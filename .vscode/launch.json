@@ -1,0 +1,68 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "🚀 Flutter (Development)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=development"
+      ],
+      "deviceId": "chrome",
+      "console": "debugConsole"
+    },
+    {
+      "name": "🧪 Flutter (Staging)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=staging"
+      ],
+      "deviceId": "chrome",
+      "console": "debugConsole"
+    },
+    {
+      "name": "🏭 Flutter (Production)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=production"
+      ],
+      "deviceId": "chrome",
+      "console": "debugConsole"
+    },
+    {
+      "name": "📱 Flutter (Mobile Dev)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=development"
+      ],
+      "console": "debugConsole"
+    },
+    {
+      "name": "📱 Flutter (Mobile Staging)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=staging"
+      ],
+      "console": "debugConsole"
+    },
+    {
+      "name": "📱 Flutter (Mobile Production)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=production"
+      ],
+      "console": "debugConsole"
+    }
+  ]
+}
