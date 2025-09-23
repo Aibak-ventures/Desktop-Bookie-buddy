@@ -1,0 +1,13 @@
+part of 'all_booking_bloc.dart';
+
+@freezed
+class AllBookingState with _$AllBookingState {
+  const factory AllBookingState.initial() = _Initial;
+  const factory AllBookingState.loading() = _Loading;
+  const factory AllBookingState.loaded({
+    required List<BookingsModel> bookings,
+    String? nextPageUrl,
+    @Default(false) bool isPaginating,
+  }) = _Loaded;
+  const factory AllBookingState.error(String error) = _Error;
+}

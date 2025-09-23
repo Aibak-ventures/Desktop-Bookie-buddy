@@ -1,0 +1,17 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$CarouselDataModelImpl _$$CarouselDataModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CarouselDataModelImpl(
+      upComingCount: (json['upcoming_count'] as num?)?.toInt() ?? 0,
+      completedCount: (json['completed_count'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$$CarouselDataModelImplToJson(
+        _$CarouselDataModelImpl instance) =>
+    <String, dynamic>{
+      'upcoming_count': instance.upComingCount,
+      'completed_count': instance.completedCount,
+    };

@@ -1,0 +1,51 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'bookings_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$BookingsModelImpl _$$BookingsModelImplFromJson(Map<String, dynamic> json) =>
+    _$BookingsModelImpl(
+      id: (json['id'] as num).toInt(),
+      customerName: json['customerName'] as String,
+      customerPhone: json['customerPhone'] as String,
+      bookingDate: json['bookingDate'] as String,
+      bookingTime: json['bookingTime'] as String,
+      serviceName: json['serviceName'] as String,
+      totalAmount: (json['totalAmount'] as num).toDouble(),
+      status: json['status'] as String,
+      createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+    );
+
+Map<String, dynamic> _$$BookingsModelImplToJson(_$BookingsModelImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'customerName': instance.customerName,
+      'customerPhone': instance.customerPhone,
+      'bookingDate': instance.bookingDate,
+      'bookingTime': instance.bookingTime,
+      'serviceName': instance.serviceName,
+      'totalAmount': instance.totalAmount,
+      'status': instance.status,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+    };
+
+_$BookingsResponseImpl _$$BookingsResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BookingsResponseImpl(
+      data: (json['data'] as List<dynamic>)
+          .map((e) => BookingsModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      pagination: json['pagination'] as Map<String, dynamic>,
+    );
+
+Map<String, dynamic> _$$BookingsResponseImplToJson(
+        _$BookingsResponseImpl instance) =>
+    <String, dynamic>{
+      'data': instance.data,
+      'pagination': instance.pagination,
+    };

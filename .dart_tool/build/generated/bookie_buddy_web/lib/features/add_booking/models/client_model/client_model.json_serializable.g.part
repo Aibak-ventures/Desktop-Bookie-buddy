@@ -1,0 +1,18 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$ClientModelImpl _$$ClientModelImplFromJson(Map<String, dynamic> json) =>
+    _$ClientModelImpl(
+      id: (json['id'] as num?)?.toInt(),
+      name: _readName(json, 'name') as String,
+      phone1: (_readPhone1(json, 'phone_1') as num).toInt(),
+      phone2: (_readPhone2(json, 'phone_2') as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$$ClientModelImplToJson(_$ClientModelImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'phone_1': instance.phone1,
+      'phone_2': instance.phone2,
+    };

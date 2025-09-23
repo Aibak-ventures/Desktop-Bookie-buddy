@@ -1,0 +1,405 @@
+import 'dart:developer';
+
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/booking_date_filter.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_search_field.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/date_filter_button.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
+import 'package:bookie_buddy_web/features/add_old_booking/view/add_old_booking_screen.dart';
+import 'package:bookie_buddy_web/features/add_old_booking/view_model/bloc_add_old_bookings/add_old_bookings_bloc.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
+import 'package:bookie_buddy_web/features/completed_bookings/view_model/bloc_completed_bookings/completed_bookings_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+class CompletedBookingsScreen extends StatelessWidget {
+  CompletedBookingsScreen({super.key});
+
+  // Date filter state
+  final dateFilterNotifier = ValueNotifier(const DateFilterModel());
+  final searchController = TextEditingController();
+  final isSearchingNotifier = ValueNotifier(false);
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context
+          .read<CompletedBookingsBloc>()
+          .add(const CompletedBookingsEvent.loadCompletedBookings());
+    });
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Completed Works'),
+        actions: [
+          ValueListenableBuilder(
+            valueListenable: isSearchingNotifier,
+            builder: (context, isSearching, child) => Container(
+              decoration: BoxDecoration(
+                color: AppColors.purpleLightShade,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              padding: 8.padding,
+              child: Icon(
+                isSearching ? Icons.close : LucideIcons.search500,
+                size: 20.sp,
+              ),
+            ).onTap(
+              () {
+                isSearchingNotifier.value = !isSearchingNotifier.value;
+              },
+            ),
+          ),
+          8.width,
+          // Date Filter Button
+          ValueListenableBuilder(
+            valueListenable: dateFilterNotifier,
+            builder: (context, value, child) {
+              return DateFilterButton(
+                showLabel: context.isMobile ? false : true,
+                hasActiveFilter: value.hasActiveFilter,
+                onTap: () => _showDateFilterBottomSheet(context),
+              );
+            },
+          ),
+
+          PopupMenuButton(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) async {
+              if (value == 'old_bookings') {
+                await context.push(
+                  BlocProvider(
+                    create: (context) => AddOldBookingsBloc(),
+                    child: const AddOldBookingScreen(),
+                  ),
+                );
+
+                context
+                    .read<CompletedBookingsBloc>()
+                    .add(const CompletedBookingsEvent.loadCompletedBookings());
+              }
+            },
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 'old_bookings',
+                  child: CustomPopupMenuItem(
+                    title: 'Add old bookings',
+                    icon: Icon(Icons.add),
+                  ),
+                )
+              ];
+            },
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Active Search filed
+          ValueListenableBuilder(
+            valueListenable: isSearchingNotifier,
+            builder: (context, isSearching, child) => isSearching
+                ? CustomSearchField(
+                    searchController: searchController,
+                    padding: (16, 8).padding,
+                    onChanged: (query) {
+                      _fetchCompletedWorksWithFilter(context);
+                    },
+                    hintText: 'Search by name or ID...',
+                    suffixFunction: () {
+                      searchController.clear();
+                      _fetchCompletedWorksWithFilter(context);
+                    },
+                  )
+                : const SizedBox.shrink(),
+          ),
+
+          // Active Filter Indicator
+          ValueListenableBuilder(
+            valueListenable: dateFilterNotifier,
+            builder: (context, value, child) => value.hasActiveFilter
+                ? _buildActiveFilterIndicator(context)
+                : const SizedBox.shrink(),
+          ),
+
+          // Main Content
+          Expanded(
+            child: RefreshIndicator.adaptive(
+              onRefresh: () async {
+                _fetchCompletedWorksWithFilter(context);
+              },
+              child: Padding(
+                padding: 16.padding,
+                child:
+                    BlocBuilder<CompletedBookingsBloc, CompletedBookingsState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () =>
+                          const Center(child: Text('No Completed Works')),
+                      error: (error) {
+                        return CustomErrorWidget(
+                          errorText: error,
+                          onRetry: () =>
+                              _fetchCompletedWorksWithFilter(context),
+                        );
+                      },
+                      loading: () => const BookingListShimmer(
+                        itemCount: 10,
+                      ),
+                      loaded: (completedWorks, nextPageUrl, isPaginating) {
+                        if (completedWorks.isEmpty) {
+                          return _buildEmptyState(context);
+                        }
+                        return NotificationListener<ScrollNotification>(
+                          onNotification: (scrollInfo) {
+                            if (scrollInfo.metrics.pixels >=
+                                    scrollInfo.metrics.maxScrollExtent - 200 &&
+                                nextPageUrl != null &&
+                                !isPaginating) {
+                              context.read<CompletedBookingsBloc>().add(
+                                    CompletedBookingsEvent
+                                        .loadNextPageCompletedBookings(
+                                      startDate: dateFilterNotifier
+                                          .value.startDate
+                                          ?.format(),
+                                      endDate: dateFilterNotifier.value.endDate
+                                          ?.format(),
+                                      searchQuery:
+                                          searchController.text.trim().isEmpty
+                                              ? null
+                                              : searchController.text.trim(),
+                                    ),
+                                  );
+                            }
+
+                            return false;
+                          },
+                          child: ListView.builder(
+                            key: const PageStorageKey('completed-work-list'),
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount:
+                                completedWorks.length + (isPaginating ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index < completedWorks.length) {
+                                final booking = completedWorks[index];
+
+                                return BookingCard(
+                                  booking: booking,
+                                  onTap: () async {
+                                    final bookingCubit =
+                                        context.read<BookingSelectionCubit>();
+                                    bookingCubit.selectBooking(booking);
+                                    final ctx = context;
+                                    final result = await context.push(
+                                      BookingDetailsScreen(
+                                        bookingId: booking.id!,
+                                      ),
+                                    );
+                                    if (result is bool && result) {
+                                      _fetchCompletedWorksWithFilter(ctx);
+                                    }
+                                    if (bookingCubit.state.isModified) {
+                                      final updated =
+                                          bookingCubit.state.selectedBooking;
+
+                                      // Update that specific booking in your list
+                                      context.read<CompletedBookingsBloc>().add(
+                                            CompletedBookingsEvent
+                                                .updateBooking(
+                                              updated,
+                                              shouldRefresh: bookingCubit
+                                                  .state.shouldRefresh,
+                                            ),
+                                          );
+                                      log('update booking called');
+
+                                      bookingCubit.reset();
+                                    }
+                                  },
+                                );
+                              } else {
+                                return const BookingCardShimmer();
+                              }
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActiveFilterIndicator(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.purple.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.purple),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.filter_list,
+            size: 16,
+            color: AppColors.purple,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              _getFilterDisplayText(),
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.purple,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _clearDateFilter(context),
+            child: Container(
+              padding: 2.padding,
+              decoration: BoxDecoration(
+                color: AppColors.purple.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.close,
+                size: 14,
+                color: AppColors.purple,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: context.screenHeight * 0.3),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.task_alt_outlined,
+              size: 64,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              dateFilterNotifier.value.hasActiveFilter
+                  ? 'No completed works found for selected dates'
+                  : 'No Completed Works',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (dateFilterNotifier.value.hasActiveFilter) ...[
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () => _clearDateFilter(context),
+                child: const Text('Clear filter to see all completed works'),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _showDateFilterBottomSheet(BuildContext context) {
+    showDateFilterBottomSheet(
+      context: context,
+      initialStartDate: dateFilterNotifier.value.startDate,
+      initialEndDate: dateFilterNotifier.value.endDate,
+      onDateFilterChanged: (startDate, endDate) {
+        dateFilterNotifier.value = dateFilterNotifier.value.copyWith(
+          startDate: startDate,
+          endDate: endDate,
+        );
+
+        _fetchCompletedWorksWithFilter(context);
+      },
+    );
+  }
+
+  void _fetchCompletedWorksWithFilter(BuildContext context) {
+    // You'll need to modify your CompletedBookingsEvent to accept date parameters
+    context.read<CompletedBookingsBloc>().add(
+          CompletedBookingsEvent.loadCompletedBookings(
+            startDate:
+                dateFilterNotifier.value.startDate?.format(reverse: true),
+            endDate: dateFilterNotifier.value.endDate?.format(reverse: true),
+            searchQuery: searchController.text.trim().isEmpty
+                ? null
+                : searchController.text.trim(),
+          ),
+        );
+  }
+
+  void _clearDateFilter(BuildContext context) {
+    dateFilterNotifier.value = const DateFilterModel();
+
+    _fetchCompletedWorksWithFilter(context);
+  }
+
+  String _getFilterDisplayText() {
+    final startDate = dateFilterNotifier.value.startDate;
+    final endDate = dateFilterNotifier.value.endDate;
+    if (startDate != null && endDate != null) {
+      if (startDate.isAtSameMomentAs(endDate)) {
+        return 'Filtered by: ${startDate.format()}';
+      } else {
+        return 'Filtered by: ${startDate.format()} - ${endDate.format()}';
+      }
+    } else if (startDate != null) {
+      return 'From: ${startDate.format()}';
+    } else if (endDate != null) {
+      return 'Until: ${endDate.format()}';
+    }
+    return 'Date filter active';
+  }
+}
+
+class CustomPopupMenuItem extends StatelessWidget {
+  final Icon? icon;
+  final String title;
+  const CustomPopupMenuItem({
+    super.key,
+    this.icon,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 5,
+      children: [
+        if (icon != null) icon!,
+        Text(title),
+      ],
+    );
+  }
+}

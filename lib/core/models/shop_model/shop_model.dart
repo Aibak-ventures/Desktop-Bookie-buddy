@@ -1,0 +1,25 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'shop_model.freezed.dart';
+part 'shop_model.g.dart';
+
+@freezed
+class ShopModel with _$ShopModel {
+  const factory ShopModel({
+    required int id,
+    required String name,
+    String? place,
+    required String phone,
+    String? email,
+    @JsonKey(
+      defaultValue: 'Address not available',
+    )
+    required String address,
+    @JsonKey(name: 'pincode') String? pincode,
+    @JsonKey(name: 'subscription_status') String? subscriptionStatus,
+    @JsonKey(name: 'img') String? image,
+  }) = _ShopModel;
+
+  factory ShopModel.fromJson(Map<String, dynamic> json) =>
+      _$ShopModelFromJson(json);
+}
