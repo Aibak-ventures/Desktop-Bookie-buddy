@@ -459,7 +459,7 @@
     },
     {
       "name": "image_cropper_platform_interface",
-      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/image_cropper_platform_interface-7.1.0",
+      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/image_cropper_platform_interface-7.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
@@ -783,9 +783,9 @@
     },
     {
       "name": "pool",
-      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/pool-1.5.1",
+      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/pool-1.5.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.4"
     },
     {
       "name": "posix",
@@ -843,7 +843,7 @@
     },
     {
       "name": "shared_preferences_android",
-      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.4.12",
+      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.4.13",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },

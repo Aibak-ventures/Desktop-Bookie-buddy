@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "bookie_buddy_web",
-      "version": "2.4.0+32",
+      "version": "0.1.0+01",
       "dependencies": [
         "another_flushbar",
         "bloc_concurrency",
@@ -702,7 +702,7 @@
     },
     {
       "name": "pool",
-      "version": "1.5.1",
+      "version": "1.5.2",
       "dependencies": [
         "async",
         "stack_trace"
@@ -1199,7 +1199,7 @@
     },
     {
       "name": "image_cropper_platform_interface",
-      "version": "7.1.0",
+      "version": "7.2.0",
       "dependencies": [
         "flutter",
         "http",
@@ -1487,7 +1487,7 @@
     },
     {
       "name": "shared_preferences_android",
-      "version": "2.4.12",
+      "version": "2.4.13",
       "dependencies": [
         "flutter",
         "shared_preferences_platform_interface"
