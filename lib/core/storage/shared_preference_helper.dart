@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceHelper {
@@ -24,25 +25,21 @@ class SharedPreferenceHelper {
     await instance.setString(key, value);
   }
 
-  static String? getString(String key) {
-    return instance.getString(key);
-  }
+  static String? getString(String key) => instance.getString(key);
 
   static Future<void> setBool(String key, bool value) async {
     await instance.setBool(key, value);
   }
 
-  static bool? getBool(String key) {
-    return instance.getBool(key);
+  static bool? getBool(String key) => instance.getBool(key);
+
+  Future<void> setShopId(int value) async {
+    await instance.setInt(AppConstants.shopIdKey, value);
   }
 
-  static Future<void> setShopId(int value) async {
-    await instance.setInt('shopId', value);
-  }
-
-  static int? get getShopId => instance.getInt('shopId');
+  int? get getShopId => instance.getInt(AppConstants.shopIdKey);
 
   static Future<void> clearShopId() async {
-    await instance.remove('shopId');
+    await instance.remove(AppConstants.shopIdKey);
   }
 }

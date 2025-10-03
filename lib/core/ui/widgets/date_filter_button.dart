@@ -16,8 +16,7 @@ class DateFilterButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: AppColors.purpleLightShade,
         borderRadius: BorderRadius.circular(5),
@@ -52,5 +51,4 @@ class DateFilterButton extends StatelessWidget {
         ],
       ),
     ).onTap(onTap);
-  }
 }

@@ -24,8 +24,7 @@ class CustomErrorWidget extends StatelessWidget {
   final double? height;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min, // Adjusts to content
@@ -67,5 +66,4 @@ class CustomErrorWidget extends StatelessWidget {
         ],
       ),
     );
-  }
 }

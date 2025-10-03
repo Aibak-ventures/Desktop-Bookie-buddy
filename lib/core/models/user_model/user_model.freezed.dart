@@ -12,7 +12,8 @@ part of 'user_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) {
   return _UserModel.fromJson(json);
@@ -20,31 +21,29 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserModel {
-  int get id => throw _privateConstructorUsedError; // user info
+  int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'full_name')
-  String get userName => throw _privateConstructorUsedError;
+  String get firstName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'last_name', defaultValue: '')
+  String get lastName => throw _privateConstructorUsedError;
   String get phone => throw _privateConstructorUsedError;
-  String? get email => throw _privateConstructorUsedError; // Shop Info
-  @JsonKey(name: 'shop_id')
-  int? get shopId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'shop_name', defaultValue: 'Shop')
-  String get shopName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'shop_phone', defaultValue: '9999999999')
-  String get shopPhone => throw _privateConstructorUsedError;
-  @JsonKey(name: 'shop_address', defaultValue: 'Address')
-  String get shopAddress => throw _privateConstructorUsedError;
-  @JsonKey(name: 'gst_number')
-  String? get gstNo => throw _privateConstructorUsedError;
-  @JsonKey(name: 'shop_image')
-  String? get shopeImage => throw _privateConstructorUsedError;
-  @JsonKey(name: 'terms_and_conditions')
-  List<String> get termsAndConditions =>
-      throw _privateConstructorUsedError; // Account Control
+  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+  ShopRole? get shopRole => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: false)
   bool get block => throw _privateConstructorUsedError;
   @JsonKey(name: 'multiple_shops', defaultValue: false)
   bool get haveMultipleShops => throw _privateConstructorUsedError;
-  String? get role => throw _privateConstructorUsedError;
+  @JsonKey(name: 'has_active_notification', defaultValue: false)
+  bool get isNotificationActive => throw _privateConstructorUsedError;
+  @JsonKey(name: 'subscription')
+  UserSubscriptionModel? get subscription => throw _privateConstructorUsedError;
+  @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+  List<UserPasswordSettingsModel> get passwordSettings =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'shop_settings')
+  ShopSettingsModel get shopSettings => throw _privateConstructorUsedError;
+  @JsonKey(name: 'shop')
+  UserShopModel get shopDetails => throw _privateConstructorUsedError;
 
   /// Serializes this UserModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -61,23 +60,28 @@ abstract class $UserModelCopyWith<$Res> {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
       _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
-  $Res call(
-      {int id,
-      @JsonKey(name: 'full_name') String userName,
-      String phone,
-      String? email,
-      @JsonKey(name: 'shop_id') int? shopId,
-      @JsonKey(name: 'shop_name', defaultValue: 'Shop') String shopName,
-      @JsonKey(name: 'shop_phone', defaultValue: '9999999999') String shopPhone,
-      @JsonKey(name: 'shop_address', defaultValue: 'Address')
-      String shopAddress,
-      @JsonKey(name: 'gst_number') String? gstNo,
-      @JsonKey(name: 'shop_image') String? shopeImage,
-      @JsonKey(name: 'terms_and_conditions') List<String> termsAndConditions,
-      @JsonKey(defaultValue: false) bool block,
-      @JsonKey(name: 'multiple_shops', defaultValue: false)
-      bool haveMultipleShops,
-      String? role});
+  $Res call({
+    int id,
+    @JsonKey(name: 'full_name') String firstName,
+    @JsonKey(name: 'last_name', defaultValue: '') String lastName,
+    String phone,
+    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+    ShopRole? shopRole,
+    @JsonKey(defaultValue: false) bool block,
+    @JsonKey(name: 'multiple_shops', defaultValue: false)
+    bool haveMultipleShops,
+    @JsonKey(name: 'has_active_notification', defaultValue: false)
+    bool isNotificationActive,
+    @JsonKey(name: 'subscription') UserSubscriptionModel? subscription,
+    @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+    List<UserPasswordSettingsModel> passwordSettings,
+    @JsonKey(name: 'shop_settings') ShopSettingsModel shopSettings,
+    @JsonKey(name: 'shop') UserShopModel shopDetails,
+  });
+
+  $UserSubscriptionModelCopyWith<$Res>? get subscription;
+  $ShopSettingsModelCopyWith<$Res> get shopSettings;
+  $UserShopModelCopyWith<$Res> get shopDetails;
 }
 
 /// @nodoc
@@ -96,78 +100,105 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @override
   $Res call({
     Object? id = null,
-    Object? userName = null,
+    Object? firstName = null,
+    Object? lastName = null,
     Object? phone = null,
-    Object? email = freezed,
-    Object? shopId = freezed,
-    Object? shopName = null,
-    Object? shopPhone = null,
-    Object? shopAddress = null,
-    Object? gstNo = freezed,
-    Object? shopeImage = freezed,
-    Object? termsAndConditions = null,
+    Object? shopRole = freezed,
     Object? block = null,
     Object? haveMultipleShops = null,
-    Object? role = freezed,
+    Object? isNotificationActive = null,
+    Object? subscription = freezed,
+    Object? passwordSettings = null,
+    Object? shopSettings = null,
+    Object? shopDetails = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: freezed == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      shopId: freezed == shopId
-          ? _value.shopId
-          : shopId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      shopName: null == shopName
-          ? _value.shopName
-          : shopName // ignore: cast_nullable_to_non_nullable
-              as String,
-      shopPhone: null == shopPhone
-          ? _value.shopPhone
-          : shopPhone // ignore: cast_nullable_to_non_nullable
-              as String,
-      shopAddress: null == shopAddress
-          ? _value.shopAddress
-          : shopAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      gstNo: freezed == gstNo
-          ? _value.gstNo
-          : gstNo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      shopeImage: freezed == shopeImage
-          ? _value.shopeImage
-          : shopeImage // ignore: cast_nullable_to_non_nullable
-              as String?,
-      termsAndConditions: null == termsAndConditions
-          ? _value.termsAndConditions
-          : termsAndConditions // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      block: null == block
-          ? _value.block
-          : block // ignore: cast_nullable_to_non_nullable
-              as bool,
-      haveMultipleShops: null == haveMultipleShops
-          ? _value.haveMultipleShops
-          : haveMultipleShops // ignore: cast_nullable_to_non_nullable
-              as bool,
-      role: freezed == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            firstName: null == firstName
+                ? _value.firstName
+                : firstName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            lastName: null == lastName
+                ? _value.lastName
+                : lastName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            phone: null == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String,
+            shopRole: freezed == shopRole
+                ? _value.shopRole
+                : shopRole // ignore: cast_nullable_to_non_nullable
+                      as ShopRole?,
+            block: null == block
+                ? _value.block
+                : block // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            haveMultipleShops: null == haveMultipleShops
+                ? _value.haveMultipleShops
+                : haveMultipleShops // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isNotificationActive: null == isNotificationActive
+                ? _value.isNotificationActive
+                : isNotificationActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            subscription: freezed == subscription
+                ? _value.subscription
+                : subscription // ignore: cast_nullable_to_non_nullable
+                      as UserSubscriptionModel?,
+            passwordSettings: null == passwordSettings
+                ? _value.passwordSettings
+                : passwordSettings // ignore: cast_nullable_to_non_nullable
+                      as List<UserPasswordSettingsModel>,
+            shopSettings: null == shopSettings
+                ? _value.shopSettings
+                : shopSettings // ignore: cast_nullable_to_non_nullable
+                      as ShopSettingsModel,
+            shopDetails: null == shopDetails
+                ? _value.shopDetails
+                : shopDetails // ignore: cast_nullable_to_non_nullable
+                      as UserShopModel,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserSubscriptionModelCopyWith<$Res>? get subscription {
+    if (_value.subscription == null) {
+      return null;
+    }
+
+    return $UserSubscriptionModelCopyWith<$Res>(_value.subscription!, (value) {
+      return _then(_value.copyWith(subscription: value) as $Val);
+    });
+  }
+
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ShopSettingsModelCopyWith<$Res> get shopSettings {
+    return $ShopSettingsModelCopyWith<$Res>(_value.shopSettings, (value) {
+      return _then(_value.copyWith(shopSettings: value) as $Val);
+    });
+  }
+
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserShopModelCopyWith<$Res> get shopDetails {
+    return $UserShopModelCopyWith<$Res>(_value.shopDetails, (value) {
+      return _then(_value.copyWith(shopDetails: value) as $Val);
+    });
   }
 }
 
@@ -175,27 +206,36 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
 abstract class _$$UserModelImplCopyWith<$Res>
     implements $UserModelCopyWith<$Res> {
   factory _$$UserModelImplCopyWith(
-          _$UserModelImpl value, $Res Function(_$UserModelImpl) then) =
-      __$$UserModelImplCopyWithImpl<$Res>;
+    _$UserModelImpl value,
+    $Res Function(_$UserModelImpl) then,
+  ) = __$$UserModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      @JsonKey(name: 'full_name') String userName,
-      String phone,
-      String? email,
-      @JsonKey(name: 'shop_id') int? shopId,
-      @JsonKey(name: 'shop_name', defaultValue: 'Shop') String shopName,
-      @JsonKey(name: 'shop_phone', defaultValue: '9999999999') String shopPhone,
-      @JsonKey(name: 'shop_address', defaultValue: 'Address')
-      String shopAddress,
-      @JsonKey(name: 'gst_number') String? gstNo,
-      @JsonKey(name: 'shop_image') String? shopeImage,
-      @JsonKey(name: 'terms_and_conditions') List<String> termsAndConditions,
-      @JsonKey(defaultValue: false) bool block,
-      @JsonKey(name: 'multiple_shops', defaultValue: false)
-      bool haveMultipleShops,
-      String? role});
+  $Res call({
+    int id,
+    @JsonKey(name: 'full_name') String firstName,
+    @JsonKey(name: 'last_name', defaultValue: '') String lastName,
+    String phone,
+    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+    ShopRole? shopRole,
+    @JsonKey(defaultValue: false) bool block,
+    @JsonKey(name: 'multiple_shops', defaultValue: false)
+    bool haveMultipleShops,
+    @JsonKey(name: 'has_active_notification', defaultValue: false)
+    bool isNotificationActive,
+    @JsonKey(name: 'subscription') UserSubscriptionModel? subscription,
+    @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+    List<UserPasswordSettingsModel> passwordSettings,
+    @JsonKey(name: 'shop_settings') ShopSettingsModel shopSettings,
+    @JsonKey(name: 'shop') UserShopModel shopDetails,
+  });
+
+  @override
+  $UserSubscriptionModelCopyWith<$Res>? get subscription;
+  @override
+  $ShopSettingsModelCopyWith<$Res> get shopSettings;
+  @override
+  $UserShopModelCopyWith<$Res> get shopDetails;
 }
 
 /// @nodoc
@@ -203,8 +243,9 @@ class __$$UserModelImplCopyWithImpl<$Res>
     extends _$UserModelCopyWithImpl<$Res, _$UserModelImpl>
     implements _$$UserModelImplCopyWith<$Res> {
   __$$UserModelImplCopyWithImpl(
-      _$UserModelImpl _value, $Res Function(_$UserModelImpl) _then)
-      : super(_value, _then);
+    _$UserModelImpl _value,
+    $Res Function(_$UserModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -212,148 +253,110 @@ class __$$UserModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? userName = null,
+    Object? firstName = null,
+    Object? lastName = null,
     Object? phone = null,
-    Object? email = freezed,
-    Object? shopId = freezed,
-    Object? shopName = null,
-    Object? shopPhone = null,
-    Object? shopAddress = null,
-    Object? gstNo = freezed,
-    Object? shopeImage = freezed,
-    Object? termsAndConditions = null,
+    Object? shopRole = freezed,
     Object? block = null,
     Object? haveMultipleShops = null,
-    Object? role = freezed,
+    Object? isNotificationActive = null,
+    Object? subscription = freezed,
+    Object? passwordSettings = null,
+    Object? shopSettings = null,
+    Object? shopDetails = null,
   }) {
-    return _then(_$UserModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: freezed == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      shopId: freezed == shopId
-          ? _value.shopId
-          : shopId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      shopName: null == shopName
-          ? _value.shopName
-          : shopName // ignore: cast_nullable_to_non_nullable
-              as String,
-      shopPhone: null == shopPhone
-          ? _value.shopPhone
-          : shopPhone // ignore: cast_nullable_to_non_nullable
-              as String,
-      shopAddress: null == shopAddress
-          ? _value.shopAddress
-          : shopAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      gstNo: freezed == gstNo
-          ? _value.gstNo
-          : gstNo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      shopeImage: freezed == shopeImage
-          ? _value.shopeImage
-          : shopeImage // ignore: cast_nullable_to_non_nullable
-              as String?,
-      termsAndConditions: null == termsAndConditions
-          ? _value._termsAndConditions
-          : termsAndConditions // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      block: null == block
-          ? _value.block
-          : block // ignore: cast_nullable_to_non_nullable
-              as bool,
-      haveMultipleShops: null == haveMultipleShops
-          ? _value.haveMultipleShops
-          : haveMultipleShops // ignore: cast_nullable_to_non_nullable
-              as bool,
-      role: freezed == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$UserModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        firstName: null == firstName
+            ? _value.firstName
+            : firstName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        lastName: null == lastName
+            ? _value.lastName
+            : lastName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        phone: null == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String,
+        shopRole: freezed == shopRole
+            ? _value.shopRole
+            : shopRole // ignore: cast_nullable_to_non_nullable
+                  as ShopRole?,
+        block: null == block
+            ? _value.block
+            : block // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        haveMultipleShops: null == haveMultipleShops
+            ? _value.haveMultipleShops
+            : haveMultipleShops // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isNotificationActive: null == isNotificationActive
+            ? _value.isNotificationActive
+            : isNotificationActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        subscription: freezed == subscription
+            ? _value.subscription
+            : subscription // ignore: cast_nullable_to_non_nullable
+                  as UserSubscriptionModel?,
+        passwordSettings: null == passwordSettings
+            ? _value._passwordSettings
+            : passwordSettings // ignore: cast_nullable_to_non_nullable
+                  as List<UserPasswordSettingsModel>,
+        shopSettings: null == shopSettings
+            ? _value.shopSettings
+            : shopSettings // ignore: cast_nullable_to_non_nullable
+                  as ShopSettingsModel,
+        shopDetails: null == shopDetails
+            ? _value.shopDetails
+            : shopDetails // ignore: cast_nullable_to_non_nullable
+                  as UserShopModel,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserModelImpl implements _UserModel {
-  const _$UserModelImpl(
-      {required this.id,
-      @JsonKey(name: 'full_name') required this.userName,
-      required this.phone,
-      this.email,
-      @JsonKey(name: 'shop_id') this.shopId,
-      @JsonKey(name: 'shop_name', defaultValue: 'Shop') required this.shopName,
-      @JsonKey(name: 'shop_phone', defaultValue: '9999999999')
-      required this.shopPhone,
-      @JsonKey(name: 'shop_address', defaultValue: 'Address')
-      required this.shopAddress,
-      @JsonKey(name: 'gst_number') this.gstNo,
-      @JsonKey(name: 'shop_image') this.shopeImage,
-      @JsonKey(name: 'terms_and_conditions')
-      final List<String> termsAndConditions = const [],
-      @JsonKey(defaultValue: false) required this.block,
-      @JsonKey(name: 'multiple_shops', defaultValue: false)
-      required this.haveMultipleShops,
-      this.role})
-      : _termsAndConditions = termsAndConditions;
+  const _$UserModelImpl({
+    required this.id,
+    @JsonKey(name: 'full_name') required this.firstName,
+    @JsonKey(name: 'last_name', defaultValue: '') required this.lastName,
+    required this.phone,
+    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString) this.shopRole,
+    @JsonKey(defaultValue: false) required this.block,
+    @JsonKey(name: 'multiple_shops', defaultValue: false)
+    required this.haveMultipleShops,
+    @JsonKey(name: 'has_active_notification', defaultValue: false)
+    required this.isNotificationActive,
+    @JsonKey(name: 'subscription') this.subscription,
+    @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+    required final List<UserPasswordSettingsModel> passwordSettings,
+    @JsonKey(name: 'shop_settings') required this.shopSettings,
+    @JsonKey(name: 'shop') required this.shopDetails,
+  }) : _passwordSettings = passwordSettings;
 
   factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserModelImplFromJson(json);
 
   @override
   final int id;
-// user info
   @override
   @JsonKey(name: 'full_name')
-  final String userName;
+  final String firstName;
+  @override
+  @JsonKey(name: 'last_name', defaultValue: '')
+  final String lastName;
   @override
   final String phone;
   @override
-  final String? email;
-// Shop Info
-  @override
-  @JsonKey(name: 'shop_id')
-  final int? shopId;
-  @override
-  @JsonKey(name: 'shop_name', defaultValue: 'Shop')
-  final String shopName;
-  @override
-  @JsonKey(name: 'shop_phone', defaultValue: '9999999999')
-  final String shopPhone;
-  @override
-  @JsonKey(name: 'shop_address', defaultValue: 'Address')
-  final String shopAddress;
-  @override
-  @JsonKey(name: 'gst_number')
-  final String? gstNo;
-  @override
-  @JsonKey(name: 'shop_image')
-  final String? shopeImage;
-  final List<String> _termsAndConditions;
-  @override
-  @JsonKey(name: 'terms_and_conditions')
-  List<String> get termsAndConditions {
-    if (_termsAndConditions is EqualUnmodifiableListView)
-      return _termsAndConditions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_termsAndConditions);
-  }
-
-// Account Control
+  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+  final ShopRole? shopRole;
   @override
   @JsonKey(defaultValue: false)
   final bool block;
@@ -361,11 +364,31 @@ class _$UserModelImpl implements _UserModel {
   @JsonKey(name: 'multiple_shops', defaultValue: false)
   final bool haveMultipleShops;
   @override
-  final String? role;
+  @JsonKey(name: 'has_active_notification', defaultValue: false)
+  final bool isNotificationActive;
+  @override
+  @JsonKey(name: 'subscription')
+  final UserSubscriptionModel? subscription;
+  final List<UserPasswordSettingsModel> _passwordSettings;
+  @override
+  @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+  List<UserPasswordSettingsModel> get passwordSettings {
+    if (_passwordSettings is EqualUnmodifiableListView)
+      return _passwordSettings;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_passwordSettings);
+  }
+
+  @override
+  @JsonKey(name: 'shop_settings')
+  final ShopSettingsModel shopSettings;
+  @override
+  @JsonKey(name: 'shop')
+  final UserShopModel shopDetails;
 
   @override
   String toString() {
-    return 'UserModel(id: $id, userName: $userName, phone: $phone, email: $email, shopId: $shopId, shopName: $shopName, shopPhone: $shopPhone, shopAddress: $shopAddress, gstNo: $gstNo, shopeImage: $shopeImage, termsAndConditions: $termsAndConditions, block: $block, haveMultipleShops: $haveMultipleShops, role: $role)';
+    return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, shopRole: $shopRole, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
   }
 
   @override
@@ -374,46 +397,47 @@ class _$UserModelImpl implements _UserModel {
         (other.runtimeType == runtimeType &&
             other is _$UserModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.userName, userName) ||
-                other.userName == userName) &&
+            (identical(other.firstName, firstName) ||
+                other.firstName == firstName) &&
+            (identical(other.lastName, lastName) ||
+                other.lastName == lastName) &&
             (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.shopId, shopId) || other.shopId == shopId) &&
-            (identical(other.shopName, shopName) ||
-                other.shopName == shopName) &&
-            (identical(other.shopPhone, shopPhone) ||
-                other.shopPhone == shopPhone) &&
-            (identical(other.shopAddress, shopAddress) ||
-                other.shopAddress == shopAddress) &&
-            (identical(other.gstNo, gstNo) || other.gstNo == gstNo) &&
-            (identical(other.shopeImage, shopeImage) ||
-                other.shopeImage == shopeImage) &&
-            const DeepCollectionEquality()
-                .equals(other._termsAndConditions, _termsAndConditions) &&
+            (identical(other.shopRole, shopRole) ||
+                other.shopRole == shopRole) &&
             (identical(other.block, block) || other.block == block) &&
             (identical(other.haveMultipleShops, haveMultipleShops) ||
                 other.haveMultipleShops == haveMultipleShops) &&
-            (identical(other.role, role) || other.role == role));
+            (identical(other.isNotificationActive, isNotificationActive) ||
+                other.isNotificationActive == isNotificationActive) &&
+            (identical(other.subscription, subscription) ||
+                other.subscription == subscription) &&
+            const DeepCollectionEquality().equals(
+              other._passwordSettings,
+              _passwordSettings,
+            ) &&
+            (identical(other.shopSettings, shopSettings) ||
+                other.shopSettings == shopSettings) &&
+            (identical(other.shopDetails, shopDetails) ||
+                other.shopDetails == shopDetails));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userName,
-      phone,
-      email,
-      shopId,
-      shopName,
-      shopPhone,
-      shopAddress,
-      gstNo,
-      shopeImage,
-      const DeepCollectionEquality().hash(_termsAndConditions),
-      block,
-      haveMultipleShops,
-      role);
+    runtimeType,
+    id,
+    firstName,
+    lastName,
+    phone,
+    shopRole,
+    block,
+    haveMultipleShops,
+    isNotificationActive,
+    subscription,
+    const DeepCollectionEquality().hash(_passwordSettings),
+    shopSettings,
+    shopDetails,
+  );
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -425,67 +449,48 @@ class _$UserModelImpl implements _UserModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserModelImplToJson(
-      this,
-    );
+    return _$$UserModelImplToJson(this);
   }
 }
 
 abstract class _UserModel implements UserModel {
-  const factory _UserModel(
-      {required final int id,
-      @JsonKey(name: 'full_name') required final String userName,
-      required final String phone,
-      final String? email,
-      @JsonKey(name: 'shop_id') final int? shopId,
-      @JsonKey(name: 'shop_name', defaultValue: 'Shop')
-      required final String shopName,
-      @JsonKey(name: 'shop_phone', defaultValue: '9999999999')
-      required final String shopPhone,
-      @JsonKey(name: 'shop_address', defaultValue: 'Address')
-      required final String shopAddress,
-      @JsonKey(name: 'gst_number') final String? gstNo,
-      @JsonKey(name: 'shop_image') final String? shopeImage,
-      @JsonKey(name: 'terms_and_conditions')
-      final List<String> termsAndConditions,
-      @JsonKey(defaultValue: false) required final bool block,
-      @JsonKey(name: 'multiple_shops', defaultValue: false)
-      required final bool haveMultipleShops,
-      final String? role}) = _$UserModelImpl;
+  const factory _UserModel({
+    required final int id,
+    @JsonKey(name: 'full_name') required final String firstName,
+    @JsonKey(name: 'last_name', defaultValue: '')
+    required final String lastName,
+    required final String phone,
+    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+    final ShopRole? shopRole,
+    @JsonKey(defaultValue: false) required final bool block,
+    @JsonKey(name: 'multiple_shops', defaultValue: false)
+    required final bool haveMultipleShops,
+    @JsonKey(name: 'has_active_notification', defaultValue: false)
+    required final bool isNotificationActive,
+    @JsonKey(name: 'subscription') final UserSubscriptionModel? subscription,
+    @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+    required final List<UserPasswordSettingsModel> passwordSettings,
+    @JsonKey(name: 'shop_settings')
+    required final ShopSettingsModel shopSettings,
+    @JsonKey(name: 'shop') required final UserShopModel shopDetails,
+  }) = _$UserModelImpl;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$UserModelImpl.fromJson;
 
   @override
-  int get id; // user info
+  int get id;
   @override
   @JsonKey(name: 'full_name')
-  String get userName;
+  String get firstName;
+  @override
+  @JsonKey(name: 'last_name', defaultValue: '')
+  String get lastName;
   @override
   String get phone;
   @override
-  String? get email; // Shop Info
-  @override
-  @JsonKey(name: 'shop_id')
-  int? get shopId;
-  @override
-  @JsonKey(name: 'shop_name', defaultValue: 'Shop')
-  String get shopName;
-  @override
-  @JsonKey(name: 'shop_phone', defaultValue: '9999999999')
-  String get shopPhone;
-  @override
-  @JsonKey(name: 'shop_address', defaultValue: 'Address')
-  String get shopAddress;
-  @override
-  @JsonKey(name: 'gst_number')
-  String? get gstNo;
-  @override
-  @JsonKey(name: 'shop_image')
-  String? get shopeImage;
-  @override
-  @JsonKey(name: 'terms_and_conditions')
-  List<String> get termsAndConditions; // Account Control
+  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+  ShopRole? get shopRole;
   @override
   @JsonKey(defaultValue: false)
   bool get block;
@@ -493,7 +498,20 @@ abstract class _UserModel implements UserModel {
   @JsonKey(name: 'multiple_shops', defaultValue: false)
   bool get haveMultipleShops;
   @override
-  String? get role;
+  @JsonKey(name: 'has_active_notification', defaultValue: false)
+  bool get isNotificationActive;
+  @override
+  @JsonKey(name: 'subscription')
+  UserSubscriptionModel? get subscription;
+  @override
+  @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+  List<UserPasswordSettingsModel> get passwordSettings;
+  @override
+  @JsonKey(name: 'shop_settings')
+  ShopSettingsModel get shopSettings;
+  @override
+  @JsonKey(name: 'shop')
+  UserShopModel get shopDetails;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -501,4 +519,403 @@ abstract class _UserModel implements UserModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+UserSubscriptionModel _$UserSubscriptionModelFromJson(
+  Map<String, dynamic> json,
+) {
+  return _UserSubscriptionModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$UserSubscriptionModel {
+  String get plan => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
+  List<String> get features => throw _privateConstructorUsedError;
+
+  /// Serializes this UserSubscriptionModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of UserSubscriptionModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $UserSubscriptionModelCopyWith<UserSubscriptionModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $UserSubscriptionModelCopyWith<$Res> {
+  factory $UserSubscriptionModelCopyWith(
+    UserSubscriptionModel value,
+    $Res Function(UserSubscriptionModel) then,
+  ) = _$UserSubscriptionModelCopyWithImpl<$Res, UserSubscriptionModel>;
+  @useResult
+  $Res call({String plan, String status, List<String> features});
+}
+
+/// @nodoc
+class _$UserSubscriptionModelCopyWithImpl<
+  $Res,
+  $Val extends UserSubscriptionModel
+>
+    implements $UserSubscriptionModelCopyWith<$Res> {
+  _$UserSubscriptionModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of UserSubscriptionModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? plan = null,
+    Object? status = null,
+    Object? features = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            plan: null == plan
+                ? _value.plan
+                : plan // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            features: null == features
+                ? _value.features
+                : features // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$UserSubscriptionModelImplCopyWith<$Res>
+    implements $UserSubscriptionModelCopyWith<$Res> {
+  factory _$$UserSubscriptionModelImplCopyWith(
+    _$UserSubscriptionModelImpl value,
+    $Res Function(_$UserSubscriptionModelImpl) then,
+  ) = __$$UserSubscriptionModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String plan, String status, List<String> features});
+}
+
+/// @nodoc
+class __$$UserSubscriptionModelImplCopyWithImpl<$Res>
+    extends
+        _$UserSubscriptionModelCopyWithImpl<$Res, _$UserSubscriptionModelImpl>
+    implements _$$UserSubscriptionModelImplCopyWith<$Res> {
+  __$$UserSubscriptionModelImplCopyWithImpl(
+    _$UserSubscriptionModelImpl _value,
+    $Res Function(_$UserSubscriptionModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of UserSubscriptionModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? plan = null,
+    Object? status = null,
+    Object? features = null,
+  }) {
+    return _then(
+      _$UserSubscriptionModelImpl(
+        plan: null == plan
+            ? _value.plan
+            : plan // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        features: null == features
+            ? _value._features
+            : features // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
+  const _$UserSubscriptionModelImpl({
+    required this.plan,
+    required this.status,
+    required final List<String> features,
+  }) : _features = features;
+
+  factory _$UserSubscriptionModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserSubscriptionModelImplFromJson(json);
+
+  @override
+  final String plan;
+  @override
+  final String status;
+  final List<String> _features;
+  @override
+  List<String> get features {
+    if (_features is EqualUnmodifiableListView) return _features;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_features);
+  }
+
+  @override
+  String toString() {
+    return 'UserSubscriptionModel(plan: $plan, status: $status, features: $features)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserSubscriptionModelImpl &&
+            (identical(other.plan, plan) || other.plan == plan) &&
+            (identical(other.status, status) || other.status == status) &&
+            const DeepCollectionEquality().equals(other._features, _features));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    plan,
+    status,
+    const DeepCollectionEquality().hash(_features),
+  );
+
+  /// Create a copy of UserSubscriptionModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserSubscriptionModelImplCopyWith<_$UserSubscriptionModelImpl>
+  get copyWith =>
+      __$$UserSubscriptionModelImplCopyWithImpl<_$UserSubscriptionModelImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UserSubscriptionModelImplToJson(this);
+  }
+}
+
+abstract class _UserSubscriptionModel implements UserSubscriptionModel {
+  const factory _UserSubscriptionModel({
+    required final String plan,
+    required final String status,
+    required final List<String> features,
+  }) = _$UserSubscriptionModelImpl;
+
+  factory _UserSubscriptionModel.fromJson(Map<String, dynamic> json) =
+      _$UserSubscriptionModelImpl.fromJson;
+
+  @override
+  String get plan;
+  @override
+  String get status;
+  @override
+  List<String> get features;
+
+  /// Create a copy of UserSubscriptionModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UserSubscriptionModelImplCopyWith<_$UserSubscriptionModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+UserPasswordSettingsModel _$UserPasswordSettingsModelFromJson(
+  Map<String, dynamic> json,
+) {
+  return _UserPasswordSettingsModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$UserPasswordSettingsModel {
+  SecretPasswordLocations get location => throw _privateConstructorUsedError;
+  UserPasswordSettingRole get role => throw _privateConstructorUsedError;
+
+  /// Serializes this UserPasswordSettingsModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of UserPasswordSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $UserPasswordSettingsModelCopyWith<UserPasswordSettingsModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $UserPasswordSettingsModelCopyWith<$Res> {
+  factory $UserPasswordSettingsModelCopyWith(
+    UserPasswordSettingsModel value,
+    $Res Function(UserPasswordSettingsModel) then,
+  ) = _$UserPasswordSettingsModelCopyWithImpl<$Res, UserPasswordSettingsModel>;
+  @useResult
+  $Res call({SecretPasswordLocations location, UserPasswordSettingRole role});
+}
+
+/// @nodoc
+class _$UserPasswordSettingsModelCopyWithImpl<
+  $Res,
+  $Val extends UserPasswordSettingsModel
+>
+    implements $UserPasswordSettingsModelCopyWith<$Res> {
+  _$UserPasswordSettingsModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of UserPasswordSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? location = null, Object? role = null}) {
+    return _then(
+      _value.copyWith(
+            location: null == location
+                ? _value.location
+                : location // ignore: cast_nullable_to_non_nullable
+                      as SecretPasswordLocations,
+            role: null == role
+                ? _value.role
+                : role // ignore: cast_nullable_to_non_nullable
+                      as UserPasswordSettingRole,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$UserPasswordSettingsModelImplCopyWith<$Res>
+    implements $UserPasswordSettingsModelCopyWith<$Res> {
+  factory _$$UserPasswordSettingsModelImplCopyWith(
+    _$UserPasswordSettingsModelImpl value,
+    $Res Function(_$UserPasswordSettingsModelImpl) then,
+  ) = __$$UserPasswordSettingsModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({SecretPasswordLocations location, UserPasswordSettingRole role});
+}
+
+/// @nodoc
+class __$$UserPasswordSettingsModelImplCopyWithImpl<$Res>
+    extends
+        _$UserPasswordSettingsModelCopyWithImpl<
+          $Res,
+          _$UserPasswordSettingsModelImpl
+        >
+    implements _$$UserPasswordSettingsModelImplCopyWith<$Res> {
+  __$$UserPasswordSettingsModelImplCopyWithImpl(
+    _$UserPasswordSettingsModelImpl _value,
+    $Res Function(_$UserPasswordSettingsModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of UserPasswordSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? location = null, Object? role = null}) {
+    return _then(
+      _$UserPasswordSettingsModelImpl(
+        location: null == location
+            ? _value.location
+            : location // ignore: cast_nullable_to_non_nullable
+                  as SecretPasswordLocations,
+        role: null == role
+            ? _value.role
+            : role // ignore: cast_nullable_to_non_nullable
+                  as UserPasswordSettingRole,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UserPasswordSettingsModelImpl implements _UserPasswordSettingsModel {
+  const _$UserPasswordSettingsModelImpl({
+    required this.location,
+    required this.role,
+  });
+
+  factory _$UserPasswordSettingsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserPasswordSettingsModelImplFromJson(json);
+
+  @override
+  final SecretPasswordLocations location;
+  @override
+  final UserPasswordSettingRole role;
+
+  @override
+  String toString() {
+    return 'UserPasswordSettingsModel(location: $location, role: $role)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserPasswordSettingsModelImpl &&
+            (identical(other.location, location) ||
+                other.location == location) &&
+            (identical(other.role, role) || other.role == role));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, location, role);
+
+  /// Create a copy of UserPasswordSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserPasswordSettingsModelImplCopyWith<_$UserPasswordSettingsModelImpl>
+  get copyWith =>
+      __$$UserPasswordSettingsModelImplCopyWithImpl<
+        _$UserPasswordSettingsModelImpl
+      >(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UserPasswordSettingsModelImplToJson(this);
+  }
+}
+
+abstract class _UserPasswordSettingsModel implements UserPasswordSettingsModel {
+  const factory _UserPasswordSettingsModel({
+    required final SecretPasswordLocations location,
+    required final UserPasswordSettingRole role,
+  }) = _$UserPasswordSettingsModelImpl;
+
+  factory _UserPasswordSettingsModel.fromJson(Map<String, dynamic> json) =
+      _$UserPasswordSettingsModelImpl.fromJson;
+
+  @override
+  SecretPasswordLocations get location;
+  @override
+  UserPasswordSettingRole get role;
+
+  /// Create a copy of UserPasswordSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UserPasswordSettingsModelImplCopyWith<_$UserPasswordSettingsModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

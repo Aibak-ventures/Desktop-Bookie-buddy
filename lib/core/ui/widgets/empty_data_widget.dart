@@ -9,13 +9,13 @@ class EmptyDataWidget extends StatelessWidget {
   final bool isShowIcon;
 
   const EmptyDataWidget({
-    Key? key,
+    super.key,
     required this.message,
     this.icon,
     this.isScrollable = false,
     this.height,
     this.isShowIcon = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -20,8 +20,7 @@ class CustomizationExpansionTile extends StatelessWidget {
   final bool isButtonVisible;
   final Widget? trailingWidget;
   @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
+  Widget build(BuildContext context) => ExpansionTile(
       title: Text(
         expansionTitle ?? 'Customisation',
         style: TextStyle(
@@ -37,8 +36,7 @@ class CustomizationExpansionTile extends StatelessWidget {
           Padding(
             padding: (20, 10).padding,
             child: Column(
-              children: measurements.map((e) {
-                return Row(
+              children: measurements.map((e) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Expanded(
@@ -59,8 +57,7 @@ class CustomizationExpansionTile extends StatelessWidget {
                       ),
                     ),
                   ],
-                );
-              }).toList(),
+                )).toList(),
             ),
           ),
         if (isButtonVisible)
@@ -76,5 +73,4 @@ class CustomizationExpansionTile extends StatelessWidget {
         if (trailingWidget != null) trailingWidget!,
       ],
     );
-  }
 }

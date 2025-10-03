@@ -10,7 +10,8 @@ class AuthRepository {
     print('🔥 AuthRepository: loginUser called with phone: $phone');
     try {
       print('🔥 AuthRepository: About to call AuthService.userLogin');
-      await AuthService.userLogin(phone, password);
+      await AuthService.userLogin(
+        phone, password);
       print('🔥 AuthRepository: AuthService.userLogin completed successfully');
     } catch (e) {
       print('🔥 AuthRepository: AuthService.userLogin failed with error: $e');

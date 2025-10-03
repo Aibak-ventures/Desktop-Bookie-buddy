@@ -825,13 +825,13 @@
     },
     {
       "name": "share_plus",
-      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus-10.1.4",
+      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus-11.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "share_plus_platform_interface",
-      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus_platform_interface-5.0.2",
+      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus_platform_interface-6.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },

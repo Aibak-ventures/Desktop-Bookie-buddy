@@ -17,15 +17,12 @@ class PriceFilterToolTipWidget extends StatelessWidget {
   final VoidCallback? onCloseTap;
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+  Widget build(BuildContext context) => ValueListenableBuilder(
       valueListenable: isPriceFilterEnabled,
-      builder: (context, isPriceEnabled, child) {
-        return isPriceEnabled
+      builder: (context, isPriceEnabled, child) => isPriceEnabled
             ? ValueListenableBuilder(
                 valueListenable: priceRangeNotifier,
-                builder: (context, pricerRange, child) {
-                  return Container(
+                builder: (context, pricerRange, child) => Container(
                     margin:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     padding:
@@ -72,10 +69,7 @@ class PriceFilterToolTipWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                  );
-                })
-            : const SizedBox.shrink();
-      },
+                  ))
+            : const SizedBox.shrink(),
     );
-  }
 }

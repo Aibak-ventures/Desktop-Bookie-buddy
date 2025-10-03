@@ -7,11 +7,11 @@ enum CheckAvailabilityStatus {
   String get name {
     switch (this) {
       case CheckAvailabilityStatus.available:
-        return "Available";
+        return 'Available';
       case CheckAvailabilityStatus.partiallyAvailable:
-        return "Partially Available";
+        return 'Partially Available';
       case CheckAvailabilityStatus.unavailable:
-        return "Unavailable";
+        return 'Unavailable';
     }
   }
 
@@ -23,11 +23,11 @@ enum CheckAvailabilityStatus {
   String toValue() {
     switch (this) {
       case CheckAvailabilityStatus.available:
-        return "available";
+        return 'available';
       case CheckAvailabilityStatus.partiallyAvailable:
-        return "partial_unavailable";
+        return 'partial_unavailable';
       case CheckAvailabilityStatus.unavailable:
-        return "unavailable";
+        return 'unavailable';
     }
   }
 
@@ -42,11 +42,11 @@ enum CheckAvailabilityStatus {
   /// Returns [CheckAvailabilityStatus.available] if the given string is not recognized.
   static CheckAvailabilityStatus fromString(String status) {
     switch (status.toLowerCase()) {
-      case "available":
+      case 'available':
         return CheckAvailabilityStatus.available;
-      case "partial_unavailable":
+      case 'partial_unavailable':
         return CheckAvailabilityStatus.partiallyAvailable;
-      case "unavailable":
+      case 'unavailable':
         return CheckAvailabilityStatus.unavailable;
       default:
         return CheckAvailabilityStatus.available;

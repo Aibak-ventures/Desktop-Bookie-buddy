@@ -1,54 +1,36 @@
-import 'dart:developer';
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+// import 'dart:developer';
+// import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
+// import 'package:bookie_buddy_web/core/api/api_paths.dart';
+// import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 
-class BookingSearchService {
-  Future<PaginationModel<BookingsModel>> searchAllBookings(
-    String query, {
-    required int page,
-    required String status,
-    String? startDate,
-    String? endDate,
-  }) async {
-    try {
-      final response = await DioClient.dio.get(
-        '/api/v2/bookings/bookings/',
-        queryParameters: {
-          'search': query,
-          'page': page,
-          'status': status,
-          if (startDate != null) 'start_date': startDate,
-          if (endDate != null) 'end_date': endDate,
-        },
-      );
+// class BookingSearchService {
+//   Future<CustomResponseModel> searchAllBookings(
+//     String query, {
+//     required int page,
+//     required String status,
+//     String? startDate,
+//     String? endDate,
+//   }) async {
+//     try {
+//       final response = await DioClient.dio.get(
+//         ApiPaths.bookings.bookingsV3,
+//         queryParameters: {
+//           'search': query,
+//           'page': page,
+//           'status': status,
+//           if (startDate != null) 'start_date': startDate,
+//           if (endDate != null) 'end_date': endDate,
+//         },
+//       );
+//       log(response.realUri.toString());
 
-      log('status code: ${response.statusCode}, data: ${response.data}');
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final bookings = (data['results']['bookings'] as List)
-            .map((e) => BookingsModel.fromJson(e))
-            .toList();
-        log('count: ${data['count']}, next: ${data['next']}');
-        return PaginationModel<BookingsModel>(
-          data: bookings,
-          totalData: data['count'],
-          nextPageUrl: data['next'],
-        );
-      } else if (response.statusCode == 404) {
-        return PaginationModel<BookingsModel>(
-          data: [],
-          totalData: 0,
-          nextPageUrl: null,
-        );
-      } else {
-        throw 'Failed to fetch search results';
-      }
-    } catch (e, stackTrace) {
-      log(e.toString(), stackTrace: stackTrace);
-      rethrow;
-    }
-  }
+//       // log('search bookings response: ${response.realUri.toString()}, data: ${response.data}');
+//       return CustomResponseModel.fromJson(response.data);
+//     } catch (e, stackTrace) {
+//       log('Error searching bookings: $e', stackTrace: stackTrace);
+//       rethrow;
+//     }
+//   }
 
   // Future<List<BookingsModel>> searchUpcomingBookings(String query) async {
   //   try {
@@ -101,4 +83,4 @@ class BookingSearchService {
   //     rethrow;
   //   }
   // }
-}
+// }

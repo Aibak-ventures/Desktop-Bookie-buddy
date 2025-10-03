@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CustomSearchField extends StatelessWidget {
   CustomSearchField({
+    super.key,
     required this.searchController,
     required this.onChanged,
     required this.hintText,
@@ -14,7 +15,7 @@ class CustomSearchField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.suffixFunction,
-    super.key,
+    this.focusNode,
   });
 
   final TextEditingController searchController;
@@ -27,16 +28,17 @@ class CustomSearchField extends StatelessWidget {
   )? onChanged;
   final void Function()? suffixFunction;
   final bool isSuffixHidden;
+  final FocusNode? focusNode;
 
-  final debouncer = Debouncer(delay: const Duration(milliseconds: 500));
+  final debouncer = Debouncer();
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: padding,
       child: TextField(
         controller: searchController,
         onTapOutside: (_) => context.hideKeyboard(),
+        focusNode: focusNode,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: hintText,
@@ -83,5 +85,4 @@ class CustomSearchField extends StatelessWidget {
         },
       ),
     );
-  }
 }

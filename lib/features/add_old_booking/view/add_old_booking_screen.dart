@@ -1,5 +1,7 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -8,7 +10,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/client_select_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_client/client_bloc.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view/widgets/add_old_booking_dates_section.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view/widgets/add_old_booking_products_section.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view_model/bloc_add_old_bookings/add_old_bookings_bloc.dart';
@@ -209,7 +211,7 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
                               0,
                               (pe, e) => pe + e.amount,
                             );
-                            final bookingRequest = AddBookingModel(
+                            final bookingRequest = RequestBookingModel(
                               bookedDate: bookedDateController.text.isEmpty
                                   ? null
                                   : bookedDateController.text.formatToUiDate(),
@@ -218,18 +220,16 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
                               returnDate:
                                   returnDateController.text.formatToUiDate(),
                               clientId: clientId,
-                              address: placeController.text.trim(),
-                              description:
-                                  descriptionController.text.trim().isEmpty
+                            address: placeController.text.trim(),
+                                  description:
+                                      descriptionController.text.trim().isEmpty
                                       ? null
                                       : descriptionController.text.trim(),
-                              products: selectedProductsNotifier.value,
-                              deliveryStatus:
-                                  DeliveryStatus.delivered.toValue(),
-                              purchaseMode: PurchaseMode.normal.toValue(),
-                              paymentMethod: PaymentMethod.cash.toValue(),
-                              bookingStatus: BookingStatus.completed.toValue(),
-                              advanceAmount: totalAmount,
+                                  products: selectedProductsNotifier.value,
+                                  deliveryStatus: DeliveryStatus.returned,
+                                  paymentMethod: PaymentMethod.cash,
+                                  bookingStatus: BookingStatus.completed,
+                                  advanceAmount: totalAmount,
                             );
 
                             context.read<AddOldBookingsBloc>().add(
@@ -263,7 +263,7 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
   Widget buildClientSection() {
     return Column(
       children: [
-        ClientSelectWidget(
+        ClientSelectWidget(isClientSearchEnabledNotifier: ValueNotifier(true),
           nameController: nameController,
           phone1Controller: phone1Controller,
           phone2Controller: phone2Controller,

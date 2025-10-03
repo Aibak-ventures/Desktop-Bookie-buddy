@@ -41,8 +41,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.textColor,
   });
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: SizedBox(
         width: width ?? context.mediaQueryWidth(0.85),
         height: height ?? context.mediaQueryHeight(0.06),
@@ -81,23 +80,18 @@ class CustomElevatedButton extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  ButtonStyle _buildButtonStyleNormal() {
-    return ElevatedButton.styleFrom(
+  ButtonStyle _buildButtonStyleNormal() => ElevatedButton.styleFrom(
       padding:
           padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
       backgroundColor: AppColors.purpleLight,
       elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: 5.radiusBorder,
-        side: BorderSide.none,
       ),
     );
-  }
 
-  ButtonStyle _buildButtonStyle() {
-    return ElevatedButton.styleFrom(
+  ButtonStyle _buildButtonStyle() => ElevatedButton.styleFrom(
       padding:
           padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
       backgroundColor: backgroundColor ?? AppColors.redLight.lighten(0.4),
@@ -109,10 +103,8 @@ class CustomElevatedButton extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildButtonContent(BuildContext context) {
-    return Text(
+  Widget _buildButtonContent(BuildContext context) => Text(
       isLoading ? loadingText : text,
       style: TextStyle(
         color: isNormal
@@ -122,5 +114,4 @@ class CustomElevatedButton extends StatelessWidget {
         fontWeight: FontWeight.w500,
       ),
     );
-  }
 }

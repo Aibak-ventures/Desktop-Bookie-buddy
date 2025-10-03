@@ -17,7 +17,7 @@ void showSearchTypeBottomSheet({
   required double minPrice,
   required ValueNotifier<double> maxPriceNotifier, // Changed to ValueNotifier
   required void Function(RangeValues range) onPriceChanged,
-  required ValueNotifier<bool> isPriceFilterEnabled, // New parameter
+  required ValueNotifier<bool> isPriceFilterEnabledNotifier, // New parameter
   required void Function(
     int type,
     RangeValues range,
@@ -25,16 +25,17 @@ void showSearchTypeBottomSheet({
   ) onApply,
 }) {
   final TextEditingController maxPriceController = TextEditingController();
-
+  final isPriceFilterEnabledWidgetNotifier =
+      ValueNotifier(isPriceFilterEnabledNotifier.value);
   showCustomBottomSheet(
     context,
-    initialChildSize: 0.8,
+    initialChildSize: 0.85,
     child: Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 10,
       children: [
         Text(
-          "Search & Filter",
+          'Search & Filter',
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
         ),
 
@@ -48,7 +49,7 @@ void showSearchTypeBottomSheet({
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Search Type",
+                  'Search Type',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -110,7 +111,7 @@ void showSearchTypeBottomSheet({
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Price Range",
+                    'Price Range',
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
@@ -118,20 +119,18 @@ void showSearchTypeBottomSheet({
                     ),
                   ),
                   ValueListenableBuilder<bool>(
-                    valueListenable: isPriceFilterEnabled,
-                    builder: (context, isEnabled, child) {
-                      return Switch(
+                    valueListenable: isPriceFilterEnabledWidgetNotifier,
+                    builder: (context, isEnabled, child) => Switch(
                         value: isEnabled,
                         onChanged: (value) {
-                          isPriceFilterEnabled.value = value;
+                          isPriceFilterEnabledWidgetNotifier.value = value;
                         },
-                        activeColor: AppColors.purple,
+                        activeThumbColor: AppColors.purple,
                         activeTrackColor:
                             AppColors.purple.withValues(alpha: 0.3),
                         inactiveThumbColor: AppColors.grey400,
                         inactiveTrackColor: AppColors.grey200,
-                      );
-                    },
+                      ),
                   ),
                 ],
               ),
@@ -140,9 +139,8 @@ void showSearchTypeBottomSheet({
 
               // Price Range Content (only shown when enabled)
               ValueListenableBuilder<bool>(
-                valueListenable: isPriceFilterEnabled,
-                builder: (context, isEnabled, child) {
-                  return AnimatedContainer(
+                valueListenable: isPriceFilterEnabledWidgetNotifier,
+                builder: (context, isEnabled, child) => AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     height: isEnabled ? null : 0,
                     child: isEnabled
@@ -154,7 +152,7 @@ void showSearchTypeBottomSheet({
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      "Maximum Price",
+                                      'Maximum Price',
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w500,
@@ -200,7 +198,7 @@ void showSearchTypeBottomSheet({
                                             border: InputBorder.none,
                                             contentPadding: EdgeInsets.zero,
                                             isDense: true,
-                                            prefixText: "₹",
+                                            prefixText: '₹',
                                             prefixStyle: TextStyle(
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -248,8 +246,7 @@ void showSearchTypeBottomSheet({
                               // Price Range Display
                               ValueListenableBuilder<RangeValues>(
                                 valueListenable: priceRange,
-                                builder: (context, range, child) {
-                                  return Row(
+                                builder: (context, range, child) => Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -277,7 +274,7 @@ void showSearchTypeBottomSheet({
                                           vertical: 4,
                                         ),
                                         child: Text(
-                                          "to",
+                                          'to',
                                           style: TextStyle(
                                             fontSize: 12.sp,
                                             color: AppColors.grey600,
@@ -303,8 +300,7 @@ void showSearchTypeBottomSheet({
                                         ),
                                       ),
                                     ],
-                                  );
-                                },
+                                  ),
                               ),
 
                               const SizedBox(height: 16),
@@ -312,11 +308,9 @@ void showSearchTypeBottomSheet({
                               // Price Range Slider
                               ValueListenableBuilder<RangeValues>(
                                 valueListenable: priceRange,
-                                builder: (context, range, child) {
-                                  return ValueListenableBuilder<double>(
+                                builder: (context, range, child) => ValueListenableBuilder<double>(
                                     valueListenable: maxPriceNotifier,
-                                    builder: (context, currentMaxPrice, child) {
-                                      return RangeSlider(
+                                    builder: (context, currentMaxPrice, child) => RangeSlider(
                                         values: range,
                                         min: minPrice,
                                         max: currentMaxPrice,
@@ -327,17 +321,14 @@ void showSearchTypeBottomSheet({
                                           priceRange.value = newRange;
                                           onPriceChanged(newRange);
                                         },
-                                      );
-                                    },
-                                  );
-                                },
+                                      ),
+                                  ),
                               ),
 
                               // Min-Max Price Labels
                               ValueListenableBuilder<double>(
                                 valueListenable: maxPriceNotifier,
-                                builder: (context, currentMaxPrice, child) {
-                                  return Row(
+                                builder: (context, currentMaxPrice, child) => Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -356,15 +347,14 @@ void showSearchTypeBottomSheet({
                                         ),
                                       ),
                                     ],
-                                  );
-                                },
+                                  ),
                               ),
 
                               const SizedBox(height: 16),
 
                               // Quick Price Filter Buttons
                               Text(
-                                "Quick Filters",
+                                'Quick Filters',
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
@@ -385,22 +375,19 @@ void showSearchTypeBottomSheet({
                                   return Wrap(
                                     spacing: 8,
                                     runSpacing: 8,
-                                    children: quickFilters.map((filter) {
-                                      return _buildQuickFilterChip(
+                                    children: quickFilters.map((filter) => _buildQuickFilterChip(
                                         filter['label'],
                                         filter['range'],
                                         priceRange,
                                         onPriceChanged,
-                                      );
-                                    }).toList(),
+                                      )).toList(),
                                   );
                                 },
                               ),
                             ],
                           )
                         : const SizedBox.shrink(),
-                  );
-                },
+                  ),
               ),
             ],
           ),
@@ -424,10 +411,10 @@ void showSearchTypeBottomSheet({
                     onPriceChanged(
                         RangeValues(minPrice, maxPriceNotifier.value));
                     // Reset price filter enabled state
-                    isPriceFilterEnabled.value = false;
+                    isPriceFilterEnabledWidgetNotifier.value = false;
                   },
                   child: Text(
-                    "Reset",
+                    'Reset',
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.black,
@@ -442,11 +429,11 @@ void showSearchTypeBottomSheet({
                     onApply(
                       selectedSearchTypeIndex.value,
                       priceRange.value,
-                      isPriceFilterEnabled.value,
+                      isPriceFilterEnabledWidgetNotifier.value,
                     );
                   },
                   child: Text(
-                    "Apply",
+                    'Apply',
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: Colors.white,
@@ -564,8 +551,7 @@ Widget _buildQuickFilterChip(
   RangeValues range,
   ValueNotifier<RangeValues> currentRange,
   void Function(RangeValues) onChanged,
-) {
-  return ValueListenableBuilder<RangeValues>(
+) => ValueListenableBuilder<RangeValues>(
     valueListenable: currentRange,
     builder: (context, current, child) {
       final isSelected =
@@ -596,4 +582,3 @@ Widget _buildQuickFilterChip(
       );
     },
   );
-}

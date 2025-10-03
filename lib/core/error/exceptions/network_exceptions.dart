@@ -6,14 +6,14 @@ sealed class NetworkException implements Exception {
 
 class FailedNetworkException extends NetworkException {
   FailedNetworkException([
-    super.message = "Network error",
+    super.message = 'Network error',
     super.errorCode,
   ]);
 }
 
 class ServerException extends NetworkException {
   ServerException([
-    super.message = "Server error",
+    super.message = 'Server error',
     super.errorCode,
   ]);
 }

@@ -23,8 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? trailingIconColor;
 
   @override
-  Widget build(BuildContext context) {
-    return AppBar(
+  Widget build(BuildContext context) => AppBar(
       backgroundColor: AppColors.white,
       elevation: 0,
       leading: leadingIcon != null
@@ -51,7 +50,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
       ],
     );
-  }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

@@ -12,7 +12,8 @@ part of 'product_info_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) {
   return _ProductInfoModel.fromJson(json);
@@ -57,25 +58,27 @@ mixin _$ProductInfoModel {
 /// @nodoc
 abstract class $ProductInfoModelCopyWith<$Res> {
   factory $ProductInfoModelCopyWith(
-          ProductInfoModel value, $Res Function(ProductInfoModel) then) =
-      _$ProductInfoModelCopyWithImpl<$Res, ProductInfoModel>;
+    ProductInfoModel value,
+    $Res Function(ProductInfoModel) then,
+  ) = _$ProductInfoModelCopyWithImpl<$Res, ProductInfoModel>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'id', readValue: _idCustomRead) int id,
-      @JsonKey(name: 'product_id') int? productId,
-      @JsonKey(name: 'variant_id') int? variantId,
-      @JsonKey(name: 'product_name') String name,
-      @JsonKey(name: 'product_thumbnail', defaultValue: '') String? image,
-      @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
-      MainServiceType? mainServiceType,
-      @JsonKey(name: 'variant_attribute') String? variantAttribute,
-      String? color,
-      String? category,
-      String? model,
-      int quantity,
-      @JsonKey(defaultValue: 0) int amount,
-      @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      List<MeasurementValueModel> measurements});
+  $Res call({
+    @JsonKey(name: 'id', readValue: _idCustomRead) int id,
+    @JsonKey(name: 'product_id') int? productId,
+    @JsonKey(name: 'variant_id') int? variantId,
+    @JsonKey(name: 'product_name') String name,
+    @JsonKey(name: 'product_thumbnail', defaultValue: '') String? image,
+    @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
+    MainServiceType? mainServiceType,
+    @JsonKey(name: 'variant_attribute') String? variantAttribute,
+    String? color,
+    String? category,
+    String? model,
+    int quantity,
+    @JsonKey(defaultValue: 0) int amount,
+    @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
+    List<MeasurementValueModel> measurements,
+  });
 }
 
 /// @nodoc
@@ -107,96 +110,102 @@ class _$ProductInfoModelCopyWithImpl<$Res, $Val extends ProductInfoModel>
     Object? amount = null,
     Object? measurements = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      productId: freezed == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      variantId: freezed == variantId
-          ? _value.variantId
-          : variantId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      image: freezed == image
-          ? _value.image
-          : image // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mainServiceType: freezed == mainServiceType
-          ? _value.mainServiceType
-          : mainServiceType // ignore: cast_nullable_to_non_nullable
-              as MainServiceType?,
-      variantAttribute: freezed == variantAttribute
-          ? _value.variantAttribute
-          : variantAttribute // ignore: cast_nullable_to_non_nullable
-              as String?,
-      color: freezed == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as String?,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-      model: freezed == model
-          ? _value.model
-          : model // ignore: cast_nullable_to_non_nullable
-              as String?,
-      quantity: null == quantity
-          ? _value.quantity
-          : quantity // ignore: cast_nullable_to_non_nullable
-              as int,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
-      measurements: null == measurements
-          ? _value.measurements
-          : measurements // ignore: cast_nullable_to_non_nullable
-              as List<MeasurementValueModel>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            productId: freezed == productId
+                ? _value.productId
+                : productId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            variantId: freezed == variantId
+                ? _value.variantId
+                : variantId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            image: freezed == image
+                ? _value.image
+                : image // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            mainServiceType: freezed == mainServiceType
+                ? _value.mainServiceType
+                : mainServiceType // ignore: cast_nullable_to_non_nullable
+                      as MainServiceType?,
+            variantAttribute: freezed == variantAttribute
+                ? _value.variantAttribute
+                : variantAttribute // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            color: freezed == color
+                ? _value.color
+                : color // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            category: freezed == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            model: freezed == model
+                ? _value.model
+                : model // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            quantity: null == quantity
+                ? _value.quantity
+                : quantity // ignore: cast_nullable_to_non_nullable
+                      as int,
+            amount: null == amount
+                ? _value.amount
+                : amount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            measurements: null == measurements
+                ? _value.measurements
+                : measurements // ignore: cast_nullable_to_non_nullable
+                      as List<MeasurementValueModel>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ProductInfoModelImplCopyWith<$Res>
     implements $ProductInfoModelCopyWith<$Res> {
-  factory _$$ProductInfoModelImplCopyWith(_$ProductInfoModelImpl value,
-          $Res Function(_$ProductInfoModelImpl) then) =
-      __$$ProductInfoModelImplCopyWithImpl<$Res>;
+  factory _$$ProductInfoModelImplCopyWith(
+    _$ProductInfoModelImpl value,
+    $Res Function(_$ProductInfoModelImpl) then,
+  ) = __$$ProductInfoModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'id', readValue: _idCustomRead) int id,
-      @JsonKey(name: 'product_id') int? productId,
-      @JsonKey(name: 'variant_id') int? variantId,
-      @JsonKey(name: 'product_name') String name,
-      @JsonKey(name: 'product_thumbnail', defaultValue: '') String? image,
-      @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
-      MainServiceType? mainServiceType,
-      @JsonKey(name: 'variant_attribute') String? variantAttribute,
-      String? color,
-      String? category,
-      String? model,
-      int quantity,
-      @JsonKey(defaultValue: 0) int amount,
-      @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      List<MeasurementValueModel> measurements});
+  $Res call({
+    @JsonKey(name: 'id', readValue: _idCustomRead) int id,
+    @JsonKey(name: 'product_id') int? productId,
+    @JsonKey(name: 'variant_id') int? variantId,
+    @JsonKey(name: 'product_name') String name,
+    @JsonKey(name: 'product_thumbnail', defaultValue: '') String? image,
+    @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
+    MainServiceType? mainServiceType,
+    @JsonKey(name: 'variant_attribute') String? variantAttribute,
+    String? color,
+    String? category,
+    String? model,
+    int quantity,
+    @JsonKey(defaultValue: 0) int amount,
+    @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
+    List<MeasurementValueModel> measurements,
+  });
 }
 
 /// @nodoc
 class __$$ProductInfoModelImplCopyWithImpl<$Res>
     extends _$ProductInfoModelCopyWithImpl<$Res, _$ProductInfoModelImpl>
     implements _$$ProductInfoModelImplCopyWith<$Res> {
-  __$$ProductInfoModelImplCopyWithImpl(_$ProductInfoModelImpl _value,
-      $Res Function(_$ProductInfoModelImpl) _then)
-      : super(_value, _then);
+  __$$ProductInfoModelImplCopyWithImpl(
+    _$ProductInfoModelImpl _value,
+    $Res Function(_$ProductInfoModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ProductInfoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -217,83 +226,85 @@ class __$$ProductInfoModelImplCopyWithImpl<$Res>
     Object? amount = null,
     Object? measurements = null,
   }) {
-    return _then(_$ProductInfoModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      productId: freezed == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      variantId: freezed == variantId
-          ? _value.variantId
-          : variantId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      image: freezed == image
-          ? _value.image
-          : image // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mainServiceType: freezed == mainServiceType
-          ? _value.mainServiceType
-          : mainServiceType // ignore: cast_nullable_to_non_nullable
-              as MainServiceType?,
-      variantAttribute: freezed == variantAttribute
-          ? _value.variantAttribute
-          : variantAttribute // ignore: cast_nullable_to_non_nullable
-              as String?,
-      color: freezed == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as String?,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-      model: freezed == model
-          ? _value.model
-          : model // ignore: cast_nullable_to_non_nullable
-              as String?,
-      quantity: null == quantity
-          ? _value.quantity
-          : quantity // ignore: cast_nullable_to_non_nullable
-              as int,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
-      measurements: null == measurements
-          ? _value._measurements
-          : measurements // ignore: cast_nullable_to_non_nullable
-              as List<MeasurementValueModel>,
-    ));
+    return _then(
+      _$ProductInfoModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        productId: freezed == productId
+            ? _value.productId
+            : productId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        variantId: freezed == variantId
+            ? _value.variantId
+            : variantId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        image: freezed == image
+            ? _value.image
+            : image // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        mainServiceType: freezed == mainServiceType
+            ? _value.mainServiceType
+            : mainServiceType // ignore: cast_nullable_to_non_nullable
+                  as MainServiceType?,
+        variantAttribute: freezed == variantAttribute
+            ? _value.variantAttribute
+            : variantAttribute // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        color: freezed == color
+            ? _value.color
+            : color // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        category: freezed == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        model: freezed == model
+            ? _value.model
+            : model // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        quantity: null == quantity
+            ? _value.quantity
+            : quantity // ignore: cast_nullable_to_non_nullable
+                  as int,
+        amount: null == amount
+            ? _value.amount
+            : amount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        measurements: null == measurements
+            ? _value._measurements
+            : measurements // ignore: cast_nullable_to_non_nullable
+                  as List<MeasurementValueModel>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ProductInfoModelImpl implements _ProductInfoModel {
-  const _$ProductInfoModelImpl(
-      {@JsonKey(name: 'id', readValue: _idCustomRead) required this.id,
-      @JsonKey(name: 'product_id') required this.productId,
-      @JsonKey(name: 'variant_id') required this.variantId,
-      @JsonKey(name: 'product_name') required this.name,
-      @JsonKey(name: 'product_thumbnail', defaultValue: '') required this.image,
-      @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
-      this.mainServiceType,
-      @JsonKey(name: 'variant_attribute') this.variantAttribute,
-      this.color,
-      this.category,
-      this.model,
-      required this.quantity,
-      @JsonKey(defaultValue: 0) required this.amount,
-      @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      final List<MeasurementValueModel> measurements = const []})
-      : _measurements = measurements;
+  const _$ProductInfoModelImpl({
+    @JsonKey(name: 'id', readValue: _idCustomRead) required this.id,
+    @JsonKey(name: 'product_id') required this.productId,
+    @JsonKey(name: 'variant_id') required this.variantId,
+    @JsonKey(name: 'product_name') required this.name,
+    @JsonKey(name: 'product_thumbnail', defaultValue: '') required this.image,
+    @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
+    this.mainServiceType,
+    @JsonKey(name: 'variant_attribute') this.variantAttribute,
+    this.color,
+    this.category,
+    this.model,
+    required this.quantity,
+    @JsonKey(defaultValue: 0) required this.amount,
+    @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
+    final List<MeasurementValueModel> measurements = const [],
+  }) : _measurements = measurements;
 
   factory _$ProductInfoModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductInfoModelImplFromJson(json);
@@ -367,27 +378,30 @@ class _$ProductInfoModelImpl implements _ProductInfoModel {
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
             (identical(other.amount, amount) || other.amount == amount) &&
-            const DeepCollectionEquality()
-                .equals(other._measurements, _measurements));
+            const DeepCollectionEquality().equals(
+              other._measurements,
+              _measurements,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      productId,
-      variantId,
-      name,
-      image,
-      mainServiceType,
-      variantAttribute,
-      color,
-      category,
-      model,
-      quantity,
-      amount,
-      const DeepCollectionEquality().hash(_measurements));
+    runtimeType,
+    id,
+    productId,
+    variantId,
+    name,
+    image,
+    mainServiceType,
+    variantAttribute,
+    color,
+    category,
+    model,
+    quantity,
+    amount,
+    const DeepCollectionEquality().hash(_measurements),
+  );
 
   /// Create a copy of ProductInfoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -396,34 +410,35 @@ class _$ProductInfoModelImpl implements _ProductInfoModel {
   @pragma('vm:prefer-inline')
   _$$ProductInfoModelImplCopyWith<_$ProductInfoModelImpl> get copyWith =>
       __$$ProductInfoModelImplCopyWithImpl<_$ProductInfoModelImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProductInfoModelImplToJson(
-      this,
-    );
+    return _$$ProductInfoModelImplToJson(this);
   }
 }
 
 abstract class _ProductInfoModel implements ProductInfoModel {
-  const factory _ProductInfoModel(
-      {@JsonKey(name: 'id', readValue: _idCustomRead) required final int id,
-      @JsonKey(name: 'product_id') required final int? productId,
-      @JsonKey(name: 'variant_id') required final int? variantId,
-      @JsonKey(name: 'product_name') required final String name,
-      @JsonKey(name: 'product_thumbnail', defaultValue: '')
-      required final String? image,
-      @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
-      final MainServiceType? mainServiceType,
-      @JsonKey(name: 'variant_attribute') final String? variantAttribute,
-      final String? color,
-      final String? category,
-      final String? model,
-      required final int quantity,
-      @JsonKey(defaultValue: 0) required final int amount,
-      @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      final List<MeasurementValueModel> measurements}) = _$ProductInfoModelImpl;
+  const factory _ProductInfoModel({
+    @JsonKey(name: 'id', readValue: _idCustomRead) required final int id,
+    @JsonKey(name: 'product_id') required final int? productId,
+    @JsonKey(name: 'variant_id') required final int? variantId,
+    @JsonKey(name: 'product_name') required final String name,
+    @JsonKey(name: 'product_thumbnail', defaultValue: '')
+    required final String? image,
+    @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
+    final MainServiceType? mainServiceType,
+    @JsonKey(name: 'variant_attribute') final String? variantAttribute,
+    final String? color,
+    final String? category,
+    final String? model,
+    required final int quantity,
+    @JsonKey(defaultValue: 0) required final int amount,
+    @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
+    final List<MeasurementValueModel> measurements,
+  }) = _$ProductInfoModelImpl;
 
   factory _ProductInfoModel.fromJson(Map<String, dynamic> json) =
       _$ProductInfoModelImpl.fromJson;

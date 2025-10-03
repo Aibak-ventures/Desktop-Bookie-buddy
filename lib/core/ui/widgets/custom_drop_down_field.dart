@@ -10,23 +10,26 @@ class CustomDropDownField<T> extends StatelessWidget {
   final T? selectedValue;
   final String hintText;
   final EdgeInsetsGeometry contentPadding;
-
+  final double? menuHeight;
+  final InputDecorationTheme? inputDecorationTheme;
   const CustomDropDownField({
+    super.key,
     required this.hintText,
     required this.onChanged,
     required this.items,
     this.prefixIcon,
     this.selectedValue,
-    super.key,
     this.contentPadding =
         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    this.menuHeight,
+    this.inputDecorationTheme,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return DropdownMenu<T>(
+  Widget build(BuildContext context) => DropdownMenu<T>(
       initialSelection: selectedValue,
       onSelected: onChanged,
+      menuHeight: menuHeight,
       hintText: hintText,
       leadingIcon: prefixIcon,
       width: double.infinity,
@@ -35,13 +38,12 @@ class CustomDropDownField<T> extends StatelessWidget {
         color: AppColors.grey600,
       ),
 
-      inputDecorationTheme:
+      inputDecorationTheme: inputDecorationTheme ??
           context.theme.dropdownMenuTheme.inputDecorationTheme?.copyWith(
-        contentPadding: contentPadding,
-      ),
+            contentPadding: contentPadding,
+          ),
       // alignmentOffset: Offset(context.screenWidth - 200, 0),
-      dropdownMenuEntries: items.map((item) {
-        return DropdownMenuEntry<T>(
+      dropdownMenuEntries: items.map((item) => DropdownMenuEntry<T>(
           value: item,
           label: item.toString(),
           style: ButtonStyle(
@@ -69,8 +71,6 @@ class CustomDropDownField<T> extends StatelessWidget {
               return Colors.transparent;
             }),
           ),
-        );
-      }).toList(),
+        )).toList(),
     );
-  }
 }

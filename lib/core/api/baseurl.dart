@@ -1,14 +1,21 @@
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+// ignore_for_file: avoid_redundant_argument_values
 
-// const String devBaseUrl = "https://dev.bookiebuddy.in";
-// const String prodBaseUrl = "https://flutter.bookiebuddy.in";
-// String baseUrl = "http://dev.bookiebuddy.in"; //development
+import 'package:flutter/foundation.dart' show kReleaseMode;
 
-// const String baseUrl = 'https://flutter.bookiebuddy.in'; //production
-// Force dev API for now since production tokens/setup might not be ready
-const String baseUrl = "https://dev.bookiebuddy.in";
+const String _devBaseUrl = 'https://dev.bookiebuddy.in';
+const String _prodBaseUrl = 'https://flutter.bookiebuddy.in';
 
-// When ready for production, use this:
-// const String baseUrl = kDebugMode
-//     ? (kIsWeb ? "https://dev.bookiebuddy.in" : "https://flutter.bookiebuddy.in") 
-//     : "https://flutter.bookiebuddy.in";
+// const baseUrl = _devBaseUrl; //development
+// const baseUrl = _prodBaseUrl; //production
+
+/// Compile-time switch: defaults to prod on release builds, dev on debug builds.
+/// Override explicitly with: --dart-define=PROD=true|false
+///
+///* Dev run (default): flutter run
+///* Dev run forced: flutter run --dart-define=PROD=false
+///* Prod-like debug run: flutter run --dart-define=PROD=true
+///* Release APK (prod default): flutter build apk --release
+///* Release APK (dev override): flutter build apk --release --dart-define=PROD=false
+const bool _isProd = bool.fromEnvironment('PROD', defaultValue: kReleaseMode);
+
+const String baseUrl = _isProd ? _prodBaseUrl : _devBaseUrl;

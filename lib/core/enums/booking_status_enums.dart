@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 enum DeliveryStatus {
   booked,
   readyToDeliver,
-  delivered;
+  delivered,
+  returned;
 
   /// Converts [DeliveryStatus] enum to a string label to display in the UI.
   String get name {
     switch (this) {
       case DeliveryStatus.booked:
-        return "Booked";
+        return 'Booked';
       case DeliveryStatus.readyToDeliver:
-        return "Ready to deliver";
+        return 'Ready to deliver';
       case DeliveryStatus.delivered:
-        return "Delivered";
+        return 'Delivered';
+      case DeliveryStatus.returned:
+        return 'Returned';
     }
   }
 
@@ -25,6 +28,8 @@ enum DeliveryStatus {
       case DeliveryStatus.readyToDeliver:
         return AppColors.aquamarineMedium;
       case DeliveryStatus.delivered:
+        return const Color.fromARGB(255, 0, 149, 255);
+      case DeliveryStatus.returned:
         return AppColors.purple;
     }
   }
@@ -40,18 +45,20 @@ enum DeliveryStatus {
   /// - "delivered"
   static DeliveryStatus fromString(String status) {
     switch (status.toLowerCase()) {
-      case "booked":
+      case 'booked':
         return DeliveryStatus.booked;
-      case "ready to deliver":
+      case 'ready to deliver':
         return DeliveryStatus.readyToDeliver;
-      case "delivered":
+      case 'delivered':
         return DeliveryStatus.delivered;
+      case 'returned':
+        return DeliveryStatus.returned;
       default:
         return DeliveryStatus.booked;
     }
   }
 
-  static String toJson(DeliveryStatus status) => status.toValue();
+  static String? toJson(DeliveryStatus? status) => status?.toValue();
 
   /// Converts the [DeliveryStatus] enum to its corresponding string value
   /// for use in API requests or data storage.
@@ -62,11 +69,13 @@ enum DeliveryStatus {
   String toValue() {
     switch (this) {
       case DeliveryStatus.booked:
-        return "booked";
+        return 'booked';
       case DeliveryStatus.readyToDeliver:
-        return "ready to deliver";
+        return 'ready to deliver';
       case DeliveryStatus.delivered:
-        return "delivered";
+        return 'delivered';
+      case DeliveryStatus.returned:
+        return 'returned';
     }
   }
 }
@@ -79,9 +88,9 @@ enum BookingStatus {
   String get name {
     switch (this) {
       case BookingStatus.upcoming:
-        return "Upcoming";
+        return 'Upcoming';
       case BookingStatus.completed:
-        return "Completed";
+        return 'Completed';
     }
   }
 
@@ -93,9 +102,9 @@ enum BookingStatus {
   String toValue() {
     switch (this) {
       case BookingStatus.upcoming:
-        return "upcoming";
+        return 'upcoming';
       case BookingStatus.completed:
-        return "completed";
+        return 'completed';
     }
   }
 
@@ -109,14 +118,37 @@ enum BookingStatus {
   /// Returns [BookingStatus.upcoming] if the given string is not recognized.
   static BookingStatus fromString(String status) {
     switch (status.toLowerCase()) {
-      case "upcoming":
+      case 'upcoming':
         return BookingStatus.upcoming;
-      case "completed":
+      case 'completed':
         return BookingStatus.completed;
       default:
         return BookingStatus.upcoming;
     }
   }
 
-  static String toJson(BookingStatus status) => status.toValue();
+  static String? toJson(BookingStatus? status) => status?.toValue();
+}
+
+enum LoadBookingType {
+  all,
+  upcoming,
+  completed,
+  past,
+  future;
+
+  String get value {
+    switch (this) {
+      case all:
+        return 'all';
+      case upcoming:
+        return 'upcoming';
+      case completed:
+        return 'completed';
+      case past:
+        return 'past';
+      case future:
+        return 'future';
+    }
+  }
 }

@@ -366,7 +366,7 @@
     },
     {
       "name": "share_plus",
-      "version": "10.1.4",
+      "version": "11.1.0",
       "dependencies": [
         "cross_file",
         "ffi",
@@ -1310,22 +1310,6 @@
       ]
     },
     {
-      "name": "url_launcher_platform_interface",
-      "version": "2.3.2",
-      "dependencies": [
-        "flutter",
-        "plugin_platform_interface"
-      ]
-    },
-    {
-      "name": "url_launcher_linux",
-      "version": "3.2.1",
-      "dependencies": [
-        "flutter",
-        "url_launcher_platform_interface"
-      ]
-    },
-    {
       "name": "url_launcher_windows",
       "version": "3.1.4",
       "dependencies": [
@@ -1344,16 +1328,24 @@
       ]
     },
     {
-      "name": "file",
-      "version": "7.0.1",
+      "name": "url_launcher_platform_interface",
+      "version": "2.3.2",
       "dependencies": [
-        "meta",
-        "path"
+        "flutter",
+        "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "url_launcher_linux",
+      "version": "3.2.1",
+      "dependencies": [
+        "flutter",
+        "url_launcher_platform_interface"
       ]
     },
     {
       "name": "share_plus_platform_interface",
-      "version": "5.0.2",
+      "version": "6.1.0",
       "dependencies": [
         "cross_file",
         "flutter",
@@ -1362,6 +1354,14 @@
         "path_provider",
         "plugin_platform_interface",
         "uuid"
+      ]
+    },
+    {
+      "name": "file",
+      "version": "7.0.1",
+      "dependencies": [
+        "meta",
+        "path"
       ]
     },
     {

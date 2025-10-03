@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/gender_type_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'measurement_value_model.freezed.dart';

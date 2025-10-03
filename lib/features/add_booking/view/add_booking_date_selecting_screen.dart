@@ -8,7 +8,6 @@ import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_product_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/calender_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';

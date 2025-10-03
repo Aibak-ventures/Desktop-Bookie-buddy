@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_icons.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
@@ -14,16 +14,15 @@ class ServiceCard extends StatelessWidget {
   final bool isGrid;
 
   const ServiceCard({
-    Key? key,
+    super.key,
     required this.serviceName,
     required this.onTap,
     required this.icon,
     this.isGrid = false,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: 24.paddingOnly(
         bottom: true,
       ),
@@ -75,10 +74,8 @@ class ServiceCard extends StatelessWidget {
         ],
       ).onTap(onTap),
     );
-  }
 
-  Text _buildName() {
-    return Text(
+  Text _buildName() => Text(
       serviceName,
       style: TextStyle(
         fontSize: 20.sp,
@@ -87,25 +84,20 @@ class ServiceCard extends StatelessWidget {
       softWrap: true,
       textAlign: TextAlign.center,
     );
-  }
 
-  Widget _buildIcon() {
-    return icon != null
+  Widget _buildIcon() => icon != null
         ? CustomNetworkImage(
             imageUrl: icon!,
             height: 100,
-            errorWidget: (context, url, error) {
-              return Image.asset(
-                AppIcons.product3d,
+            errorWidget: (context, url, error) => Image.asset(
+                AppAssets.product3d,
                 height: 100,
-              );
-            },
+              ),
           )
         : Image.asset(
-            AppIcons.product3d,
+            AppAssets.product3d,
             height: 100,
           );
-  }
 }
 
 class ServiceCardMini extends StatelessWidget {
@@ -119,8 +111,8 @@ class ServiceCardMini extends StatelessWidget {
     required this.onTap,
     required this.icon,
     this.isSelected = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -158,23 +150,20 @@ class ServiceCardMini extends StatelessWidget {
                     imageUrl: icon!,
                     height: iconHeight,
                     width: iconHeight,
-                    errorWidget: (context, url, error) {
-                      return Image.asset(
-                        AppIcons.product3d,
+                    errorWidget: (context, url, error) => Image.asset(
+                        AppAssets.product3d,
                         height: iconHeight,
                         width: iconHeight,
-                      );
-                    },
+                      ),
                   )
                 : Image.asset(
-                    AppIcons.product3d,
+                    AppAssets.product3d,
                     height: iconHeight,
                     width: iconHeight,
                   ),
             ShaderMask(
               blendMode: BlendMode.srcIn,
-              shaderCallback: (bounds) {
-                return LinearGradient(
+              shaderCallback: (bounds) => LinearGradient(
                   colors: isSelected
                       ? [
                           Colors.white,
@@ -186,8 +175,7 @@ class ServiceCardMini extends StatelessWidget {
                         ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                ).createShader(bounds);
-              },
+                ).createShader(bounds),
               child: Text(
                 serviceName,
                 style: TextStyle(

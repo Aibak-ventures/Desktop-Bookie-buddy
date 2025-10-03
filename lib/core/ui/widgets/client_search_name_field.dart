@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_shimmer_box.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_client/client_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
@@ -12,32 +13,34 @@ class ClientSearchNameField extends StatelessWidget {
   const ClientSearchNameField({
     super.key,
     required this.nameController,
-    required this.scrollController,
+    this.scrollController,
     this.onClear,
     this.hitText = 'Client Name',
+    this.isSearchEnabled = true,
+    this.focusNode,
   });
 
   final TextEditingController nameController;
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final VoidCallback? onClear;
   final String hitText;
+  final bool isSearchEnabled;
+  final FocusNode? focusNode;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ClientBloc, ClientState>(
-      builder: (context, state) {
-        return TypeAheadField<ClientModel>(
-          controller: nameController,
-          scrollController: scrollController,
-          hideOnSelect: true,
-          decorationBuilder: (context, child) {
-            return Container(
+  Widget build(BuildContext context) => BlocBuilder<ClientCubit, ClientState>(
+    builder: (context, state) => TypeAheadField<ClientModel>(
+      controller: nameController,
+      focusNode: focusNode,
+      scrollController: scrollController,
+      hideOnEmpty: !isSearchEnabled,
+      hideWithKeyboard: false,
+      decorationBuilder: (context, child) => isSearchEnabled
+          ? DecoratedBox(
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: 10.radiusBorder,
-                border: BoxBorder.all(
-                  color: AppColors.grey300,
-                ),
+                border: BoxBorder.all(color: AppColors.grey300),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.grey300,
@@ -48,69 +51,59 @@ class ClientSearchNameField extends StatelessWidget {
                 ],
               ),
               child: child,
-            );
-          },
-          builder: (context, controller, focusNode) {
-            return CustomTextField(
-              focusNode: focusNode,
-              controller: controller,
-              hintText: hitText,
-              keyboardType: TextInputType.name,
-              prefixIcon: const Icon(
-                Icons.person,
-              ),
-              suffixIcon: ValueListenableBuilder(
-                  valueListenable: controller,
-                  builder: (context, searchValue, child) {
-                    return searchValue.text.isEmpty
-                        ? const SizedBox.shrink()
-                        : IconButton(
-                            onPressed: () {
-                              controller.clear();
-                              context
-                                  .read<ClientBloc>()
-                                  .add(ClientEvent.clearSelected(onClear));
-                              // onClear?.call();
-                            },
-                            icon: const Icon(Icons.clear),
-                          );
-                  }),
-              validator: AppInputValidators.name,
-              onChanged: (value) {
-                if (!state.isLoading)
-                  context
-                      .read<ClientBloc>()
-                      .add(ClientEvent.searchQueryChanged(value));
-              },
-            );
-          },
-          itemBuilder: (context, suggestion) {
-            return ListTile(
-              title: Text(suggestion.name),
-              subtitle: Text(suggestion.phone1.toString()),
-            );
-          },
-          suggestionsCallback: (pattern) async {
-            // final state = context.read<ClientBloc>().state;
-            return state.suggestions;
-          },
-          onSelected: (client) {
-            context.read<ClientBloc>().add(ClientEvent.clientSelected(client));
-          },
-          emptyBuilder: (context) => const SizedBox(
-            height: 100,
-            child: Center(child: Text('No client found')),
-          ),
-          errorBuilder: (context, error) => SizedBox(
-            height: 100,
-            child: Center(child: Text(error.toString())),
-          ),
-          loadingBuilder: (context) => const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(),
-          ),
-        );
+            )
+          : const SizedBox.shrink(),
+      builder: (context, controller, focusNode) => CustomTextField(
+        focusNode: focusNode,
+        controller: controller,
+        hintText: hitText,
+        keyboardType: TextInputType.name,
+        textInputAction: TextInputAction.next,
+        prefixIcon: const Icon(Icons.person),
+        suffixIcon: ValueListenableBuilder(
+          valueListenable: controller,
+          builder: (context, searchValue, child) => searchValue.text.isEmpty
+              ? const SizedBox.shrink()
+              : IconButton(
+                  onPressed: () {
+                    controller.clear();
+                    context.read<ClientCubit>().clearSelected(onClear);
+                  },
+                  icon: const Icon(Icons.clear),
+                ),
+        ),
+        validator: AppInputValidators.name,
+      ),
+      itemBuilder: (context, client) => ListTile(
+        title: Text(client.name),
+        subtitle: Text(client.phone1.toString()),
+      ),
+      suggestionsCallback: (query) async {
+        if (isSearchEnabled)
+          return context.read<ClientCubit>().searchClient(query);
+        return null;
       },
-    );
-  }
+      onSelected: (client) {
+        context.read<ClientCubit>().selectClient(client);
+      },
+      emptyBuilder: (context) => const SizedBox(
+        height: 100,
+        child: Center(child: Text('No client found')),
+      ),
+      errorBuilder: (context, error) =>
+          SizedBox(height: 100, child: Center(child: Text(error.toString()))),
+      loadingBuilder: (context) => ListView.builder(
+        itemCount: 4,
+        shrinkWrap: true,
+        itemBuilder: (context, index) => ListTile(
+          title: Row(
+            children: [CustomShimmerBox(width: 0.6.widthR, height: 20)],
+          ),
+          subtitle: Row(
+            children: [CustomShimmerBox(width: 0.5.widthR, height: 15)],
+          ),
+        ),
+      ),
+    ),
+  );
 }

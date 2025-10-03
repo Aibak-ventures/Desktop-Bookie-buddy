@@ -39,8 +39,7 @@ Future<int?> showVariantSelectionDialog({
                   ),
                 ),
               if (mainServiceType.isDress && variants.length > 1)
-                StatefulBuilder(builder: (context, setState) {
-                  return Column(
+                StatefulBuilder(builder: (context, setState) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
@@ -101,8 +100,7 @@ Future<int?> showVariantSelectionDialog({
                         ),
                       ),
                     ],
-                  );
-                }),
+                  )),
               Text(
                 'Are you sure you want to select this ${isMultiVariant ? 'variant' : 'product'}?',
                 textAlign: !isMultiVariant ? TextAlign.start : TextAlign.center,

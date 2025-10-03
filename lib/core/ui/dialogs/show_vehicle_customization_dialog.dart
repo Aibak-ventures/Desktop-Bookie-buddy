@@ -15,22 +15,24 @@ Future<MeasurementValueModel?> showVehicleCustomizationDialog(
       text: initialValue?.value.replaceAll('Km', '').trim());
   return showDialog<MeasurementValueModel>(
     context: context,
-    builder: (dialogCtx) {
-      return AlertDialog(
+    builder: (dialogCtx) => AlertDialog(
         title: const Text('Add Details'),
-        content: Row(
-          children: [
-            Expanded(
-              child: CustomTextField(
-                controller: controller,
-                hintText: 'Eg: 1000 or 2800',
-                validator: AppInputValidators.numberOnly,
-                keyboardType: TextInputType.number,
+        content: SizedBox(
+          width: context.isMobile ? null : 0.5.widthR,
+          child: Row(
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  controller: controller,
+                  hintText: 'Eg: 1000 or 2800',
+                  validator: AppInputValidators.numberOnly,
+                  keyboardType: TextInputType.number,
+                ),
               ),
-            ),
-            16.width,
-            const Text('Km'),
-          ],
+              16.width,
+              const Text('Km'),
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -59,7 +61,6 @@ Future<MeasurementValueModel?> showVehicleCustomizationDialog(
             },
           ),
         ],
-      );
-    },
+      ),
   );
 }

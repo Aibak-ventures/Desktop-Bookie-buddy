@@ -12,7 +12,8 @@ part of 'product_selected_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ProductSelectedModel _$ProductSelectedModelFromJson(Map<String, dynamic> json) {
   return _ProductSelectedModel.fromJson(json);
@@ -38,22 +39,26 @@ mixin _$ProductSelectedModel {
 
 /// @nodoc
 abstract class $ProductSelectedModelCopyWith<$Res> {
-  factory $ProductSelectedModelCopyWith(ProductSelectedModel value,
-          $Res Function(ProductSelectedModel) then) =
-      _$ProductSelectedModelCopyWithImpl<$Res, ProductSelectedModel>;
+  factory $ProductSelectedModelCopyWith(
+    ProductSelectedModel value,
+    $Res Function(ProductSelectedModel) then,
+  ) = _$ProductSelectedModelCopyWithImpl<$Res, ProductSelectedModel>;
   @useResult
-  $Res call(
-      {ProductInfoModel variant,
-      int amount,
-      List<MeasurementValueModel> measurements,
-      int quantity});
+  $Res call({
+    ProductInfoModel variant,
+    int amount,
+    List<MeasurementValueModel> measurements,
+    int quantity,
+  });
 
   $ProductInfoModelCopyWith<$Res> get variant;
 }
 
 /// @nodoc
-class _$ProductSelectedModelCopyWithImpl<$Res,
-        $Val extends ProductSelectedModel>
+class _$ProductSelectedModelCopyWithImpl<
+  $Res,
+  $Val extends ProductSelectedModel
+>
     implements $ProductSelectedModelCopyWith<$Res> {
   _$ProductSelectedModelCopyWithImpl(this._value, this._then);
 
@@ -72,24 +77,27 @@ class _$ProductSelectedModelCopyWithImpl<$Res,
     Object? measurements = null,
     Object? quantity = null,
   }) {
-    return _then(_value.copyWith(
-      variant: null == variant
-          ? _value.variant
-          : variant // ignore: cast_nullable_to_non_nullable
-              as ProductInfoModel,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
-      measurements: null == measurements
-          ? _value.measurements
-          : measurements // ignore: cast_nullable_to_non_nullable
-              as List<MeasurementValueModel>,
-      quantity: null == quantity
-          ? _value.quantity
-          : quantity // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            variant: null == variant
+                ? _value.variant
+                : variant // ignore: cast_nullable_to_non_nullable
+                      as ProductInfoModel,
+            amount: null == amount
+                ? _value.amount
+                : amount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            measurements: null == measurements
+                ? _value.measurements
+                : measurements // ignore: cast_nullable_to_non_nullable
+                      as List<MeasurementValueModel>,
+            quantity: null == quantity
+                ? _value.quantity
+                : quantity // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of ProductSelectedModel
@@ -106,16 +114,18 @@ class _$ProductSelectedModelCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$ProductSelectedModelImplCopyWith<$Res>
     implements $ProductSelectedModelCopyWith<$Res> {
-  factory _$$ProductSelectedModelImplCopyWith(_$ProductSelectedModelImpl value,
-          $Res Function(_$ProductSelectedModelImpl) then) =
-      __$$ProductSelectedModelImplCopyWithImpl<$Res>;
+  factory _$$ProductSelectedModelImplCopyWith(
+    _$ProductSelectedModelImpl value,
+    $Res Function(_$ProductSelectedModelImpl) then,
+  ) = __$$ProductSelectedModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {ProductInfoModel variant,
-      int amount,
-      List<MeasurementValueModel> measurements,
-      int quantity});
+  $Res call({
+    ProductInfoModel variant,
+    int amount,
+    List<MeasurementValueModel> measurements,
+    int quantity,
+  });
 
   @override
   $ProductInfoModelCopyWith<$Res> get variant;
@@ -125,9 +135,10 @@ abstract class _$$ProductSelectedModelImplCopyWith<$Res>
 class __$$ProductSelectedModelImplCopyWithImpl<$Res>
     extends _$ProductSelectedModelCopyWithImpl<$Res, _$ProductSelectedModelImpl>
     implements _$$ProductSelectedModelImplCopyWith<$Res> {
-  __$$ProductSelectedModelImplCopyWithImpl(_$ProductSelectedModelImpl _value,
-      $Res Function(_$ProductSelectedModelImpl) _then)
-      : super(_value, _then);
+  __$$ProductSelectedModelImplCopyWithImpl(
+    _$ProductSelectedModelImpl _value,
+    $Res Function(_$ProductSelectedModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ProductSelectedModel
   /// with the given fields replaced by the non-null parameter values.
@@ -139,36 +150,38 @@ class __$$ProductSelectedModelImplCopyWithImpl<$Res>
     Object? measurements = null,
     Object? quantity = null,
   }) {
-    return _then(_$ProductSelectedModelImpl(
-      variant: null == variant
-          ? _value.variant
-          : variant // ignore: cast_nullable_to_non_nullable
-              as ProductInfoModel,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
-      measurements: null == measurements
-          ? _value._measurements
-          : measurements // ignore: cast_nullable_to_non_nullable
-              as List<MeasurementValueModel>,
-      quantity: null == quantity
-          ? _value.quantity
-          : quantity // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ProductSelectedModelImpl(
+        variant: null == variant
+            ? _value.variant
+            : variant // ignore: cast_nullable_to_non_nullable
+                  as ProductInfoModel,
+        amount: null == amount
+            ? _value.amount
+            : amount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        measurements: null == measurements
+            ? _value._measurements
+            : measurements // ignore: cast_nullable_to_non_nullable
+                  as List<MeasurementValueModel>,
+        quantity: null == quantity
+            ? _value.quantity
+            : quantity // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ProductSelectedModelImpl implements _ProductSelectedModel {
-  const _$ProductSelectedModelImpl(
-      {required this.variant,
-      required this.amount,
-      final List<MeasurementValueModel> measurements = const [],
-      required this.quantity})
-      : _measurements = measurements;
+  const _$ProductSelectedModelImpl({
+    required this.variant,
+    required this.amount,
+    final List<MeasurementValueModel> measurements = const [],
+    required this.quantity,
+  }) : _measurements = measurements;
 
   factory _$ProductSelectedModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductSelectedModelImplFromJson(json);
@@ -201,16 +214,23 @@ class _$ProductSelectedModelImpl implements _ProductSelectedModel {
             other is _$ProductSelectedModelImpl &&
             (identical(other.variant, variant) || other.variant == variant) &&
             (identical(other.amount, amount) || other.amount == amount) &&
-            const DeepCollectionEquality()
-                .equals(other._measurements, _measurements) &&
+            const DeepCollectionEquality().equals(
+              other._measurements,
+              _measurements,
+            ) &&
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, variant, amount,
-      const DeepCollectionEquality().hash(_measurements), quantity);
+  int get hashCode => Object.hash(
+    runtimeType,
+    variant,
+    amount,
+    const DeepCollectionEquality().hash(_measurements),
+    quantity,
+  );
 
   /// Create a copy of ProductSelectedModel
   /// with the given fields replaced by the non-null parameter values.
@@ -218,24 +238,25 @@ class _$ProductSelectedModelImpl implements _ProductSelectedModel {
   @override
   @pragma('vm:prefer-inline')
   _$$ProductSelectedModelImplCopyWith<_$ProductSelectedModelImpl>
-      get copyWith =>
-          __$$ProductSelectedModelImplCopyWithImpl<_$ProductSelectedModelImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$ProductSelectedModelImplCopyWithImpl<_$ProductSelectedModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProductSelectedModelImplToJson(
-      this,
-    );
+    return _$$ProductSelectedModelImplToJson(this);
   }
 }
 
 abstract class _ProductSelectedModel implements ProductSelectedModel {
-  const factory _ProductSelectedModel(
-      {required final ProductInfoModel variant,
-      required final int amount,
-      final List<MeasurementValueModel> measurements,
-      required final int quantity}) = _$ProductSelectedModelImpl;
+  const factory _ProductSelectedModel({
+    required final ProductInfoModel variant,
+    required final int amount,
+    final List<MeasurementValueModel> measurements,
+    required final int quantity,
+  }) = _$ProductSelectedModelImpl;
 
   factory _ProductSelectedModel.fromJson(Map<String, dynamic> json) =
       _$ProductSelectedModelImpl.fromJson;
@@ -254,5 +275,5 @@ abstract class _ProductSelectedModel implements ProductSelectedModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProductSelectedModelImplCopyWith<_$ProductSelectedModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -4,6 +4,7 @@ enum MainServiceType {
   dress,
   vehicle,
   equipment,
+  gadgets,
   others;
 
   static MainServiceType fromString(String? serviceName) {
@@ -15,6 +16,8 @@ enum MainServiceType {
       return MainServiceType.vehicle;
     } else if (serviceType.contains('equipment')) {
       return MainServiceType.equipment;
+    } else if (serviceType.contains('gadget')) {
+      return MainServiceType.gadgets;
     } else {
       return MainServiceType.others;
     }
@@ -27,11 +30,12 @@ enum MainServiceType {
     if (serviceId == null) {
       return MainServiceType.others;
     }
-    final serviceName = services
-        .firstWhere((service) => service.id == serviceId)
-        .mainServiceName;
-
-    return fromString(serviceName);
+    for (final s in services) {
+      if (s.id == serviceId) {
+        return fromString(s.mainServiceName);
+      }
+    }
+    return MainServiceType.others;
   }
 }
 
@@ -39,5 +43,6 @@ extension MainServiceTypeX on MainServiceType? {
   bool get isDress => this == MainServiceType.dress;
   bool get isVehicle => this == MainServiceType.vehicle;
   bool get isEquipment => this == MainServiceType.equipment;
+  bool get isGadgets => this == MainServiceType.gadgets;
   bool get isOthers => this == MainServiceType.others;
 }

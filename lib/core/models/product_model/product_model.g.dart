@@ -11,8 +11,9 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       description: json['description'] as String?,
-      mainServiceType:
-          MainServiceType.fromString(json['main_service_name'] as String?),
+      mainServiceType: MainServiceType.fromString(
+        json['main_service_name'] as String?,
+      ),
       color: json['color'] as String?,
       model: json['model'] as String?,
       image: json['image'] as String?,
@@ -45,5 +46,6 @@ const _$MainServiceTypeEnumMap = {
   MainServiceType.dress: 'dress',
   MainServiceType.vehicle: 'vehicle',
   MainServiceType.equipment: 'equipment',
+  MainServiceType.gadgets: 'gadgets',
   MainServiceType.others: 'others',
 };

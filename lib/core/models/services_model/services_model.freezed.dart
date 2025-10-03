@@ -12,7 +12,8 @@ part of 'services_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ServicesModel _$ServicesModelFromJson(Map<String, dynamic> json) {
   return _ServicesModel.fromJson(json);
@@ -43,16 +44,18 @@ mixin _$ServicesModel {
 /// @nodoc
 abstract class $ServicesModelCopyWith<$Res> {
   factory $ServicesModelCopyWith(
-          ServicesModel value, $Res Function(ServicesModel) then) =
-      _$ServicesModelCopyWithImpl<$Res, ServicesModel>;
+    ServicesModel value,
+    $Res Function(ServicesModel) then,
+  ) = _$ServicesModelCopyWithImpl<$Res, ServicesModel>;
   @useResult
-  $Res call(
-      {int id,
-      @JsonKey(name: 'service_name') String name,
-      @JsonKey(name: 'description') String description,
-      @JsonKey(name: 'icon') String? icon,
-      @JsonKey(name: 'main_service_name', defaultValue: 'Other')
-      String mainServiceName});
+  $Res call({
+    int id,
+    @JsonKey(name: 'service_name') String name,
+    @JsonKey(name: 'description') String description,
+    @JsonKey(name: 'icon') String? icon,
+    @JsonKey(name: 'main_service_name', defaultValue: 'Other')
+    String mainServiceName,
+  });
 }
 
 /// @nodoc
@@ -76,28 +79,31 @@ class _$ServicesModelCopyWithImpl<$Res, $Val extends ServicesModel>
     Object? icon = freezed,
     Object? mainServiceName = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      icon: freezed == icon
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mainServiceName: null == mainServiceName
-          ? _value.mainServiceName
-          : mainServiceName // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            icon: freezed == icon
+                ? _value.icon
+                : icon // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            mainServiceName: null == mainServiceName
+                ? _value.mainServiceName
+                : mainServiceName // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -105,17 +111,19 @@ class _$ServicesModelCopyWithImpl<$Res, $Val extends ServicesModel>
 abstract class _$$ServicesModelImplCopyWith<$Res>
     implements $ServicesModelCopyWith<$Res> {
   factory _$$ServicesModelImplCopyWith(
-          _$ServicesModelImpl value, $Res Function(_$ServicesModelImpl) then) =
-      __$$ServicesModelImplCopyWithImpl<$Res>;
+    _$ServicesModelImpl value,
+    $Res Function(_$ServicesModelImpl) then,
+  ) = __$$ServicesModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      @JsonKey(name: 'service_name') String name,
-      @JsonKey(name: 'description') String description,
-      @JsonKey(name: 'icon') String? icon,
-      @JsonKey(name: 'main_service_name', defaultValue: 'Other')
-      String mainServiceName});
+  $Res call({
+    int id,
+    @JsonKey(name: 'service_name') String name,
+    @JsonKey(name: 'description') String description,
+    @JsonKey(name: 'icon') String? icon,
+    @JsonKey(name: 'main_service_name', defaultValue: 'Other')
+    String mainServiceName,
+  });
 }
 
 /// @nodoc
@@ -123,8 +131,9 @@ class __$$ServicesModelImplCopyWithImpl<$Res>
     extends _$ServicesModelCopyWithImpl<$Res, _$ServicesModelImpl>
     implements _$$ServicesModelImplCopyWith<$Res> {
   __$$ServicesModelImplCopyWithImpl(
-      _$ServicesModelImpl _value, $Res Function(_$ServicesModelImpl) _then)
-      : super(_value, _then);
+    _$ServicesModelImpl _value,
+    $Res Function(_$ServicesModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ServicesModel
   /// with the given fields replaced by the non-null parameter values.
@@ -137,41 +146,44 @@ class __$$ServicesModelImplCopyWithImpl<$Res>
     Object? icon = freezed,
     Object? mainServiceName = null,
   }) {
-    return _then(_$ServicesModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      icon: freezed == icon
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mainServiceName: null == mainServiceName
-          ? _value.mainServiceName
-          : mainServiceName // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$ServicesModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        icon: freezed == icon
+            ? _value.icon
+            : icon // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        mainServiceName: null == mainServiceName
+            ? _value.mainServiceName
+            : mainServiceName // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ServicesModelImpl implements _ServicesModel {
-  _$ServicesModelImpl(
-      {required this.id,
-      @JsonKey(name: 'service_name') required this.name,
-      @JsonKey(name: 'description') required this.description,
-      @JsonKey(name: 'icon') this.icon,
-      @JsonKey(name: 'main_service_name', defaultValue: 'Other')
-      required this.mainServiceName});
+  _$ServicesModelImpl({
+    required this.id,
+    @JsonKey(name: 'service_name') required this.name,
+    @JsonKey(name: 'description') required this.description,
+    @JsonKey(name: 'icon') this.icon,
+    @JsonKey(name: 'main_service_name', defaultValue: 'Other')
+    required this.mainServiceName,
+  });
 
   factory _$ServicesModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ServicesModelImplFromJson(json);
@@ -225,20 +237,19 @@ class _$ServicesModelImpl implements _ServicesModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ServicesModelImplToJson(
-      this,
-    );
+    return _$$ServicesModelImplToJson(this);
   }
 }
 
 abstract class _ServicesModel implements ServicesModel {
-  factory _ServicesModel(
-      {required final int id,
-      @JsonKey(name: 'service_name') required final String name,
-      @JsonKey(name: 'description') required final String description,
-      @JsonKey(name: 'icon') final String? icon,
-      @JsonKey(name: 'main_service_name', defaultValue: 'Other')
-      required final String mainServiceName}) = _$ServicesModelImpl;
+  factory _ServicesModel({
+    required final int id,
+    @JsonKey(name: 'service_name') required final String name,
+    @JsonKey(name: 'description') required final String description,
+    @JsonKey(name: 'icon') final String? icon,
+    @JsonKey(name: 'main_service_name', defaultValue: 'Other')
+    required final String mainServiceName,
+  }) = _$ServicesModelImpl;
 
   factory _ServicesModel.fromJson(Map<String, dynamic> json) =
       _$ServicesModelImpl.fromJson;

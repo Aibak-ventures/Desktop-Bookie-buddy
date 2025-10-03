@@ -1,23 +1,64 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/models/shop_model/shop_model.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
+import 'package:flutter/material.dart';
 
 class ShopService {
-  Future<List<ShopModel>> fetchShops() async {
+  Future<CustomResponseModel> fetchShops() async {
     try {
-      final response = await DioClient.dio.get(
-        '/api/v1/shop/available-shops/',
-      );
-
-      if (response.statusCode != 200) {
-        throw response.data['error'] ?? 'Failed to fetch shops';
-      }
-
-      final shops = response.data['shops'] as List;
-      return shops.map((e) => ShopModel.fromJson(e)).toList();
+      final response = await DioClient.dio.get(ApiPaths.shop.availableShops);
+      // log("Fetch Shops Response: ${response.realUri.toString()} ,${response.data}");
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Fetch Shops Error: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> updateShopPrivacySettings(
+    List<UserPasswordSettingsModel> updatedPasswordSettings,
+  ) async {
+    try {
+      final data = updatedPasswordSettings.toCustomJson();
+
+      debugPrint('Update Shop Privacy Settings Request: $data');
+      // throw 'Error: can\'t update shop privacy settings';
+      final response = await DioClient.dio.patch(
+        ApiPaths.shop.privacySettings,
+        data: data,
+      );
+      log(
+        'Update Shop Privacy Settings Response: ${response.realUri.toString()} ,${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Update Shop Privacy Settings Error: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> updateShopSettings({
+    int? coolingPeriodDuration,
+    AddButtonDefaultAction? addButtonDefaultAction,
+  }) async {
+    try {
+      final response = await DioClient.dio.patch(
+        ApiPaths.shop.updateSettings,
+        data: {
+          'cooling_days': coolingPeriodDuration,
+          'default_action': addButtonDefaultAction?.toJson(),
+        },
+      );
+      log(
+        'Update Shop Settings Response: ${response.realUri.toString()} ,${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Update Shop Settings Error: $e', stackTrace: stack);
       rethrow;
     }
   }

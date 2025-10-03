@@ -31,8 +31,7 @@ class CustomIconButton extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       alignment: Alignment.center,
       height: height,
       width: width,
@@ -52,5 +51,4 @@ class CustomIconButton extends StatelessWidget {
               ],
             ),
     ).onTap(onTap);
-  }
 }

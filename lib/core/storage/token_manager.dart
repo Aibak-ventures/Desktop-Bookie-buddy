@@ -1,12 +1,20 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:bookie_buddy_web/core/services/auth_service.dart';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 
 class TokenManager {
   static Timer? _refreshTimer;
+  static bool _isRefreshing = false; // To prevent concurrent refreshes
+
+  static bool get isTokenValid => (TokenStorage.accessToken != null &&
+            TokenStorage.accessToken!.isNotEmpty) &&
+        (TokenStorage.refreshToken != null &&
+            TokenStorage.refreshToken!.isNotEmpty);
 
   static void startProactiveRefresh() async {
+    await TokenStorage.loadTokenExpiry();
     log('Proactive token refresh started');
     _refreshTimer?.cancel();
     await _checkTokenExpiry();
@@ -19,14 +27,27 @@ class TokenManager {
   }
 
   static Future<void> _checkTokenExpiry() async {
+    if (_isRefreshing) {
+      log('Proactive token refresh is already in progress');
+      return;
+    }
+
     log('Proactive token refresh checking...');
+
+    if (TokenStorage.refreshToken == null) {
+      log('No refresh token available, skipping proactive refresh');
+      return;
+    }
     if (TokenStorage.isTokenExpiringSoon) {
+      _isRefreshing = true;
       log('Proactive token refresh triggered');
       try {
-        await AuthService.refreshToken();
+        await getIt.get<AuthRepository>().refreshToken();
         log('Proactive token refresh completed successfully');
       } catch (e) {
         log('Proactive token refresh failed: $e');
+      } finally {
+        _isRefreshing = false;
       }
     } else {
       log('Proactive token refresh is not expiring soon');

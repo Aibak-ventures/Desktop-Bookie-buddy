@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/models/expense_model/expense_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';
 import 'package:dio/dio.dart';
 
@@ -10,105 +10,83 @@ class ExpenseService {
   final Dio _dio = DioClient.dio;
 
   // Fetch all expenses
-  Future<PaginationModel<ExpenseModel>> fetchExpensePagination({
+  Future<CustomResponseModel> fetchExpensePagination({
     required int page,
     int? clientId,
   }) async {
     try {
       final response = await _dio.get(
-        '/api/v1/expenses/wallet/expenses/',
+        ApiPaths.ledger.expenses,
         queryParameters: {
           'page': page,
           if (clientId != null) 'client_id': clientId,
         },
       );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> results = response.data["results"];
-        final data = results.map((e) => ExpenseModel.fromJson(e)).toList();
-
-        return PaginationModel<ExpenseModel>(
-          data: data,
-          totalData: response.data["count"],
-          nextPageUrl: response.data["next"],
-        );
-      } else {
-        throw 'Failed to fetch expenses';
-      }
-    } on DioException catch (e) {
-      log("Fetch Expenses Error: ${e.message}");
-      throw 'Error fetching expenses: ${e.message}';
+      log(response.realUri.toString());
+      // log('Fetch Expenses Response: ${response.realUri.toString()}, Data: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Fetch Expenses Error: ${e}', stackTrace: stack);
+      rethrow;
     }
   }
 
   // Add a new expense
-  Future<void> addExpense({
+  Future<CustomResponseModel> addExpense({
     required ExpenseRequestModel expense,
   }) async {
     try {
       final response = await _dio.post(
-        '/api/v1/expenses/expenses/',
+        ApiPaths.expenses.expenses,
         data: expense.toJson(),
       );
-
-      if (response.statusCode != 201) {
-        throw 'Failed to add expense';
-      }
-    } on DioException catch (e) {
-      log("Add Expense Error: ${e.message}");
-      throw 'Error adding expense: ${e.message}';
+      log(
+        'Add Expense Response: ${response.realUri.toString()}, Data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Add Expense Error: $e', stackTrace: stack);
+      rethrow;
     }
   }
 
   // Edit an existing expense
-  Future<void> editExpense({
+  Future<CustomResponseModel> editExpense({
     required ExpenseRequestModel updatedExpense,
   }) async {
     try {
       final response = await _dio.patch(
-        '/api/v1/expenses/expenses/${updatedExpense.expenseId}/',
+        '${ApiPaths.expenses.expenses}${updatedExpense.expenseId}/',
         data: updatedExpense.toJson(),
       );
 
-      final data = response.data;
-
-      if (response.statusCode == 200) {
-        return;
-      } else if (response.statusCode == 404) {
-        throw data['error'] ?? 'Expense not found';
-      } else {
-        throw data['error'] ?? 'Failed to edit expense';
-      }
-    } on DioException catch (e, stack) {
-      log("Edit Expense Error: ${e.message}", stackTrace: stack);
-      throw 'Error editing expense: ${e.message}';
+      log(
+        'Edit Expense Response: ${response.realUri.toString()}, Data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
-      throw 'Error editing expense: $e';
+      log('Edit Expense Error: $e', stackTrace: stack);
+      rethrow;
     }
   }
 
-  Future<void> deleteExpense({
+  Future<CustomResponseModel> deleteExpense({
     required int expenseId,
     required int? variantId,
   }) async {
     try {
       final response = await _dio.delete(
         variantId != null
-            ? '/api/v1/expenses/variant-expenses/$expenseId/'
-            : '/api/v1/expenses/expenses/$expenseId/',
+            ? '${ApiPaths.expenses.variantExpenses}$expenseId/'
+            : '${ApiPaths.expenses.expenses}$expenseId/',
       );
 
-      if (response.statusCode != 204) {
-        throw response.data['error'] ??
-            response.data['message'] ??
-            'Failed to delete expense';
-      }
-    } on DioException catch (e) {
-      log("Delete Expense Error: ${e.message}");
-      throw 'Error deleting expense: ${e.message}';
+      log(
+        'Delete Expense Response: ${response.realUri.toString()}, Data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Delete Expense Error: $e', stackTrace: stack);
       rethrow;
     }
   }

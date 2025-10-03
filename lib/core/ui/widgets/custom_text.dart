@@ -21,8 +21,7 @@ class CustomText extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
+  Widget build(BuildContext context) => Text(
       text,
       textAlign: textAlign,
       style: TextStyle(
@@ -35,5 +34,4 @@ class CustomText extends StatelessWidget {
       maxLines: maxLines,
       overflow: textOverflow,
     );
-  }
 }

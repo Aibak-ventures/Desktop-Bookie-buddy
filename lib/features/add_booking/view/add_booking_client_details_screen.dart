@@ -8,7 +8,6 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_appbar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_client/client_bloc.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -15,8 +15,7 @@ class ProductDetailsDialog extends StatelessWidget {
   final ProductModel product;
 
   @override
-  Widget build(BuildContext context) {
-    return Dialog(
+  Widget build(BuildContext context) => Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: 10.radiusBorder,
       ),
@@ -36,8 +35,7 @@ class ProductDetailsDialog extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: CustomNetworkImage(
-                      imageUrl: product.image ?? "",
-                      fit: BoxFit.cover,
+                      imageUrl: product.image ?? '',
                       width: double.infinity,
                     ),
                   ),
@@ -91,5 +89,4 @@ class ProductDetailsDialog extends StatelessWidget {
         ],
       ),
     );
-  }
 }
