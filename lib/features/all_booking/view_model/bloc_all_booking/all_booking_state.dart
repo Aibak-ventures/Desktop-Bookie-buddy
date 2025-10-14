@@ -8,6 +8,9 @@ class AllBookingState with _$AllBookingState {
     required List<BookingsModel> bookings,
     String? nextPageUrl,
     @Default(false) bool isPaginating,
+    String? startDate,
+    String? endDate,
+    String? searchQuery,
   }) = _Loaded;
   const factory AllBookingState.error(String error) = _Error;
 }

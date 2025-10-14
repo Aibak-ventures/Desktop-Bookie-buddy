@@ -9,7 +9,7 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/client_select_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_client/client_bloc.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view/widgets/add_old_booking_dates_section.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view/widgets/add_old_booking_products_section.dart';
@@ -186,10 +186,10 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
                           onPressed: () {
                             if (isLoading) return;
                             if (!formKey.currentState!.validate()) return;
-                            final clientId = context
-                                .read<ClientBloc>()
-                                .getSelectedClient()
-                                ?.id;
+                           final clientId = context
+                                    .read<ClientCubit>()
+                                    .getSelectedClient()
+                                    ?.id;
                             if (clientId == null) {
                               context.showSnackBar(
                                 'Please select a client',

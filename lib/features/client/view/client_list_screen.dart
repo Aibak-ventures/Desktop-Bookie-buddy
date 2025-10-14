@@ -1,13 +1,15 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_add_client_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_responsive_builder.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_search_field.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/client_request_model/client_request_model.dart';
+// import 'package:bookie_buddy_web/features/booking_details/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/features/client/view/widgets/client_list_tile.dart';
 import 'package:bookie_buddy_web/features/client/view_model/bloc_client_list/client_list_bloc.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +19,14 @@ class ClientListScreen extends StatelessWidget {
   const ClientListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ClientListBloc()..add(const ClientListEvent.loadClients()),
-      child: ClientListView(),
-    );
-  }
+  Widget build(BuildContext context) => BlocProvider(
+    create: (context) =>
+        ClientListBloc(repository: getIt.get())
+          ..add(const ClientListEvent.loadClients()),
+    child: ClientListView(),
+  );
 }
+
 
 class ClientListView extends StatelessWidget {
   ClientListView({super.key});

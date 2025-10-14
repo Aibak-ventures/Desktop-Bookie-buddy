@@ -1,8 +1,7 @@
-import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_booking_completed_event.dart';
@@ -11,8 +10,10 @@ part 'product_booking_completed_bloc.freezed.dart';
 
 class ProductBookingCompletedBloc
     extends Bloc<ProductBookingCompletedEvent, ProductBookingCompletedState> {
-  final ProductRepository _repository = getIt.get<ProductRepository>();
-  ProductBookingCompletedBloc() : super(const _Loading()) {
+  final ProductRepository _repository;
+  ProductBookingCompletedBloc({required ProductRepository repository})
+    : _repository = repository,
+      super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);
     on<_LoadNextBookings>(_onLoadNextPageBookings);
   }
@@ -30,12 +31,7 @@ class ProductBookingCompletedBloc
         status: _status,
       );
 
-      emit(
-        _Loaded(
-          bookings: result.data,
-          nextPageUrl: result.nextPageUrl,
-        ),
-      );
+      emit(_Loaded(bookings: result.data, nextPageUrl: result.nextPageUrl));
     } catch (e) {
       emit(_Error(e.toString()));
     }
@@ -50,9 +46,7 @@ class ProductBookingCompletedBloc
 
     if (s.nextPageUrl == null || s.isPaginating) return;
 
-    emit(
-      s.copyWith(isPaginating: true),
-    );
+    emit(s.copyWith(isPaginating: true));
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
       final result = await _repository.getProductBookings(

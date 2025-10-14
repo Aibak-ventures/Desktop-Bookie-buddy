@@ -12,7 +12,8 @@ part of 'product_booking_upcoming_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ProductBookingUpcomingEvent {
@@ -21,62 +22,61 @@ mixin _$ProductBookingUpcomingEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int productId) loadBookings,
     required TResult Function(int productId) loadNextBooking,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int productId)? loadBookings,
     TResult? Function(int productId)? loadNextBooking,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int productId)? loadBookings,
     TResult Function(int productId)? loadNextBooking,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadBookings value) loadBookings,
     required TResult Function(_LoadNextBookings value) loadNextBooking,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadBookings value)? loadBookings,
     TResult? Function(_LoadNextBookings value)? loadNextBooking,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadBookings value)? loadBookings,
     TResult Function(_LoadNextBookings value)? loadNextBooking,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 
   /// Create a copy of ProductBookingUpcomingEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $ProductBookingUpcomingEventCopyWith<ProductBookingUpcomingEvent>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ProductBookingUpcomingEventCopyWith<$Res> {
   factory $ProductBookingUpcomingEventCopyWith(
-          ProductBookingUpcomingEvent value,
-          $Res Function(ProductBookingUpcomingEvent) then) =
-      _$ProductBookingUpcomingEventCopyWithImpl<$Res,
-          ProductBookingUpcomingEvent>;
+    ProductBookingUpcomingEvent value,
+    $Res Function(ProductBookingUpcomingEvent) then,
+  ) =
+      _$ProductBookingUpcomingEventCopyWithImpl<
+        $Res,
+        ProductBookingUpcomingEvent
+      >;
   @useResult
   $Res call({int productId});
 }
 
 /// @nodoc
-class _$ProductBookingUpcomingEventCopyWithImpl<$Res,
-        $Val extends ProductBookingUpcomingEvent>
+class _$ProductBookingUpcomingEventCopyWithImpl<
+  $Res,
+  $Val extends ProductBookingUpcomingEvent
+>
     implements $ProductBookingUpcomingEventCopyWith<$Res> {
   _$ProductBookingUpcomingEventCopyWithImpl(this._value, this._then);
 
@@ -89,15 +89,16 @@ class _$ProductBookingUpcomingEventCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? productId = null,
-  }) {
-    return _then(_value.copyWith(
-      productId: null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? productId = null}) {
+    return _then(
+      _value.copyWith(
+            productId: null == productId
+                ? _value.productId
+                : productId // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -105,8 +106,9 @@ class _$ProductBookingUpcomingEventCopyWithImpl<$Res,
 abstract class _$$LoadBookingsImplCopyWith<$Res>
     implements $ProductBookingUpcomingEventCopyWith<$Res> {
   factory _$$LoadBookingsImplCopyWith(
-          _$LoadBookingsImpl value, $Res Function(_$LoadBookingsImpl) then) =
-      __$$LoadBookingsImplCopyWithImpl<$Res>;
+    _$LoadBookingsImpl value,
+    $Res Function(_$LoadBookingsImpl) then,
+  ) = __$$LoadBookingsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int productId});
@@ -117,22 +119,23 @@ class __$$LoadBookingsImplCopyWithImpl<$Res>
     extends _$ProductBookingUpcomingEventCopyWithImpl<$Res, _$LoadBookingsImpl>
     implements _$$LoadBookingsImplCopyWith<$Res> {
   __$$LoadBookingsImplCopyWithImpl(
-      _$LoadBookingsImpl _value, $Res Function(_$LoadBookingsImpl) _then)
-      : super(_value, _then);
+    _$LoadBookingsImpl _value,
+    $Res Function(_$LoadBookingsImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ProductBookingUpcomingEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? productId = null,
-  }) {
-    return _then(_$LoadBookingsImpl(
-      null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? productId = null}) {
+    return _then(
+      _$LoadBookingsImpl(
+        null == productId
+            ? _value.productId
+            : productId // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -249,9 +252,10 @@ abstract class _LoadBookings implements ProductBookingUpcomingEvent {
 /// @nodoc
 abstract class _$$LoadNextBookingsImplCopyWith<$Res>
     implements $ProductBookingUpcomingEventCopyWith<$Res> {
-  factory _$$LoadNextBookingsImplCopyWith(_$LoadNextBookingsImpl value,
-          $Res Function(_$LoadNextBookingsImpl) then) =
-      __$$LoadNextBookingsImplCopyWithImpl<$Res>;
+  factory _$$LoadNextBookingsImplCopyWith(
+    _$LoadNextBookingsImpl value,
+    $Res Function(_$LoadNextBookingsImpl) then,
+  ) = __$$LoadNextBookingsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int productId});
@@ -259,26 +263,27 @@ abstract class _$$LoadNextBookingsImplCopyWith<$Res>
 
 /// @nodoc
 class __$$LoadNextBookingsImplCopyWithImpl<$Res>
-    extends _$ProductBookingUpcomingEventCopyWithImpl<$Res,
-        _$LoadNextBookingsImpl>
+    extends
+        _$ProductBookingUpcomingEventCopyWithImpl<$Res, _$LoadNextBookingsImpl>
     implements _$$LoadNextBookingsImplCopyWith<$Res> {
-  __$$LoadNextBookingsImplCopyWithImpl(_$LoadNextBookingsImpl _value,
-      $Res Function(_$LoadNextBookingsImpl) _then)
-      : super(_value, _then);
+  __$$LoadNextBookingsImplCopyWithImpl(
+    _$LoadNextBookingsImpl _value,
+    $Res Function(_$LoadNextBookingsImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ProductBookingUpcomingEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? productId = null,
-  }) {
-    return _then(_$LoadNextBookingsImpl(
-      null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? productId = null}) {
+    return _then(
+      _$LoadNextBookingsImpl(
+        null == productId
+            ? _value.productId
+            : productId // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -314,7 +319,9 @@ class _$LoadNextBookingsImpl implements _LoadNextBookings {
   @pragma('vm:prefer-inline')
   _$$LoadNextBookingsImplCopyWith<_$LoadNextBookingsImpl> get copyWith =>
       __$$LoadNextBookingsImplCopyWithImpl<_$LoadNextBookingsImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
@@ -398,67 +405,75 @@ mixin _$ProductBookingUpcomingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
-        loaded,
+    required TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )
+    loaded,
     required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult? Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ProductBookingUpcomingStateCopyWith<$Res> {
   factory $ProductBookingUpcomingStateCopyWith(
-          ProductBookingUpcomingState value,
-          $Res Function(ProductBookingUpcomingState) then) =
-      _$ProductBookingUpcomingStateCopyWithImpl<$Res,
-          ProductBookingUpcomingState>;
+    ProductBookingUpcomingState value,
+    $Res Function(ProductBookingUpcomingState) then,
+  ) =
+      _$ProductBookingUpcomingStateCopyWithImpl<
+        $Res,
+        ProductBookingUpcomingState
+      >;
 }
 
 /// @nodoc
-class _$ProductBookingUpcomingStateCopyWithImpl<$Res,
-        $Val extends ProductBookingUpcomingState>
+class _$ProductBookingUpcomingStateCopyWithImpl<
+  $Res,
+  $Val extends ProductBookingUpcomingState
+>
     implements $ProductBookingUpcomingStateCopyWith<$Res> {
   _$ProductBookingUpcomingStateCopyWithImpl(this._value, this._then);
 
@@ -474,8 +489,9 @@ class _$ProductBookingUpcomingStateCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
+    _$LoadingImpl value,
+    $Res Function(_$LoadingImpl) then,
+  ) = __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -483,8 +499,9 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$ProductBookingUpcomingStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
+    _$LoadingImpl _value,
+    $Res Function(_$LoadingImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ProductBookingUpcomingState
   /// with the given fields replaced by the non-null parameter values.
@@ -513,9 +530,12 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
-        loaded,
+    required TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )
+    loaded,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -525,9 +545,12 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult? Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -537,9 +560,12 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -591,11 +617,15 @@ abstract class _Loading implements ProductBookingUpcomingState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
-      __$$LoadedImplCopyWithImpl<$Res>;
+    _$LoadedImpl value,
+    $Res Function(_$LoadedImpl) then,
+  ) = __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {List<BookingsModel> bookings, String? nextPageUrl, bool isPaginating});
+  $Res call({
+    List<BookingsModel> bookings,
+    String? nextPageUrl,
+    bool isPaginating,
+  });
 }
 
 /// @nodoc
@@ -603,8 +633,9 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$ProductBookingUpcomingStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
+    _$LoadedImpl _value,
+    $Res Function(_$LoadedImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ProductBookingUpcomingState
   /// with the given fields replaced by the non-null parameter values.
@@ -615,31 +646,33 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? nextPageUrl = freezed,
     Object? isPaginating = null,
   }) {
-    return _then(_$LoadedImpl(
-      bookings: null == bookings
-          ? _value._bookings
-          : bookings // ignore: cast_nullable_to_non_nullable
-              as List<BookingsModel>,
-      nextPageUrl: freezed == nextPageUrl
-          ? _value.nextPageUrl
-          : nextPageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPaginating: null == isPaginating
-          ? _value.isPaginating
-          : isPaginating // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$LoadedImpl(
+        bookings: null == bookings
+            ? _value._bookings
+            : bookings // ignore: cast_nullable_to_non_nullable
+                  as List<BookingsModel>,
+        nextPageUrl: freezed == nextPageUrl
+            ? _value.nextPageUrl
+            : nextPageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isPaginating: null == isPaginating
+            ? _value.isPaginating
+            : isPaginating // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(
-      {required final List<BookingsModel> bookings,
-      required this.nextPageUrl,
-      this.isPaginating = false})
-      : _bookings = bookings;
+  const _$LoadedImpl({
+    required final List<BookingsModel> bookings,
+    required this.nextPageUrl,
+    this.isPaginating = false,
+  }) : _bookings = bookings;
 
   final List<BookingsModel> _bookings;
   @override
@@ -674,10 +707,11 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_bookings),
-      nextPageUrl,
-      isPaginating);
+    runtimeType,
+    const DeepCollectionEquality().hash(_bookings),
+    nextPageUrl,
+    isPaginating,
+  );
 
   /// Create a copy of ProductBookingUpcomingState
   /// with the given fields replaced by the non-null parameter values.
@@ -691,9 +725,12 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
-        loaded,
+    required TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )
+    loaded,
     required TResult Function(String error) error,
   }) {
     return loaded(bookings, nextPageUrl, isPaginating);
@@ -703,9 +740,12 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult? Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult? Function(String error)? error,
   }) {
     return loaded?.call(bookings, nextPageUrl, isPaginating);
@@ -715,9 +755,12 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -763,10 +806,11 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements ProductBookingUpcomingState {
-  const factory _Loaded(
-      {required final List<BookingsModel> bookings,
-      required final String? nextPageUrl,
-      final bool isPaginating}) = _$LoadedImpl;
+  const factory _Loaded({
+    required final List<BookingsModel> bookings,
+    required final String? nextPageUrl,
+    final bool isPaginating,
+  }) = _$LoadedImpl;
 
   List<BookingsModel> get bookings;
   String? get nextPageUrl;
@@ -782,8 +826,9 @@ abstract class _Loaded implements ProductBookingUpcomingState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
+    _$ErrorImpl value,
+    $Res Function(_$ErrorImpl) then,
+  ) = __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -793,22 +838,23 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$ProductBookingUpcomingStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
+    _$ErrorImpl _value,
+    $Res Function(_$ErrorImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ProductBookingUpcomingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? error = null}) {
+    return _then(
+      _$ErrorImpl(
+        null == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -848,9 +894,12 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
-        loaded,
+    required TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )
+    loaded,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -860,9 +909,12 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult? Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -872,9 +924,12 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)?
-        loaded,
+    TResult Function(
+      List<BookingsModel> bookings,
+      String? nextPageUrl,
+      bool isPaginating,
+    )?
+    loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

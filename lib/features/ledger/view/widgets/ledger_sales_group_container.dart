@@ -88,7 +88,7 @@ class LedgerSalesGroupContainer extends StatelessWidget {
       ),
       ...sales.map((sale) {
         final paymentMethod = sale.paymentMethods.firstOrNull;
-        return LedgerListTile(
+       return LedgerListTile(
           onTap: () {
             context.read<SaleDetailsBloc>().add(
               SaleDetailsEvent.getSaleDetails(saleId: sale.saleId),

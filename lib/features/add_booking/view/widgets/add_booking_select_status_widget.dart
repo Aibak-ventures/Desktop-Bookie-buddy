@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_drop_down_field.dart';
@@ -9,14 +10,12 @@ class AddBookingSelectStatusWidget extends StatelessWidget {
   const AddBookingSelectStatusWidget({
     required this.deliveryStatusNotifier,
     required this.paymentOptionNotifier,
-    required this.purchaseModeNotifier,
     required this.advanceAmountController,
     super.key,
   });
 
   final ValueNotifier<DeliveryStatus> deliveryStatusNotifier;
   final ValueNotifier<PaymentMethod> paymentOptionNotifier;
-  final ValueNotifier<PurchaseMode> purchaseModeNotifier;
   final TextEditingController advanceAmountController;
 
   @override
@@ -103,39 +102,7 @@ class AddBookingSelectStatusWidget extends StatelessWidget {
                       ],
                     );
             }),
-        Text(
-          'Purchase Mode',
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        ValueListenableBuilder<PurchaseMode>(
-          valueListenable: purchaseModeNotifier,
-          builder: (context, selectedOption, child) => Column(
-            children: [
-              RadioListTile<PurchaseMode>(
-                title: Text(PurchaseMode.normal.name),
-                value: PurchaseMode.normal,
-                activeColor: AppColors.purple,
-                groupValue: selectedOption,
-                onChanged: (value) {
-                  if (value != null) purchaseModeNotifier.value = value;
-                },
-              ),
-              RadioListTile<PurchaseMode>(
-                title: Text(PurchaseMode.package.name),
-                value: PurchaseMode.package,
-                activeColor: AppColors.purple,
-                groupValue: selectedOption,
-                onChanged: (value) {
-                  if (value != null) purchaseModeNotifier.value = value;
-                },
-              ),
-            ],
-          ),
-        ),
+  
       ],
     );
   }

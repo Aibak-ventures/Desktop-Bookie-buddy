@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -27,6 +27,7 @@ class SelectedProductInAddBooking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final product = selected.variant;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -48,12 +49,18 @@ class SelectedProductInAddBooking extends StatelessWidget {
           ),
           child: Column(
             children: [
-              ProductSimpleDetailsTile(
-                serviceId: serviceId,
-                product: selected.variant,
+                ProductSimpleDetailsTile(
+                name: product.name,
+                quantity: product.quantity,
+                category: product.category,
+                color: product.color,
+                image: product.image,
+                model: product.model,
+                variantAttribute: product.variantAttribute,
+                mainServiceType: product.mainServiceType,
                 amount: selected.amount,
               ),
-              if (selected.variant.mainServiceType.isDress ||
+               if (selected.variant.mainServiceType.isDress ||
                   selected.variant.mainServiceType.isVehicle)
                 CustomizationExpansionTile(
                   expansionTitle: selected.variant.mainServiceType.isVehicle

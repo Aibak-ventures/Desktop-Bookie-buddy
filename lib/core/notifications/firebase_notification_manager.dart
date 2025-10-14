@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:flutter/foundation.dart';
 /// Centralized FCM token + refresh handling. Permission is requested in main.
 class FirebaseNotificationManager {
   static final _firebaseMessaging = FirebaseMessaging.instance;

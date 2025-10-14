@@ -161,7 +161,7 @@ class HomeScreen extends StatelessWidget {
                       text: 'Hello ',
                       children: [
                         TextSpan(
-                          text: '${user?.userName ?? 'Owner'}!',
+                          text: '${user?.userFullName ?? 'Owner'}!',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF667eea),
@@ -345,7 +345,7 @@ class HomeScreen extends StatelessWidget {
                                 text: 'Hello ',
                                 children: [
                                   TextSpan(
-                                    text: '${user?.userName ?? 'Owner'}!',
+                                    text: '${user?.userFullName ?? 'Owner'}!',
                                     style: const TextStyle(
                                       color: AppColors.purple,
                                     ),

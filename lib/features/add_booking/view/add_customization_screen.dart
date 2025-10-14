@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
@@ -307,14 +307,14 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
 
                               measurementsNotifier.value = [
                                 ...measurementsNotifier.value,
-                                MeasurementFieldModel(
-                                  name: customCustomizationController.text
-                                      .trim()
-                                      .capitalize(),
-                                  key: newKey,
-                                  description: '',
-                                  gender: GenderType.unisex,
-                                ),
+                             MeasurementFieldModel(
+                          name: customCustomizationController.text
+                              .trim()
+                              .capitalizeFirstLetter(),
+                          key: newKey,
+                          description: '',
+                          gender: GenderType.unisex,
+                        ),
                               ];
                               customCustomizationController.clear();
                             }

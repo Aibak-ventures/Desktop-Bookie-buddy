@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
@@ -7,9 +8,9 @@ import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
+// import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
+// import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
 import 'package:bookie_buddy_web/features/main/widgets/shop_switcher_bottom_sheet.dart';
 import 'package:bookie_buddy_web/features/search/view_model/bloc_search/search_bloc.dart';
@@ -40,7 +41,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   final List<Widget> screens = [
     const HomeScreen(),
     BlocProvider(
-      create: (context) => SearchBloc(),
+       create: (context) => SearchBloc(repository: getIt.get()),
       child: const SearchScreen(),
     ),
     const AddExpenseScreen(),
@@ -232,7 +233,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user?.shopName ?? 'Shop Name',
+                            user?.firstName ?? 'Shop Name',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -242,7 +243,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            user?.userName ?? 'Owner',
+                            user?.lastName ?? 'Owner',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white.withOpacity(0.8),

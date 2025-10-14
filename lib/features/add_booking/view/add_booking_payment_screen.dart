@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -7,7 +8,8 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/screens/success_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/add_booking_select_status_widget.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_add_booking/add_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
@@ -24,7 +26,7 @@ class AddBookingPaymentScreen extends StatefulWidget {
     required this.newBooking,
     super.key,
   });
-  final AddBookingModel newBooking;
+  final RequestBookingModel newBooking;
 
   @override
   _AddBookingPaymentScreenState createState() =>
@@ -36,7 +38,9 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
   final paymentOptionNotifier = ValueNotifier(PaymentMethod.gPay);
   final purchaseModeNotifier = ValueNotifier(PurchaseMode.normal);
   final deliveryStatusNotifier = ValueNotifier(DeliveryStatus.booked);
-
+  final additionalChargesNotifier = ValueNotifier<List<AdditionalChargesModel>>(
+    [],
+  );
   // controllers
   final advanceAmountController = TextEditingController();
   final securityAmountController = TextEditingController();
@@ -157,7 +161,7 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                       AddBookingSelectStatusWidget(
                         deliveryStatusNotifier: deliveryStatusNotifier,
                         paymentOptionNotifier: paymentOptionNotifier,
-                        purchaseModeNotifier: purchaseModeNotifier,
+                        // purchaseModeNotifier: purchaseModeNotifier,
                         advanceAmountController: advanceAmountController,
                       ),
                     ],
@@ -256,18 +260,22 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                   );
                 }
 
-                final newBooking = widget.newBooking.copyWith(
-                  advanceAmount: advanceAmount == null ? null : advanceAmount,
-                  securityAmount: securityAmount,
-                  discountAmount: discountAmount,
-                  paymentMethod: paymentOptionNotifier.value.toValue(),
-                  purchaseMode: purchaseModeNotifier.value.toValue(),
-                  deliveryStatus: deliveryStatusNotifier.value.toValue(),
-                  pickupDate:
-                      '${widget.newBooking.pickupDate!.formatToUiDate()}T${widget.newBooking.pickupTime?.formatToTime(addSeconds: true) ?? '00:00:00'}',
-                  returnDate:
-                      '${widget.newBooking.returnDate}T${widget.newBooking.returnTime?.formatToTime(addSeconds: true) ?? '23:59:59'}',
-                );
+               final newBooking = widget.newBooking.copyWith(
+                advanceAmount: advanceAmount == null ? null : advanceAmount,
+                securityAmount: securityAmount,
+                discountAmount: discountAmount,
+                paymentMethod: paymentOptionNotifier.value,
+                // purchaseMode: purchaseModeNotifier.value.toValue(),
+                deliveryStatus: deliveryStatusNotifier.value,
+                pickupDate:
+                    '${widget.newBooking.pickupDate!.formatToUiDate()}T${widget.newBooking.pickupTime?.formatToTime(addSeconds: true) ?? '00:00:00'}',
+                returnDate:
+                    '${widget.newBooking.returnDate}T${widget.newBooking.returnTime?.formatToTime(addSeconds: true) ?? '23:59:59'}',
+                coolingPeriodDate:
+                    '${widget.newBooking.coolingPeriodDate}T23:59:59',
+
+                additionalCharges: additionalChargesNotifier.value,
+              );
 
                 final bloc = context.read<AddBookingBloc>();
                 bloc.add(

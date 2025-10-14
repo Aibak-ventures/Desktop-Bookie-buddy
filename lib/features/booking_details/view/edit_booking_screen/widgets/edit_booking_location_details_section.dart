@@ -16,8 +16,7 @@ class EditBookingLocationDetailsSection extends StatelessWidget {
   final TextEditingController locationToController;
 
   @override
-  Widget build(BuildContext context) {
-    return EditBookingSectionColumn(
+  Widget build(BuildContext context) => EditBookingSectionColumn(
       title: 'Location Details',
       child: Column(
         spacing: 15,
@@ -55,5 +54,4 @@ class EditBookingLocationDetailsSection extends StatelessWidget {
         ],
       ),
     );
-  }
 }

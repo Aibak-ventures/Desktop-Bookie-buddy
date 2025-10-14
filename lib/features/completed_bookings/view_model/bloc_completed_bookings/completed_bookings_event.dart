@@ -8,11 +8,8 @@ class CompletedBookingsEvent with _$CompletedBookingsEvent {
     String? searchQuery,
   }) = _LoadCompletedBookings;
 
-  const factory CompletedBookingsEvent.loadNextPageCompletedBookings({
-    String? startDate,
-    String? endDate,
-    String? searchQuery,
-  }) = _LoadNextPageCompletedBookings;
+  const factory CompletedBookingsEvent.loadNextPageCompletedBookings() =
+      _LoadNextPageCompletedBookings;
 
   /// Handles the update booking event by either refreshing the bookings list
   /// or updating a specific booking in the current state. If `shouldRefresh`
@@ -22,5 +19,6 @@ class CompletedBookingsEvent with _$CompletedBookingsEvent {
   const factory CompletedBookingsEvent.updateBooking(
     BookingsModel? booking, {
     @Default(false) bool shouldRefresh,
+    @Default(false) bool isDeleted,
   }) = _UpdateBooking;
 }

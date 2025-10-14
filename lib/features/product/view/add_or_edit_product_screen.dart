@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';

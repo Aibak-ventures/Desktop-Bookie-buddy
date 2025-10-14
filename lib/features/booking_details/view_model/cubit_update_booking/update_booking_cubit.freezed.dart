@@ -12,7 +12,8 @@ part of 'update_booking_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$UpdateBookingState {
@@ -23,8 +24,7 @@ mixin _$UpdateBookingState {
     required TResult Function() success,
     required TResult Function(Map<String, dynamic> error) failure,
     required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
@@ -32,8 +32,7 @@ mixin _$UpdateBookingState {
     TResult? Function()? success,
     TResult? Function(Map<String, dynamic> error)? failure,
     TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
@@ -42,8 +41,7 @@ mixin _$UpdateBookingState {
     TResult Function(Map<String, dynamic> error)? failure,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
@@ -51,8 +49,7 @@ mixin _$UpdateBookingState {
     required TResult Function(_Success value) success,
     required TResult Function(_Failure value) failure,
     required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
@@ -60,8 +57,7 @@ mixin _$UpdateBookingState {
     TResult? Function(_Success value)? success,
     TResult? Function(_Failure value)? failure,
     TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -70,15 +66,15 @@ mixin _$UpdateBookingState {
     TResult Function(_Failure value)? failure,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $UpdateBookingStateCopyWith<$Res> {
   factory $UpdateBookingStateCopyWith(
-          UpdateBookingState value, $Res Function(UpdateBookingState) then) =
-      _$UpdateBookingStateCopyWithImpl<$Res, UpdateBookingState>;
+    UpdateBookingState value,
+    $Res Function(UpdateBookingState) then,
+  ) = _$UpdateBookingStateCopyWithImpl<$Res, UpdateBookingState>;
 }
 
 /// @nodoc
@@ -98,8 +94,9 @@ class _$UpdateBookingStateCopyWithImpl<$Res, $Val extends UpdateBookingState>
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
+    _$InitialImpl value,
+    $Res Function(_$InitialImpl) then,
+  ) = __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -107,8 +104,9 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$UpdateBookingStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
-      : super(_value, _then);
+    _$InitialImpl _value,
+    $Res Function(_$InitialImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UpdateBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -221,8 +219,9 @@ abstract class _Initial implements UpdateBookingState {
 /// @nodoc
 abstract class _$$SubmittingImplCopyWith<$Res> {
   factory _$$SubmittingImplCopyWith(
-          _$SubmittingImpl value, $Res Function(_$SubmittingImpl) then) =
-      __$$SubmittingImplCopyWithImpl<$Res>;
+    _$SubmittingImpl value,
+    $Res Function(_$SubmittingImpl) then,
+  ) = __$$SubmittingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -230,8 +229,9 @@ class __$$SubmittingImplCopyWithImpl<$Res>
     extends _$UpdateBookingStateCopyWithImpl<$Res, _$SubmittingImpl>
     implements _$$SubmittingImplCopyWith<$Res> {
   __$$SubmittingImplCopyWithImpl(
-      _$SubmittingImpl _value, $Res Function(_$SubmittingImpl) _then)
-      : super(_value, _then);
+    _$SubmittingImpl _value,
+    $Res Function(_$SubmittingImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UpdateBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -344,8 +344,9 @@ abstract class _Submitting implements UpdateBookingState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
+    _$SuccessImpl value,
+    $Res Function(_$SuccessImpl) then,
+  ) = __$$SuccessImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -353,8 +354,9 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$UpdateBookingStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
-      : super(_value, _then);
+    _$SuccessImpl _value,
+    $Res Function(_$SuccessImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UpdateBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -467,8 +469,9 @@ abstract class _Success implements UpdateBookingState {
 /// @nodoc
 abstract class _$$FailureImplCopyWith<$Res> {
   factory _$$FailureImplCopyWith(
-          _$FailureImpl value, $Res Function(_$FailureImpl) then) =
-      __$$FailureImplCopyWithImpl<$Res>;
+    _$FailureImpl value,
+    $Res Function(_$FailureImpl) then,
+  ) = __$$FailureImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Map<String, dynamic> error});
 }
@@ -478,22 +481,23 @@ class __$$FailureImplCopyWithImpl<$Res>
     extends _$UpdateBookingStateCopyWithImpl<$Res, _$FailureImpl>
     implements _$$FailureImplCopyWith<$Res> {
   __$$FailureImplCopyWithImpl(
-      _$FailureImpl _value, $Res Function(_$FailureImpl) _then)
-      : super(_value, _then);
+    _$FailureImpl _value,
+    $Res Function(_$FailureImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UpdateBookingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$FailureImpl(
-      null == error
-          ? _value._error
-          : error // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-    ));
+  $Res call({Object? error = null}) {
+    return _then(
+      _$FailureImpl(
+        null == error
+            ? _value._error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+      ),
+    );
   }
 }
 
@@ -631,8 +635,9 @@ abstract class _Failure implements UpdateBookingState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
+    _$ErrorImpl value,
+    $Res Function(_$ErrorImpl) then,
+  ) = __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -642,22 +647,23 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$UpdateBookingStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
+    _$ErrorImpl _value,
+    $Res Function(_$ErrorImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UpdateBookingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? error = null}) {
+    return _then(
+      _$ErrorImpl(
+        null == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 

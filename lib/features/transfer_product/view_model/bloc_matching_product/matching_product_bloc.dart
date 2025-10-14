@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

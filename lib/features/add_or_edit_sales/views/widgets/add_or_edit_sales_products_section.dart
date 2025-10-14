@@ -95,7 +95,7 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
       itemBuilder: (context, index) {
         final productModel = selectedProducts[index];
 
-        return EditBookingProductListTile(
+     return EditBookingProductListTile(
           amount: productModel.amount * productModel.quantity,
           product: productModel.variant,
           needColor: false,
@@ -233,7 +233,7 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
   //   }).toList();
   // }
 
-  Future<void> _handleAddMore(BuildContext context) async {
+   Future<void> _handleAddMore(BuildContext context) async {
     try {
       await context.push<List<ProductSelectedModel>>(
         SelectServiceScreen(

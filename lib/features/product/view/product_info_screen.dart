@@ -1,6 +1,8 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/app_icons.dart';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -87,7 +89,7 @@ class ProductInfoScreen extends StatelessWidget {
 
                         performSecureActionDialog(
                           context,
-                          'transfer',
+                           SecretPasswordLocations.transferProduct,
                           onSuccess: () async {
                             final selectedVariantId =
                                 product.variants.length == 1
@@ -269,31 +271,35 @@ class ProductInfoScreen extends StatelessWidget {
                                     ],
                                   ),
                                   10.height,
-                                  Expanded(
-                                    child: MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider(
-                                          create: (context) =>
-                                              ProductBookingUpcomingBloc()
-                                                ..add(
-                                                  ProductBookingUpcomingEvent
-                                                      .loadBookings(product.id),
-                                                ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              ProductBookingCompletedBloc()
-                                                ..add(
-                                                  ProductBookingCompletedEvent
-                                                      .loadBookings(product.id),
-                                                ),
-                                        ),
-                                      ],
-                                      child: ProductAllBookingsTabView(
-                                        productId: productId,
+                                 Expanded(
+                                  child: MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                        create: (context) =>
+                                            ProductBookingUpcomingBloc(
+                                              repository: getIt.get(),
+                                            )..add(
+                                              ProductBookingUpcomingEvent.loadBookings(
+                                                product.id,
+                                              ),
+                                            ),
                                       ),
+                                      BlocProvider(
+                                        create: (context) =>
+                                            ProductBookingCompletedBloc(
+                                              repository: getIt.get(),
+                                            )..add(
+                                              ProductBookingCompletedEvent.loadBookings(
+                                                product.id,
+                                              ),
+                                            ),
+                                      ),
+                                    ],
+                                    child: ProductAllBookingsTabView(
+                                      productId: productId,
                                     ),
                                   ),
+                                ),
                                 ],
                               ),
                       ),
@@ -366,17 +372,17 @@ class ProductInfoScreen extends StatelessWidget {
           ),
           shadowColor: AppColors.purpleLightShade,
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => BlocProvider(
-                create: (context) => AddExpenseCubit(),
-                child: ProductAddExpenseDialog(
-                  variantId: product.variants.first.id,
-                  mainServiceType: mainServiceType,
-                  variants: product.variants,
-                ),
+           showDialog(
+            context: context,
+            builder: (context) => BlocProvider(
+              create: (context) => AddExpenseCubit(repository: getIt.get()),
+              child: ProductAddExpenseDialog(
+                variantId: product.variants.first.id,
+                mainServiceType: mainServiceType,
+                variants: product.variants,
               ),
-            );
+            ),
+          );
           },
         ),
 
@@ -461,25 +467,29 @@ class ProductInfoScreen extends StatelessWidget {
             prefixText: 'All',
             icon: Icons.my_library_books_outlined,
             onTap: () {
-              context.push(
+            context.push(
                 MultiBlocProvider(
                   providers: [
                     BlocProvider(
-                      create: (context) => ProductBookingUpcomingBloc()
-                        ..add(
-                          ProductBookingUpcomingEvent.loadBookings(product.id),
-                        ),
+                      create: (context) =>
+                          ProductBookingUpcomingBloc(repository: getIt.get())
+                            ..add(
+                              ProductBookingUpcomingEvent.loadBookings(
+                                product.id,
+                              ),
+                            ),
                     ),
                     BlocProvider(
-                      create: (context) => ProductBookingCompletedBloc()
-                        ..add(
-                          ProductBookingCompletedEvent.loadBookings(product.id),
-                        ),
+                      create: (context) =>
+                          ProductBookingCompletedBloc(repository: getIt.get())
+                            ..add(
+                              ProductBookingCompletedEvent.loadBookings(
+                                product.id,
+                              ),
+                            ),
                     ),
                   ],
-                  child: ProductAllBookingsScreen(
-                    productId: product.id,
-                  ),
+                  child: ProductAllBookingsScreen(productId: product.id),
                 ),
               );
             },

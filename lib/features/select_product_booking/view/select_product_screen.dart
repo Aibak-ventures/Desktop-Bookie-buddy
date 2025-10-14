@@ -1,6 +1,5 @@
 import 'dart:developer';
-
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -14,10 +13,11 @@ import 'package:bookie_buddy_web/core/ui/widgets/show_custom_bottom_sheet.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_grid_view_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/selected_product_list_view_widget.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view_model/bloc_select_product/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view_model/cubit_selected_products/selected_products_cubit.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,7 +29,9 @@ class SelectProductScreen extends StatefulWidget {
   final TimeOfDay? pickupTime;
   final TimeOfDay? returnTime;
   final bool useAvailableProductsApi;
+  final bool isSales;
   final List<ProductSelectedModel>? preSelectedData;
+  final bool availabilityCheckOnly;
   const SelectProductScreen({
     super.key,
     required this.serviceId,
@@ -38,7 +40,9 @@ class SelectProductScreen extends StatefulWidget {
     this.preSelectedData,
     this.pickupTime,
     this.returnTime,
+    this.isSales = false,
     this.useAvailableProductsApi = true,
+    this.availabilityCheckOnly = false,
   });
 
   @override
@@ -47,34 +51,35 @@ class SelectProductScreen extends StatefulWidget {
 
 class _SelectProductScreenState extends State<SelectProductScreen> {
   final searchController = TextEditingController();
-  late int selectedServiceId;
-  late ValueNotifier<MainServiceType> selectedMainServiceTypeNotifier;
+  late final ValueNotifier<int> selectedServiceIdNotifier;
+  late final ValueNotifier<MainServiceType> selectedMainServiceTypeNotifier;
   final isPriceFilterEnabled = ValueNotifier<bool>(false);
   final priceRangeNotifier = ValueNotifier(const RangeValues(0, 80000));
   @override
   void initState() {
     super.initState();
-    selectedServiceId = widget.serviceId;
+    selectedServiceIdNotifier = ValueNotifier(widget.serviceId);
     final services = context.read<ServiceBloc>().getServices();
 
     selectedMainServiceTypeNotifier = ValueNotifier(
       MainServiceType.fromServiceList(services, widget.serviceId),
     );
 
-    context
-        .read<SelectedProductsCubit>()
-        .loadPreSelected(widget.preSelectedData);
+    context.read<SelectedProductsCubit>().loadPreSelected(
+      widget.preSelectedData,
+    );
 
     context.read<SelectProductBloc>().add(
-          SelectProductEvent.loadProducts(
-            serviceId: selectedServiceId,
-            pickupDate: widget.pickupDate,
-            returnDate: widget.returnDate,
-            pickupTime: widget.pickupTime,
-            returnTime: widget.returnTime,
-            useAvailableProductsApi: widget.useAvailableProductsApi,
-          ),
-        );
+      SelectProductEvent.loadProducts(
+        serviceId: selectedServiceIdNotifier.value,
+        pickupDate: widget.pickupDate,
+        returnDate: widget.returnDate,
+        pickupTime: widget.pickupTime,
+        returnTime: widget.returnTime,
+        useAvailableProductsApi: widget.useAvailableProductsApi,
+        isSales: widget.isSales,
+      ),
+    );
   }
 
   @override
@@ -121,26 +126,29 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                   onChanged: (query, selectedType, priceRange, isPriceEnabled) {
                     if (query.isNotEmpty) {
                       bloc.add(
-                        SelectProductEvent.searchProducts(
-                          serviceId: selectedServiceId,
-                          query: query,
-                          type: selectedType,
-                          pickupDate: widget.pickupDate,
-                          returnDate: widget.returnDate,
-                          pickupTime: widget.pickupTime,
-                          returnTime: widget.returnTime,
-                          startPrice:
-                              isPriceEnabled ? priceRange.start.toInt() : null,
-                          endPrice:
-                              isPriceEnabled ? priceRange.end.toInt() : null,
-                          useAvailableProductsApi:
-                              widget.useAvailableProductsApi,
-                        ),
+                       SelectProductEvent.searchProducts(
+                                serviceId: selectedServiceIdNotifier.value,
+                                query: query,
+                                type: selectedType,
+                                pickupDate: widget.pickupDate,
+                                returnDate: widget.returnDate,
+                                pickupTime: widget.pickupTime,
+                                returnTime: widget.returnTime,
+                                startPrice: isPriceEnabled
+                                    ? priceRange.start.toInt()
+                                    : null,
+                                endPrice: isPriceEnabled
+                                    ? priceRange.end.toInt()
+                                    : null,
+                                useAvailableProductsApi:
+                                    widget.useAvailableProductsApi,
+                                isSales: widget.isSales,
+                              ),
                       );
                     } else {
                       bloc.add(
                         SelectProductEvent.loadProducts(
-                          serviceId: selectedServiceId,
+                          serviceId: selectedServiceIdNotifier.value,
                           pickupDate: widget.pickupDate,
                           returnDate: widget.returnDate,
                           pickupTime: widget.pickupTime,
@@ -155,7 +163,7 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                       searchType) {
                     bloc.add(
                       SelectProductEvent.searchProducts(
-                        serviceId: selectedServiceId,
+                        serviceId: selectedServiceIdNotifier.value,
                         pickupDate: widget.pickupDate,
                         returnDate: widget.returnDate,
                         pickupTime: widget.pickupTime,
@@ -179,7 +187,7 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
             onCloseTap: () {
               context.read<SelectProductBloc>().add(
                     SelectProductEvent.loadProducts(
-                      serviceId: selectedServiceId,
+                      serviceId: selectedServiceIdNotifier.value,
                       pickupDate: widget.pickupDate,
                       returnDate: widget.returnDate,
                       pickupTime: widget.pickupTime,
@@ -198,17 +206,19 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
           ),
 
           // Grid View with responsive sizing
-          SelectProductGridViewWidget(
-            gridPadding: gridPadding,
-            searchController: searchController,
-            serviceId: selectedServiceId,
-            pickupDate: widget.pickupDate,
-            returnDate: widget.returnDate,
-            mainServiceTypeNotifier: selectedMainServiceTypeNotifier,
-            pickupTime: widget.pickupTime,
-            returnTime: widget.returnTime,
-            useAvailableProductsApi: widget.useAvailableProductsApi,
-          )
+      SelectProductGridViewWidget(
+              gridPadding: gridPadding,
+              searchController: searchController,
+              serviceIdNotifier: selectedServiceIdNotifier,
+              pickupDate: widget.pickupDate,
+              returnDate: widget.returnDate,
+              mainServiceTypeNotifier: selectedMainServiceTypeNotifier,
+              pickupTime: widget.pickupTime,
+              returnTime: widget.returnTime,
+              useAvailableProductsApi: widget.useAvailableProductsApi,
+              isSales: widget.isSales,
+              availabilityCheckOnly: widget.availabilityCheckOnly,
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -254,14 +264,14 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
     ).onTap(
       () async {
         final name = await context.push<String>(AddOrEditProductScreen(
-          serviceId: selectedServiceId,
+          serviceId: selectedServiceIdNotifier.value,
         ));
         log('name: $name');
         if (name != null) {
           searchController.text = name;
           context.read<SelectProductBloc>().add(
                 SelectProductEvent.searchProducts(
-                  serviceId: selectedServiceId,
+                  serviceId: selectedServiceIdNotifier.value,
                   query: name,
                   type: 'Name',
                   pickupDate: widget.pickupDate,
@@ -296,14 +306,14 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
     final id = await _showSelectBottomSheetBuilder(services);
 
     if (id != null) {
-      selectedServiceId = id;
+      selectedServiceIdNotifier.value = id;
 
       selectedMainServiceTypeNotifier.value =
-          MainServiceType.fromServiceList(services, selectedServiceId);
+          MainServiceType.fromServiceList(services, selectedServiceIdNotifier.value);
       log(selectedMainServiceTypeNotifier.value.toString());
       context.read<SelectProductBloc>().add(
             SelectProductEvent.loadProducts(
-              serviceId: selectedServiceId,
+              serviceId:  selectedServiceIdNotifier.value,
               pickupDate: widget.pickupDate,
               returnDate: widget.returnDate,
               pickupTime: widget.pickupTime,
@@ -338,7 +348,7 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                         serviceName: service.name,
                         onTap: () => context.pop(service.id),
                         icon: service.icon,
-                        isSelected: selectedServiceId == service.id,
+                        isSelected: selectedServiceIdNotifier.value == service.id,
                       ),
                     )
                     .toList(),

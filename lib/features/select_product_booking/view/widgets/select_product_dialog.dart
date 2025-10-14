@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
@@ -21,12 +21,9 @@ class SizeAmountDialog extends StatefulWidget {
   final List<ProductVariantModel> availableVariants;
   final List<ProductSelectedModel> alreadySelectedVariants;
   final String? initialAmount;
-  final Function(
-    int variantId,
-    String? size,
-    String amount,
-    int quantity,
-  )? onConfirm;
+  final bool isSales;
+  final Function(int variantId, String? size, String amount, int quantity)?
+  onConfirm;
 
   const SizeAmountDialog({
     required this.mainServiceType,
@@ -35,8 +32,9 @@ class SizeAmountDialog extends StatefulWidget {
     this.alreadySelectedVariants = const [],
     this.initialAmount,
     this.onConfirm,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+    this.isSales = false,
+  });
 
   @override
   State<SizeAmountDialog> createState() => _SizeAmountDialogState();
@@ -427,24 +425,20 @@ void showSizeAmountDialog({
   List<ProductVariantModel> availableVariants = const [],
   List<ProductSelectedModel> alreadySelectedVariants = const [],
   String? initialAmount,
-  void Function(
-    int variantId,
-    String? size,
-    String amount,
-    int quantity,
-  )? onConfirm,
+  bool isSales = false,
+  void Function(int variantId, String? size, String amount, int quantity)?
+  onConfirm,
 }) {
   showDialog(
     context: context,
-    builder: (BuildContext context) {
-      return SizeAmountDialog(
-        mainServiceType: mainServiceType,
-        productImageUrl: productImageUrl,
-        availableVariants: availableVariants,
-        alreadySelectedVariants: alreadySelectedVariants,
-        initialAmount: initialAmount,
-        onConfirm: onConfirm,
-      );
-    },
+    builder: (BuildContext context) => SizeAmountDialog(
+      mainServiceType: mainServiceType,
+      productImageUrl: productImageUrl,
+      availableVariants: availableVariants,
+      alreadySelectedVariants: alreadySelectedVariants,
+      initialAmount: initialAmount,
+      onConfirm: onConfirm,
+      isSales: isSales,
+    ),
   );
 }

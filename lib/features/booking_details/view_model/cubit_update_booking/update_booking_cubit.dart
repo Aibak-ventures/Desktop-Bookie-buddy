@@ -1,43 +1,53 @@
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'update_booking_state.dart';
 part 'update_booking_cubit.freezed.dart';
+part 'update_booking_state.dart';
 
 class UpdateBookingCubit extends Cubit<UpdateBookingState> {
-  final BookingRepository _bookingRepository = getIt.get<BookingRepository>();
-  final ClientRepository _clientRepository = getIt.get<ClientRepository>();
-  UpdateBookingCubit() : super(const _Initial());
+  final BookingRepository _bookingRepository;
+  final ClientRepository _clientRepository;
+  UpdateBookingCubit({
+    required BookingRepository bookingRepository,
+    required ClientRepository clientRepository,
+  }) : _bookingRepository = bookingRepository,
+       _clientRepository = clientRepository,
+       super(const _Initial());
 
-  Future<void> updateBooking({
+  void updateBooking({
     required int bookingId,
-    required Map<String, dynamic> updatedData,
+
+    required RequestBookingModel updatedBooking,
     ClientRequestModel? client,
   }) async {
     emit(const _Submitting());
     try {
+      ClientModel? newClient;
+      // 3. Then add client if provided
+      if (client != null) {
+        newClient = await _clientRepository.addClient(client);
+      }
+      if (newClient != null) {
+        updatedBooking = updatedBooking.copyWith(clientId: newClient.id);
+      }
       // 1. Call Booking update first
       final res = await _bookingRepository.updateBooking(
         bookingId,
-        updatedData,
+
+        updatedBooking,
       );
 
       // 2. If booking fails, don't proceed to client
-      if (res.containsKey('error')) {
-        final error = res['error'];
-        emit(error is String ? _Error(error) : _Failure(error));
+      if (res.status.isInsufficientStock) {
+        emit(_Failure(res.data));
         return;
-      }
-
-      // 3. Then update client if provided
-      if (client != null) {
-        await _clientRepository.updateClient(client);
       }
 
       emit(const _Success());

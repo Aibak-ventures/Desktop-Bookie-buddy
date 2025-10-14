@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
@@ -16,7 +17,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/product_search_field_widget.dart';
 import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_product_search/product_search_bloc.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_product_search/product_search_cubit.dart';
 import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
 import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
 import 'package:bookie_buddy_web/features/product/view/widgets/variant_size_type_text_field.dart';
@@ -80,7 +81,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     if (productScrollController.hasClients &&
         productScrollController.position.pixels >=
             productScrollController.position.maxScrollExtent - 50) {
-      final bloc = context.read<ProductSearchBloc>();
+      final bloc = context.read<ProductSearchCubit>();
       final isLoadNext = bloc.state.when(
         initial: (
           suggestions,
@@ -94,10 +95,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             nextPageUrl != null &&
             !isLoading,
       );
-      if (isLoadNext) {
-        log('loading next event called');
-        bloc.add(const ProductSearchEvent.loadNextData());
-      }
+     
     }
     // log('position: ${productScrollController.position.pixels}, max: ${productScrollController.position.maxScrollExtent}');
   }
@@ -109,7 +107,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           : _selectedCategory ?? '';
 
       final selectedProduct =
-          context.read<ProductSearchBloc>().state.selectedProduct;
+          context.read<ProductSearchCubit>().state.selectedProduct;
 
       final oldExpense = widget.expense;
       final ExpenseRequestModel expense;
@@ -417,7 +415,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         ),
         children: [
           if (!isEdit)
-            BlocConsumer<ProductSearchBloc, ProductSearchState>(
+            BlocConsumer<ProductSearchCubit, ProductSearchState>(
               listener: (context, state) {
                 state.when(
                   initial: (suggestions, selectedProduct,
@@ -600,7 +598,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           success: (message) {
             // clear selected product and variant
             context
-                .read<ProductSearchBloc>()
+                .read<ProductSearchCubit>()
                 .add(const ProductSearchEvent.clearSelected());
             variantSelectedNotifier.value = null;
 

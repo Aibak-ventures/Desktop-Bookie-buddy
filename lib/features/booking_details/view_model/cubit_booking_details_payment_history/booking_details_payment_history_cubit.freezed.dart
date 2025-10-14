@@ -12,7 +12,8 @@ part of 'booking_details_payment_history_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$BookingDetailsPaymentHistoryState {
@@ -22,45 +23,41 @@ mixin _$BookingDetailsPaymentHistoryState {
     required TResult Function() loading,
     required TResult Function(String error) error,
     required TResult Function(
-            List<BookingDetailsPaymentHistoryModel> paymentHistory)
-        expanded,
-  }) =>
-      throw _privateConstructorUsedError;
+      List<BookingDetailsPaymentHistoryModel> paymentHistory,
+    )
+    expanded,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? collapsed,
     TResult? Function()? loading,
     TResult? Function(String error)? error,
     TResult? Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
-  }) =>
-      throw _privateConstructorUsedError;
+    expanded,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? collapsed,
     TResult Function()? loading,
     TResult Function(String error)? error,
     TResult Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Collapsed value) collapsed,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Error value) error,
     required TResult Function(_Expanded value) expanded,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Collapsed value)? collapsed,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Error value)? error,
     TResult? Function(_Expanded value)? expanded,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Collapsed value)? collapsed,
@@ -68,22 +65,26 @@ mixin _$BookingDetailsPaymentHistoryState {
     TResult Function(_Error value)? error,
     TResult Function(_Expanded value)? expanded,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $BookingDetailsPaymentHistoryStateCopyWith<$Res> {
   factory $BookingDetailsPaymentHistoryStateCopyWith(
-          BookingDetailsPaymentHistoryState value,
-          $Res Function(BookingDetailsPaymentHistoryState) then) =
-      _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res,
-          BookingDetailsPaymentHistoryState>;
+    BookingDetailsPaymentHistoryState value,
+    $Res Function(BookingDetailsPaymentHistoryState) then,
+  ) =
+      _$BookingDetailsPaymentHistoryStateCopyWithImpl<
+        $Res,
+        BookingDetailsPaymentHistoryState
+      >;
 }
 
 /// @nodoc
-class _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res,
-        $Val extends BookingDetailsPaymentHistoryState>
+class _$BookingDetailsPaymentHistoryStateCopyWithImpl<
+  $Res,
+  $Val extends BookingDetailsPaymentHistoryState
+>
     implements $BookingDetailsPaymentHistoryStateCopyWith<$Res> {
   _$BookingDetailsPaymentHistoryStateCopyWithImpl(this._value, this._then);
 
@@ -99,17 +100,20 @@ class _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$CollapsedImplCopyWith<$Res> {
   factory _$$CollapsedImplCopyWith(
-          _$CollapsedImpl value, $Res Function(_$CollapsedImpl) then) =
-      __$$CollapsedImplCopyWithImpl<$Res>;
+    _$CollapsedImpl value,
+    $Res Function(_$CollapsedImpl) then,
+  ) = __$$CollapsedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$CollapsedImplCopyWithImpl<$Res>
-    extends _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res,
-        _$CollapsedImpl> implements _$$CollapsedImplCopyWith<$Res> {
+    extends
+        _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res, _$CollapsedImpl>
+    implements _$$CollapsedImplCopyWith<$Res> {
   __$$CollapsedImplCopyWithImpl(
-      _$CollapsedImpl _value, $Res Function(_$CollapsedImpl) _then)
-      : super(_value, _then);
+    _$CollapsedImpl _value,
+    $Res Function(_$CollapsedImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of BookingDetailsPaymentHistoryState
   /// with the given fields replaced by the non-null parameter values.
@@ -141,8 +145,9 @@ class _$CollapsedImpl implements _Collapsed {
     required TResult Function() loading,
     required TResult Function(String error) error,
     required TResult Function(
-            List<BookingDetailsPaymentHistoryModel> paymentHistory)
-        expanded,
+      List<BookingDetailsPaymentHistoryModel> paymentHistory,
+    )
+    expanded,
   }) {
     return collapsed();
   }
@@ -154,7 +159,7 @@ class _$CollapsedImpl implements _Collapsed {
     TResult? Function()? loading,
     TResult? Function(String error)? error,
     TResult? Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
   }) {
     return collapsed?.call();
   }
@@ -166,7 +171,7 @@ class _$CollapsedImpl implements _Collapsed {
     TResult Function()? loading,
     TResult Function(String error)? error,
     TResult Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
     required TResult orElse(),
   }) {
     if (collapsed != null) {
@@ -220,8 +225,9 @@ abstract class _Collapsed implements BookingDetailsPaymentHistoryState {
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
+    _$LoadingImpl value,
+    $Res Function(_$LoadingImpl) then,
+  ) = __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -229,8 +235,9 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
+    _$LoadingImpl _value,
+    $Res Function(_$LoadingImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of BookingDetailsPaymentHistoryState
   /// with the given fields replaced by the non-null parameter values.
@@ -262,8 +269,9 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() loading,
     required TResult Function(String error) error,
     required TResult Function(
-            List<BookingDetailsPaymentHistoryModel> paymentHistory)
-        expanded,
+      List<BookingDetailsPaymentHistoryModel> paymentHistory,
+    )
+    expanded,
   }) {
     return loading();
   }
@@ -275,7 +283,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? loading,
     TResult? Function(String error)? error,
     TResult? Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
   }) {
     return loading?.call();
   }
@@ -287,7 +295,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? loading,
     TResult Function(String error)? error,
     TResult Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -341,8 +349,9 @@ abstract class _Loading implements BookingDetailsPaymentHistoryState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
+    _$ErrorImpl value,
+    $Res Function(_$ErrorImpl) then,
+  ) = __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -352,22 +361,23 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
+    _$ErrorImpl _value,
+    $Res Function(_$ErrorImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of BookingDetailsPaymentHistoryState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? error = null}) {
+    return _then(
+      _$ErrorImpl(
+        null == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -410,8 +420,9 @@ class _$ErrorImpl implements _Error {
     required TResult Function() loading,
     required TResult Function(String error) error,
     required TResult Function(
-            List<BookingDetailsPaymentHistoryModel> paymentHistory)
-        expanded,
+      List<BookingDetailsPaymentHistoryModel> paymentHistory,
+    )
+    expanded,
   }) {
     return error(this.error);
   }
@@ -423,7 +434,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function()? loading,
     TResult? Function(String error)? error,
     TResult? Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
   }) {
     return error?.call(this.error);
   }
@@ -435,7 +446,7 @@ class _$ErrorImpl implements _Error {
     TResult Function()? loading,
     TResult Function(String error)? error,
     TResult Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -497,33 +508,36 @@ abstract class _Error implements BookingDetailsPaymentHistoryState {
 /// @nodoc
 abstract class _$$ExpandedImplCopyWith<$Res> {
   factory _$$ExpandedImplCopyWith(
-          _$ExpandedImpl value, $Res Function(_$ExpandedImpl) then) =
-      __$$ExpandedImplCopyWithImpl<$Res>;
+    _$ExpandedImpl value,
+    $Res Function(_$ExpandedImpl) then,
+  ) = __$$ExpandedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<BookingDetailsPaymentHistoryModel> paymentHistory});
 }
 
 /// @nodoc
 class __$$ExpandedImplCopyWithImpl<$Res>
-    extends _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res,
-        _$ExpandedImpl> implements _$$ExpandedImplCopyWith<$Res> {
+    extends
+        _$BookingDetailsPaymentHistoryStateCopyWithImpl<$Res, _$ExpandedImpl>
+    implements _$$ExpandedImplCopyWith<$Res> {
   __$$ExpandedImplCopyWithImpl(
-      _$ExpandedImpl _value, $Res Function(_$ExpandedImpl) _then)
-      : super(_value, _then);
+    _$ExpandedImpl _value,
+    $Res Function(_$ExpandedImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of BookingDetailsPaymentHistoryState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? paymentHistory = null,
-  }) {
-    return _then(_$ExpandedImpl(
-      null == paymentHistory
-          ? _value._paymentHistory
-          : paymentHistory // ignore: cast_nullable_to_non_nullable
-              as List<BookingDetailsPaymentHistoryModel>,
-    ));
+  $Res call({Object? paymentHistory = null}) {
+    return _then(
+      _$ExpandedImpl(
+        null == paymentHistory
+            ? _value._paymentHistory
+            : paymentHistory // ignore: cast_nullable_to_non_nullable
+                  as List<BookingDetailsPaymentHistoryModel>,
+      ),
+    );
   }
 }
 
@@ -531,8 +545,8 @@ class __$$ExpandedImplCopyWithImpl<$Res>
 
 class _$ExpandedImpl implements _Expanded {
   const _$ExpandedImpl(
-      final List<BookingDetailsPaymentHistoryModel> paymentHistory)
-      : _paymentHistory = paymentHistory;
+    final List<BookingDetailsPaymentHistoryModel> paymentHistory,
+  ) : _paymentHistory = paymentHistory;
 
   final List<BookingDetailsPaymentHistoryModel> _paymentHistory;
   @override
@@ -552,13 +566,17 @@ class _$ExpandedImpl implements _Expanded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ExpandedImpl &&
-            const DeepCollectionEquality()
-                .equals(other._paymentHistory, _paymentHistory));
+            const DeepCollectionEquality().equals(
+              other._paymentHistory,
+              _paymentHistory,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_paymentHistory));
+    runtimeType,
+    const DeepCollectionEquality().hash(_paymentHistory),
+  );
 
   /// Create a copy of BookingDetailsPaymentHistoryState
   /// with the given fields replaced by the non-null parameter values.
@@ -575,8 +593,9 @@ class _$ExpandedImpl implements _Expanded {
     required TResult Function() loading,
     required TResult Function(String error) error,
     required TResult Function(
-            List<BookingDetailsPaymentHistoryModel> paymentHistory)
-        expanded,
+      List<BookingDetailsPaymentHistoryModel> paymentHistory,
+    )
+    expanded,
   }) {
     return expanded(paymentHistory);
   }
@@ -588,7 +607,7 @@ class _$ExpandedImpl implements _Expanded {
     TResult? Function()? loading,
     TResult? Function(String error)? error,
     TResult? Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
   }) {
     return expanded?.call(paymentHistory);
   }
@@ -600,7 +619,7 @@ class _$ExpandedImpl implements _Expanded {
     TResult Function()? loading,
     TResult Function(String error)? error,
     TResult Function(List<BookingDetailsPaymentHistoryModel> paymentHistory)?
-        expanded,
+    expanded,
     required TResult orElse(),
   }) {
     if (expanded != null) {
@@ -649,8 +668,8 @@ class _$ExpandedImpl implements _Expanded {
 
 abstract class _Expanded implements BookingDetailsPaymentHistoryState {
   const factory _Expanded(
-          final List<BookingDetailsPaymentHistoryModel> paymentHistory) =
-      _$ExpandedImpl;
+    final List<BookingDetailsPaymentHistoryModel> paymentHistory,
+  ) = _$ExpandedImpl;
 
   List<BookingDetailsPaymentHistoryModel> get paymentHistory;
 

@@ -3,7 +3,7 @@ part of 'add_booking_bloc.dart';
 @freezed
 class AddBookingState with _$AddBookingState {
   const factory AddBookingState.initial({
-    required AddBookingModel booking,
+    required RequestBookingModel booking,
   }) = _Initial;
 
   const factory AddBookingState.submitting() = _Submitting;
@@ -19,5 +19,5 @@ extension AddBookingStateX on AddBookingState {
   bool get isSuccess => this is _Success;
   bool get isError => this is _Error;
 
-  AddBookingModel get initialStateData => (this as _Initial).booking;
+  RequestBookingModel get initialStateData => (this as _Initial).booking;
 }

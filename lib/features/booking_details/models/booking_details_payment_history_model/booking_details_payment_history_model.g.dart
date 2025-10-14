@@ -7,20 +7,19 @@ part of 'booking_details_payment_history_model.dart';
 // **************************************************************************
 
 _$BookingDetailsPaymentHistoryModelImpl
-    _$$BookingDetailsPaymentHistoryModelImplFromJson(
-            Map<String, dynamic> json) =>
-        _$BookingDetailsPaymentHistoryModelImpl(
-          amount: (json['amount'] as num).toInt(),
-          paymentMethod: json['payment_method'] == null
-              ? PaymentMethod.cash
-              : PaymentMethod.fromString(json['payment_method'] as String),
-          dateTime: json['datetime'] as String,
-        );
+_$$BookingDetailsPaymentHistoryModelImplFromJson(Map<String, dynamic> json) =>
+    _$BookingDetailsPaymentHistoryModelImpl(
+      amount: (json['amount'] as num).toInt(),
+      paymentMethod: json['payment_method'] == null
+          ? PaymentMethod.cash
+          : PaymentMethod.fromString(json['payment_method'] as String),
+      dateTime: json['datetime'] as String,
+    );
 
 Map<String, dynamic> _$$BookingDetailsPaymentHistoryModelImplToJson(
-        _$BookingDetailsPaymentHistoryModelImpl instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-      'payment_method': PaymentMethod.toJson(instance.paymentMethod),
-      'datetime': instance.dateTime,
-    };
+  _$BookingDetailsPaymentHistoryModelImpl instance,
+) => <String, dynamic>{
+  'amount': instance.amount,
+  'payment_method': PaymentMethod.toJson(instance.paymentMethod),
+  'datetime': instance.dateTime,
+};

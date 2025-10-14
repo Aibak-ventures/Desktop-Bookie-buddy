@@ -1,14 +1,16 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_client_details_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/selected_product_in_add_booking.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
@@ -24,7 +26,7 @@ class AddBookingProductScreen extends StatelessWidget {
     super.key,
   });
 
-  final AddBookingModel addBookingModel;
+  final RequestBookingModel addBookingModel;
   // final List<ProductSelectedModel> selectedProducts;
 
   final ValueNotifier<List<ProductSelectedModel>> selectedProductsNotifier;
@@ -57,7 +59,7 @@ class AddBookingProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, AddBookingModel bookingData) {
+  Widget _buildMobileLayout(BuildContext context, RequestBookingModel bookingData) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -97,7 +99,7 @@ class AddBookingProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWebLayout(BuildContext context, AddBookingModel bookingData) {
+  Widget _buildWebLayout(BuildContext context, RequestBookingModel bookingData) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -301,7 +303,7 @@ class AddBookingProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWebEmptyState(BuildContext context, AddBookingModel bookingData) {
+  Widget _buildWebEmptyState(BuildContext context, RequestBookingModel bookingData) {
     return Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
@@ -349,7 +351,7 @@ class AddBookingProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWebAddProductCard(BuildContext context, AddBookingModel bookingData) {
+  Widget _buildWebAddProductCard(BuildContext context, RequestBookingModel bookingData) {
     return ValueListenableBuilder(
       valueListenable: selectedProductsNotifier,
       builder: (context, products, child) {
@@ -673,15 +675,19 @@ class AddBookingProductScreen extends StatelessWidget {
         }
 
         context.push(
-          AddBookingClientDetailsScreen(
-            addBookingModel: addBookingModel.copyWith(
-              products: selectedProductsNotifier.value,
-              description: descriptionController.text.trim(),
-              locationStart: locationStartController.text.trim(),
-              locationFrom: locationFromController.text.trim(),
-              locationTo: locationToController.text.trim(),
-            ),
-          ),
+             AddBookingClientDetailsScreen(
+                        addBookingModel: addBookingModel.copyWith(
+                          products: selectedProductsNotifier.value,
+                          description: descriptionController.text.trim(),
+                          otherDetails: BookingOtherDetailsModel(
+                            locationStart:
+                                locationStartController.text.nullIfEmpty,
+                            locationFrom:
+                                locationFromController.text.nullIfEmpty,
+                            locationTo: locationToController.text.nullIfEmpty,
+                          ),
+                        ),
+                      ),
         );
       },
       text: 'Next',
@@ -689,7 +695,7 @@ class AddBookingProductScreen extends StatelessWidget {
   }
 
   Container _addProductContainerBuilder(
-      BuildContext context, AddBookingModel bookingData) {
+      BuildContext context, RequestBookingModel bookingData) {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(30),

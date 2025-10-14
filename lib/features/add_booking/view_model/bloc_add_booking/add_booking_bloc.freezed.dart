@@ -12,49 +12,44 @@ part of 'add_booking_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$AddBookingEvent {
-  AddBookingModel get booking => throw _privateConstructorUsedError;
+  RequestBookingModel get booking => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) addNewBooking,
-    required TResult Function(AddBookingModel booking) updateBookingData,
-  }) =>
-      throw _privateConstructorUsedError;
+    required TResult Function(RequestBookingModel booking) addNewBooking,
+    required TResult Function(RequestBookingModel booking) updateBookingData,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? addNewBooking,
-    TResult? Function(AddBookingModel booking)? updateBookingData,
-  }) =>
-      throw _privateConstructorUsedError;
+    TResult? Function(RequestBookingModel booking)? addNewBooking,
+    TResult? Function(RequestBookingModel booking)? updateBookingData,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? addNewBooking,
-    TResult Function(AddBookingModel booking)? updateBookingData,
+    TResult Function(RequestBookingModel booking)? addNewBooking,
+    TResult Function(RequestBookingModel booking)? updateBookingData,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_AddNewBooking value) addNewBooking,
     required TResult Function(_UpdateBookingData value) updateBookingData,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_AddNewBooking value)? addNewBooking,
     TResult? Function(_UpdateBookingData value)? updateBookingData,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_AddNewBooking value)? addNewBooking,
     TResult Function(_UpdateBookingData value)? updateBookingData,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -66,12 +61,13 @@ mixin _$AddBookingEvent {
 /// @nodoc
 abstract class $AddBookingEventCopyWith<$Res> {
   factory $AddBookingEventCopyWith(
-          AddBookingEvent value, $Res Function(AddBookingEvent) then) =
-      _$AddBookingEventCopyWithImpl<$Res, AddBookingEvent>;
+    AddBookingEvent value,
+    $Res Function(AddBookingEvent) then,
+  ) = _$AddBookingEventCopyWithImpl<$Res, AddBookingEvent>;
   @useResult
-  $Res call({AddBookingModel booking});
+  $Res call({RequestBookingModel booking});
 
-  $AddBookingModelCopyWith<$Res> get booking;
+  $RequestBookingModelCopyWith<$Res> get booking;
 }
 
 /// @nodoc
@@ -88,23 +84,24 @@ class _$AddBookingEventCopyWithImpl<$Res, $Val extends AddBookingEvent>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? booking = null,
-  }) {
-    return _then(_value.copyWith(
-      booking: null == booking
-          ? _value.booking
-          : booking // ignore: cast_nullable_to_non_nullable
-              as AddBookingModel,
-    ) as $Val);
+  $Res call({Object? booking = null}) {
+    return _then(
+      _value.copyWith(
+            booking: null == booking
+                ? _value.booking
+                : booking // ignore: cast_nullable_to_non_nullable
+                      as RequestBookingModel,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $AddBookingModelCopyWith<$Res> get booking {
-    return $AddBookingModelCopyWith<$Res>(_value.booking, (value) {
+  $RequestBookingModelCopyWith<$Res> get booking {
+    return $RequestBookingModelCopyWith<$Res>(_value.booking, (value) {
       return _then(_value.copyWith(booking: value) as $Val);
     });
   }
@@ -114,14 +111,15 @@ class _$AddBookingEventCopyWithImpl<$Res, $Val extends AddBookingEvent>
 abstract class _$$AddNewBookingImplCopyWith<$Res>
     implements $AddBookingEventCopyWith<$Res> {
   factory _$$AddNewBookingImplCopyWith(
-          _$AddNewBookingImpl value, $Res Function(_$AddNewBookingImpl) then) =
-      __$$AddNewBookingImplCopyWithImpl<$Res>;
+    _$AddNewBookingImpl value,
+    $Res Function(_$AddNewBookingImpl) then,
+  ) = __$$AddNewBookingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({AddBookingModel booking});
+  $Res call({RequestBookingModel booking});
 
   @override
-  $AddBookingModelCopyWith<$Res> get booking;
+  $RequestBookingModelCopyWith<$Res> get booking;
 }
 
 /// @nodoc
@@ -129,22 +127,23 @@ class __$$AddNewBookingImplCopyWithImpl<$Res>
     extends _$AddBookingEventCopyWithImpl<$Res, _$AddNewBookingImpl>
     implements _$$AddNewBookingImplCopyWith<$Res> {
   __$$AddNewBookingImplCopyWithImpl(
-      _$AddNewBookingImpl _value, $Res Function(_$AddNewBookingImpl) _then)
-      : super(_value, _then);
+    _$AddNewBookingImpl _value,
+    $Res Function(_$AddNewBookingImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? booking = null,
-  }) {
-    return _then(_$AddNewBookingImpl(
-      null == booking
-          ? _value.booking
-          : booking // ignore: cast_nullable_to_non_nullable
-              as AddBookingModel,
-    ));
+  $Res call({Object? booking = null}) {
+    return _then(
+      _$AddNewBookingImpl(
+        null == booking
+            ? _value.booking
+            : booking // ignore: cast_nullable_to_non_nullable
+                  as RequestBookingModel,
+      ),
+    );
   }
 }
 
@@ -154,7 +153,7 @@ class _$AddNewBookingImpl implements _AddNewBooking {
   const _$AddNewBookingImpl(this.booking);
 
   @override
-  final AddBookingModel booking;
+  final RequestBookingModel booking;
 
   @override
   String toString() {
@@ -183,8 +182,8 @@ class _$AddNewBookingImpl implements _AddNewBooking {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) addNewBooking,
-    required TResult Function(AddBookingModel booking) updateBookingData,
+    required TResult Function(RequestBookingModel booking) addNewBooking,
+    required TResult Function(RequestBookingModel booking) updateBookingData,
   }) {
     return addNewBooking(booking);
   }
@@ -192,8 +191,8 @@ class _$AddNewBookingImpl implements _AddNewBooking {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? addNewBooking,
-    TResult? Function(AddBookingModel booking)? updateBookingData,
+    TResult? Function(RequestBookingModel booking)? addNewBooking,
+    TResult? Function(RequestBookingModel booking)? updateBookingData,
   }) {
     return addNewBooking?.call(booking);
   }
@@ -201,8 +200,8 @@ class _$AddNewBookingImpl implements _AddNewBooking {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? addNewBooking,
-    TResult Function(AddBookingModel booking)? updateBookingData,
+    TResult Function(RequestBookingModel booking)? addNewBooking,
+    TResult Function(RequestBookingModel booking)? updateBookingData,
     required TResult orElse(),
   }) {
     if (addNewBooking != null) {
@@ -244,11 +243,11 @@ class _$AddNewBookingImpl implements _AddNewBooking {
 }
 
 abstract class _AddNewBooking implements AddBookingEvent {
-  const factory _AddNewBooking(final AddBookingModel booking) =
+  const factory _AddNewBooking(final RequestBookingModel booking) =
       _$AddNewBookingImpl;
 
   @override
-  AddBookingModel get booking;
+  RequestBookingModel get booking;
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -261,38 +260,40 @@ abstract class _AddNewBooking implements AddBookingEvent {
 /// @nodoc
 abstract class _$$UpdateBookingDataImplCopyWith<$Res>
     implements $AddBookingEventCopyWith<$Res> {
-  factory _$$UpdateBookingDataImplCopyWith(_$UpdateBookingDataImpl value,
-          $Res Function(_$UpdateBookingDataImpl) then) =
-      __$$UpdateBookingDataImplCopyWithImpl<$Res>;
+  factory _$$UpdateBookingDataImplCopyWith(
+    _$UpdateBookingDataImpl value,
+    $Res Function(_$UpdateBookingDataImpl) then,
+  ) = __$$UpdateBookingDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({AddBookingModel booking});
+  $Res call({RequestBookingModel booking});
 
   @override
-  $AddBookingModelCopyWith<$Res> get booking;
+  $RequestBookingModelCopyWith<$Res> get booking;
 }
 
 /// @nodoc
 class __$$UpdateBookingDataImplCopyWithImpl<$Res>
     extends _$AddBookingEventCopyWithImpl<$Res, _$UpdateBookingDataImpl>
     implements _$$UpdateBookingDataImplCopyWith<$Res> {
-  __$$UpdateBookingDataImplCopyWithImpl(_$UpdateBookingDataImpl _value,
-      $Res Function(_$UpdateBookingDataImpl) _then)
-      : super(_value, _then);
+  __$$UpdateBookingDataImplCopyWithImpl(
+    _$UpdateBookingDataImpl _value,
+    $Res Function(_$UpdateBookingDataImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? booking = null,
-  }) {
-    return _then(_$UpdateBookingDataImpl(
-      null == booking
-          ? _value.booking
-          : booking // ignore: cast_nullable_to_non_nullable
-              as AddBookingModel,
-    ));
+  $Res call({Object? booking = null}) {
+    return _then(
+      _$UpdateBookingDataImpl(
+        null == booking
+            ? _value.booking
+            : booking // ignore: cast_nullable_to_non_nullable
+                  as RequestBookingModel,
+      ),
+    );
   }
 }
 
@@ -302,7 +303,7 @@ class _$UpdateBookingDataImpl implements _UpdateBookingData {
   const _$UpdateBookingDataImpl(this.booking);
 
   @override
-  final AddBookingModel booking;
+  final RequestBookingModel booking;
 
   @override
   String toString() {
@@ -327,13 +328,15 @@ class _$UpdateBookingDataImpl implements _UpdateBookingData {
   @pragma('vm:prefer-inline')
   _$$UpdateBookingDataImplCopyWith<_$UpdateBookingDataImpl> get copyWith =>
       __$$UpdateBookingDataImplCopyWithImpl<_$UpdateBookingDataImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) addNewBooking,
-    required TResult Function(AddBookingModel booking) updateBookingData,
+    required TResult Function(RequestBookingModel booking) addNewBooking,
+    required TResult Function(RequestBookingModel booking) updateBookingData,
   }) {
     return updateBookingData(booking);
   }
@@ -341,8 +344,8 @@ class _$UpdateBookingDataImpl implements _UpdateBookingData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? addNewBooking,
-    TResult? Function(AddBookingModel booking)? updateBookingData,
+    TResult? Function(RequestBookingModel booking)? addNewBooking,
+    TResult? Function(RequestBookingModel booking)? updateBookingData,
   }) {
     return updateBookingData?.call(booking);
   }
@@ -350,8 +353,8 @@ class _$UpdateBookingDataImpl implements _UpdateBookingData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? addNewBooking,
-    TResult Function(AddBookingModel booking)? updateBookingData,
+    TResult Function(RequestBookingModel booking)? addNewBooking,
+    TResult Function(RequestBookingModel booking)? updateBookingData,
     required TResult orElse(),
   }) {
     if (updateBookingData != null) {
@@ -393,11 +396,11 @@ class _$UpdateBookingDataImpl implements _UpdateBookingData {
 }
 
 abstract class _UpdateBookingData implements AddBookingEvent {
-  const factory _UpdateBookingData(final AddBookingModel booking) =
+  const factory _UpdateBookingData(final RequestBookingModel booking) =
       _$UpdateBookingDataImpl;
 
   @override
-  AddBookingModel get booking;
+  RequestBookingModel get booking;
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -411,45 +414,40 @@ abstract class _UpdateBookingData implements AddBookingEvent {
 mixin _$AddBookingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) initial,
+    required TResult Function(RequestBookingModel booking) initial,
     required TResult Function() submitting,
     required TResult Function() success,
     required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? initial,
+    TResult? Function(RequestBookingModel booking)? initial,
     TResult? Function()? submitting,
     TResult? Function()? success,
     TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? initial,
+    TResult Function(RequestBookingModel booking)? initial,
     TResult Function()? submitting,
     TResult Function()? success,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -457,15 +455,15 @@ mixin _$AddBookingState {
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AddBookingStateCopyWith<$Res> {
   factory $AddBookingStateCopyWith(
-          AddBookingState value, $Res Function(AddBookingState) then) =
-      _$AddBookingStateCopyWithImpl<$Res, AddBookingState>;
+    AddBookingState value,
+    $Res Function(AddBookingState) then,
+  ) = _$AddBookingStateCopyWithImpl<$Res, AddBookingState>;
 }
 
 /// @nodoc
@@ -485,12 +483,13 @@ class _$AddBookingStateCopyWithImpl<$Res, $Val extends AddBookingState>
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
+    _$InitialImpl value,
+    $Res Function(_$InitialImpl) then,
+  ) = __$$InitialImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({AddBookingModel booking});
+  $Res call({RequestBookingModel booking});
 
-  $AddBookingModelCopyWith<$Res> get booking;
+  $RequestBookingModelCopyWith<$Res> get booking;
 }
 
 /// @nodoc
@@ -498,30 +497,31 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
-      : super(_value, _then);
+    _$InitialImpl _value,
+    $Res Function(_$InitialImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? booking = null,
-  }) {
-    return _then(_$InitialImpl(
-      booking: null == booking
-          ? _value.booking
-          : booking // ignore: cast_nullable_to_non_nullable
-              as AddBookingModel,
-    ));
+  $Res call({Object? booking = null}) {
+    return _then(
+      _$InitialImpl(
+        booking: null == booking
+            ? _value.booking
+            : booking // ignore: cast_nullable_to_non_nullable
+                  as RequestBookingModel,
+      ),
+    );
   }
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $AddBookingModelCopyWith<$Res> get booking {
-    return $AddBookingModelCopyWith<$Res>(_value.booking, (value) {
+  $RequestBookingModelCopyWith<$Res> get booking {
+    return $RequestBookingModelCopyWith<$Res>(_value.booking, (value) {
       return _then(_value.copyWith(booking: value));
     });
   }
@@ -533,7 +533,7 @@ class _$InitialImpl implements _Initial {
   const _$InitialImpl({required this.booking});
 
   @override
-  final AddBookingModel booking;
+  final RequestBookingModel booking;
 
   @override
   String toString() {
@@ -562,7 +562,7 @@ class _$InitialImpl implements _Initial {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) initial,
+    required TResult Function(RequestBookingModel booking) initial,
     required TResult Function() submitting,
     required TResult Function() success,
     required TResult Function(String error) error,
@@ -573,7 +573,7 @@ class _$InitialImpl implements _Initial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? initial,
+    TResult? Function(RequestBookingModel booking)? initial,
     TResult? Function()? submitting,
     TResult? Function()? success,
     TResult? Function(String error)? error,
@@ -584,7 +584,7 @@ class _$InitialImpl implements _Initial {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? initial,
+    TResult Function(RequestBookingModel booking)? initial,
     TResult Function()? submitting,
     TResult Function()? success,
     TResult Function(String error)? error,
@@ -635,10 +635,10 @@ class _$InitialImpl implements _Initial {
 }
 
 abstract class _Initial implements AddBookingState {
-  const factory _Initial({required final AddBookingModel booking}) =
+  const factory _Initial({required final RequestBookingModel booking}) =
       _$InitialImpl;
 
-  AddBookingModel get booking;
+  RequestBookingModel get booking;
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -650,8 +650,9 @@ abstract class _Initial implements AddBookingState {
 /// @nodoc
 abstract class _$$SubmittingImplCopyWith<$Res> {
   factory _$$SubmittingImplCopyWith(
-          _$SubmittingImpl value, $Res Function(_$SubmittingImpl) then) =
-      __$$SubmittingImplCopyWithImpl<$Res>;
+    _$SubmittingImpl value,
+    $Res Function(_$SubmittingImpl) then,
+  ) = __$$SubmittingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -659,8 +660,9 @@ class __$$SubmittingImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$SubmittingImpl>
     implements _$$SubmittingImplCopyWith<$Res> {
   __$$SubmittingImplCopyWithImpl(
-      _$SubmittingImpl _value, $Res Function(_$SubmittingImpl) _then)
-      : super(_value, _then);
+    _$SubmittingImpl _value,
+    $Res Function(_$SubmittingImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -688,7 +690,7 @@ class _$SubmittingImpl implements _Submitting {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) initial,
+    required TResult Function(RequestBookingModel booking) initial,
     required TResult Function() submitting,
     required TResult Function() success,
     required TResult Function(String error) error,
@@ -699,7 +701,7 @@ class _$SubmittingImpl implements _Submitting {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? initial,
+    TResult? Function(RequestBookingModel booking)? initial,
     TResult? Function()? submitting,
     TResult? Function()? success,
     TResult? Function(String error)? error,
@@ -710,7 +712,7 @@ class _$SubmittingImpl implements _Submitting {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? initial,
+    TResult Function(RequestBookingModel booking)? initial,
     TResult Function()? submitting,
     TResult Function()? success,
     TResult Function(String error)? error,
@@ -767,8 +769,9 @@ abstract class _Submitting implements AddBookingState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
+    _$SuccessImpl value,
+    $Res Function(_$SuccessImpl) then,
+  ) = __$$SuccessImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -776,8 +779,9 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
-      : super(_value, _then);
+    _$SuccessImpl _value,
+    $Res Function(_$SuccessImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -805,7 +809,7 @@ class _$SuccessImpl implements _Success {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) initial,
+    required TResult Function(RequestBookingModel booking) initial,
     required TResult Function() submitting,
     required TResult Function() success,
     required TResult Function(String error) error,
@@ -816,7 +820,7 @@ class _$SuccessImpl implements _Success {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? initial,
+    TResult? Function(RequestBookingModel booking)? initial,
     TResult? Function()? submitting,
     TResult? Function()? success,
     TResult? Function(String error)? error,
@@ -827,7 +831,7 @@ class _$SuccessImpl implements _Success {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? initial,
+    TResult Function(RequestBookingModel booking)? initial,
     TResult Function()? submitting,
     TResult Function()? success,
     TResult Function(String error)? error,
@@ -884,8 +888,9 @@ abstract class _Success implements AddBookingState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
+    _$ErrorImpl value,
+    $Res Function(_$ErrorImpl) then,
+  ) = __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -895,22 +900,23 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
+    _$ErrorImpl _value,
+    $Res Function(_$ErrorImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? error = null}) {
+    return _then(
+      _$ErrorImpl(
+        null == error
+            ? _value.error
+            : error // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -949,7 +955,7 @@ class _$ErrorImpl implements _Error {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) initial,
+    required TResult Function(RequestBookingModel booking) initial,
     required TResult Function() submitting,
     required TResult Function() success,
     required TResult Function(String error) error,
@@ -960,7 +966,7 @@ class _$ErrorImpl implements _Error {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? initial,
+    TResult? Function(RequestBookingModel booking)? initial,
     TResult? Function()? submitting,
     TResult? Function()? success,
     TResult? Function(String error)? error,
@@ -971,7 +977,7 @@ class _$ErrorImpl implements _Error {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? initial,
+    TResult Function(RequestBookingModel booking)? initial,
     TResult Function()? submitting,
     TResult Function()? success,
     TResult Function(String error)? error,

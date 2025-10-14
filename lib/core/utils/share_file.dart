@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 Future<void> shareFile({
   required final BuildContext context,

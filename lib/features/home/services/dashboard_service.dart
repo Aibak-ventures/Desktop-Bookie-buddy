@@ -6,7 +6,8 @@ import 'package:bookie_buddy_web/core/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/network_exceptions.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+// import 'package:bookie_buddy_web/core/models/pagination_model.dart';
 import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
 import 'package:dio/dio.dart';
 

@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
@@ -103,19 +104,17 @@ class ProductGridViewWidget extends StatelessWidget {
                           return ProductCard(
                             product: product,
                             onTap: () {
-                              context.push(BlocProvider(
-                                create: (context) => ProductInfoBloc()
-                                  ..add(
-                                    ProductInfoEvent.loadProductInfo(
-                                      product.id,
-                                    ),
-                                  ),
+                             context.push(
+                              BlocProvider(
+                                create: (context) =>
+                                    ProductInfoBloc(repository: getIt.get()),
                                 child: ProductInfoScreen(
                                   serviceId: serviceId,
                                   productId: product.id,
                                   mainServiceType: mainServiceType,
                                 ),
-                              ));
+                              ),
+                            );
                             },
                             onOptionSelected: (value) async {},
                           );
