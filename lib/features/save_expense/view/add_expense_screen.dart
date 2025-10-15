@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/constants/expense_categories.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -41,7 +41,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   final expenseController = TextEditingController();
   final descriptionController = TextEditingController();
-  final _categories = <String>[
+  var _categories = <String>[
     'Food',
     'Vehicle',
     "Petrol",
@@ -81,21 +81,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     if (productScrollController.hasClients &&
         productScrollController.position.pixels >=
             productScrollController.position.maxScrollExtent - 50) {
-      final bloc = context.read<ProductSearchCubit>();
-      final isLoadNext = bloc.state.when(
-        initial: (
-          suggestions,
-          selectedProduct,
-          searchQuery,
-          nextPageUrl,
-          isLoading,
-        ) =>
-            selectedProduct == null &&
-            searchQuery.isNotEmpty &&
-            nextPageUrl != null &&
-            !isLoading,
-      );
-     
+      // final cubit = context.read<ProductSearchCubit>();
+      // final isLoadNext = cubit.state.searchQuery.isNotEmpty &&
+      //     cubit.state.nextPageUrl != null &&
+      //     cubit.state.isLoading;
+
+      // if (isLoadNext) {
+      //   log('loading next event called');
+      //   cubit.loadNexData();
+      // }
     }
     // log('position: ${productScrollController.position.pixels}, max: ${productScrollController.position.maxScrollExtent}');
   }
@@ -193,9 +187,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     final isEdit = widget.expense != null;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: ResponsiveHelper.isDesktop(context) 
-          ? const Color(0xFFF8F9FA) 
-          : null,
+      backgroundColor:
+          ResponsiveHelper.isDesktop(context) ? const Color(0xFFF8F9FA) : null,
       appBar: ResponsiveHelper.isMobile(context)
           ? AppBar(
               automaticallyImplyLeading: !isEdit ? false : true,
@@ -271,7 +264,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      !isEdit 
+                      !isEdit
                           ? 'Track your expenses and manage your budget effectively'
                           : 'Update your expense details',
                       style: TextStyle(
@@ -282,7 +275,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   ],
                 ),
               ),
-              
+
               // Form Section
               Center(
                 child: Container(
@@ -309,7 +302,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   ),
                 ),
               ),
-              
+
               SizedBox(height: 60.h),
             ],
           ),
@@ -356,7 +349,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     ),
                     SizedBox(height: 12.h),
                     Text(
-                      !isEdit 
+                      !isEdit
                           ? 'Track your expenses and manage your budget effectively'
                           : 'Update your expense details',
                       style: TextStyle(
@@ -367,7 +360,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   ],
                 ),
               ),
-              
+
               // Form Section
               Center(
                 child: Container(
@@ -394,7 +387,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   ),
                 ),
               ),
-              
+
               SizedBox(height: 80.h),
             ],
           ),
@@ -417,23 +410,33 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           if (!isEdit)
             BlocConsumer<ProductSearchCubit, ProductSearchState>(
               listener: (context, state) {
-                state.when(
-                  initial: (suggestions, selectedProduct,
-                      searchQuery, nextPageUrl, isLoading) {
-                    if (selectedProduct != null) {
-                      productNameController.text =
-                          selectedProduct.name;
-                      variantSelectedNotifier.value =
-                          selectedProduct.variants.first.id;
-                      log(selectedProduct.toString());
-                      context.hideKeyboard();
-                    }
-                  },
-                );
+                // state.when(
+                //   initial: (suggestions, selectedProduct, searchQuery,
+                //       nextPageUrl, isLoading) {
+                //     if (selectedProduct != null) {
+                //       productNameController.text = selectedProduct.name;
+                //       variantSelectedNotifier.value =
+                //           selectedProduct.variants.first.id;
+                //       log(selectedProduct.toString());
+                //       context.hideKeyboard();
+                //     }
+                //   },
+                // );
+                final selectedProduct = state.selectedProduct;
+                if (selectedProduct != null) {
+                  productNameController.text = selectedProduct.name;
+                  variantSelectedNotifier.value =
+                      selectedProduct.variants.first.id;
+                  log(selectedProduct.toString());
+                  context.hideKeyboard();
+
+                  _categories = ExpenseCategories.forService(
+                    selectedProduct.mainServiceType,
+                  );
+                }
               },
               builder: (context, state) {
-                final isSelectedProduct =
-                    state.selectedProduct != null;
+                final isSelectedProduct = state.selectedProduct != null;
 
                 return Column(
                   children: [
@@ -442,49 +445,38 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       scrollController: productScrollController,
                     ),
                     if (isSelectedProduct &&
-                        state.selectedProduct!.mainServiceType
-                            .isDress &&
+                        state.selectedProduct!.mainServiceType.isDress &&
                         !VariantSizeType.isFreeSize(
-                          state.selectedProduct!.variants.first
-                              .attribute,
+                          state.selectedProduct!.variants.first.attribute,
                         ) &&
-                        state
-                            .selectedProduct!.variants.isNotEmpty)
+                        state.selectedProduct!.variants.isNotEmpty)
                       SizedBox(
                         width: double.infinity,
                         height: 65.h,
                         child: ValueListenableBuilder(
-                            valueListenable:
-                                variantSelectedNotifier,
-                            builder:
-                                (context, selectedId, child) {
+                            valueListenable: variantSelectedNotifier,
+                            builder: (context, selectedId, child) {
                               return ListView.builder(
-                                padding:
-                                    10.paddingOnly(top: true),
+                                padding: 10.paddingOnly(top: true),
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
-                                itemCount: state.selectedProduct!
-                                    .variants.length,
+                                itemCount:
+                                    state.selectedProduct!.variants.length,
                                 itemBuilder: (context, index) {
-                                  final variant = state
-                                      .selectedProduct!
-                                      .variants[index];
-                                  final isSelected =
-                                      variant.id == selectedId;
+                                  final variant =
+                                      state.selectedProduct!.variants[index];
+                                  final isSelected = variant.id == selectedId;
                                   return Padding(
-                                    padding: 12
-                                        .paddingOnly(right: true),
+                                    padding: 12.paddingOnly(right: true),
                                     child: Container(
                                       width: 55,
                                       height: 55,
                                       decoration: BoxDecoration(
-                                        color:
-                                            AppColors.purpleLight,
+                                        color: AppColors.purpleLight,
                                         shape: BoxShape.circle,
                                         border: isSelected
                                             ? BoxBorder.all(
-                                                color: AppColors
-                                                    .purple,
+                                                color: AppColors.purple,
                                               )
                                             : null,
                                       ),
@@ -493,17 +485,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                           variant.attribute,
                                           style: TextStyle(
                                             fontSize: 16.sp,
-                                            fontWeight:
-                                                FontWeight.w600,
-                                            color:
-                                                AppColors.black,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.black,
                                           ),
                                         ),
                                       ),
                                     ).onTap(
                                       () {
-                                        variantSelectedNotifier
-                                            .value = variant.id;
+                                        variantSelectedNotifier.value =
+                                            variant.id;
                                       },
                                     ),
                                   );
@@ -521,9 +511,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             controller: dateController,
             hintText: 'Select Date',
             prefixIcon: const Icon(Icons.calendar_month),
-            validator: (value) => value == null || value.isEmpty
-                ? 'Enter a date'
-                : null,
+            validator: (value) =>
+                value == null || value.isEmpty ? 'Enter a date' : null,
           ).onTap(
             () => selectDate(context),
           ),
@@ -554,9 +543,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             CustomTextField(
               hintText: 'Enter Custom Category',
               controller: customCategoryController,
-              validator: (value) => value == null || value.isEmpty
-                  ? 'Enter a category'
-                  : null,
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter a category' : null,
             ),
           ],
           Stack(
@@ -587,7 +575,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context, bool isEdit, {bool isInCard = false}) {
+  Widget _buildSubmitButton(BuildContext context, bool isEdit,
+      {bool isInCard = false}) {
     return BlocConsumer<SaveExpenseCubit, SaveExpenseState>(
       listener: (context, state) {
         state.maybeWhen(
@@ -597,9 +586,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           },
           success: (message) {
             // clear selected product and variant
-            context
-                .read<ProductSearchCubit>()
-                .add(const ProductSearchEvent.clearSelected());
+            context.read<ProductSearchCubit>().clearSelected();
+            // context
+            //     .read<ProductSearchCubit>()
+            //     .add(const ProductSearchEvent.clearSelected());
             variantSelectedNotifier.value = null;
 
             if (isEdit && context.mounted) {
@@ -626,18 +616,18 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           orElse: () => false,
           submitted: () => true,
         );
-        
+
         return Container(
           width: isInCard ? null : double.infinity,
-          padding: isInCard 
-              ? EdgeInsets.zero 
+          padding: isInCard
+              ? EdgeInsets.zero
               : EdgeInsets.only(
                   left: isMobile ? 16.w : 40.w,
                   right: isMobile ? 16.w : 40.w,
                   bottom: 100.h,
                 ),
           child: CustomElevatedButton(
-            width: isInCard 
+            width: isInCard
                 ? ResponsiveHelper.getValue(
                     context,
                     mobile: double.infinity,

@@ -12,8 +12,7 @@ part of 'shop_settings_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ShopSettingsModel _$ShopSettingsModelFromJson(Map<String, dynamic> json) {
   return _ShopSettingsModel.fromJson(json);
@@ -24,10 +23,9 @@ mixin _$ShopSettingsModel {
   @JsonKey(name: 'cooling_days', defaultValue: 0)
   int get coolingPeriodDuration => throw _privateConstructorUsedError;
   @JsonKey(
-    name: 'default_action',
-    fromJson: AddButtonDefaultAction.fromString,
-    defaultValue: AddButtonDefaultAction.booking,
-  )
+      name: 'default_action',
+      fromJson: AddButtonDefaultAction.fromString,
+      defaultValue: AddButtonDefaultAction.booking)
   AddButtonDefaultAction get addButtonDefaultAction =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'search_client', defaultValue: false)
@@ -46,20 +44,18 @@ mixin _$ShopSettingsModel {
 /// @nodoc
 abstract class $ShopSettingsModelCopyWith<$Res> {
   factory $ShopSettingsModelCopyWith(
-    ShopSettingsModel value,
-    $Res Function(ShopSettingsModel) then,
-  ) = _$ShopSettingsModelCopyWithImpl<$Res, ShopSettingsModel>;
+          ShopSettingsModel value, $Res Function(ShopSettingsModel) then) =
+      _$ShopSettingsModelCopyWithImpl<$Res, ShopSettingsModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,
-    @JsonKey(
-      name: 'default_action',
-      fromJson: AddButtonDefaultAction.fromString,
-      defaultValue: AddButtonDefaultAction.booking,
-    )
-    AddButtonDefaultAction addButtonDefaultAction,
-    @JsonKey(name: 'search_client', defaultValue: false) bool searchClient,
-  });
+  $Res call(
+      {@JsonKey(name: 'cooling_days', defaultValue: 0)
+      int coolingPeriodDuration,
+      @JsonKey(
+          name: 'default_action',
+          fromJson: AddButtonDefaultAction.fromString,
+          defaultValue: AddButtonDefaultAction.booking)
+      AddButtonDefaultAction addButtonDefaultAction,
+      @JsonKey(name: 'search_client', defaultValue: false) bool searchClient});
 }
 
 /// @nodoc
@@ -81,55 +77,49 @@ class _$ShopSettingsModelCopyWithImpl<$Res, $Val extends ShopSettingsModel>
     Object? addButtonDefaultAction = null,
     Object? searchClient = null,
   }) {
-    return _then(
-      _value.copyWith(
-            coolingPeriodDuration: null == coolingPeriodDuration
-                ? _value.coolingPeriodDuration
-                : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
-                      as int,
-            addButtonDefaultAction: null == addButtonDefaultAction
-                ? _value.addButtonDefaultAction
-                : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
-                      as AddButtonDefaultAction,
-            searchClient: null == searchClient
-                ? _value.searchClient
-                : searchClient // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      coolingPeriodDuration: null == coolingPeriodDuration
+          ? _value.coolingPeriodDuration
+          : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
+              as int,
+      addButtonDefaultAction: null == addButtonDefaultAction
+          ? _value.addButtonDefaultAction
+          : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
+              as AddButtonDefaultAction,
+      searchClient: null == searchClient
+          ? _value.searchClient
+          : searchClient // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ShopSettingsModelImplCopyWith<$Res>
     implements $ShopSettingsModelCopyWith<$Res> {
-  factory _$$ShopSettingsModelImplCopyWith(
-    _$ShopSettingsModelImpl value,
-    $Res Function(_$ShopSettingsModelImpl) then,
-  ) = __$$ShopSettingsModelImplCopyWithImpl<$Res>;
+  factory _$$ShopSettingsModelImplCopyWith(_$ShopSettingsModelImpl value,
+          $Res Function(_$ShopSettingsModelImpl) then) =
+      __$$ShopSettingsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,
-    @JsonKey(
-      name: 'default_action',
-      fromJson: AddButtonDefaultAction.fromString,
-      defaultValue: AddButtonDefaultAction.booking,
-    )
-    AddButtonDefaultAction addButtonDefaultAction,
-    @JsonKey(name: 'search_client', defaultValue: false) bool searchClient,
-  });
+  $Res call(
+      {@JsonKey(name: 'cooling_days', defaultValue: 0)
+      int coolingPeriodDuration,
+      @JsonKey(
+          name: 'default_action',
+          fromJson: AddButtonDefaultAction.fromString,
+          defaultValue: AddButtonDefaultAction.booking)
+      AddButtonDefaultAction addButtonDefaultAction,
+      @JsonKey(name: 'search_client', defaultValue: false) bool searchClient});
 }
 
 /// @nodoc
 class __$$ShopSettingsModelImplCopyWithImpl<$Res>
     extends _$ShopSettingsModelCopyWithImpl<$Res, _$ShopSettingsModelImpl>
     implements _$$ShopSettingsModelImplCopyWith<$Res> {
-  __$$ShopSettingsModelImplCopyWithImpl(
-    _$ShopSettingsModelImpl _value,
-    $Res Function(_$ShopSettingsModelImpl) _then,
-  ) : super(_value, _then);
+  __$$ShopSettingsModelImplCopyWithImpl(_$ShopSettingsModelImpl _value,
+      $Res Function(_$ShopSettingsModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ShopSettingsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -140,40 +130,36 @@ class __$$ShopSettingsModelImplCopyWithImpl<$Res>
     Object? addButtonDefaultAction = null,
     Object? searchClient = null,
   }) {
-    return _then(
-      _$ShopSettingsModelImpl(
-        coolingPeriodDuration: null == coolingPeriodDuration
-            ? _value.coolingPeriodDuration
-            : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
-                  as int,
-        addButtonDefaultAction: null == addButtonDefaultAction
-            ? _value.addButtonDefaultAction
-            : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
-                  as AddButtonDefaultAction,
-        searchClient: null == searchClient
-            ? _value.searchClient
-            : searchClient // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$ShopSettingsModelImpl(
+      coolingPeriodDuration: null == coolingPeriodDuration
+          ? _value.coolingPeriodDuration
+          : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
+              as int,
+      addButtonDefaultAction: null == addButtonDefaultAction
+          ? _value.addButtonDefaultAction
+          : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
+              as AddButtonDefaultAction,
+      searchClient: null == searchClient
+          ? _value.searchClient
+          : searchClient // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ShopSettingsModelImpl implements _ShopSettingsModel {
-  const _$ShopSettingsModelImpl({
-    @JsonKey(name: 'cooling_days', defaultValue: 0)
-    required this.coolingPeriodDuration,
-    @JsonKey(
-      name: 'default_action',
-      fromJson: AddButtonDefaultAction.fromString,
-      defaultValue: AddButtonDefaultAction.booking,
-    )
-    required this.addButtonDefaultAction,
-    @JsonKey(name: 'search_client', defaultValue: false)
-    required this.searchClient,
-  });
+  const _$ShopSettingsModelImpl(
+      {@JsonKey(name: 'cooling_days', defaultValue: 0)
+      required this.coolingPeriodDuration,
+      @JsonKey(
+          name: 'default_action',
+          fromJson: AddButtonDefaultAction.fromString,
+          defaultValue: AddButtonDefaultAction.booking)
+      required this.addButtonDefaultAction,
+      @JsonKey(name: 'search_client', defaultValue: false)
+      required this.searchClient});
 
   factory _$ShopSettingsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShopSettingsModelImplFromJson(json);
@@ -183,10 +169,9 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
   final int coolingPeriodDuration;
   @override
   @JsonKey(
-    name: 'default_action',
-    fromJson: AddButtonDefaultAction.fromString,
-    defaultValue: AddButtonDefaultAction.booking,
-  )
+      name: 'default_action',
+      fromJson: AddButtonDefaultAction.fromString,
+      defaultValue: AddButtonDefaultAction.booking)
   final AddButtonDefaultAction addButtonDefaultAction;
   @override
   @JsonKey(name: 'search_client', defaultValue: false)
@@ -213,11 +198,7 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    coolingPeriodDuration,
-    addButtonDefaultAction,
-    searchClient,
-  );
+      runtimeType, coolingPeriodDuration, addButtonDefaultAction, searchClient);
 
   /// Create a copy of ShopSettingsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -226,29 +207,27 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
   @pragma('vm:prefer-inline')
   _$$ShopSettingsModelImplCopyWith<_$ShopSettingsModelImpl> get copyWith =>
       __$$ShopSettingsModelImplCopyWithImpl<_$ShopSettingsModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShopSettingsModelImplToJson(this);
+    return _$$ShopSettingsModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ShopSettingsModel implements ShopSettingsModel {
-  const factory _ShopSettingsModel({
-    @JsonKey(name: 'cooling_days', defaultValue: 0)
-    required final int coolingPeriodDuration,
-    @JsonKey(
-      name: 'default_action',
-      fromJson: AddButtonDefaultAction.fromString,
-      defaultValue: AddButtonDefaultAction.booking,
-    )
-    required final AddButtonDefaultAction addButtonDefaultAction,
-    @JsonKey(name: 'search_client', defaultValue: false)
-    required final bool searchClient,
-  }) = _$ShopSettingsModelImpl;
+  const factory _ShopSettingsModel(
+      {@JsonKey(name: 'cooling_days', defaultValue: 0)
+      required final int coolingPeriodDuration,
+      @JsonKey(
+          name: 'default_action',
+          fromJson: AddButtonDefaultAction.fromString,
+          defaultValue: AddButtonDefaultAction.booking)
+      required final AddButtonDefaultAction addButtonDefaultAction,
+      @JsonKey(name: 'search_client', defaultValue: false)
+      required final bool searchClient}) = _$ShopSettingsModelImpl;
 
   factory _ShopSettingsModel.fromJson(Map<String, dynamic> json) =
       _$ShopSettingsModelImpl.fromJson;
@@ -258,10 +237,9 @@ abstract class _ShopSettingsModel implements ShopSettingsModel {
   int get coolingPeriodDuration;
   @override
   @JsonKey(
-    name: 'default_action',
-    fromJson: AddButtonDefaultAction.fromString,
-    defaultValue: AddButtonDefaultAction.booking,
-  )
+      name: 'default_action',
+      fromJson: AddButtonDefaultAction.fromString,
+      defaultValue: AddButtonDefaultAction.booking)
   AddButtonDefaultAction get addButtonDefaultAction;
   @override
   @JsonKey(name: 'search_client', defaultValue: false)

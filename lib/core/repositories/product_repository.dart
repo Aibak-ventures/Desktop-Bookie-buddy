@@ -5,9 +5,11 @@ import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.d
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_action_service.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_query_service.dart';
+import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
 import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';
+import 'package:bookie_buddy_web/features/transfer_product/models/transfer_product_history_model/transfer_product_history_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductRepository {
@@ -17,8 +19,8 @@ class ProductRepository {
   ProductRepository({
     required ProductQueryService queryService,
     required ProductActionService actionService,
-  }) : _queryService = queryService,
-       _actionService = actionService;
+  })  : _queryService = queryService,
+        _actionService = actionService;
 
   // CREATE or UPDATE Product
   Future<void> saveProduct({required ProductRequestModel product}) async {
@@ -435,7 +437,8 @@ class ProductRepository {
   }
 
   Future<PaginationModel<TransferProductHistoryModel>>
-  getTransferProductHistory({required int shopId, required int page}) async {
+      getTransferProductHistory(
+          {required int shopId, required int page}) async {
     try {
       final response = await safeApiCall(
         () => _queryService.fetchTransferProductHistory(

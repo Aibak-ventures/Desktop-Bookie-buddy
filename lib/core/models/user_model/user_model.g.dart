@@ -19,14 +19,11 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
       subscription: json['subscription'] == null
           ? null
           : UserSubscriptionModel.fromJson(
-              json['subscription'] as Map<String, dynamic>,
-            ),
-      passwordSettings: _passwordSettingsFromJson(
-        json['password_settings'] as Map,
-      ),
+              json['subscription'] as Map<String, dynamic>),
+      passwordSettings:
+          _passwordSettingsFromJson(json['password_settings'] as Map),
       shopSettings: ShopSettingsModel.fromJson(
-        json['shop_settings'] as Map<String, dynamic>,
-      ),
+          json['shop_settings'] as Map<String, dynamic>),
       shopDetails: UserShopModel.fromJson(json['shop'] as Map<String, dynamic>),
     );
 
@@ -53,36 +50,35 @@ const _$ShopRoleEnumMap = {
 };
 
 _$UserSubscriptionModelImpl _$$UserSubscriptionModelImplFromJson(
-  Map<String, dynamic> json,
-) => _$UserSubscriptionModelImpl(
-  plan: json['plan'] as String,
-  status: json['status'] as String,
-  features: (json['features'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
-);
+        Map<String, dynamic> json) =>
+    _$UserSubscriptionModelImpl(
+      plan: json['plan'] as String,
+      status: json['status'] as String,
+      features:
+          (json['features'] as List<dynamic>).map((e) => e as String).toList(),
+    );
 
 Map<String, dynamic> _$$UserSubscriptionModelImplToJson(
-  _$UserSubscriptionModelImpl instance,
-) => <String, dynamic>{
-  'plan': instance.plan,
-  'status': instance.status,
-  'features': instance.features,
-};
+        _$UserSubscriptionModelImpl instance) =>
+    <String, dynamic>{
+      'plan': instance.plan,
+      'status': instance.status,
+      'features': instance.features,
+    };
 
 _$UserPasswordSettingsModelImpl _$$UserPasswordSettingsModelImplFromJson(
-  Map<String, dynamic> json,
-) => _$UserPasswordSettingsModelImpl(
-  location: $enumDecode(_$SecretPasswordLocationsEnumMap, json['location']),
-  role: $enumDecode(_$UserPasswordSettingRoleEnumMap, json['role']),
-);
+        Map<String, dynamic> json) =>
+    _$UserPasswordSettingsModelImpl(
+      location: $enumDecode(_$SecretPasswordLocationsEnumMap, json['location']),
+      role: $enumDecode(_$UserPasswordSettingRoleEnumMap, json['role']),
+    );
 
 Map<String, dynamic> _$$UserPasswordSettingsModelImplToJson(
-  _$UserPasswordSettingsModelImpl instance,
-) => <String, dynamic>{
-  'location': _$SecretPasswordLocationsEnumMap[instance.location]!,
-  'role': _$UserPasswordSettingRoleEnumMap[instance.role]!,
-};
+        _$UserPasswordSettingsModelImpl instance) =>
+    <String, dynamic>{
+      'location': _$SecretPasswordLocationsEnumMap[instance.location]!,
+      'role': _$UserPasswordSettingRoleEnumMap[instance.role]!,
+    };
 
 const _$SecretPasswordLocationsEnumMap = {
   SecretPasswordLocations.ledgerView: 'ledgerView',
@@ -92,6 +88,7 @@ const _$SecretPasswordLocationsEnumMap = {
   SecretPasswordLocations.transferProduct: 'transferProduct',
   SecretPasswordLocations.monthlyGrossView: 'monthlyGrossView',
   SecretPasswordLocations.productDeletion: 'productDeletion',
+  SecretPasswordLocations.productEdit: 'productEdit',
 };
 
 const _$UserPasswordSettingRoleEnumMap = {

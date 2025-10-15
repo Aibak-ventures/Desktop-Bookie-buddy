@@ -15,9 +15,8 @@ _$SaleModelImpl _$$SaleModelImplFromJson(Map<String, dynamic> json) =>
       discountAmount: (json['discount'] as num).toInt(),
       saleDate: json['sale_date'] as String,
       createdAt: json['created_at'] as String,
-      products: (json['products'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      products:
+          (json['products'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$SaleModelImplToJson(_$SaleModelImpl instance) =>

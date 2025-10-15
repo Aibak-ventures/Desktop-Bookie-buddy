@@ -12,8 +12,7 @@ part of 'add_expense_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AddExpenseState {
@@ -23,14 +22,16 @@ mixin _$AddExpenseState {
     required TResult Function() submitted,
     required TResult Function(String message) success,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? submitted,
     TResult? Function(String message)? success,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
@@ -38,21 +39,24 @@ mixin _$AddExpenseState {
     TResult Function(String message)? success,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Submitted value) submitted,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Submitted value)? submitted,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -60,15 +64,15 @@ mixin _$AddExpenseState {
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AddExpenseStateCopyWith<$Res> {
   factory $AddExpenseStateCopyWith(
-    AddExpenseState value,
-    $Res Function(AddExpenseState) then,
-  ) = _$AddExpenseStateCopyWithImpl<$Res, AddExpenseState>;
+          AddExpenseState value, $Res Function(AddExpenseState) then) =
+      _$AddExpenseStateCopyWithImpl<$Res, AddExpenseState>;
 }
 
 /// @nodoc
@@ -88,9 +92,8 @@ class _$AddExpenseStateCopyWithImpl<$Res, $Val extends AddExpenseState>
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -98,9 +101,8 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$AddExpenseStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddExpenseState
   /// with the given fields replaced by the non-null parameter values.
@@ -207,9 +209,8 @@ abstract class _Initial implements AddExpenseState {
 /// @nodoc
 abstract class _$$SubmittedImplCopyWith<$Res> {
   factory _$$SubmittedImplCopyWith(
-    _$SubmittedImpl value,
-    $Res Function(_$SubmittedImpl) then,
-  ) = __$$SubmittedImplCopyWithImpl<$Res>;
+          _$SubmittedImpl value, $Res Function(_$SubmittedImpl) then) =
+      __$$SubmittedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -217,9 +218,8 @@ class __$$SubmittedImplCopyWithImpl<$Res>
     extends _$AddExpenseStateCopyWithImpl<$Res, _$SubmittedImpl>
     implements _$$SubmittedImplCopyWith<$Res> {
   __$$SubmittedImplCopyWithImpl(
-    _$SubmittedImpl _value,
-    $Res Function(_$SubmittedImpl) _then,
-  ) : super(_value, _then);
+      _$SubmittedImpl _value, $Res Function(_$SubmittedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddExpenseState
   /// with the given fields replaced by the non-null parameter values.
@@ -326,9 +326,8 @@ abstract class _Submitted implements AddExpenseState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
@@ -338,23 +337,22 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$AddExpenseStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddExpenseState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$SuccessImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$SuccessImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -480,9 +478,8 @@ abstract class _Success implements AddExpenseState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -492,23 +489,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$AddExpenseStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddExpenseState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

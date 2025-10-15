@@ -12,8 +12,7 @@ part of 'request_booking_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 RequestBookingModel _$RequestBookingModelFromJson(Map<String, dynamic> json) {
   return _RequestBookingModel.fromJson(json);
@@ -82,43 +81,43 @@ mixin _$RequestBookingModel {
 /// @nodoc
 abstract class $RequestBookingModelCopyWith<$Res> {
   factory $RequestBookingModelCopyWith(
-    RequestBookingModel value,
-    $Res Function(RequestBookingModel) then,
-  ) = _$RequestBookingModelCopyWithImpl<$Res, RequestBookingModel>;
+          RequestBookingModel value, $Res Function(RequestBookingModel) then) =
+      _$RequestBookingModelCopyWithImpl<$Res, RequestBookingModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'client_id') int? clientId,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
-    ClientRequestModel? client,
-    @JsonKey(name: 'client_address') String? address,
-    @JsonKey(name: 'booked_date') String? bookedDate,
-    @JsonKey(name: 'pickup_date') String? pickupDate,
-    @JsonKey(name: 'return_date') String? returnDate,
-    @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
-    @JsonKey(name: 'advance_amount') int? advanceAmount,
-    @JsonKey(name: 'security_amount') int? securityAmount,
-    @JsonKey(name: 'discount_amount') int? discountAmount,
-    @JsonKey(name: 'purchase_mode') String? purchaseMode,
-    @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-    PaymentMethod? paymentMethod,
-    @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
-    DeliveryStatus? deliveryStatus,
-    @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
-    BookingStatus? bookingStatus,
-    @JsonKey(name: 'variants', toJson: _productsToJson)
-    List<ProductSelectedModel>? products,
-    @JsonKey(name: 'details') BookingOtherDetailsModel? otherDetails,
-    @JsonKey(name: 'additional_charges')
-    List<AdditionalChargesModel>? additionalCharges,
-    @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
-    int? serviceId,
-    @JsonKey(name: 'pickup_time', includeToJson: false, includeFromJson: false)
-    TimeOfDay? pickupTime,
-    @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
-    TimeOfDay? returnTime,
-  });
+  $Res call(
+      {@JsonKey(name: 'client_id') int? clientId,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
+      ClientRequestModel? client,
+      @JsonKey(name: 'client_address') String? address,
+      @JsonKey(name: 'booked_date') String? bookedDate,
+      @JsonKey(name: 'pickup_date') String? pickupDate,
+      @JsonKey(name: 'return_date') String? returnDate,
+      @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
+      @JsonKey(name: 'advance_amount') int? advanceAmount,
+      @JsonKey(name: 'security_amount') int? securityAmount,
+      @JsonKey(name: 'discount_amount') int? discountAmount,
+      @JsonKey(name: 'purchase_mode') String? purchaseMode,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+      PaymentMethod? paymentMethod,
+      @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
+      DeliveryStatus? deliveryStatus,
+      @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
+      BookingStatus? bookingStatus,
+      @JsonKey(name: 'variants', toJson: _productsToJson)
+      List<ProductSelectedModel>? products,
+      @JsonKey(name: 'details') BookingOtherDetailsModel? otherDetails,
+      @JsonKey(name: 'additional_charges')
+      List<AdditionalChargesModel>? additionalCharges,
+      @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
+      int? serviceId,
+      @JsonKey(
+          name: 'pickup_time', includeToJson: false, includeFromJson: false)
+      TimeOfDay? pickupTime,
+      @JsonKey(
+          name: 'return_time', includeToJson: false, includeFromJson: false)
+      TimeOfDay? returnTime});
 
   $ClientRequestModelCopyWith<$Res>? get client;
   $BookingOtherDetailsModelCopyWith<$Res>? get otherDetails;
@@ -162,99 +161,96 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
     Object? pickupTime = freezed,
     Object? returnTime = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            clientId: freezed == clientId
-                ? _value.clientId
-                : clientId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            staffId: freezed == staffId
-                ? _value.staffId
-                : staffId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            client: freezed == client
-                ? _value.client
-                : client // ignore: cast_nullable_to_non_nullable
-                      as ClientRequestModel?,
-            address: freezed == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            bookedDate: freezed == bookedDate
-                ? _value.bookedDate
-                : bookedDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            pickupDate: freezed == pickupDate
-                ? _value.pickupDate
-                : pickupDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            returnDate: freezed == returnDate
-                ? _value.returnDate
-                : returnDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            coolingPeriodDate: freezed == coolingPeriodDate
-                ? _value.coolingPeriodDate
-                : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            advanceAmount: freezed == advanceAmount
-                ? _value.advanceAmount
-                : advanceAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            securityAmount: freezed == securityAmount
-                ? _value.securityAmount
-                : securityAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            discountAmount: freezed == discountAmount
-                ? _value.discountAmount
-                : discountAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            purchaseMode: freezed == purchaseMode
-                ? _value.purchaseMode
-                : purchaseMode // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            description: freezed == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            paymentMethod: freezed == paymentMethod
-                ? _value.paymentMethod
-                : paymentMethod // ignore: cast_nullable_to_non_nullable
-                      as PaymentMethod?,
-            deliveryStatus: freezed == deliveryStatus
-                ? _value.deliveryStatus
-                : deliveryStatus // ignore: cast_nullable_to_non_nullable
-                      as DeliveryStatus?,
-            bookingStatus: freezed == bookingStatus
-                ? _value.bookingStatus
-                : bookingStatus // ignore: cast_nullable_to_non_nullable
-                      as BookingStatus?,
-            products: freezed == products
-                ? _value.products
-                : products // ignore: cast_nullable_to_non_nullable
-                      as List<ProductSelectedModel>?,
-            otherDetails: freezed == otherDetails
-                ? _value.otherDetails
-                : otherDetails // ignore: cast_nullable_to_non_nullable
-                      as BookingOtherDetailsModel?,
-            additionalCharges: freezed == additionalCharges
-                ? _value.additionalCharges
-                : additionalCharges // ignore: cast_nullable_to_non_nullable
-                      as List<AdditionalChargesModel>?,
-            serviceId: freezed == serviceId
-                ? _value.serviceId
-                : serviceId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            pickupTime: freezed == pickupTime
-                ? _value.pickupTime
-                : pickupTime // ignore: cast_nullable_to_non_nullable
-                      as TimeOfDay?,
-            returnTime: freezed == returnTime
-                ? _value.returnTime
-                : returnTime // ignore: cast_nullable_to_non_nullable
-                      as TimeOfDay?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      client: freezed == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientRequestModel?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bookedDate: freezed == bookedDate
+          ? _value.bookedDate
+          : bookedDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pickupDate: freezed == pickupDate
+          ? _value.pickupDate
+          : pickupDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      returnDate: freezed == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      coolingPeriodDate: freezed == coolingPeriodDate
+          ? _value.coolingPeriodDate
+          : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      advanceAmount: freezed == advanceAmount
+          ? _value.advanceAmount
+          : advanceAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      securityAmount: freezed == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      discountAmount: freezed == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      purchaseMode: freezed == purchaseMode
+          ? _value.purchaseMode
+          : purchaseMode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as PaymentMethod?,
+      deliveryStatus: freezed == deliveryStatus
+          ? _value.deliveryStatus
+          : deliveryStatus // ignore: cast_nullable_to_non_nullable
+              as DeliveryStatus?,
+      bookingStatus: freezed == bookingStatus
+          ? _value.bookingStatus
+          : bookingStatus // ignore: cast_nullable_to_non_nullable
+              as BookingStatus?,
+      products: freezed == products
+          ? _value.products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>?,
+      otherDetails: freezed == otherDetails
+          ? _value.otherDetails
+          : otherDetails // ignore: cast_nullable_to_non_nullable
+              as BookingOtherDetailsModel?,
+      additionalCharges: freezed == additionalCharges
+          ? _value.additionalCharges
+          : additionalCharges // ignore: cast_nullable_to_non_nullable
+              as List<AdditionalChargesModel>?,
+      serviceId: freezed == serviceId
+          ? _value.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      pickupTime: freezed == pickupTime
+          ? _value.pickupTime
+          : pickupTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      returnTime: freezed == returnTime
+          ? _value.returnTime
+          : returnTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+    ) as $Val);
   }
 
   /// Create a copy of RequestBookingModel
@@ -280,9 +276,8 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
       return null;
     }
 
-    return $BookingOtherDetailsModelCopyWith<$Res>(_value.otherDetails!, (
-      value,
-    ) {
+    return $BookingOtherDetailsModelCopyWith<$Res>(_value.otherDetails!,
+        (value) {
       return _then(_value.copyWith(otherDetails: value) as $Val);
     });
   }
@@ -291,45 +286,45 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
 /// @nodoc
 abstract class _$$RequestBookingModelImplCopyWith<$Res>
     implements $RequestBookingModelCopyWith<$Res> {
-  factory _$$RequestBookingModelImplCopyWith(
-    _$RequestBookingModelImpl value,
-    $Res Function(_$RequestBookingModelImpl) then,
-  ) = __$$RequestBookingModelImplCopyWithImpl<$Res>;
+  factory _$$RequestBookingModelImplCopyWith(_$RequestBookingModelImpl value,
+          $Res Function(_$RequestBookingModelImpl) then) =
+      __$$RequestBookingModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'client_id') int? clientId,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
-    ClientRequestModel? client,
-    @JsonKey(name: 'client_address') String? address,
-    @JsonKey(name: 'booked_date') String? bookedDate,
-    @JsonKey(name: 'pickup_date') String? pickupDate,
-    @JsonKey(name: 'return_date') String? returnDate,
-    @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
-    @JsonKey(name: 'advance_amount') int? advanceAmount,
-    @JsonKey(name: 'security_amount') int? securityAmount,
-    @JsonKey(name: 'discount_amount') int? discountAmount,
-    @JsonKey(name: 'purchase_mode') String? purchaseMode,
-    @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-    PaymentMethod? paymentMethod,
-    @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
-    DeliveryStatus? deliveryStatus,
-    @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
-    BookingStatus? bookingStatus,
-    @JsonKey(name: 'variants', toJson: _productsToJson)
-    List<ProductSelectedModel>? products,
-    @JsonKey(name: 'details') BookingOtherDetailsModel? otherDetails,
-    @JsonKey(name: 'additional_charges')
-    List<AdditionalChargesModel>? additionalCharges,
-    @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
-    int? serviceId,
-    @JsonKey(name: 'pickup_time', includeToJson: false, includeFromJson: false)
-    TimeOfDay? pickupTime,
-    @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
-    TimeOfDay? returnTime,
-  });
+  $Res call(
+      {@JsonKey(name: 'client_id') int? clientId,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
+      ClientRequestModel? client,
+      @JsonKey(name: 'client_address') String? address,
+      @JsonKey(name: 'booked_date') String? bookedDate,
+      @JsonKey(name: 'pickup_date') String? pickupDate,
+      @JsonKey(name: 'return_date') String? returnDate,
+      @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
+      @JsonKey(name: 'advance_amount') int? advanceAmount,
+      @JsonKey(name: 'security_amount') int? securityAmount,
+      @JsonKey(name: 'discount_amount') int? discountAmount,
+      @JsonKey(name: 'purchase_mode') String? purchaseMode,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+      PaymentMethod? paymentMethod,
+      @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
+      DeliveryStatus? deliveryStatus,
+      @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
+      BookingStatus? bookingStatus,
+      @JsonKey(name: 'variants', toJson: _productsToJson)
+      List<ProductSelectedModel>? products,
+      @JsonKey(name: 'details') BookingOtherDetailsModel? otherDetails,
+      @JsonKey(name: 'additional_charges')
+      List<AdditionalChargesModel>? additionalCharges,
+      @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
+      int? serviceId,
+      @JsonKey(
+          name: 'pickup_time', includeToJson: false, includeFromJson: false)
+      TimeOfDay? pickupTime,
+      @JsonKey(
+          name: 'return_time', includeToJson: false, includeFromJson: false)
+      TimeOfDay? returnTime});
 
   @override
   $ClientRequestModelCopyWith<$Res>? get client;
@@ -341,10 +336,9 @@ abstract class _$$RequestBookingModelImplCopyWith<$Res>
 class __$$RequestBookingModelImplCopyWithImpl<$Res>
     extends _$RequestBookingModelCopyWithImpl<$Res, _$RequestBookingModelImpl>
     implements _$$RequestBookingModelImplCopyWith<$Res> {
-  __$$RequestBookingModelImplCopyWithImpl(
-    _$RequestBookingModelImpl _value,
-    $Res Function(_$RequestBookingModelImpl) _then,
-  ) : super(_value, _then);
+  __$$RequestBookingModelImplCopyWithImpl(_$RequestBookingModelImpl _value,
+      $Res Function(_$RequestBookingModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of RequestBookingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -374,98 +368,96 @@ class __$$RequestBookingModelImplCopyWithImpl<$Res>
     Object? pickupTime = freezed,
     Object? returnTime = freezed,
   }) {
-    return _then(
-      _$RequestBookingModelImpl(
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        staffId: freezed == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        client: freezed == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientRequestModel?,
-        address: freezed == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        bookedDate: freezed == bookedDate
-            ? _value.bookedDate
-            : bookedDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        pickupDate: freezed == pickupDate
-            ? _value.pickupDate
-            : pickupDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        returnDate: freezed == returnDate
-            ? _value.returnDate
-            : returnDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        coolingPeriodDate: freezed == coolingPeriodDate
-            ? _value.coolingPeriodDate
-            : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        advanceAmount: freezed == advanceAmount
-            ? _value.advanceAmount
-            : advanceAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        securityAmount: freezed == securityAmount
-            ? _value.securityAmount
-            : securityAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        discountAmount: freezed == discountAmount
-            ? _value.discountAmount
-            : discountAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        purchaseMode: freezed == purchaseMode
-            ? _value.purchaseMode
-            : purchaseMode // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        description: freezed == description
-            ? _value.description
-            : description // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        paymentMethod: freezed == paymentMethod
-            ? _value.paymentMethod
-            : paymentMethod // ignore: cast_nullable_to_non_nullable
-                  as PaymentMethod?,
-        deliveryStatus: freezed == deliveryStatus
-            ? _value.deliveryStatus
-            : deliveryStatus // ignore: cast_nullable_to_non_nullable
-                  as DeliveryStatus?,
-        bookingStatus: freezed == bookingStatus
-            ? _value.bookingStatus
-            : bookingStatus // ignore: cast_nullable_to_non_nullable
-                  as BookingStatus?,
-        products: freezed == products
-            ? _value._products
-            : products // ignore: cast_nullable_to_non_nullable
-                  as List<ProductSelectedModel>?,
-        otherDetails: freezed == otherDetails
-            ? _value.otherDetails
-            : otherDetails // ignore: cast_nullable_to_non_nullable
-                  as BookingOtherDetailsModel?,
-        additionalCharges: freezed == additionalCharges
-            ? _value._additionalCharges
-            : additionalCharges // ignore: cast_nullable_to_non_nullable
-                  as List<AdditionalChargesModel>?,
-        serviceId: freezed == serviceId
-            ? _value.serviceId
-            : serviceId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        pickupTime: freezed == pickupTime
-            ? _value.pickupTime
-            : pickupTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-        returnTime: freezed == returnTime
-            ? _value.returnTime
-            : returnTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-      ),
-    );
+    return _then(_$RequestBookingModelImpl(
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      client: freezed == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientRequestModel?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bookedDate: freezed == bookedDate
+          ? _value.bookedDate
+          : bookedDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pickupDate: freezed == pickupDate
+          ? _value.pickupDate
+          : pickupDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      returnDate: freezed == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      coolingPeriodDate: freezed == coolingPeriodDate
+          ? _value.coolingPeriodDate
+          : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      advanceAmount: freezed == advanceAmount
+          ? _value.advanceAmount
+          : advanceAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      securityAmount: freezed == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      discountAmount: freezed == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      purchaseMode: freezed == purchaseMode
+          ? _value.purchaseMode
+          : purchaseMode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as PaymentMethod?,
+      deliveryStatus: freezed == deliveryStatus
+          ? _value.deliveryStatus
+          : deliveryStatus // ignore: cast_nullable_to_non_nullable
+              as DeliveryStatus?,
+      bookingStatus: freezed == bookingStatus
+          ? _value.bookingStatus
+          : bookingStatus // ignore: cast_nullable_to_non_nullable
+              as BookingStatus?,
+      products: freezed == products
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>?,
+      otherDetails: freezed == otherDetails
+          ? _value.otherDetails
+          : otherDetails // ignore: cast_nullable_to_non_nullable
+              as BookingOtherDetailsModel?,
+      additionalCharges: freezed == additionalCharges
+          ? _value._additionalCharges
+          : additionalCharges // ignore: cast_nullable_to_non_nullable
+              as List<AdditionalChargesModel>?,
+      serviceId: freezed == serviceId
+          ? _value.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      pickupTime: freezed == pickupTime
+          ? _value.pickupTime
+          : pickupTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      returnTime: freezed == returnTime
+          ? _value.returnTime
+          : returnTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+    ));
   }
 }
 
@@ -473,40 +465,42 @@ class __$$RequestBookingModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(includeIfNull: false)
 class _$RequestBookingModelImpl implements _RequestBookingModel {
-  const _$RequestBookingModelImpl({
-    @JsonKey(name: 'client_id') this.clientId,
-    @JsonKey(name: 'staff_id') this.staffId,
-    @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
-    this.client,
-    @JsonKey(name: 'client_address') this.address,
-    @JsonKey(name: 'booked_date') this.bookedDate,
-    @JsonKey(name: 'pickup_date') this.pickupDate,
-    @JsonKey(name: 'return_date') this.returnDate,
-    @JsonKey(name: 'cooling_period_end') this.coolingPeriodDate,
-    @JsonKey(name: 'advance_amount') this.advanceAmount,
-    @JsonKey(name: 'security_amount') this.securityAmount,
-    @JsonKey(name: 'discount_amount') this.discountAmount,
-    @JsonKey(name: 'purchase_mode') this.purchaseMode,
-    @JsonKey(name: 'description') this.description,
-    @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-    this.paymentMethod,
-    @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
-    this.deliveryStatus,
-    @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
-    this.bookingStatus,
-    @JsonKey(name: 'variants', toJson: _productsToJson)
-    final List<ProductSelectedModel>? products,
-    @JsonKey(name: 'details') this.otherDetails,
-    @JsonKey(name: 'additional_charges')
-    final List<AdditionalChargesModel>? additionalCharges,
-    @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
-    this.serviceId,
-    @JsonKey(name: 'pickup_time', includeToJson: false, includeFromJson: false)
-    this.pickupTime,
-    @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
-    this.returnTime,
-  }) : _products = products,
-       _additionalCharges = additionalCharges;
+  const _$RequestBookingModelImpl(
+      {@JsonKey(name: 'client_id') this.clientId,
+      @JsonKey(name: 'staff_id') this.staffId,
+      @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
+      this.client,
+      @JsonKey(name: 'client_address') this.address,
+      @JsonKey(name: 'booked_date') this.bookedDate,
+      @JsonKey(name: 'pickup_date') this.pickupDate,
+      @JsonKey(name: 'return_date') this.returnDate,
+      @JsonKey(name: 'cooling_period_end') this.coolingPeriodDate,
+      @JsonKey(name: 'advance_amount') this.advanceAmount,
+      @JsonKey(name: 'security_amount') this.securityAmount,
+      @JsonKey(name: 'discount_amount') this.discountAmount,
+      @JsonKey(name: 'purchase_mode') this.purchaseMode,
+      @JsonKey(name: 'description') this.description,
+      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+      this.paymentMethod,
+      @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
+      this.deliveryStatus,
+      @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
+      this.bookingStatus,
+      @JsonKey(name: 'variants', toJson: _productsToJson)
+      final List<ProductSelectedModel>? products,
+      @JsonKey(name: 'details') this.otherDetails,
+      @JsonKey(name: 'additional_charges')
+      final List<AdditionalChargesModel>? additionalCharges,
+      @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
+      this.serviceId,
+      @JsonKey(
+          name: 'pickup_time', includeToJson: false, includeFromJson: false)
+      this.pickupTime,
+      @JsonKey(
+          name: 'return_time', includeToJson: false, includeFromJson: false)
+      this.returnTime})
+      : _products = products,
+        _additionalCharges = additionalCharges;
 
   factory _$RequestBookingModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$RequestBookingModelImplFromJson(json);
@@ -637,10 +631,8 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
             const DeepCollectionEquality().equals(other._products, _products) &&
             (identical(other.otherDetails, otherDetails) ||
                 other.otherDetails == otherDetails) &&
-            const DeepCollectionEquality().equals(
-              other._additionalCharges,
-              _additionalCharges,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._additionalCharges, _additionalCharges) &&
             (identical(other.serviceId, serviceId) ||
                 other.serviceId == serviceId) &&
             (identical(other.pickupTime, pickupTime) ||
@@ -652,30 +644,30 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-    runtimeType,
-    clientId,
-    staffId,
-    client,
-    address,
-    bookedDate,
-    pickupDate,
-    returnDate,
-    coolingPeriodDate,
-    advanceAmount,
-    securityAmount,
-    discountAmount,
-    purchaseMode,
-    description,
-    paymentMethod,
-    deliveryStatus,
-    bookingStatus,
-    const DeepCollectionEquality().hash(_products),
-    otherDetails,
-    const DeepCollectionEquality().hash(_additionalCharges),
-    serviceId,
-    pickupTime,
-    returnTime,
-  ]);
+        runtimeType,
+        clientId,
+        staffId,
+        client,
+        address,
+        bookedDate,
+        pickupDate,
+        returnDate,
+        coolingPeriodDate,
+        advanceAmount,
+        securityAmount,
+        discountAmount,
+        purchaseMode,
+        description,
+        paymentMethod,
+        deliveryStatus,
+        bookingStatus,
+        const DeepCollectionEquality().hash(_products),
+        otherDetails,
+        const DeepCollectionEquality().hash(_additionalCharges),
+        serviceId,
+        pickupTime,
+        returnTime
+      ]);
 
   /// Create a copy of RequestBookingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -684,50 +676,51 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
   @pragma('vm:prefer-inline')
   _$$RequestBookingModelImplCopyWith<_$RequestBookingModelImpl> get copyWith =>
       __$$RequestBookingModelImplCopyWithImpl<_$RequestBookingModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RequestBookingModelImplToJson(this);
+    return _$$RequestBookingModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _RequestBookingModel implements RequestBookingModel {
-  const factory _RequestBookingModel({
-    @JsonKey(name: 'client_id') final int? clientId,
-    @JsonKey(name: 'staff_id') final int? staffId,
-    @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
-    final ClientRequestModel? client,
-    @JsonKey(name: 'client_address') final String? address,
-    @JsonKey(name: 'booked_date') final String? bookedDate,
-    @JsonKey(name: 'pickup_date') final String? pickupDate,
-    @JsonKey(name: 'return_date') final String? returnDate,
-    @JsonKey(name: 'cooling_period_end') final String? coolingPeriodDate,
-    @JsonKey(name: 'advance_amount') final int? advanceAmount,
-    @JsonKey(name: 'security_amount') final int? securityAmount,
-    @JsonKey(name: 'discount_amount') final int? discountAmount,
-    @JsonKey(name: 'purchase_mode') final String? purchaseMode,
-    @JsonKey(name: 'description') final String? description,
-    @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-    final PaymentMethod? paymentMethod,
-    @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
-    final DeliveryStatus? deliveryStatus,
-    @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
-    final BookingStatus? bookingStatus,
-    @JsonKey(name: 'variants', toJson: _productsToJson)
-    final List<ProductSelectedModel>? products,
-    @JsonKey(name: 'details') final BookingOtherDetailsModel? otherDetails,
-    @JsonKey(name: 'additional_charges')
-    final List<AdditionalChargesModel>? additionalCharges,
-    @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
-    final int? serviceId,
-    @JsonKey(name: 'pickup_time', includeToJson: false, includeFromJson: false)
-    final TimeOfDay? pickupTime,
-    @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
-    final TimeOfDay? returnTime,
-  }) = _$RequestBookingModelImpl;
+  const factory _RequestBookingModel(
+      {@JsonKey(name: 'client_id') final int? clientId,
+      @JsonKey(name: 'staff_id') final int? staffId,
+      @JsonKey(name: 'client', toJson: _clientToJson, includeIfNull: false)
+      final ClientRequestModel? client,
+      @JsonKey(name: 'client_address') final String? address,
+      @JsonKey(name: 'booked_date') final String? bookedDate,
+      @JsonKey(name: 'pickup_date') final String? pickupDate,
+      @JsonKey(name: 'return_date') final String? returnDate,
+      @JsonKey(name: 'cooling_period_end') final String? coolingPeriodDate,
+      @JsonKey(name: 'advance_amount') final int? advanceAmount,
+      @JsonKey(name: 'security_amount') final int? securityAmount,
+      @JsonKey(name: 'discount_amount') final int? discountAmount,
+      @JsonKey(name: 'purchase_mode') final String? purchaseMode,
+      @JsonKey(name: 'description') final String? description,
+      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+      final PaymentMethod? paymentMethod,
+      @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
+      final DeliveryStatus? deliveryStatus,
+      @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
+      final BookingStatus? bookingStatus,
+      @JsonKey(name: 'variants', toJson: _productsToJson)
+      final List<ProductSelectedModel>? products,
+      @JsonKey(name: 'details') final BookingOtherDetailsModel? otherDetails,
+      @JsonKey(name: 'additional_charges')
+      final List<AdditionalChargesModel>? additionalCharges,
+      @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
+      final int? serviceId,
+      @JsonKey(
+          name: 'pickup_time', includeToJson: false, includeFromJson: false)
+      final TimeOfDay? pickupTime,
+      @JsonKey(
+          name: 'return_time', includeToJson: false, includeFromJson: false)
+      final TimeOfDay? returnTime}) = _$RequestBookingModelImpl;
 
   factory _RequestBookingModel.fromJson(Map<String, dynamic> json) =
       _$RequestBookingModelImpl.fromJson;

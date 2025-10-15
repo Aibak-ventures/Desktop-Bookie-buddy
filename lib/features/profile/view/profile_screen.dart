@@ -5,8 +5,6 @@ import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/navigation/navigations.dart';
-import 'package:bookie_buddy_web/core/notifications/firebase_notification_manager.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
@@ -38,10 +36,8 @@ import 'package:bookie_buddy_web/features/profile/view/contact_and_support_scree
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/profile_shop_details_card.dart';
-import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {

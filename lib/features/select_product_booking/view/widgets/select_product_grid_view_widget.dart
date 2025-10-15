@@ -4,7 +4,6 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widget.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_card.dart';
@@ -72,8 +71,8 @@ class SelectProductGridViewWidget extends StatelessWidget {
                 mainAxisSpacing: gridSpacing,
                 childAspectRatio: aspectRatio,
               ),
-              itemBuilder: (context, index) =>
-                  SelectProductCardShimmer(needAddButton: !availabilityCheckOnly),
+              itemBuilder: (context, index) => SelectProductCardShimmer(
+                  needAddButton: !availabilityCheckOnly),
             ),
             error: (error) => SingleChildScrollView(
               child: CustomErrorWidget(
@@ -101,8 +100,10 @@ class SelectProductGridViewWidget extends StatelessWidget {
             ) =>
                 products.isEmpty
                     ? isSearching
-                        ? const NoResultFoundAnimationWidget(adjustHeightTop: 0.15)
-                        : const NoProductFoundAnimationWidget(adjustHeightTop: 0.15)
+                        ? const NoResultFoundAnimationWidget(
+                            adjustHeightTop: 0.15)
+                        : const NoProductFoundAnimationWidget(
+                            adjustHeightTop: 0.15)
                     : NotificationListener<ScrollNotification>(
                         onNotification: (scrollInfo) {
                           if (scrollInfo.metrics.pixels >=
@@ -111,11 +112,13 @@ class SelectProductGridViewWidget extends StatelessWidget {
                               !isPaginating) {
                             if (isSearching) {
                               context.read<SelectProductBloc>().add(
-                                    const SelectProductEvent.loadNextSearchResults(),
+                                    const SelectProductEvent
+                                        .loadNextSearchResults(),
                                   );
                             } else {
                               context.read<SelectProductBloc>().add(
-                                    const SelectProductEvent.loadNextPageProducts(),
+                                    const SelectProductEvent
+                                        .loadNextPageProducts(),
                                   );
                             }
                           }
@@ -125,14 +128,15 @@ class SelectProductGridViewWidget extends StatelessWidget {
                           key: const PageStorageKey('select-product-grid-list'),
                           padding: EdgeInsets.all(gridPadding),
                           itemCount: products.length + 1,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: crossAxisCount,
                             crossAxisSpacing: gridSpacing,
                             mainAxisSpacing: gridSpacing,
                             childAspectRatio: aspectRatio,
                           ),
-                          itemBuilder: (context, index) =>
-                              BlocBuilder<SelectedProductsCubit, SelectedProductsState>(
+                          itemBuilder: (context, index) => BlocBuilder<
+                              SelectedProductsCubit, SelectedProductsState>(
                             builder: (context, state) {
                               final selectedProductsWithAmount = state.when(
                                 selected: (selected) => selected,
@@ -141,17 +145,22 @@ class SelectProductGridViewWidget extends StatelessWidget {
                               if (index < products.length) {
                                 final product = products[index];
                                 final selectedVariants =
-                                    selectedProductsWithAmount.where(
-                                  (selected) => product.variants.any(
-                                    (variant) => variant.id == selected.variant.variantId,
-                                  ),
-                                ).toList();
+                                    selectedProductsWithAmount
+                                        .where(
+                                          (selected) => product.variants.any(
+                                            (variant) =>
+                                                variant.id ==
+                                                selected.variant.variantId,
+                                          ),
+                                        )
+                                        .toList();
 
                                 final isSelected = selectedVariants.isNotEmpty;
 
                                 return ValueListenableBuilder(
                                   valueListenable: mainServiceTypeNotifier,
-                                  builder: (context, mainServiceType, _) => SelectProductCard(
+                                  builder: (context, mainServiceType, _) =>
+                                      SelectProductCard(
                                     isSelected: isSelected,
                                     mainServiceType: mainServiceType,
                                     needAddButton: !availabilityCheckOnly,
@@ -160,17 +169,23 @@ class SelectProductGridViewWidget extends StatelessWidget {
                                       showSizeAmountDialog(
                                         context: context,
                                         isSales: isSales,
-                                        alreadySelectedVariants: selectedVariants,
+                                        alreadySelectedVariants:
+                                            selectedVariants,
                                         mainServiceType: mainServiceType,
                                         productImageUrl: product.image!,
-                                        initialAmount: product.price?.toString(),
+                                        initialAmount:
+                                            product.price?.toString(),
                                         availableVariants: product.variants,
-                                        onConfirm: (id, size, amount, quantity) {
-                                          final attribute = size == null || size.isEmpty
-                                              ? (product.variants.first.attribute.isEmpty
-                                                  ? product.model
-                                                  : product.variants.first.attribute)
-                                              : size;
+                                        onConfirm:
+                                            (id, size, amount, quantity) {
+                                          final attribute =
+                                              size == null || size.isEmpty
+                                                  ? (product.variants.first
+                                                          .attribute.isEmpty
+                                                      ? product.model
+                                                      : product.variants.first
+                                                          .attribute)
+                                                  : size;
 
                                           cubit.addSelectedProduct(
                                             ProductInfoModel(
@@ -214,30 +229,32 @@ class SelectProductGridViewWidget extends StatelessWidget {
 
   void _onRefresh(BuildContext context) {
     context.read<SelectProductBloc>().state.maybeMap(
-      loaded: (value) {
-        if ((value.searchQuery != null && value.searchQuery!.isNotEmpty && value.searchType != null) ||
-            (value.startPrice != null || value.endPrice != null)) {
-          context.read<SelectProductBloc>().add(
-                SelectProductEvent.searchProducts(
-                  serviceId: serviceIdNotifier.value,
-                  pickupDate: pickupDate,
-                  returnDate: returnDate,
-                  pickupTime: pickupTime,
-                  returnTime: returnTime,
-                  query: value.searchQuery,
-                  type: value.searchType,
-                  endPrice: value.endPrice,
-                  startPrice: value.startPrice,
-                  useAvailableProductsApi: value.useAvailableProductsApi,
-                  isSales: value.isSales,
-                ),
-              );
-        } else {
-          _fetchData(context);
-        }
-      },
-      orElse: () => _fetchData(context),
-    );
+          loaded: (value) {
+            if ((value.searchQuery != null &&
+                    value.searchQuery!.isNotEmpty &&
+                    value.searchType != null) ||
+                (value.startPrice != null || value.endPrice != null)) {
+              context.read<SelectProductBloc>().add(
+                    SelectProductEvent.searchProducts(
+                      serviceId: serviceIdNotifier.value,
+                      pickupDate: pickupDate,
+                      returnDate: returnDate,
+                      pickupTime: pickupTime,
+                      returnTime: returnTime,
+                      query: value.searchQuery,
+                      type: value.searchType,
+                      endPrice: value.endPrice,
+                      startPrice: value.startPrice,
+                      useAvailableProductsApi: value.useAvailableProductsApi,
+                      isSales: value.isSales,
+                    ),
+                  );
+            } else {
+              _fetchData(context);
+            }
+          },
+          orElse: () => _fetchData(context),
+        );
   }
 
   void _fetchData(BuildContext context) {

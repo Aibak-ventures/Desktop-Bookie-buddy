@@ -12,90 +12,80 @@ part of 'completed_bookings_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$CompletedBookingsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loadCompletedBookings,
+            String? startDate, String? endDate, String? searchQuery)
+        loadCompletedBookings,
     required TResult Function() loadNextPageCompletedBookings,
     required TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )
-    updateBooking,
-  }) => throw _privateConstructorUsedError;
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)
+        updateBooking,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult? Function()? loadNextPageCompletedBookings,
     TResult? Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
-  }) => throw _privateConstructorUsedError;
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult Function()? loadNextPageCompletedBookings,
     TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadCompletedBookings value)
-    loadCompletedBookings,
+        loadCompletedBookings,
     required TResult Function(_LoadNextPageCompletedBookings value)
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult? Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $CompletedBookingsEventCopyWith<$Res> {
-  factory $CompletedBookingsEventCopyWith(
-    CompletedBookingsEvent value,
-    $Res Function(CompletedBookingsEvent) then,
-  ) = _$CompletedBookingsEventCopyWithImpl<$Res, CompletedBookingsEvent>;
+  factory $CompletedBookingsEventCopyWith(CompletedBookingsEvent value,
+          $Res Function(CompletedBookingsEvent) then) =
+      _$CompletedBookingsEventCopyWithImpl<$Res, CompletedBookingsEvent>;
 }
 
 /// @nodoc
-class _$CompletedBookingsEventCopyWithImpl<
-  $Res,
-  $Val extends CompletedBookingsEvent
->
+class _$CompletedBookingsEventCopyWithImpl<$Res,
+        $Val extends CompletedBookingsEvent>
     implements $CompletedBookingsEventCopyWith<$Res> {
   _$CompletedBookingsEventCopyWithImpl(this._value, this._then);
 
@@ -111,22 +101,21 @@ class _$CompletedBookingsEventCopyWithImpl<
 /// @nodoc
 abstract class _$$LoadCompletedBookingsImplCopyWith<$Res> {
   factory _$$LoadCompletedBookingsImplCopyWith(
-    _$LoadCompletedBookingsImpl value,
-    $Res Function(_$LoadCompletedBookingsImpl) then,
-  ) = __$$LoadCompletedBookingsImplCopyWithImpl<$Res>;
+          _$LoadCompletedBookingsImpl value,
+          $Res Function(_$LoadCompletedBookingsImpl) then) =
+      __$$LoadCompletedBookingsImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String? startDate, String? endDate, String? searchQuery});
 }
 
 /// @nodoc
 class __$$LoadCompletedBookingsImplCopyWithImpl<$Res>
-    extends
-        _$CompletedBookingsEventCopyWithImpl<$Res, _$LoadCompletedBookingsImpl>
+    extends _$CompletedBookingsEventCopyWithImpl<$Res,
+        _$LoadCompletedBookingsImpl>
     implements _$$LoadCompletedBookingsImplCopyWith<$Res> {
-  __$$LoadCompletedBookingsImplCopyWithImpl(
-    _$LoadCompletedBookingsImpl _value,
-    $Res Function(_$LoadCompletedBookingsImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadCompletedBookingsImplCopyWithImpl(_$LoadCompletedBookingsImpl _value,
+      $Res Function(_$LoadCompletedBookingsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CompletedBookingsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -137,33 +126,28 @@ class __$$LoadCompletedBookingsImplCopyWithImpl<$Res>
     Object? endDate = freezed,
     Object? searchQuery = freezed,
   }) {
-    return _then(
-      _$LoadCompletedBookingsImpl(
-        startDate: freezed == startDate
-            ? _value.startDate
-            : startDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        endDate: freezed == endDate
-            ? _value.endDate
-            : endDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        searchQuery: freezed == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$LoadCompletedBookingsImpl(
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      searchQuery: freezed == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
-  const _$LoadCompletedBookingsImpl({
-    this.startDate,
-    this.endDate,
-    this.searchQuery,
-  });
+  const _$LoadCompletedBookingsImpl(
+      {this.startDate, this.endDate, this.searchQuery});
 
   @override
   final String? startDate;
@@ -198,28 +182,19 @@ class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
   @override
   @pragma('vm:prefer-inline')
   _$$LoadCompletedBookingsImplCopyWith<_$LoadCompletedBookingsImpl>
-  get copyWith =>
-      __$$LoadCompletedBookingsImplCopyWithImpl<_$LoadCompletedBookingsImpl>(
-        this,
-        _$identity,
-      );
+      get copyWith => __$$LoadCompletedBookingsImplCopyWithImpl<
+          _$LoadCompletedBookingsImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loadCompletedBookings,
+            String? startDate, String? endDate, String? searchQuery)
+        loadCompletedBookings,
     required TResult Function() loadNextPageCompletedBookings,
     required TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)
+        updateBooking,
   }) {
     return loadCompletedBookings(startDate, endDate, searchQuery);
   }
@@ -228,14 +203,11 @@ class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult? Function()? loadNextPageCompletedBookings,
     TResult? Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
   }) {
     return loadCompletedBookings?.call(startDate, endDate, searchQuery);
   }
@@ -244,14 +216,11 @@ class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult Function()? loadNextPageCompletedBookings,
     TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
     required TResult orElse(),
   }) {
     if (loadCompletedBookings != null) {
@@ -264,9 +233,9 @@ class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadCompletedBookings value)
-    loadCompletedBookings,
+        loadCompletedBookings,
     required TResult Function(_LoadNextPageCompletedBookings value)
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
   }) {
     return loadCompletedBookings(this);
@@ -277,7 +246,7 @@ class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult? Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
   }) {
     return loadCompletedBookings?.call(this);
@@ -288,7 +257,7 @@ class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     required TResult orElse(),
   }) {
@@ -300,11 +269,10 @@ class _$LoadCompletedBookingsImpl implements _LoadCompletedBookings {
 }
 
 abstract class _LoadCompletedBookings implements CompletedBookingsEvent {
-  const factory _LoadCompletedBookings({
-    final String? startDate,
-    final String? endDate,
-    final String? searchQuery,
-  }) = _$LoadCompletedBookingsImpl;
+  const factory _LoadCompletedBookings(
+      {final String? startDate,
+      final String? endDate,
+      final String? searchQuery}) = _$LoadCompletedBookingsImpl;
 
   String? get startDate;
   String? get endDate;
@@ -314,29 +282,26 @@ abstract class _LoadCompletedBookings implements CompletedBookingsEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadCompletedBookingsImplCopyWith<_$LoadCompletedBookingsImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$LoadNextPageCompletedBookingsImplCopyWith<$Res> {
   factory _$$LoadNextPageCompletedBookingsImplCopyWith(
-    _$LoadNextPageCompletedBookingsImpl value,
-    $Res Function(_$LoadNextPageCompletedBookingsImpl) then,
-  ) = __$$LoadNextPageCompletedBookingsImplCopyWithImpl<$Res>;
+          _$LoadNextPageCompletedBookingsImpl value,
+          $Res Function(_$LoadNextPageCompletedBookingsImpl) then) =
+      __$$LoadNextPageCompletedBookingsImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNextPageCompletedBookingsImplCopyWithImpl<$Res>
-    extends
-        _$CompletedBookingsEventCopyWithImpl<
-          $Res,
-          _$LoadNextPageCompletedBookingsImpl
-        >
+    extends _$CompletedBookingsEventCopyWithImpl<$Res,
+        _$LoadNextPageCompletedBookingsImpl>
     implements _$$LoadNextPageCompletedBookingsImplCopyWith<$Res> {
   __$$LoadNextPageCompletedBookingsImplCopyWithImpl(
-    _$LoadNextPageCompletedBookingsImpl _value,
-    $Res Function(_$LoadNextPageCompletedBookingsImpl) _then,
-  ) : super(_value, _then);
+      _$LoadNextPageCompletedBookingsImpl _value,
+      $Res Function(_$LoadNextPageCompletedBookingsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CompletedBookingsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -367,18 +332,12 @@ class _$LoadNextPageCompletedBookingsImpl
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loadCompletedBookings,
+            String? startDate, String? endDate, String? searchQuery)
+        loadCompletedBookings,
     required TResult Function() loadNextPageCompletedBookings,
     required TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)
+        updateBooking,
   }) {
     return loadNextPageCompletedBookings();
   }
@@ -387,14 +346,11 @@ class _$LoadNextPageCompletedBookingsImpl
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult? Function()? loadNextPageCompletedBookings,
     TResult? Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
   }) {
     return loadNextPageCompletedBookings?.call();
   }
@@ -403,14 +359,11 @@ class _$LoadNextPageCompletedBookingsImpl
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult Function()? loadNextPageCompletedBookings,
     TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
     required TResult orElse(),
   }) {
     if (loadNextPageCompletedBookings != null) {
@@ -423,9 +376,9 @@ class _$LoadNextPageCompletedBookingsImpl
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadCompletedBookings value)
-    loadCompletedBookings,
+        loadCompletedBookings,
     required TResult Function(_LoadNextPageCompletedBookings value)
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
   }) {
     return loadNextPageCompletedBookings(this);
@@ -436,7 +389,7 @@ class _$LoadNextPageCompletedBookingsImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult? Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
   }) {
     return loadNextPageCompletedBookings?.call(this);
@@ -447,7 +400,7 @@ class _$LoadNextPageCompletedBookingsImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     required TResult orElse(),
   }) {
@@ -467,9 +420,8 @@ abstract class _LoadNextPageCompletedBookings
 /// @nodoc
 abstract class _$$UpdateBookingImplCopyWith<$Res> {
   factory _$$UpdateBookingImplCopyWith(
-    _$UpdateBookingImpl value,
-    $Res Function(_$UpdateBookingImpl) then,
-  ) = __$$UpdateBookingImplCopyWithImpl<$Res>;
+          _$UpdateBookingImpl value, $Res Function(_$UpdateBookingImpl) then) =
+      __$$UpdateBookingImplCopyWithImpl<$Res>;
   @useResult
   $Res call({BookingsModel? booking, bool shouldRefresh, bool isDeleted});
 
@@ -481,9 +433,8 @@ class __$$UpdateBookingImplCopyWithImpl<$Res>
     extends _$CompletedBookingsEventCopyWithImpl<$Res, _$UpdateBookingImpl>
     implements _$$UpdateBookingImplCopyWith<$Res> {
   __$$UpdateBookingImplCopyWithImpl(
-    _$UpdateBookingImpl _value,
-    $Res Function(_$UpdateBookingImpl) _then,
-  ) : super(_value, _then);
+      _$UpdateBookingImpl _value, $Res Function(_$UpdateBookingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CompletedBookingsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -494,22 +445,20 @@ class __$$UpdateBookingImplCopyWithImpl<$Res>
     Object? shouldRefresh = null,
     Object? isDeleted = null,
   }) {
-    return _then(
-      _$UpdateBookingImpl(
-        freezed == booking
-            ? _value.booking
-            : booking // ignore: cast_nullable_to_non_nullable
-                  as BookingsModel?,
-        shouldRefresh: null == shouldRefresh
-            ? _value.shouldRefresh
-            : shouldRefresh // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        isDeleted: null == isDeleted
-            ? _value.isDeleted
-            : isDeleted // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$UpdateBookingImpl(
+      freezed == booking
+          ? _value.booking
+          : booking // ignore: cast_nullable_to_non_nullable
+              as BookingsModel?,
+      shouldRefresh: null == shouldRefresh
+          ? _value.shouldRefresh
+          : shouldRefresh // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isDeleted: null == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 
   /// Create a copy of CompletedBookingsEvent
@@ -530,11 +479,8 @@ class __$$UpdateBookingImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$UpdateBookingImpl implements _UpdateBooking {
-  const _$UpdateBookingImpl(
-    this.booking, {
-    this.shouldRefresh = false,
-    this.isDeleted = false,
-  });
+  const _$UpdateBookingImpl(this.booking,
+      {this.shouldRefresh = false, this.isDeleted = false});
 
   @override
   final BookingsModel? booking;
@@ -578,18 +524,12 @@ class _$UpdateBookingImpl implements _UpdateBooking {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loadCompletedBookings,
+            String? startDate, String? endDate, String? searchQuery)
+        loadCompletedBookings,
     required TResult Function() loadNextPageCompletedBookings,
     required TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)
+        updateBooking,
   }) {
     return updateBooking(booking, shouldRefresh, isDeleted);
   }
@@ -598,14 +538,11 @@ class _$UpdateBookingImpl implements _UpdateBooking {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult? Function()? loadNextPageCompletedBookings,
     TResult? Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
   }) {
     return updateBooking?.call(booking, shouldRefresh, isDeleted);
   }
@@ -614,14 +551,11 @@ class _$UpdateBookingImpl implements _UpdateBooking {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? startDate, String? endDate, String? searchQuery)?
-    loadCompletedBookings,
+        loadCompletedBookings,
     TResult Function()? loadNextPageCompletedBookings,
     TResult Function(
-      BookingsModel? booking,
-      bool shouldRefresh,
-      bool isDeleted,
-    )?
-    updateBooking,
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
     required TResult orElse(),
   }) {
     if (updateBooking != null) {
@@ -634,9 +568,9 @@ class _$UpdateBookingImpl implements _UpdateBooking {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadCompletedBookings value)
-    loadCompletedBookings,
+        loadCompletedBookings,
     required TResult Function(_LoadNextPageCompletedBookings value)
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
   }) {
     return updateBooking(this);
@@ -647,7 +581,7 @@ class _$UpdateBookingImpl implements _UpdateBooking {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult? Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
   }) {
     return updateBooking?.call(this);
@@ -658,7 +592,7 @@ class _$UpdateBookingImpl implements _UpdateBooking {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadCompletedBookings value)? loadCompletedBookings,
     TResult Function(_LoadNextPageCompletedBookings value)?
-    loadNextPageCompletedBookings,
+        loadNextPageCompletedBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     required TResult orElse(),
   }) {
@@ -670,11 +604,8 @@ class _$UpdateBookingImpl implements _UpdateBooking {
 }
 
 abstract class _UpdateBooking implements CompletedBookingsEvent {
-  const factory _UpdateBooking(
-    final BookingsModel? booking, {
-    final bool shouldRefresh,
-    final bool isDeleted,
-  }) = _$UpdateBookingImpl;
+  const factory _UpdateBooking(final BookingsModel? booking,
+      {final bool shouldRefresh, final bool isDeleted}) = _$UpdateBookingImpl;
 
   BookingsModel? get booking;
   bool get shouldRefresh;
@@ -694,61 +625,63 @@ mixin _$CompletedBookingsState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -756,22 +689,20 @@ mixin _$CompletedBookingsState {
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $CompletedBookingsStateCopyWith<$Res> {
-  factory $CompletedBookingsStateCopyWith(
-    CompletedBookingsState value,
-    $Res Function(CompletedBookingsState) then,
-  ) = _$CompletedBookingsStateCopyWithImpl<$Res, CompletedBookingsState>;
+  factory $CompletedBookingsStateCopyWith(CompletedBookingsState value,
+          $Res Function(CompletedBookingsState) then) =
+      _$CompletedBookingsStateCopyWithImpl<$Res, CompletedBookingsState>;
 }
 
 /// @nodoc
-class _$CompletedBookingsStateCopyWithImpl<
-  $Res,
-  $Val extends CompletedBookingsState
->
+class _$CompletedBookingsStateCopyWithImpl<$Res,
+        $Val extends CompletedBookingsState>
     implements $CompletedBookingsStateCopyWith<$Res> {
   _$CompletedBookingsStateCopyWithImpl(this._value, this._then);
 
@@ -787,9 +718,8 @@ class _$CompletedBookingsStateCopyWithImpl<
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -797,9 +727,8 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$CompletedBookingsStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CompletedBookingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -830,14 +759,13 @@ class _$InitialImpl implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return initial();
@@ -849,14 +777,13 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return initial?.call();
@@ -868,14 +795,13 @@ class _$InitialImpl implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -930,9 +856,8 @@ abstract class _Initial implements CompletedBookingsState {
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -940,9 +865,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$CompletedBookingsStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CompletedBookingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -973,14 +897,13 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -992,14 +915,13 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -1011,14 +933,13 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -1073,18 +994,16 @@ abstract class _Loading implements CompletedBookingsState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    List<BookingsModel> completedBookings,
-    String? nextPageUrl,
-    bool isPaginating,
-    String? startDate,
-    String? endDate,
-    String? searchQuery,
-  });
+  $Res call(
+      {List<BookingsModel> completedBookings,
+      String? nextPageUrl,
+      bool isPaginating,
+      String? startDate,
+      String? endDate,
+      String? searchQuery});
 }
 
 /// @nodoc
@@ -1092,9 +1011,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$CompletedBookingsStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CompletedBookingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -1108,48 +1026,46 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? endDate = freezed,
     Object? searchQuery = freezed,
   }) {
-    return _then(
-      _$LoadedImpl(
-        completedBookings: null == completedBookings
-            ? _value._completedBookings
-            : completedBookings // ignore: cast_nullable_to_non_nullable
-                  as List<BookingsModel>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isPaginating: null == isPaginating
-            ? _value.isPaginating
-            : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        startDate: freezed == startDate
-            ? _value.startDate
-            : startDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        endDate: freezed == endDate
-            ? _value.endDate
-            : endDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        searchQuery: freezed == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      completedBookings: null == completedBookings
+          ? _value._completedBookings
+          : completedBookings // ignore: cast_nullable_to_non_nullable
+              as List<BookingsModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPaginating: null == isPaginating
+          ? _value.isPaginating
+          : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      searchQuery: freezed == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    required final List<BookingsModel> completedBookings,
-    required this.nextPageUrl,
-    this.isPaginating = false,
-    this.startDate,
-    this.endDate,
-    this.searchQuery,
-  }) : _completedBookings = completedBookings;
+  const _$LoadedImpl(
+      {required final List<BookingsModel> completedBookings,
+      required this.nextPageUrl,
+      this.isPaginating = false,
+      this.startDate,
+      this.endDate,
+      this.searchQuery})
+      : _completedBookings = completedBookings;
 
   final List<BookingsModel> _completedBookings;
   @override
@@ -1182,10 +1098,8 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(
-              other._completedBookings,
-              _completedBookings,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._completedBookings, _completedBookings) &&
             (identical(other.nextPageUrl, nextPageUrl) ||
                 other.nextPageUrl == nextPageUrl) &&
             (identical(other.isPaginating, isPaginating) ||
@@ -1199,14 +1113,13 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_completedBookings),
-    nextPageUrl,
-    isPaginating,
-    startDate,
-    endDate,
-    searchQuery,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_completedBookings),
+      nextPageUrl,
+      isPaginating,
+      startDate,
+      endDate,
+      searchQuery);
 
   /// Create a copy of CompletedBookingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -1222,24 +1135,17 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
   }) {
-    return loaded(
-      completedBookings,
-      nextPageUrl,
-      isPaginating,
-      startDate,
-      endDate,
-      searchQuery,
-    );
+    return loaded(completedBookings, nextPageUrl, isPaginating, startDate,
+        endDate, searchQuery);
   }
 
   @override
@@ -1248,24 +1154,17 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
-    return loaded?.call(
-      completedBookings,
-      nextPageUrl,
-      isPaginating,
-      startDate,
-      endDate,
-      searchQuery,
-    );
+    return loaded?.call(completedBookings, nextPageUrl, isPaginating, startDate,
+        endDate, searchQuery);
   }
 
   @override
@@ -1274,26 +1173,19 @@ class _$LoadedImpl implements _Loaded {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(
-        completedBookings,
-        nextPageUrl,
-        isPaginating,
-        startDate,
-        endDate,
-        searchQuery,
-      );
+      return loaded(completedBookings, nextPageUrl, isPaginating, startDate,
+          endDate, searchQuery);
     }
     return orElse();
   }
@@ -1337,14 +1229,13 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements CompletedBookingsState {
-  const factory _Loaded({
-    required final List<BookingsModel> completedBookings,
-    required final String? nextPageUrl,
-    final bool isPaginating,
-    final String? startDate,
-    final String? endDate,
-    final String? searchQuery,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final List<BookingsModel> completedBookings,
+      required final String? nextPageUrl,
+      final bool isPaginating,
+      final String? startDate,
+      final String? endDate,
+      final String? searchQuery}) = _$LoadedImpl;
 
   List<BookingsModel> get completedBookings;
   String? get nextPageUrl;
@@ -1363,9 +1254,8 @@ abstract class _Loaded implements CompletedBookingsState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -1375,23 +1265,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$CompletedBookingsStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of CompletedBookingsState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -1433,14 +1322,13 @@ class _$ErrorImpl implements _Error {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -1452,14 +1340,13 @@ class _$ErrorImpl implements _Error {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -1471,14 +1358,13 @@ class _$ErrorImpl implements _Error {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-      List<BookingsModel> completedBookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-    )?
-    loaded,
+            List<BookingsModel> completedBookings,
+            String? nextPageUrl,
+            bool isPaginating,
+            String? startDate,
+            String? endDate,
+            String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

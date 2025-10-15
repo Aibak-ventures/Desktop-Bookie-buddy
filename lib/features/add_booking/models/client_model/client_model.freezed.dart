@@ -12,8 +12,7 @@ part of 'client_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ClientModel _$ClientModelFromJson(Map<String, dynamic> json) {
   return _ClientModel.fromJson(json);
@@ -43,16 +42,14 @@ mixin _$ClientModel {
 /// @nodoc
 abstract class $ClientModelCopyWith<$Res> {
   factory $ClientModelCopyWith(
-    ClientModel value,
-    $Res Function(ClientModel) then,
-  ) = _$ClientModelCopyWithImpl<$Res, ClientModel>;
+          ClientModel value, $Res Function(ClientModel) then) =
+      _$ClientModelCopyWithImpl<$Res, ClientModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'id', includeToJson: false) int? id,
-    @JsonKey(name: 'name', readValue: _readName) String name,
-    @JsonKey(name: 'phone_1', readValue: _readPhone1) int phone1,
-    @JsonKey(name: 'phone_2', readValue: _readPhone2) int? phone2,
-  });
+  $Res call(
+      {@JsonKey(name: 'id', includeToJson: false) int? id,
+      @JsonKey(name: 'name', readValue: _readName) String name,
+      @JsonKey(name: 'phone_1', readValue: _readPhone1) int phone1,
+      @JsonKey(name: 'phone_2', readValue: _readPhone2) int? phone2});
 }
 
 /// @nodoc
@@ -75,27 +72,24 @@ class _$ClientModelCopyWithImpl<$Res, $Val extends ClientModel>
     Object? phone1 = null,
     Object? phone2 = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: freezed == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            phone1: null == phone1
-                ? _value.phone1
-                : phone1 // ignore: cast_nullable_to_non_nullable
-                      as int,
-            phone2: freezed == phone2
-                ? _value.phone2
-                : phone2 // ignore: cast_nullable_to_non_nullable
-                      as int?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      phone1: null == phone1
+          ? _value.phone1
+          : phone1 // ignore: cast_nullable_to_non_nullable
+              as int,
+      phone2: freezed == phone2
+          ? _value.phone2
+          : phone2 // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
   }
 }
 
@@ -103,17 +97,15 @@ class _$ClientModelCopyWithImpl<$Res, $Val extends ClientModel>
 abstract class _$$ClientModelImplCopyWith<$Res>
     implements $ClientModelCopyWith<$Res> {
   factory _$$ClientModelImplCopyWith(
-    _$ClientModelImpl value,
-    $Res Function(_$ClientModelImpl) then,
-  ) = __$$ClientModelImplCopyWithImpl<$Res>;
+          _$ClientModelImpl value, $Res Function(_$ClientModelImpl) then) =
+      __$$ClientModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'id', includeToJson: false) int? id,
-    @JsonKey(name: 'name', readValue: _readName) String name,
-    @JsonKey(name: 'phone_1', readValue: _readPhone1) int phone1,
-    @JsonKey(name: 'phone_2', readValue: _readPhone2) int? phone2,
-  });
+  $Res call(
+      {@JsonKey(name: 'id', includeToJson: false) int? id,
+      @JsonKey(name: 'name', readValue: _readName) String name,
+      @JsonKey(name: 'phone_1', readValue: _readPhone1) int phone1,
+      @JsonKey(name: 'phone_2', readValue: _readPhone2) int? phone2});
 }
 
 /// @nodoc
@@ -121,9 +113,8 @@ class __$$ClientModelImplCopyWithImpl<$Res>
     extends _$ClientModelCopyWithImpl<$Res, _$ClientModelImpl>
     implements _$$ClientModelImplCopyWith<$Res> {
   __$$ClientModelImplCopyWithImpl(
-    _$ClientModelImpl _value,
-    $Res Function(_$ClientModelImpl) _then,
-  ) : super(_value, _then);
+      _$ClientModelImpl _value, $Res Function(_$ClientModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientModel
   /// with the given fields replaced by the non-null parameter values.
@@ -135,38 +126,35 @@ class __$$ClientModelImplCopyWithImpl<$Res>
     Object? phone1 = null,
     Object? phone2 = freezed,
   }) {
-    return _then(
-      _$ClientModelImpl(
-        id: freezed == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        phone1: null == phone1
-            ? _value.phone1
-            : phone1 // ignore: cast_nullable_to_non_nullable
-                  as int,
-        phone2: freezed == phone2
-            ? _value.phone2
-            : phone2 // ignore: cast_nullable_to_non_nullable
-                  as int?,
-      ),
-    );
+    return _then(_$ClientModelImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      phone1: null == phone1
+          ? _value.phone1
+          : phone1 // ignore: cast_nullable_to_non_nullable
+              as int,
+      phone2: freezed == phone2
+          ? _value.phone2
+          : phone2 // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ClientModelImpl implements _ClientModel {
-  const _$ClientModelImpl({
-    @JsonKey(name: 'id', includeToJson: false) this.id,
-    @JsonKey(name: 'name', readValue: _readName) required this.name,
-    @JsonKey(name: 'phone_1', readValue: _readPhone1) required this.phone1,
-    @JsonKey(name: 'phone_2', readValue: _readPhone2) this.phone2,
-  });
+  const _$ClientModelImpl(
+      {@JsonKey(name: 'id', includeToJson: false) this.id,
+      @JsonKey(name: 'name', readValue: _readName) required this.name,
+      @JsonKey(name: 'phone_1', readValue: _readPhone1) required this.phone1,
+      @JsonKey(name: 'phone_2', readValue: _readPhone2) this.phone2});
 
   factory _$ClientModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ClientModelImplFromJson(json);
@@ -214,17 +202,20 @@ class _$ClientModelImpl implements _ClientModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ClientModelImplToJson(this);
+    return _$$ClientModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ClientModel implements ClientModel {
-  const factory _ClientModel({
-    @JsonKey(name: 'id', includeToJson: false) final int? id,
-    @JsonKey(name: 'name', readValue: _readName) required final String name,
-    @JsonKey(name: 'phone_1', readValue: _readPhone1) required final int phone1,
-    @JsonKey(name: 'phone_2', readValue: _readPhone2) final int? phone2,
-  }) = _$ClientModelImpl;
+  const factory _ClientModel(
+      {@JsonKey(name: 'id', includeToJson: false) final int? id,
+      @JsonKey(name: 'name', readValue: _readName) required final String name,
+      @JsonKey(name: 'phone_1', readValue: _readPhone1)
+      required final int phone1,
+      @JsonKey(name: 'phone_2', readValue: _readPhone2)
+      final int? phone2}) = _$ClientModelImpl;
 
   factory _ClientModel.fromJson(Map<String, dynamic> json) =
       _$ClientModelImpl.fromJson;

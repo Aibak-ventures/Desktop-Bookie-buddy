@@ -12,8 +12,7 @@ part of 'client_request_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ClientRequestModel _$ClientRequestModelFromJson(Map<String, dynamic> json) {
   return _ClientRequestModel.fromJson(json);
@@ -43,16 +42,14 @@ mixin _$ClientRequestModel {
 /// @nodoc
 abstract class $ClientRequestModelCopyWith<$Res> {
   factory $ClientRequestModelCopyWith(
-    ClientRequestModel value,
-    $Res Function(ClientRequestModel) then,
-  ) = _$ClientRequestModelCopyWithImpl<$Res, ClientRequestModel>;
+          ClientRequestModel value, $Res Function(ClientRequestModel) then) =
+      _$ClientRequestModelCopyWithImpl<$Res, ClientRequestModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,
-    @JsonKey(name: 'name', includeIfNull: false) String? name,
-    @JsonKey(name: 'phone_1', includeIfNull: false) int? phone1,
-    @JsonKey(name: 'phone_2', includeIfNull: false) int? phone2,
-  });
+  $Res call(
+      {@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,
+      @JsonKey(name: 'name', includeIfNull: false) String? name,
+      @JsonKey(name: 'phone_1', includeIfNull: false) int? phone1,
+      @JsonKey(name: 'phone_2', includeIfNull: false) int? phone2});
 }
 
 /// @nodoc
@@ -75,55 +72,49 @@ class _$ClientRequestModelCopyWithImpl<$Res, $Val extends ClientRequestModel>
     Object? phone1 = freezed,
     Object? phone2 = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: freezed == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            name: freezed == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            phone1: freezed == phone1
-                ? _value.phone1
-                : phone1 // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            phone2: freezed == phone2
-                ? _value.phone2
-                : phone2 // ignore: cast_nullable_to_non_nullable
-                      as int?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phone1: freezed == phone1
+          ? _value.phone1
+          : phone1 // ignore: cast_nullable_to_non_nullable
+              as int?,
+      phone2: freezed == phone2
+          ? _value.phone2
+          : phone2 // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ClientRequestModelImplCopyWith<$Res>
     implements $ClientRequestModelCopyWith<$Res> {
-  factory _$$ClientRequestModelImplCopyWith(
-    _$ClientRequestModelImpl value,
-    $Res Function(_$ClientRequestModelImpl) then,
-  ) = __$$ClientRequestModelImplCopyWithImpl<$Res>;
+  factory _$$ClientRequestModelImplCopyWith(_$ClientRequestModelImpl value,
+          $Res Function(_$ClientRequestModelImpl) then) =
+      __$$ClientRequestModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,
-    @JsonKey(name: 'name', includeIfNull: false) String? name,
-    @JsonKey(name: 'phone_1', includeIfNull: false) int? phone1,
-    @JsonKey(name: 'phone_2', includeIfNull: false) int? phone2,
-  });
+  $Res call(
+      {@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,
+      @JsonKey(name: 'name', includeIfNull: false) String? name,
+      @JsonKey(name: 'phone_1', includeIfNull: false) int? phone1,
+      @JsonKey(name: 'phone_2', includeIfNull: false) int? phone2});
 }
 
 /// @nodoc
 class __$$ClientRequestModelImplCopyWithImpl<$Res>
     extends _$ClientRequestModelCopyWithImpl<$Res, _$ClientRequestModelImpl>
     implements _$$ClientRequestModelImplCopyWith<$Res> {
-  __$$ClientRequestModelImplCopyWithImpl(
-    _$ClientRequestModelImpl _value,
-    $Res Function(_$ClientRequestModelImpl) _then,
-  ) : super(_value, _then);
+  __$$ClientRequestModelImplCopyWithImpl(_$ClientRequestModelImpl _value,
+      $Res Function(_$ClientRequestModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -135,39 +126,36 @@ class __$$ClientRequestModelImplCopyWithImpl<$Res>
     Object? phone1 = freezed,
     Object? phone2 = freezed,
   }) {
-    return _then(
-      _$ClientRequestModelImpl(
-        id: freezed == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        name: freezed == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        phone1: freezed == phone1
-            ? _value.phone1
-            : phone1 // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        phone2: freezed == phone2
-            ? _value.phone2
-            : phone2 // ignore: cast_nullable_to_non_nullable
-                  as int?,
-      ),
-    );
+    return _then(_$ClientRequestModelImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phone1: freezed == phone1
+          ? _value.phone1
+          : phone1 // ignore: cast_nullable_to_non_nullable
+              as int?,
+      phone2: freezed == phone2
+          ? _value.phone2
+          : phone2 // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ClientRequestModelImpl implements _ClientRequestModel {
-  const _$ClientRequestModelImpl({
-    @JsonKey(name: 'id', includeToJson: false, includeIfNull: false)
-    required this.id,
-    @JsonKey(name: 'name', includeIfNull: false) this.name,
-    @JsonKey(name: 'phone_1', includeIfNull: false) this.phone1,
-    @JsonKey(name: 'phone_2', includeIfNull: false) this.phone2,
-  });
+  const _$ClientRequestModelImpl(
+      {@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)
+      required this.id,
+      @JsonKey(name: 'name', includeIfNull: false) this.name,
+      @JsonKey(name: 'phone_1', includeIfNull: false) this.phone1,
+      @JsonKey(name: 'phone_2', includeIfNull: false) this.phone2});
 
   factory _$ClientRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ClientRequestModelImplFromJson(json);
@@ -212,24 +200,24 @@ class _$ClientRequestModelImpl implements _ClientRequestModel {
   @pragma('vm:prefer-inline')
   _$$ClientRequestModelImplCopyWith<_$ClientRequestModelImpl> get copyWith =>
       __$$ClientRequestModelImplCopyWithImpl<_$ClientRequestModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ClientRequestModelImplToJson(this);
+    return _$$ClientRequestModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ClientRequestModel implements ClientRequestModel {
-  const factory _ClientRequestModel({
-    @JsonKey(name: 'id', includeToJson: false, includeIfNull: false)
-    required final int? id,
-    @JsonKey(name: 'name', includeIfNull: false) final String? name,
-    @JsonKey(name: 'phone_1', includeIfNull: false) final int? phone1,
-    @JsonKey(name: 'phone_2', includeIfNull: false) final int? phone2,
-  }) = _$ClientRequestModelImpl;
+  const factory _ClientRequestModel(
+          {@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)
+          required final int? id,
+          @JsonKey(name: 'name', includeIfNull: false) final String? name,
+          @JsonKey(name: 'phone_1', includeIfNull: false) final int? phone1,
+          @JsonKey(name: 'phone_2', includeIfNull: false) final int? phone2}) =
+      _$ClientRequestModelImpl;
 
   factory _ClientRequestModel.fromJson(Map<String, dynamic> json) =
       _$ClientRequestModelImpl.fromJson;

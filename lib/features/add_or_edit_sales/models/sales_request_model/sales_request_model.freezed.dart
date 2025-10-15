@@ -12,8 +12,7 @@ part of 'sales_request_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 SalesRequestModel _$SalesRequestModelFromJson(Map<String, dynamic> json) {
   return _SalesRequestModel.fromJson(json);
@@ -64,28 +63,26 @@ mixin _$SalesRequestModel {
 /// @nodoc
 abstract class $SalesRequestModelCopyWith<$Res> {
   factory $SalesRequestModelCopyWith(
-    SalesRequestModel value,
-    $Res Function(SalesRequestModel) then,
-  ) = _$SalesRequestModelCopyWithImpl<$Res, SalesRequestModel>;
+          SalesRequestModel value, $Res Function(SalesRequestModel) then) =
+      _$SalesRequestModelCopyWithImpl<$Res, SalesRequestModel>;
   @useResult
-  $Res call({
-    @JsonKey(includeToJson: false) int? id,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'client_id') int? clientId,
-    @JsonKey(name: 'client_name') String? clientName,
-    @JsonKey(name: 'client_phone_1') String? clientPhone1,
-    @JsonKey(name: 'client_phone_2') String? clientPhone2,
-    @JsonKey(name: 'client_address') String? address,
-    @JsonKey(name: 'sale_date') String? saleDate,
-    @JsonKey(name: 'variants', toJson: _variantsToJson)
-    List<ProductSelectedModel>? products,
-    @JsonKey(name: 'decrease_stock') bool? stockCountDecrease,
-    @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'discount') int? discountAmount,
-    @JsonKey(name: 'paid_amount') int? paidAmount,
-    @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-    PaymentMethod? paymentMethod,
-  });
+  $Res call(
+      {@JsonKey(includeToJson: false) int? id,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'client_id') int? clientId,
+      @JsonKey(name: 'client_name') String? clientName,
+      @JsonKey(name: 'client_phone_1') String? clientPhone1,
+      @JsonKey(name: 'client_phone_2') String? clientPhone2,
+      @JsonKey(name: 'client_address') String? address,
+      @JsonKey(name: 'sale_date') String? saleDate,
+      @JsonKey(name: 'variants', toJson: _variantsToJson)
+      List<ProductSelectedModel>? products,
+      @JsonKey(name: 'decrease_stock') bool? stockCountDecrease,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'discount') int? discountAmount,
+      @JsonKey(name: 'paid_amount') int? paidAmount,
+      @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
+      PaymentMethod? paymentMethod});
 }
 
 /// @nodoc
@@ -118,107 +115,101 @@ class _$SalesRequestModelCopyWithImpl<$Res, $Val extends SalesRequestModel>
     Object? paidAmount = freezed,
     Object? paymentMethod = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: freezed == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            staffId: freezed == staffId
-                ? _value.staffId
-                : staffId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            clientId: freezed == clientId
-                ? _value.clientId
-                : clientId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            clientName: freezed == clientName
-                ? _value.clientName
-                : clientName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            clientPhone1: freezed == clientPhone1
-                ? _value.clientPhone1
-                : clientPhone1 // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            clientPhone2: freezed == clientPhone2
-                ? _value.clientPhone2
-                : clientPhone2 // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            address: freezed == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            saleDate: freezed == saleDate
-                ? _value.saleDate
-                : saleDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            products: freezed == products
-                ? _value.products
-                : products // ignore: cast_nullable_to_non_nullable
-                      as List<ProductSelectedModel>?,
-            stockCountDecrease: freezed == stockCountDecrease
-                ? _value.stockCountDecrease
-                : stockCountDecrease // ignore: cast_nullable_to_non_nullable
-                      as bool?,
-            description: freezed == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            discountAmount: freezed == discountAmount
-                ? _value.discountAmount
-                : discountAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            paidAmount: freezed == paidAmount
-                ? _value.paidAmount
-                : paidAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            paymentMethod: freezed == paymentMethod
-                ? _value.paymentMethod
-                : paymentMethod // ignore: cast_nullable_to_non_nullable
-                      as PaymentMethod?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      clientName: freezed == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      clientPhone1: freezed == clientPhone1
+          ? _value.clientPhone1
+          : clientPhone1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      clientPhone2: freezed == clientPhone2
+          ? _value.clientPhone2
+          : clientPhone2 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      saleDate: freezed == saleDate
+          ? _value.saleDate
+          : saleDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      products: freezed == products
+          ? _value.products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>?,
+      stockCountDecrease: freezed == stockCountDecrease
+          ? _value.stockCountDecrease
+          : stockCountDecrease // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      discountAmount: freezed == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      paidAmount: freezed == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as PaymentMethod?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$SalesRequestModelImplCopyWith<$Res>
     implements $SalesRequestModelCopyWith<$Res> {
-  factory _$$SalesRequestModelImplCopyWith(
-    _$SalesRequestModelImpl value,
-    $Res Function(_$SalesRequestModelImpl) then,
-  ) = __$$SalesRequestModelImplCopyWithImpl<$Res>;
+  factory _$$SalesRequestModelImplCopyWith(_$SalesRequestModelImpl value,
+          $Res Function(_$SalesRequestModelImpl) then) =
+      __$$SalesRequestModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(includeToJson: false) int? id,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'client_id') int? clientId,
-    @JsonKey(name: 'client_name') String? clientName,
-    @JsonKey(name: 'client_phone_1') String? clientPhone1,
-    @JsonKey(name: 'client_phone_2') String? clientPhone2,
-    @JsonKey(name: 'client_address') String? address,
-    @JsonKey(name: 'sale_date') String? saleDate,
-    @JsonKey(name: 'variants', toJson: _variantsToJson)
-    List<ProductSelectedModel>? products,
-    @JsonKey(name: 'decrease_stock') bool? stockCountDecrease,
-    @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'discount') int? discountAmount,
-    @JsonKey(name: 'paid_amount') int? paidAmount,
-    @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-    PaymentMethod? paymentMethod,
-  });
+  $Res call(
+      {@JsonKey(includeToJson: false) int? id,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'client_id') int? clientId,
+      @JsonKey(name: 'client_name') String? clientName,
+      @JsonKey(name: 'client_phone_1') String? clientPhone1,
+      @JsonKey(name: 'client_phone_2') String? clientPhone2,
+      @JsonKey(name: 'client_address') String? address,
+      @JsonKey(name: 'sale_date') String? saleDate,
+      @JsonKey(name: 'variants', toJson: _variantsToJson)
+      List<ProductSelectedModel>? products,
+      @JsonKey(name: 'decrease_stock') bool? stockCountDecrease,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'discount') int? discountAmount,
+      @JsonKey(name: 'paid_amount') int? paidAmount,
+      @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
+      PaymentMethod? paymentMethod});
 }
 
 /// @nodoc
 class __$$SalesRequestModelImplCopyWithImpl<$Res>
     extends _$SalesRequestModelCopyWithImpl<$Res, _$SalesRequestModelImpl>
     implements _$$SalesRequestModelImplCopyWith<$Res> {
-  __$$SalesRequestModelImplCopyWithImpl(
-    _$SalesRequestModelImpl _value,
-    $Res Function(_$SalesRequestModelImpl) _then,
-  ) : super(_value, _then);
+  __$$SalesRequestModelImplCopyWithImpl(_$SalesRequestModelImpl _value,
+      $Res Function(_$SalesRequestModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SalesRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -240,66 +231,64 @@ class __$$SalesRequestModelImplCopyWithImpl<$Res>
     Object? paidAmount = freezed,
     Object? paymentMethod = freezed,
   }) {
-    return _then(
-      _$SalesRequestModelImpl(
-        id: freezed == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        staffId: freezed == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        clientName: freezed == clientName
-            ? _value.clientName
-            : clientName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        clientPhone1: freezed == clientPhone1
-            ? _value.clientPhone1
-            : clientPhone1 // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        clientPhone2: freezed == clientPhone2
-            ? _value.clientPhone2
-            : clientPhone2 // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        address: freezed == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        saleDate: freezed == saleDate
-            ? _value.saleDate
-            : saleDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        products: freezed == products
-            ? _value._products
-            : products // ignore: cast_nullable_to_non_nullable
-                  as List<ProductSelectedModel>?,
-        stockCountDecrease: freezed == stockCountDecrease
-            ? _value.stockCountDecrease
-            : stockCountDecrease // ignore: cast_nullable_to_non_nullable
-                  as bool?,
-        description: freezed == description
-            ? _value.description
-            : description // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        discountAmount: freezed == discountAmount
-            ? _value.discountAmount
-            : discountAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        paidAmount: freezed == paidAmount
-            ? _value.paidAmount
-            : paidAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        paymentMethod: freezed == paymentMethod
-            ? _value.paymentMethod
-            : paymentMethod // ignore: cast_nullable_to_non_nullable
-                  as PaymentMethod?,
-      ),
-    );
+    return _then(_$SalesRequestModelImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      clientName: freezed == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      clientPhone1: freezed == clientPhone1
+          ? _value.clientPhone1
+          : clientPhone1 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      clientPhone2: freezed == clientPhone2
+          ? _value.clientPhone2
+          : clientPhone2 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      saleDate: freezed == saleDate
+          ? _value.saleDate
+          : saleDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      products: freezed == products
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>?,
+      stockCountDecrease: freezed == stockCountDecrease
+          ? _value.stockCountDecrease
+          : stockCountDecrease // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      discountAmount: freezed == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      paidAmount: freezed == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as PaymentMethod?,
+    ));
   }
 }
 
@@ -307,24 +296,24 @@ class __$$SalesRequestModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(includeIfNull: false)
 class _$SalesRequestModelImpl implements _SalesRequestModel {
-  const _$SalesRequestModelImpl({
-    @JsonKey(includeToJson: false) this.id,
-    @JsonKey(name: 'staff_id') this.staffId,
-    @JsonKey(name: 'client_id') this.clientId,
-    @JsonKey(name: 'client_name') this.clientName,
-    @JsonKey(name: 'client_phone_1') this.clientPhone1,
-    @JsonKey(name: 'client_phone_2') this.clientPhone2,
-    @JsonKey(name: 'client_address') this.address,
-    @JsonKey(name: 'sale_date') this.saleDate,
-    @JsonKey(name: 'variants', toJson: _variantsToJson)
-    final List<ProductSelectedModel>? products,
-    @JsonKey(name: 'decrease_stock') this.stockCountDecrease,
-    @JsonKey(name: 'description') this.description,
-    @JsonKey(name: 'discount') this.discountAmount,
-    @JsonKey(name: 'paid_amount') this.paidAmount,
-    @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-    this.paymentMethod = PaymentMethod.cash,
-  }) : _products = products;
+  const _$SalesRequestModelImpl(
+      {@JsonKey(includeToJson: false) this.id,
+      @JsonKey(name: 'staff_id') this.staffId,
+      @JsonKey(name: 'client_id') this.clientId,
+      @JsonKey(name: 'client_name') this.clientName,
+      @JsonKey(name: 'client_phone_1') this.clientPhone1,
+      @JsonKey(name: 'client_phone_2') this.clientPhone2,
+      @JsonKey(name: 'client_address') this.address,
+      @JsonKey(name: 'sale_date') this.saleDate,
+      @JsonKey(name: 'variants', toJson: _variantsToJson)
+      final List<ProductSelectedModel>? products,
+      @JsonKey(name: 'decrease_stock') this.stockCountDecrease,
+      @JsonKey(name: 'description') this.description,
+      @JsonKey(name: 'discount') this.discountAmount,
+      @JsonKey(name: 'paid_amount') this.paidAmount,
+      @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
+      this.paymentMethod = PaymentMethod.cash})
+      : _products = products;
 
   factory _$SalesRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SalesRequestModelImplFromJson(json);
@@ -419,22 +408,21 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    staffId,
-    clientId,
-    clientName,
-    clientPhone1,
-    clientPhone2,
-    address,
-    saleDate,
-    const DeepCollectionEquality().hash(_products),
-    stockCountDecrease,
-    description,
-    discountAmount,
-    paidAmount,
-    paymentMethod,
-  );
+      runtimeType,
+      id,
+      staffId,
+      clientId,
+      clientName,
+      clientPhone1,
+      clientPhone2,
+      address,
+      saleDate,
+      const DeepCollectionEquality().hash(_products),
+      stockCountDecrease,
+      description,
+      discountAmount,
+      paidAmount,
+      paymentMethod);
 
   /// Create a copy of SalesRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -443,35 +431,34 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
   @pragma('vm:prefer-inline')
   _$$SalesRequestModelImplCopyWith<_$SalesRequestModelImpl> get copyWith =>
       __$$SalesRequestModelImplCopyWithImpl<_$SalesRequestModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SalesRequestModelImplToJson(this);
+    return _$$SalesRequestModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _SalesRequestModel implements SalesRequestModel {
-  const factory _SalesRequestModel({
-    @JsonKey(includeToJson: false) final int? id,
-    @JsonKey(name: 'staff_id') final int? staffId,
-    @JsonKey(name: 'client_id') final int? clientId,
-    @JsonKey(name: 'client_name') final String? clientName,
-    @JsonKey(name: 'client_phone_1') final String? clientPhone1,
-    @JsonKey(name: 'client_phone_2') final String? clientPhone2,
-    @JsonKey(name: 'client_address') final String? address,
-    @JsonKey(name: 'sale_date') final String? saleDate,
-    @JsonKey(name: 'variants', toJson: _variantsToJson)
-    final List<ProductSelectedModel>? products,
-    @JsonKey(name: 'decrease_stock') final bool? stockCountDecrease,
-    @JsonKey(name: 'description') final String? description,
-    @JsonKey(name: 'discount') final int? discountAmount,
-    @JsonKey(name: 'paid_amount') final int? paidAmount,
-    @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-    final PaymentMethod? paymentMethod,
-  }) = _$SalesRequestModelImpl;
+  const factory _SalesRequestModel(
+      {@JsonKey(includeToJson: false) final int? id,
+      @JsonKey(name: 'staff_id') final int? staffId,
+      @JsonKey(name: 'client_id') final int? clientId,
+      @JsonKey(name: 'client_name') final String? clientName,
+      @JsonKey(name: 'client_phone_1') final String? clientPhone1,
+      @JsonKey(name: 'client_phone_2') final String? clientPhone2,
+      @JsonKey(name: 'client_address') final String? address,
+      @JsonKey(name: 'sale_date') final String? saleDate,
+      @JsonKey(name: 'variants', toJson: _variantsToJson)
+      final List<ProductSelectedModel>? products,
+      @JsonKey(name: 'decrease_stock') final bool? stockCountDecrease,
+      @JsonKey(name: 'description') final String? description,
+      @JsonKey(name: 'discount') final int? discountAmount,
+      @JsonKey(name: 'paid_amount') final int? paidAmount,
+      @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
+      final PaymentMethod? paymentMethod}) = _$SalesRequestModelImpl;
 
   factory _SalesRequestModel.fromJson(Map<String, dynamic> json) =
       _$SalesRequestModelImpl.fromJson;

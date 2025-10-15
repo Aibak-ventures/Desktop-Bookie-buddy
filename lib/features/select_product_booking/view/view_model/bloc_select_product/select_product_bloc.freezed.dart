@@ -12,114 +12,112 @@ part of 'select_product_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$SelectProductEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        searchProducts,
     required TResult Function() loadNextSearchResults,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult? Function()? loadNextSearchResults,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadProducts value) loadProducts,
     required TResult Function(_LoadNextPageProducts value) loadNextPageProducts,
     required TResult Function(_SearchProducts value) searchProducts,
     required TResult Function(_LoadNextSearchResults value)
-    loadNextSearchResults,
-  }) => throw _privateConstructorUsedError;
+        loadNextSearchResults,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadProducts value)? loadProducts,
     TResult? Function(_LoadNextPageProducts value)? loadNextPageProducts,
     TResult? Function(_SearchProducts value)? searchProducts,
     TResult? Function(_LoadNextSearchResults value)? loadNextSearchResults,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadProducts value)? loadProducts,
@@ -127,15 +125,15 @@ mixin _$SelectProductEvent {
     TResult Function(_SearchProducts value)? searchProducts,
     TResult Function(_LoadNextSearchResults value)? loadNextSearchResults,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $SelectProductEventCopyWith<$Res> {
   factory $SelectProductEventCopyWith(
-    SelectProductEvent value,
-    $Res Function(SelectProductEvent) then,
-  ) = _$SelectProductEventCopyWithImpl<$Res, SelectProductEvent>;
+          SelectProductEvent value, $Res Function(SelectProductEvent) then) =
+      _$SelectProductEventCopyWithImpl<$Res, SelectProductEvent>;
 }
 
 /// @nodoc
@@ -155,19 +153,17 @@ class _$SelectProductEventCopyWithImpl<$Res, $Val extends SelectProductEvent>
 /// @nodoc
 abstract class _$$LoadProductsImplCopyWith<$Res> {
   factory _$$LoadProductsImplCopyWith(
-    _$LoadProductsImpl value,
-    $Res Function(_$LoadProductsImpl) then,
-  ) = __$$LoadProductsImplCopyWithImpl<$Res>;
+          _$LoadProductsImpl value, $Res Function(_$LoadProductsImpl) then) =
+      __$$LoadProductsImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    int serviceId,
-    String pickupDate,
-    String returnDate,
-    TimeOfDay? pickupTime,
-    TimeOfDay? returnTime,
-    bool useAvailableProductsApi,
-    bool isSales,
-  });
+  $Res call(
+      {int serviceId,
+      String pickupDate,
+      String returnDate,
+      TimeOfDay? pickupTime,
+      TimeOfDay? returnTime,
+      bool useAvailableProductsApi,
+      bool isSales});
 }
 
 /// @nodoc
@@ -175,9 +171,8 @@ class __$$LoadProductsImplCopyWithImpl<$Res>
     extends _$SelectProductEventCopyWithImpl<$Res, _$LoadProductsImpl>
     implements _$$LoadProductsImplCopyWith<$Res> {
   __$$LoadProductsImplCopyWithImpl(
-    _$LoadProductsImpl _value,
-    $Res Function(_$LoadProductsImpl) _then,
-  ) : super(_value, _then);
+      _$LoadProductsImpl _value, $Res Function(_$LoadProductsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -192,53 +187,50 @@ class __$$LoadProductsImplCopyWithImpl<$Res>
     Object? useAvailableProductsApi = null,
     Object? isSales = null,
   }) {
-    return _then(
-      _$LoadProductsImpl(
-        serviceId: null == serviceId
-            ? _value.serviceId
-            : serviceId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        pickupDate: null == pickupDate
-            ? _value.pickupDate
-            : pickupDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        returnDate: null == returnDate
-            ? _value.returnDate
-            : returnDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        pickupTime: freezed == pickupTime
-            ? _value.pickupTime
-            : pickupTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-        returnTime: freezed == returnTime
-            ? _value.returnTime
-            : returnTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-        useAvailableProductsApi: null == useAvailableProductsApi
-            ? _value.useAvailableProductsApi
-            : useAvailableProductsApi // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        isSales: null == isSales
-            ? _value.isSales
-            : isSales // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$LoadProductsImpl(
+      serviceId: null == serviceId
+          ? _value.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as int,
+      pickupDate: null == pickupDate
+          ? _value.pickupDate
+          : pickupDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      returnDate: null == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      pickupTime: freezed == pickupTime
+          ? _value.pickupTime
+          : pickupTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      returnTime: freezed == returnTime
+          ? _value.returnTime
+          : returnTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      useAvailableProductsApi: null == useAvailableProductsApi
+          ? _value.useAvailableProductsApi
+          : useAvailableProductsApi // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSales: null == isSales
+          ? _value.isSales
+          : isSales // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadProductsImpl implements _LoadProducts {
-  const _$LoadProductsImpl({
-    required this.serviceId,
-    required this.pickupDate,
-    required this.returnDate,
-    this.pickupTime,
-    this.returnTime,
-    this.useAvailableProductsApi = true,
-    this.isSales = false,
-  });
+  const _$LoadProductsImpl(
+      {required this.serviceId,
+      required this.pickupDate,
+      required this.returnDate,
+      this.pickupTime,
+      this.returnTime,
+      this.useAvailableProductsApi = true,
+      this.isSales = false});
 
   @override
   final int serviceId;
@@ -278,24 +270,14 @@ class _$LoadProductsImpl implements _LoadProducts {
             (identical(other.returnTime, returnTime) ||
                 other.returnTime == returnTime) &&
             (identical(
-                  other.useAvailableProductsApi,
-                  useAvailableProductsApi,
-                ) ||
+                    other.useAvailableProductsApi, useAvailableProductsApi) ||
                 other.useAvailableProductsApi == useAvailableProductsApi) &&
             (identical(other.isSales, isSales) || other.isSales == isSales));
   }
 
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    serviceId,
-    pickupDate,
-    returnDate,
-    pickupTime,
-    returnTime,
-    useAvailableProductsApi,
-    isSales,
-  );
+  int get hashCode => Object.hash(runtimeType, serviceId, pickupDate,
+      returnDate, pickupTime, returnTime, useAvailableProductsApi, isSales);
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -309,125 +291,98 @@ class _$LoadProductsImpl implements _LoadProducts {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
-    return loadProducts(
-      serviceId,
-      pickupDate,
-      returnDate,
-      pickupTime,
-      returnTime,
-      useAvailableProductsApi,
-      isSales,
-    );
+    return loadProducts(serviceId, pickupDate, returnDate, pickupTime,
+        returnTime, useAvailableProductsApi, isSales);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) {
-    return loadProducts?.call(
-      serviceId,
-      pickupDate,
-      returnDate,
-      pickupTime,
-      returnTime,
-      useAvailableProductsApi,
-      isSales,
-    );
+    return loadProducts?.call(serviceId, pickupDate, returnDate, pickupTime,
+        returnTime, useAvailableProductsApi, isSales);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
   }) {
     if (loadProducts != null) {
-      return loadProducts(
-        serviceId,
-        pickupDate,
-        returnDate,
-        pickupTime,
-        returnTime,
-        useAvailableProductsApi,
-        isSales,
-      );
+      return loadProducts(serviceId, pickupDate, returnDate, pickupTime,
+          returnTime, useAvailableProductsApi, isSales);
     }
     return orElse();
   }
@@ -439,7 +394,7 @@ class _$LoadProductsImpl implements _LoadProducts {
     required TResult Function(_LoadNextPageProducts value) loadNextPageProducts,
     required TResult Function(_SearchProducts value) searchProducts,
     required TResult Function(_LoadNextSearchResults value)
-    loadNextSearchResults,
+        loadNextSearchResults,
   }) {
     return loadProducts(this);
   }
@@ -472,15 +427,14 @@ class _$LoadProductsImpl implements _LoadProducts {
 }
 
 abstract class _LoadProducts implements SelectProductEvent {
-  const factory _LoadProducts({
-    required final int serviceId,
-    required final String pickupDate,
-    required final String returnDate,
-    final TimeOfDay? pickupTime,
-    final TimeOfDay? returnTime,
-    final bool useAvailableProductsApi,
-    final bool isSales,
-  }) = _$LoadProductsImpl;
+  const factory _LoadProducts(
+      {required final int serviceId,
+      required final String pickupDate,
+      required final String returnDate,
+      final TimeOfDay? pickupTime,
+      final TimeOfDay? returnTime,
+      final bool useAvailableProductsApi,
+      final bool isSales}) = _$LoadProductsImpl;
 
   int get serviceId;
   String get pickupDate;
@@ -499,20 +453,18 @@ abstract class _LoadProducts implements SelectProductEvent {
 
 /// @nodoc
 abstract class _$$LoadNextPageProductsImplCopyWith<$Res> {
-  factory _$$LoadNextPageProductsImplCopyWith(
-    _$LoadNextPageProductsImpl value,
-    $Res Function(_$LoadNextPageProductsImpl) then,
-  ) = __$$LoadNextPageProductsImplCopyWithImpl<$Res>;
+  factory _$$LoadNextPageProductsImplCopyWith(_$LoadNextPageProductsImpl value,
+          $Res Function(_$LoadNextPageProductsImpl) then) =
+      __$$LoadNextPageProductsImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNextPageProductsImplCopyWithImpl<$Res>
     extends _$SelectProductEventCopyWithImpl<$Res, _$LoadNextPageProductsImpl>
     implements _$$LoadNextPageProductsImplCopyWith<$Res> {
-  __$$LoadNextPageProductsImplCopyWithImpl(
-    _$LoadNextPageProductsImpl _value,
-    $Res Function(_$LoadNextPageProductsImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadNextPageProductsImplCopyWithImpl(_$LoadNextPageProductsImpl _value,
+      $Res Function(_$LoadNextPageProductsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -542,30 +494,28 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
     return loadNextPageProducts();
@@ -575,30 +525,28 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) {
     return loadNextPageProducts?.call();
@@ -608,30 +556,28 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
   }) {
@@ -648,7 +594,7 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
     required TResult Function(_LoadNextPageProducts value) loadNextPageProducts,
     required TResult Function(_SearchProducts value) searchProducts,
     required TResult Function(_LoadNextSearchResults value)
-    loadNextSearchResults,
+        loadNextSearchResults,
   }) {
     return loadNextPageProducts(this);
   }
@@ -686,24 +632,22 @@ abstract class _LoadNextPageProducts implements SelectProductEvent {
 
 /// @nodoc
 abstract class _$$SearchProductsImplCopyWith<$Res> {
-  factory _$$SearchProductsImplCopyWith(
-    _$SearchProductsImpl value,
-    $Res Function(_$SearchProductsImpl) then,
-  ) = __$$SearchProductsImplCopyWithImpl<$Res>;
+  factory _$$SearchProductsImplCopyWith(_$SearchProductsImpl value,
+          $Res Function(_$SearchProductsImpl) then) =
+      __$$SearchProductsImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    int serviceId,
-    String pickupDate,
-    String returnDate,
-    String? query,
-    String? type,
-    int? startPrice,
-    int? endPrice,
-    TimeOfDay? pickupTime,
-    TimeOfDay? returnTime,
-    bool useAvailableProductsApi,
-    bool isSales,
-  });
+  $Res call(
+      {int serviceId,
+      String pickupDate,
+      String returnDate,
+      String? query,
+      String? type,
+      int? startPrice,
+      int? endPrice,
+      TimeOfDay? pickupTime,
+      TimeOfDay? returnTime,
+      bool useAvailableProductsApi,
+      bool isSales});
 }
 
 /// @nodoc
@@ -711,9 +655,8 @@ class __$$SearchProductsImplCopyWithImpl<$Res>
     extends _$SelectProductEventCopyWithImpl<$Res, _$SearchProductsImpl>
     implements _$$SearchProductsImplCopyWith<$Res> {
   __$$SearchProductsImplCopyWithImpl(
-    _$SearchProductsImpl _value,
-    $Res Function(_$SearchProductsImpl) _then,
-  ) : super(_value, _then);
+      _$SearchProductsImpl _value, $Res Function(_$SearchProductsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -732,73 +675,70 @@ class __$$SearchProductsImplCopyWithImpl<$Res>
     Object? useAvailableProductsApi = null,
     Object? isSales = null,
   }) {
-    return _then(
-      _$SearchProductsImpl(
-        serviceId: null == serviceId
-            ? _value.serviceId
-            : serviceId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        pickupDate: null == pickupDate
-            ? _value.pickupDate
-            : pickupDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        returnDate: null == returnDate
-            ? _value.returnDate
-            : returnDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        query: freezed == query
-            ? _value.query
-            : query // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        type: freezed == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        startPrice: freezed == startPrice
-            ? _value.startPrice
-            : startPrice // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        endPrice: freezed == endPrice
-            ? _value.endPrice
-            : endPrice // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        pickupTime: freezed == pickupTime
-            ? _value.pickupTime
-            : pickupTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-        returnTime: freezed == returnTime
-            ? _value.returnTime
-            : returnTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-        useAvailableProductsApi: null == useAvailableProductsApi
-            ? _value.useAvailableProductsApi
-            : useAvailableProductsApi // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        isSales: null == isSales
-            ? _value.isSales
-            : isSales // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$SearchProductsImpl(
+      serviceId: null == serviceId
+          ? _value.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as int,
+      pickupDate: null == pickupDate
+          ? _value.pickupDate
+          : pickupDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      returnDate: null == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      query: freezed == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String?,
+      type: freezed == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      startPrice: freezed == startPrice
+          ? _value.startPrice
+          : startPrice // ignore: cast_nullable_to_non_nullable
+              as int?,
+      endPrice: freezed == endPrice
+          ? _value.endPrice
+          : endPrice // ignore: cast_nullable_to_non_nullable
+              as int?,
+      pickupTime: freezed == pickupTime
+          ? _value.pickupTime
+          : pickupTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      returnTime: freezed == returnTime
+          ? _value.returnTime
+          : returnTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      useAvailableProductsApi: null == useAvailableProductsApi
+          ? _value.useAvailableProductsApi
+          : useAvailableProductsApi // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSales: null == isSales
+          ? _value.isSales
+          : isSales // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$SearchProductsImpl implements _SearchProducts {
-  const _$SearchProductsImpl({
-    required this.serviceId,
-    required this.pickupDate,
-    required this.returnDate,
-    this.query,
-    this.type = 'name',
-    this.startPrice,
-    this.endPrice,
-    this.pickupTime,
-    this.returnTime,
-    this.useAvailableProductsApi = true,
-    this.isSales = false,
-  });
+  const _$SearchProductsImpl(
+      {required this.serviceId,
+      required this.pickupDate,
+      required this.returnDate,
+      this.query,
+      this.type = 'name',
+      this.startPrice,
+      this.endPrice,
+      this.pickupTime,
+      this.returnTime,
+      this.useAvailableProductsApi = true,
+      this.isSales = false});
 
   @override
   final int serviceId;
@@ -853,28 +793,25 @@ class _$SearchProductsImpl implements _SearchProducts {
             (identical(other.returnTime, returnTime) ||
                 other.returnTime == returnTime) &&
             (identical(
-                  other.useAvailableProductsApi,
-                  useAvailableProductsApi,
-                ) ||
+                    other.useAvailableProductsApi, useAvailableProductsApi) ||
                 other.useAvailableProductsApi == useAvailableProductsApi) &&
             (identical(other.isSales, isSales) || other.isSales == isSales));
   }
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    serviceId,
-    pickupDate,
-    returnDate,
-    query,
-    type,
-    startPrice,
-    endPrice,
-    pickupTime,
-    returnTime,
-    useAvailableProductsApi,
-    isSales,
-  );
+      runtimeType,
+      serviceId,
+      pickupDate,
+      returnDate,
+      query,
+      type,
+      startPrice,
+      endPrice,
+      pickupTime,
+      returnTime,
+      useAvailableProductsApi,
+      isSales);
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -883,133 +820,37 @@ class _$SearchProductsImpl implements _SearchProducts {
   @pragma('vm:prefer-inline')
   _$$SearchProductsImplCopyWith<_$SearchProductsImpl> get copyWith =>
       __$$SearchProductsImplCopyWithImpl<_$SearchProductsImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
     return searchProducts(
-      serviceId,
-      pickupDate,
-      returnDate,
-      query,
-      type,
-      startPrice,
-      endPrice,
-      pickupTime,
-      returnTime,
-      useAvailableProductsApi,
-      isSales,
-    );
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
-    TResult? Function()? loadNextPageProducts,
-    TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
-    TResult? Function()? loadNextSearchResults,
-  }) {
-    return searchProducts?.call(
-      serviceId,
-      pickupDate,
-      returnDate,
-      query,
-      type,
-      startPrice,
-      endPrice,
-      pickupTime,
-      returnTime,
-      useAvailableProductsApi,
-      isSales,
-    );
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
-    TResult Function()? loadNextPageProducts,
-    TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
-    TResult Function()? loadNextSearchResults,
-    required TResult orElse(),
-  }) {
-    if (searchProducts != null) {
-      return searchProducts(
         serviceId,
         pickupDate,
         returnDate,
@@ -1020,8 +861,93 @@ class _$SearchProductsImpl implements _SearchProducts {
         pickupTime,
         returnTime,
         useAvailableProductsApi,
-        isSales,
-      );
+        isSales);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
+    TResult? Function()? loadNextPageProducts,
+    TResult? Function(
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
+    TResult? Function()? loadNextSearchResults,
+  }) {
+    return searchProducts?.call(
+        serviceId,
+        pickupDate,
+        returnDate,
+        query,
+        type,
+        startPrice,
+        endPrice,
+        pickupTime,
+        returnTime,
+        useAvailableProductsApi,
+        isSales);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
+    TResult Function()? loadNextPageProducts,
+    TResult Function(
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
+    TResult Function()? loadNextSearchResults,
+    required TResult orElse(),
+  }) {
+    if (searchProducts != null) {
+      return searchProducts(
+          serviceId,
+          pickupDate,
+          returnDate,
+          query,
+          type,
+          startPrice,
+          endPrice,
+          pickupTime,
+          returnTime,
+          useAvailableProductsApi,
+          isSales);
     }
     return orElse();
   }
@@ -1033,7 +959,7 @@ class _$SearchProductsImpl implements _SearchProducts {
     required TResult Function(_LoadNextPageProducts value) loadNextPageProducts,
     required TResult Function(_SearchProducts value) searchProducts,
     required TResult Function(_LoadNextSearchResults value)
-    loadNextSearchResults,
+        loadNextSearchResults,
   }) {
     return searchProducts(this);
   }
@@ -1066,19 +992,18 @@ class _$SearchProductsImpl implements _SearchProducts {
 }
 
 abstract class _SearchProducts implements SelectProductEvent {
-  const factory _SearchProducts({
-    required final int serviceId,
-    required final String pickupDate,
-    required final String returnDate,
-    final String? query,
-    final String? type,
-    final int? startPrice,
-    final int? endPrice,
-    final TimeOfDay? pickupTime,
-    final TimeOfDay? returnTime,
-    final bool useAvailableProductsApi,
-    final bool isSales,
-  }) = _$SearchProductsImpl;
+  const factory _SearchProducts(
+      {required final int serviceId,
+      required final String pickupDate,
+      required final String returnDate,
+      final String? query,
+      final String? type,
+      final int? startPrice,
+      final int? endPrice,
+      final TimeOfDay? pickupTime,
+      final TimeOfDay? returnTime,
+      final bool useAvailableProductsApi,
+      final bool isSales}) = _$SearchProductsImpl;
 
   int get serviceId;
   String get pickupDate;
@@ -1102,19 +1027,18 @@ abstract class _SearchProducts implements SelectProductEvent {
 /// @nodoc
 abstract class _$$LoadNextSearchResultsImplCopyWith<$Res> {
   factory _$$LoadNextSearchResultsImplCopyWith(
-    _$LoadNextSearchResultsImpl value,
-    $Res Function(_$LoadNextSearchResultsImpl) then,
-  ) = __$$LoadNextSearchResultsImplCopyWithImpl<$Res>;
+          _$LoadNextSearchResultsImpl value,
+          $Res Function(_$LoadNextSearchResultsImpl) then) =
+      __$$LoadNextSearchResultsImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNextSearchResultsImplCopyWithImpl<$Res>
     extends _$SelectProductEventCopyWithImpl<$Res, _$LoadNextSearchResultsImpl>
     implements _$$LoadNextSearchResultsImplCopyWith<$Res> {
-  __$$LoadNextSearchResultsImplCopyWithImpl(
-    _$LoadNextSearchResultsImpl _value,
-    $Res Function(_$LoadNextSearchResultsImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadNextSearchResultsImplCopyWithImpl(_$LoadNextSearchResultsImpl _value,
+      $Res Function(_$LoadNextSearchResultsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1144,30 +1068,28 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
     return loadNextSearchResults();
@@ -1177,30 +1099,28 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) {
     return loadNextSearchResults?.call();
@@ -1210,30 +1130,28 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loadProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      String? query,
-      String? type,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    searchProducts,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            String? query,
+            String? type,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
   }) {
@@ -1250,7 +1168,7 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
     required TResult Function(_LoadNextPageProducts value) loadNextPageProducts,
     required TResult Function(_SearchProducts value) searchProducts,
     required TResult Function(_LoadNextSearchResults value)
-    loadNextSearchResults,
+        loadNextSearchResults,
   }) {
     return loadNextSearchResults(this);
   }
@@ -1292,99 +1210,101 @@ mixin _$SelectProductState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loaded,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $SelectProductStateCopyWith<$Res> {
   factory $SelectProductStateCopyWith(
-    SelectProductState value,
-    $Res Function(SelectProductState) then,
-  ) = _$SelectProductStateCopyWithImpl<$Res, SelectProductState>;
+          SelectProductState value, $Res Function(SelectProductState) then) =
+      _$SelectProductStateCopyWithImpl<$Res, SelectProductState>;
 }
 
 /// @nodoc
@@ -1404,9 +1324,8 @@ class _$SelectProductStateCopyWithImpl<$Res, $Val extends SelectProductState>
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -1414,9 +1333,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$SelectProductStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectProductState
   /// with the given fields replaced by the non-null parameter values.
@@ -1446,23 +1364,22 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -1473,23 +1390,22 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -1500,23 +1416,22 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -1568,27 +1483,25 @@ abstract class _Loading implements SelectProductState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    List<ProductModel> products,
-    String? nextPageUrl,
-    int serviceId,
-    String pickupDate,
-    String returnDate,
-    bool isPaginating,
-    bool isSearching,
-    String? searchQuery,
-    String? searchType,
-    int? startPrice,
-    int? endPrice,
-    TimeOfDay? pickupTime,
-    TimeOfDay? returnTime,
-    bool useAvailableProductsApi,
-    bool isSales,
-  });
+  $Res call(
+      {List<ProductModel> products,
+      String? nextPageUrl,
+      int serviceId,
+      String pickupDate,
+      String returnDate,
+      bool isPaginating,
+      bool isSearching,
+      String? searchQuery,
+      String? searchType,
+      int? startPrice,
+      int? endPrice,
+      TimeOfDay? pickupTime,
+      TimeOfDay? returnTime,
+      bool useAvailableProductsApi,
+      bool isSales});
 }
 
 /// @nodoc
@@ -1596,9 +1509,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$SelectProductStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectProductState
   /// with the given fields replaced by the non-null parameter values.
@@ -1621,93 +1533,91 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? useAvailableProductsApi = null,
     Object? isSales = null,
   }) {
-    return _then(
-      _$LoadedImpl(
-        products: null == products
-            ? _value._products
-            : products // ignore: cast_nullable_to_non_nullable
-                  as List<ProductModel>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        serviceId: null == serviceId
-            ? _value.serviceId
-            : serviceId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        pickupDate: null == pickupDate
-            ? _value.pickupDate
-            : pickupDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        returnDate: null == returnDate
-            ? _value.returnDate
-            : returnDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        isPaginating: null == isPaginating
-            ? _value.isPaginating
-            : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        isSearching: null == isSearching
-            ? _value.isSearching
-            : isSearching // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        searchQuery: freezed == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        searchType: freezed == searchType
-            ? _value.searchType
-            : searchType // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        startPrice: freezed == startPrice
-            ? _value.startPrice
-            : startPrice // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        endPrice: freezed == endPrice
-            ? _value.endPrice
-            : endPrice // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        pickupTime: freezed == pickupTime
-            ? _value.pickupTime
-            : pickupTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-        returnTime: freezed == returnTime
-            ? _value.returnTime
-            : returnTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
-        useAvailableProductsApi: null == useAvailableProductsApi
-            ? _value.useAvailableProductsApi
-            : useAvailableProductsApi // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        isSales: null == isSales
-            ? _value.isSales
-            : isSales // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      products: null == products
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      serviceId: null == serviceId
+          ? _value.serviceId
+          : serviceId // ignore: cast_nullable_to_non_nullable
+              as int,
+      pickupDate: null == pickupDate
+          ? _value.pickupDate
+          : pickupDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      returnDate: null == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      isPaginating: null == isPaginating
+          ? _value.isPaginating
+          : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSearching: null == isSearching
+          ? _value.isSearching
+          : isSearching // ignore: cast_nullable_to_non_nullable
+              as bool,
+      searchQuery: freezed == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+      searchType: freezed == searchType
+          ? _value.searchType
+          : searchType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      startPrice: freezed == startPrice
+          ? _value.startPrice
+          : startPrice // ignore: cast_nullable_to_non_nullable
+              as int?,
+      endPrice: freezed == endPrice
+          ? _value.endPrice
+          : endPrice // ignore: cast_nullable_to_non_nullable
+              as int?,
+      pickupTime: freezed == pickupTime
+          ? _value.pickupTime
+          : pickupTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      returnTime: freezed == returnTime
+          ? _value.returnTime
+          : returnTime // ignore: cast_nullable_to_non_nullable
+              as TimeOfDay?,
+      useAvailableProductsApi: null == useAvailableProductsApi
+          ? _value.useAvailableProductsApi
+          : useAvailableProductsApi // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSales: null == isSales
+          ? _value.isSales
+          : isSales // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    required final List<ProductModel> products,
-    required this.nextPageUrl,
-    required this.serviceId,
-    required this.pickupDate,
-    required this.returnDate,
-    this.isPaginating = false,
-    this.isSearching = false,
-    this.searchQuery,
-    this.searchType,
-    this.startPrice,
-    this.endPrice,
-    this.pickupTime,
-    this.returnTime,
-    this.useAvailableProductsApi = true,
-    this.isSales = false,
-  }) : _products = products;
+  const _$LoadedImpl(
+      {required final List<ProductModel> products,
+      required this.nextPageUrl,
+      required this.serviceId,
+      required this.pickupDate,
+      required this.returnDate,
+      this.isPaginating = false,
+      this.isSearching = false,
+      this.searchQuery,
+      this.searchType,
+      this.startPrice,
+      this.endPrice,
+      this.pickupTime,
+      this.returnTime,
+      this.useAvailableProductsApi = true,
+      this.isSales = false})
+      : _products = products;
 
   final List<ProductModel> _products;
   @override
@@ -1786,32 +1696,29 @@ class _$LoadedImpl implements _Loaded {
             (identical(other.returnTime, returnTime) ||
                 other.returnTime == returnTime) &&
             (identical(
-                  other.useAvailableProductsApi,
-                  useAvailableProductsApi,
-                ) ||
+                    other.useAvailableProductsApi, useAvailableProductsApi) ||
                 other.useAvailableProductsApi == useAvailableProductsApi) &&
             (identical(other.isSales, isSales) || other.isSales == isSales));
   }
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_products),
-    nextPageUrl,
-    serviceId,
-    pickupDate,
-    returnDate,
-    isPaginating,
-    isSearching,
-    searchQuery,
-    searchType,
-    startPrice,
-    endPrice,
-    pickupTime,
-    returnTime,
-    useAvailableProductsApi,
-    isSales,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_products),
+      nextPageUrl,
+      serviceId,
+      pickupDate,
+      returnDate,
+      isPaginating,
+      isSearching,
+      searchQuery,
+      searchType,
+      startPrice,
+      endPrice,
+      pickupTime,
+      returnTime,
+      useAvailableProductsApi,
+      isSales);
 
   /// Create a copy of SelectProductState
   /// with the given fields replaced by the non-null parameter values.
@@ -1826,114 +1733,25 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return loaded(
-      products,
-      nextPageUrl,
-      serviceId,
-      pickupDate,
-      returnDate,
-      isPaginating,
-      isSearching,
-      searchQuery,
-      searchType,
-      startPrice,
-      endPrice,
-      pickupTime,
-      returnTime,
-      useAvailableProductsApi,
-      isSales,
-    );
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return loaded?.call(
-      products,
-      nextPageUrl,
-      serviceId,
-      pickupDate,
-      returnDate,
-      isPaginating,
-      isSearching,
-      searchQuery,
-      searchType,
-      startPrice,
-      endPrice,
-      pickupTime,
-      returnTime,
-      useAvailableProductsApi,
-      isSales,
-    );
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(
         products,
         nextPageUrl,
         serviceId,
@@ -1948,8 +1766,91 @@ class _$LoadedImpl implements _Loaded {
         pickupTime,
         returnTime,
         useAvailableProductsApi,
-        isSales,
-      );
+        isSales);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function(
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
+    TResult? Function(String error)? error,
+  }) {
+    return loaded?.call(
+        products,
+        nextPageUrl,
+        serviceId,
+        pickupDate,
+        returnDate,
+        isPaginating,
+        isSearching,
+        searchQuery,
+        searchType,
+        startPrice,
+        endPrice,
+        pickupTime,
+        returnTime,
+        useAvailableProductsApi,
+        isSales);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function(
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
+    TResult Function(String error)? error,
+    required TResult orElse(),
+  }) {
+    if (loaded != null) {
+      return loaded(
+          products,
+          nextPageUrl,
+          serviceId,
+          pickupDate,
+          returnDate,
+          isPaginating,
+          isSearching,
+          searchQuery,
+          searchType,
+          startPrice,
+          endPrice,
+          pickupTime,
+          returnTime,
+          useAvailableProductsApi,
+          isSales);
     }
     return orElse();
   }
@@ -1990,23 +1891,22 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements SelectProductState {
-  const factory _Loaded({
-    required final List<ProductModel> products,
-    required final String? nextPageUrl,
-    required final int serviceId,
-    required final String pickupDate,
-    required final String returnDate,
-    final bool isPaginating,
-    final bool isSearching,
-    final String? searchQuery,
-    final String? searchType,
-    final int? startPrice,
-    final int? endPrice,
-    final TimeOfDay? pickupTime,
-    final TimeOfDay? returnTime,
-    final bool useAvailableProductsApi,
-    final bool isSales,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final List<ProductModel> products,
+      required final String? nextPageUrl,
+      required final int serviceId,
+      required final String pickupDate,
+      required final String returnDate,
+      final bool isPaginating,
+      final bool isSearching,
+      final String? searchQuery,
+      final String? searchType,
+      final int? startPrice,
+      final int? endPrice,
+      final TimeOfDay? pickupTime,
+      final TimeOfDay? returnTime,
+      final bool useAvailableProductsApi,
+      final bool isSales}) = _$LoadedImpl;
 
   List<ProductModel> get products;
   String? get nextPageUrl;
@@ -2034,9 +1934,8 @@ abstract class _Loaded implements SelectProductState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -2046,23 +1945,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$SelectProductStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectProductState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -2103,23 +2001,22 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -2130,23 +2027,22 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -2157,23 +2053,22 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<ProductModel> products,
-      String? nextPageUrl,
-      int serviceId,
-      String pickupDate,
-      String returnDate,
-      bool isPaginating,
-      bool isSearching,
-      String? searchQuery,
-      String? searchType,
-      int? startPrice,
-      int? endPrice,
-      TimeOfDay? pickupTime,
-      TimeOfDay? returnTime,
-      bool useAvailableProductsApi,
-      bool isSales,
-    )?
-    loaded,
+            List<ProductModel> products,
+            String? nextPageUrl,
+            int serviceId,
+            String pickupDate,
+            String returnDate,
+            bool isPaginating,
+            bool isSearching,
+            String? searchQuery,
+            String? searchType,
+            int? startPrice,
+            int? endPrice,
+            TimeOfDay? pickupTime,
+            TimeOfDay? returnTime,
+            bool useAvailableProductsApi,
+            bool isSales)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

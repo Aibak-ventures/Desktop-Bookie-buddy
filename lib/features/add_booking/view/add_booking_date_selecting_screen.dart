@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 
 class AddBookingDateSelectingScreen extends StatefulWidget {
   const AddBookingDateSelectingScreen({
-    required this.addBookingModel,
+    this.addBookingModel = const RequestBookingModel(),
     super.key,
   });
 
@@ -46,7 +46,7 @@ class _AddBookingDateSelectingScreenState
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
@@ -346,7 +346,8 @@ class _AddBookingDateSelectingScreenState
           controller: returnDateController,
           ignorePointers: true,
           keyboardType: TextInputType.datetime,
-          prefixIcon: const Icon(Icons.calendar_month, color: Color(0xFF667eea)),
+          prefixIcon:
+              const Icon(Icons.calendar_month, color: Color(0xFF667eea)),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please select a return date';
@@ -354,9 +355,9 @@ class _AddBookingDateSelectingScreenState
             return null;
           },
         ).onTap(() => selectReturnDate(context)),
-        
+
         const SizedBox(height: 32),
-        
+
         // Time section header with clear button
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -384,9 +385,9 @@ class _AddBookingDateSelectingScreenState
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Pickup Time
         CustomTextField(
           controller: pickupTimeController,
@@ -396,9 +397,9 @@ class _AddBookingDateSelectingScreenState
           prefixIcon: const Icon(Icons.access_time, color: Color(0xFF667eea)),
           validator: null,
         ).onTap(() => _selectTime(context, true)),
-        
+
         const SizedBox(height: 16),
-        
+
         // Return Time
         CustomTextField(
           controller: returnTimeController,
@@ -441,7 +442,8 @@ class _AddBookingDateSelectingScreenState
   Future<void> _selectTime(BuildContext context, bool isPickup) async {
     final picked = await showTimePicker(
       context: context,
-      initialTime: (isPickup ? pickupTime : returnTime) ?? TimeOfDay.now().clearedTime,
+      initialTime:
+          (isPickup ? pickupTime : returnTime) ?? TimeOfDay.now().clearedTime,
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
@@ -453,7 +455,9 @@ class _AddBookingDateSelectingScreenState
     if (picked != null) {
       if (isPickup) {
         // Check if returnTime already selected and compare
-        if (returnTime != null && picked.isAfter(returnTime!) && isReturnAndPickupSameDay) {
+        if (returnTime != null &&
+            picked.isAfter(returnTime!) &&
+            isReturnAndPickupSameDay) {
           context.showSnackBar(
             'Pickup time must be before return time',
             title: 'Time Error',
@@ -465,7 +469,9 @@ class _AddBookingDateSelectingScreenState
         pickupTimeController.text = picked.formatTime12Hour();
       } else {
         // Return time
-        if (pickupTime != null && picked.isBefore(pickupTime!) && isReturnAndPickupSameDay) {
+        if (pickupTime != null &&
+            picked.isBefore(pickupTime!) &&
+            isReturnAndPickupSameDay) {
           context.showSnackBar(
             'Return time must be after pickup time',
             title: 'Time Error',

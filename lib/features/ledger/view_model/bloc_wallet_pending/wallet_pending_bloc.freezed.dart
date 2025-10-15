@@ -12,8 +12,7 @@ part of 'wallet_pending_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$WalletPendingEvent {
@@ -21,42 +20,47 @@ mixin _$WalletPendingEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int? clientId) loadPending,
     required TResult Function() loadNextPagePending,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? clientId)? loadPending,
     TResult? Function()? loadNextPagePending,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? clientId)? loadPending,
     TResult Function()? loadNextPagePending,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadPending value) loadPending,
     required TResult Function(_LoadNextPagePending value) loadNextPagePending,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadPending value)? loadPending,
     TResult? Function(_LoadNextPagePending value)? loadNextPagePending,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadPending value)? loadPending,
     TResult Function(_LoadNextPagePending value)? loadNextPagePending,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $WalletPendingEventCopyWith<$Res> {
   factory $WalletPendingEventCopyWith(
-    WalletPendingEvent value,
-    $Res Function(WalletPendingEvent) then,
-  ) = _$WalletPendingEventCopyWithImpl<$Res, WalletPendingEvent>;
+          WalletPendingEvent value, $Res Function(WalletPendingEvent) then) =
+      _$WalletPendingEventCopyWithImpl<$Res, WalletPendingEvent>;
 }
 
 /// @nodoc
@@ -76,9 +80,8 @@ class _$WalletPendingEventCopyWithImpl<$Res, $Val extends WalletPendingEvent>
 /// @nodoc
 abstract class _$$LoadPendingImplCopyWith<$Res> {
   factory _$$LoadPendingImplCopyWith(
-    _$LoadPendingImpl value,
-    $Res Function(_$LoadPendingImpl) then,
-  ) = __$$LoadPendingImplCopyWithImpl<$Res>;
+          _$LoadPendingImpl value, $Res Function(_$LoadPendingImpl) then) =
+      __$$LoadPendingImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int? clientId});
 }
@@ -88,23 +91,22 @@ class __$$LoadPendingImplCopyWithImpl<$Res>
     extends _$WalletPendingEventCopyWithImpl<$Res, _$LoadPendingImpl>
     implements _$$LoadPendingImplCopyWith<$Res> {
   __$$LoadPendingImplCopyWithImpl(
-    _$LoadPendingImpl _value,
-    $Res Function(_$LoadPendingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadPendingImpl _value, $Res Function(_$LoadPendingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletPendingEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? clientId = freezed}) {
-    return _then(
-      _$LoadPendingImpl(
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-      ),
-    );
+  $Res call({
+    Object? clientId = freezed,
+  }) {
+    return _then(_$LoadPendingImpl(
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
@@ -218,20 +220,18 @@ abstract class _LoadPending implements WalletPendingEvent {
 
 /// @nodoc
 abstract class _$$LoadNextPagePendingImplCopyWith<$Res> {
-  factory _$$LoadNextPagePendingImplCopyWith(
-    _$LoadNextPagePendingImpl value,
-    $Res Function(_$LoadNextPagePendingImpl) then,
-  ) = __$$LoadNextPagePendingImplCopyWithImpl<$Res>;
+  factory _$$LoadNextPagePendingImplCopyWith(_$LoadNextPagePendingImpl value,
+          $Res Function(_$LoadNextPagePendingImpl) then) =
+      __$$LoadNextPagePendingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNextPagePendingImplCopyWithImpl<$Res>
     extends _$WalletPendingEventCopyWithImpl<$Res, _$LoadNextPagePendingImpl>
     implements _$$LoadNextPagePendingImplCopyWith<$Res> {
-  __$$LoadNextPagePendingImplCopyWithImpl(
-    _$LoadNextPagePendingImpl _value,
-    $Res Function(_$LoadNextPagePendingImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadNextPagePendingImplCopyWithImpl(_$LoadNextPagePendingImpl _value,
+      $Res Function(_$LoadNextPagePendingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletPendingEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -330,69 +330,71 @@ mixin _$WalletPendingState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $WalletPendingStateCopyWith<$Res> {
   factory $WalletPendingStateCopyWith(
-    WalletPendingState value,
-    $Res Function(WalletPendingState) then,
-  ) = _$WalletPendingStateCopyWithImpl<$Res, WalletPendingState>;
+          WalletPendingState value, $Res Function(WalletPendingState) then) =
+      _$WalletPendingStateCopyWithImpl<$Res, WalletPendingState>;
 }
 
 /// @nodoc
@@ -412,9 +414,8 @@ class _$WalletPendingStateCopyWithImpl<$Res, $Val extends WalletPendingState>
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -422,9 +423,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$WalletPendingStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletPendingState
   /// with the given fields replaced by the non-null parameter values.
@@ -454,13 +454,12 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -471,13 +470,12 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -488,13 +486,12 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -546,17 +543,15 @@ abstract class _Loading implements WalletPendingState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    List<LedgerPendingsDailyModel> walletPending,
-    String? nextPageUrl,
-    bool isPaginating,
-    int? clientId,
-    bool isFirstFetch,
-  });
+  $Res call(
+      {List<LedgerPendingsDailyModel> walletPending,
+      String? nextPageUrl,
+      bool isPaginating,
+      int? clientId,
+      bool isFirstFetch});
 }
 
 /// @nodoc
@@ -564,9 +559,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$WalletPendingStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletPendingState
   /// with the given fields replaced by the non-null parameter values.
@@ -579,43 +573,41 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? clientId = freezed,
     Object? isFirstFetch = null,
   }) {
-    return _then(
-      _$LoadedImpl(
-        walletPending: null == walletPending
-            ? _value._walletPending
-            : walletPending // ignore: cast_nullable_to_non_nullable
-                  as List<LedgerPendingsDailyModel>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isPaginating: null == isPaginating
-            ? _value.isPaginating
-            : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        isFirstFetch: null == isFirstFetch
-            ? _value.isFirstFetch
-            : isFirstFetch // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      walletPending: null == walletPending
+          ? _value._walletPending
+          : walletPending // ignore: cast_nullable_to_non_nullable
+              as List<LedgerPendingsDailyModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPaginating: null == isPaginating
+          ? _value.isPaginating
+          : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isFirstFetch: null == isFirstFetch
+          ? _value.isFirstFetch
+          : isFirstFetch // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    required final List<LedgerPendingsDailyModel> walletPending,
-    required this.nextPageUrl,
-    this.isPaginating = false,
-    this.clientId,
-    this.isFirstFetch = false,
-  }) : _walletPending = walletPending;
+  const _$LoadedImpl(
+      {required final List<LedgerPendingsDailyModel> walletPending,
+      required this.nextPageUrl,
+      this.isPaginating = false,
+      this.clientId,
+      this.isFirstFetch = false})
+      : _walletPending = walletPending;
 
   final List<LedgerPendingsDailyModel> _walletPending;
   @override
@@ -646,10 +638,8 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(
-              other._walletPending,
-              _walletPending,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._walletPending, _walletPending) &&
             (identical(other.nextPageUrl, nextPageUrl) ||
                 other.nextPageUrl == nextPageUrl) &&
             (identical(other.isPaginating, isPaginating) ||
@@ -662,13 +652,12 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_walletPending),
-    nextPageUrl,
-    isPaginating,
-    clientId,
-    isFirstFetch,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_walletPending),
+      nextPageUrl,
+      isPaginating,
+      clientId,
+      isFirstFetch);
 
   /// Create a copy of WalletPendingState
   /// with the given fields replaced by the non-null parameter values.
@@ -683,22 +672,16 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return loaded(
-      walletPending,
-      nextPageUrl,
-      isPaginating,
-      clientId,
-      isFirstFetch,
-    );
+        walletPending, nextPageUrl, isPaginating, clientId, isFirstFetch);
   }
 
   @override
@@ -706,22 +689,16 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return loaded?.call(
-      walletPending,
-      nextPageUrl,
-      isPaginating,
-      clientId,
-      isFirstFetch,
-    );
+        walletPending, nextPageUrl, isPaginating, clientId, isFirstFetch);
   }
 
   @override
@@ -729,24 +706,18 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
       return loaded(
-        walletPending,
-        nextPageUrl,
-        isPaginating,
-        clientId,
-        isFirstFetch,
-      );
+          walletPending, nextPageUrl, isPaginating, clientId, isFirstFetch);
     }
     return orElse();
   }
@@ -787,13 +758,12 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements WalletPendingState {
-  const factory _Loaded({
-    required final List<LedgerPendingsDailyModel> walletPending,
-    required final String? nextPageUrl,
-    final bool isPaginating,
-    final int? clientId,
-    final bool isFirstFetch,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final List<LedgerPendingsDailyModel> walletPending,
+      required final String? nextPageUrl,
+      final bool isPaginating,
+      final int? clientId,
+      final bool isFirstFetch}) = _$LoadedImpl;
 
   List<LedgerPendingsDailyModel> get walletPending;
   String? get nextPageUrl;
@@ -811,9 +781,8 @@ abstract class _Loaded implements WalletPendingState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -823,23 +792,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$WalletPendingStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletPendingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -880,13 +848,12 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -897,13 +864,12 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -914,13 +880,12 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerPendingsDailyModel> walletPending,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerPendingsDailyModel> walletPending,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

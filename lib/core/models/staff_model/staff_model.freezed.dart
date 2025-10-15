@@ -12,8 +12,7 @@ part of 'staff_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 StaffModel _$StaffModelFromJson(Map<String, dynamic> json) {
   return _StaffModel.fromJson(json);
@@ -40,15 +39,13 @@ mixin _$StaffModel {
 /// @nodoc
 abstract class $StaffModelCopyWith<$Res> {
   factory $StaffModelCopyWith(
-    StaffModel value,
-    $Res Function(StaffModel) then,
-  ) = _$StaffModelCopyWithImpl<$Res, StaffModel>;
+          StaffModel value, $Res Function(StaffModel) then) =
+      _$StaffModelCopyWithImpl<$Res, StaffModel>;
   @useResult
-  $Res call({
-    int id,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'phone') String phoneNumber,
-  });
+  $Res call(
+      {int id,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'phone') String phoneNumber});
 }
 
 /// @nodoc
@@ -70,23 +67,20 @@ class _$StaffModelCopyWithImpl<$Res, $Val extends StaffModel>
     Object? name = null,
     Object? phoneNumber = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            phoneNumber: null == phoneNumber
-                ? _value.phoneNumber
-                : phoneNumber // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
@@ -94,16 +88,14 @@ class _$StaffModelCopyWithImpl<$Res, $Val extends StaffModel>
 abstract class _$$StaffModelImplCopyWith<$Res>
     implements $StaffModelCopyWith<$Res> {
   factory _$$StaffModelImplCopyWith(
-    _$StaffModelImpl value,
-    $Res Function(_$StaffModelImpl) then,
-  ) = __$$StaffModelImplCopyWithImpl<$Res>;
+          _$StaffModelImpl value, $Res Function(_$StaffModelImpl) then) =
+      __$$StaffModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int id,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'phone') String phoneNumber,
-  });
+  $Res call(
+      {int id,
+      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'phone') String phoneNumber});
 }
 
 /// @nodoc
@@ -111,9 +103,8 @@ class __$$StaffModelImplCopyWithImpl<$Res>
     extends _$StaffModelCopyWithImpl<$Res, _$StaffModelImpl>
     implements _$$StaffModelImplCopyWith<$Res> {
   __$$StaffModelImplCopyWithImpl(
-    _$StaffModelImpl _value,
-    $Res Function(_$StaffModelImpl) _then,
-  ) : super(_value, _then);
+      _$StaffModelImpl _value, $Res Function(_$StaffModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffModel
   /// with the given fields replaced by the non-null parameter values.
@@ -124,33 +115,30 @@ class __$$StaffModelImplCopyWithImpl<$Res>
     Object? name = null,
     Object? phoneNumber = null,
   }) {
-    return _then(
-      _$StaffModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        phoneNumber: null == phoneNumber
-            ? _value.phoneNumber
-            : phoneNumber // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$StaffModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StaffModelImpl implements _StaffModel {
-  const _$StaffModelImpl({
-    required this.id,
-    @JsonKey(name: 'name') required this.name,
-    @JsonKey(name: 'phone') required this.phoneNumber,
-  });
+  const _$StaffModelImpl(
+      {required this.id,
+      @JsonKey(name: 'name') required this.name,
+      @JsonKey(name: 'phone') required this.phoneNumber});
 
   factory _$StaffModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StaffModelImplFromJson(json);
@@ -194,16 +182,18 @@ class _$StaffModelImpl implements _StaffModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StaffModelImplToJson(this);
+    return _$$StaffModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _StaffModel implements StaffModel {
-  const factory _StaffModel({
-    required final int id,
-    @JsonKey(name: 'name') required final String name,
-    @JsonKey(name: 'phone') required final String phoneNumber,
-  }) = _$StaffModelImpl;
+  const factory _StaffModel(
+          {required final int id,
+          @JsonKey(name: 'name') required final String name,
+          @JsonKey(name: 'phone') required final String phoneNumber}) =
+      _$StaffModelImpl;
 
   factory _StaffModel.fromJson(Map<String, dynamic> json) =
       _$StaffModelImpl.fromJson;

@@ -12,12 +12,10 @@ part of 'booking_other_details_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 BookingOtherDetailsModel _$BookingOtherDetailsModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _BookingOtherDetailsModel.fromJson(json);
 }
 
@@ -42,23 +40,19 @@ mixin _$BookingOtherDetailsModel {
 
 /// @nodoc
 abstract class $BookingOtherDetailsModelCopyWith<$Res> {
-  factory $BookingOtherDetailsModelCopyWith(
-    BookingOtherDetailsModel value,
-    $Res Function(BookingOtherDetailsModel) then,
-  ) = _$BookingOtherDetailsModelCopyWithImpl<$Res, BookingOtherDetailsModel>;
+  factory $BookingOtherDetailsModelCopyWith(BookingOtherDetailsModel value,
+          $Res Function(BookingOtherDetailsModel) then) =
+      _$BookingOtherDetailsModelCopyWithImpl<$Res, BookingOtherDetailsModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'location_start') String? locationStart,
-    @JsonKey(name: 'location_from') String? locationFrom,
-    @JsonKey(name: 'location_to') String? locationTo,
-  });
+  $Res call(
+      {@JsonKey(name: 'location_start') String? locationStart,
+      @JsonKey(name: 'location_from') String? locationFrom,
+      @JsonKey(name: 'location_to') String? locationTo});
 }
 
 /// @nodoc
-class _$BookingOtherDetailsModelCopyWithImpl<
-  $Res,
-  $Val extends BookingOtherDetailsModel
->
+class _$BookingOtherDetailsModelCopyWithImpl<$Res,
+        $Val extends BookingOtherDetailsModel>
     implements $BookingOtherDetailsModelCopyWith<$Res> {
   _$BookingOtherDetailsModelCopyWithImpl(this._value, this._then);
 
@@ -76,23 +70,20 @@ class _$BookingOtherDetailsModelCopyWithImpl<
     Object? locationFrom = freezed,
     Object? locationTo = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            locationStart: freezed == locationStart
-                ? _value.locationStart
-                : locationStart // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            locationFrom: freezed == locationFrom
-                ? _value.locationFrom
-                : locationFrom // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            locationTo: freezed == locationTo
-                ? _value.locationTo
-                : locationTo // ignore: cast_nullable_to_non_nullable
-                      as String?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      locationStart: freezed == locationStart
+          ? _value.locationStart
+          : locationStart // ignore: cast_nullable_to_non_nullable
+              as String?,
+      locationFrom: freezed == locationFrom
+          ? _value.locationFrom
+          : locationFrom // ignore: cast_nullable_to_non_nullable
+              as String?,
+      locationTo: freezed == locationTo
+          ? _value.locationTo
+          : locationTo // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
   }
 }
 
@@ -100,30 +91,26 @@ class _$BookingOtherDetailsModelCopyWithImpl<
 abstract class _$$BookingOtherDetailsModelImplCopyWith<$Res>
     implements $BookingOtherDetailsModelCopyWith<$Res> {
   factory _$$BookingOtherDetailsModelImplCopyWith(
-    _$BookingOtherDetailsModelImpl value,
-    $Res Function(_$BookingOtherDetailsModelImpl) then,
-  ) = __$$BookingOtherDetailsModelImplCopyWithImpl<$Res>;
+          _$BookingOtherDetailsModelImpl value,
+          $Res Function(_$BookingOtherDetailsModelImpl) then) =
+      __$$BookingOtherDetailsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'location_start') String? locationStart,
-    @JsonKey(name: 'location_from') String? locationFrom,
-    @JsonKey(name: 'location_to') String? locationTo,
-  });
+  $Res call(
+      {@JsonKey(name: 'location_start') String? locationStart,
+      @JsonKey(name: 'location_from') String? locationFrom,
+      @JsonKey(name: 'location_to') String? locationTo});
 }
 
 /// @nodoc
 class __$$BookingOtherDetailsModelImplCopyWithImpl<$Res>
-    extends
-        _$BookingOtherDetailsModelCopyWithImpl<
-          $Res,
-          _$BookingOtherDetailsModelImpl
-        >
+    extends _$BookingOtherDetailsModelCopyWithImpl<$Res,
+        _$BookingOtherDetailsModelImpl>
     implements _$$BookingOtherDetailsModelImplCopyWith<$Res> {
   __$$BookingOtherDetailsModelImplCopyWithImpl(
-    _$BookingOtherDetailsModelImpl _value,
-    $Res Function(_$BookingOtherDetailsModelImpl) _then,
-  ) : super(_value, _then);
+      _$BookingOtherDetailsModelImpl _value,
+      $Res Function(_$BookingOtherDetailsModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of BookingOtherDetailsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -134,38 +121,32 @@ class __$$BookingOtherDetailsModelImplCopyWithImpl<$Res>
     Object? locationFrom = freezed,
     Object? locationTo = freezed,
   }) {
-    return _then(
-      _$BookingOtherDetailsModelImpl(
-        locationStart: freezed == locationStart
-            ? _value.locationStart
-            : locationStart // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        locationFrom: freezed == locationFrom
-            ? _value.locationFrom
-            : locationFrom // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        locationTo: freezed == locationTo
-            ? _value.locationTo
-            : locationTo // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$BookingOtherDetailsModelImpl(
+      locationStart: freezed == locationStart
+          ? _value.locationStart
+          : locationStart // ignore: cast_nullable_to_non_nullable
+              as String?,
+      locationFrom: freezed == locationFrom
+          ? _value.locationFrom
+          : locationFrom // ignore: cast_nullable_to_non_nullable
+              as String?,
+      locationTo: freezed == locationTo
+          ? _value.locationTo
+          : locationTo // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 
 @JsonSerializable(
-  fieldRename: FieldRename.snake,
-  includeIfNull: false,
-  createToJson: true,
-)
+    fieldRename: FieldRename.snake, includeIfNull: false, createToJson: true)
 class _$BookingOtherDetailsModelImpl implements _BookingOtherDetailsModel {
-  const _$BookingOtherDetailsModelImpl({
-    @JsonKey(name: 'location_start') this.locationStart,
-    @JsonKey(name: 'location_from') this.locationFrom,
-    @JsonKey(name: 'location_to') this.locationTo,
-  });
+  const _$BookingOtherDetailsModelImpl(
+      {@JsonKey(name: 'location_start') this.locationStart,
+      @JsonKey(name: 'location_from') this.locationFrom,
+      @JsonKey(name: 'location_to') this.locationTo});
 
   factory _$BookingOtherDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$BookingOtherDetailsModelImplFromJson(json);
@@ -209,23 +190,23 @@ class _$BookingOtherDetailsModelImpl implements _BookingOtherDetailsModel {
   @override
   @pragma('vm:prefer-inline')
   _$$BookingOtherDetailsModelImplCopyWith<_$BookingOtherDetailsModelImpl>
-  get copyWith =>
-      __$$BookingOtherDetailsModelImplCopyWithImpl<
-        _$BookingOtherDetailsModelImpl
-      >(this, _$identity);
+      get copyWith => __$$BookingOtherDetailsModelImplCopyWithImpl<
+          _$BookingOtherDetailsModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$BookingOtherDetailsModelImplToJson(this);
+    return _$$BookingOtherDetailsModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _BookingOtherDetailsModel implements BookingOtherDetailsModel {
-  const factory _BookingOtherDetailsModel({
-    @JsonKey(name: 'location_start') final String? locationStart,
-    @JsonKey(name: 'location_from') final String? locationFrom,
-    @JsonKey(name: 'location_to') final String? locationTo,
-  }) = _$BookingOtherDetailsModelImpl;
+  const factory _BookingOtherDetailsModel(
+          {@JsonKey(name: 'location_start') final String? locationStart,
+          @JsonKey(name: 'location_from') final String? locationFrom,
+          @JsonKey(name: 'location_to') final String? locationTo}) =
+      _$BookingOtherDetailsModelImpl;
 
   factory _BookingOtherDetailsModel.fromJson(Map<String, dynamic> json) =
       _$BookingOtherDetailsModelImpl.fromJson;
@@ -245,5 +226,5 @@ abstract class _BookingOtherDetailsModel implements BookingOtherDetailsModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BookingOtherDetailsModelImplCopyWith<_$BookingOtherDetailsModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

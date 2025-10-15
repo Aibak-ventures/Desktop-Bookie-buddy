@@ -12,8 +12,7 @@ part of 'client_save_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ClientSaveEvent {
@@ -21,29 +20,35 @@ mixin _$ClientSaveEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ClientRequestModel client) saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ClientRequestModel client)? saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ClientRequestModel client)? saveClient,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_SaveClient value) saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_SaveClient value)? saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_SaveClient value)? saveClient,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ClientSaveEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -55,9 +60,8 @@ mixin _$ClientSaveEvent {
 /// @nodoc
 abstract class $ClientSaveEventCopyWith<$Res> {
   factory $ClientSaveEventCopyWith(
-    ClientSaveEvent value,
-    $Res Function(ClientSaveEvent) then,
-  ) = _$ClientSaveEventCopyWithImpl<$Res, ClientSaveEvent>;
+          ClientSaveEvent value, $Res Function(ClientSaveEvent) then) =
+      _$ClientSaveEventCopyWithImpl<$Res, ClientSaveEvent>;
   @useResult
   $Res call({ClientRequestModel client});
 
@@ -78,16 +82,15 @@ class _$ClientSaveEventCopyWithImpl<$Res, $Val extends ClientSaveEvent>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? client = null}) {
-    return _then(
-      _value.copyWith(
-            client: null == client
-                ? _value.client
-                : client // ignore: cast_nullable_to_non_nullable
-                      as ClientRequestModel,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? client = null,
+  }) {
+    return _then(_value.copyWith(
+      client: null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientRequestModel,
+    ) as $Val);
   }
 
   /// Create a copy of ClientSaveEvent
@@ -105,9 +108,8 @@ class _$ClientSaveEventCopyWithImpl<$Res, $Val extends ClientSaveEvent>
 abstract class _$$SaveClientImplCopyWith<$Res>
     implements $ClientSaveEventCopyWith<$Res> {
   factory _$$SaveClientImplCopyWith(
-    _$SaveClientImpl value,
-    $Res Function(_$SaveClientImpl) then,
-  ) = __$$SaveClientImplCopyWithImpl<$Res>;
+          _$SaveClientImpl value, $Res Function(_$SaveClientImpl) then) =
+      __$$SaveClientImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({ClientRequestModel client});
@@ -121,23 +123,22 @@ class __$$SaveClientImplCopyWithImpl<$Res>
     extends _$ClientSaveEventCopyWithImpl<$Res, _$SaveClientImpl>
     implements _$$SaveClientImplCopyWith<$Res> {
   __$$SaveClientImplCopyWithImpl(
-    _$SaveClientImpl _value,
-    $Res Function(_$SaveClientImpl) _then,
-  ) : super(_value, _then);
+      _$SaveClientImpl _value, $Res Function(_$SaveClientImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientSaveEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? client = null}) {
-    return _then(
-      _$SaveClientImpl(
-        null == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientRequestModel,
-      ),
-    );
+  $Res call({
+    Object? client = null,
+  }) {
+    return _then(_$SaveClientImpl(
+      null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientRequestModel,
+    ));
   }
 }
 
@@ -252,14 +253,16 @@ mixin _$ClientSaveState {
     required TResult Function() saving,
     required TResult Function(String message, ClientModel client) success,
     required TResult Function(String message) failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? saving,
     TResult? Function(String message, ClientModel client)? success,
     TResult? Function(String message)? failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
@@ -267,21 +270,24 @@ mixin _$ClientSaveState {
     TResult Function(String message, ClientModel client)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Saving value) saving,
     required TResult Function(_Success value) success,
     required TResult Function(_Failure value) failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Saving value)? saving,
     TResult? Function(_Success value)? success,
     TResult? Function(_Failure value)? failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -289,15 +295,15 @@ mixin _$ClientSaveState {
     TResult Function(_Success value)? success,
     TResult Function(_Failure value)? failure,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ClientSaveStateCopyWith<$Res> {
   factory $ClientSaveStateCopyWith(
-    ClientSaveState value,
-    $Res Function(ClientSaveState) then,
-  ) = _$ClientSaveStateCopyWithImpl<$Res, ClientSaveState>;
+          ClientSaveState value, $Res Function(ClientSaveState) then) =
+      _$ClientSaveStateCopyWithImpl<$Res, ClientSaveState>;
 }
 
 /// @nodoc
@@ -317,9 +323,8 @@ class _$ClientSaveStateCopyWithImpl<$Res, $Val extends ClientSaveState>
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -327,9 +332,8 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$ClientSaveStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientSaveState
   /// with the given fields replaced by the non-null parameter values.
@@ -436,9 +440,8 @@ abstract class _Initial implements ClientSaveState {
 /// @nodoc
 abstract class _$$SavingImplCopyWith<$Res> {
   factory _$$SavingImplCopyWith(
-    _$SavingImpl value,
-    $Res Function(_$SavingImpl) then,
-  ) = __$$SavingImplCopyWithImpl<$Res>;
+          _$SavingImpl value, $Res Function(_$SavingImpl) then) =
+      __$$SavingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -446,9 +449,8 @@ class __$$SavingImplCopyWithImpl<$Res>
     extends _$ClientSaveStateCopyWithImpl<$Res, _$SavingImpl>
     implements _$$SavingImplCopyWith<$Res> {
   __$$SavingImplCopyWithImpl(
-    _$SavingImpl _value,
-    $Res Function(_$SavingImpl) _then,
-  ) : super(_value, _then);
+      _$SavingImpl _value, $Res Function(_$SavingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientSaveState
   /// with the given fields replaced by the non-null parameter values.
@@ -555,9 +557,8 @@ abstract class _Saving implements ClientSaveState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message, ClientModel client});
 
@@ -569,27 +570,27 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$ClientSaveStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientSaveState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null, Object? client = null}) {
-    return _then(
-      _$SuccessImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-        null == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientModel,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+    Object? client = null,
+  }) {
+    return _then(_$SuccessImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientModel,
+    ));
   }
 
   /// Create a copy of ClientSaveState
@@ -730,9 +731,8 @@ abstract class _Success implements ClientSaveState {
 /// @nodoc
 abstract class _$$FailureImplCopyWith<$Res> {
   factory _$$FailureImplCopyWith(
-    _$FailureImpl value,
-    $Res Function(_$FailureImpl) then,
-  ) = __$$FailureImplCopyWithImpl<$Res>;
+          _$FailureImpl value, $Res Function(_$FailureImpl) then) =
+      __$$FailureImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
@@ -742,23 +742,22 @@ class __$$FailureImplCopyWithImpl<$Res>
     extends _$ClientSaveStateCopyWithImpl<$Res, _$FailureImpl>
     implements _$$FailureImplCopyWith<$Res> {
   __$$FailureImplCopyWithImpl(
-    _$FailureImpl _value,
-    $Res Function(_$FailureImpl) _then,
-  ) : super(_value, _then);
+      _$FailureImpl _value, $Res Function(_$FailureImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientSaveState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$FailureImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$FailureImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

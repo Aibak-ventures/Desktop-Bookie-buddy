@@ -12,8 +12,7 @@ part of 'staff_request_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 StaffRequestModel _$StaffRequestModelFromJson(Map<String, dynamic> json) {
   return _StaffRequestModel.fromJson(json);
@@ -41,15 +40,13 @@ mixin _$StaffRequestModel {
 /// @nodoc
 abstract class $StaffRequestModelCopyWith<$Res> {
   factory $StaffRequestModelCopyWith(
-    StaffRequestModel value,
-    $Res Function(StaffRequestModel) then,
-  ) = _$StaffRequestModelCopyWithImpl<$Res, StaffRequestModel>;
+          StaffRequestModel value, $Res Function(StaffRequestModel) then) =
+      _$StaffRequestModelCopyWithImpl<$Res, StaffRequestModel>;
   @useResult
-  $Res call({
-    @JsonKey(includeToJson: false) int? id,
-    @JsonKey(name: 'name', includeIfNull: false) String? name,
-    @JsonKey(name: 'phone', includeIfNull: false) String? phoneNumber,
-  });
+  $Res call(
+      {@JsonKey(includeToJson: false) int? id,
+      @JsonKey(name: 'name', includeIfNull: false) String? name,
+      @JsonKey(name: 'phone', includeIfNull: false) String? phoneNumber});
 }
 
 /// @nodoc
@@ -71,50 +68,44 @@ class _$StaffRequestModelCopyWithImpl<$Res, $Val extends StaffRequestModel>
     Object? name = freezed,
     Object? phoneNumber = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: freezed == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            name: freezed == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            phoneNumber: freezed == phoneNumber
-                ? _value.phoneNumber
-                : phoneNumber // ignore: cast_nullable_to_non_nullable
-                      as String?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phoneNumber: freezed == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$StaffRequestModelImplCopyWith<$Res>
     implements $StaffRequestModelCopyWith<$Res> {
-  factory _$$StaffRequestModelImplCopyWith(
-    _$StaffRequestModelImpl value,
-    $Res Function(_$StaffRequestModelImpl) then,
-  ) = __$$StaffRequestModelImplCopyWithImpl<$Res>;
+  factory _$$StaffRequestModelImplCopyWith(_$StaffRequestModelImpl value,
+          $Res Function(_$StaffRequestModelImpl) then) =
+      __$$StaffRequestModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(includeToJson: false) int? id,
-    @JsonKey(name: 'name', includeIfNull: false) String? name,
-    @JsonKey(name: 'phone', includeIfNull: false) String? phoneNumber,
-  });
+  $Res call(
+      {@JsonKey(includeToJson: false) int? id,
+      @JsonKey(name: 'name', includeIfNull: false) String? name,
+      @JsonKey(name: 'phone', includeIfNull: false) String? phoneNumber});
 }
 
 /// @nodoc
 class __$$StaffRequestModelImplCopyWithImpl<$Res>
     extends _$StaffRequestModelCopyWithImpl<$Res, _$StaffRequestModelImpl>
     implements _$$StaffRequestModelImplCopyWith<$Res> {
-  __$$StaffRequestModelImplCopyWithImpl(
-    _$StaffRequestModelImpl _value,
-    $Res Function(_$StaffRequestModelImpl) _then,
-  ) : super(_value, _then);
+  __$$StaffRequestModelImplCopyWithImpl(_$StaffRequestModelImpl _value,
+      $Res Function(_$StaffRequestModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -125,33 +116,30 @@ class __$$StaffRequestModelImplCopyWithImpl<$Res>
     Object? name = freezed,
     Object? phoneNumber = freezed,
   }) {
-    return _then(
-      _$StaffRequestModelImpl(
-        id: freezed == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        name: freezed == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        phoneNumber: freezed == phoneNumber
-            ? _value.phoneNumber
-            : phoneNumber // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$StaffRequestModelImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phoneNumber: freezed == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StaffRequestModelImpl implements _StaffRequestModel {
-  const _$StaffRequestModelImpl({
-    @JsonKey(includeToJson: false) this.id,
-    @JsonKey(name: 'name', includeIfNull: false) this.name,
-    @JsonKey(name: 'phone', includeIfNull: false) this.phoneNumber,
-  });
+  const _$StaffRequestModelImpl(
+      {@JsonKey(includeToJson: false) this.id,
+      @JsonKey(name: 'name', includeIfNull: false) this.name,
+      @JsonKey(name: 'phone', includeIfNull: false) this.phoneNumber});
 
   factory _$StaffRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StaffRequestModelImplFromJson(json);
@@ -193,22 +181,22 @@ class _$StaffRequestModelImpl implements _StaffRequestModel {
   @pragma('vm:prefer-inline')
   _$$StaffRequestModelImplCopyWith<_$StaffRequestModelImpl> get copyWith =>
       __$$StaffRequestModelImplCopyWithImpl<_$StaffRequestModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StaffRequestModelImplToJson(this);
+    return _$$StaffRequestModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _StaffRequestModel implements StaffRequestModel {
-  const factory _StaffRequestModel({
-    @JsonKey(includeToJson: false) final int? id,
-    @JsonKey(name: 'name', includeIfNull: false) final String? name,
-    @JsonKey(name: 'phone', includeIfNull: false) final String? phoneNumber,
-  }) = _$StaffRequestModelImpl;
+  const factory _StaffRequestModel(
+      {@JsonKey(includeToJson: false) final int? id,
+      @JsonKey(name: 'name', includeIfNull: false) final String? name,
+      @JsonKey(name: 'phone', includeIfNull: false)
+      final String? phoneNumber}) = _$StaffRequestModelImpl;
 
   factory _StaffRequestModel.fromJson(Map<String, dynamic> json) =
       _$StaffRequestModelImpl.fromJson;

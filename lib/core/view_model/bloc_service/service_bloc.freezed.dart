@@ -12,8 +12,7 @@ part of 'service_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ServiceEvent {
@@ -21,29 +20,35 @@ mixin _$ServiceEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(bool force) loadServices,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(bool force)? loadServices,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(bool force)? loadServices,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadServices value) loadServices,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadServices value)? loadServices,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadServices value)? loadServices,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ServiceEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -55,9 +60,8 @@ mixin _$ServiceEvent {
 /// @nodoc
 abstract class $ServiceEventCopyWith<$Res> {
   factory $ServiceEventCopyWith(
-    ServiceEvent value,
-    $Res Function(ServiceEvent) then,
-  ) = _$ServiceEventCopyWithImpl<$Res, ServiceEvent>;
+          ServiceEvent value, $Res Function(ServiceEvent) then) =
+      _$ServiceEventCopyWithImpl<$Res, ServiceEvent>;
   @useResult
   $Res call({bool force});
 }
@@ -76,16 +80,15 @@ class _$ServiceEventCopyWithImpl<$Res, $Val extends ServiceEvent>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? force = null}) {
-    return _then(
-      _value.copyWith(
-            force: null == force
-                ? _value.force
-                : force // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? force = null,
+  }) {
+    return _then(_value.copyWith(
+      force: null == force
+          ? _value.force
+          : force // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
   }
 }
 
@@ -93,9 +96,8 @@ class _$ServiceEventCopyWithImpl<$Res, $Val extends ServiceEvent>
 abstract class _$$LoadServicesImplCopyWith<$Res>
     implements $ServiceEventCopyWith<$Res> {
   factory _$$LoadServicesImplCopyWith(
-    _$LoadServicesImpl value,
-    $Res Function(_$LoadServicesImpl) then,
-  ) = __$$LoadServicesImplCopyWithImpl<$Res>;
+          _$LoadServicesImpl value, $Res Function(_$LoadServicesImpl) then) =
+      __$$LoadServicesImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool force});
@@ -106,23 +108,22 @@ class __$$LoadServicesImplCopyWithImpl<$Res>
     extends _$ServiceEventCopyWithImpl<$Res, _$LoadServicesImpl>
     implements _$$LoadServicesImplCopyWith<$Res> {
   __$$LoadServicesImplCopyWithImpl(
-    _$LoadServicesImpl _value,
-    $Res Function(_$LoadServicesImpl) _then,
-  ) : super(_value, _then);
+      _$LoadServicesImpl _value, $Res Function(_$LoadServicesImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ServiceEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? force = null}) {
-    return _then(
-      _$LoadServicesImpl(
-        force: null == force
-            ? _value.force
-            : force // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+  $Res call({
+    Object? force = null,
+  }) {
+    return _then(_$LoadServicesImpl(
+      force: null == force
+          ? _value.force
+          : force // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
@@ -237,47 +238,52 @@ mixin _$ServiceState {
     required TResult Function() loading,
     required TResult Function(List<ServicesModel> services) loaded,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(List<ServicesModel> services)? loaded,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(List<ServicesModel> services)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ServiceStateCopyWith<$Res> {
   factory $ServiceStateCopyWith(
-    ServiceState value,
-    $Res Function(ServiceState) then,
-  ) = _$ServiceStateCopyWithImpl<$Res, ServiceState>;
+          ServiceState value, $Res Function(ServiceState) then) =
+      _$ServiceStateCopyWithImpl<$Res, ServiceState>;
 }
 
 /// @nodoc
@@ -297,9 +303,8 @@ class _$ServiceStateCopyWithImpl<$Res, $Val extends ServiceState>
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -307,9 +312,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$ServiceStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ServiceState
   /// with the given fields replaced by the non-null parameter values.
@@ -410,9 +414,8 @@ abstract class _Loading implements ServiceState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<ServicesModel> services});
 }
@@ -422,23 +425,22 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$ServiceStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ServiceState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? services = null}) {
-    return _then(
-      _$LoadedImpl(
-        null == services
-            ? _value._services
-            : services // ignore: cast_nullable_to_non_nullable
-                  as List<ServicesModel>,
-      ),
-    );
+  $Res call({
+    Object? services = null,
+  }) {
+    return _then(_$LoadedImpl(
+      null == services
+          ? _value._services
+          : services // ignore: cast_nullable_to_non_nullable
+              as List<ServicesModel>,
+    ));
   }
 }
 
@@ -564,9 +566,8 @@ abstract class _Loaded implements ServiceState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -576,23 +577,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$ServiceStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ServiceState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

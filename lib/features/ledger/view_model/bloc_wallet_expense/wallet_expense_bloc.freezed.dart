@@ -12,8 +12,7 @@ part of 'wallet_expense_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$WalletExpenseEvent {
@@ -22,47 +21,52 @@ mixin _$WalletExpenseEvent {
     required TResult Function(int? clientId) loadExpense,
     required TResult Function() loadNextPageExpense,
     required TResult Function(int expenseId, int? variantId) deleteExpense,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? clientId)? loadExpense,
     TResult? Function()? loadNextPageExpense,
     TResult? Function(int expenseId, int? variantId)? deleteExpense,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? clientId)? loadExpense,
     TResult Function()? loadNextPageExpense,
     TResult Function(int expenseId, int? variantId)? deleteExpense,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadExpense value) loadExpense,
     required TResult Function(_LoadNextPageExpense value) loadNextPageExpense,
     required TResult Function(_DeleteExpense value) deleteExpense,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadExpense value)? loadExpense,
     TResult? Function(_LoadNextPageExpense value)? loadNextPageExpense,
     TResult? Function(_DeleteExpense value)? deleteExpense,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadExpense value)? loadExpense,
     TResult Function(_LoadNextPageExpense value)? loadNextPageExpense,
     TResult Function(_DeleteExpense value)? deleteExpense,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $WalletExpenseEventCopyWith<$Res> {
   factory $WalletExpenseEventCopyWith(
-    WalletExpenseEvent value,
-    $Res Function(WalletExpenseEvent) then,
-  ) = _$WalletExpenseEventCopyWithImpl<$Res, WalletExpenseEvent>;
+          WalletExpenseEvent value, $Res Function(WalletExpenseEvent) then) =
+      _$WalletExpenseEventCopyWithImpl<$Res, WalletExpenseEvent>;
 }
 
 /// @nodoc
@@ -82,9 +86,8 @@ class _$WalletExpenseEventCopyWithImpl<$Res, $Val extends WalletExpenseEvent>
 /// @nodoc
 abstract class _$$LoadExpenseImplCopyWith<$Res> {
   factory _$$LoadExpenseImplCopyWith(
-    _$LoadExpenseImpl value,
-    $Res Function(_$LoadExpenseImpl) then,
-  ) = __$$LoadExpenseImplCopyWithImpl<$Res>;
+          _$LoadExpenseImpl value, $Res Function(_$LoadExpenseImpl) then) =
+      __$$LoadExpenseImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int? clientId});
 }
@@ -94,23 +97,22 @@ class __$$LoadExpenseImplCopyWithImpl<$Res>
     extends _$WalletExpenseEventCopyWithImpl<$Res, _$LoadExpenseImpl>
     implements _$$LoadExpenseImplCopyWith<$Res> {
   __$$LoadExpenseImplCopyWithImpl(
-    _$LoadExpenseImpl _value,
-    $Res Function(_$LoadExpenseImpl) _then,
-  ) : super(_value, _then);
+      _$LoadExpenseImpl _value, $Res Function(_$LoadExpenseImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? clientId = freezed}) {
-    return _then(
-      _$LoadExpenseImpl(
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-      ),
-    );
+  $Res call({
+    Object? clientId = freezed,
+  }) {
+    return _then(_$LoadExpenseImpl(
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
@@ -230,20 +232,18 @@ abstract class _LoadExpense implements WalletExpenseEvent {
 
 /// @nodoc
 abstract class _$$LoadNextPageExpenseImplCopyWith<$Res> {
-  factory _$$LoadNextPageExpenseImplCopyWith(
-    _$LoadNextPageExpenseImpl value,
-    $Res Function(_$LoadNextPageExpenseImpl) then,
-  ) = __$$LoadNextPageExpenseImplCopyWithImpl<$Res>;
+  factory _$$LoadNextPageExpenseImplCopyWith(_$LoadNextPageExpenseImpl value,
+          $Res Function(_$LoadNextPageExpenseImpl) then) =
+      __$$LoadNextPageExpenseImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNextPageExpenseImplCopyWithImpl<$Res>
     extends _$WalletExpenseEventCopyWithImpl<$Res, _$LoadNextPageExpenseImpl>
     implements _$$LoadNextPageExpenseImplCopyWith<$Res> {
-  __$$LoadNextPageExpenseImplCopyWithImpl(
-    _$LoadNextPageExpenseImpl _value,
-    $Res Function(_$LoadNextPageExpenseImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadNextPageExpenseImplCopyWithImpl(_$LoadNextPageExpenseImpl _value,
+      $Res Function(_$LoadNextPageExpenseImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -345,9 +345,8 @@ abstract class _LoadNextPageExpense implements WalletExpenseEvent {
 /// @nodoc
 abstract class _$$DeleteExpenseImplCopyWith<$Res> {
   factory _$$DeleteExpenseImplCopyWith(
-    _$DeleteExpenseImpl value,
-    $Res Function(_$DeleteExpenseImpl) then,
-  ) = __$$DeleteExpenseImplCopyWithImpl<$Res>;
+          _$DeleteExpenseImpl value, $Res Function(_$DeleteExpenseImpl) then) =
+      __$$DeleteExpenseImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int expenseId, int? variantId});
 }
@@ -357,27 +356,27 @@ class __$$DeleteExpenseImplCopyWithImpl<$Res>
     extends _$WalletExpenseEventCopyWithImpl<$Res, _$DeleteExpenseImpl>
     implements _$$DeleteExpenseImplCopyWith<$Res> {
   __$$DeleteExpenseImplCopyWithImpl(
-    _$DeleteExpenseImpl _value,
-    $Res Function(_$DeleteExpenseImpl) _then,
-  ) : super(_value, _then);
+      _$DeleteExpenseImpl _value, $Res Function(_$DeleteExpenseImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? expenseId = null, Object? variantId = freezed}) {
-    return _then(
-      _$DeleteExpenseImpl(
-        expenseId: null == expenseId
-            ? _value.expenseId
-            : expenseId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        variantId: freezed == variantId
-            ? _value.variantId
-            : variantId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-      ),
-    );
+  $Res call({
+    Object? expenseId = null,
+    Object? variantId = freezed,
+  }) {
+    return _then(_$DeleteExpenseImpl(
+      expenseId: null == expenseId
+          ? _value.expenseId
+          : expenseId // ignore: cast_nullable_to_non_nullable
+              as int,
+      variantId: freezed == variantId
+          ? _value.variantId
+          : variantId // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
@@ -488,10 +487,9 @@ class _$DeleteExpenseImpl implements _DeleteExpense {
 }
 
 abstract class _DeleteExpense implements WalletExpenseEvent {
-  const factory _DeleteExpense({
-    required final int expenseId,
-    required final int? variantId,
-  }) = _$DeleteExpenseImpl;
+  const factory _DeleteExpense(
+      {required final int expenseId,
+      required final int? variantId}) = _$DeleteExpenseImpl;
 
   int get expenseId;
   int? get variantId;
@@ -509,48 +507,48 @@ mixin _$WalletExpenseState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) success,
     required TResult Function(String message) failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? success,
     TResult? Function(String message)? failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
@@ -558,7 +556,8 @@ mixin _$WalletExpenseState {
     required TResult Function(_Error value) error,
     required TResult Function(_Success value) success,
     required TResult Function(_Failure value) failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
@@ -566,7 +565,8 @@ mixin _$WalletExpenseState {
     TResult? Function(_Error value)? error,
     TResult? Function(_Success value)? success,
     TResult? Function(_Failure value)? failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
@@ -575,15 +575,15 @@ mixin _$WalletExpenseState {
     TResult Function(_Success value)? success,
     TResult Function(_Failure value)? failure,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $WalletExpenseStateCopyWith<$Res> {
   factory $WalletExpenseStateCopyWith(
-    WalletExpenseState value,
-    $Res Function(WalletExpenseState) then,
-  ) = _$WalletExpenseStateCopyWithImpl<$Res, WalletExpenseState>;
+          WalletExpenseState value, $Res Function(WalletExpenseState) then) =
+      _$WalletExpenseStateCopyWithImpl<$Res, WalletExpenseState>;
 }
 
 /// @nodoc
@@ -603,9 +603,8 @@ class _$WalletExpenseStateCopyWithImpl<$Res, $Val extends WalletExpenseState>
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -613,9 +612,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$WalletExpenseStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseState
   /// with the given fields replaced by the non-null parameter values.
@@ -645,13 +643,12 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) success,
     required TResult Function(String message) failure,
@@ -664,13 +661,12 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? success,
     TResult? Function(String message)? failure,
@@ -683,13 +679,12 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? success,
     TResult Function(String message)? failure,
@@ -749,17 +744,15 @@ abstract class _Loading implements WalletExpenseState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    List<LedgerExpenseDailyModel> expenseGroupedList,
-    String? nextPageUrl,
-    bool isPaginating,
-    int? clientId,
-    bool isFirstFetch,
-  });
+  $Res call(
+      {List<LedgerExpenseDailyModel> expenseGroupedList,
+      String? nextPageUrl,
+      bool isPaginating,
+      int? clientId,
+      bool isFirstFetch});
 }
 
 /// @nodoc
@@ -767,9 +760,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$WalletExpenseStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseState
   /// with the given fields replaced by the non-null parameter values.
@@ -782,43 +774,41 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? clientId = freezed,
     Object? isFirstFetch = null,
   }) {
-    return _then(
-      _$LoadedImpl(
-        expenseGroupedList: null == expenseGroupedList
-            ? _value._expenseGroupedList
-            : expenseGroupedList // ignore: cast_nullable_to_non_nullable
-                  as List<LedgerExpenseDailyModel>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isPaginating: null == isPaginating
-            ? _value.isPaginating
-            : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        isFirstFetch: null == isFirstFetch
-            ? _value.isFirstFetch
-            : isFirstFetch // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      expenseGroupedList: null == expenseGroupedList
+          ? _value._expenseGroupedList
+          : expenseGroupedList // ignore: cast_nullable_to_non_nullable
+              as List<LedgerExpenseDailyModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPaginating: null == isPaginating
+          ? _value.isPaginating
+          : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isFirstFetch: null == isFirstFetch
+          ? _value.isFirstFetch
+          : isFirstFetch // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    required final List<LedgerExpenseDailyModel> expenseGroupedList,
-    required this.nextPageUrl,
-    this.isPaginating = false,
-    this.clientId,
-    this.isFirstFetch = false,
-  }) : _expenseGroupedList = expenseGroupedList;
+  const _$LoadedImpl(
+      {required final List<LedgerExpenseDailyModel> expenseGroupedList,
+      required this.nextPageUrl,
+      this.isPaginating = false,
+      this.clientId,
+      this.isFirstFetch = false})
+      : _expenseGroupedList = expenseGroupedList;
 
   final List<LedgerExpenseDailyModel> _expenseGroupedList;
   @override
@@ -850,10 +840,8 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(
-              other._expenseGroupedList,
-              _expenseGroupedList,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._expenseGroupedList, _expenseGroupedList) &&
             (identical(other.nextPageUrl, nextPageUrl) ||
                 other.nextPageUrl == nextPageUrl) &&
             (identical(other.isPaginating, isPaginating) ||
@@ -866,13 +854,12 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_expenseGroupedList),
-    nextPageUrl,
-    isPaginating,
-    clientId,
-    isFirstFetch,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_expenseGroupedList),
+      nextPageUrl,
+      isPaginating,
+      clientId,
+      isFirstFetch);
 
   /// Create a copy of WalletExpenseState
   /// with the given fields replaced by the non-null parameter values.
@@ -887,24 +874,18 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) success,
     required TResult Function(String message) failure,
   }) {
     return loaded(
-      expenseGroupedList,
-      nextPageUrl,
-      isPaginating,
-      clientId,
-      isFirstFetch,
-    );
+        expenseGroupedList, nextPageUrl, isPaginating, clientId, isFirstFetch);
   }
 
   @override
@@ -912,24 +893,18 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? success,
     TResult? Function(String message)? failure,
   }) {
     return loaded?.call(
-      expenseGroupedList,
-      nextPageUrl,
-      isPaginating,
-      clientId,
-      isFirstFetch,
-    );
+        expenseGroupedList, nextPageUrl, isPaginating, clientId, isFirstFetch);
   }
 
   @override
@@ -937,26 +912,20 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(
-        expenseGroupedList,
-        nextPageUrl,
-        isPaginating,
-        clientId,
-        isFirstFetch,
-      );
+      return loaded(expenseGroupedList, nextPageUrl, isPaginating, clientId,
+          isFirstFetch);
     }
     return orElse();
   }
@@ -1003,13 +972,12 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements WalletExpenseState {
-  const factory _Loaded({
-    required final List<LedgerExpenseDailyModel> expenseGroupedList,
-    required final String? nextPageUrl,
-    final bool isPaginating,
-    final int? clientId,
-    final bool isFirstFetch,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final List<LedgerExpenseDailyModel> expenseGroupedList,
+      required final String? nextPageUrl,
+      final bool isPaginating,
+      final int? clientId,
+      final bool isFirstFetch}) = _$LoadedImpl;
 
   List<LedgerExpenseDailyModel> get expenseGroupedList;
   String? get nextPageUrl;
@@ -1027,9 +995,8 @@ abstract class _Loaded implements WalletExpenseState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -1039,23 +1006,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$WalletExpenseStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -1096,13 +1062,12 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) success,
     required TResult Function(String message) failure,
@@ -1115,13 +1080,12 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? success,
     TResult? Function(String message)? failure,
@@ -1134,13 +1098,12 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? success,
     TResult Function(String message)? failure,
@@ -1208,9 +1171,8 @@ abstract class _Error implements WalletExpenseState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
@@ -1220,23 +1182,22 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$WalletExpenseStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$SuccessImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$SuccessImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -1277,13 +1238,12 @@ class _$SuccessImpl implements _Success {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) success,
     required TResult Function(String message) failure,
@@ -1296,13 +1256,12 @@ class _$SuccessImpl implements _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? success,
     TResult? Function(String message)? failure,
@@ -1315,13 +1274,12 @@ class _$SuccessImpl implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? success,
     TResult Function(String message)? failure,
@@ -1389,9 +1347,8 @@ abstract class _Success implements WalletExpenseState {
 /// @nodoc
 abstract class _$$FailureImplCopyWith<$Res> {
   factory _$$FailureImplCopyWith(
-    _$FailureImpl value,
-    $Res Function(_$FailureImpl) then,
-  ) = __$$FailureImplCopyWithImpl<$Res>;
+          _$FailureImpl value, $Res Function(_$FailureImpl) then) =
+      __$$FailureImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
@@ -1401,23 +1358,22 @@ class __$$FailureImplCopyWithImpl<$Res>
     extends _$WalletExpenseStateCopyWithImpl<$Res, _$FailureImpl>
     implements _$$FailureImplCopyWith<$Res> {
   __$$FailureImplCopyWithImpl(
-    _$FailureImpl _value,
-    $Res Function(_$FailureImpl) _then,
-  ) : super(_value, _then);
+      _$FailureImpl _value, $Res Function(_$FailureImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of WalletExpenseState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$FailureImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$FailureImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -1458,13 +1414,12 @@ class _$FailureImpl implements _Failure {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) success,
     required TResult Function(String message) failure,
@@ -1477,13 +1432,12 @@ class _$FailureImpl implements _Failure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? success,
     TResult? Function(String message)? failure,
@@ -1496,13 +1450,12 @@ class _$FailureImpl implements _Failure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerExpenseDailyModel> expenseGroupedList,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerExpenseDailyModel> expenseGroupedList,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? success,
     TResult Function(String message)? failure,

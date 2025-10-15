@@ -12,8 +12,7 @@ part of 'client_list_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ClientListEvent {
@@ -24,7 +23,8 @@ mixin _$ClientListEvent {
     required TResult Function(ClientModel client) deleteClient,
     required TResult Function(ClientRequestModel client) editClient,
     required TResult Function(ClientRequestModel client) addClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? searchQuery)? loadClients,
@@ -32,7 +32,8 @@ mixin _$ClientListEvent {
     TResult? Function(ClientModel client)? deleteClient,
     TResult? Function(ClientRequestModel client)? editClient,
     TResult? Function(ClientRequestModel client)? addClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? searchQuery)? loadClients,
@@ -41,7 +42,8 @@ mixin _$ClientListEvent {
     TResult Function(ClientRequestModel client)? editClient,
     TResult Function(ClientRequestModel client)? addClient,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadClients value) loadClients,
@@ -49,7 +51,8 @@ mixin _$ClientListEvent {
     required TResult Function(_DeleteClient value) deleteClient,
     required TResult Function(_EditClient value) editClient,
     required TResult Function(_AddClient value) addClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadClients value)? loadClients,
@@ -57,7 +60,8 @@ mixin _$ClientListEvent {
     TResult? Function(_DeleteClient value)? deleteClient,
     TResult? Function(_EditClient value)? editClient,
     TResult? Function(_AddClient value)? addClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadClients value)? loadClients,
@@ -66,15 +70,15 @@ mixin _$ClientListEvent {
     TResult Function(_EditClient value)? editClient,
     TResult Function(_AddClient value)? addClient,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ClientListEventCopyWith<$Res> {
   factory $ClientListEventCopyWith(
-    ClientListEvent value,
-    $Res Function(ClientListEvent) then,
-  ) = _$ClientListEventCopyWithImpl<$Res, ClientListEvent>;
+          ClientListEvent value, $Res Function(ClientListEvent) then) =
+      _$ClientListEventCopyWithImpl<$Res, ClientListEvent>;
 }
 
 /// @nodoc
@@ -94,9 +98,8 @@ class _$ClientListEventCopyWithImpl<$Res, $Val extends ClientListEvent>
 /// @nodoc
 abstract class _$$LoadClientsImplCopyWith<$Res> {
   factory _$$LoadClientsImplCopyWith(
-    _$LoadClientsImpl value,
-    $Res Function(_$LoadClientsImpl) then,
-  ) = __$$LoadClientsImplCopyWithImpl<$Res>;
+          _$LoadClientsImpl value, $Res Function(_$LoadClientsImpl) then) =
+      __$$LoadClientsImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String? searchQuery});
 }
@@ -106,23 +109,22 @@ class __$$LoadClientsImplCopyWithImpl<$Res>
     extends _$ClientListEventCopyWithImpl<$Res, _$LoadClientsImpl>
     implements _$$LoadClientsImplCopyWith<$Res> {
   __$$LoadClientsImplCopyWithImpl(
-    _$LoadClientsImpl _value,
-    $Res Function(_$LoadClientsImpl) _then,
-  ) : super(_value, _then);
+      _$LoadClientsImpl _value, $Res Function(_$LoadClientsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? searchQuery = freezed}) {
-    return _then(
-      _$LoadClientsImpl(
-        searchQuery: freezed == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+  $Res call({
+    Object? searchQuery = freezed,
+  }) {
+    return _then(_$LoadClientsImpl(
+      searchQuery: freezed == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
@@ -254,20 +256,18 @@ abstract class _LoadClients implements ClientListEvent {
 
 /// @nodoc
 abstract class _$$LoadNextPageClientsImplCopyWith<$Res> {
-  factory _$$LoadNextPageClientsImplCopyWith(
-    _$LoadNextPageClientsImpl value,
-    $Res Function(_$LoadNextPageClientsImpl) then,
-  ) = __$$LoadNextPageClientsImplCopyWithImpl<$Res>;
+  factory _$$LoadNextPageClientsImplCopyWith(_$LoadNextPageClientsImpl value,
+          $Res Function(_$LoadNextPageClientsImpl) then) =
+      __$$LoadNextPageClientsImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNextPageClientsImplCopyWithImpl<$Res>
     extends _$ClientListEventCopyWithImpl<$Res, _$LoadNextPageClientsImpl>
     implements _$$LoadNextPageClientsImplCopyWith<$Res> {
-  __$$LoadNextPageClientsImplCopyWithImpl(
-    _$LoadNextPageClientsImpl _value,
-    $Res Function(_$LoadNextPageClientsImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadNextPageClientsImplCopyWithImpl(_$LoadNextPageClientsImpl _value,
+      $Res Function(_$LoadNextPageClientsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -381,9 +381,8 @@ abstract class _LoadNextPageClients implements ClientListEvent {
 /// @nodoc
 abstract class _$$DeleteClientImplCopyWith<$Res> {
   factory _$$DeleteClientImplCopyWith(
-    _$DeleteClientImpl value,
-    $Res Function(_$DeleteClientImpl) then,
-  ) = __$$DeleteClientImplCopyWithImpl<$Res>;
+          _$DeleteClientImpl value, $Res Function(_$DeleteClientImpl) then) =
+      __$$DeleteClientImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ClientModel client});
 
@@ -395,23 +394,22 @@ class __$$DeleteClientImplCopyWithImpl<$Res>
     extends _$ClientListEventCopyWithImpl<$Res, _$DeleteClientImpl>
     implements _$$DeleteClientImplCopyWith<$Res> {
   __$$DeleteClientImplCopyWithImpl(
-    _$DeleteClientImpl _value,
-    $Res Function(_$DeleteClientImpl) _then,
-  ) : super(_value, _then);
+      _$DeleteClientImpl _value, $Res Function(_$DeleteClientImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? client = null}) {
-    return _then(
-      _$DeleteClientImpl(
-        null == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientModel,
-      ),
-    );
+  $Res call({
+    Object? client = null,
+  }) {
+    return _then(_$DeleteClientImpl(
+      null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientModel,
+    ));
   }
 
   /// Create a copy of ClientListEvent
@@ -553,9 +551,8 @@ abstract class _DeleteClient implements ClientListEvent {
 /// @nodoc
 abstract class _$$EditClientImplCopyWith<$Res> {
   factory _$$EditClientImplCopyWith(
-    _$EditClientImpl value,
-    $Res Function(_$EditClientImpl) then,
-  ) = __$$EditClientImplCopyWithImpl<$Res>;
+          _$EditClientImpl value, $Res Function(_$EditClientImpl) then) =
+      __$$EditClientImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ClientRequestModel client});
 
@@ -567,23 +564,22 @@ class __$$EditClientImplCopyWithImpl<$Res>
     extends _$ClientListEventCopyWithImpl<$Res, _$EditClientImpl>
     implements _$$EditClientImplCopyWith<$Res> {
   __$$EditClientImplCopyWithImpl(
-    _$EditClientImpl _value,
-    $Res Function(_$EditClientImpl) _then,
-  ) : super(_value, _then);
+      _$EditClientImpl _value, $Res Function(_$EditClientImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? client = null}) {
-    return _then(
-      _$EditClientImpl(
-        null == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientRequestModel,
-      ),
-    );
+  $Res call({
+    Object? client = null,
+  }) {
+    return _then(_$EditClientImpl(
+      null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientRequestModel,
+    ));
   }
 
   /// Create a copy of ClientListEvent
@@ -725,9 +721,8 @@ abstract class _EditClient implements ClientListEvent {
 /// @nodoc
 abstract class _$$AddClientImplCopyWith<$Res> {
   factory _$$AddClientImplCopyWith(
-    _$AddClientImpl value,
-    $Res Function(_$AddClientImpl) then,
-  ) = __$$AddClientImplCopyWithImpl<$Res>;
+          _$AddClientImpl value, $Res Function(_$AddClientImpl) then) =
+      __$$AddClientImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ClientRequestModel client});
 
@@ -739,23 +734,22 @@ class __$$AddClientImplCopyWithImpl<$Res>
     extends _$ClientListEventCopyWithImpl<$Res, _$AddClientImpl>
     implements _$$AddClientImplCopyWith<$Res> {
   __$$AddClientImplCopyWithImpl(
-    _$AddClientImpl _value,
-    $Res Function(_$AddClientImpl) _then,
-  ) : super(_value, _then);
+      _$AddClientImpl _value, $Res Function(_$AddClientImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? client = null}) {
-    return _then(
-      _$AddClientImpl(
-        null == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientRequestModel,
-      ),
-    );
+  $Res call({
+    Object? client = null,
+  }) {
+    return _then(_$AddClientImpl(
+      null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientRequestModel,
+    ));
   }
 
   /// Create a copy of ClientListEvent
@@ -899,50 +893,38 @@ mixin _$ClientListState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )
-    loaded,
+    required TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) failure,
     required TResult Function(String message, bool didPop, bool needRefresh)
-    success,
-  }) => throw _privateConstructorUsedError;
+        success,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult? Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? failure,
     TResult? Function(String message, bool didPop, bool needRefresh)? success,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? failure,
     TResult Function(String message, bool didPop, bool needRefresh)? success,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
@@ -950,7 +932,8 @@ mixin _$ClientListState {
     required TResult Function(_Error value) error,
     required TResult Function(_Failure value) failure,
     required TResult Function(_Success value) success,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
@@ -958,7 +941,8 @@ mixin _$ClientListState {
     TResult? Function(_Error value)? error,
     TResult? Function(_Failure value)? failure,
     TResult? Function(_Success value)? success,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
@@ -967,15 +951,15 @@ mixin _$ClientListState {
     TResult Function(_Failure value)? failure,
     TResult Function(_Success value)? success,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ClientListStateCopyWith<$Res> {
   factory $ClientListStateCopyWith(
-    ClientListState value,
-    $Res Function(ClientListState) then,
-  ) = _$ClientListStateCopyWithImpl<$Res, ClientListState>;
+          ClientListState value, $Res Function(ClientListState) then) =
+      _$ClientListStateCopyWithImpl<$Res, ClientListState>;
 }
 
 /// @nodoc
@@ -995,9 +979,8 @@ class _$ClientListStateCopyWithImpl<$Res, $Val extends ClientListState>
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -1005,9 +988,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$ClientListStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListState
   /// with the given fields replaced by the non-null parameter values.
@@ -1036,18 +1018,13 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )
-    loaded,
+    required TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) failure,
     required TResult Function(String message, bool didPop, bool needRefresh)
-    success,
+        success,
   }) {
     return loading();
   }
@@ -1056,14 +1033,9 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult? Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? failure,
     TResult? Function(String message, bool didPop, bool needRefresh)? success,
@@ -1075,14 +1047,9 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? failure,
     TResult Function(String message, bool didPop, bool needRefresh)? success,
@@ -1142,17 +1109,15 @@ abstract class _Loading implements ClientListState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    List<ClientModel> clients,
-    String? nextPageUrl,
-    bool isPaginating,
-    bool isLoading,
-    String? searchQuery,
-  });
+  $Res call(
+      {List<ClientModel> clients,
+      String? nextPageUrl,
+      bool isPaginating,
+      bool isLoading,
+      String? searchQuery});
 }
 
 /// @nodoc
@@ -1160,9 +1125,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$ClientListStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListState
   /// with the given fields replaced by the non-null parameter values.
@@ -1175,43 +1139,41 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? searchQuery = freezed,
   }) {
-    return _then(
-      _$LoadedImpl(
-        clients: null == clients
-            ? _value._clients
-            : clients // ignore: cast_nullable_to_non_nullable
-                  as List<ClientModel>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isPaginating: null == isPaginating
-            ? _value.isPaginating
-            : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        isLoading: null == isLoading
-            ? _value.isLoading
-            : isLoading // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        searchQuery: freezed == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      clients: null == clients
+          ? _value._clients
+          : clients // ignore: cast_nullable_to_non_nullable
+              as List<ClientModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPaginating: null == isPaginating
+          ? _value.isPaginating
+          : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      searchQuery: freezed == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    required final List<ClientModel> clients,
-    required this.nextPageUrl,
-    this.isPaginating = false,
-    this.isLoading = false,
-    this.searchQuery,
-  }) : _clients = clients;
+  const _$LoadedImpl(
+      {required final List<ClientModel> clients,
+      required this.nextPageUrl,
+      this.isPaginating = false,
+      this.isLoading = false,
+      this.searchQuery})
+      : _clients = clients;
 
   final List<ClientModel> _clients;
   @override
@@ -1255,13 +1217,12 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_clients),
-    nextPageUrl,
-    isPaginating,
-    isLoading,
-    searchQuery,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_clients),
+      nextPageUrl,
+      isPaginating,
+      isLoading,
+      searchQuery);
 
   /// Create a copy of ClientListState
   /// with the given fields replaced by the non-null parameter values.
@@ -1275,18 +1236,13 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )
-    loaded,
+    required TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) failure,
     required TResult Function(String message, bool didPop, bool needRefresh)
-    success,
+        success,
   }) {
     return loaded(clients, nextPageUrl, isPaginating, isLoading, searchQuery);
   }
@@ -1295,39 +1251,24 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult? Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? failure,
     TResult? Function(String message, bool didPop, bool needRefresh)? success,
   }) {
     return loaded?.call(
-      clients,
-      nextPageUrl,
-      isPaginating,
-      isLoading,
-      searchQuery,
-    );
+        clients, nextPageUrl, isPaginating, isLoading, searchQuery);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? failure,
     TResult Function(String message, bool didPop, bool needRefresh)? success,
@@ -1381,13 +1322,12 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements ClientListState {
-  const factory _Loaded({
-    required final List<ClientModel> clients,
-    required final String? nextPageUrl,
-    final bool isPaginating,
-    final bool isLoading,
-    final String? searchQuery,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final List<ClientModel> clients,
+      required final String? nextPageUrl,
+      final bool isPaginating,
+      final bool isLoading,
+      final String? searchQuery}) = _$LoadedImpl;
 
   List<ClientModel> get clients;
   String? get nextPageUrl;
@@ -1405,9 +1345,8 @@ abstract class _Loaded implements ClientListState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -1417,23 +1356,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$ClientListStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -1473,18 +1411,13 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )
-    loaded,
+    required TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) failure,
     required TResult Function(String message, bool didPop, bool needRefresh)
-    success,
+        success,
   }) {
     return error(this.error);
   }
@@ -1493,14 +1426,9 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult? Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? failure,
     TResult? Function(String message, bool didPop, bool needRefresh)? success,
@@ -1512,14 +1440,9 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? failure,
     TResult Function(String message, bool didPop, bool needRefresh)? success,
@@ -1587,9 +1510,8 @@ abstract class _Error implements ClientListState {
 /// @nodoc
 abstract class _$$FailureImplCopyWith<$Res> {
   factory _$$FailureImplCopyWith(
-    _$FailureImpl value,
-    $Res Function(_$FailureImpl) then,
-  ) = __$$FailureImplCopyWithImpl<$Res>;
+          _$FailureImpl value, $Res Function(_$FailureImpl) then) =
+      __$$FailureImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
@@ -1599,23 +1521,22 @@ class __$$FailureImplCopyWithImpl<$Res>
     extends _$ClientListStateCopyWithImpl<$Res, _$FailureImpl>
     implements _$$FailureImplCopyWith<$Res> {
   __$$FailureImplCopyWithImpl(
-    _$FailureImpl _value,
-    $Res Function(_$FailureImpl) _then,
-  ) : super(_value, _then);
+      _$FailureImpl _value, $Res Function(_$FailureImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$FailureImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$FailureImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -1655,18 +1576,13 @@ class _$FailureImpl implements _Failure {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )
-    loaded,
+    required TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) failure,
     required TResult Function(String message, bool didPop, bool needRefresh)
-    success,
+        success,
   }) {
     return failure(message);
   }
@@ -1675,14 +1591,9 @@ class _$FailureImpl implements _Failure {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult? Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? failure,
     TResult? Function(String message, bool didPop, bool needRefresh)? success,
@@ -1694,14 +1605,9 @@ class _$FailureImpl implements _Failure {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? failure,
     TResult Function(String message, bool didPop, bool needRefresh)? success,
@@ -1769,9 +1675,8 @@ abstract class _Failure implements ClientListState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message, bool didPop, bool needRefresh});
 }
@@ -1781,9 +1686,8 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$ClientListStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientListState
   /// with the given fields replaced by the non-null parameter values.
@@ -1794,33 +1698,28 @@ class __$$SuccessImplCopyWithImpl<$Res>
     Object? didPop = null,
     Object? needRefresh = null,
   }) {
-    return _then(
-      _$SuccessImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-        didPop: null == didPop
-            ? _value.didPop
-            : didPop // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        needRefresh: null == needRefresh
-            ? _value.needRefresh
-            : needRefresh // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$SuccessImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      didPop: null == didPop
+          ? _value.didPop
+          : didPop // ignore: cast_nullable_to_non_nullable
+              as bool,
+      needRefresh: null == needRefresh
+          ? _value.needRefresh
+          : needRefresh // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$SuccessImpl implements _Success {
-  const _$SuccessImpl(
-    this.message, {
-    this.didPop = false,
-    this.needRefresh = true,
-  });
+  const _$SuccessImpl(this.message,
+      {this.didPop = false, this.needRefresh = true});
 
   @override
   final String message;
@@ -1862,18 +1761,13 @@ class _$SuccessImpl implements _Success {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )
-    loaded,
+    required TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)
+        loaded,
     required TResult Function(String error) error,
     required TResult Function(String message) failure,
     required TResult Function(String message, bool didPop, bool needRefresh)
-    success,
+        success,
   }) {
     return success(message, didPop, needRefresh);
   }
@@ -1882,14 +1776,9 @@ class _$SuccessImpl implements _Success {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult? Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult? Function(String error)? error,
     TResult? Function(String message)? failure,
     TResult? Function(String message, bool didPop, bool needRefresh)? success,
@@ -1901,14 +1790,9 @@ class _$SuccessImpl implements _Success {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<ClientModel> clients,
-      String? nextPageUrl,
-      bool isPaginating,
-      bool isLoading,
-      String? searchQuery,
-    )?
-    loaded,
+    TResult Function(List<ClientModel> clients, String? nextPageUrl,
+            bool isPaginating, bool isLoading, String? searchQuery)?
+        loaded,
     TResult Function(String error)? error,
     TResult Function(String message)? failure,
     TResult Function(String message, bool didPop, bool needRefresh)? success,
@@ -1962,11 +1846,8 @@ class _$SuccessImpl implements _Success {
 }
 
 abstract class _Success implements ClientListState {
-  const factory _Success(
-    final String message, {
-    final bool didPop,
-    final bool needRefresh,
-  }) = _$SuccessImpl;
+  const factory _Success(final String message,
+      {final bool didPop, final bool needRefresh}) = _$SuccessImpl;
 
   String get message;
   bool get didPop;

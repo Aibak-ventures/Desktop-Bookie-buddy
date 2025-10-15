@@ -12,8 +12,7 @@ part of 'client_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ClientState {
@@ -33,17 +32,15 @@ mixin _$ClientState {
 /// @nodoc
 abstract class $ClientStateCopyWith<$Res> {
   factory $ClientStateCopyWith(
-    ClientState value,
-    $Res Function(ClientState) then,
-  ) = _$ClientStateCopyWithImpl<$Res, ClientState>;
+          ClientState value, $Res Function(ClientState) then) =
+      _$ClientStateCopyWithImpl<$Res, ClientState>;
   @useResult
-  $Res call({
-    List<ClientModel> suggestions,
-    ClientModel? selectedClient,
-    String searchQuery,
-    String? nextPageUrl,
-    bool isLoading,
-  });
+  $Res call(
+      {List<ClientModel> suggestions,
+      ClientModel? selectedClient,
+      String searchQuery,
+      String? nextPageUrl,
+      bool isLoading});
 
   $ClientModelCopyWith<$Res>? get selectedClient;
 }
@@ -69,31 +66,28 @@ class _$ClientStateCopyWithImpl<$Res, $Val extends ClientState>
     Object? nextPageUrl = freezed,
     Object? isLoading = null,
   }) {
-    return _then(
-      _value.copyWith(
-            suggestions: null == suggestions
-                ? _value.suggestions
-                : suggestions // ignore: cast_nullable_to_non_nullable
-                      as List<ClientModel>,
-            selectedClient: freezed == selectedClient
-                ? _value.selectedClient
-                : selectedClient // ignore: cast_nullable_to_non_nullable
-                      as ClientModel?,
-            searchQuery: null == searchQuery
-                ? _value.searchQuery
-                : searchQuery // ignore: cast_nullable_to_non_nullable
-                      as String,
-            nextPageUrl: freezed == nextPageUrl
-                ? _value.nextPageUrl
-                : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            isLoading: null == isLoading
-                ? _value.isLoading
-                : isLoading // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      suggestions: null == suggestions
+          ? _value.suggestions
+          : suggestions // ignore: cast_nullable_to_non_nullable
+              as List<ClientModel>,
+      selectedClient: freezed == selectedClient
+          ? _value.selectedClient
+          : selectedClient // ignore: cast_nullable_to_non_nullable
+              as ClientModel?,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
   }
 
   /// Create a copy of ClientState
@@ -115,18 +109,16 @@ class _$ClientStateCopyWithImpl<$Res, $Val extends ClientState>
 abstract class _$$ClientStateImplCopyWith<$Res>
     implements $ClientStateCopyWith<$Res> {
   factory _$$ClientStateImplCopyWith(
-    _$ClientStateImpl value,
-    $Res Function(_$ClientStateImpl) then,
-  ) = __$$ClientStateImplCopyWithImpl<$Res>;
+          _$ClientStateImpl value, $Res Function(_$ClientStateImpl) then) =
+      __$$ClientStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    List<ClientModel> suggestions,
-    ClientModel? selectedClient,
-    String searchQuery,
-    String? nextPageUrl,
-    bool isLoading,
-  });
+  $Res call(
+      {List<ClientModel> suggestions,
+      ClientModel? selectedClient,
+      String searchQuery,
+      String? nextPageUrl,
+      bool isLoading});
 
   @override
   $ClientModelCopyWith<$Res>? get selectedClient;
@@ -137,9 +129,8 @@ class __$$ClientStateImplCopyWithImpl<$Res>
     extends _$ClientStateCopyWithImpl<$Res, _$ClientStateImpl>
     implements _$$ClientStateImplCopyWith<$Res> {
   __$$ClientStateImplCopyWithImpl(
-    _$ClientStateImpl _value,
-    $Res Function(_$ClientStateImpl) _then,
-  ) : super(_value, _then);
+      _$ClientStateImpl _value, $Res Function(_$ClientStateImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ClientState
   /// with the given fields replaced by the non-null parameter values.
@@ -152,43 +143,41 @@ class __$$ClientStateImplCopyWithImpl<$Res>
     Object? nextPageUrl = freezed,
     Object? isLoading = null,
   }) {
-    return _then(
-      _$ClientStateImpl(
-        suggestions: null == suggestions
-            ? _value._suggestions
-            : suggestions // ignore: cast_nullable_to_non_nullable
-                  as List<ClientModel>,
-        selectedClient: freezed == selectedClient
-            ? _value.selectedClient
-            : selectedClient // ignore: cast_nullable_to_non_nullable
-                  as ClientModel?,
-        searchQuery: null == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isLoading: null == isLoading
-            ? _value.isLoading
-            : isLoading // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$ClientStateImpl(
+      suggestions: null == suggestions
+          ? _value._suggestions
+          : suggestions // ignore: cast_nullable_to_non_nullable
+              as List<ClientModel>,
+      selectedClient: freezed == selectedClient
+          ? _value.selectedClient
+          : selectedClient // ignore: cast_nullable_to_non_nullable
+              as ClientModel?,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$ClientStateImpl implements _ClientState {
-  const _$ClientStateImpl({
-    required final List<ClientModel> suggestions,
-    required this.selectedClient,
-    required this.searchQuery,
-    this.nextPageUrl,
-    this.isLoading = false,
-  }) : _suggestions = suggestions;
+  const _$ClientStateImpl(
+      {required final List<ClientModel> suggestions,
+      required this.selectedClient,
+      required this.searchQuery,
+      this.nextPageUrl,
+      this.isLoading = false})
+      : _suggestions = suggestions;
 
   final List<ClientModel> _suggestions;
   @override
@@ -218,10 +207,8 @@ class _$ClientStateImpl implements _ClientState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClientStateImpl &&
-            const DeepCollectionEquality().equals(
-              other._suggestions,
-              _suggestions,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._suggestions, _suggestions) &&
             (identical(other.selectedClient, selectedClient) ||
                 other.selectedClient == selectedClient) &&
             (identical(other.searchQuery, searchQuery) ||
@@ -234,13 +221,12 @@ class _$ClientStateImpl implements _ClientState {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_suggestions),
-    selectedClient,
-    searchQuery,
-    nextPageUrl,
-    isLoading,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_suggestions),
+      selectedClient,
+      searchQuery,
+      nextPageUrl,
+      isLoading);
 
   /// Create a copy of ClientState
   /// with the given fields replaced by the non-null parameter values.
@@ -252,13 +238,12 @@ class _$ClientStateImpl implements _ClientState {
 }
 
 abstract class _ClientState implements ClientState {
-  const factory _ClientState({
-    required final List<ClientModel> suggestions,
-    required final ClientModel? selectedClient,
-    required final String searchQuery,
-    final String? nextPageUrl,
-    final bool isLoading,
-  }) = _$ClientStateImpl;
+  const factory _ClientState(
+      {required final List<ClientModel> suggestions,
+      required final ClientModel? selectedClient,
+      required final String searchQuery,
+      final String? nextPageUrl,
+      final bool isLoading}) = _$ClientStateImpl;
 
   @override
   List<ClientModel> get suggestions;

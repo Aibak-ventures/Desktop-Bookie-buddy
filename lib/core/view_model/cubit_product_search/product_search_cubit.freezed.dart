@@ -12,8 +12,7 @@ part of 'product_search_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ProductSearchState {
@@ -33,17 +32,15 @@ mixin _$ProductSearchState {
 /// @nodoc
 abstract class $ProductSearchStateCopyWith<$Res> {
   factory $ProductSearchStateCopyWith(
-    ProductSearchState value,
-    $Res Function(ProductSearchState) then,
-  ) = _$ProductSearchStateCopyWithImpl<$Res, ProductSearchState>;
+          ProductSearchState value, $Res Function(ProductSearchState) then) =
+      _$ProductSearchStateCopyWithImpl<$Res, ProductSearchState>;
   @useResult
-  $Res call({
-    List<ProductModel> suggestions,
-    ProductModel? selectedProduct,
-    String searchQuery,
-    String? nextPageUrl,
-    bool isLoading,
-  });
+  $Res call(
+      {List<ProductModel> suggestions,
+      ProductModel? selectedProduct,
+      String searchQuery,
+      String? nextPageUrl,
+      bool isLoading});
 
   $ProductModelCopyWith<$Res>? get selectedProduct;
 }
@@ -69,31 +66,28 @@ class _$ProductSearchStateCopyWithImpl<$Res, $Val extends ProductSearchState>
     Object? nextPageUrl = freezed,
     Object? isLoading = null,
   }) {
-    return _then(
-      _value.copyWith(
-            suggestions: null == suggestions
-                ? _value.suggestions
-                : suggestions // ignore: cast_nullable_to_non_nullable
-                      as List<ProductModel>,
-            selectedProduct: freezed == selectedProduct
-                ? _value.selectedProduct
-                : selectedProduct // ignore: cast_nullable_to_non_nullable
-                      as ProductModel?,
-            searchQuery: null == searchQuery
-                ? _value.searchQuery
-                : searchQuery // ignore: cast_nullable_to_non_nullable
-                      as String,
-            nextPageUrl: freezed == nextPageUrl
-                ? _value.nextPageUrl
-                : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            isLoading: null == isLoading
-                ? _value.isLoading
-                : isLoading // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      suggestions: null == suggestions
+          ? _value.suggestions
+          : suggestions // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
+      selectedProduct: freezed == selectedProduct
+          ? _value.selectedProduct
+          : selectedProduct // ignore: cast_nullable_to_non_nullable
+              as ProductModel?,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
   }
 
   /// Create a copy of ProductSearchState
@@ -114,19 +108,17 @@ class _$ProductSearchStateCopyWithImpl<$Res, $Val extends ProductSearchState>
 /// @nodoc
 abstract class _$$ProductSearchStateImplCopyWith<$Res>
     implements $ProductSearchStateCopyWith<$Res> {
-  factory _$$ProductSearchStateImplCopyWith(
-    _$ProductSearchStateImpl value,
-    $Res Function(_$ProductSearchStateImpl) then,
-  ) = __$$ProductSearchStateImplCopyWithImpl<$Res>;
+  factory _$$ProductSearchStateImplCopyWith(_$ProductSearchStateImpl value,
+          $Res Function(_$ProductSearchStateImpl) then) =
+      __$$ProductSearchStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    List<ProductModel> suggestions,
-    ProductModel? selectedProduct,
-    String searchQuery,
-    String? nextPageUrl,
-    bool isLoading,
-  });
+  $Res call(
+      {List<ProductModel> suggestions,
+      ProductModel? selectedProduct,
+      String searchQuery,
+      String? nextPageUrl,
+      bool isLoading});
 
   @override
   $ProductModelCopyWith<$Res>? get selectedProduct;
@@ -136,10 +128,9 @@ abstract class _$$ProductSearchStateImplCopyWith<$Res>
 class __$$ProductSearchStateImplCopyWithImpl<$Res>
     extends _$ProductSearchStateCopyWithImpl<$Res, _$ProductSearchStateImpl>
     implements _$$ProductSearchStateImplCopyWith<$Res> {
-  __$$ProductSearchStateImplCopyWithImpl(
-    _$ProductSearchStateImpl _value,
-    $Res Function(_$ProductSearchStateImpl) _then,
-  ) : super(_value, _then);
+  __$$ProductSearchStateImplCopyWithImpl(_$ProductSearchStateImpl _value,
+      $Res Function(_$ProductSearchStateImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ProductSearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -152,43 +143,41 @@ class __$$ProductSearchStateImplCopyWithImpl<$Res>
     Object? nextPageUrl = freezed,
     Object? isLoading = null,
   }) {
-    return _then(
-      _$ProductSearchStateImpl(
-        suggestions: null == suggestions
-            ? _value._suggestions
-            : suggestions // ignore: cast_nullable_to_non_nullable
-                  as List<ProductModel>,
-        selectedProduct: freezed == selectedProduct
-            ? _value.selectedProduct
-            : selectedProduct // ignore: cast_nullable_to_non_nullable
-                  as ProductModel?,
-        searchQuery: null == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isLoading: null == isLoading
-            ? _value.isLoading
-            : isLoading // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$ProductSearchStateImpl(
+      suggestions: null == suggestions
+          ? _value._suggestions
+          : suggestions // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
+      selectedProduct: freezed == selectedProduct
+          ? _value.selectedProduct
+          : selectedProduct // ignore: cast_nullable_to_non_nullable
+              as ProductModel?,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$ProductSearchStateImpl implements _ProductSearchState {
-  const _$ProductSearchStateImpl({
-    required final List<ProductModel> suggestions,
-    required this.selectedProduct,
-    required this.searchQuery,
-    this.nextPageUrl,
-    this.isLoading = false,
-  }) : _suggestions = suggestions;
+  const _$ProductSearchStateImpl(
+      {required final List<ProductModel> suggestions,
+      required this.selectedProduct,
+      required this.searchQuery,
+      this.nextPageUrl,
+      this.isLoading = false})
+      : _suggestions = suggestions;
 
   final List<ProductModel> _suggestions;
   @override
@@ -218,10 +207,8 @@ class _$ProductSearchStateImpl implements _ProductSearchState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProductSearchStateImpl &&
-            const DeepCollectionEquality().equals(
-              other._suggestions,
-              _suggestions,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._suggestions, _suggestions) &&
             (identical(other.selectedProduct, selectedProduct) ||
                 other.selectedProduct == selectedProduct) &&
             (identical(other.searchQuery, searchQuery) ||
@@ -234,13 +221,12 @@ class _$ProductSearchStateImpl implements _ProductSearchState {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_suggestions),
-    selectedProduct,
-    searchQuery,
-    nextPageUrl,
-    isLoading,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_suggestions),
+      selectedProduct,
+      searchQuery,
+      nextPageUrl,
+      isLoading);
 
   /// Create a copy of ProductSearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -249,19 +235,16 @@ class _$ProductSearchStateImpl implements _ProductSearchState {
   @pragma('vm:prefer-inline')
   _$$ProductSearchStateImplCopyWith<_$ProductSearchStateImpl> get copyWith =>
       __$$ProductSearchStateImplCopyWithImpl<_$ProductSearchStateImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 }
 
 abstract class _ProductSearchState implements ProductSearchState {
-  const factory _ProductSearchState({
-    required final List<ProductModel> suggestions,
-    required final ProductModel? selectedProduct,
-    required final String searchQuery,
-    final String? nextPageUrl,
-    final bool isLoading,
-  }) = _$ProductSearchStateImpl;
+  const factory _ProductSearchState(
+      {required final List<ProductModel> suggestions,
+      required final ProductModel? selectedProduct,
+      required final String searchQuery,
+      final String? nextPageUrl,
+      final bool isLoading}) = _$ProductSearchStateImpl;
 
   @override
   List<ProductModel> get suggestions;
