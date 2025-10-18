@@ -11,6 +11,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/view/add_booking_client_details_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
@@ -496,25 +497,26 @@ class AddBookingProductScreen extends StatelessWidget {
     }
 
     try {
-      await GoRouter.of(context).pushNamed(
-        AppRoutes.addBookingDetails.name,
-        extra: {
-          'add_booking_model': addBookingModel.copyWith(
-            products: context
-                .read<AddBookingProductsCubit>()
-                .state
-                .products,
-            description: descriptionController.text.trim(),
-            otherDetails: BookingOtherDetailsModel(
-              locationStart:
-                  locationStartController.text.nullIfEmpty,
-              locationFrom:
-                  locationFromController.text.nullIfEmpty,
-              locationTo: locationToController.text.nullIfEmpty,
-            ),
-          ),
-        },
-      );
+     final addBookingProductsState = context.read<AddBookingProductsCubit>().state;
+
+await Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => AddBookingClientDetailsScreen(
+      addBookingModel: addBookingModel.copyWith(
+        products: addBookingProductsState.products,
+        description: descriptionController.text.trim(),
+        otherDetails: BookingOtherDetailsModel(
+          locationStart: locationStartController.text.nullIfEmpty,
+          locationFrom: locationFromController.text.nullIfEmpty,
+          locationTo: locationToController.text.nullIfEmpty,
+        ),
+      ),
+    ),
+  ),
+);
+
+
     } catch (e) {
       // Fallback navigation if GoRouter fails
       if (context.mounted) {

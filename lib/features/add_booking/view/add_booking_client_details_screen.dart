@@ -14,6 +14,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/view/add_booking_payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -383,29 +384,30 @@ class _AddBookingClientDetailsScreenState
     }
 
     try {
-      await context.pushNamed(
-        AppRoutes.addBookingPayment.name,
-        queryParameters: {
-          'whatsapp_number': _phone1Controller.text.trim(),
-        },
-        extra: {
-          'add_booking_model': widget.addBookingModel.copyWith(
-            address: _addressController.text.trim(),
-            staffId: staff.id,
-            clientId: isExistingClient ? client?.id : null,
-            client: isExistingClient
-                ? null
-                : ClientRequestModel(
-                    id: null,
-                    name: _nameController.text.trim(),
-                    phone1: _phone1Controller.text.toInt(),
-                    phone2: _phone2Controller.text.isNotEmpty
-                        ? _phone2Controller.text.toIntOrNull()
-                        : null,
-                  ),
-          ),
-        },
-      );
+      await Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => AddBookingPaymentScreen(
+      whatsAppPhoneNumber: _phone1Controller.text.trim(),
+      newBooking: widget.addBookingModel.copyWith(
+        address: _addressController.text.trim(),
+        staffId: staff.id,
+        clientId: isExistingClient ? client?.id : null,
+        client: isExistingClient
+            ? null
+            : ClientRequestModel(
+                id: null,
+                name: _nameController.text.trim(),
+                phone1: _phone1Controller.text.toInt(),
+                phone2: _phone2Controller.text.isNotEmpty
+                    ? _phone2Controller.text.toIntOrNull()
+                    : null,
+              ),
+      ),
+    ),
+  ),
+);
+
     } catch (e) {
       debugPrint('Navigation error: $e');
       context.showSnackBar('Navigation error occurred', isError: true);

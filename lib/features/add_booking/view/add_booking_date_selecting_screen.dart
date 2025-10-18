@@ -5,7 +5,14 @@ import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
+import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
+import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/view/add_booking_product_screen.dart';
+// import 'package:bookie_buddy_web/features/add_booking/view_model/add_booking_products_cubit/add_booking_products_cubit.dart';
+import 'dart:developer';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
@@ -718,30 +725,69 @@ class _AddBookingDateSelectingScreenState
     final pickupDate = pickupDateNotifier.value.format(reverse: true);
     final returnDate = returnDateController.text.formatToUiDate();
     final coolingPeriodDate = coolingPeriodDateController.text.formatToUiDate();
-
-    // final navigatorContext = context;
+    final isEdit = widget.addBookingModel.staffId != null;
 
     if (context.mounted) {
       try {
+        final bookingData = widget.addBookingModel.copyWith(
+          pickupDate: pickupDate,
+          returnDate: returnDate,
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+          coolingPeriodDate:
+              coolingPeriodDate == returnDate ? null : coolingPeriodDate,
+        );
         
-        await context.pushNamed(
-          AppRoutes.addBookingSelectService.name,
-          queryParameters: {
-            'pickup_date': pickupDate,
-            'return_date': returnDate,
-          },
-          extra: {
-            'pickup_time': pickupTime,
-            'return_time': returnTime,
-            'add_booking_model': widget.addBookingModel.copyWith(
-              pickupDate: pickupDate,
-              returnDate: returnDate,
-              pickupTime: pickupTime,
-              returnTime: returnTime,
-              coolingPeriodDate:
-                  coolingPeriodDate == returnDate ? null : coolingPeriodDate,
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => SelectServiceScreen(
+              onServiceSelected: (service, ctx) async {
+                // debugPrint('Selected service: ${service.name}');
+
+                final updatedBookingData = bookingData.copyWith(
+                  serviceId: service.id,
+                );
+
+                // Navigate to select products screen
+                final selectedProducts = await Navigator.of(ctx).push<List<ProductSelectedModel>>(
+                  MaterialPageRoute(
+                    builder: (context) => SelectProductScreen(
+                      serviceId: service.id,
+                      pickupDate: pickupDate,
+                      returnDate: returnDate,
+                      pickupTime: pickupTime,
+                      returnTime: returnTime,
+                      preSelectedData: null,
+                    ),
+                  ),
+                );
+
+                log(
+                  'Returned from product selection with data: $selectedProducts, type: ${selectedProducts.runtimeType}',
+                );
+
+                if (selectedProducts != null && selectedProducts.isNotEmpty) {
+                  if (isEdit) {
+                    // If editing a booking, pop twice to go back to edit screen with new data
+                    Navigator.of(ctx).pop(selectedProducts);
+                    return;
+                  }
+                  // If adding new booking, go to product review screen
+                  await Navigator.of(ctx).push(
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => AddBookingProductsCubit()..setAll(selectedProducts),
+                        child: AddBookingProductScreen(addBookingModel: updatedBookingData),
+                      ),
+                    ),
+                  );
+                } else {
+                  log('No products selected, returning to date selection');
+                  return;
+                }
+              },
             ),
-          },
+          ),
         );
       } catch (e) {
         debugPrint(e.toString());
