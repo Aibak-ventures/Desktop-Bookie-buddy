@@ -68,6 +68,8 @@ mixin _$RequestBookingModel {
   TimeOfDay? get pickupTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
   TimeOfDay? get returnTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+  bool get sendPdfToWhatsApp => throw _privateConstructorUsedError;
 
   /// Serializes this RequestBookingModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -118,6 +120,8 @@ abstract class $RequestBookingModelCopyWith<$Res> {
     TimeOfDay? pickupTime,
     @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
     TimeOfDay? returnTime,
+    @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+    bool sendPdfToWhatsApp,
   });
 
   $ClientRequestModelCopyWith<$Res>? get client;
@@ -161,6 +165,7 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
     Object? serviceId = freezed,
     Object? pickupTime = freezed,
     Object? returnTime = freezed,
+    Object? sendPdfToWhatsApp = null,
   }) {
     return _then(
       _value.copyWith(
@@ -252,6 +257,10 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
                 ? _value.returnTime
                 : returnTime // ignore: cast_nullable_to_non_nullable
                       as TimeOfDay?,
+            sendPdfToWhatsApp: null == sendPdfToWhatsApp
+                ? _value.sendPdfToWhatsApp
+                : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -329,6 +338,8 @@ abstract class _$$RequestBookingModelImplCopyWith<$Res>
     TimeOfDay? pickupTime,
     @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
     TimeOfDay? returnTime,
+    @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+    bool sendPdfToWhatsApp,
   });
 
   @override
@@ -373,6 +384,7 @@ class __$$RequestBookingModelImplCopyWithImpl<$Res>
     Object? serviceId = freezed,
     Object? pickupTime = freezed,
     Object? returnTime = freezed,
+    Object? sendPdfToWhatsApp = null,
   }) {
     return _then(
       _$RequestBookingModelImpl(
@@ -464,6 +476,10 @@ class __$$RequestBookingModelImplCopyWithImpl<$Res>
             ? _value.returnTime
             : returnTime // ignore: cast_nullable_to_non_nullable
                   as TimeOfDay?,
+        sendPdfToWhatsApp: null == sendPdfToWhatsApp
+            ? _value.sendPdfToWhatsApp
+            : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -505,6 +521,8 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
     this.pickupTime,
     @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
     this.returnTime,
+    @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+    this.sendPdfToWhatsApp = false,
   }) : _products = products,
        _additionalCharges = additionalCharges;
 
@@ -594,10 +612,13 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
   @override
   @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
   final TimeOfDay? returnTime;
+  @override
+  @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+  final bool sendPdfToWhatsApp;
 
   @override
   String toString() {
-    return 'RequestBookingModel(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, paymentMethod: $paymentMethod, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime)';
+    return 'RequestBookingModel(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, paymentMethod: $paymentMethod, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime, sendPdfToWhatsApp: $sendPdfToWhatsApp)';
   }
 
   @override
@@ -646,7 +667,9 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
             (identical(other.pickupTime, pickupTime) ||
                 other.pickupTime == pickupTime) &&
             (identical(other.returnTime, returnTime) ||
-                other.returnTime == returnTime));
+                other.returnTime == returnTime) &&
+            (identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) ||
+                other.sendPdfToWhatsApp == sendPdfToWhatsApp));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -675,6 +698,7 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
     serviceId,
     pickupTime,
     returnTime,
+    sendPdfToWhatsApp,
   ]);
 
   /// Create a copy of RequestBookingModel
@@ -727,6 +751,8 @@ abstract class _RequestBookingModel implements RequestBookingModel {
     final TimeOfDay? pickupTime,
     @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
     final TimeOfDay? returnTime,
+    @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+    final bool sendPdfToWhatsApp,
   }) = _$RequestBookingModelImpl;
 
   factory _RequestBookingModel.fromJson(Map<String, dynamic> json) =
@@ -798,6 +824,9 @@ abstract class _RequestBookingModel implements RequestBookingModel {
   @override
   @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
   TimeOfDay? get returnTime;
+  @override
+  @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+  bool get sendPdfToWhatsApp;
 
   /// Create a copy of RequestBookingModel
   /// with the given fields replaced by the non-null parameter values.

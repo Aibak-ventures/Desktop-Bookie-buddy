@@ -12,8 +12,7 @@ part of 'pagination_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$PaginationModel<T> {
@@ -37,21 +36,19 @@ mixin _$PaginationModel<T> {
 /// @nodoc
 abstract class $PaginationModelCopyWith<T, $Res> {
   factory $PaginationModelCopyWith(
-    PaginationModel<T> value,
-    $Res Function(PaginationModel<T>) then,
-  ) = _$PaginationModelCopyWithImpl<T, $Res, PaginationModel<T>>;
+          PaginationModel<T> value, $Res Function(PaginationModel<T>) then) =
+      _$PaginationModelCopyWithImpl<T, $Res, PaginationModel<T>>;
   @useResult
-  $Res call({
-    List<T> data,
-    String? nextPageUrl,
-    String? previousPageUrl,
-    int totalData,
-    int pageSize,
-    int currentPage,
-    int totalPages,
-    int startIndex,
-    int endIndex,
-  });
+  $Res call(
+      {List<T> data,
+      String? nextPageUrl,
+      String? previousPageUrl,
+      int totalData,
+      int pageSize,
+      int currentPage,
+      int totalPages,
+      int startIndex,
+      int endIndex});
 }
 
 /// @nodoc
@@ -79,80 +76,74 @@ class _$PaginationModelCopyWithImpl<T, $Res, $Val extends PaginationModel<T>>
     Object? startIndex = null,
     Object? endIndex = null,
   }) {
-    return _then(
-      _value.copyWith(
-            data: null == data
-                ? _value.data
-                : data // ignore: cast_nullable_to_non_nullable
-                      as List<T>,
-            nextPageUrl: freezed == nextPageUrl
-                ? _value.nextPageUrl
-                : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            previousPageUrl: freezed == previousPageUrl
-                ? _value.previousPageUrl
-                : previousPageUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            totalData: null == totalData
-                ? _value.totalData
-                : totalData // ignore: cast_nullable_to_non_nullable
-                      as int,
-            pageSize: null == pageSize
-                ? _value.pageSize
-                : pageSize // ignore: cast_nullable_to_non_nullable
-                      as int,
-            currentPage: null == currentPage
-                ? _value.currentPage
-                : currentPage // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalPages: null == totalPages
-                ? _value.totalPages
-                : totalPages // ignore: cast_nullable_to_non_nullable
-                      as int,
-            startIndex: null == startIndex
-                ? _value.startIndex
-                : startIndex // ignore: cast_nullable_to_non_nullable
-                      as int,
-            endIndex: null == endIndex
-                ? _value.endIndex
-                : endIndex // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<T>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      previousPageUrl: freezed == previousPageUrl
+          ? _value.previousPageUrl
+          : previousPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      totalData: null == totalData
+          ? _value.totalData
+          : totalData // ignore: cast_nullable_to_non_nullable
+              as int,
+      pageSize: null == pageSize
+          ? _value.pageSize
+          : pageSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentPage: null == currentPage
+          ? _value.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
+      startIndex: null == startIndex
+          ? _value.startIndex
+          : startIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      endIndex: null == endIndex
+          ? _value.endIndex
+          : endIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$PaginationModelImplCopyWith<T, $Res>
     implements $PaginationModelCopyWith<T, $Res> {
-  factory _$$PaginationModelImplCopyWith(
-    _$PaginationModelImpl<T> value,
-    $Res Function(_$PaginationModelImpl<T>) then,
-  ) = __$$PaginationModelImplCopyWithImpl<T, $Res>;
+  factory _$$PaginationModelImplCopyWith(_$PaginationModelImpl<T> value,
+          $Res Function(_$PaginationModelImpl<T>) then) =
+      __$$PaginationModelImplCopyWithImpl<T, $Res>;
   @override
   @useResult
-  $Res call({
-    List<T> data,
-    String? nextPageUrl,
-    String? previousPageUrl,
-    int totalData,
-    int pageSize,
-    int currentPage,
-    int totalPages,
-    int startIndex,
-    int endIndex,
-  });
+  $Res call(
+      {List<T> data,
+      String? nextPageUrl,
+      String? previousPageUrl,
+      int totalData,
+      int pageSize,
+      int currentPage,
+      int totalPages,
+      int startIndex,
+      int endIndex});
 }
 
 /// @nodoc
 class __$$PaginationModelImplCopyWithImpl<T, $Res>
     extends _$PaginationModelCopyWithImpl<T, $Res, _$PaginationModelImpl<T>>
     implements _$$PaginationModelImplCopyWith<T, $Res> {
-  __$$PaginationModelImplCopyWithImpl(
-    _$PaginationModelImpl<T> _value,
-    $Res Function(_$PaginationModelImpl<T>) _then,
-  ) : super(_value, _then);
+  __$$PaginationModelImplCopyWithImpl(_$PaginationModelImpl<T> _value,
+      $Res Function(_$PaginationModelImpl<T>) _then)
+      : super(_value, _then);
 
   /// Create a copy of PaginationModel
   /// with the given fields replaced by the non-null parameter values.
@@ -169,63 +160,61 @@ class __$$PaginationModelImplCopyWithImpl<T, $Res>
     Object? startIndex = null,
     Object? endIndex = null,
   }) {
-    return _then(
-      _$PaginationModelImpl<T>(
-        data: null == data
-            ? _value._data
-            : data // ignore: cast_nullable_to_non_nullable
-                  as List<T>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        previousPageUrl: freezed == previousPageUrl
-            ? _value.previousPageUrl
-            : previousPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        totalData: null == totalData
-            ? _value.totalData
-            : totalData // ignore: cast_nullable_to_non_nullable
-                  as int,
-        pageSize: null == pageSize
-            ? _value.pageSize
-            : pageSize // ignore: cast_nullable_to_non_nullable
-                  as int,
-        currentPage: null == currentPage
-            ? _value.currentPage
-            : currentPage // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalPages: null == totalPages
-            ? _value.totalPages
-            : totalPages // ignore: cast_nullable_to_non_nullable
-                  as int,
-        startIndex: null == startIndex
-            ? _value.startIndex
-            : startIndex // ignore: cast_nullable_to_non_nullable
-                  as int,
-        endIndex: null == endIndex
-            ? _value.endIndex
-            : endIndex // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
+    return _then(_$PaginationModelImpl<T>(
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<T>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      previousPageUrl: freezed == previousPageUrl
+          ? _value.previousPageUrl
+          : previousPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      totalData: null == totalData
+          ? _value.totalData
+          : totalData // ignore: cast_nullable_to_non_nullable
+              as int,
+      pageSize: null == pageSize
+          ? _value.pageSize
+          : pageSize // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentPage: null == currentPage
+          ? _value.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
+      startIndex: null == startIndex
+          ? _value.startIndex
+          : startIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      endIndex: null == endIndex
+          ? _value.endIndex
+          : endIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$PaginationModelImpl<T> implements _PaginationModel<T> {
-  const _$PaginationModelImpl({
-    required final List<T> data,
-    this.nextPageUrl,
-    this.previousPageUrl,
-    this.totalData = 0,
-    this.pageSize = 0,
-    this.currentPage = 1,
-    this.totalPages = 0,
-    this.startIndex = 0,
-    this.endIndex = 0,
-  }) : _data = data;
+  const _$PaginationModelImpl(
+      {required final List<T> data,
+      this.nextPageUrl,
+      this.previousPageUrl,
+      this.totalData = 0,
+      this.pageSize = 0,
+      this.currentPage = 1,
+      this.totalPages = 0,
+      this.startIndex = 0,
+      this.endIndex = 0})
+      : _data = data;
 
   final List<T> _data;
   @override
@@ -289,17 +278,16 @@ class _$PaginationModelImpl<T> implements _PaginationModel<T> {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_data),
-    nextPageUrl,
-    previousPageUrl,
-    totalData,
-    pageSize,
-    currentPage,
-    totalPages,
-    startIndex,
-    endIndex,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_data),
+      nextPageUrl,
+      previousPageUrl,
+      totalData,
+      pageSize,
+      currentPage,
+      totalPages,
+      startIndex,
+      endIndex);
 
   /// Create a copy of PaginationModel
   /// with the given fields replaced by the non-null parameter values.
@@ -308,23 +296,20 @@ class _$PaginationModelImpl<T> implements _PaginationModel<T> {
   @pragma('vm:prefer-inline')
   _$$PaginationModelImplCopyWith<T, _$PaginationModelImpl<T>> get copyWith =>
       __$$PaginationModelImplCopyWithImpl<T, _$PaginationModelImpl<T>>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 }
 
 abstract class _PaginationModel<T> implements PaginationModel<T> {
-  const factory _PaginationModel({
-    required final List<T> data,
-    final String? nextPageUrl,
-    final String? previousPageUrl,
-    final int totalData,
-    final int pageSize,
-    final int currentPage,
-    final int totalPages,
-    final int startIndex,
-    final int endIndex,
-  }) = _$PaginationModelImpl<T>;
+  const factory _PaginationModel(
+      {required final List<T> data,
+      final String? nextPageUrl,
+      final String? previousPageUrl,
+      final int totalData,
+      final int pageSize,
+      final int currentPage,
+      final int totalPages,
+      final int startIndex,
+      final int endIndex}) = _$PaginationModelImpl<T>;
 
   @override
   List<T> get data;

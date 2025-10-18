@@ -12,8 +12,7 @@ part of 'staff_details_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 StaffDetailsModel _$StaffDetailsModelFromJson(Map<String, dynamic> json) {
   return _StaffDetailsModel.fromJson(json);
@@ -41,16 +40,14 @@ mixin _$StaffDetailsModel {
 /// @nodoc
 abstract class $StaffDetailsModelCopyWith<$Res> {
   factory $StaffDetailsModelCopyWith(
-    StaffDetailsModel value,
-    $Res Function(StaffDetailsModel) then,
-  ) = _$StaffDetailsModelCopyWithImpl<$Res, StaffDetailsModel>;
+          StaffDetailsModel value, $Res Function(StaffDetailsModel) then) =
+      _$StaffDetailsModelCopyWithImpl<$Res, StaffDetailsModel>;
   @useResult
-  $Res call({
-    int id,
-    String name,
-    @JsonKey(name: 'phone') String phoneNumber,
-    @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
-  });
+  $Res call(
+      {int id,
+      String name,
+      @JsonKey(name: 'phone') String phoneNumber,
+      @JsonKey(name: 'created_at', defaultValue: '') String createdAt});
 }
 
 /// @nodoc
@@ -73,55 +70,49 @@ class _$StaffDetailsModelCopyWithImpl<$Res, $Val extends StaffDetailsModel>
     Object? phoneNumber = null,
     Object? createdAt = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            phoneNumber: null == phoneNumber
-                ? _value.phoneNumber
-                : phoneNumber // ignore: cast_nullable_to_non_nullable
-                      as String,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$StaffDetailsModelImplCopyWith<$Res>
     implements $StaffDetailsModelCopyWith<$Res> {
-  factory _$$StaffDetailsModelImplCopyWith(
-    _$StaffDetailsModelImpl value,
-    $Res Function(_$StaffDetailsModelImpl) then,
-  ) = __$$StaffDetailsModelImplCopyWithImpl<$Res>;
+  factory _$$StaffDetailsModelImplCopyWith(_$StaffDetailsModelImpl value,
+          $Res Function(_$StaffDetailsModelImpl) then) =
+      __$$StaffDetailsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int id,
-    String name,
-    @JsonKey(name: 'phone') String phoneNumber,
-    @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
-  });
+  $Res call(
+      {int id,
+      String name,
+      @JsonKey(name: 'phone') String phoneNumber,
+      @JsonKey(name: 'created_at', defaultValue: '') String createdAt});
 }
 
 /// @nodoc
 class __$$StaffDetailsModelImplCopyWithImpl<$Res>
     extends _$StaffDetailsModelCopyWithImpl<$Res, _$StaffDetailsModelImpl>
     implements _$$StaffDetailsModelImplCopyWith<$Res> {
-  __$$StaffDetailsModelImplCopyWithImpl(
-    _$StaffDetailsModelImpl _value,
-    $Res Function(_$StaffDetailsModelImpl) _then,
-  ) : super(_value, _then);
+  __$$StaffDetailsModelImplCopyWithImpl(_$StaffDetailsModelImpl _value,
+      $Res Function(_$StaffDetailsModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffDetailsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -133,38 +124,35 @@ class __$$StaffDetailsModelImplCopyWithImpl<$Res>
     Object? phoneNumber = null,
     Object? createdAt = null,
   }) {
-    return _then(
-      _$StaffDetailsModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        phoneNumber: null == phoneNumber
-            ? _value.phoneNumber
-            : phoneNumber // ignore: cast_nullable_to_non_nullable
-                  as String,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$StaffDetailsModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StaffDetailsModelImpl implements _StaffDetailsModel {
-  const _$StaffDetailsModelImpl({
-    required this.id,
-    required this.name,
-    @JsonKey(name: 'phone') required this.phoneNumber,
-    @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt,
-  });
+  const _$StaffDetailsModelImpl(
+      {required this.id,
+      required this.name,
+      @JsonKey(name: 'phone') required this.phoneNumber,
+      @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt});
 
   factory _$StaffDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StaffDetailsModelImplFromJson(json);
@@ -210,24 +198,23 @@ class _$StaffDetailsModelImpl implements _StaffDetailsModel {
   @pragma('vm:prefer-inline')
   _$$StaffDetailsModelImplCopyWith<_$StaffDetailsModelImpl> get copyWith =>
       __$$StaffDetailsModelImplCopyWithImpl<_$StaffDetailsModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StaffDetailsModelImplToJson(this);
+    return _$$StaffDetailsModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _StaffDetailsModel implements StaffDetailsModel {
-  const factory _StaffDetailsModel({
-    required final int id,
-    required final String name,
-    @JsonKey(name: 'phone') required final String phoneNumber,
-    @JsonKey(name: 'created_at', defaultValue: '')
-    required final String createdAt,
-  }) = _$StaffDetailsModelImpl;
+  const factory _StaffDetailsModel(
+      {required final int id,
+      required final String name,
+      @JsonKey(name: 'phone') required final String phoneNumber,
+      @JsonKey(name: 'created_at', defaultValue: '')
+      required final String createdAt}) = _$StaffDetailsModelImpl;
 
   factory _StaffDetailsModel.fromJson(Map<String, dynamic> json) =
       _$StaffDetailsModelImpl.fromJson;

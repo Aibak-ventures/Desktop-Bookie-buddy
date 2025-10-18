@@ -12,8 +12,7 @@ part of 'ledger_booking_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LedgerBookingModel _$LedgerBookingModelFromJson(Map<String, dynamic> json) {
   return _LedgerBookingModel.fromJson(json);
@@ -47,18 +46,16 @@ mixin _$LedgerBookingModel {
 /// @nodoc
 abstract class $LedgerBookingModelCopyWith<$Res> {
   factory $LedgerBookingModelCopyWith(
-    LedgerBookingModel value,
-    $Res Function(LedgerBookingModel) then,
-  ) = _$LedgerBookingModelCopyWithImpl<$Res, LedgerBookingModel>;
+          LedgerBookingModel value, $Res Function(LedgerBookingModel) then) =
+      _$LedgerBookingModelCopyWithImpl<$Res, LedgerBookingModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'booking_id') int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
-    @JsonKey(name: 'total_amount', defaultValue: 0) int totalAmount,
-    @JsonKey(name: 'advance_amount', defaultValue: 0) int advanceAmount,
-    @JsonKey(name: 'booked_date') String bookedDate,
-    @JsonKey(name: 'booked_items') List<String> bookedItems,
-  });
+  $Res call(
+      {@JsonKey(name: 'booking_id') int bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
+      @JsonKey(name: 'total_amount', defaultValue: 0) int totalAmount,
+      @JsonKey(name: 'advance_amount', defaultValue: 0) int advanceAmount,
+      @JsonKey(name: 'booked_date') String bookedDate,
+      @JsonKey(name: 'booked_items') List<String> bookedItems});
 }
 
 /// @nodoc
@@ -83,65 +80,59 @@ class _$LedgerBookingModelCopyWithImpl<$Res, $Val extends LedgerBookingModel>
     Object? bookedDate = null,
     Object? bookedItems = null,
   }) {
-    return _then(
-      _value.copyWith(
-            bookingId: null == bookingId
-                ? _value.bookingId
-                : bookingId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            clientName: null == clientName
-                ? _value.clientName
-                : clientName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            totalAmount: null == totalAmount
-                ? _value.totalAmount
-                : totalAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            advanceAmount: null == advanceAmount
-                ? _value.advanceAmount
-                : advanceAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            bookedDate: null == bookedDate
-                ? _value.bookedDate
-                : bookedDate // ignore: cast_nullable_to_non_nullable
-                      as String,
-            bookedItems: null == bookedItems
-                ? _value.bookedItems
-                : bookedItems // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      advanceAmount: null == advanceAmount
+          ? _value.advanceAmount
+          : advanceAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      bookedDate: null == bookedDate
+          ? _value.bookedDate
+          : bookedDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      bookedItems: null == bookedItems
+          ? _value.bookedItems
+          : bookedItems // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$LedgerBookingModelImplCopyWith<$Res>
     implements $LedgerBookingModelCopyWith<$Res> {
-  factory _$$LedgerBookingModelImplCopyWith(
-    _$LedgerBookingModelImpl value,
-    $Res Function(_$LedgerBookingModelImpl) then,
-  ) = __$$LedgerBookingModelImplCopyWithImpl<$Res>;
+  factory _$$LedgerBookingModelImplCopyWith(_$LedgerBookingModelImpl value,
+          $Res Function(_$LedgerBookingModelImpl) then) =
+      __$$LedgerBookingModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'booking_id') int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
-    @JsonKey(name: 'total_amount', defaultValue: 0) int totalAmount,
-    @JsonKey(name: 'advance_amount', defaultValue: 0) int advanceAmount,
-    @JsonKey(name: 'booked_date') String bookedDate,
-    @JsonKey(name: 'booked_items') List<String> bookedItems,
-  });
+  $Res call(
+      {@JsonKey(name: 'booking_id') int bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
+      @JsonKey(name: 'total_amount', defaultValue: 0) int totalAmount,
+      @JsonKey(name: 'advance_amount', defaultValue: 0) int advanceAmount,
+      @JsonKey(name: 'booked_date') String bookedDate,
+      @JsonKey(name: 'booked_items') List<String> bookedItems});
 }
 
 /// @nodoc
 class __$$LedgerBookingModelImplCopyWithImpl<$Res>
     extends _$LedgerBookingModelCopyWithImpl<$Res, _$LedgerBookingModelImpl>
     implements _$$LedgerBookingModelImplCopyWith<$Res> {
-  __$$LedgerBookingModelImplCopyWithImpl(
-    _$LedgerBookingModelImpl _value,
-    $Res Function(_$LedgerBookingModelImpl) _then,
-  ) : super(_value, _then);
+  __$$LedgerBookingModelImplCopyWithImpl(_$LedgerBookingModelImpl _value,
+      $Res Function(_$LedgerBookingModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerBookingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -155,50 +146,48 @@ class __$$LedgerBookingModelImplCopyWithImpl<$Res>
     Object? bookedDate = null,
     Object? bookedItems = null,
   }) {
-    return _then(
-      _$LedgerBookingModelImpl(
-        bookingId: null == bookingId
-            ? _value.bookingId
-            : bookingId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        clientName: null == clientName
-            ? _value.clientName
-            : clientName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        totalAmount: null == totalAmount
-            ? _value.totalAmount
-            : totalAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        advanceAmount: null == advanceAmount
-            ? _value.advanceAmount
-            : advanceAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        bookedDate: null == bookedDate
-            ? _value.bookedDate
-            : bookedDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        bookedItems: null == bookedItems
-            ? _value._bookedItems
-            : bookedItems // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-      ),
-    );
+    return _then(_$LedgerBookingModelImpl(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      advanceAmount: null == advanceAmount
+          ? _value.advanceAmount
+          : advanceAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      bookedDate: null == bookedDate
+          ? _value.bookedDate
+          : bookedDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      bookedItems: null == bookedItems
+          ? _value._bookedItems
+          : bookedItems // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerBookingModelImpl implements _LedgerBookingModel {
-  const _$LedgerBookingModelImpl({
-    @JsonKey(name: 'booking_id') required this.bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown')
-    required this.clientName,
-    @JsonKey(name: 'total_amount', defaultValue: 0) required this.totalAmount,
-    @JsonKey(name: 'advance_amount', defaultValue: 0)
-    required this.advanceAmount,
-    @JsonKey(name: 'booked_date') required this.bookedDate,
-    @JsonKey(name: 'booked_items') final List<String> bookedItems = const [],
-  }) : _bookedItems = bookedItems;
+  const _$LedgerBookingModelImpl(
+      {@JsonKey(name: 'booking_id') required this.bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown')
+      required this.clientName,
+      @JsonKey(name: 'total_amount', defaultValue: 0) required this.totalAmount,
+      @JsonKey(name: 'advance_amount', defaultValue: 0)
+      required this.advanceAmount,
+      @JsonKey(name: 'booked_date') required this.bookedDate,
+      @JsonKey(name: 'booked_items') final List<String> bookedItems = const []})
+      : _bookedItems = bookedItems;
 
   factory _$LedgerBookingModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerBookingModelImplFromJson(json);
@@ -247,23 +236,20 @@ class _$LedgerBookingModelImpl implements _LedgerBookingModel {
                 other.advanceAmount == advanceAmount) &&
             (identical(other.bookedDate, bookedDate) ||
                 other.bookedDate == bookedDate) &&
-            const DeepCollectionEquality().equals(
-              other._bookedItems,
-              _bookedItems,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._bookedItems, _bookedItems));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    bookingId,
-    clientName,
-    totalAmount,
-    advanceAmount,
-    bookedDate,
-    const DeepCollectionEquality().hash(_bookedItems),
-  );
+      runtimeType,
+      bookingId,
+      clientName,
+      totalAmount,
+      advanceAmount,
+      bookedDate,
+      const DeepCollectionEquality().hash(_bookedItems));
 
   /// Create a copy of LedgerBookingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -272,28 +258,28 @@ class _$LedgerBookingModelImpl implements _LedgerBookingModel {
   @pragma('vm:prefer-inline')
   _$$LedgerBookingModelImplCopyWith<_$LedgerBookingModelImpl> get copyWith =>
       __$$LedgerBookingModelImplCopyWithImpl<_$LedgerBookingModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerBookingModelImplToJson(this);
+    return _$$LedgerBookingModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerBookingModel implements LedgerBookingModel {
-  const factory _LedgerBookingModel({
-    @JsonKey(name: 'booking_id') required final int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown')
-    required final String clientName,
-    @JsonKey(name: 'total_amount', defaultValue: 0)
-    required final int totalAmount,
-    @JsonKey(name: 'advance_amount', defaultValue: 0)
-    required final int advanceAmount,
-    @JsonKey(name: 'booked_date') required final String bookedDate,
-    @JsonKey(name: 'booked_items') final List<String> bookedItems,
-  }) = _$LedgerBookingModelImpl;
+  const factory _LedgerBookingModel(
+          {@JsonKey(name: 'booking_id') required final int bookingId,
+          @JsonKey(name: 'client_name', defaultValue: 'Unknown')
+          required final String clientName,
+          @JsonKey(name: 'total_amount', defaultValue: 0)
+          required final int totalAmount,
+          @JsonKey(name: 'advance_amount', defaultValue: 0)
+          required final int advanceAmount,
+          @JsonKey(name: 'booked_date') required final String bookedDate,
+          @JsonKey(name: 'booked_items') final List<String> bookedItems}) =
+      _$LedgerBookingModelImpl;
 
   factory _LedgerBookingModel.fromJson(Map<String, dynamic> json) =
       _$LedgerBookingModelImpl.fromJson;

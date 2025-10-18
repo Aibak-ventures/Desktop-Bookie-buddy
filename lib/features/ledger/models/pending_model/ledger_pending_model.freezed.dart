@@ -12,8 +12,7 @@ part of 'ledger_pending_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LedgerPendingModel _$LedgerPendingModelFromJson(Map<String, dynamic> json) {
   return _LedgerPendingModel.fromJson(json);
@@ -43,16 +42,14 @@ mixin _$LedgerPendingModel {
 /// @nodoc
 abstract class $LedgerPendingModelCopyWith<$Res> {
   factory $LedgerPendingModelCopyWith(
-    LedgerPendingModel value,
-    $Res Function(LedgerPendingModel) then,
-  ) = _$LedgerPendingModelCopyWithImpl<$Res, LedgerPendingModel>;
+          LedgerPendingModel value, $Res Function(LedgerPendingModel) then) =
+      _$LedgerPendingModelCopyWithImpl<$Res, LedgerPendingModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'booking_id') int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
-    @JsonKey(name: 'remaining_amount') int remainingAmount,
-    @JsonKey(name: 'return_date') String returnDate,
-  });
+  $Res call(
+      {@JsonKey(name: 'booking_id') int bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
+      @JsonKey(name: 'remaining_amount') int remainingAmount,
+      @JsonKey(name: 'return_date') String returnDate});
 }
 
 /// @nodoc
@@ -75,55 +72,49 @@ class _$LedgerPendingModelCopyWithImpl<$Res, $Val extends LedgerPendingModel>
     Object? remainingAmount = null,
     Object? returnDate = null,
   }) {
-    return _then(
-      _value.copyWith(
-            bookingId: null == bookingId
-                ? _value.bookingId
-                : bookingId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            clientName: null == clientName
-                ? _value.clientName
-                : clientName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            remainingAmount: null == remainingAmount
-                ? _value.remainingAmount
-                : remainingAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            returnDate: null == returnDate
-                ? _value.returnDate
-                : returnDate // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      remainingAmount: null == remainingAmount
+          ? _value.remainingAmount
+          : remainingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      returnDate: null == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$LedgerPendingModelImplCopyWith<$Res>
     implements $LedgerPendingModelCopyWith<$Res> {
-  factory _$$LedgerPendingModelImplCopyWith(
-    _$LedgerPendingModelImpl value,
-    $Res Function(_$LedgerPendingModelImpl) then,
-  ) = __$$LedgerPendingModelImplCopyWithImpl<$Res>;
+  factory _$$LedgerPendingModelImplCopyWith(_$LedgerPendingModelImpl value,
+          $Res Function(_$LedgerPendingModelImpl) then) =
+      __$$LedgerPendingModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'booking_id') int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
-    @JsonKey(name: 'remaining_amount') int remainingAmount,
-    @JsonKey(name: 'return_date') String returnDate,
-  });
+  $Res call(
+      {@JsonKey(name: 'booking_id') int bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
+      @JsonKey(name: 'remaining_amount') int remainingAmount,
+      @JsonKey(name: 'return_date') String returnDate});
 }
 
 /// @nodoc
 class __$$LedgerPendingModelImplCopyWithImpl<$Res>
     extends _$LedgerPendingModelCopyWithImpl<$Res, _$LedgerPendingModelImpl>
     implements _$$LedgerPendingModelImplCopyWith<$Res> {
-  __$$LedgerPendingModelImplCopyWithImpl(
-    _$LedgerPendingModelImpl _value,
-    $Res Function(_$LedgerPendingModelImpl) _then,
-  ) : super(_value, _then);
+  __$$LedgerPendingModelImplCopyWithImpl(_$LedgerPendingModelImpl _value,
+      $Res Function(_$LedgerPendingModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerPendingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -135,39 +126,36 @@ class __$$LedgerPendingModelImplCopyWithImpl<$Res>
     Object? remainingAmount = null,
     Object? returnDate = null,
   }) {
-    return _then(
-      _$LedgerPendingModelImpl(
-        bookingId: null == bookingId
-            ? _value.bookingId
-            : bookingId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        clientName: null == clientName
-            ? _value.clientName
-            : clientName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        remainingAmount: null == remainingAmount
-            ? _value.remainingAmount
-            : remainingAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        returnDate: null == returnDate
-            ? _value.returnDate
-            : returnDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$LedgerPendingModelImpl(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      remainingAmount: null == remainingAmount
+          ? _value.remainingAmount
+          : remainingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      returnDate: null == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerPendingModelImpl implements _LedgerPendingModel {
-  const _$LedgerPendingModelImpl({
-    @JsonKey(name: 'booking_id') required this.bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown')
-    required this.clientName,
-    @JsonKey(name: 'remaining_amount') required this.remainingAmount,
-    @JsonKey(name: 'return_date') required this.returnDate,
-  });
+  const _$LedgerPendingModelImpl(
+      {@JsonKey(name: 'booking_id') required this.bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown')
+      required this.clientName,
+      @JsonKey(name: 'remaining_amount') required this.remainingAmount,
+      @JsonKey(name: 'return_date') required this.returnDate});
 
   factory _$LedgerPendingModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerPendingModelImplFromJson(json);
@@ -208,12 +196,7 @@ class _$LedgerPendingModelImpl implements _LedgerPendingModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    bookingId,
-    clientName,
-    remainingAmount,
-    returnDate,
-  );
+      runtimeType, bookingId, clientName, remainingAmount, returnDate);
 
   /// Create a copy of LedgerPendingModel
   /// with the given fields replaced by the non-null parameter values.
@@ -222,24 +205,24 @@ class _$LedgerPendingModelImpl implements _LedgerPendingModel {
   @pragma('vm:prefer-inline')
   _$$LedgerPendingModelImplCopyWith<_$LedgerPendingModelImpl> get copyWith =>
       __$$LedgerPendingModelImplCopyWithImpl<_$LedgerPendingModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerPendingModelImplToJson(this);
+    return _$$LedgerPendingModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerPendingModel implements LedgerPendingModel {
-  const factory _LedgerPendingModel({
-    @JsonKey(name: 'booking_id') required final int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown')
-    required final String clientName,
-    @JsonKey(name: 'remaining_amount') required final int remainingAmount,
-    @JsonKey(name: 'return_date') required final String returnDate,
-  }) = _$LedgerPendingModelImpl;
+  const factory _LedgerPendingModel(
+          {@JsonKey(name: 'booking_id') required final int bookingId,
+          @JsonKey(name: 'client_name', defaultValue: 'Unknown')
+          required final String clientName,
+          @JsonKey(name: 'remaining_amount') required final int remainingAmount,
+          @JsonKey(name: 'return_date') required final String returnDate}) =
+      _$LedgerPendingModelImpl;
 
   factory _LedgerPendingModel.fromJson(Map<String, dynamic> json) =
       _$LedgerPendingModelImpl.fromJson;

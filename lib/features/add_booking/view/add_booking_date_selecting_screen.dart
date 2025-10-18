@@ -1,23 +1,23 @@
-import 'dart:developer';
-
+// ignore_for_file: library_private_types_in_public_api
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
+import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/add_booking_product_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/calender_widget.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class AddBookingDateSelectingScreen extends StatefulWidget {
   const AddBookingDateSelectingScreen({
-    required this.addBookingModel,
+    this.addBookingModel = const RequestBookingModel(),
     super.key,
   });
 
@@ -32,76 +32,741 @@ class _AddBookingDateSelectingScreenState
     extends State<AddBookingDateSelectingScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final returnDateController = TextEditingController(
-    text: DateTime.now().add(1.days()).format(), // One day after today
-  );
-
+  final returnDateController =
+      TextEditingController(text: DateTime.now().add(1.days()).format());
   final pickupDateNotifier = ValueNotifier<DateTime>(DateTime.now());
+  final coolingPeriodDateController = TextEditingController();
 
+  late final int coolingPeriodDuration;
   TimeOfDay? pickupTime;
   TimeOfDay? returnTime;
-
   final pickupTimeController = TextEditingController();
   final returnTimeController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    coolingPeriodDuration =
+        context.read<UserCubit>().state?.shopSettings.coolingPeriodDuration ?? 0;
+    coolingPeriodDateController.text = returnDateController.text
+        .parseToDateTime()
+        .add(coolingPeriodDuration.days())
+        .format();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
-        Theme.of(context).platform == TargetPlatform.windows ||
-        Theme.of(context).platform == TargetPlatform.macOS ||
-        Theme.of(context).platform == TargetPlatform.linux;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWideScreen = screenWidth > 900;
+    final isWeb = screenWidth > 768;
 
     return Scaffold(
-      backgroundColor: isDesktop ? const Color(0xFFF5F7FA) : null,
+      backgroundColor: isWeb ? const Color(0xFFF5F7FA) : null,
       appBar: AppBar(
-        title: const Text('Select Dates'),
-        backgroundColor: isDesktop ? Colors.white : null,
-        elevation: isDesktop ? 0.5 : null,
+        title: const Text('Create New Booking'),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: isWeb ? Colors.transparent : null,
       ),
-      body: ResponsiveWidget(
-        mobile: _buildMobileLayout(context),
-        tablet: _buildTabletLayout(context),
-        desktop: _buildDesktopLayout(context),
+      body: Container(
+        width: double.infinity,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: isWeb ? 1200 : double.infinity,
+              ),
+              padding: isWeb
+                  ? const EdgeInsets.all(40)
+                  : const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: isWeb ? _buildWebLayout(isWideScreen) : _buildMobileLayout(),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  bool get isReturnAndPickupSameDay =>
-      pickupDateNotifier.value.dateOnly.isSameDay(
-        returnDateController.text.parseToDateTime().dateOnly,
+  Widget _buildWebLayout(bool isWideScreen) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header section
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade50, Colors.purple.shade50],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade600,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.calendar_today,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Schedule Your Booking',
+                          style: TextStyle(
+                            fontSize: 32.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade800,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Select your preferred dates and times to get started with your booking',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 40),
+        
+        // Main content with calendar and form
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left: Calendar section
+            Expanded(
+              flex: isWideScreen ? 3 : 2,
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade200,
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Select Pickup Date',
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ValueListenableBuilder(
+                      valueListenable: pickupDateNotifier,
+                      builder: (context, selectedDate, child) => Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.event,
+                              color: Colors.blue.shade600,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Selected: ${selectedDate.format()}',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.blue.shade800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    CalenderWidget(
+                      onDateSelected: (selectedDate) {
+                        pickupDateNotifier.value = selectedDate;
+                      },
+                      initialSelectedDate: pickupDateNotifier.value,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(width: isWideScreen ? 32 : 16),
+
+            // Right: Form fields
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  // Return date card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Return Date',
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        CustomTextField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select return date.';
+                            }
+                            final selectedDate = value.parseToDateTime();
+                            if (selectedDate.isBefore(pickupDateNotifier.value)) {
+                              return 'Return date cannot be before pickup date.';
+                            }
+                            return null;
+                          },
+                          hintText: 'Select Return Date',
+                          controller: returnDateController,
+                          prefixIcon: const Icon(Icons.calendar_month_outlined),
+                          ignorePointers: true,
+                        ).onTap(() => selectReturnDate(context)),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Time selection card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              color: Colors.orange.shade600,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Time (Optional)',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Pickup Time',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  CustomTextField(
+                                    validator: (value) {
+                                      if (isReturnAndPickupSameDay) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select pickup time.';
+                                        }
+                                        final selectedTime = value.parseToTimeOfDay();
+                                        final returnTimeOfDay = returnTime ?? const TimeOfDay(hour: 0, minute: 0);
+                                        if (selectedTime != null && selectedTime.isAfter(returnTimeOfDay)) {
+                                          return 'Pickup time cannot be after return time on the same day.';
+                                        }
+                                      }
+                                      return null;
+                                    },
+                                    controller: pickupTimeController,
+                                    hintText: 'Pickup Time',
+                                    prefixIcon: const Icon(Icons.access_time),
+                                    ignorePointers: true,
+                                  ).onTap(() async {
+                                    final picked = await showTimePicker(
+                                      context: context,
+                                      initialTime: pickupTime ?? TimeOfDay.now(),
+                                    );
+                                    if (picked != null) {
+                                      pickupTime = picked;
+                                      pickupTimeController.text = picked.formatTime12Hour();
+                                    }
+                                  }),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Return Time',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  CustomTextField(
+                                    validator: (value) {
+                                      if (isReturnAndPickupSameDay) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select return time.';
+                                        }
+                                        final selectedTime = value.parseToTimeOfDay();
+                                        final pickupTimeOfDay = pickupTime ?? const TimeOfDay(hour: 0, minute: 0);
+                                        if (selectedTime != null && selectedTime.isBefore(pickupTimeOfDay)) {
+                                          return 'Return time cannot be before pickup time on the same day.';
+                                        }
+                                      }
+                                      return null;
+                                    },
+                                    controller: returnTimeController,
+                                    hintText: 'Return Time',
+                                    prefixIcon: const Icon(Icons.access_time),
+                                    ignorePointers: true,
+                                  ).onTap(() async {
+                                    final picked = await showTimePicker(
+                                      context: context,
+                                      initialTime: returnTime ?? TimeOfDay.now(),
+                                    );
+                                    if (picked != null) {
+                                      returnTime = picked;
+                                      returnTimeController.text = picked.formatTime12Hour();
+                                    }
+                                  }),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Cooling period card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.ac_unit,
+                              color: Colors.green.shade600,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Cooling Period (Optional)',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Additional time after return for maintenance or processing',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        CustomTextField(
+                          validator: (isReturnAndPickupSameDay
+                              ? (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select cooling period date.';
+                                  }
+                                  final selectedDate = value.parseToDateTime();
+                                  final minDate = returnDateController.text.parseToDateTime();
+                                  if (selectedDate.isBefore(minDate)) {
+                                    return 'Cooling period date cannot be before return date.';
+                                  }
+                                  return null;
+                                }
+                              : null),
+                          controller: coolingPeriodDateController,
+                          hintText: 'Select cooling period',
+                          prefixIcon: const Icon(Icons.calendar_month_outlined),
+                          ignorePointers: true,
+                        ).onTap(() => selectCoolingPeriodDate(context)),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 40),
+                  
+                  // Next button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => onNextPressed(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue.shade600,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.arrow_forward, color: Colors.white),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Continue to Service Selection',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileLayout() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Left: Calendar
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.purple.shade200),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: CalenderWidget(
+                          onDateSelected: (selectedDate) {
+                            pickupDateNotifier.value = selectedDate;
+                          },
+                          initialSelectedDate: pickupDateNotifier.value,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 16),
+
+                  // Right: Form fields
+                  Expanded(
+                    flex: 2,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Return Date", style: _labelStyle(context)),
+                          8.verticalSpace,
+                          CustomTextField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select return date.';
+                              }
+                              final selectedDate = value.parseToDateTime();
+                              if (selectedDate.isBefore(pickupDateNotifier.value)) {
+                                return 'Return date cannot be before pickup date.';
+                              }
+                              return null;
+                            },
+                            hintText: 'Select Return Date',
+                            controller: returnDateController,
+                            prefixIcon: const Icon(Icons.calendar_month_outlined),
+                            ignorePointers: true,
+                          ).onTap(() => selectReturnDate(context)),
+                          16.verticalSpace,
+
+                          Text('Time (Optional)', style: _labelStyle(context)),
+                          8.verticalSpace,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomTextField(
+                                  validator: (value) {
+                                    if (isReturnAndPickupSameDay) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please select pickup time.';
+                                      }
+                                      final selectedTime = value.parseToTimeOfDay();
+                                  final returnTimeOfDay = returnTime ?? const TimeOfDay(hour: 0, minute: 0);
+                                  if (selectedTime != null && selectedTime.isAfter(returnTimeOfDay)) {
+                                        return 'Pickup time cannot be after return time on the same day.';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                  controller: pickupTimeController,
+                                  hintText: 'Pickup Time',
+                                  prefixIcon: const Icon(Icons.access_time),
+                                  ignorePointers: true,
+                                ).onTap(() async {
+                                  final picked = await showTimePicker(
+                                    context: context,
+                                    initialTime: pickupTime ?? TimeOfDay.now(),
+                                  );
+                                  if (picked != null) {
+                                    pickupTime = picked;
+                                    pickupTimeController.text = picked.formatTime12Hour();
+                                  }
+                                }),
+                              ),
+                              12.horizontalSpace,
+                              Expanded(
+                                child: CustomTextField(
+                                  validator: (value) {
+                                    if (isReturnAndPickupSameDay) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please select return time.';
+                                      }
+                                      final selectedTime = value.parseToTimeOfDay();
+                                  final pickupTimeOfDay = pickupTime ?? const TimeOfDay(hour: 0, minute: 0);
+                                  if (selectedTime != null && selectedTime.isBefore(pickupTimeOfDay)) {
+                                        return 'Return time cannot be before pickup time on the same day.';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                  controller: returnTimeController,
+                                  hintText: 'Return Time',
+                                  prefixIcon: const Icon(Icons.access_time),
+                                  ignorePointers: true,
+                                ).onTap(() async {
+                                  final picked = await showTimePicker(
+                                    context: context,
+                                    initialTime: returnTime ?? TimeOfDay.now(),
+                                  );
+                                  if (picked != null) {
+                                    returnTime = picked;
+                                    returnTimeController.text = picked.formatTime12Hour();
+                                  }
+                                }),
+                              ),
+                            ],
+                          ),
+                          24.verticalSpace,
+
+                          Text("Cooling Period Date (Optional)", style: _labelStyle(context)),
+                          8.verticalSpace,
+                          CustomTextField(
+                            validator: (isReturnAndPickupSameDay
+                                ? (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please select cooling period date.';
+                                    }
+                                    final selectedDate = value.parseToDateTime();
+                                    final minDate = returnDateController.text.parseToDateTime();
+                                    if (selectedDate.isBefore(minDate)) {
+                                      return 'Cooling period date cannot be before return date.';
+                                    }
+                                    return null;
+                                  }
+                                : null),
+                            controller: coolingPeriodDateController,
+                            hintText: 'Select cooling period',
+                            prefixIcon: const Icon(Icons.calendar_month_outlined),
+                            ignorePointers: true,
+                          ).onTap(() => selectCoolingPeriodDate(context)),
+                          32.verticalSpace,
+
+                          Center(
+                            child: CustomElevatedButton(
+                              text: 'Next',
+                              width: double.infinity,
+                              onPressed: () => onNextPressed(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  TextStyle _labelStyle(BuildContext context) => TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 16.sp,
+        color: Colors.black,
       );
 
-  void validateTimeOnSameDay() {
-    if (pickupTime != null && returnTime != null && isReturnAndPickupSameDay) {
-      if (pickupTime!.hour > returnTime!.hour ||
-          (pickupTime!.hour == returnTime!.hour &&
-              pickupTime!.minute >= returnTime!.minute)) {
-        // Invalid time combination
-        context.showSnackBar(
-          'On the same day, return time must be after pickup time.',
-          title: 'Time Error',
-          isError: true,
-        );
+  bool get isReturnAndPickupSameDay => pickupDateNotifier.value.dateOnly
+      .isSameDay(returnDateController.text.parseToDateTime().dateOnly);
 
-        // Clear return time to force user to fix
-        returnTime = null;
-        returnTimeController.clear();
+  Future<void> onNextPressed() async {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      context.showSnackBar(
+        'Please select return date.',
+        title: 'Date Error',
+        isError: true,
+      );
+      return;
+    }
+
+    final pickupDate = pickupDateNotifier.value.format(reverse: true);
+    final returnDate = returnDateController.text.formatToUiDate();
+    final coolingPeriodDate = coolingPeriodDateController.text.formatToUiDate();
+
+    // final navigatorContext = context;
+
+    if (context.mounted) {
+      try {
+        
+        await context.pushNamed(
+          AppRoutes.addBookingSelectService.name,
+          queryParameters: {
+            'pickup_date': pickupDate,
+            'return_date': returnDate,
+          },
+          extra: {
+            'pickup_time': pickupTime,
+            'return_time': returnTime,
+            'add_booking_model': widget.addBookingModel.copyWith(
+              pickupDate: pickupDate,
+              returnDate: returnDate,
+              pickupTime: pickupTime,
+              returnTime: returnTime,
+              coolingPeriodDate:
+                  coolingPeriodDate == returnDate ? null : coolingPeriodDate,
+            ),
+          },
+        );
+      } catch (e) {
+        debugPrint(e.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Navigation error. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
 
-  // Future<void> selectTime(
-  //     BuildContext context, TextEditingController controller) async {
-  //   final TimeOfDay? picked = await showTimePicker(
-  //     context: context,
-  //     initialTime: TimeOfDay(hour: DateTime.now().hour, minute: 00),
-  //   );
-
-  //   if (picked != null) {
-  //     final time = picked.format(context);
-  //     controller.text = time;
-  //   }
-  // }
+  Future<void> selectCoolingPeriodDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: coolingPeriodDateController.text.parseToDateTime(),
+      firstDate: returnDateController.text.parseToDateTime(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+ 
+    if (picked != null) {
+      coolingPeriodDateController.text = picked.format();
+    }
+  }
 
   Future<void> selectReturnDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -113,407 +778,40 @@ class _AddBookingDateSelectingScreenState
 
     if (picked != null) {
       returnDateController.text = picked.format();
-      validateTimeOnSameDay();
+      coolingPeriodDateController.text =
+          picked.add(coolingPeriodDuration.days()).format();
     }
   }
 
   @override
   void dispose() {
-    // controllers
     returnDateController.dispose();
     pickupTimeController.dispose();
     returnTimeController.dispose();
-
-    // notifiers
+    coolingPeriodDateController.dispose();
     pickupDateNotifier.dispose();
-
     super.dispose();
   }
+}
 
-  Widget _buildMobileLayout(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
-                    _buildSectionHeader('Select Pickup Date'),
-                    const SizedBox(height: 12),
-                    _buildCalendarSection(context),
-                    const SizedBox(height: 24),
-                    _buildDateTimeSection(context),
-                    const SizedBox(height: 32),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          _buildContinueButton(context),
-        ],
-      ),
-    );
-  }
+extension StringTimeExtensions on String {
+  /// Parses a 12-hour time string like '10:30 AM' or '4:15 PM' to TimeOfDay.
+  TimeOfDay? parseToTimeOfDay() {
+    try {
+      final format = RegExp(r'(\d+):(\d+)\s*(AM|PM)', caseSensitive: false);
+      final match = format.firstMatch(this);
+      if (match == null) return null;
 
-  Widget _buildTabletLayout(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Left side - Calendar
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        margin: const EdgeInsets.only(right: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildSectionHeader('Select Pickup Date'),
-                            const SizedBox(height: 20),
-                            _buildCalendarSection(context),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Right side - Date/Time inputs
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: _buildDateTimeSection(context),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          _buildContinueButton(context),
-        ],
-      ),
-    );
-  }
+      int hour = int.parse(match.group(1)!);
+      final int minute = int.parse(match.group(2)!);
+      final String ampm = match.group(3)!.toUpperCase();
 
-  Widget _buildDesktopLayout(BuildContext context) {
-    return Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left side - Calendar
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          padding: const EdgeInsets.all(32),
-                          margin: const EdgeInsets.only(right: 24),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildSectionHeader('Select Pickup Date'),
-                              const SizedBox(height: 24),
-                              _buildCalendarSection(context),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Right side - Date/Time inputs
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: const EdgeInsets.all(32),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: _buildDateTimeSection(context),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
-            Container(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: _buildContinueButton(context),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      if (ampm == 'PM' && hour != 12) hour += 12;
+      if (ampm == 'AM' && hour == 12) hour = 0;
 
-  Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF1a1a1a),
-      ),
-    );
-  }
-
-  Widget _buildCalendarSection(BuildContext context) {
-    return Container(
-      height: 400,
-      child: Center(
-        child: CalenderWidget(
-          onDateSelected: (selectedDate) {
-            pickupDateNotifier.value = selectedDate;
-            validateTimeOnSameDay();
-            final returnDate = returnDateController.text.parseToDateTime();
-            if (returnDate.isBefore(selectedDate)) {
-              returnDateController.text = selectedDate.add(1.days()).format();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDateTimeSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionHeader('Return Date'),
-        const SizedBox(height: 16),
-        CustomTextField(
-          hintText: 'Select Return Date',
-          controller: returnDateController,
-          ignorePointers: true,
-          keyboardType: TextInputType.datetime,
-          prefixIcon: const Icon(Icons.calendar_month, color: Color(0xFF667eea)),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select a return date';
-            }
-            return null;
-          },
-        ).onTap(() => selectReturnDate(context)),
-        
-        const SizedBox(height: 32),
-        
-        // Time section header with clear button
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Time (Optional)',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1a1a1a),
-              ),
-            ),
-            TextButton.icon(
-              onPressed: () {
-                pickupTime = null;
-                pickupTimeController.clear();
-                returnTime = null;
-                returnTimeController.clear();
-              },
-              icon: const Icon(Icons.clear, size: 18),
-              label: const Text('Clear'),
-              style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFF667eea),
-              ),
-            ),
-          ],
-        ),
-        
-        const SizedBox(height: 16),
-        
-        // Pickup Time
-        CustomTextField(
-          controller: pickupTimeController,
-          label: 'Pickup Time',
-          hintText: 'Select Pickup Time',
-          ignorePointers: true,
-          prefixIcon: const Icon(Icons.access_time, color: Color(0xFF667eea)),
-          validator: null,
-        ).onTap(() => _selectTime(context, true)),
-        
-        const SizedBox(height: 16),
-        
-        // Return Time
-        CustomTextField(
-          controller: returnTimeController,
-          label: 'Return Time',
-          hintText: 'Select Return Time',
-          ignorePointers: true,
-          prefixIcon: const Icon(Icons.access_time, color: Color(0xFF667eea)),
-          validator: null,
-        ).onTap(() => _selectTime(context, false)),
-      ],
-    );
-  }
-
-  Widget _buildContinueButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: () => _handleContinue(context),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF667eea),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-        child: const Text(
-          'Continue',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _selectTime(BuildContext context, bool isPickup) async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: (isPickup ? pickupTime : returnTime) ?? TimeOfDay.now().clearedTime,
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      if (isPickup) {
-        // Check if returnTime already selected and compare
-        if (returnTime != null && picked.isAfter(returnTime!) && isReturnAndPickupSameDay) {
-          context.showSnackBar(
-            'Pickup time must be before return time',
-            title: 'Time Error',
-            isError: true,
-          );
-          return;
-        }
-        pickupTime = picked;
-        pickupTimeController.text = picked.formatTime12Hour();
-      } else {
-        // Return time
-        if (pickupTime != null && picked.isBefore(pickupTime!) && isReturnAndPickupSameDay) {
-          context.showSnackBar(
-            'Return time must be after pickup time',
-            title: 'Time Error',
-            isError: true,
-          );
-          return;
-        }
-        returnTime = picked;
-        returnTimeController.text = picked.formatTime12Hour();
-      }
+      return TimeOfDay(hour: hour, minute: minute);
+    } catch (_) {
+      return null;
     }
-  }
-
-  void _handleContinue(BuildContext context) {
-    if (!(_formKey.currentState?.validate() ?? false)) {
-      context.showSnackBar(
-        'Please select return date and try again.',
-        title: 'Date Error',
-        isError: true,
-      );
-      return;
-    }
-
-    context.push(SelectServiceScreen(
-      onServiceSelected: (service, ctx) async {
-        log('pickup time: $pickupTime, return time: $returnTime');
-        final data = await ctx.push(
-          SelectProductScreen(
-            serviceId: service.id,
-            pickupDate: pickupDateNotifier.value.format(reverse: true),
-            returnDate: returnDateController.text.formatToUiDate(),
-            pickupTime: pickupTime,
-            returnTime: returnTime,
-          ),
-        );
-        ctx.push(
-          AddBookingProductScreen(
-            selectedProductsNotifier: ValueNotifier(data),
-            addBookingModel: widget.addBookingModel.copyWith(
-              serviceId: service.id,
-              pickupDate: pickupDateNotifier.value.format(reverse: true),
-              returnDate: returnDateController.text.formatToUiDate(),
-              pickupTime: pickupTime,
-              returnTime: returnTime,
-            ),
-          ),
-        );
-      },
-    ));
   }
 }

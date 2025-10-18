@@ -12,8 +12,7 @@ part of 'booking_details_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 BookingDetailsModel _$BookingDetailsModelFromJson(Map<String, dynamic> json) {
   return _BookingDetailsModel.fromJson(json);
@@ -36,22 +35,19 @@ mixin _$BookingDetailsModel {
   @JsonKey(fromJson: PurchaseMode.fromString, defaultValue: PurchaseMode.normal)
   PurchaseMode get purchaseMode => throw _privateConstructorUsedError;
   @JsonKey(
-    fromJson: BookingStatus.fromString,
-    toJson: BookingStatus.toJson,
-    defaultValue: BookingStatus.upcoming,
-  )
+      fromJson: BookingStatus.fromString,
+      toJson: BookingStatus.toJson,
+      defaultValue: BookingStatus.upcoming)
   BookingStatus get bookingStatus => throw _privateConstructorUsedError;
   @JsonKey(
-    fromJson: PaymentStatus.fromBool,
-    toJson: PaymentStatus.toJson,
-    defaultValue: PaymentStatus.pending,
-  )
+      fromJson: PaymentStatus.fromBool,
+      toJson: PaymentStatus.toJson,
+      defaultValue: PaymentStatus.pending)
   PaymentStatus get paymentStatus => throw _privateConstructorUsedError;
   @JsonKey(
-    fromJson: DeliveryStatus.fromString,
-    toJson: DeliveryStatus.toJson,
-    defaultValue: DeliveryStatus.booked,
-  )
+      fromJson: DeliveryStatus.fromString,
+      toJson: DeliveryStatus.toJson,
+      defaultValue: DeliveryStatus.booked)
   DeliveryStatus get deliveryStatus => throw _privateConstructorUsedError;
   @JsonKey(name: 'staff_name')
   String? get staffName => throw _privateConstructorUsedError;
@@ -86,56 +82,49 @@ mixin _$BookingDetailsModel {
 /// @nodoc
 abstract class $BookingDetailsModelCopyWith<$Res> {
   factory $BookingDetailsModelCopyWith(
-    BookingDetailsModel value,
-    $Res Function(BookingDetailsModel) then,
-  ) = _$BookingDetailsModelCopyWithImpl<$Res, BookingDetailsModel>;
+          BookingDetailsModel value, $Res Function(BookingDetailsModel) then) =
+      _$BookingDetailsModelCopyWithImpl<$Res, BookingDetailsModel>;
   @useResult
-  $Res call({
-    int id,
-    @JsonKey(name: 'shop_booking_id') String invoiceId,
-    String? pickupDate,
-    String returnDate,
-    @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
-    int totalAmount,
-    int? discountAmount,
-    @JsonKey(name: 'advance_amount') int paidAmount,
-    int? securityAmount,
-    @JsonKey(
-      fromJson: PurchaseMode.fromString,
-      defaultValue: PurchaseMode.normal,
-    )
-    PurchaseMode purchaseMode,
-    @JsonKey(
-      fromJson: BookingStatus.fromString,
-      toJson: BookingStatus.toJson,
-      defaultValue: BookingStatus.upcoming,
-    )
-    BookingStatus bookingStatus,
-    @JsonKey(
-      fromJson: PaymentStatus.fromBool,
-      toJson: PaymentStatus.toJson,
-      defaultValue: PaymentStatus.pending,
-    )
-    PaymentStatus paymentStatus,
-    @JsonKey(
-      fromJson: DeliveryStatus.fromString,
-      toJson: DeliveryStatus.toJson,
-      defaultValue: DeliveryStatus.booked,
-    )
-    DeliveryStatus deliveryStatus,
-    @JsonKey(name: 'staff_name') String? staffName,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
-    BookingOtherDetailsModel otherDetails,
-    @JsonKey(name: 'created_at') String bookedDate,
-    @JsonKey(name: 'completed_at') String? bookingCompletedDate,
-    @JsonKey(name: 'client_address') String? address,
-    ClientModel client,
-    String? description,
-    List<ProductInfoModel> bookedItems,
-    @JsonKey(name: 'additional_charges')
-    List<AdditionalChargesModel> additionalCharges,
-  });
+  $Res call(
+      {int id,
+      @JsonKey(name: 'shop_booking_id') String invoiceId,
+      String? pickupDate,
+      String returnDate,
+      @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
+      int totalAmount,
+      int? discountAmount,
+      @JsonKey(name: 'advance_amount') int paidAmount,
+      int? securityAmount,
+      @JsonKey(
+          fromJson: PurchaseMode.fromString, defaultValue: PurchaseMode.normal)
+      PurchaseMode purchaseMode,
+      @JsonKey(
+          fromJson: BookingStatus.fromString,
+          toJson: BookingStatus.toJson,
+          defaultValue: BookingStatus.upcoming)
+      BookingStatus bookingStatus,
+      @JsonKey(
+          fromJson: PaymentStatus.fromBool,
+          toJson: PaymentStatus.toJson,
+          defaultValue: PaymentStatus.pending)
+      PaymentStatus paymentStatus,
+      @JsonKey(
+          fromJson: DeliveryStatus.fromString,
+          toJson: DeliveryStatus.toJson,
+          defaultValue: DeliveryStatus.booked)
+      DeliveryStatus deliveryStatus,
+      @JsonKey(name: 'staff_name') String? staffName,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
+      BookingOtherDetailsModel otherDetails,
+      @JsonKey(name: 'created_at') String bookedDate,
+      @JsonKey(name: 'completed_at') String? bookingCompletedDate,
+      @JsonKey(name: 'client_address') String? address,
+      ClientModel client,
+      String? description,
+      List<ProductInfoModel> bookedItems,
+      @JsonKey(name: 'additional_charges')
+      List<AdditionalChargesModel> additionalCharges});
 
   $BookingOtherDetailsModelCopyWith<$Res> get otherDetails;
   $ClientModelCopyWith<$Res> get client;
@@ -180,103 +169,100 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
     Object? bookedItems = null,
     Object? additionalCharges = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            invoiceId: null == invoiceId
-                ? _value.invoiceId
-                : invoiceId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            pickupDate: freezed == pickupDate
-                ? _value.pickupDate
-                : pickupDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            returnDate: null == returnDate
-                ? _value.returnDate
-                : returnDate // ignore: cast_nullable_to_non_nullable
-                      as String,
-            coolingPeriodDate: freezed == coolingPeriodDate
-                ? _value.coolingPeriodDate
-                : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            totalAmount: null == totalAmount
-                ? _value.totalAmount
-                : totalAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            discountAmount: freezed == discountAmount
-                ? _value.discountAmount
-                : discountAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            paidAmount: null == paidAmount
-                ? _value.paidAmount
-                : paidAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            securityAmount: freezed == securityAmount
-                ? _value.securityAmount
-                : securityAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            purchaseMode: null == purchaseMode
-                ? _value.purchaseMode
-                : purchaseMode // ignore: cast_nullable_to_non_nullable
-                      as PurchaseMode,
-            bookingStatus: null == bookingStatus
-                ? _value.bookingStatus
-                : bookingStatus // ignore: cast_nullable_to_non_nullable
-                      as BookingStatus,
-            paymentStatus: null == paymentStatus
-                ? _value.paymentStatus
-                : paymentStatus // ignore: cast_nullable_to_non_nullable
-                      as PaymentStatus,
-            deliveryStatus: null == deliveryStatus
-                ? _value.deliveryStatus
-                : deliveryStatus // ignore: cast_nullable_to_non_nullable
-                      as DeliveryStatus,
-            staffName: freezed == staffName
-                ? _value.staffName
-                : staffName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            staffId: freezed == staffId
-                ? _value.staffId
-                : staffId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            otherDetails: null == otherDetails
-                ? _value.otherDetails
-                : otherDetails // ignore: cast_nullable_to_non_nullable
-                      as BookingOtherDetailsModel,
-            bookedDate: null == bookedDate
-                ? _value.bookedDate
-                : bookedDate // ignore: cast_nullable_to_non_nullable
-                      as String,
-            bookingCompletedDate: freezed == bookingCompletedDate
-                ? _value.bookingCompletedDate
-                : bookingCompletedDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            address: freezed == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            client: null == client
-                ? _value.client
-                : client // ignore: cast_nullable_to_non_nullable
-                      as ClientModel,
-            description: freezed == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            bookedItems: null == bookedItems
-                ? _value.bookedItems
-                : bookedItems // ignore: cast_nullable_to_non_nullable
-                      as List<ProductInfoModel>,
-            additionalCharges: null == additionalCharges
-                ? _value.additionalCharges
-                : additionalCharges // ignore: cast_nullable_to_non_nullable
-                      as List<AdditionalChargesModel>,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      invoiceId: null == invoiceId
+          ? _value.invoiceId
+          : invoiceId // ignore: cast_nullable_to_non_nullable
+              as String,
+      pickupDate: freezed == pickupDate
+          ? _value.pickupDate
+          : pickupDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      returnDate: null == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      coolingPeriodDate: freezed == coolingPeriodDate
+          ? _value.coolingPeriodDate
+          : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      discountAmount: freezed == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      paidAmount: null == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      securityAmount: freezed == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      purchaseMode: null == purchaseMode
+          ? _value.purchaseMode
+          : purchaseMode // ignore: cast_nullable_to_non_nullable
+              as PurchaseMode,
+      bookingStatus: null == bookingStatus
+          ? _value.bookingStatus
+          : bookingStatus // ignore: cast_nullable_to_non_nullable
+              as BookingStatus,
+      paymentStatus: null == paymentStatus
+          ? _value.paymentStatus
+          : paymentStatus // ignore: cast_nullable_to_non_nullable
+              as PaymentStatus,
+      deliveryStatus: null == deliveryStatus
+          ? _value.deliveryStatus
+          : deliveryStatus // ignore: cast_nullable_to_non_nullable
+              as DeliveryStatus,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      otherDetails: null == otherDetails
+          ? _value.otherDetails
+          : otherDetails // ignore: cast_nullable_to_non_nullable
+              as BookingOtherDetailsModel,
+      bookedDate: null == bookedDate
+          ? _value.bookedDate
+          : bookedDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      bookingCompletedDate: freezed == bookingCompletedDate
+          ? _value.bookingCompletedDate
+          : bookingCompletedDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      client: null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientModel,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bookedItems: null == bookedItems
+          ? _value.bookedItems
+          : bookedItems // ignore: cast_nullable_to_non_nullable
+              as List<ProductInfoModel>,
+      additionalCharges: null == additionalCharges
+          ? _value.additionalCharges
+          : additionalCharges // ignore: cast_nullable_to_non_nullable
+              as List<AdditionalChargesModel>,
+    ) as $Val);
   }
 
   /// Create a copy of BookingDetailsModel
@@ -284,9 +270,8 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
   @override
   @pragma('vm:prefer-inline')
   $BookingOtherDetailsModelCopyWith<$Res> get otherDetails {
-    return $BookingOtherDetailsModelCopyWith<$Res>(_value.otherDetails, (
-      value,
-    ) {
+    return $BookingOtherDetailsModelCopyWith<$Res>(_value.otherDetails,
+        (value) {
       return _then(_value.copyWith(otherDetails: value) as $Val);
     });
   }
@@ -305,58 +290,51 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
 /// @nodoc
 abstract class _$$BookingDetailsModelImplCopyWith<$Res>
     implements $BookingDetailsModelCopyWith<$Res> {
-  factory _$$BookingDetailsModelImplCopyWith(
-    _$BookingDetailsModelImpl value,
-    $Res Function(_$BookingDetailsModelImpl) then,
-  ) = __$$BookingDetailsModelImplCopyWithImpl<$Res>;
+  factory _$$BookingDetailsModelImplCopyWith(_$BookingDetailsModelImpl value,
+          $Res Function(_$BookingDetailsModelImpl) then) =
+      __$$BookingDetailsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int id,
-    @JsonKey(name: 'shop_booking_id') String invoiceId,
-    String? pickupDate,
-    String returnDate,
-    @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
-    int totalAmount,
-    int? discountAmount,
-    @JsonKey(name: 'advance_amount') int paidAmount,
-    int? securityAmount,
-    @JsonKey(
-      fromJson: PurchaseMode.fromString,
-      defaultValue: PurchaseMode.normal,
-    )
-    PurchaseMode purchaseMode,
-    @JsonKey(
-      fromJson: BookingStatus.fromString,
-      toJson: BookingStatus.toJson,
-      defaultValue: BookingStatus.upcoming,
-    )
-    BookingStatus bookingStatus,
-    @JsonKey(
-      fromJson: PaymentStatus.fromBool,
-      toJson: PaymentStatus.toJson,
-      defaultValue: PaymentStatus.pending,
-    )
-    PaymentStatus paymentStatus,
-    @JsonKey(
-      fromJson: DeliveryStatus.fromString,
-      toJson: DeliveryStatus.toJson,
-      defaultValue: DeliveryStatus.booked,
-    )
-    DeliveryStatus deliveryStatus,
-    @JsonKey(name: 'staff_name') String? staffName,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
-    BookingOtherDetailsModel otherDetails,
-    @JsonKey(name: 'created_at') String bookedDate,
-    @JsonKey(name: 'completed_at') String? bookingCompletedDate,
-    @JsonKey(name: 'client_address') String? address,
-    ClientModel client,
-    String? description,
-    List<ProductInfoModel> bookedItems,
-    @JsonKey(name: 'additional_charges')
-    List<AdditionalChargesModel> additionalCharges,
-  });
+  $Res call(
+      {int id,
+      @JsonKey(name: 'shop_booking_id') String invoiceId,
+      String? pickupDate,
+      String returnDate,
+      @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
+      int totalAmount,
+      int? discountAmount,
+      @JsonKey(name: 'advance_amount') int paidAmount,
+      int? securityAmount,
+      @JsonKey(
+          fromJson: PurchaseMode.fromString, defaultValue: PurchaseMode.normal)
+      PurchaseMode purchaseMode,
+      @JsonKey(
+          fromJson: BookingStatus.fromString,
+          toJson: BookingStatus.toJson,
+          defaultValue: BookingStatus.upcoming)
+      BookingStatus bookingStatus,
+      @JsonKey(
+          fromJson: PaymentStatus.fromBool,
+          toJson: PaymentStatus.toJson,
+          defaultValue: PaymentStatus.pending)
+      PaymentStatus paymentStatus,
+      @JsonKey(
+          fromJson: DeliveryStatus.fromString,
+          toJson: DeliveryStatus.toJson,
+          defaultValue: DeliveryStatus.booked)
+      DeliveryStatus deliveryStatus,
+      @JsonKey(name: 'staff_name') String? staffName,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
+      BookingOtherDetailsModel otherDetails,
+      @JsonKey(name: 'created_at') String bookedDate,
+      @JsonKey(name: 'completed_at') String? bookingCompletedDate,
+      @JsonKey(name: 'client_address') String? address,
+      ClientModel client,
+      String? description,
+      List<ProductInfoModel> bookedItems,
+      @JsonKey(name: 'additional_charges')
+      List<AdditionalChargesModel> additionalCharges});
 
   @override
   $BookingOtherDetailsModelCopyWith<$Res> get otherDetails;
@@ -368,10 +346,9 @@ abstract class _$$BookingDetailsModelImplCopyWith<$Res>
 class __$$BookingDetailsModelImplCopyWithImpl<$Res>
     extends _$BookingDetailsModelCopyWithImpl<$Res, _$BookingDetailsModelImpl>
     implements _$$BookingDetailsModelImplCopyWith<$Res> {
-  __$$BookingDetailsModelImplCopyWithImpl(
-    _$BookingDetailsModelImpl _value,
-    $Res Function(_$BookingDetailsModelImpl) _then,
-  ) : super(_value, _then);
+  __$$BookingDetailsModelImplCopyWithImpl(_$BookingDetailsModelImpl _value,
+      $Res Function(_$BookingDetailsModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of BookingDetailsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -402,102 +379,100 @@ class __$$BookingDetailsModelImplCopyWithImpl<$Res>
     Object? bookedItems = null,
     Object? additionalCharges = null,
   }) {
-    return _then(
-      _$BookingDetailsModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        invoiceId: null == invoiceId
-            ? _value.invoiceId
-            : invoiceId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        pickupDate: freezed == pickupDate
-            ? _value.pickupDate
-            : pickupDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        returnDate: null == returnDate
-            ? _value.returnDate
-            : returnDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        coolingPeriodDate: freezed == coolingPeriodDate
-            ? _value.coolingPeriodDate
-            : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        totalAmount: null == totalAmount
-            ? _value.totalAmount
-            : totalAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        discountAmount: freezed == discountAmount
-            ? _value.discountAmount
-            : discountAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        paidAmount: null == paidAmount
-            ? _value.paidAmount
-            : paidAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        securityAmount: freezed == securityAmount
-            ? _value.securityAmount
-            : securityAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        purchaseMode: null == purchaseMode
-            ? _value.purchaseMode
-            : purchaseMode // ignore: cast_nullable_to_non_nullable
-                  as PurchaseMode,
-        bookingStatus: null == bookingStatus
-            ? _value.bookingStatus
-            : bookingStatus // ignore: cast_nullable_to_non_nullable
-                  as BookingStatus,
-        paymentStatus: null == paymentStatus
-            ? _value.paymentStatus
-            : paymentStatus // ignore: cast_nullable_to_non_nullable
-                  as PaymentStatus,
-        deliveryStatus: null == deliveryStatus
-            ? _value.deliveryStatus
-            : deliveryStatus // ignore: cast_nullable_to_non_nullable
-                  as DeliveryStatus,
-        staffName: freezed == staffName
-            ? _value.staffName
-            : staffName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        staffId: freezed == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        otherDetails: null == otherDetails
-            ? _value.otherDetails
-            : otherDetails // ignore: cast_nullable_to_non_nullable
-                  as BookingOtherDetailsModel,
-        bookedDate: null == bookedDate
-            ? _value.bookedDate
-            : bookedDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        bookingCompletedDate: freezed == bookingCompletedDate
-            ? _value.bookingCompletedDate
-            : bookingCompletedDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        address: freezed == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        client: null == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientModel,
-        description: freezed == description
-            ? _value.description
-            : description // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        bookedItems: null == bookedItems
-            ? _value._bookedItems
-            : bookedItems // ignore: cast_nullable_to_non_nullable
-                  as List<ProductInfoModel>,
-        additionalCharges: null == additionalCharges
-            ? _value._additionalCharges
-            : additionalCharges // ignore: cast_nullable_to_non_nullable
-                  as List<AdditionalChargesModel>,
-      ),
-    );
+    return _then(_$BookingDetailsModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      invoiceId: null == invoiceId
+          ? _value.invoiceId
+          : invoiceId // ignore: cast_nullable_to_non_nullable
+              as String,
+      pickupDate: freezed == pickupDate
+          ? _value.pickupDate
+          : pickupDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      returnDate: null == returnDate
+          ? _value.returnDate
+          : returnDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      coolingPeriodDate: freezed == coolingPeriodDate
+          ? _value.coolingPeriodDate
+          : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      discountAmount: freezed == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      paidAmount: null == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      securityAmount: freezed == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      purchaseMode: null == purchaseMode
+          ? _value.purchaseMode
+          : purchaseMode // ignore: cast_nullable_to_non_nullable
+              as PurchaseMode,
+      bookingStatus: null == bookingStatus
+          ? _value.bookingStatus
+          : bookingStatus // ignore: cast_nullable_to_non_nullable
+              as BookingStatus,
+      paymentStatus: null == paymentStatus
+          ? _value.paymentStatus
+          : paymentStatus // ignore: cast_nullable_to_non_nullable
+              as PaymentStatus,
+      deliveryStatus: null == deliveryStatus
+          ? _value.deliveryStatus
+          : deliveryStatus // ignore: cast_nullable_to_non_nullable
+              as DeliveryStatus,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      otherDetails: null == otherDetails
+          ? _value.otherDetails
+          : otherDetails // ignore: cast_nullable_to_non_nullable
+              as BookingOtherDetailsModel,
+      bookedDate: null == bookedDate
+          ? _value.bookedDate
+          : bookedDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      bookingCompletedDate: freezed == bookingCompletedDate
+          ? _value.bookingCompletedDate
+          : bookingCompletedDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      client: null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientModel,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bookedItems: null == bookedItems
+          ? _value._bookedItems
+          : bookedItems // ignore: cast_nullable_to_non_nullable
+              as List<ProductInfoModel>,
+      additionalCharges: null == additionalCharges
+          ? _value._additionalCharges
+          : additionalCharges // ignore: cast_nullable_to_non_nullable
+              as List<AdditionalChargesModel>,
+    ));
   }
 }
 
@@ -505,53 +480,48 @@ class __$$BookingDetailsModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$BookingDetailsModelImpl implements _BookingDetailsModel {
-  const _$BookingDetailsModelImpl({
-    required this.id,
-    @JsonKey(name: 'shop_booking_id') required this.invoiceId,
-    required this.pickupDate,
-    required this.returnDate,
-    @JsonKey(name: 'cooling_period_end') this.coolingPeriodDate,
-    required this.totalAmount,
-    this.discountAmount,
-    @JsonKey(name: 'advance_amount') required this.paidAmount,
-    this.securityAmount,
-    @JsonKey(
-      fromJson: PurchaseMode.fromString,
-      defaultValue: PurchaseMode.normal,
-    )
-    required this.purchaseMode,
-    @JsonKey(
-      fromJson: BookingStatus.fromString,
-      toJson: BookingStatus.toJson,
-      defaultValue: BookingStatus.upcoming,
-    )
-    required this.bookingStatus,
-    @JsonKey(
-      fromJson: PaymentStatus.fromBool,
-      toJson: PaymentStatus.toJson,
-      defaultValue: PaymentStatus.pending,
-    )
-    required this.paymentStatus,
-    @JsonKey(
-      fromJson: DeliveryStatus.fromString,
-      toJson: DeliveryStatus.toJson,
-      defaultValue: DeliveryStatus.booked,
-    )
-    required this.deliveryStatus,
-    @JsonKey(name: 'staff_name') this.staffName,
-    @JsonKey(name: 'staff_id') this.staffId,
-    @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
-    required this.otherDetails,
-    @JsonKey(name: 'created_at') required this.bookedDate,
-    @JsonKey(name: 'completed_at') this.bookingCompletedDate,
-    @JsonKey(name: 'client_address') this.address,
-    required this.client,
-    this.description,
-    required final List<ProductInfoModel> bookedItems,
-    @JsonKey(name: 'additional_charges')
-    final List<AdditionalChargesModel> additionalCharges = const [],
-  }) : _bookedItems = bookedItems,
-       _additionalCharges = additionalCharges;
+  const _$BookingDetailsModelImpl(
+      {required this.id,
+      @JsonKey(name: 'shop_booking_id') required this.invoiceId,
+      required this.pickupDate,
+      required this.returnDate,
+      @JsonKey(name: 'cooling_period_end') this.coolingPeriodDate,
+      required this.totalAmount,
+      this.discountAmount,
+      @JsonKey(name: 'advance_amount') required this.paidAmount,
+      this.securityAmount,
+      @JsonKey(
+          fromJson: PurchaseMode.fromString, defaultValue: PurchaseMode.normal)
+      required this.purchaseMode,
+      @JsonKey(
+          fromJson: BookingStatus.fromString,
+          toJson: BookingStatus.toJson,
+          defaultValue: BookingStatus.upcoming)
+      required this.bookingStatus,
+      @JsonKey(
+          fromJson: PaymentStatus.fromBool,
+          toJson: PaymentStatus.toJson,
+          defaultValue: PaymentStatus.pending)
+      required this.paymentStatus,
+      @JsonKey(
+          fromJson: DeliveryStatus.fromString,
+          toJson: DeliveryStatus.toJson,
+          defaultValue: DeliveryStatus.booked)
+      required this.deliveryStatus,
+      @JsonKey(name: 'staff_name') this.staffName,
+      @JsonKey(name: 'staff_id') this.staffId,
+      @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
+      required this.otherDetails,
+      @JsonKey(name: 'created_at') required this.bookedDate,
+      @JsonKey(name: 'completed_at') this.bookingCompletedDate,
+      @JsonKey(name: 'client_address') this.address,
+      required this.client,
+      this.description,
+      required final List<ProductInfoModel> bookedItems,
+      @JsonKey(name: 'additional_charges')
+      final List<AdditionalChargesModel> additionalCharges = const []})
+      : _bookedItems = bookedItems,
+        _additionalCharges = additionalCharges;
 
   factory _$BookingDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$BookingDetailsModelImplFromJson(json);
@@ -582,24 +552,21 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
   final PurchaseMode purchaseMode;
   @override
   @JsonKey(
-    fromJson: BookingStatus.fromString,
-    toJson: BookingStatus.toJson,
-    defaultValue: BookingStatus.upcoming,
-  )
+      fromJson: BookingStatus.fromString,
+      toJson: BookingStatus.toJson,
+      defaultValue: BookingStatus.upcoming)
   final BookingStatus bookingStatus;
   @override
   @JsonKey(
-    fromJson: PaymentStatus.fromBool,
-    toJson: PaymentStatus.toJson,
-    defaultValue: PaymentStatus.pending,
-  )
+      fromJson: PaymentStatus.fromBool,
+      toJson: PaymentStatus.toJson,
+      defaultValue: PaymentStatus.pending)
   final PaymentStatus paymentStatus;
   @override
   @JsonKey(
-    fromJson: DeliveryStatus.fromString,
-    toJson: DeliveryStatus.toJson,
-    defaultValue: DeliveryStatus.booked,
-  )
+      fromJson: DeliveryStatus.fromString,
+      toJson: DeliveryStatus.toJson,
+      defaultValue: DeliveryStatus.booked)
   final DeliveryStatus deliveryStatus;
   @override
   @JsonKey(name: 'staff_name')
@@ -689,44 +656,40 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
             (identical(other.client, client) || other.client == client) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            const DeepCollectionEquality().equals(
-              other._bookedItems,
-              _bookedItems,
-            ) &&
-            const DeepCollectionEquality().equals(
-              other._additionalCharges,
-              _additionalCharges,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._bookedItems, _bookedItems) &&
+            const DeepCollectionEquality()
+                .equals(other._additionalCharges, _additionalCharges));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-    runtimeType,
-    id,
-    invoiceId,
-    pickupDate,
-    returnDate,
-    coolingPeriodDate,
-    totalAmount,
-    discountAmount,
-    paidAmount,
-    securityAmount,
-    purchaseMode,
-    bookingStatus,
-    paymentStatus,
-    deliveryStatus,
-    staffName,
-    staffId,
-    otherDetails,
-    bookedDate,
-    bookingCompletedDate,
-    address,
-    client,
-    description,
-    const DeepCollectionEquality().hash(_bookedItems),
-    const DeepCollectionEquality().hash(_additionalCharges),
-  ]);
+        runtimeType,
+        id,
+        invoiceId,
+        pickupDate,
+        returnDate,
+        coolingPeriodDate,
+        totalAmount,
+        discountAmount,
+        paidAmount,
+        securityAmount,
+        purchaseMode,
+        bookingStatus,
+        paymentStatus,
+        deliveryStatus,
+        staffName,
+        staffId,
+        otherDetails,
+        bookedDate,
+        bookingCompletedDate,
+        address,
+        client,
+        description,
+        const DeepCollectionEquality().hash(_bookedItems),
+        const DeepCollectionEquality().hash(_additionalCharges)
+      ]);
 
   /// Create a copy of BookingDetailsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -735,63 +698,58 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
   @pragma('vm:prefer-inline')
   _$$BookingDetailsModelImplCopyWith<_$BookingDetailsModelImpl> get copyWith =>
       __$$BookingDetailsModelImplCopyWithImpl<_$BookingDetailsModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$BookingDetailsModelImplToJson(this);
+    return _$$BookingDetailsModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _BookingDetailsModel implements BookingDetailsModel {
-  const factory _BookingDetailsModel({
-    required final int id,
-    @JsonKey(name: 'shop_booking_id') required final String invoiceId,
-    required final String? pickupDate,
-    required final String returnDate,
-    @JsonKey(name: 'cooling_period_end') final String? coolingPeriodDate,
-    required final int totalAmount,
-    final int? discountAmount,
-    @JsonKey(name: 'advance_amount') required final int paidAmount,
-    final int? securityAmount,
-    @JsonKey(
-      fromJson: PurchaseMode.fromString,
-      defaultValue: PurchaseMode.normal,
-    )
-    required final PurchaseMode purchaseMode,
-    @JsonKey(
-      fromJson: BookingStatus.fromString,
-      toJson: BookingStatus.toJson,
-      defaultValue: BookingStatus.upcoming,
-    )
-    required final BookingStatus bookingStatus,
-    @JsonKey(
-      fromJson: PaymentStatus.fromBool,
-      toJson: PaymentStatus.toJson,
-      defaultValue: PaymentStatus.pending,
-    )
-    required final PaymentStatus paymentStatus,
-    @JsonKey(
-      fromJson: DeliveryStatus.fromString,
-      toJson: DeliveryStatus.toJson,
-      defaultValue: DeliveryStatus.booked,
-    )
-    required final DeliveryStatus deliveryStatus,
-    @JsonKey(name: 'staff_name') final String? staffName,
-    @JsonKey(name: 'staff_id') final int? staffId,
-    @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
-    required final BookingOtherDetailsModel otherDetails,
-    @JsonKey(name: 'created_at') required final String bookedDate,
-    @JsonKey(name: 'completed_at') final String? bookingCompletedDate,
-    @JsonKey(name: 'client_address') final String? address,
-    required final ClientModel client,
-    final String? description,
-    required final List<ProductInfoModel> bookedItems,
-    @JsonKey(name: 'additional_charges')
-    final List<AdditionalChargesModel> additionalCharges,
-  }) = _$BookingDetailsModelImpl;
+  const factory _BookingDetailsModel(
+      {required final int id,
+      @JsonKey(name: 'shop_booking_id') required final String invoiceId,
+      required final String? pickupDate,
+      required final String returnDate,
+      @JsonKey(name: 'cooling_period_end') final String? coolingPeriodDate,
+      required final int totalAmount,
+      final int? discountAmount,
+      @JsonKey(name: 'advance_amount') required final int paidAmount,
+      final int? securityAmount,
+      @JsonKey(
+          fromJson: PurchaseMode.fromString, defaultValue: PurchaseMode.normal)
+      required final PurchaseMode purchaseMode,
+      @JsonKey(
+          fromJson: BookingStatus.fromString,
+          toJson: BookingStatus.toJson,
+          defaultValue: BookingStatus.upcoming)
+      required final BookingStatus bookingStatus,
+      @JsonKey(
+          fromJson: PaymentStatus.fromBool,
+          toJson: PaymentStatus.toJson,
+          defaultValue: PaymentStatus.pending)
+      required final PaymentStatus paymentStatus,
+      @JsonKey(
+          fromJson: DeliveryStatus.fromString,
+          toJson: DeliveryStatus.toJson,
+          defaultValue: DeliveryStatus.booked)
+      required final DeliveryStatus deliveryStatus,
+      @JsonKey(name: 'staff_name') final String? staffName,
+      @JsonKey(name: 'staff_id') final int? staffId,
+      @JsonKey(name: 'details', defaultValue: BookingOtherDetailsModel.empty)
+      required final BookingOtherDetailsModel otherDetails,
+      @JsonKey(name: 'created_at') required final String bookedDate,
+      @JsonKey(name: 'completed_at') final String? bookingCompletedDate,
+      @JsonKey(name: 'client_address') final String? address,
+      required final ClientModel client,
+      final String? description,
+      required final List<ProductInfoModel> bookedItems,
+      @JsonKey(name: 'additional_charges')
+      final List<AdditionalChargesModel>
+          additionalCharges}) = _$BookingDetailsModelImpl;
 
   factory _BookingDetailsModel.fromJson(Map<String, dynamic> json) =
       _$BookingDetailsModelImpl.fromJson;
@@ -822,24 +780,21 @@ abstract class _BookingDetailsModel implements BookingDetailsModel {
   PurchaseMode get purchaseMode;
   @override
   @JsonKey(
-    fromJson: BookingStatus.fromString,
-    toJson: BookingStatus.toJson,
-    defaultValue: BookingStatus.upcoming,
-  )
+      fromJson: BookingStatus.fromString,
+      toJson: BookingStatus.toJson,
+      defaultValue: BookingStatus.upcoming)
   BookingStatus get bookingStatus;
   @override
   @JsonKey(
-    fromJson: PaymentStatus.fromBool,
-    toJson: PaymentStatus.toJson,
-    defaultValue: PaymentStatus.pending,
-  )
+      fromJson: PaymentStatus.fromBool,
+      toJson: PaymentStatus.toJson,
+      defaultValue: PaymentStatus.pending)
   PaymentStatus get paymentStatus;
   @override
   @JsonKey(
-    fromJson: DeliveryStatus.fromString,
-    toJson: DeliveryStatus.toJson,
-    defaultValue: DeliveryStatus.booked,
-  )
+      fromJson: DeliveryStatus.fromString,
+      toJson: DeliveryStatus.toJson,
+      defaultValue: DeliveryStatus.booked)
   DeliveryStatus get deliveryStatus;
   @override
   @JsonKey(name: 'staff_name')

@@ -12,8 +12,7 @@ part of 'staff_analytics_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 StaffAnalyticsModel _$StaffAnalyticsModelFromJson(Map<String, dynamic> json) {
   return _StaffAnalyticsModel.fromJson(json);
@@ -57,30 +56,29 @@ mixin _$StaffAnalyticsModel {
 /// @nodoc
 abstract class $StaffAnalyticsModelCopyWith<$Res> {
   factory $StaffAnalyticsModelCopyWith(
-    StaffAnalyticsModel value,
-    $Res Function(StaffAnalyticsModel) then,
-  ) = _$StaffAnalyticsModelCopyWithImpl<$Res, StaffAnalyticsModel>;
+          StaffAnalyticsModel value, $Res Function(StaffAnalyticsModel) then) =
+      _$StaffAnalyticsModelCopyWithImpl<$Res, StaffAnalyticsModel>;
   @useResult
-  $Res call({
-    int staffId,
-    String staffName,
-    int year,
-    @JsonKey(fromJson: Month.fromInt, includeToJson: false) Month month,
-    String monthName,
-    @JsonKey(name: 'total_bookings_count', defaultValue: 0)
-    int totalBookingsCount,
-    @JsonKey(name: 'total_sales_count', defaultValue: 0) int totalSalesCount,
-    @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
-    int totalPendingsCount,
-    @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
-    int totalBookingsAmount,
-    @JsonKey(name: 'total_sales_earning', defaultValue: 0) int totalSalesAmount,
-    @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
-    int totalPendingAmount,
-    @JsonKey(name: 'total_earning', defaultValue: 0) int totalAmount,
-    @JsonKey(name: 'performance_percent', defaultValue: 0)
-    int performancePercent,
-  });
+  $Res call(
+      {int staffId,
+      String staffName,
+      int year,
+      @JsonKey(fromJson: Month.fromInt, includeToJson: false) Month month,
+      String monthName,
+      @JsonKey(name: 'total_bookings_count', defaultValue: 0)
+      int totalBookingsCount,
+      @JsonKey(name: 'total_sales_count', defaultValue: 0) int totalSalesCount,
+      @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
+      int totalPendingsCount,
+      @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
+      int totalBookingsAmount,
+      @JsonKey(name: 'total_sales_earning', defaultValue: 0)
+      int totalSalesAmount,
+      @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
+      int totalPendingAmount,
+      @JsonKey(name: 'total_earning', defaultValue: 0) int totalAmount,
+      @JsonKey(name: 'performance_percent', defaultValue: 0)
+      int performancePercent});
 }
 
 /// @nodoc
@@ -112,105 +110,100 @@ class _$StaffAnalyticsModelCopyWithImpl<$Res, $Val extends StaffAnalyticsModel>
     Object? totalAmount = null,
     Object? performancePercent = null,
   }) {
-    return _then(
-      _value.copyWith(
-            staffId: null == staffId
-                ? _value.staffId
-                : staffId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            staffName: null == staffName
-                ? _value.staffName
-                : staffName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            year: null == year
-                ? _value.year
-                : year // ignore: cast_nullable_to_non_nullable
-                      as int,
-            month: null == month
-                ? _value.month
-                : month // ignore: cast_nullable_to_non_nullable
-                      as Month,
-            monthName: null == monthName
-                ? _value.monthName
-                : monthName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            totalBookingsCount: null == totalBookingsCount
-                ? _value.totalBookingsCount
-                : totalBookingsCount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalSalesCount: null == totalSalesCount
-                ? _value.totalSalesCount
-                : totalSalesCount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalPendingsCount: null == totalPendingsCount
-                ? _value.totalPendingsCount
-                : totalPendingsCount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalBookingsAmount: null == totalBookingsAmount
-                ? _value.totalBookingsAmount
-                : totalBookingsAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalSalesAmount: null == totalSalesAmount
-                ? _value.totalSalesAmount
-                : totalSalesAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalPendingAmount: null == totalPendingAmount
-                ? _value.totalPendingAmount
-                : totalPendingAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalAmount: null == totalAmount
-                ? _value.totalAmount
-                : totalAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            performancePercent: null == performancePercent
-                ? _value.performancePercent
-                : performancePercent // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      staffId: null == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int,
+      staffName: null == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String,
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as Month,
+      monthName: null == monthName
+          ? _value.monthName
+          : monthName // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalBookingsCount: null == totalBookingsCount
+          ? _value.totalBookingsCount
+          : totalBookingsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalSalesCount: null == totalSalesCount
+          ? _value.totalSalesCount
+          : totalSalesCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPendingsCount: null == totalPendingsCount
+          ? _value.totalPendingsCount
+          : totalPendingsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalBookingsAmount: null == totalBookingsAmount
+          ? _value.totalBookingsAmount
+          : totalBookingsAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalSalesAmount: null == totalSalesAmount
+          ? _value.totalSalesAmount
+          : totalSalesAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPendingAmount: null == totalPendingAmount
+          ? _value.totalPendingAmount
+          : totalPendingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      performancePercent: null == performancePercent
+          ? _value.performancePercent
+          : performancePercent // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$StaffAnalyticsModelImplCopyWith<$Res>
     implements $StaffAnalyticsModelCopyWith<$Res> {
-  factory _$$StaffAnalyticsModelImplCopyWith(
-    _$StaffAnalyticsModelImpl value,
-    $Res Function(_$StaffAnalyticsModelImpl) then,
-  ) = __$$StaffAnalyticsModelImplCopyWithImpl<$Res>;
+  factory _$$StaffAnalyticsModelImplCopyWith(_$StaffAnalyticsModelImpl value,
+          $Res Function(_$StaffAnalyticsModelImpl) then) =
+      __$$StaffAnalyticsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int staffId,
-    String staffName,
-    int year,
-    @JsonKey(fromJson: Month.fromInt, includeToJson: false) Month month,
-    String monthName,
-    @JsonKey(name: 'total_bookings_count', defaultValue: 0)
-    int totalBookingsCount,
-    @JsonKey(name: 'total_sales_count', defaultValue: 0) int totalSalesCount,
-    @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
-    int totalPendingsCount,
-    @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
-    int totalBookingsAmount,
-    @JsonKey(name: 'total_sales_earning', defaultValue: 0) int totalSalesAmount,
-    @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
-    int totalPendingAmount,
-    @JsonKey(name: 'total_earning', defaultValue: 0) int totalAmount,
-    @JsonKey(name: 'performance_percent', defaultValue: 0)
-    int performancePercent,
-  });
+  $Res call(
+      {int staffId,
+      String staffName,
+      int year,
+      @JsonKey(fromJson: Month.fromInt, includeToJson: false) Month month,
+      String monthName,
+      @JsonKey(name: 'total_bookings_count', defaultValue: 0)
+      int totalBookingsCount,
+      @JsonKey(name: 'total_sales_count', defaultValue: 0) int totalSalesCount,
+      @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
+      int totalPendingsCount,
+      @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
+      int totalBookingsAmount,
+      @JsonKey(name: 'total_sales_earning', defaultValue: 0)
+      int totalSalesAmount,
+      @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
+      int totalPendingAmount,
+      @JsonKey(name: 'total_earning', defaultValue: 0) int totalAmount,
+      @JsonKey(name: 'performance_percent', defaultValue: 0)
+      int performancePercent});
 }
 
 /// @nodoc
 class __$$StaffAnalyticsModelImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsModelCopyWithImpl<$Res, _$StaffAnalyticsModelImpl>
     implements _$$StaffAnalyticsModelImplCopyWith<$Res> {
-  __$$StaffAnalyticsModelImplCopyWithImpl(
-    _$StaffAnalyticsModelImpl _value,
-    $Res Function(_$StaffAnalyticsModelImpl) _then,
-  ) : super(_value, _then);
+  __$$StaffAnalyticsModelImplCopyWithImpl(_$StaffAnalyticsModelImpl _value,
+      $Res Function(_$StaffAnalyticsModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -231,62 +224,60 @@ class __$$StaffAnalyticsModelImplCopyWithImpl<$Res>
     Object? totalAmount = null,
     Object? performancePercent = null,
   }) {
-    return _then(
-      _$StaffAnalyticsModelImpl(
-        staffId: null == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        staffName: null == staffName
-            ? _value.staffName
-            : staffName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        year: null == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                  as int,
-        month: null == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                  as Month,
-        monthName: null == monthName
-            ? _value.monthName
-            : monthName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        totalBookingsCount: null == totalBookingsCount
-            ? _value.totalBookingsCount
-            : totalBookingsCount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalSalesCount: null == totalSalesCount
-            ? _value.totalSalesCount
-            : totalSalesCount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalPendingsCount: null == totalPendingsCount
-            ? _value.totalPendingsCount
-            : totalPendingsCount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalBookingsAmount: null == totalBookingsAmount
-            ? _value.totalBookingsAmount
-            : totalBookingsAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalSalesAmount: null == totalSalesAmount
-            ? _value.totalSalesAmount
-            : totalSalesAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalPendingAmount: null == totalPendingAmount
-            ? _value.totalPendingAmount
-            : totalPendingAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalAmount: null == totalAmount
-            ? _value.totalAmount
-            : totalAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        performancePercent: null == performancePercent
-            ? _value.performancePercent
-            : performancePercent // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
+    return _then(_$StaffAnalyticsModelImpl(
+      staffId: null == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int,
+      staffName: null == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String,
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as Month,
+      monthName: null == monthName
+          ? _value.monthName
+          : monthName // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalBookingsCount: null == totalBookingsCount
+          ? _value.totalBookingsCount
+          : totalBookingsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalSalesCount: null == totalSalesCount
+          ? _value.totalSalesCount
+          : totalSalesCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPendingsCount: null == totalPendingsCount
+          ? _value.totalPendingsCount
+          : totalPendingsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalBookingsAmount: null == totalBookingsAmount
+          ? _value.totalBookingsAmount
+          : totalBookingsAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalSalesAmount: null == totalSalesAmount
+          ? _value.totalSalesAmount
+          : totalSalesAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPendingAmount: null == totalPendingAmount
+          ? _value.totalPendingAmount
+          : totalPendingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      performancePercent: null == performancePercent
+          ? _value.performancePercent
+          : performancePercent // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
@@ -294,28 +285,29 @@ class __$$StaffAnalyticsModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _$StaffAnalyticsModelImpl implements _StaffAnalyticsModel {
-  const _$StaffAnalyticsModelImpl({
-    required this.staffId,
-    required this.staffName,
-    required this.year,
-    @JsonKey(fromJson: Month.fromInt, includeToJson: false) required this.month,
-    required this.monthName,
-    @JsonKey(name: 'total_bookings_count', defaultValue: 0)
-    required this.totalBookingsCount,
-    @JsonKey(name: 'total_sales_count', defaultValue: 0)
-    required this.totalSalesCount,
-    @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
-    required this.totalPendingsCount,
-    @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
-    required this.totalBookingsAmount,
-    @JsonKey(name: 'total_sales_earning', defaultValue: 0)
-    required this.totalSalesAmount,
-    @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
-    required this.totalPendingAmount,
-    @JsonKey(name: 'total_earning', defaultValue: 0) required this.totalAmount,
-    @JsonKey(name: 'performance_percent', defaultValue: 0)
-    required this.performancePercent,
-  });
+  const _$StaffAnalyticsModelImpl(
+      {required this.staffId,
+      required this.staffName,
+      required this.year,
+      @JsonKey(fromJson: Month.fromInt, includeToJson: false)
+      required this.month,
+      required this.monthName,
+      @JsonKey(name: 'total_bookings_count', defaultValue: 0)
+      required this.totalBookingsCount,
+      @JsonKey(name: 'total_sales_count', defaultValue: 0)
+      required this.totalSalesCount,
+      @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
+      required this.totalPendingsCount,
+      @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
+      required this.totalBookingsAmount,
+      @JsonKey(name: 'total_sales_earning', defaultValue: 0)
+      required this.totalSalesAmount,
+      @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
+      required this.totalPendingAmount,
+      @JsonKey(name: 'total_earning', defaultValue: 0)
+      required this.totalAmount,
+      @JsonKey(name: 'performance_percent', defaultValue: 0)
+      required this.performancePercent});
 
   factory _$StaffAnalyticsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StaffAnalyticsModelImplFromJson(json);
@@ -394,21 +386,20 @@ class _$StaffAnalyticsModelImpl implements _StaffAnalyticsModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    staffId,
-    staffName,
-    year,
-    month,
-    monthName,
-    totalBookingsCount,
-    totalSalesCount,
-    totalPendingsCount,
-    totalBookingsAmount,
-    totalSalesAmount,
-    totalPendingAmount,
-    totalAmount,
-    performancePercent,
-  );
+      runtimeType,
+      staffId,
+      staffName,
+      year,
+      month,
+      monthName,
+      totalBookingsCount,
+      totalSalesCount,
+      totalPendingsCount,
+      totalBookingsAmount,
+      totalSalesAmount,
+      totalPendingAmount,
+      totalAmount,
+      performancePercent);
 
   /// Create a copy of StaffAnalyticsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -417,41 +408,40 @@ class _$StaffAnalyticsModelImpl implements _StaffAnalyticsModel {
   @pragma('vm:prefer-inline')
   _$$StaffAnalyticsModelImplCopyWith<_$StaffAnalyticsModelImpl> get copyWith =>
       __$$StaffAnalyticsModelImplCopyWithImpl<_$StaffAnalyticsModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StaffAnalyticsModelImplToJson(this);
+    return _$$StaffAnalyticsModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _StaffAnalyticsModel implements StaffAnalyticsModel {
-  const factory _StaffAnalyticsModel({
-    required final int staffId,
-    required final String staffName,
-    required final int year,
-    @JsonKey(fromJson: Month.fromInt, includeToJson: false)
-    required final Month month,
-    required final String monthName,
-    @JsonKey(name: 'total_bookings_count', defaultValue: 0)
-    required final int totalBookingsCount,
-    @JsonKey(name: 'total_sales_count', defaultValue: 0)
-    required final int totalSalesCount,
-    @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
-    required final int totalPendingsCount,
-    @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
-    required final int totalBookingsAmount,
-    @JsonKey(name: 'total_sales_earning', defaultValue: 0)
-    required final int totalSalesAmount,
-    @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
-    required final int totalPendingAmount,
-    @JsonKey(name: 'total_earning', defaultValue: 0)
-    required final int totalAmount,
-    @JsonKey(name: 'performance_percent', defaultValue: 0)
-    required final int performancePercent,
-  }) = _$StaffAnalyticsModelImpl;
+  const factory _StaffAnalyticsModel(
+      {required final int staffId,
+      required final String staffName,
+      required final int year,
+      @JsonKey(fromJson: Month.fromInt, includeToJson: false)
+      required final Month month,
+      required final String monthName,
+      @JsonKey(name: 'total_bookings_count', defaultValue: 0)
+      required final int totalBookingsCount,
+      @JsonKey(name: 'total_sales_count', defaultValue: 0)
+      required final int totalSalesCount,
+      @JsonKey(name: 'total_bookings_pending_count', defaultValue: 0)
+      required final int totalPendingsCount,
+      @JsonKey(name: 'total_bookings_earned_amount', defaultValue: 0)
+      required final int totalBookingsAmount,
+      @JsonKey(name: 'total_sales_earning', defaultValue: 0)
+      required final int totalSalesAmount,
+      @JsonKey(name: 'total_bookings_pending_amount', defaultValue: 0)
+      required final int totalPendingAmount,
+      @JsonKey(name: 'total_earning', defaultValue: 0)
+      required final int totalAmount,
+      @JsonKey(name: 'performance_percent', defaultValue: 0)
+      required final int performancePercent}) = _$StaffAnalyticsModelImpl;
 
   factory _StaffAnalyticsModel.fromJson(Map<String, dynamic> json) =
       _$StaffAnalyticsModelImpl.fromJson;

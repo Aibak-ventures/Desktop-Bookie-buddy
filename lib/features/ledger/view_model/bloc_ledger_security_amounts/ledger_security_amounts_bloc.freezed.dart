@@ -12,8 +12,7 @@ part of 'ledger_security_amounts_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$LedgerSecurityAmountsEvent {
@@ -21,56 +20,56 @@ mixin _$LedgerSecurityAmountsEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int? clientId) loadSecurityAmounts,
     required TResult Function() loadNextPageSecurityAmounts,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int? clientId)? loadSecurityAmounts,
     TResult? Function()? loadNextPageSecurityAmounts,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int? clientId)? loadSecurityAmounts,
     TResult Function()? loadNextPageSecurityAmounts,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadSecurityAmounts value) loadSecurityAmounts,
     required TResult Function(_LoadNextPageSecurityAmounts value)
-    loadNextPageSecurityAmounts,
-  }) => throw _privateConstructorUsedError;
+        loadNextPageSecurityAmounts,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadSecurityAmounts value)? loadSecurityAmounts,
     TResult? Function(_LoadNextPageSecurityAmounts value)?
-    loadNextPageSecurityAmounts,
-  }) => throw _privateConstructorUsedError;
+        loadNextPageSecurityAmounts,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadSecurityAmounts value)? loadSecurityAmounts,
     TResult Function(_LoadNextPageSecurityAmounts value)?
-    loadNextPageSecurityAmounts,
+        loadNextPageSecurityAmounts,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $LedgerSecurityAmountsEventCopyWith<$Res> {
-  factory $LedgerSecurityAmountsEventCopyWith(
-    LedgerSecurityAmountsEvent value,
-    $Res Function(LedgerSecurityAmountsEvent) then,
-  ) =
-      _$LedgerSecurityAmountsEventCopyWithImpl<
-        $Res,
-        LedgerSecurityAmountsEvent
-      >;
+  factory $LedgerSecurityAmountsEventCopyWith(LedgerSecurityAmountsEvent value,
+          $Res Function(LedgerSecurityAmountsEvent) then) =
+      _$LedgerSecurityAmountsEventCopyWithImpl<$Res,
+          LedgerSecurityAmountsEvent>;
 }
 
 /// @nodoc
-class _$LedgerSecurityAmountsEventCopyWithImpl<
-  $Res,
-  $Val extends LedgerSecurityAmountsEvent
->
+class _$LedgerSecurityAmountsEventCopyWithImpl<$Res,
+        $Val extends LedgerSecurityAmountsEvent>
     implements $LedgerSecurityAmountsEventCopyWith<$Res> {
   _$LedgerSecurityAmountsEventCopyWithImpl(this._value, this._then);
 
@@ -85,40 +84,35 @@ class _$LedgerSecurityAmountsEventCopyWithImpl<
 
 /// @nodoc
 abstract class _$$LoadSecurityAmountsImplCopyWith<$Res> {
-  factory _$$LoadSecurityAmountsImplCopyWith(
-    _$LoadSecurityAmountsImpl value,
-    $Res Function(_$LoadSecurityAmountsImpl) then,
-  ) = __$$LoadSecurityAmountsImplCopyWithImpl<$Res>;
+  factory _$$LoadSecurityAmountsImplCopyWith(_$LoadSecurityAmountsImpl value,
+          $Res Function(_$LoadSecurityAmountsImpl) then) =
+      __$$LoadSecurityAmountsImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int? clientId});
 }
 
 /// @nodoc
 class __$$LoadSecurityAmountsImplCopyWithImpl<$Res>
-    extends
-        _$LedgerSecurityAmountsEventCopyWithImpl<
-          $Res,
-          _$LoadSecurityAmountsImpl
-        >
+    extends _$LedgerSecurityAmountsEventCopyWithImpl<$Res,
+        _$LoadSecurityAmountsImpl>
     implements _$$LoadSecurityAmountsImplCopyWith<$Res> {
-  __$$LoadSecurityAmountsImplCopyWithImpl(
-    _$LoadSecurityAmountsImpl _value,
-    $Res Function(_$LoadSecurityAmountsImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadSecurityAmountsImplCopyWithImpl(_$LoadSecurityAmountsImpl _value,
+      $Res Function(_$LoadSecurityAmountsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerSecurityAmountsEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? clientId = freezed}) {
-    return _then(
-      _$LoadSecurityAmountsImpl(
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-      ),
-    );
+  $Res call({
+    Object? clientId = freezed,
+  }) {
+    return _then(_$LoadSecurityAmountsImpl(
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
@@ -154,9 +148,7 @@ class _$LoadSecurityAmountsImpl implements _LoadSecurityAmounts {
   @pragma('vm:prefer-inline')
   _$$LoadSecurityAmountsImplCopyWith<_$LoadSecurityAmountsImpl> get copyWith =>
       __$$LoadSecurityAmountsImplCopyWithImpl<_$LoadSecurityAmountsImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -194,7 +186,7 @@ class _$LoadSecurityAmountsImpl implements _LoadSecurityAmounts {
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadSecurityAmounts value) loadSecurityAmounts,
     required TResult Function(_LoadNextPageSecurityAmounts value)
-    loadNextPageSecurityAmounts,
+        loadNextPageSecurityAmounts,
   }) {
     return loadSecurityAmounts(this);
   }
@@ -204,7 +196,7 @@ class _$LoadSecurityAmountsImpl implements _LoadSecurityAmounts {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadSecurityAmounts value)? loadSecurityAmounts,
     TResult? Function(_LoadNextPageSecurityAmounts value)?
-    loadNextPageSecurityAmounts,
+        loadNextPageSecurityAmounts,
   }) {
     return loadSecurityAmounts?.call(this);
   }
@@ -214,7 +206,7 @@ class _$LoadSecurityAmountsImpl implements _LoadSecurityAmounts {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadSecurityAmounts value)? loadSecurityAmounts,
     TResult Function(_LoadNextPageSecurityAmounts value)?
-    loadNextPageSecurityAmounts,
+        loadNextPageSecurityAmounts,
     required TResult orElse(),
   }) {
     if (loadSecurityAmounts != null) {
@@ -240,23 +232,20 @@ abstract class _LoadSecurityAmounts implements LedgerSecurityAmountsEvent {
 /// @nodoc
 abstract class _$$LoadNextPageSecurityAmountsImplCopyWith<$Res> {
   factory _$$LoadNextPageSecurityAmountsImplCopyWith(
-    _$LoadNextPageSecurityAmountsImpl value,
-    $Res Function(_$LoadNextPageSecurityAmountsImpl) then,
-  ) = __$$LoadNextPageSecurityAmountsImplCopyWithImpl<$Res>;
+          _$LoadNextPageSecurityAmountsImpl value,
+          $Res Function(_$LoadNextPageSecurityAmountsImpl) then) =
+      __$$LoadNextPageSecurityAmountsImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
 class __$$LoadNextPageSecurityAmountsImplCopyWithImpl<$Res>
-    extends
-        _$LedgerSecurityAmountsEventCopyWithImpl<
-          $Res,
-          _$LoadNextPageSecurityAmountsImpl
-        >
+    extends _$LedgerSecurityAmountsEventCopyWithImpl<$Res,
+        _$LoadNextPageSecurityAmountsImpl>
     implements _$$LoadNextPageSecurityAmountsImplCopyWith<$Res> {
   __$$LoadNextPageSecurityAmountsImplCopyWithImpl(
-    _$LoadNextPageSecurityAmountsImpl _value,
-    $Res Function(_$LoadNextPageSecurityAmountsImpl) _then,
-  ) : super(_value, _then);
+      _$LoadNextPageSecurityAmountsImpl _value,
+      $Res Function(_$LoadNextPageSecurityAmountsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerSecurityAmountsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -319,7 +308,7 @@ class _$LoadNextPageSecurityAmountsImpl
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadSecurityAmounts value) loadSecurityAmounts,
     required TResult Function(_LoadNextPageSecurityAmounts value)
-    loadNextPageSecurityAmounts,
+        loadNextPageSecurityAmounts,
   }) {
     return loadNextPageSecurityAmounts(this);
   }
@@ -329,7 +318,7 @@ class _$LoadNextPageSecurityAmountsImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadSecurityAmounts value)? loadSecurityAmounts,
     TResult? Function(_LoadNextPageSecurityAmounts value)?
-    loadNextPageSecurityAmounts,
+        loadNextPageSecurityAmounts,
   }) {
     return loadNextPageSecurityAmounts?.call(this);
   }
@@ -339,7 +328,7 @@ class _$LoadNextPageSecurityAmountsImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadSecurityAmounts value)? loadSecurityAmounts,
     TResult Function(_LoadNextPageSecurityAmounts value)?
-    loadNextPageSecurityAmounts,
+        loadNextPageSecurityAmounts,
     required TResult orElse(),
   }) {
     if (loadNextPageSecurityAmounts != null) {
@@ -361,80 +350,77 @@ mixin _$LedgerSecurityAmountsState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $LedgerSecurityAmountsStateCopyWith<$Res> {
-  factory $LedgerSecurityAmountsStateCopyWith(
-    LedgerSecurityAmountsState value,
-    $Res Function(LedgerSecurityAmountsState) then,
-  ) =
-      _$LedgerSecurityAmountsStateCopyWithImpl<
-        $Res,
-        LedgerSecurityAmountsState
-      >;
+  factory $LedgerSecurityAmountsStateCopyWith(LedgerSecurityAmountsState value,
+          $Res Function(LedgerSecurityAmountsState) then) =
+      _$LedgerSecurityAmountsStateCopyWithImpl<$Res,
+          LedgerSecurityAmountsState>;
 }
 
 /// @nodoc
-class _$LedgerSecurityAmountsStateCopyWithImpl<
-  $Res,
-  $Val extends LedgerSecurityAmountsState
->
+class _$LedgerSecurityAmountsStateCopyWithImpl<$Res,
+        $Val extends LedgerSecurityAmountsState>
     implements $LedgerSecurityAmountsStateCopyWith<$Res> {
   _$LedgerSecurityAmountsStateCopyWithImpl(this._value, this._then);
 
@@ -450,9 +436,8 @@ class _$LedgerSecurityAmountsStateCopyWithImpl<
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -460,9 +445,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$LedgerSecurityAmountsStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerSecurityAmountsState
   /// with the given fields replaced by the non-null parameter values.
@@ -492,13 +476,12 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -509,13 +492,12 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -526,13 +508,12 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -584,17 +565,15 @@ abstract class _Loading implements LedgerSecurityAmountsState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-    String? nextPageUrl,
-    bool isPaginating,
-    int? clientId,
-    bool isFirstFetch,
-  });
+  $Res call(
+      {List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+      String? nextPageUrl,
+      bool isPaginating,
+      int? clientId,
+      bool isFirstFetch});
 }
 
 /// @nodoc
@@ -602,9 +581,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$LedgerSecurityAmountsStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerSecurityAmountsState
   /// with the given fields replaced by the non-null parameter values.
@@ -617,43 +595,42 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? clientId = freezed,
     Object? isFirstFetch = null,
   }) {
-    return _then(
-      _$LoadedImpl(
-        ledgerSecurityAmounts: null == ledgerSecurityAmounts
-            ? _value._ledgerSecurityAmounts
-            : ledgerSecurityAmounts // ignore: cast_nullable_to_non_nullable
-                  as List<LedgerSecurityAmountDailyModel>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        isPaginating: null == isPaginating
-            ? _value.isPaginating
-            : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        clientId: freezed == clientId
-            ? _value.clientId
-            : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        isFirstFetch: null == isFirstFetch
-            ? _value.isFirstFetch
-            : isFirstFetch // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      ledgerSecurityAmounts: null == ledgerSecurityAmounts
+          ? _value._ledgerSecurityAmounts
+          : ledgerSecurityAmounts // ignore: cast_nullable_to_non_nullable
+              as List<LedgerSecurityAmountDailyModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPaginating: null == isPaginating
+          ? _value.isPaginating
+          : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      clientId: freezed == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isFirstFetch: null == isFirstFetch
+          ? _value.isFirstFetch
+          : isFirstFetch // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    required final List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-    required this.nextPageUrl,
-    this.isPaginating = false,
-    this.clientId,
-    this.isFirstFetch = false,
-  }) : _ledgerSecurityAmounts = ledgerSecurityAmounts;
+  const _$LoadedImpl(
+      {required final List<LedgerSecurityAmountDailyModel>
+          ledgerSecurityAmounts,
+      required this.nextPageUrl,
+      this.isPaginating = false,
+      this.clientId,
+      this.isFirstFetch = false})
+      : _ledgerSecurityAmounts = ledgerSecurityAmounts;
 
   final List<LedgerSecurityAmountDailyModel> _ledgerSecurityAmounts;
   @override
@@ -685,10 +662,8 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(
-              other._ledgerSecurityAmounts,
-              _ledgerSecurityAmounts,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._ledgerSecurityAmounts, _ledgerSecurityAmounts) &&
             (identical(other.nextPageUrl, nextPageUrl) ||
                 other.nextPageUrl == nextPageUrl) &&
             (identical(other.isPaginating, isPaginating) ||
@@ -701,13 +676,12 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_ledgerSecurityAmounts),
-    nextPageUrl,
-    isPaginating,
-    clientId,
-    isFirstFetch,
-  );
+      runtimeType,
+      const DeepCollectionEquality().hash(_ledgerSecurityAmounts),
+      nextPageUrl,
+      isPaginating,
+      clientId,
+      isFirstFetch);
 
   /// Create a copy of LedgerSecurityAmountsState
   /// with the given fields replaced by the non-null parameter values.
@@ -722,22 +696,16 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
   }) {
-    return loaded(
-      ledgerSecurityAmounts,
-      nextPageUrl,
-      isPaginating,
-      clientId,
-      isFirstFetch,
-    );
+    return loaded(ledgerSecurityAmounts, nextPageUrl, isPaginating, clientId,
+        isFirstFetch);
   }
 
   @override
@@ -745,22 +713,16 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
-    return loaded?.call(
-      ledgerSecurityAmounts,
-      nextPageUrl,
-      isPaginating,
-      clientId,
-      isFirstFetch,
-    );
+    return loaded?.call(ledgerSecurityAmounts, nextPageUrl, isPaginating,
+        clientId, isFirstFetch);
   }
 
   @override
@@ -768,24 +730,18 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(
-        ledgerSecurityAmounts,
-        nextPageUrl,
-        isPaginating,
-        clientId,
-        isFirstFetch,
-      );
+      return loaded(ledgerSecurityAmounts, nextPageUrl, isPaginating, clientId,
+          isFirstFetch);
     }
     return orElse();
   }
@@ -826,13 +782,13 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements LedgerSecurityAmountsState {
-  const factory _Loaded({
-    required final List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-    required final String? nextPageUrl,
-    final bool isPaginating,
-    final int? clientId,
-    final bool isFirstFetch,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final List<LedgerSecurityAmountDailyModel>
+          ledgerSecurityAmounts,
+      required final String? nextPageUrl,
+      final bool isPaginating,
+      final int? clientId,
+      final bool isFirstFetch}) = _$LoadedImpl;
 
   List<LedgerSecurityAmountDailyModel> get ledgerSecurityAmounts;
   String? get nextPageUrl;
@@ -850,9 +806,8 @@ abstract class _Loaded implements LedgerSecurityAmountsState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -862,23 +817,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$LedgerSecurityAmountsStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerSecurityAmountsState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -919,13 +873,12 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)
+        loaded,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -936,13 +889,12 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -953,13 +905,12 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-      List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
-      String? nextPageUrl,
-      bool isPaginating,
-      int? clientId,
-      bool isFirstFetch,
-    )?
-    loaded,
+            List<LedgerSecurityAmountDailyModel> ledgerSecurityAmounts,
+            String? nextPageUrl,
+            bool isPaginating,
+            int? clientId,
+            bool isFirstFetch)?
+        loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

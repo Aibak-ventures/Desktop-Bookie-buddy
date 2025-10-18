@@ -12,12 +12,10 @@ part of 'ledger_payments_summary_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LedgerPaymentsSummaryModel _$LedgerPaymentsSummaryModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerPaymentsSummaryModel.fromJson(json);
 }
 
@@ -34,28 +32,22 @@ mixin _$LedgerPaymentsSummaryModel {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $LedgerPaymentsSummaryModelCopyWith<LedgerPaymentsSummaryModel>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $LedgerPaymentsSummaryModelCopyWith<$Res> {
-  factory $LedgerPaymentsSummaryModelCopyWith(
-    LedgerPaymentsSummaryModel value,
-    $Res Function(LedgerPaymentsSummaryModel) then,
-  ) =
-      _$LedgerPaymentsSummaryModelCopyWithImpl<
-        $Res,
-        LedgerPaymentsSummaryModel
-      >;
+  factory $LedgerPaymentsSummaryModelCopyWith(LedgerPaymentsSummaryModel value,
+          $Res Function(LedgerPaymentsSummaryModel) then) =
+      _$LedgerPaymentsSummaryModelCopyWithImpl<$Res,
+          LedgerPaymentsSummaryModel>;
   @useResult
   $Res call({int gpay, int cash, int total});
 }
 
 /// @nodoc
-class _$LedgerPaymentsSummaryModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerPaymentsSummaryModel
->
+class _$LedgerPaymentsSummaryModelCopyWithImpl<$Res,
+        $Val extends LedgerPaymentsSummaryModel>
     implements $LedgerPaymentsSummaryModelCopyWith<$Res> {
   _$LedgerPaymentsSummaryModelCopyWithImpl(this._value, this._then);
 
@@ -68,24 +60,25 @@ class _$LedgerPaymentsSummaryModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? gpay = null, Object? cash = null, Object? total = null}) {
-    return _then(
-      _value.copyWith(
-            gpay: null == gpay
-                ? _value.gpay
-                : gpay // ignore: cast_nullable_to_non_nullable
-                      as int,
-            cash: null == cash
-                ? _value.cash
-                : cash // ignore: cast_nullable_to_non_nullable
-                      as int,
-            total: null == total
-                ? _value.total
-                : total // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? gpay = null,
+    Object? cash = null,
+    Object? total = null,
+  }) {
+    return _then(_value.copyWith(
+      gpay: null == gpay
+          ? _value.gpay
+          : gpay // ignore: cast_nullable_to_non_nullable
+              as int,
+      cash: null == cash
+          ? _value.cash
+          : cash // ignore: cast_nullable_to_non_nullable
+              as int,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
   }
 }
 
@@ -93,9 +86,9 @@ class _$LedgerPaymentsSummaryModelCopyWithImpl<
 abstract class _$$LedgerPaymentsSummaryModelImplCopyWith<$Res>
     implements $LedgerPaymentsSummaryModelCopyWith<$Res> {
   factory _$$LedgerPaymentsSummaryModelImplCopyWith(
-    _$LedgerPaymentsSummaryModelImpl value,
-    $Res Function(_$LedgerPaymentsSummaryModelImpl) then,
-  ) = __$$LedgerPaymentsSummaryModelImplCopyWithImpl<$Res>;
+          _$LedgerPaymentsSummaryModelImpl value,
+          $Res Function(_$LedgerPaymentsSummaryModelImpl) then) =
+      __$$LedgerPaymentsSummaryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int gpay, int cash, int total});
@@ -103,53 +96,49 @@ abstract class _$$LedgerPaymentsSummaryModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$LedgerPaymentsSummaryModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerPaymentsSummaryModelCopyWithImpl<
-          $Res,
-          _$LedgerPaymentsSummaryModelImpl
-        >
+    extends _$LedgerPaymentsSummaryModelCopyWithImpl<$Res,
+        _$LedgerPaymentsSummaryModelImpl>
     implements _$$LedgerPaymentsSummaryModelImplCopyWith<$Res> {
   __$$LedgerPaymentsSummaryModelImplCopyWithImpl(
-    _$LedgerPaymentsSummaryModelImpl _value,
-    $Res Function(_$LedgerPaymentsSummaryModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerPaymentsSummaryModelImpl _value,
+      $Res Function(_$LedgerPaymentsSummaryModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerPaymentsSummaryModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? gpay = null, Object? cash = null, Object? total = null}) {
-    return _then(
-      _$LedgerPaymentsSummaryModelImpl(
-        gpay: null == gpay
-            ? _value.gpay
-            : gpay // ignore: cast_nullable_to_non_nullable
-                  as int,
-        cash: null == cash
-            ? _value.cash
-            : cash // ignore: cast_nullable_to_non_nullable
-                  as int,
-        total: null == total
-            ? _value.total
-            : total // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
+  $Res call({
+    Object? gpay = null,
+    Object? cash = null,
+    Object? total = null,
+  }) {
+    return _then(_$LedgerPaymentsSummaryModelImpl(
+      gpay: null == gpay
+          ? _value.gpay
+          : gpay // ignore: cast_nullable_to_non_nullable
+              as int,
+      cash: null == cash
+          ? _value.cash
+          : cash // ignore: cast_nullable_to_non_nullable
+              as int,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerPaymentsSummaryModelImpl implements _LedgerPaymentsSummaryModel {
-  const _$LedgerPaymentsSummaryModelImpl({
-    required this.gpay,
-    required this.cash,
-    required this.total,
-  });
+  const _$LedgerPaymentsSummaryModelImpl(
+      {required this.gpay, required this.cash, required this.total});
 
   factory _$LedgerPaymentsSummaryModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$LedgerPaymentsSummaryModelImplFromJson(json);
+          Map<String, dynamic> json) =>
+      _$$LedgerPaymentsSummaryModelImplFromJson(json);
 
   @override
   final int gpay;
@@ -183,24 +172,23 @@ class _$LedgerPaymentsSummaryModelImpl implements _LedgerPaymentsSummaryModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerPaymentsSummaryModelImplCopyWith<_$LedgerPaymentsSummaryModelImpl>
-  get copyWith =>
-      __$$LedgerPaymentsSummaryModelImplCopyWithImpl<
-        _$LedgerPaymentsSummaryModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerPaymentsSummaryModelImplCopyWithImpl<
+          _$LedgerPaymentsSummaryModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerPaymentsSummaryModelImplToJson(this);
+    return _$$LedgerPaymentsSummaryModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerPaymentsSummaryModel
     implements LedgerPaymentsSummaryModel {
-  const factory _LedgerPaymentsSummaryModel({
-    required final int gpay,
-    required final int cash,
-    required final int total,
-  }) = _$LedgerPaymentsSummaryModelImpl;
+  const factory _LedgerPaymentsSummaryModel(
+      {required final int gpay,
+      required final int cash,
+      required final int total}) = _$LedgerPaymentsSummaryModelImpl;
 
   factory _LedgerPaymentsSummaryModel.fromJson(Map<String, dynamic> json) =
       _$LedgerPaymentsSummaryModelImpl.fromJson;
@@ -217,5 +205,5 @@ abstract class _LedgerPaymentsSummaryModel
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerPaymentsSummaryModelImplCopyWith<_$LedgerPaymentsSummaryModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

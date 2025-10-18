@@ -12,12 +12,10 @@ part of 'ledger_expense_grouped_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LedgerExpenseGroupedModel _$LedgerExpenseGroupedModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerExpenseGroupedModel.fromJson(json);
 }
 
@@ -38,19 +36,16 @@ mixin _$LedgerExpenseGroupedModel {
 
 /// @nodoc
 abstract class $LedgerExpenseGroupedModelCopyWith<$Res> {
-  factory $LedgerExpenseGroupedModelCopyWith(
-    LedgerExpenseGroupedModel value,
-    $Res Function(LedgerExpenseGroupedModel) then,
-  ) = _$LedgerExpenseGroupedModelCopyWithImpl<$Res, LedgerExpenseGroupedModel>;
+  factory $LedgerExpenseGroupedModelCopyWith(LedgerExpenseGroupedModel value,
+          $Res Function(LedgerExpenseGroupedModel) then) =
+      _$LedgerExpenseGroupedModelCopyWithImpl<$Res, LedgerExpenseGroupedModel>;
   @useResult
   $Res call({List<LedgerExpenseDailyModel> dailyExpenses});
 }
 
 /// @nodoc
-class _$LedgerExpenseGroupedModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerExpenseGroupedModel
->
+class _$LedgerExpenseGroupedModelCopyWithImpl<$Res,
+        $Val extends LedgerExpenseGroupedModel>
     implements $LedgerExpenseGroupedModelCopyWith<$Res> {
   _$LedgerExpenseGroupedModelCopyWithImpl(this._value, this._then);
 
@@ -63,16 +58,15 @@ class _$LedgerExpenseGroupedModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dailyExpenses = null}) {
-    return _then(
-      _value.copyWith(
-            dailyExpenses: null == dailyExpenses
-                ? _value.dailyExpenses
-                : dailyExpenses // ignore: cast_nullable_to_non_nullable
-                      as List<LedgerExpenseDailyModel>,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? dailyExpenses = null,
+  }) {
+    return _then(_value.copyWith(
+      dailyExpenses: null == dailyExpenses
+          ? _value.dailyExpenses
+          : dailyExpenses // ignore: cast_nullable_to_non_nullable
+              as List<LedgerExpenseDailyModel>,
+    ) as $Val);
   }
 }
 
@@ -80,9 +74,9 @@ class _$LedgerExpenseGroupedModelCopyWithImpl<
 abstract class _$$LedgerExpenseGroupedModelImplCopyWith<$Res>
     implements $LedgerExpenseGroupedModelCopyWith<$Res> {
   factory _$$LedgerExpenseGroupedModelImplCopyWith(
-    _$LedgerExpenseGroupedModelImpl value,
-    $Res Function(_$LedgerExpenseGroupedModelImpl) then,
-  ) = __$$LedgerExpenseGroupedModelImplCopyWithImpl<$Res>;
+          _$LedgerExpenseGroupedModelImpl value,
+          $Res Function(_$LedgerExpenseGroupedModelImpl) then) =
+      __$$LedgerExpenseGroupedModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<LedgerExpenseDailyModel> dailyExpenses});
@@ -90,39 +84,36 @@ abstract class _$$LedgerExpenseGroupedModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$LedgerExpenseGroupedModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerExpenseGroupedModelCopyWithImpl<
-          $Res,
-          _$LedgerExpenseGroupedModelImpl
-        >
+    extends _$LedgerExpenseGroupedModelCopyWithImpl<$Res,
+        _$LedgerExpenseGroupedModelImpl>
     implements _$$LedgerExpenseGroupedModelImplCopyWith<$Res> {
   __$$LedgerExpenseGroupedModelImplCopyWithImpl(
-    _$LedgerExpenseGroupedModelImpl _value,
-    $Res Function(_$LedgerExpenseGroupedModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerExpenseGroupedModelImpl _value,
+      $Res Function(_$LedgerExpenseGroupedModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerExpenseGroupedModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dailyExpenses = null}) {
-    return _then(
-      _$LedgerExpenseGroupedModelImpl(
-        dailyExpenses: null == dailyExpenses
-            ? _value._dailyExpenses
-            : dailyExpenses // ignore: cast_nullable_to_non_nullable
-                  as List<LedgerExpenseDailyModel>,
-      ),
-    );
+  $Res call({
+    Object? dailyExpenses = null,
+  }) {
+    return _then(_$LedgerExpenseGroupedModelImpl(
+      dailyExpenses: null == dailyExpenses
+          ? _value._dailyExpenses
+          : dailyExpenses // ignore: cast_nullable_to_non_nullable
+              as List<LedgerExpenseDailyModel>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerExpenseGroupedModelImpl implements _LedgerExpenseGroupedModel {
-  const _$LedgerExpenseGroupedModelImpl({
-    required final List<LedgerExpenseDailyModel> dailyExpenses,
-  }) : _dailyExpenses = dailyExpenses;
+  const _$LedgerExpenseGroupedModelImpl(
+      {required final List<LedgerExpenseDailyModel> dailyExpenses})
+      : _dailyExpenses = dailyExpenses;
 
   factory _$LedgerExpenseGroupedModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerExpenseGroupedModelImplFromJson(json);
@@ -145,18 +136,14 @@ class _$LedgerExpenseGroupedModelImpl implements _LedgerExpenseGroupedModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LedgerExpenseGroupedModelImpl &&
-            const DeepCollectionEquality().equals(
-              other._dailyExpenses,
-              _dailyExpenses,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._dailyExpenses, _dailyExpenses));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_dailyExpenses),
-  );
+      runtimeType, const DeepCollectionEquality().hash(_dailyExpenses));
 
   /// Create a copy of LedgerExpenseGroupedModel
   /// with the given fields replaced by the non-null parameter values.
@@ -164,21 +151,21 @@ class _$LedgerExpenseGroupedModelImpl implements _LedgerExpenseGroupedModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerExpenseGroupedModelImplCopyWith<_$LedgerExpenseGroupedModelImpl>
-  get copyWith =>
-      __$$LedgerExpenseGroupedModelImplCopyWithImpl<
-        _$LedgerExpenseGroupedModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerExpenseGroupedModelImplCopyWithImpl<
+          _$LedgerExpenseGroupedModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerExpenseGroupedModelImplToJson(this);
+    return _$$LedgerExpenseGroupedModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerExpenseGroupedModel implements LedgerExpenseGroupedModel {
-  const factory _LedgerExpenseGroupedModel({
-    required final List<LedgerExpenseDailyModel> dailyExpenses,
-  }) = _$LedgerExpenseGroupedModelImpl;
+  const factory _LedgerExpenseGroupedModel(
+          {required final List<LedgerExpenseDailyModel> dailyExpenses}) =
+      _$LedgerExpenseGroupedModelImpl;
 
   factory _LedgerExpenseGroupedModel.fromJson(Map<String, dynamic> json) =
       _$LedgerExpenseGroupedModelImpl.fromJson;
@@ -191,12 +178,11 @@ abstract class _LedgerExpenseGroupedModel implements LedgerExpenseGroupedModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerExpenseGroupedModelImplCopyWith<_$LedgerExpenseGroupedModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 LedgerExpenseDailyModel _$LedgerExpenseDailyModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerExpenseDailyModel.fromJson(json);
 }
 
@@ -219,23 +205,19 @@ mixin _$LedgerExpenseDailyModel {
 
 /// @nodoc
 abstract class $LedgerExpenseDailyModelCopyWith<$Res> {
-  factory $LedgerExpenseDailyModelCopyWith(
-    LedgerExpenseDailyModel value,
-    $Res Function(LedgerExpenseDailyModel) then,
-  ) = _$LedgerExpenseDailyModelCopyWithImpl<$Res, LedgerExpenseDailyModel>;
+  factory $LedgerExpenseDailyModelCopyWith(LedgerExpenseDailyModel value,
+          $Res Function(LedgerExpenseDailyModel) then) =
+      _$LedgerExpenseDailyModelCopyWithImpl<$Res, LedgerExpenseDailyModel>;
   @useResult
-  $Res call({
-    String date,
-    @JsonKey(name: 'total_expense', defaultValue: 0) int total,
-    List<ExpenseModel> expenses,
-  });
+  $Res call(
+      {String date,
+      @JsonKey(name: 'total_expense', defaultValue: 0) int total,
+      List<ExpenseModel> expenses});
 }
 
 /// @nodoc
-class _$LedgerExpenseDailyModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerExpenseDailyModel
->
+class _$LedgerExpenseDailyModelCopyWithImpl<$Res,
+        $Val extends LedgerExpenseDailyModel>
     implements $LedgerExpenseDailyModelCopyWith<$Res> {
   _$LedgerExpenseDailyModelCopyWithImpl(this._value, this._then);
 
@@ -253,23 +235,20 @@ class _$LedgerExpenseDailyModelCopyWithImpl<
     Object? total = null,
     Object? expenses = null,
   }) {
-    return _then(
-      _value.copyWith(
-            date: null == date
-                ? _value.date
-                : date // ignore: cast_nullable_to_non_nullable
-                      as String,
-            total: null == total
-                ? _value.total
-                : total // ignore: cast_nullable_to_non_nullable
-                      as int,
-            expenses: null == expenses
-                ? _value.expenses
-                : expenses // ignore: cast_nullable_to_non_nullable
-                      as List<ExpenseModel>,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as int,
+      expenses: null == expenses
+          ? _value.expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as List<ExpenseModel>,
+    ) as $Val);
   }
 }
 
@@ -277,30 +256,26 @@ class _$LedgerExpenseDailyModelCopyWithImpl<
 abstract class _$$LedgerExpenseDailyModelImplCopyWith<$Res>
     implements $LedgerExpenseDailyModelCopyWith<$Res> {
   factory _$$LedgerExpenseDailyModelImplCopyWith(
-    _$LedgerExpenseDailyModelImpl value,
-    $Res Function(_$LedgerExpenseDailyModelImpl) then,
-  ) = __$$LedgerExpenseDailyModelImplCopyWithImpl<$Res>;
+          _$LedgerExpenseDailyModelImpl value,
+          $Res Function(_$LedgerExpenseDailyModelImpl) then) =
+      __$$LedgerExpenseDailyModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String date,
-    @JsonKey(name: 'total_expense', defaultValue: 0) int total,
-    List<ExpenseModel> expenses,
-  });
+  $Res call(
+      {String date,
+      @JsonKey(name: 'total_expense', defaultValue: 0) int total,
+      List<ExpenseModel> expenses});
 }
 
 /// @nodoc
 class __$$LedgerExpenseDailyModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerExpenseDailyModelCopyWithImpl<
-          $Res,
-          _$LedgerExpenseDailyModelImpl
-        >
+    extends _$LedgerExpenseDailyModelCopyWithImpl<$Res,
+        _$LedgerExpenseDailyModelImpl>
     implements _$$LedgerExpenseDailyModelImplCopyWith<$Res> {
   __$$LedgerExpenseDailyModelImplCopyWithImpl(
-    _$LedgerExpenseDailyModelImpl _value,
-    $Res Function(_$LedgerExpenseDailyModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerExpenseDailyModelImpl _value,
+      $Res Function(_$LedgerExpenseDailyModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerExpenseDailyModel
   /// with the given fields replaced by the non-null parameter values.
@@ -311,33 +286,31 @@ class __$$LedgerExpenseDailyModelImplCopyWithImpl<$Res>
     Object? total = null,
     Object? expenses = null,
   }) {
-    return _then(
-      _$LedgerExpenseDailyModelImpl(
-        date: null == date
-            ? _value.date
-            : date // ignore: cast_nullable_to_non_nullable
-                  as String,
-        total: null == total
-            ? _value.total
-            : total // ignore: cast_nullable_to_non_nullable
-                  as int,
-        expenses: null == expenses
-            ? _value._expenses
-            : expenses // ignore: cast_nullable_to_non_nullable
-                  as List<ExpenseModel>,
-      ),
-    );
+    return _then(_$LedgerExpenseDailyModelImpl(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as int,
+      expenses: null == expenses
+          ? _value._expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as List<ExpenseModel>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerExpenseDailyModelImpl implements _LedgerExpenseDailyModel {
-  const _$LedgerExpenseDailyModelImpl({
-    required this.date,
-    @JsonKey(name: 'total_expense', defaultValue: 0) required this.total,
-    required final List<ExpenseModel> expenses,
-  }) : _expenses = expenses;
+  const _$LedgerExpenseDailyModelImpl(
+      {required this.date,
+      @JsonKey(name: 'total_expense', defaultValue: 0) required this.total,
+      required final List<ExpenseModel> expenses})
+      : _expenses = expenses;
 
   factory _$LedgerExpenseDailyModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerExpenseDailyModelImplFromJson(json);
@@ -373,11 +346,7 @@ class _$LedgerExpenseDailyModelImpl implements _LedgerExpenseDailyModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    date,
-    total,
-    const DeepCollectionEquality().hash(_expenses),
-  );
+      runtimeType, date, total, const DeepCollectionEquality().hash(_expenses));
 
   /// Create a copy of LedgerExpenseDailyModel
   /// with the given fields replaced by the non-null parameter values.
@@ -385,23 +354,23 @@ class _$LedgerExpenseDailyModelImpl implements _LedgerExpenseDailyModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerExpenseDailyModelImplCopyWith<_$LedgerExpenseDailyModelImpl>
-  get copyWith =>
-      __$$LedgerExpenseDailyModelImplCopyWithImpl<
-        _$LedgerExpenseDailyModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerExpenseDailyModelImplCopyWithImpl<
+          _$LedgerExpenseDailyModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerExpenseDailyModelImplToJson(this);
+    return _$$LedgerExpenseDailyModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerExpenseDailyModel implements LedgerExpenseDailyModel {
-  const factory _LedgerExpenseDailyModel({
-    required final String date,
-    @JsonKey(name: 'total_expense', defaultValue: 0) required final int total,
-    required final List<ExpenseModel> expenses,
-  }) = _$LedgerExpenseDailyModelImpl;
+  const factory _LedgerExpenseDailyModel(
+      {required final String date,
+      @JsonKey(name: 'total_expense', defaultValue: 0) required final int total,
+      required final List<ExpenseModel>
+          expenses}) = _$LedgerExpenseDailyModelImpl;
 
   factory _LedgerExpenseDailyModel.fromJson(Map<String, dynamic> json) =
       _$LedgerExpenseDailyModelImpl.fromJson;
@@ -419,5 +388,5 @@ abstract class _LedgerExpenseDailyModel implements LedgerExpenseDailyModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerExpenseDailyModelImplCopyWith<_$LedgerExpenseDailyModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

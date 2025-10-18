@@ -12,8 +12,7 @@ part of 'daily_summary_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 DailySummaryModel _$DailySummaryModelFromJson(Map<String, dynamic> json) {
   return _DailySummaryModel.fromJson(json);
@@ -47,19 +46,19 @@ mixin _$DailySummaryModel {
 /// @nodoc
 abstract class $DailySummaryModelCopyWith<$Res> {
   factory $DailySummaryModelCopyWith(
-    DailySummaryModel value,
-    $Res Function(DailySummaryModel) then,
-  ) = _$DailySummaryModelCopyWithImpl<$Res, DailySummaryModel>;
+          DailySummaryModel value, $Res Function(DailySummaryModel) then) =
+      _$DailySummaryModelCopyWithImpl<$Res, DailySummaryModel>;
   @useResult
-  $Res call({
-    String date,
-    LedgerPaymentsSummaryModel payments,
-    @JsonKey(name: 'expenses', readValue: _readSummaryValue) int expenses,
-    @JsonKey(name: 'pendings', readValue: _readSummaryValue) int pendings,
-    @JsonKey(name: 'security', readValue: _readSummaryValue) int securityAmount,
-    @JsonKey(name: 'bookings', readValue: _readSummaryValue) int bookingAmount,
-    @JsonKey(name: 'sales', readValue: _readSummaryValue) int salesAmount,
-  });
+  $Res call(
+      {String date,
+      LedgerPaymentsSummaryModel payments,
+      @JsonKey(name: 'expenses', readValue: _readSummaryValue) int expenses,
+      @JsonKey(name: 'pendings', readValue: _readSummaryValue) int pendings,
+      @JsonKey(name: 'security', readValue: _readSummaryValue)
+      int securityAmount,
+      @JsonKey(name: 'bookings', readValue: _readSummaryValue)
+      int bookingAmount,
+      @JsonKey(name: 'sales', readValue: _readSummaryValue) int salesAmount});
 
   $LedgerPaymentsSummaryModelCopyWith<$Res> get payments;
 }
@@ -87,39 +86,36 @@ class _$DailySummaryModelCopyWithImpl<$Res, $Val extends DailySummaryModel>
     Object? bookingAmount = null,
     Object? salesAmount = null,
   }) {
-    return _then(
-      _value.copyWith(
-            date: null == date
-                ? _value.date
-                : date // ignore: cast_nullable_to_non_nullable
-                      as String,
-            payments: null == payments
-                ? _value.payments
-                : payments // ignore: cast_nullable_to_non_nullable
-                      as LedgerPaymentsSummaryModel,
-            expenses: null == expenses
-                ? _value.expenses
-                : expenses // ignore: cast_nullable_to_non_nullable
-                      as int,
-            pendings: null == pendings
-                ? _value.pendings
-                : pendings // ignore: cast_nullable_to_non_nullable
-                      as int,
-            securityAmount: null == securityAmount
-                ? _value.securityAmount
-                : securityAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            bookingAmount: null == bookingAmount
-                ? _value.bookingAmount
-                : bookingAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            salesAmount: null == salesAmount
-                ? _value.salesAmount
-                : salesAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      payments: null == payments
+          ? _value.payments
+          : payments // ignore: cast_nullable_to_non_nullable
+              as LedgerPaymentsSummaryModel,
+      expenses: null == expenses
+          ? _value.expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as int,
+      pendings: null == pendings
+          ? _value.pendings
+          : pendings // ignore: cast_nullable_to_non_nullable
+              as int,
+      securityAmount: null == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      bookingAmount: null == bookingAmount
+          ? _value.bookingAmount
+          : bookingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      salesAmount: null == salesAmount
+          ? _value.salesAmount
+          : salesAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
   }
 
   /// Create a copy of DailySummaryModel
@@ -136,21 +132,21 @@ class _$DailySummaryModelCopyWithImpl<$Res, $Val extends DailySummaryModel>
 /// @nodoc
 abstract class _$$DailySummaryModelImplCopyWith<$Res>
     implements $DailySummaryModelCopyWith<$Res> {
-  factory _$$DailySummaryModelImplCopyWith(
-    _$DailySummaryModelImpl value,
-    $Res Function(_$DailySummaryModelImpl) then,
-  ) = __$$DailySummaryModelImplCopyWithImpl<$Res>;
+  factory _$$DailySummaryModelImplCopyWith(_$DailySummaryModelImpl value,
+          $Res Function(_$DailySummaryModelImpl) then) =
+      __$$DailySummaryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String date,
-    LedgerPaymentsSummaryModel payments,
-    @JsonKey(name: 'expenses', readValue: _readSummaryValue) int expenses,
-    @JsonKey(name: 'pendings', readValue: _readSummaryValue) int pendings,
-    @JsonKey(name: 'security', readValue: _readSummaryValue) int securityAmount,
-    @JsonKey(name: 'bookings', readValue: _readSummaryValue) int bookingAmount,
-    @JsonKey(name: 'sales', readValue: _readSummaryValue) int salesAmount,
-  });
+  $Res call(
+      {String date,
+      LedgerPaymentsSummaryModel payments,
+      @JsonKey(name: 'expenses', readValue: _readSummaryValue) int expenses,
+      @JsonKey(name: 'pendings', readValue: _readSummaryValue) int pendings,
+      @JsonKey(name: 'security', readValue: _readSummaryValue)
+      int securityAmount,
+      @JsonKey(name: 'bookings', readValue: _readSummaryValue)
+      int bookingAmount,
+      @JsonKey(name: 'sales', readValue: _readSummaryValue) int salesAmount});
 
   @override
   $LedgerPaymentsSummaryModelCopyWith<$Res> get payments;
@@ -160,10 +156,9 @@ abstract class _$$DailySummaryModelImplCopyWith<$Res>
 class __$$DailySummaryModelImplCopyWithImpl<$Res>
     extends _$DailySummaryModelCopyWithImpl<$Res, _$DailySummaryModelImpl>
     implements _$$DailySummaryModelImplCopyWith<$Res> {
-  __$$DailySummaryModelImplCopyWithImpl(
-    _$DailySummaryModelImpl _value,
-    $Res Function(_$DailySummaryModelImpl) _then,
-  ) : super(_value, _then);
+  __$$DailySummaryModelImplCopyWithImpl(_$DailySummaryModelImpl _value,
+      $Res Function(_$DailySummaryModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of DailySummaryModel
   /// with the given fields replaced by the non-null parameter values.
@@ -178,58 +173,55 @@ class __$$DailySummaryModelImplCopyWithImpl<$Res>
     Object? bookingAmount = null,
     Object? salesAmount = null,
   }) {
-    return _then(
-      _$DailySummaryModelImpl(
-        date: null == date
-            ? _value.date
-            : date // ignore: cast_nullable_to_non_nullable
-                  as String,
-        payments: null == payments
-            ? _value.payments
-            : payments // ignore: cast_nullable_to_non_nullable
-                  as LedgerPaymentsSummaryModel,
-        expenses: null == expenses
-            ? _value.expenses
-            : expenses // ignore: cast_nullable_to_non_nullable
-                  as int,
-        pendings: null == pendings
-            ? _value.pendings
-            : pendings // ignore: cast_nullable_to_non_nullable
-                  as int,
-        securityAmount: null == securityAmount
-            ? _value.securityAmount
-            : securityAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        bookingAmount: null == bookingAmount
-            ? _value.bookingAmount
-            : bookingAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        salesAmount: null == salesAmount
-            ? _value.salesAmount
-            : salesAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
+    return _then(_$DailySummaryModelImpl(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      payments: null == payments
+          ? _value.payments
+          : payments // ignore: cast_nullable_to_non_nullable
+              as LedgerPaymentsSummaryModel,
+      expenses: null == expenses
+          ? _value.expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as int,
+      pendings: null == pendings
+          ? _value.pendings
+          : pendings // ignore: cast_nullable_to_non_nullable
+              as int,
+      securityAmount: null == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      bookingAmount: null == bookingAmount
+          ? _value.bookingAmount
+          : bookingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      salesAmount: null == salesAmount
+          ? _value.salesAmount
+          : salesAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$DailySummaryModelImpl implements _DailySummaryModel {
-  const _$DailySummaryModelImpl({
-    required this.date,
-    required this.payments,
-    @JsonKey(name: 'expenses', readValue: _readSummaryValue)
-    required this.expenses,
-    @JsonKey(name: 'pendings', readValue: _readSummaryValue)
-    required this.pendings,
-    @JsonKey(name: 'security', readValue: _readSummaryValue)
-    required this.securityAmount,
-    @JsonKey(name: 'bookings', readValue: _readSummaryValue)
-    required this.bookingAmount,
-    @JsonKey(name: 'sales', readValue: _readSummaryValue)
-    required this.salesAmount,
-  });
+  const _$DailySummaryModelImpl(
+      {required this.date,
+      required this.payments,
+      @JsonKey(name: 'expenses', readValue: _readSummaryValue)
+      required this.expenses,
+      @JsonKey(name: 'pendings', readValue: _readSummaryValue)
+      required this.pendings,
+      @JsonKey(name: 'security', readValue: _readSummaryValue)
+      required this.securityAmount,
+      @JsonKey(name: 'bookings', readValue: _readSummaryValue)
+      required this.bookingAmount,
+      @JsonKey(name: 'sales', readValue: _readSummaryValue)
+      required this.salesAmount});
 
   factory _$DailySummaryModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DailySummaryModelImplFromJson(json);
@@ -281,16 +273,8 @@ class _$DailySummaryModelImpl implements _DailySummaryModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    date,
-    payments,
-    expenses,
-    pendings,
-    securityAmount,
-    bookingAmount,
-    salesAmount,
-  );
+  int get hashCode => Object.hash(runtimeType, date, payments, expenses,
+      pendings, securityAmount, bookingAmount, salesAmount);
 
   /// Create a copy of DailySummaryModel
   /// with the given fields replaced by the non-null parameter values.
@@ -299,31 +283,30 @@ class _$DailySummaryModelImpl implements _DailySummaryModel {
   @pragma('vm:prefer-inline')
   _$$DailySummaryModelImplCopyWith<_$DailySummaryModelImpl> get copyWith =>
       __$$DailySummaryModelImplCopyWithImpl<_$DailySummaryModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DailySummaryModelImplToJson(this);
+    return _$$DailySummaryModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _DailySummaryModel implements DailySummaryModel {
-  const factory _DailySummaryModel({
-    required final String date,
-    required final LedgerPaymentsSummaryModel payments,
-    @JsonKey(name: 'expenses', readValue: _readSummaryValue)
-    required final int expenses,
-    @JsonKey(name: 'pendings', readValue: _readSummaryValue)
-    required final int pendings,
-    @JsonKey(name: 'security', readValue: _readSummaryValue)
-    required final int securityAmount,
-    @JsonKey(name: 'bookings', readValue: _readSummaryValue)
-    required final int bookingAmount,
-    @JsonKey(name: 'sales', readValue: _readSummaryValue)
-    required final int salesAmount,
-  }) = _$DailySummaryModelImpl;
+  const factory _DailySummaryModel(
+      {required final String date,
+      required final LedgerPaymentsSummaryModel payments,
+      @JsonKey(name: 'expenses', readValue: _readSummaryValue)
+      required final int expenses,
+      @JsonKey(name: 'pendings', readValue: _readSummaryValue)
+      required final int pendings,
+      @JsonKey(name: 'security', readValue: _readSummaryValue)
+      required final int securityAmount,
+      @JsonKey(name: 'bookings', readValue: _readSummaryValue)
+      required final int bookingAmount,
+      @JsonKey(name: 'sales', readValue: _readSummaryValue)
+      required final int salesAmount}) = _$DailySummaryModelImpl;
 
   factory _DailySummaryModel.fromJson(Map<String, dynamic> json) =
       _$DailySummaryModelImpl.fromJson;

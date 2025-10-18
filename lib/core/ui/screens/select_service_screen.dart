@@ -19,7 +19,7 @@ class SelectServiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+                context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
       },
     );
     return Scaffold(
@@ -77,19 +77,22 @@ class SelectServiceScreen extends StatelessWidget {
                             return GridView.builder(
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
+                                crossAxisCount: 5,
                                 childAspectRatio: 1,
                               ),
                               padding: 15.padding,
                               itemCount: services.length,
                               itemBuilder: (context, index) {
                                 final service = services[index];
-                                return ServiceCard(
-                                  isGrid: true,
-                                  serviceName: service.name,
-                                  icon: service.icon,
-                                  onTap: () =>
-                                      onServiceSelected(service, context),
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ServiceCard(
+                                    isGrid: true,
+                                    serviceName: service.name,
+                                    icon: service.icon,
+                                    onTap: () =>
+                                        onServiceSelected(service, context),
+                                  ),
                                 );
                               },
                             );

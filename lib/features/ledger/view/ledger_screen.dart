@@ -13,10 +13,8 @@ import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart'
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/ledger/models/daily_summary_model/daily_summary_model.dart';
 import 'package:bookie_buddy_web/features/ledger/view/bookings_tab.dart';
-import 'package:bookie_buddy_web/features/ledger/view/expense_tab.dart';
 import 'package:bookie_buddy_web/features/ledger/view/payments_tab.dart';
 import 'package:bookie_buddy_web/features/ledger/view/pending_tab.dart';
-import 'package:bookie_buddy_web/features/ledger/view/sales_tab.dart';
 import 'package:bookie_buddy_web/features/ledger/view/security_amount_tab.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/generate_statement_pdf.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/ledger_payment_summary_widget.dart';

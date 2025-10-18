@@ -12,8 +12,7 @@ part of 'sale_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 SaleModel _$SaleModelFromJson(Map<String, dynamic> json) {
   return _SaleModel.fromJson(json);
@@ -53,16 +52,15 @@ abstract class $SaleModelCopyWith<$Res> {
   factory $SaleModelCopyWith(SaleModel value, $Res Function(SaleModel) then) =
       _$SaleModelCopyWithImpl<$Res, SaleModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'id') int id,
-    @JsonKey(name: 'client_name') String clientName,
-    @JsonKey(name: 'total_amount') int totalAmount,
-    @JsonKey(name: 'paid_amount') int paidAmount,
-    @JsonKey(name: 'discount') int discountAmount,
-    @JsonKey(name: 'sale_date') String saleDate,
-    @JsonKey(name: 'created_at') String createdAt,
-    @JsonKey(name: 'products') List<String> products,
-  });
+  $Res call(
+      {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'client_name') String clientName,
+      @JsonKey(name: 'total_amount') int totalAmount,
+      @JsonKey(name: 'paid_amount') int paidAmount,
+      @JsonKey(name: 'discount') int discountAmount,
+      @JsonKey(name: 'sale_date') String saleDate,
+      @JsonKey(name: 'created_at') String createdAt,
+      @JsonKey(name: 'products') List<String> products});
 }
 
 /// @nodoc
@@ -89,43 +87,40 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
     Object? createdAt = null,
     Object? products = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            clientName: null == clientName
-                ? _value.clientName
-                : clientName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            totalAmount: null == totalAmount
-                ? _value.totalAmount
-                : totalAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            paidAmount: null == paidAmount
-                ? _value.paidAmount
-                : paidAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            discountAmount: null == discountAmount
-                ? _value.discountAmount
-                : discountAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            saleDate: null == saleDate
-                ? _value.saleDate
-                : saleDate // ignore: cast_nullable_to_non_nullable
-                      as String,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as String,
-            products: null == products
-                ? _value.products
-                : products // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      paidAmount: null == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      discountAmount: null == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      saleDate: null == saleDate
+          ? _value.saleDate
+          : saleDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      products: null == products
+          ? _value.products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ) as $Val);
   }
 }
 
@@ -133,21 +128,19 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
 abstract class _$$SaleModelImplCopyWith<$Res>
     implements $SaleModelCopyWith<$Res> {
   factory _$$SaleModelImplCopyWith(
-    _$SaleModelImpl value,
-    $Res Function(_$SaleModelImpl) then,
-  ) = __$$SaleModelImplCopyWithImpl<$Res>;
+          _$SaleModelImpl value, $Res Function(_$SaleModelImpl) then) =
+      __$$SaleModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'id') int id,
-    @JsonKey(name: 'client_name') String clientName,
-    @JsonKey(name: 'total_amount') int totalAmount,
-    @JsonKey(name: 'paid_amount') int paidAmount,
-    @JsonKey(name: 'discount') int discountAmount,
-    @JsonKey(name: 'sale_date') String saleDate,
-    @JsonKey(name: 'created_at') String createdAt,
-    @JsonKey(name: 'products') List<String> products,
-  });
+  $Res call(
+      {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'client_name') String clientName,
+      @JsonKey(name: 'total_amount') int totalAmount,
+      @JsonKey(name: 'paid_amount') int paidAmount,
+      @JsonKey(name: 'discount') int discountAmount,
+      @JsonKey(name: 'sale_date') String saleDate,
+      @JsonKey(name: 'created_at') String createdAt,
+      @JsonKey(name: 'products') List<String> products});
 }
 
 /// @nodoc
@@ -155,9 +148,8 @@ class __$$SaleModelImplCopyWithImpl<$Res>
     extends _$SaleModelCopyWithImpl<$Res, _$SaleModelImpl>
     implements _$$SaleModelImplCopyWith<$Res> {
   __$$SaleModelImplCopyWithImpl(
-    _$SaleModelImpl _value,
-    $Res Function(_$SaleModelImpl) _then,
-  ) : super(_value, _then);
+      _$SaleModelImpl _value, $Res Function(_$SaleModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -173,58 +165,56 @@ class __$$SaleModelImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? products = null,
   }) {
-    return _then(
-      _$SaleModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        clientName: null == clientName
-            ? _value.clientName
-            : clientName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        totalAmount: null == totalAmount
-            ? _value.totalAmount
-            : totalAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        paidAmount: null == paidAmount
-            ? _value.paidAmount
-            : paidAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        discountAmount: null == discountAmount
-            ? _value.discountAmount
-            : discountAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        saleDate: null == saleDate
-            ? _value.saleDate
-            : saleDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as String,
-        products: null == products
-            ? _value._products
-            : products // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-      ),
-    );
+    return _then(_$SaleModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      paidAmount: null == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      discountAmount: null == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      saleDate: null == saleDate
+          ? _value.saleDate
+          : saleDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      products: null == products
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SaleModelImpl implements _SaleModel {
-  const _$SaleModelImpl({
-    @JsonKey(name: 'id') required this.id,
-    @JsonKey(name: 'client_name') required this.clientName,
-    @JsonKey(name: 'total_amount') required this.totalAmount,
-    @JsonKey(name: 'paid_amount') required this.paidAmount,
-    @JsonKey(name: 'discount') required this.discountAmount,
-    @JsonKey(name: 'sale_date') required this.saleDate,
-    @JsonKey(name: 'created_at') required this.createdAt,
-    @JsonKey(name: 'products') required final List<String> products,
-  }) : _products = products;
+  const _$SaleModelImpl(
+      {@JsonKey(name: 'id') required this.id,
+      @JsonKey(name: 'client_name') required this.clientName,
+      @JsonKey(name: 'total_amount') required this.totalAmount,
+      @JsonKey(name: 'paid_amount') required this.paidAmount,
+      @JsonKey(name: 'discount') required this.discountAmount,
+      @JsonKey(name: 'sale_date') required this.saleDate,
+      @JsonKey(name: 'created_at') required this.createdAt,
+      @JsonKey(name: 'products') required final List<String> products})
+      : _products = products;
 
   factory _$SaleModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SaleModelImplFromJson(json);
@@ -288,16 +278,15 @@ class _$SaleModelImpl implements _SaleModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    clientName,
-    totalAmount,
-    paidAmount,
-    discountAmount,
-    saleDate,
-    createdAt,
-    const DeepCollectionEquality().hash(_products),
-  );
+      runtimeType,
+      id,
+      clientName,
+      totalAmount,
+      paidAmount,
+      discountAmount,
+      saleDate,
+      createdAt,
+      const DeepCollectionEquality().hash(_products));
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -309,21 +298,23 @@ class _$SaleModelImpl implements _SaleModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SaleModelImplToJson(this);
+    return _$$SaleModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _SaleModel implements SaleModel {
-  const factory _SaleModel({
-    @JsonKey(name: 'id') required final int id,
-    @JsonKey(name: 'client_name') required final String clientName,
-    @JsonKey(name: 'total_amount') required final int totalAmount,
-    @JsonKey(name: 'paid_amount') required final int paidAmount,
-    @JsonKey(name: 'discount') required final int discountAmount,
-    @JsonKey(name: 'sale_date') required final String saleDate,
-    @JsonKey(name: 'created_at') required final String createdAt,
-    @JsonKey(name: 'products') required final List<String> products,
-  }) = _$SaleModelImpl;
+  const factory _SaleModel(
+          {@JsonKey(name: 'id') required final int id,
+          @JsonKey(name: 'client_name') required final String clientName,
+          @JsonKey(name: 'total_amount') required final int totalAmount,
+          @JsonKey(name: 'paid_amount') required final int paidAmount,
+          @JsonKey(name: 'discount') required final int discountAmount,
+          @JsonKey(name: 'sale_date') required final String saleDate,
+          @JsonKey(name: 'created_at') required final String createdAt,
+          @JsonKey(name: 'products') required final List<String> products}) =
+      _$SaleModelImpl;
 
   factory _SaleModel.fromJson(Map<String, dynamic> json) =
       _$SaleModelImpl.fromJson;

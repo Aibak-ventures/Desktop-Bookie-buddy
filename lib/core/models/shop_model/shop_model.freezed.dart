@@ -12,8 +12,7 @@ part of 'shop_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ShopModel _$ShopModelFromJson(Map<String, dynamic> json) {
   return _ShopModel.fromJson(json);
@@ -50,17 +49,16 @@ abstract class $ShopModelCopyWith<$Res> {
   factory $ShopModelCopyWith(ShopModel value, $Res Function(ShopModel) then) =
       _$ShopModelCopyWithImpl<$Res, ShopModel>;
   @useResult
-  $Res call({
-    int id,
-    String name,
-    String? place,
-    String phone,
-    String? email,
-    @JsonKey(defaultValue: 'Address not available') String address,
-    @JsonKey(name: 'pincode') String? pincode,
-    @JsonKey(name: 'subscription_status') String? subscriptionStatus,
-    @JsonKey(name: 'img') String? image,
-  });
+  $Res call(
+      {int id,
+      String name,
+      String? place,
+      String phone,
+      String? email,
+      @JsonKey(defaultValue: 'Address not available') String address,
+      @JsonKey(name: 'pincode') String? pincode,
+      @JsonKey(name: 'subscription_status') String? subscriptionStatus,
+      @JsonKey(name: 'img') String? image});
 }
 
 /// @nodoc
@@ -88,47 +86,44 @@ class _$ShopModelCopyWithImpl<$Res, $Val extends ShopModel>
     Object? subscriptionStatus = freezed,
     Object? image = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            place: freezed == place
-                ? _value.place
-                : place // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            phone: null == phone
-                ? _value.phone
-                : phone // ignore: cast_nullable_to_non_nullable
-                      as String,
-            email: freezed == email
-                ? _value.email
-                : email // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            address: null == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String,
-            pincode: freezed == pincode
-                ? _value.pincode
-                : pincode // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            subscriptionStatus: freezed == subscriptionStatus
-                ? _value.subscriptionStatus
-                : subscriptionStatus // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            image: freezed == image
-                ? _value.image
-                : image // ignore: cast_nullable_to_non_nullable
-                      as String?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phone: null == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      pincode: freezed == pincode
+          ? _value.pincode
+          : pincode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subscriptionStatus: freezed == subscriptionStatus
+          ? _value.subscriptionStatus
+          : subscriptionStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
   }
 }
 
@@ -136,22 +131,20 @@ class _$ShopModelCopyWithImpl<$Res, $Val extends ShopModel>
 abstract class _$$ShopModelImplCopyWith<$Res>
     implements $ShopModelCopyWith<$Res> {
   factory _$$ShopModelImplCopyWith(
-    _$ShopModelImpl value,
-    $Res Function(_$ShopModelImpl) then,
-  ) = __$$ShopModelImplCopyWithImpl<$Res>;
+          _$ShopModelImpl value, $Res Function(_$ShopModelImpl) then) =
+      __$$ShopModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int id,
-    String name,
-    String? place,
-    String phone,
-    String? email,
-    @JsonKey(defaultValue: 'Address not available') String address,
-    @JsonKey(name: 'pincode') String? pincode,
-    @JsonKey(name: 'subscription_status') String? subscriptionStatus,
-    @JsonKey(name: 'img') String? image,
-  });
+  $Res call(
+      {int id,
+      String name,
+      String? place,
+      String phone,
+      String? email,
+      @JsonKey(defaultValue: 'Address not available') String address,
+      @JsonKey(name: 'pincode') String? pincode,
+      @JsonKey(name: 'subscription_status') String? subscriptionStatus,
+      @JsonKey(name: 'img') String? image});
 }
 
 /// @nodoc
@@ -159,9 +152,8 @@ class __$$ShopModelImplCopyWithImpl<$Res>
     extends _$ShopModelCopyWithImpl<$Res, _$ShopModelImpl>
     implements _$$ShopModelImplCopyWith<$Res> {
   __$$ShopModelImplCopyWithImpl(
-    _$ShopModelImpl _value,
-    $Res Function(_$ShopModelImpl) _then,
-  ) : super(_value, _then);
+      _$ShopModelImpl _value, $Res Function(_$ShopModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ShopModel
   /// with the given fields replaced by the non-null parameter values.
@@ -178,63 +170,60 @@ class __$$ShopModelImplCopyWithImpl<$Res>
     Object? subscriptionStatus = freezed,
     Object? image = freezed,
   }) {
-    return _then(
-      _$ShopModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        place: freezed == place
-            ? _value.place
-            : place // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        phone: null == phone
-            ? _value.phone
-            : phone // ignore: cast_nullable_to_non_nullable
-                  as String,
-        email: freezed == email
-            ? _value.email
-            : email // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        address: null == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String,
-        pincode: freezed == pincode
-            ? _value.pincode
-            : pincode // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        subscriptionStatus: freezed == subscriptionStatus
-            ? _value.subscriptionStatus
-            : subscriptionStatus // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        image: freezed == image
-            ? _value.image
-            : image // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$ShopModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      place: freezed == place
+          ? _value.place
+          : place // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phone: null == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      pincode: freezed == pincode
+          ? _value.pincode
+          : pincode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subscriptionStatus: freezed == subscriptionStatus
+          ? _value.subscriptionStatus
+          : subscriptionStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ShopModelImpl implements _ShopModel {
-  const _$ShopModelImpl({
-    required this.id,
-    required this.name,
-    this.place,
-    required this.phone,
-    this.email,
-    @JsonKey(defaultValue: 'Address not available') required this.address,
-    @JsonKey(name: 'pincode') this.pincode,
-    @JsonKey(name: 'subscription_status') this.subscriptionStatus,
-    @JsonKey(name: 'img') this.image,
-  });
+  const _$ShopModelImpl(
+      {required this.id,
+      required this.name,
+      this.place,
+      required this.phone,
+      this.email,
+      @JsonKey(defaultValue: 'Address not available') required this.address,
+      @JsonKey(name: 'pincode') this.pincode,
+      @JsonKey(name: 'subscription_status') this.subscriptionStatus,
+      @JsonKey(name: 'img') this.image});
 
   factory _$ShopModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShopModelImplFromJson(json);
@@ -286,18 +275,8 @@ class _$ShopModelImpl implements _ShopModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    name,
-    place,
-    phone,
-    email,
-    address,
-    pincode,
-    subscriptionStatus,
-    image,
-  );
+  int get hashCode => Object.hash(runtimeType, id, name, place, phone, email,
+      address, pincode, subscriptionStatus, image);
 
   /// Create a copy of ShopModel
   /// with the given fields replaced by the non-null parameter values.
@@ -309,23 +288,24 @@ class _$ShopModelImpl implements _ShopModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShopModelImplToJson(this);
+    return _$$ShopModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ShopModel implements ShopModel {
-  const factory _ShopModel({
-    required final int id,
-    required final String name,
-    final String? place,
-    required final String phone,
-    final String? email,
-    @JsonKey(defaultValue: 'Address not available')
-    required final String address,
-    @JsonKey(name: 'pincode') final String? pincode,
-    @JsonKey(name: 'subscription_status') final String? subscriptionStatus,
-    @JsonKey(name: 'img') final String? image,
-  }) = _$ShopModelImpl;
+  const factory _ShopModel(
+      {required final int id,
+      required final String name,
+      final String? place,
+      required final String phone,
+      final String? email,
+      @JsonKey(defaultValue: 'Address not available')
+      required final String address,
+      @JsonKey(name: 'pincode') final String? pincode,
+      @JsonKey(name: 'subscription_status') final String? subscriptionStatus,
+      @JsonKey(name: 'img') final String? image}) = _$ShopModelImpl;
 
   factory _ShopModel.fromJson(Map<String, dynamic> json) =
       _$ShopModelImpl.fromJson;

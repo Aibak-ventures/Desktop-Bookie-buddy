@@ -12,12 +12,10 @@ part of 'ledger_security_amount_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LedgerSecurityAmountModel _$LedgerSecurityAmountModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerSecurityAmountModel.fromJson(json);
 }
 
@@ -44,24 +42,20 @@ mixin _$LedgerSecurityAmountModel {
 
 /// @nodoc
 abstract class $LedgerSecurityAmountModelCopyWith<$Res> {
-  factory $LedgerSecurityAmountModelCopyWith(
-    LedgerSecurityAmountModel value,
-    $Res Function(LedgerSecurityAmountModel) then,
-  ) = _$LedgerSecurityAmountModelCopyWithImpl<$Res, LedgerSecurityAmountModel>;
+  factory $LedgerSecurityAmountModelCopyWith(LedgerSecurityAmountModel value,
+          $Res Function(LedgerSecurityAmountModel) then) =
+      _$LedgerSecurityAmountModelCopyWithImpl<$Res, LedgerSecurityAmountModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'id') int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
-    @JsonKey(name: 'security_amount') int securityAmount,
-    @JsonKey(name: 'booking_date') String bookingDate,
-  });
+  $Res call(
+      {@JsonKey(name: 'id') int bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
+      @JsonKey(name: 'security_amount') int securityAmount,
+      @JsonKey(name: 'booking_date') String bookingDate});
 }
 
 /// @nodoc
-class _$LedgerSecurityAmountModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerSecurityAmountModel
->
+class _$LedgerSecurityAmountModelCopyWithImpl<$Res,
+        $Val extends LedgerSecurityAmountModel>
     implements $LedgerSecurityAmountModelCopyWith<$Res> {
   _$LedgerSecurityAmountModelCopyWithImpl(this._value, this._then);
 
@@ -80,27 +74,24 @@ class _$LedgerSecurityAmountModelCopyWithImpl<
     Object? securityAmount = null,
     Object? bookingDate = null,
   }) {
-    return _then(
-      _value.copyWith(
-            bookingId: null == bookingId
-                ? _value.bookingId
-                : bookingId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            clientName: null == clientName
-                ? _value.clientName
-                : clientName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            securityAmount: null == securityAmount
-                ? _value.securityAmount
-                : securityAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            bookingDate: null == bookingDate
-                ? _value.bookingDate
-                : bookingDate // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      securityAmount: null == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      bookingDate: null == bookingDate
+          ? _value.bookingDate
+          : bookingDate // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
@@ -108,31 +99,27 @@ class _$LedgerSecurityAmountModelCopyWithImpl<
 abstract class _$$LedgerSecurityAmountModelImplCopyWith<$Res>
     implements $LedgerSecurityAmountModelCopyWith<$Res> {
   factory _$$LedgerSecurityAmountModelImplCopyWith(
-    _$LedgerSecurityAmountModelImpl value,
-    $Res Function(_$LedgerSecurityAmountModelImpl) then,
-  ) = __$$LedgerSecurityAmountModelImplCopyWithImpl<$Res>;
+          _$LedgerSecurityAmountModelImpl value,
+          $Res Function(_$LedgerSecurityAmountModelImpl) then) =
+      __$$LedgerSecurityAmountModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'id') int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
-    @JsonKey(name: 'security_amount') int securityAmount,
-    @JsonKey(name: 'booking_date') String bookingDate,
-  });
+  $Res call(
+      {@JsonKey(name: 'id') int bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
+      @JsonKey(name: 'security_amount') int securityAmount,
+      @JsonKey(name: 'booking_date') String bookingDate});
 }
 
 /// @nodoc
 class __$$LedgerSecurityAmountModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerSecurityAmountModelCopyWithImpl<
-          $Res,
-          _$LedgerSecurityAmountModelImpl
-        >
+    extends _$LedgerSecurityAmountModelCopyWithImpl<$Res,
+        _$LedgerSecurityAmountModelImpl>
     implements _$$LedgerSecurityAmountModelImplCopyWith<$Res> {
   __$$LedgerSecurityAmountModelImplCopyWithImpl(
-    _$LedgerSecurityAmountModelImpl _value,
-    $Res Function(_$LedgerSecurityAmountModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerSecurityAmountModelImpl _value,
+      $Res Function(_$LedgerSecurityAmountModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerSecurityAmountModel
   /// with the given fields replaced by the non-null parameter values.
@@ -144,39 +131,36 @@ class __$$LedgerSecurityAmountModelImplCopyWithImpl<$Res>
     Object? securityAmount = null,
     Object? bookingDate = null,
   }) {
-    return _then(
-      _$LedgerSecurityAmountModelImpl(
-        bookingId: null == bookingId
-            ? _value.bookingId
-            : bookingId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        clientName: null == clientName
-            ? _value.clientName
-            : clientName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        securityAmount: null == securityAmount
-            ? _value.securityAmount
-            : securityAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        bookingDate: null == bookingDate
-            ? _value.bookingDate
-            : bookingDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$LedgerSecurityAmountModelImpl(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      clientName: null == clientName
+          ? _value.clientName
+          : clientName // ignore: cast_nullable_to_non_nullable
+              as String,
+      securityAmount: null == securityAmount
+          ? _value.securityAmount
+          : securityAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      bookingDate: null == bookingDate
+          ? _value.bookingDate
+          : bookingDate // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerSecurityAmountModelImpl implements _LedgerSecurityAmountModel {
-  const _$LedgerSecurityAmountModelImpl({
-    @JsonKey(name: 'id') required this.bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown')
-    required this.clientName,
-    @JsonKey(name: 'security_amount') required this.securityAmount,
-    @JsonKey(name: 'booking_date') required this.bookingDate,
-  });
+  const _$LedgerSecurityAmountModelImpl(
+      {@JsonKey(name: 'id') required this.bookingId,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown')
+      required this.clientName,
+      @JsonKey(name: 'security_amount') required this.securityAmount,
+      @JsonKey(name: 'booking_date') required this.bookingDate});
 
   factory _$LedgerSecurityAmountModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerSecurityAmountModelImplFromJson(json);
@@ -217,12 +201,7 @@ class _$LedgerSecurityAmountModelImpl implements _LedgerSecurityAmountModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    bookingId,
-    clientName,
-    securityAmount,
-    bookingDate,
-  );
+      runtimeType, bookingId, clientName, securityAmount, bookingDate);
 
   /// Create a copy of LedgerSecurityAmountModel
   /// with the given fields replaced by the non-null parameter values.
@@ -230,25 +209,25 @@ class _$LedgerSecurityAmountModelImpl implements _LedgerSecurityAmountModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerSecurityAmountModelImplCopyWith<_$LedgerSecurityAmountModelImpl>
-  get copyWith =>
-      __$$LedgerSecurityAmountModelImplCopyWithImpl<
-        _$LedgerSecurityAmountModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerSecurityAmountModelImplCopyWithImpl<
+          _$LedgerSecurityAmountModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerSecurityAmountModelImplToJson(this);
+    return _$$LedgerSecurityAmountModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerSecurityAmountModel implements LedgerSecurityAmountModel {
-  const factory _LedgerSecurityAmountModel({
-    @JsonKey(name: 'id') required final int bookingId,
-    @JsonKey(name: 'client_name', defaultValue: 'Unknown')
-    required final String clientName,
-    @JsonKey(name: 'security_amount') required final int securityAmount,
-    @JsonKey(name: 'booking_date') required final String bookingDate,
-  }) = _$LedgerSecurityAmountModelImpl;
+  const factory _LedgerSecurityAmountModel(
+          {@JsonKey(name: 'id') required final int bookingId,
+          @JsonKey(name: 'client_name', defaultValue: 'Unknown')
+          required final String clientName,
+          @JsonKey(name: 'security_amount') required final int securityAmount,
+          @JsonKey(name: 'booking_date') required final String bookingDate}) =
+      _$LedgerSecurityAmountModelImpl;
 
   factory _LedgerSecurityAmountModel.fromJson(Map<String, dynamic> json) =
       _$LedgerSecurityAmountModelImpl.fromJson;
@@ -271,5 +250,5 @@ abstract class _LedgerSecurityAmountModel implements LedgerSecurityAmountModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerSecurityAmountModelImplCopyWith<_$LedgerSecurityAmountModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

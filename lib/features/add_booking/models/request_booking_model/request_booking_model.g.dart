@@ -74,6 +74,7 @@ Map<String, dynamic> _$$RequestBookingModelImplToJson(
   if (_productsToJson(instance.products) case final value?) 'variants': value,
   if (instance.otherDetails case final value?) 'details': value,
   if (instance.additionalCharges case final value?) 'additional_charges': value,
+  'send_invoice': instance.sendPdfToWhatsApp,
 };
 
 const _$PaymentMethodEnumMap = {

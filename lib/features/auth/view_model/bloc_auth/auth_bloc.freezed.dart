@@ -12,46 +12,51 @@ part of 'auth_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AuthEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String phone, String password, String? fcmToken)
-    loginRequested,
+        loginRequested,
     required TResult Function() logoutRequested,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String phone, String password, String? fcmToken)?
-    loginRequested,
+        loginRequested,
     TResult? Function()? logoutRequested,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String phone, String password, String? fcmToken)?
-    loginRequested,
+        loginRequested,
     TResult Function()? logoutRequested,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoginRequested value) loginRequested,
     required TResult Function(_LogoutRequested value) logoutRequested,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoginRequested value)? loginRequested,
     TResult? Function(_LogoutRequested value)? logoutRequested,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoginRequested value)? loginRequested,
     TResult Function(_LogoutRequested value)? logoutRequested,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -76,10 +81,9 @@ class _$AuthEventCopyWithImpl<$Res, $Val extends AuthEvent>
 
 /// @nodoc
 abstract class _$$LoginRequestedImplCopyWith<$Res> {
-  factory _$$LoginRequestedImplCopyWith(
-    _$LoginRequestedImpl value,
-    $Res Function(_$LoginRequestedImpl) then,
-  ) = __$$LoginRequestedImplCopyWithImpl<$Res>;
+  factory _$$LoginRequestedImplCopyWith(_$LoginRequestedImpl value,
+          $Res Function(_$LoginRequestedImpl) then) =
+      __$$LoginRequestedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String phone, String password, String? fcmToken});
 }
@@ -89,9 +93,8 @@ class __$$LoginRequestedImplCopyWithImpl<$Res>
     extends _$AuthEventCopyWithImpl<$Res, _$LoginRequestedImpl>
     implements _$$LoginRequestedImplCopyWith<$Res> {
   __$$LoginRequestedImplCopyWithImpl(
-    _$LoginRequestedImpl _value,
-    $Res Function(_$LoginRequestedImpl) _then,
-  ) : super(_value, _then);
+      _$LoginRequestedImpl _value, $Res Function(_$LoginRequestedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -102,33 +105,28 @@ class __$$LoginRequestedImplCopyWithImpl<$Res>
     Object? password = null,
     Object? fcmToken = freezed,
   }) {
-    return _then(
-      _$LoginRequestedImpl(
-        phone: null == phone
-            ? _value.phone
-            : phone // ignore: cast_nullable_to_non_nullable
-                  as String,
-        password: null == password
-            ? _value.password
-            : password // ignore: cast_nullable_to_non_nullable
-                  as String,
-        fcmToken: freezed == fcmToken
-            ? _value.fcmToken
-            : fcmToken // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$LoginRequestedImpl(
+      phone: null == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      fcmToken: freezed == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoginRequestedImpl implements _LoginRequested {
-  const _$LoginRequestedImpl({
-    required this.phone,
-    required this.password,
-    this.fcmToken,
-  });
+  const _$LoginRequestedImpl(
+      {required this.phone, required this.password, this.fcmToken});
 
   @override
   final String phone;
@@ -164,15 +162,13 @@ class _$LoginRequestedImpl implements _LoginRequested {
   @pragma('vm:prefer-inline')
   _$$LoginRequestedImplCopyWith<_$LoginRequestedImpl> get copyWith =>
       __$$LoginRequestedImplCopyWithImpl<_$LoginRequestedImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String phone, String password, String? fcmToken)
-    loginRequested,
+        loginRequested,
     required TResult Function() logoutRequested,
   }) {
     return loginRequested(phone, password, fcmToken);
@@ -182,7 +178,7 @@ class _$LoginRequestedImpl implements _LoginRequested {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String phone, String password, String? fcmToken)?
-    loginRequested,
+        loginRequested,
     TResult? Function()? logoutRequested,
   }) {
     return loginRequested?.call(phone, password, fcmToken);
@@ -192,7 +188,7 @@ class _$LoginRequestedImpl implements _LoginRequested {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String phone, String password, String? fcmToken)?
-    loginRequested,
+        loginRequested,
     TResult Function()? logoutRequested,
     required TResult orElse(),
   }) {
@@ -235,11 +231,10 @@ class _$LoginRequestedImpl implements _LoginRequested {
 }
 
 abstract class _LoginRequested implements AuthEvent {
-  const factory _LoginRequested({
-    required final String phone,
-    required final String password,
-    final String? fcmToken,
-  }) = _$LoginRequestedImpl;
+  const factory _LoginRequested(
+      {required final String phone,
+      required final String password,
+      final String? fcmToken}) = _$LoginRequestedImpl;
 
   String get phone;
   String get password;
@@ -254,10 +249,9 @@ abstract class _LoginRequested implements AuthEvent {
 
 /// @nodoc
 abstract class _$$LogoutRequestedImplCopyWith<$Res> {
-  factory _$$LogoutRequestedImplCopyWith(
-    _$LogoutRequestedImpl value,
-    $Res Function(_$LogoutRequestedImpl) then,
-  ) = __$$LogoutRequestedImplCopyWithImpl<$Res>;
+  factory _$$LogoutRequestedImplCopyWith(_$LogoutRequestedImpl value,
+          $Res Function(_$LogoutRequestedImpl) then) =
+      __$$LogoutRequestedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -265,9 +259,8 @@ class __$$LogoutRequestedImplCopyWithImpl<$Res>
     extends _$AuthEventCopyWithImpl<$Res, _$LogoutRequestedImpl>
     implements _$$LogoutRequestedImplCopyWith<$Res> {
   __$$LogoutRequestedImplCopyWithImpl(
-    _$LogoutRequestedImpl _value,
-    $Res Function(_$LogoutRequestedImpl) _then,
-  ) : super(_value, _then);
+      _$LogoutRequestedImpl _value, $Res Function(_$LogoutRequestedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -296,7 +289,7 @@ class _$LogoutRequestedImpl implements _LogoutRequested {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String phone, String password, String? fcmToken)
-    loginRequested,
+        loginRequested,
     required TResult Function() logoutRequested,
   }) {
     return logoutRequested();
@@ -306,7 +299,7 @@ class _$LogoutRequestedImpl implements _LogoutRequested {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String phone, String password, String? fcmToken)?
-    loginRequested,
+        loginRequested,
     TResult? Function()? logoutRequested,
   }) {
     return logoutRequested?.call();
@@ -316,7 +309,7 @@ class _$LogoutRequestedImpl implements _LogoutRequested {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String phone, String password, String? fcmToken)?
-    loginRequested,
+        loginRequested,
     TResult Function()? logoutRequested,
     required TResult orElse(),
   }) {
@@ -370,14 +363,16 @@ mixin _$AuthState {
     required TResult Function() loading,
     required TResult Function() authenticated,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function()? authenticated,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
@@ -385,21 +380,24 @@ mixin _$AuthState {
     TResult Function()? authenticated,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_Authenticated value) authenticated,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Authenticated value)? authenticated,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -407,7 +405,8 @@ mixin _$AuthState {
     TResult Function(_Authenticated value)? authenticated,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -433,9 +432,8 @@ class _$AuthStateCopyWithImpl<$Res, $Val extends AuthState>
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -443,9 +441,8 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$AuthStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -552,9 +549,8 @@ abstract class _Initial implements AuthState {
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -562,9 +558,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$AuthStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -671,9 +666,8 @@ abstract class _Loading implements AuthState {
 /// @nodoc
 abstract class _$$AuthenticatedImplCopyWith<$Res> {
   factory _$$AuthenticatedImplCopyWith(
-    _$AuthenticatedImpl value,
-    $Res Function(_$AuthenticatedImpl) then,
-  ) = __$$AuthenticatedImplCopyWithImpl<$Res>;
+          _$AuthenticatedImpl value, $Res Function(_$AuthenticatedImpl) then) =
+      __$$AuthenticatedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -681,9 +675,8 @@ class __$$AuthenticatedImplCopyWithImpl<$Res>
     extends _$AuthStateCopyWithImpl<$Res, _$AuthenticatedImpl>
     implements _$$AuthenticatedImplCopyWith<$Res> {
   __$$AuthenticatedImplCopyWithImpl(
-    _$AuthenticatedImpl _value,
-    $Res Function(_$AuthenticatedImpl) _then,
-  ) : super(_value, _then);
+      _$AuthenticatedImpl _value, $Res Function(_$AuthenticatedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -790,9 +783,8 @@ abstract class _Authenticated implements AuthState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -802,23 +794,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$AuthStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

@@ -1,61 +1,333 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
+import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/add_booking_client_details_screen.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/widgets/selected_product_in_add_booking.dart';
+import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class AddBookingProductScreen extends StatelessWidget {
-  AddBookingProductScreen({
-    required this.addBookingModel,
-    required this.selectedProductsNotifier,
-    super.key,
-  });
+  AddBookingProductScreen({required this.addBookingModel, super.key});
 
   final RequestBookingModel addBookingModel;
-  // final List<ProductSelectedModel> selectedProducts;
-
-  final ValueNotifier<List<ProductSelectedModel>> selectedProductsNotifier;
 
   final locationStartController = TextEditingController();
   final locationFromController = TextEditingController();
   final locationToController = TextEditingController();
   final descriptionController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final bookingData = addBookingModel;
-    final isDesktop = kIsWeb || 
-        Theme.of(context).platform == TargetPlatform.windows ||
-        Theme.of(context).platform == TargetPlatform.macOS ||
-        Theme.of(context).platform == TargetPlatform.linux;
+    final isWeb = context.screenWidth > 768;
+    
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) =>
+          handlePop(didPop, result, context),
+      child: Scaffold(
+        backgroundColor: isWeb ? const Color(0xFFF5F7FA) : null,
+        appBar: AppBar(
+          title: const Text('Add Products'),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        body: Container(
+          width: double.infinity,
+          child: SingleChildScrollView(
+            child: Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: isWeb ? 1000 : double.infinity,
+                ),
+                padding: isWeb
+                    ? const EdgeInsets.all(40)
+                    : const EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
+                  child: isWeb ? _buildWebLayout(context, bookingData) : _buildMobileLayout(context, bookingData),
+                ),
+              ),
+            ),
+          ),
+        ),
+        resizeToAvoidBottomInset: false,
+      ),
+    );
+  }
 
-    return Scaffold(
-      backgroundColor: isDesktop ? const Color(0xFFF5F7FA) : null,
-      appBar: AppBar(
-        title: const Text('Add Products'),
-        backgroundColor: isDesktop ? Colors.white : null,
-        elevation: isDesktop ? 0.5 : null,
-      ),
-      body: ResponsiveWidget(
-        mobile: _buildMobileLayout(context, bookingData),
-        tablet: _buildWebLayout(context, bookingData),
-        desktop: _buildWebLayout(context, bookingData),
-      ),
+  Widget _buildWebLayout(BuildContext context, RequestBookingModel bookingData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header section
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Select Products & Services',
+                style: TextStyle(
+                  fontSize: 28.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade800,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Choose products and configure additional details for your booking',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 40),
+        
+        // Selected products section
+        BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
+          builder: (context, state) => state.products.isEmpty
+              ? const SizedBox.shrink()
+              : Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Selected Products',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildSelectedProductSection(context, state.products),
+                    ],
+                  ),
+                ),
+        ),
+
+        // Add product section
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Add Products',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _addProductContainerBuilder(context, bookingData),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 24),
+
+        // Vehicle locations and description section
+        BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
+          builder: (context, state) {
+            final products = state.products;
+            final isVehicle = products.any(
+              (p) => p.variant.mainServiceType.isVehicle == true,
+            );
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Vehicle locations (left side)
+                if (isVehicle)
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Vehicle Locations',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          CustomTextField(
+                            controller: locationStartController,
+                            label: 'Start Location',
+                            hintText: 'Location',
+                            prefixIcon: const Icon(Icons.place_outlined),
+                            textInputAction: TextInputAction.next,
+                            validator: (value) =>
+                                AppInputValidators.basicText(
+                                  value,
+                                  isRequired: false,
+                                  fieldName: 'Place',
+                                ),
+                          ),
+                          const SizedBox(height: 16),
+                          CustomTextField(
+                            controller: locationFromController,
+                            label: 'Pickup Location',
+                            hintText: 'Location',
+                            prefixIcon: const Icon(Icons.place_outlined),
+                            textInputAction: TextInputAction.next,
+                            validator: (value) =>
+                                AppInputValidators.basicText(
+                                  value,
+                                  isRequired: false,
+                                  fieldName: 'Place',
+                                ),
+                          ),
+                          const SizedBox(height: 16),
+                          CustomTextField(
+                            controller: locationToController,
+                            label: 'Destination',
+                            hintText: 'Location',
+                            prefixIcon: const Icon(Icons.place_outlined),
+                            textInputAction: TextInputAction.next,
+                            validator: (value) =>
+                                AppInputValidators.basicText(
+                                  value,
+                                  isRequired: false,
+                                  fieldName: 'Place',
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                
+                if (isVehicle) const SizedBox(width: 24),
+                
+                // Description section (right side)
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Additional Details',
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        CustomTextField(
+                          controller: descriptionController,
+                          label: 'Description (Optional)',
+                          hintText: 'Any additional notes or requirements',
+                          minLines: 4,
+                          maxLines: 6,
+                          textInputAction: TextInputAction.newline,
+                          validator: (value) => AppInputValidators.basicText(
+                            value,
+                            isRequired: false,
+                            fieldName: 'Description',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        
+        const SizedBox(height: 40),
+        
+        // Next button
+        Center(
+          child: SizedBox(
+            width: 300,
+            child: CustomElevatedButton(
+              text: 'Continue to Payment',
+              onPressed: () => _handleNext(context),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -65,716 +337,359 @@ class AddBookingProductScreen extends StatelessWidget {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: context.isMobile ? null : 40.paddingHorizontal,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 15),
-                ValueListenableBuilder(
-                  valueListenable: selectedProductsNotifier,
-                  builder: (context, products, child) => products.isEmpty
+                15.height,
+                BlocBuilder<
+                  AddBookingProductsCubit,
+                  AddBookingProductsState
+                >(
+                  builder: (context, state) => state.products.isEmpty
                       ? const SizedBox.shrink()
-                      : _buildSelectedProductSection(),
+                      : _buildSelectedProductSection(
+                          context,
+                          state.products,
+                        ),
                 ),
+
+                // add product container
                 _addProductContainerBuilder(context, bookingData),
-                const SizedBox(height: 16),
-                if ((selectedProductsNotifier.value.firstOrNull?.variant
-                        .mainServiceType.isVehicle) ?? false)
-                  _buildLocationFields(context),
-                _buildDescriptionField(context),
-                SizedBox(
-                  height: context.mediaQuery.viewInsets.bottom > 0 
-                      ? MediaQuery.of(context).size.height * 0.35
-                      : MediaQuery.of(context).size.height * 0.1,
+                0.01.heightCustom,
+
+                BlocBuilder<
+                  AddBookingProductsCubit,
+                  AddBookingProductsState
+                >(
+                  builder: (context, state) {
+                    final products = state.products;
+                    final isVehicle = products.any(
+                      (p) => p.variant.mainServiceType.isVehicle == true,
+                    );
+                    if (!isVehicle) return const SizedBox.shrink();
+                    return Padding(
+                      padding: 16.paddingHorizontal,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 15,
+                        children: [
+                          // locations
+                          Text(
+                            'Locations',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          CustomTextField(
+                            controller: locationStartController,
+                            label: 'Start Location',
+                            hintText: 'Location',
+                            prefixIcon: const Icon(Icons.place_outlined),
+                            textInputAction: TextInputAction.next,
+                            validator: (value) =>
+                                AppInputValidators.basicText(
+                                  value,
+                                  isRequired: false,
+                                  fieldName: 'Place',
+                                ),
+                          ),
+                          CustomTextField(
+                            controller: locationFromController,
+                            label: 'Pickup Location',
+                            hintText: 'Location',
+                            prefixIcon: const Icon(Icons.place_outlined),
+                            textInputAction: TextInputAction.next,
+                            validator: (value) =>
+                                AppInputValidators.basicText(
+                                  value,
+                                  isRequired: false,
+                                  fieldName: 'Place',
+                                ),
+                          ),
+                          CustomTextField(
+                            controller: locationToController,
+                            label: 'Destination',
+                            hintText: 'Location',
+                            prefixIcon: const Icon(Icons.place_outlined),
+                            textInputAction: TextInputAction.next,
+                            validator: (value) =>
+                                AppInputValidators.basicText(
+                                  value,
+                                  isRequired: false,
+                                  fieldName: 'Place',
+                                ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
+
+                Padding(
+                  padding: 16.padding,
+                  child: Stack(
+                    children: [
+                      CustomTextField(
+                        controller: descriptionController,
+                        label: 'Description (Optional)',
+                        hintText: 'Description',
+                        maxLines: 4,
+                        minLines: 4,
+                        textInputAction: TextInputAction.newline,
+                        validator: (value) => AppInputValidators.basicText(
+                          value,
+                          isRequired: false,
+                          fieldName: 'Description',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Padding to avoid keyboard overlap
+                context.mediaQuery.viewInsets.bottom > 0
+                    ? 0.35.heightCustom
+                    : 0.1.heightCustom,
               ],
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(16),
-          child: _buildNextButton(context),
+          padding: context.isMobile ? 16.padding : (40, 20).padding,
+          child: CustomElevatedButton(
+            width: double.infinity,
+            onPressed: () => _handleNext(context),
+            text: 'Next',
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildWebLayout(BuildContext context, RequestBookingModel bookingData) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFFF8F9FF),
-            const Color(0xFFF0F4FF),
-          ],
-        ),
-      ),
-      child: Center(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 1200),
-          margin: const EdgeInsets.all(24),
-          child: Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Header Section
-                  Container(
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          const Color(0xFF667eea),
-                          const Color(0xFF764ba2),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.add_business_outlined,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Add Products & Services',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Configure your booking details and select products',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white.withOpacity(0.9),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Content Section
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(32),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Left Column - Product Selection
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Product Selection',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF1a1a1a),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                ValueListenableBuilder(
-                                  valueListenable: selectedProductsNotifier,
-                                  builder: (context, products, child) => products.isEmpty
-                                      ? _buildWebEmptyState(context, bookingData)
-                                      : _buildSelectedProductSection(),
-                                ),
-                                const SizedBox(height: 24),
-                                _buildWebAddProductCard(context, bookingData),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 32),
-                          // Right Column - Details
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if ((selectedProductsNotifier.value.firstOrNull?.variant
-                                        .mainServiceType.isVehicle) ?? false) ...[
-                                  _buildWebLocationSection(context),
-                                  const SizedBox(height: 24),
-                                ],
-                                _buildWebDescriptionSection(context),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Footer Section
-                  Container(
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8F9FA),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ValueListenableBuilder(
-                            valueListenable: selectedProductsNotifier,
-                            builder: (context, products, child) {
-                              final total = products.fold(0, (int prev, element) => prev + element.amount);
-                              return RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Total Amount: ',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: const Color(0xFF6b7280),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: '₹${total.toString()}',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF667eea),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 24),
-                        SizedBox(
-                          width: 200,
-                          child: _buildNextButton(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+  void _handleNext(BuildContext context) async {
+    final products = context
+        .read<AddBookingProductsCubit>()
+        .state
+        .products;
+    if (products.isEmpty) {
+      CustomSnackBar(
+        message: 'Please select at least one product',
+      );
+      return;
+    }
+
+    final total = products.fold(
+      0,
+      (int prev, element) => prev + element.amount,
+    );
+    if (total <= 0) {
+      CustomSnackBar(
+        message: 'Product amount total must be greater than 0',
+      );
+      return;
+    }
+
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      await GoRouter.of(context).pushNamed(
+        AppRoutes.addBookingDetails.name,
+        extra: {
+          'add_booking_model': addBookingModel.copyWith(
+            products: context
+                .read<AddBookingProductsCubit>()
+                .state
+                .products,
+            description: descriptionController.text.trim(),
+            otherDetails: BookingOtherDetailsModel(
+              locationStart:
+                  locationStartController.text.nullIfEmpty,
+              locationFrom:
+                  locationFromController.text.nullIfEmpty,
+              locationTo: locationToController.text.nullIfEmpty,
             ),
           ),
-        ),
-      ),
-    );
+        },
+      );
+    } catch (e) {
+      // Fallback navigation if GoRouter fails
+      if (context.mounted) {
+        await context.pushNamed(
+          AppRoutes.addBookingDetails.name,
+          extra: {
+            'add_booking_model': addBookingModel.copyWith(
+              products: context
+                  .read<AddBookingProductsCubit>()
+                  .state
+                  .products,
+              description: descriptionController.text.trim(),
+              otherDetails: BookingOtherDetailsModel(
+                locationStart:
+                    locationStartController.text.nullIfEmpty,
+                locationFrom:
+                    locationFromController.text.nullIfEmpty,
+                locationTo: locationToController.text.nullIfEmpty,
+              ),
+            ),
+          },
+        );
+      }
+    }
   }
 
-  Widget _buildWebEmptyState(BuildContext context, RequestBookingModel bookingData) {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FF),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE5E7EB),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF667eea).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Icon(
-              Icons.shopping_cart_outlined,
-              size: 48,
-              color: const Color(0xFF667eea),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No Products Selected',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF374151),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Start by adding products to your booking',
-            style: TextStyle(
-              fontSize: 14,
-              color: const Color(0xFF6B7280),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
+  void handlePop(bool didPop, dynamic result, BuildContext context) async {
+    if (didPop) {
+      return;
+    }
+    final selectedProducts = context
+        .read<AddBookingProductsCubit>()
+        .state
+        .products;
+    if (selectedProducts.isEmpty) {
+      NavigatorX(context).pop(); 
+
+      return;
+    }
+    final result = await showDiscardDialog(context);
+    if (result ?? false) {
+      NavigatorX(context).pop();
+    }
   }
 
-  Widget _buildWebAddProductCard(BuildContext context, RequestBookingModel bookingData) {
-    return ValueListenableBuilder(
-      valueListenable: selectedProductsNotifier,
-      builder: (context, products, child) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color(0xFF667eea),
-                const Color(0xFF764ba2),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF667eea).withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () async {
-                final result = await context.push(SelectProductScreen(
-                  serviceId: bookingData.serviceId!,
-                  preSelectedData: selectedProductsNotifier.value,
-                  pickupDate: bookingData.pickupDate!,
-                  returnDate: bookingData.returnDate!,
-                  pickupTime: bookingData.pickupTime,
-                  returnTime: bookingData.returnTime,
-                ));
-                if (result != null) {
-                  selectedProductsNotifier.value =
-                      List<ProductSelectedModel>.from(result);
-                }
+  Container _addProductContainerBuilder(
+    BuildContext context,
+    RequestBookingModel bookingData,
+  ) => Container(
+    margin: 16.padding,
+    padding: 30.padding,
+    alignment: Alignment.center,
+    decoration: ShapeDecoration(
+      shape: RoundedRectangleBorder(
+        borderRadius: 5.radiusBorder,
+        side: BorderSide(color: AppColors.grey400),
+      ),
+    ),
+    child: Container(
+      decoration: BoxDecoration(
+        color: AppColors.purpleLightShade,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: MaterialButton(
+        onPressed: () async {
+          try {
+            final result = await GoRouter.of(context).pushNamed(
+              AppRoutes.selectProducts.name,
+              extra: {
+                'selected_products': context
+                    .read<AddBookingProductsCubit>()
+                    .state
+                    .products,
+                'pickup_date_time': bookingData.pickupDate,
+                'return_date_time': bookingData.returnDate,
               },
-              borderRadius: BorderRadius.circular(16),
-              child: Padding(
-                padding: const EdgeInsets.all(24),
+            );
+
+            if (result != null && result is List<ProductSelectedModel>) {
+              context
+                  .read<AddBookingProductsCubit>()
+                  .setAll(result);
+            }
+          } catch (e) {
+            // Fallback navigation if GoRouter fails
+            if (context.mounted) {
+              final result = await context.pushNamed(
+                AppRoutes.selectProducts.name,
+                extra: {
+                  'selected_products': context
+                      .read<AddBookingProductsCubit>()
+                      .state
+                      .products,
+                  'pickup_date_time': bookingData.pickupDate,
+                  'return_date_time': bookingData.returnDate,
+                },
+              );
+
+              if (result != null && result is List<ProductSelectedModel>) {
+                context
+                    .read<AddBookingProductsCubit>()
+                    .setAll(result);
+              }
+            }
+          }
+        },
+        splashColor: AppColors.grey300,
+        elevation: 0,
+        padding: EdgeInsets.zero,
+        child: Container(
+          padding: 10.padding,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
+                      padding: 8.padding,
+                      decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        Icons.add_shopping_cart,
-                        color: Colors.white,
-                        size: 24,
+                        Icons.add,
+                        color: AppColors.purple,
+                        size: 18.sp,
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            products.isEmpty ? 'Add Products' : 'Add More Products',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            products.isEmpty 
-                                ? 'Browse and select products for your booking'
-                                : 'Continue adding more products to your selection',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.9),
-                            ),
-                          ),
-                        ],
+                    8.width,
+                    Text(
+                      'Add Service',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.purple,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: 16,
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildWebLocationSection(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE5E7EB),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
               Icon(
-                Icons.location_on_outlined,
-                color: const Color(0xFF667eea),
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Location Details',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1a1a1a),
-                ),
+                Icons.arrow_forward_ios,
+                color: AppColors.purple,
+                size: 16.sp,
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          CustomTextField(
-            controller: locationStartController,
-            label: 'Start Location',
-            hintText: 'Enter start location',
-            prefixIcon: const Icon(Icons.trip_origin),
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Start Location',
-            ),
-          ),
-          const SizedBox(height: 16),
-          CustomTextField(
-            controller: locationFromController,
-            label: 'Pickup Location',
-            hintText: 'Enter pickup location',
-            prefixIcon: const Icon(Icons.location_on),
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Pickup Location',
-            ),
-          ),
-          const SizedBox(height: 16),
-          CustomTextField(
-            controller: locationToController,
-            label: 'Destination',
-            hintText: 'Enter destination',
-            prefixIcon: const Icon(Icons.flag),
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Destination',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWebDescriptionSection(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE5E7EB),
-          width: 1,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.description_outlined,
-                color: const Color(0xFF667eea),
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Additional Notes',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1a1a1a),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          CustomTextField(
-            controller: descriptionController,
-            hintText: 'Add any additional notes or requirements...',
-            maxLines: 6,
-            minLines: 4,
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Description',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    ),
+  );
 
-  Widget _buildLocationFields(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Locations',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 15),
-          CustomTextField(
-            controller: locationStartController,
-            label: 'Start Location',
-            hintText: 'Location',
-            prefixIcon: const Icon(Icons.place_outlined),
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Place',
-            ),
-          ),
-          const SizedBox(height: 15),
-          CustomTextField(
-            controller: locationFromController,
-            label: 'Pickup Location',
-            hintText: 'Location',
-            prefixIcon: const Icon(Icons.place_outlined),
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Place',
-            ),
-          ),
-          const SizedBox(height: 15),
-          CustomTextField(
-            controller: locationToController,
-            label: 'Destination',
-            hintText: 'Location',
-            prefixIcon: const Icon(Icons.place_outlined),
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Place',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDescriptionField(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Stack(
-        children: [
-          CustomTextField(
-            controller: descriptionController,
-            hintText: 'Add Description here...',
-            prefixIcon: const SizedBox.shrink(),
-            maxLines: 30,
-            minLines: 4,
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Description',
-            ),
-          ),
-          Positioned(
-            top: 16,
-            left: 12,
-            child: Icon(
-              Icons.edit_note_rounded,
-              color: AppColors.purple.lighten(0.2),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNextButton(BuildContext context) {
-    return CustomElevatedButton(
-      width: double.infinity,
-      onPressed: () async {
-        if (selectedProductsNotifier.value.isEmpty) {
-          CustomSnackBar(message: 'Please select at least one product');
-          return;
-        }
-
-        final total = selectedProductsNotifier.value
-            .fold(0, (int prev, element) => prev + element.amount);
-        if (total <= 0) {
-          CustomSnackBar(
-            message: 'Product amount total must be greater than 0',
-            isError: true,
-          );
-          return;
-        }
-
-        context.push(
-             AddBookingClientDetailsScreen(
-                        addBookingModel: addBookingModel.copyWith(
-                          products: selectedProductsNotifier.value,
-                          description: descriptionController.text.trim(),
-                          otherDetails: BookingOtherDetailsModel(
-                            locationStart:
-                                locationStartController.text.nullIfEmpty,
-                            locationFrom:
-                                locationFromController.text.nullIfEmpty,
-                            locationTo: locationToController.text.nullIfEmpty,
-                          ),
-                        ),
-                      ),
-        );
-      },
-      text: 'Next',
-    );
-  }
-
-  Container _addProductContainerBuilder(
-      BuildContext context, RequestBookingModel bookingData) {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(30),
-      alignment: Alignment.center,
-      decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-          side: BorderSide(
-            color: AppColors.grey400,
-          ),
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.purpleLightShade,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        width: MediaQuery.of(context).size.width * 0.5,
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 5,
-          children: [
-            const Icon(
-              Icons.add,
-              color: AppColors.purple,
-            ),
-            ValueListenableBuilder(
-              valueListenable: selectedProductsNotifier,
-              builder: (context, value, child) {
-                return Text(
-                  value.isEmpty ? 'Add products' : 'Add more',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.purple,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ).onTap(
-        () async {
-          final result = await context.push(SelectProductScreen(
-            serviceId: bookingData.serviceId!,
-            preSelectedData: selectedProductsNotifier.value,
-            pickupDate: bookingData.pickupDate!,
-            returnDate: bookingData.returnDate!,
-            pickupTime: bookingData.pickupTime,
-            returnTime: bookingData.returnTime,
-          ));
-          if (result != null) {
-            selectedProductsNotifier.value =
-                List<ProductSelectedModel>.from(result);
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildSelectedProductSection() {
-    return Column(
-      children: selectedProductsNotifier.value.map((selected) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          child: SelectedProductInAddBooking(
-            serviceId: addBookingModel.serviceId,
-            selected: selected,
-            onRemove: () {
-              selectedProductsNotifier.value = selectedProductsNotifier.value
-                  .where((item) => item != selected)
-                  .toList();
-            },
-            selectedProductsNotifier: selectedProductsNotifier,
-          ),
-        );
-      }).toList(),
-    );
-  }
+  Widget _buildSelectedProductSection(
+    BuildContext context,
+    List<ProductSelectedModel> products,
+  ) => Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ...products.map(
+        //   (product) => Container(
+        //     margin: 3.paddingVertical,
+        //     child: SelectedProductInAddBooking(selected: ,
+        //       product: product,
+        //       onRemove: () {
+        //         log('removing product from cubit ${product.id}');
+        //         context
+        //             .read<AddBookingProductsCubit>()
+        //             .re(product);
+        //       },
+        //     ),
+        //   ),
+        // ),
+      ],
+    ),
+  );
 }

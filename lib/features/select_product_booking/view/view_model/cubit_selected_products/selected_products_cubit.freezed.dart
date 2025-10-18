@@ -12,8 +12,7 @@ part of 'selected_products_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$SelectedProductsState {
@@ -22,34 +21,39 @@ mixin _$SelectedProductsState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      List<ProductSelectedModel> selectedProductsWithAmount,
-    )
-    selected,
-  }) => throw _privateConstructorUsedError;
+            List<ProductSelectedModel> selectedProductsWithAmount)
+        selected,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<ProductSelectedModel> selectedProductsWithAmount)?
-    selected,
-  }) => throw _privateConstructorUsedError;
+        selected,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<ProductSelectedModel> selectedProductsWithAmount)?
-    selected,
+        selected,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Selected value) selected,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Selected value)? selected,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Selected value)? selected,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of SelectedProductsState
   /// with the given fields replaced by the non-null parameter values.
@@ -60,19 +64,16 @@ mixin _$SelectedProductsState {
 
 /// @nodoc
 abstract class $SelectedProductsStateCopyWith<$Res> {
-  factory $SelectedProductsStateCopyWith(
-    SelectedProductsState value,
-    $Res Function(SelectedProductsState) then,
-  ) = _$SelectedProductsStateCopyWithImpl<$Res, SelectedProductsState>;
+  factory $SelectedProductsStateCopyWith(SelectedProductsState value,
+          $Res Function(SelectedProductsState) then) =
+      _$SelectedProductsStateCopyWithImpl<$Res, SelectedProductsState>;
   @useResult
   $Res call({List<ProductSelectedModel> selectedProductsWithAmount});
 }
 
 /// @nodoc
-class _$SelectedProductsStateCopyWithImpl<
-  $Res,
-  $Val extends SelectedProductsState
->
+class _$SelectedProductsStateCopyWithImpl<$Res,
+        $Val extends SelectedProductsState>
     implements $SelectedProductsStateCopyWith<$Res> {
   _$SelectedProductsStateCopyWithImpl(this._value, this._then);
 
@@ -85,16 +86,15 @@ class _$SelectedProductsStateCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? selectedProductsWithAmount = null}) {
-    return _then(
-      _value.copyWith(
-            selectedProductsWithAmount: null == selectedProductsWithAmount
-                ? _value.selectedProductsWithAmount
-                : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
-                      as List<ProductSelectedModel>,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? selectedProductsWithAmount = null,
+  }) {
+    return _then(_value.copyWith(
+      selectedProductsWithAmount: null == selectedProductsWithAmount
+          ? _value.selectedProductsWithAmount
+          : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>,
+    ) as $Val);
   }
 }
 
@@ -102,9 +102,8 @@ class _$SelectedProductsStateCopyWithImpl<
 abstract class _$$SelectedImplCopyWith<$Res>
     implements $SelectedProductsStateCopyWith<$Res> {
   factory _$$SelectedImplCopyWith(
-    _$SelectedImpl value,
-    $Res Function(_$SelectedImpl) then,
-  ) = __$$SelectedImplCopyWithImpl<$Res>;
+          _$SelectedImpl value, $Res Function(_$SelectedImpl) then) =
+      __$$SelectedImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<ProductSelectedModel> selectedProductsWithAmount});
@@ -115,23 +114,22 @@ class __$$SelectedImplCopyWithImpl<$Res>
     extends _$SelectedProductsStateCopyWithImpl<$Res, _$SelectedImpl>
     implements _$$SelectedImplCopyWith<$Res> {
   __$$SelectedImplCopyWithImpl(
-    _$SelectedImpl _value,
-    $Res Function(_$SelectedImpl) _then,
-  ) : super(_value, _then);
+      _$SelectedImpl _value, $Res Function(_$SelectedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SelectedProductsState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? selectedProductsWithAmount = null}) {
-    return _then(
-      _$SelectedImpl(
-        null == selectedProductsWithAmount
-            ? _value._selectedProductsWithAmount
-            : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
-                  as List<ProductSelectedModel>,
-      ),
-    );
+  $Res call({
+    Object? selectedProductsWithAmount = null,
+  }) {
+    return _then(_$SelectedImpl(
+      null == selectedProductsWithAmount
+          ? _value._selectedProductsWithAmount
+          : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>,
+    ));
   }
 }
 
@@ -139,8 +137,8 @@ class __$$SelectedImplCopyWithImpl<$Res>
 
 class _$SelectedImpl implements _Selected {
   const _$SelectedImpl(
-    final List<ProductSelectedModel> selectedProductsWithAmount,
-  ) : _selectedProductsWithAmount = selectedProductsWithAmount;
+      final List<ProductSelectedModel> selectedProductsWithAmount)
+      : _selectedProductsWithAmount = selectedProductsWithAmount;
 
   final List<ProductSelectedModel> _selectedProductsWithAmount;
   @override
@@ -162,16 +160,13 @@ class _$SelectedImpl implements _Selected {
         (other.runtimeType == runtimeType &&
             other is _$SelectedImpl &&
             const DeepCollectionEquality().equals(
-              other._selectedProductsWithAmount,
-              _selectedProductsWithAmount,
-            ));
+                other._selectedProductsWithAmount,
+                _selectedProductsWithAmount));
   }
 
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_selectedProductsWithAmount),
-  );
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_selectedProductsWithAmount));
 
   /// Create a copy of SelectedProductsState
   /// with the given fields replaced by the non-null parameter values.
@@ -185,9 +180,8 @@ class _$SelectedImpl implements _Selected {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      List<ProductSelectedModel> selectedProductsWithAmount,
-    )
-    selected,
+            List<ProductSelectedModel> selectedProductsWithAmount)
+        selected,
   }) {
     return selected(selectedProductsWithAmount);
   }
@@ -196,7 +190,7 @@ class _$SelectedImpl implements _Selected {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<ProductSelectedModel> selectedProductsWithAmount)?
-    selected,
+        selected,
   }) {
     return selected?.call(selectedProductsWithAmount);
   }
@@ -205,7 +199,7 @@ class _$SelectedImpl implements _Selected {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<ProductSelectedModel> selectedProductsWithAmount)?
-    selected,
+        selected,
     required TResult orElse(),
   }) {
     if (selected != null) {
@@ -245,8 +239,8 @@ class _$SelectedImpl implements _Selected {
 
 abstract class _Selected implements SelectedProductsState {
   const factory _Selected(
-    final List<ProductSelectedModel> selectedProductsWithAmount,
-  ) = _$SelectedImpl;
+          final List<ProductSelectedModel> selectedProductsWithAmount) =
+      _$SelectedImpl;
 
   @override
   List<ProductSelectedModel> get selectedProductsWithAmount;

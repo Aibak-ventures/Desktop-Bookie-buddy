@@ -24,10 +24,14 @@ class SelectedProductListViewWidget extends StatelessWidget {
           selected: (selectedProductsWithAmount) {
             return selectedProductsWithAmount.isEmpty
                 ? const SizedBox.shrink()
-                : Container(
-                    height: screenHeight * 0.1, // Responsive height
-                    margin: (5, 10).padding,
-                    child: ListView.builder(
+                : ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: screenHeight * 0.15,
+                      minHeight: 80,
+                    ),
+                    child: Container(
+                      margin: (5, 10).padding,
+                      child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: selectedProductsWithAmount.length,
                       itemBuilder: (context, index) {
@@ -55,6 +59,7 @@ class SelectedProductListViewWidget extends StatelessWidget {
                           },
                         );
                       },
+                    ),
                     ),
                   );
           },

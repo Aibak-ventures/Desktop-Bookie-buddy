@@ -46,17 +46,15 @@ class RequestBookingModel with _$RequestBookingModel {
     @JsonKey(name: 'details') BookingOtherDetailsModel? otherDetails,
     @JsonKey(name: 'additional_charges')
     List<AdditionalChargesModel>? additionalCharges,
-
     @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
     int? serviceId,
     @JsonKey(name: 'pickup_time', includeToJson: false, includeFromJson: false)
     TimeOfDay? pickupTime,
     @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
     TimeOfDay? returnTime,
-    // @JsonKey(name: 'staff_name') String? staffName,
-    // @JsonKey(name: 'location_start') String? locationStart,
-    // @JsonKey(name: 'location_from') String? locationFrom,
-    // @JsonKey(name: 'location_to') String? locationTo,
+    @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+    @Default(false)
+    bool sendPdfToWhatsApp,
   }) = _RequestBookingModel;
 
   factory RequestBookingModel.fromJson(Map<String, dynamic> json) =>
@@ -83,35 +81,4 @@ extension RequestBookingModelX on RequestBookingModel {
       (products != null && products!.isNotEmpty) ||
       otherDetails != null ||
       (additionalCharges != null && additionalCharges!.isNotEmpty);
-
-  //   // final details = {
-  //   //   //Location for vehicle
-  //   //   if (locationFrom.isNotNullOrEmpty) 'location_from': locationFrom,
-
-  //   //   if (locationTo.isNotNullOrEmpty) 'location_to': locationTo,
-
-  //   //   if (locationStart.isNotNullOrEmpty) 'location_start': locationStart,
-  //   // };
-  //   Map<String, dynamic> toCustomJson() => {
-  //     'client_id': ?clientId,
-  //     'staff_id': ?staffId,
-  //     'client': ?client?.toCustomJson(),
-  //     'client_address': address,
-  //     'booked_date': ?bookedDate,
-  //     'pickup_date': pickupDate,
-  //     'return_date': returnDate,
-  //     'cooling_period_end': ?coolingPeriodDate,
-  //     'advance_amount': ?advanceAmount,
-  //     'security_amount': ?securityAmount,
-  //     'discount_amount': ?discountAmount,
-  //     'purchase_mode': ?purchaseMode,
-  //     'description': ?description,
-  //     'payment_method': ?paymentMethod,
-  //     'delivery_status': deliveryStatus,
-  //     'booking_status': ?bookingStatus,
-  //     'variants': products?.map((e) => e.toCustomJson()).toList(),
-  //     'details': ?otherDetails?.toJson(),
-  //     if (additionalCharges.isNotNullOrEmpty)
-  //       'additional_charges': additionalCharges!.map((e) => e.toJson()).toList(),
-  //   };
 }

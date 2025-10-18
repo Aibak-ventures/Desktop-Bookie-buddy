@@ -12,8 +12,7 @@ part of 'sale_details_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) {
   return _SaleDetailsModel.fromJson(json);
@@ -45,11 +44,10 @@ mixin _$SaleDetailsModel {
   @JsonKey(name: 'items')
   List<ProductSaleInfoModel> get products => throw _privateConstructorUsedError;
   @JsonKey(
-    name: 'method',
-    fromJson: PaymentMethod.fromString,
-    toJson: PaymentMethod.toJson,
-    readValue: _paymentMethodReadValue,
-  )
+      name: 'method',
+      fromJson: PaymentMethod.fromString,
+      toJson: PaymentMethod.toJson,
+      readValue: _paymentMethodReadValue)
   PaymentMethod get paymentMethod => throw _privateConstructorUsedError;
   @JsonKey(name: 'staff_id')
   int? get staffId => throw _privateConstructorUsedError;
@@ -69,33 +67,30 @@ mixin _$SaleDetailsModel {
 /// @nodoc
 abstract class $SaleDetailsModelCopyWith<$Res> {
   factory $SaleDetailsModelCopyWith(
-    SaleDetailsModel value,
-    $Res Function(SaleDetailsModel) then,
-  ) = _$SaleDetailsModelCopyWithImpl<$Res, SaleDetailsModel>;
+          SaleDetailsModel value, $Res Function(SaleDetailsModel) then) =
+      _$SaleDetailsModelCopyWithImpl<$Res, SaleDetailsModel>;
   @useResult
-  $Res call({
-    int id,
-    @JsonKey(name: 'client') ClientModel client,
-    @JsonKey(name: 'address', defaultValue: '') String address,
-    @JsonKey(name: 'description') String description,
-    @JsonKey(name: 'sale_date') String saleDate,
-    @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
-    @JsonKey(name: 'total_amount') int totalAmount,
-    @JsonKey(name: 'discount') int discountAmount,
-    @JsonKey(name: 'paid_amount') int paidAmount,
-    @JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,
-    @JsonKey(name: 'balance_due') int balanceDueAmount,
-    @JsonKey(name: 'items') List<ProductSaleInfoModel> products,
-    @JsonKey(
-      name: 'method',
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
-      readValue: _paymentMethodReadValue,
-    )
-    PaymentMethod paymentMethod,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'staff_name') String? staffName,
-  });
+  $Res call(
+      {int id,
+      @JsonKey(name: 'client') ClientModel client,
+      @JsonKey(name: 'address', defaultValue: '') String address,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'sale_date') String saleDate,
+      @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
+      @JsonKey(name: 'total_amount') int totalAmount,
+      @JsonKey(name: 'discount') int discountAmount,
+      @JsonKey(name: 'paid_amount') int paidAmount,
+      @JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,
+      @JsonKey(name: 'balance_due') int balanceDueAmount,
+      @JsonKey(name: 'items') List<ProductSaleInfoModel> products,
+      @JsonKey(
+          name: 'method',
+          fromJson: PaymentMethod.fromString,
+          toJson: PaymentMethod.toJson,
+          readValue: _paymentMethodReadValue)
+      PaymentMethod paymentMethod,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'staff_name') String? staffName});
 
   $ClientModelCopyWith<$Res> get client;
 }
@@ -131,71 +126,68 @@ class _$SaleDetailsModelCopyWithImpl<$Res, $Val extends SaleDetailsModel>
     Object? staffId = freezed,
     Object? staffName = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            client: null == client
-                ? _value.client
-                : client // ignore: cast_nullable_to_non_nullable
-                      as ClientModel,
-            address: null == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String,
-            description: null == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                      as String,
-            saleDate: null == saleDate
-                ? _value.saleDate
-                : saleDate // ignore: cast_nullable_to_non_nullable
-                      as String,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as String,
-            totalAmount: null == totalAmount
-                ? _value.totalAmount
-                : totalAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            discountAmount: null == discountAmount
-                ? _value.discountAmount
-                : discountAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            paidAmount: null == paidAmount
-                ? _value.paidAmount
-                : paidAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            invoiceId: null == invoiceId
-                ? _value.invoiceId
-                : invoiceId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            balanceDueAmount: null == balanceDueAmount
-                ? _value.balanceDueAmount
-                : balanceDueAmount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            products: null == products
-                ? _value.products
-                : products // ignore: cast_nullable_to_non_nullable
-                      as List<ProductSaleInfoModel>,
-            paymentMethod: null == paymentMethod
-                ? _value.paymentMethod
-                : paymentMethod // ignore: cast_nullable_to_non_nullable
-                      as PaymentMethod,
-            staffId: freezed == staffId
-                ? _value.staffId
-                : staffId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            staffName: freezed == staffName
-                ? _value.staffName
-                : staffName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      client: null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientModel,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      saleDate: null == saleDate
+          ? _value.saleDate
+          : saleDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      discountAmount: null == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      paidAmount: null == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      invoiceId: null == invoiceId
+          ? _value.invoiceId
+          : invoiceId // ignore: cast_nullable_to_non_nullable
+              as String,
+      balanceDueAmount: null == balanceDueAmount
+          ? _value.balanceDueAmount
+          : balanceDueAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      products: null == products
+          ? _value.products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSaleInfoModel>,
+      paymentMethod: null == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as PaymentMethod,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
   }
 
   /// Create a copy of SaleDetailsModel
@@ -212,35 +204,32 @@ class _$SaleDetailsModelCopyWithImpl<$Res, $Val extends SaleDetailsModel>
 /// @nodoc
 abstract class _$$SaleDetailsModelImplCopyWith<$Res>
     implements $SaleDetailsModelCopyWith<$Res> {
-  factory _$$SaleDetailsModelImplCopyWith(
-    _$SaleDetailsModelImpl value,
-    $Res Function(_$SaleDetailsModelImpl) then,
-  ) = __$$SaleDetailsModelImplCopyWithImpl<$Res>;
+  factory _$$SaleDetailsModelImplCopyWith(_$SaleDetailsModelImpl value,
+          $Res Function(_$SaleDetailsModelImpl) then) =
+      __$$SaleDetailsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int id,
-    @JsonKey(name: 'client') ClientModel client,
-    @JsonKey(name: 'address', defaultValue: '') String address,
-    @JsonKey(name: 'description') String description,
-    @JsonKey(name: 'sale_date') String saleDate,
-    @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
-    @JsonKey(name: 'total_amount') int totalAmount,
-    @JsonKey(name: 'discount') int discountAmount,
-    @JsonKey(name: 'paid_amount') int paidAmount,
-    @JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,
-    @JsonKey(name: 'balance_due') int balanceDueAmount,
-    @JsonKey(name: 'items') List<ProductSaleInfoModel> products,
-    @JsonKey(
-      name: 'method',
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
-      readValue: _paymentMethodReadValue,
-    )
-    PaymentMethod paymentMethod,
-    @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'staff_name') String? staffName,
-  });
+  $Res call(
+      {int id,
+      @JsonKey(name: 'client') ClientModel client,
+      @JsonKey(name: 'address', defaultValue: '') String address,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'sale_date') String saleDate,
+      @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
+      @JsonKey(name: 'total_amount') int totalAmount,
+      @JsonKey(name: 'discount') int discountAmount,
+      @JsonKey(name: 'paid_amount') int paidAmount,
+      @JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,
+      @JsonKey(name: 'balance_due') int balanceDueAmount,
+      @JsonKey(name: 'items') List<ProductSaleInfoModel> products,
+      @JsonKey(
+          name: 'method',
+          fromJson: PaymentMethod.fromString,
+          toJson: PaymentMethod.toJson,
+          readValue: _paymentMethodReadValue)
+      PaymentMethod paymentMethod,
+      @JsonKey(name: 'staff_id') int? staffId,
+      @JsonKey(name: 'staff_name') String? staffName});
 
   @override
   $ClientModelCopyWith<$Res> get client;
@@ -250,10 +239,9 @@ abstract class _$$SaleDetailsModelImplCopyWith<$Res>
 class __$$SaleDetailsModelImplCopyWithImpl<$Res>
     extends _$SaleDetailsModelCopyWithImpl<$Res, _$SaleDetailsModelImpl>
     implements _$$SaleDetailsModelImplCopyWith<$Res> {
-  __$$SaleDetailsModelImplCopyWithImpl(
-    _$SaleDetailsModelImpl _value,
-    $Res Function(_$SaleDetailsModelImpl) _then,
-  ) : super(_value, _then);
+  __$$SaleDetailsModelImplCopyWithImpl(_$SaleDetailsModelImpl _value,
+      $Res Function(_$SaleDetailsModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SaleDetailsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -276,99 +264,97 @@ class __$$SaleDetailsModelImplCopyWithImpl<$Res>
     Object? staffId = freezed,
     Object? staffName = freezed,
   }) {
-    return _then(
-      _$SaleDetailsModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        client: null == client
-            ? _value.client
-            : client // ignore: cast_nullable_to_non_nullable
-                  as ClientModel,
-        address: null == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String,
-        description: null == description
-            ? _value.description
-            : description // ignore: cast_nullable_to_non_nullable
-                  as String,
-        saleDate: null == saleDate
-            ? _value.saleDate
-            : saleDate // ignore: cast_nullable_to_non_nullable
-                  as String,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as String,
-        totalAmount: null == totalAmount
-            ? _value.totalAmount
-            : totalAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        discountAmount: null == discountAmount
-            ? _value.discountAmount
-            : discountAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        paidAmount: null == paidAmount
-            ? _value.paidAmount
-            : paidAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        invoiceId: null == invoiceId
-            ? _value.invoiceId
-            : invoiceId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        balanceDueAmount: null == balanceDueAmount
-            ? _value.balanceDueAmount
-            : balanceDueAmount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        products: null == products
-            ? _value._products
-            : products // ignore: cast_nullable_to_non_nullable
-                  as List<ProductSaleInfoModel>,
-        paymentMethod: null == paymentMethod
-            ? _value.paymentMethod
-            : paymentMethod // ignore: cast_nullable_to_non_nullable
-                  as PaymentMethod,
-        staffId: freezed == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        staffName: freezed == staffName
-            ? _value.staffName
-            : staffName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
+    return _then(_$SaleDetailsModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      client: null == client
+          ? _value.client
+          : client // ignore: cast_nullable_to_non_nullable
+              as ClientModel,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      saleDate: null == saleDate
+          ? _value.saleDate
+          : saleDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      discountAmount: null == discountAmount
+          ? _value.discountAmount
+          : discountAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      paidAmount: null == paidAmount
+          ? _value.paidAmount
+          : paidAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      invoiceId: null == invoiceId
+          ? _value.invoiceId
+          : invoiceId // ignore: cast_nullable_to_non_nullable
+              as String,
+      balanceDueAmount: null == balanceDueAmount
+          ? _value.balanceDueAmount
+          : balanceDueAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      products: null == products
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSaleInfoModel>,
+      paymentMethod: null == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as PaymentMethod,
+      staffId: freezed == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SaleDetailsModelImpl implements _SaleDetailsModel {
-  const _$SaleDetailsModelImpl({
-    required this.id,
-    @JsonKey(name: 'client') required this.client,
-    @JsonKey(name: 'address', defaultValue: '') required this.address,
-    @JsonKey(name: 'description') required this.description,
-    @JsonKey(name: 'sale_date') required this.saleDate,
-    @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt,
-    @JsonKey(name: 'total_amount') required this.totalAmount,
-    @JsonKey(name: 'discount') required this.discountAmount,
-    @JsonKey(name: 'paid_amount') required this.paidAmount,
-    @JsonKey(name: 'shop_sale_id', defaultValue: '') required this.invoiceId,
-    @JsonKey(name: 'balance_due') required this.balanceDueAmount,
-    @JsonKey(name: 'items') required final List<ProductSaleInfoModel> products,
-    @JsonKey(
-      name: 'method',
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
-      readValue: _paymentMethodReadValue,
-    )
-    this.paymentMethod = PaymentMethod.cash,
-    @JsonKey(name: 'staff_id') this.staffId,
-    @JsonKey(name: 'staff_name') this.staffName,
-  }) : _products = products;
+  const _$SaleDetailsModelImpl(
+      {required this.id,
+      @JsonKey(name: 'client') required this.client,
+      @JsonKey(name: 'address', defaultValue: '') required this.address,
+      @JsonKey(name: 'description') required this.description,
+      @JsonKey(name: 'sale_date') required this.saleDate,
+      @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt,
+      @JsonKey(name: 'total_amount') required this.totalAmount,
+      @JsonKey(name: 'discount') required this.discountAmount,
+      @JsonKey(name: 'paid_amount') required this.paidAmount,
+      @JsonKey(name: 'shop_sale_id', defaultValue: '') required this.invoiceId,
+      @JsonKey(name: 'balance_due') required this.balanceDueAmount,
+      @JsonKey(name: 'items')
+      required final List<ProductSaleInfoModel> products,
+      @JsonKey(
+          name: 'method',
+          fromJson: PaymentMethod.fromString,
+          toJson: PaymentMethod.toJson,
+          readValue: _paymentMethodReadValue)
+      this.paymentMethod = PaymentMethod.cash,
+      @JsonKey(name: 'staff_id') this.staffId,
+      @JsonKey(name: 'staff_name') this.staffName})
+      : _products = products;
 
   factory _$SaleDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SaleDetailsModelImplFromJson(json);
@@ -416,11 +402,10 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
 
   @override
   @JsonKey(
-    name: 'method',
-    fromJson: PaymentMethod.fromString,
-    toJson: PaymentMethod.toJson,
-    readValue: _paymentMethodReadValue,
-  )
+      name: 'method',
+      fromJson: PaymentMethod.fromString,
+      toJson: PaymentMethod.toJson,
+      readValue: _paymentMethodReadValue)
   final PaymentMethod paymentMethod;
   @override
   @JsonKey(name: 'staff_id')
@@ -469,23 +454,22 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    client,
-    address,
-    description,
-    saleDate,
-    createdAt,
-    totalAmount,
-    discountAmount,
-    paidAmount,
-    invoiceId,
-    balanceDueAmount,
-    const DeepCollectionEquality().hash(_products),
-    paymentMethod,
-    staffId,
-    staffName,
-  );
+      runtimeType,
+      id,
+      client,
+      address,
+      description,
+      saleDate,
+      createdAt,
+      totalAmount,
+      discountAmount,
+      paidAmount,
+      invoiceId,
+      balanceDueAmount,
+      const DeepCollectionEquality().hash(_products),
+      paymentMethod,
+      staffId,
+      staffName);
 
   /// Create a copy of SaleDetailsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -494,42 +478,42 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
   @pragma('vm:prefer-inline')
   _$$SaleDetailsModelImplCopyWith<_$SaleDetailsModelImpl> get copyWith =>
       __$$SaleDetailsModelImplCopyWithImpl<_$SaleDetailsModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SaleDetailsModelImplToJson(this);
+    return _$$SaleDetailsModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _SaleDetailsModel implements SaleDetailsModel {
-  const factory _SaleDetailsModel({
-    required final int id,
-    @JsonKey(name: 'client') required final ClientModel client,
-    @JsonKey(name: 'address', defaultValue: '') required final String address,
-    @JsonKey(name: 'description') required final String description,
-    @JsonKey(name: 'sale_date') required final String saleDate,
-    @JsonKey(name: 'created_at', defaultValue: '')
-    required final String createdAt,
-    @JsonKey(name: 'total_amount') required final int totalAmount,
-    @JsonKey(name: 'discount') required final int discountAmount,
-    @JsonKey(name: 'paid_amount') required final int paidAmount,
-    @JsonKey(name: 'shop_sale_id', defaultValue: '')
-    required final String invoiceId,
-    @JsonKey(name: 'balance_due') required final int balanceDueAmount,
-    @JsonKey(name: 'items') required final List<ProductSaleInfoModel> products,
-    @JsonKey(
-      name: 'method',
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
-      readValue: _paymentMethodReadValue,
-    )
-    final PaymentMethod paymentMethod,
-    @JsonKey(name: 'staff_id') final int? staffId,
-    @JsonKey(name: 'staff_name') final String? staffName,
-  }) = _$SaleDetailsModelImpl;
+  const factory _SaleDetailsModel(
+      {required final int id,
+      @JsonKey(name: 'client') required final ClientModel client,
+      @JsonKey(name: 'address', defaultValue: '') required final String address,
+      @JsonKey(name: 'description') required final String description,
+      @JsonKey(name: 'sale_date') required final String saleDate,
+      @JsonKey(name: 'created_at', defaultValue: '')
+      required final String createdAt,
+      @JsonKey(name: 'total_amount') required final int totalAmount,
+      @JsonKey(name: 'discount') required final int discountAmount,
+      @JsonKey(name: 'paid_amount') required final int paidAmount,
+      @JsonKey(name: 'shop_sale_id', defaultValue: '')
+      required final String invoiceId,
+      @JsonKey(name: 'balance_due') required final int balanceDueAmount,
+      @JsonKey(name: 'items')
+      required final List<ProductSaleInfoModel> products,
+      @JsonKey(
+          name: 'method',
+          fromJson: PaymentMethod.fromString,
+          toJson: PaymentMethod.toJson,
+          readValue: _paymentMethodReadValue)
+      final PaymentMethod paymentMethod,
+      @JsonKey(name: 'staff_id') final int? staffId,
+      @JsonKey(name: 'staff_name')
+      final String? staffName}) = _$SaleDetailsModelImpl;
 
   factory _SaleDetailsModel.fromJson(Map<String, dynamic> json) =
       _$SaleDetailsModelImpl.fromJson;
@@ -571,11 +555,10 @@ abstract class _SaleDetailsModel implements SaleDetailsModel {
   List<ProductSaleInfoModel> get products;
   @override
   @JsonKey(
-    name: 'method',
-    fromJson: PaymentMethod.fromString,
-    toJson: PaymentMethod.toJson,
-    readValue: _paymentMethodReadValue,
-  )
+      name: 'method',
+      fromJson: PaymentMethod.fromString,
+      toJson: PaymentMethod.toJson,
+      readValue: _paymentMethodReadValue)
   PaymentMethod get paymentMethod;
   @override
   @JsonKey(name: 'staff_id')
@@ -637,34 +620,30 @@ mixin _$ProductSaleInfoModel {
 
 /// @nodoc
 abstract class $ProductSaleInfoModelCopyWith<$Res> {
-  factory $ProductSaleInfoModelCopyWith(
-    ProductSaleInfoModel value,
-    $Res Function(ProductSaleInfoModel) then,
-  ) = _$ProductSaleInfoModelCopyWithImpl<$Res, ProductSaleInfoModel>;
+  factory $ProductSaleInfoModelCopyWith(ProductSaleInfoModel value,
+          $Res Function(ProductSaleInfoModel) then) =
+      _$ProductSaleInfoModelCopyWithImpl<$Res, ProductSaleInfoModel>;
   @useResult
-  $Res call({
-    @JsonKey(name: 'id') int id,
-    @JsonKey(name: 'product_id') int productId,
-    @JsonKey(name: 'variant_id') int variantId,
-    @JsonKey(name: 'product_name') String name,
-    @JsonKey(name: 'variant') String? variantAttribute,
-    @JsonKey(name: 'quantity') int quantity,
-    @JsonKey(name: 'price') int price,
-    @JsonKey(name: 'subtotal') int subtotal,
-    @JsonKey(name: 'thumbnail') String? image,
-    @JsonKey(name: 'color') String? color,
-    @JsonKey(name: 'category') String? category,
-    @JsonKey(name: 'model') String? model,
-    @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
-    MainServiceType? mainServiceType,
-  });
+  $Res call(
+      {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'product_id') int productId,
+      @JsonKey(name: 'variant_id') int variantId,
+      @JsonKey(name: 'product_name') String name,
+      @JsonKey(name: 'variant') String? variantAttribute,
+      @JsonKey(name: 'quantity') int quantity,
+      @JsonKey(name: 'price') int price,
+      @JsonKey(name: 'subtotal') int subtotal,
+      @JsonKey(name: 'thumbnail') String? image,
+      @JsonKey(name: 'color') String? color,
+      @JsonKey(name: 'category') String? category,
+      @JsonKey(name: 'model') String? model,
+      @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
+      MainServiceType? mainServiceType});
 }
 
 /// @nodoc
-class _$ProductSaleInfoModelCopyWithImpl<
-  $Res,
-  $Val extends ProductSaleInfoModel
->
+class _$ProductSaleInfoModelCopyWithImpl<$Res,
+        $Val extends ProductSaleInfoModel>
     implements $ProductSaleInfoModelCopyWith<$Res> {
   _$ProductSaleInfoModelCopyWithImpl(this._value, this._then);
 
@@ -692,101 +671,95 @@ class _$ProductSaleInfoModelCopyWithImpl<
     Object? model = freezed,
     Object? mainServiceType = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            productId: null == productId
-                ? _value.productId
-                : productId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            variantId: null == variantId
-                ? _value.variantId
-                : variantId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            variantAttribute: freezed == variantAttribute
-                ? _value.variantAttribute
-                : variantAttribute // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            quantity: null == quantity
-                ? _value.quantity
-                : quantity // ignore: cast_nullable_to_non_nullable
-                      as int,
-            price: null == price
-                ? _value.price
-                : price // ignore: cast_nullable_to_non_nullable
-                      as int,
-            subtotal: null == subtotal
-                ? _value.subtotal
-                : subtotal // ignore: cast_nullable_to_non_nullable
-                      as int,
-            image: freezed == image
-                ? _value.image
-                : image // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            color: freezed == color
-                ? _value.color
-                : color // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            category: freezed == category
-                ? _value.category
-                : category // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            model: freezed == model
-                ? _value.model
-                : model // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            mainServiceType: freezed == mainServiceType
-                ? _value.mainServiceType
-                : mainServiceType // ignore: cast_nullable_to_non_nullable
-                      as MainServiceType?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as int,
+      variantId: null == variantId
+          ? _value.variantId
+          : variantId // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      variantAttribute: freezed == variantAttribute
+          ? _value.variantAttribute
+          : variantAttribute // ignore: cast_nullable_to_non_nullable
+              as String?,
+      quantity: null == quantity
+          ? _value.quantity
+          : quantity // ignore: cast_nullable_to_non_nullable
+              as int,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int,
+      subtotal: null == subtotal
+          ? _value.subtotal
+          : subtotal // ignore: cast_nullable_to_non_nullable
+              as int,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      color: freezed == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String?,
+      category: freezed == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String?,
+      model: freezed == model
+          ? _value.model
+          : model // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mainServiceType: freezed == mainServiceType
+          ? _value.mainServiceType
+          : mainServiceType // ignore: cast_nullable_to_non_nullable
+              as MainServiceType?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ProductSaleInfoModelImplCopyWith<$Res>
     implements $ProductSaleInfoModelCopyWith<$Res> {
-  factory _$$ProductSaleInfoModelImplCopyWith(
-    _$ProductSaleInfoModelImpl value,
-    $Res Function(_$ProductSaleInfoModelImpl) then,
-  ) = __$$ProductSaleInfoModelImplCopyWithImpl<$Res>;
+  factory _$$ProductSaleInfoModelImplCopyWith(_$ProductSaleInfoModelImpl value,
+          $Res Function(_$ProductSaleInfoModelImpl) then) =
+      __$$ProductSaleInfoModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(name: 'id') int id,
-    @JsonKey(name: 'product_id') int productId,
-    @JsonKey(name: 'variant_id') int variantId,
-    @JsonKey(name: 'product_name') String name,
-    @JsonKey(name: 'variant') String? variantAttribute,
-    @JsonKey(name: 'quantity') int quantity,
-    @JsonKey(name: 'price') int price,
-    @JsonKey(name: 'subtotal') int subtotal,
-    @JsonKey(name: 'thumbnail') String? image,
-    @JsonKey(name: 'color') String? color,
-    @JsonKey(name: 'category') String? category,
-    @JsonKey(name: 'model') String? model,
-    @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
-    MainServiceType? mainServiceType,
-  });
+  $Res call(
+      {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'product_id') int productId,
+      @JsonKey(name: 'variant_id') int variantId,
+      @JsonKey(name: 'product_name') String name,
+      @JsonKey(name: 'variant') String? variantAttribute,
+      @JsonKey(name: 'quantity') int quantity,
+      @JsonKey(name: 'price') int price,
+      @JsonKey(name: 'subtotal') int subtotal,
+      @JsonKey(name: 'thumbnail') String? image,
+      @JsonKey(name: 'color') String? color,
+      @JsonKey(name: 'category') String? category,
+      @JsonKey(name: 'model') String? model,
+      @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
+      MainServiceType? mainServiceType});
 }
 
 /// @nodoc
 class __$$ProductSaleInfoModelImplCopyWithImpl<$Res>
     extends _$ProductSaleInfoModelCopyWithImpl<$Res, _$ProductSaleInfoModelImpl>
     implements _$$ProductSaleInfoModelImplCopyWith<$Res> {
-  __$$ProductSaleInfoModelImplCopyWithImpl(
-    _$ProductSaleInfoModelImpl _value,
-    $Res Function(_$ProductSaleInfoModelImpl) _then,
-  ) : super(_value, _then);
+  __$$ProductSaleInfoModelImplCopyWithImpl(_$ProductSaleInfoModelImpl _value,
+      $Res Function(_$ProductSaleInfoModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ProductSaleInfoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -807,84 +780,81 @@ class __$$ProductSaleInfoModelImplCopyWithImpl<$Res>
     Object? model = freezed,
     Object? mainServiceType = freezed,
   }) {
-    return _then(
-      _$ProductSaleInfoModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        productId: null == productId
-            ? _value.productId
-            : productId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        variantId: null == variantId
-            ? _value.variantId
-            : variantId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        variantAttribute: freezed == variantAttribute
-            ? _value.variantAttribute
-            : variantAttribute // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        quantity: null == quantity
-            ? _value.quantity
-            : quantity // ignore: cast_nullable_to_non_nullable
-                  as int,
-        price: null == price
-            ? _value.price
-            : price // ignore: cast_nullable_to_non_nullable
-                  as int,
-        subtotal: null == subtotal
-            ? _value.subtotal
-            : subtotal // ignore: cast_nullable_to_non_nullable
-                  as int,
-        image: freezed == image
-            ? _value.image
-            : image // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        color: freezed == color
-            ? _value.color
-            : color // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        category: freezed == category
-            ? _value.category
-            : category // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        model: freezed == model
-            ? _value.model
-            : model // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        mainServiceType: freezed == mainServiceType
-            ? _value.mainServiceType
-            : mainServiceType // ignore: cast_nullable_to_non_nullable
-                  as MainServiceType?,
-      ),
-    );
+    return _then(_$ProductSaleInfoModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as int,
+      variantId: null == variantId
+          ? _value.variantId
+          : variantId // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      variantAttribute: freezed == variantAttribute
+          ? _value.variantAttribute
+          : variantAttribute // ignore: cast_nullable_to_non_nullable
+              as String?,
+      quantity: null == quantity
+          ? _value.quantity
+          : quantity // ignore: cast_nullable_to_non_nullable
+              as int,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int,
+      subtotal: null == subtotal
+          ? _value.subtotal
+          : subtotal // ignore: cast_nullable_to_non_nullable
+              as int,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      color: freezed == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String?,
+      category: freezed == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String?,
+      model: freezed == model
+          ? _value.model
+          : model // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mainServiceType: freezed == mainServiceType
+          ? _value.mainServiceType
+          : mainServiceType // ignore: cast_nullable_to_non_nullable
+              as MainServiceType?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ProductSaleInfoModelImpl implements _ProductSaleInfoModel {
-  const _$ProductSaleInfoModelImpl({
-    @JsonKey(name: 'id') required this.id,
-    @JsonKey(name: 'product_id') required this.productId,
-    @JsonKey(name: 'variant_id') required this.variantId,
-    @JsonKey(name: 'product_name') required this.name,
-    @JsonKey(name: 'variant') this.variantAttribute,
-    @JsonKey(name: 'quantity') required this.quantity,
-    @JsonKey(name: 'price') required this.price,
-    @JsonKey(name: 'subtotal') required this.subtotal,
-    @JsonKey(name: 'thumbnail') this.image,
-    @JsonKey(name: 'color') this.color,
-    @JsonKey(name: 'category') this.category,
-    @JsonKey(name: 'model') this.model,
-    @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
-    this.mainServiceType,
-  });
+  const _$ProductSaleInfoModelImpl(
+      {@JsonKey(name: 'id') required this.id,
+      @JsonKey(name: 'product_id') required this.productId,
+      @JsonKey(name: 'variant_id') required this.variantId,
+      @JsonKey(name: 'product_name') required this.name,
+      @JsonKey(name: 'variant') this.variantAttribute,
+      @JsonKey(name: 'quantity') required this.quantity,
+      @JsonKey(name: 'price') required this.price,
+      @JsonKey(name: 'subtotal') required this.subtotal,
+      @JsonKey(name: 'thumbnail') this.image,
+      @JsonKey(name: 'color') this.color,
+      @JsonKey(name: 'category') this.category,
+      @JsonKey(name: 'model') this.model,
+      @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
+      this.mainServiceType});
 
   factory _$ProductSaleInfoModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductSaleInfoModelImplFromJson(json);
@@ -964,21 +934,20 @@ class _$ProductSaleInfoModelImpl implements _ProductSaleInfoModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    productId,
-    variantId,
-    name,
-    variantAttribute,
-    quantity,
-    price,
-    subtotal,
-    image,
-    color,
-    category,
-    model,
-    mainServiceType,
-  );
+      runtimeType,
+      id,
+      productId,
+      variantId,
+      name,
+      variantAttribute,
+      quantity,
+      price,
+      subtotal,
+      image,
+      color,
+      category,
+      model,
+      mainServiceType);
 
   /// Create a copy of ProductSaleInfoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -986,35 +955,34 @@ class _$ProductSaleInfoModelImpl implements _ProductSaleInfoModel {
   @override
   @pragma('vm:prefer-inline')
   _$$ProductSaleInfoModelImplCopyWith<_$ProductSaleInfoModelImpl>
-  get copyWith =>
-      __$$ProductSaleInfoModelImplCopyWithImpl<_$ProductSaleInfoModelImpl>(
-        this,
-        _$identity,
-      );
+      get copyWith =>
+          __$$ProductSaleInfoModelImplCopyWithImpl<_$ProductSaleInfoModelImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProductSaleInfoModelImplToJson(this);
+    return _$$ProductSaleInfoModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ProductSaleInfoModel implements ProductSaleInfoModel {
-  const factory _ProductSaleInfoModel({
-    @JsonKey(name: 'id') required final int id,
-    @JsonKey(name: 'product_id') required final int productId,
-    @JsonKey(name: 'variant_id') required final int variantId,
-    @JsonKey(name: 'product_name') required final String name,
-    @JsonKey(name: 'variant') final String? variantAttribute,
-    @JsonKey(name: 'quantity') required final int quantity,
-    @JsonKey(name: 'price') required final int price,
-    @JsonKey(name: 'subtotal') required final int subtotal,
-    @JsonKey(name: 'thumbnail') final String? image,
-    @JsonKey(name: 'color') final String? color,
-    @JsonKey(name: 'category') final String? category,
-    @JsonKey(name: 'model') final String? model,
-    @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
-    final MainServiceType? mainServiceType,
-  }) = _$ProductSaleInfoModelImpl;
+  const factory _ProductSaleInfoModel(
+      {@JsonKey(name: 'id') required final int id,
+      @JsonKey(name: 'product_id') required final int productId,
+      @JsonKey(name: 'variant_id') required final int variantId,
+      @JsonKey(name: 'product_name') required final String name,
+      @JsonKey(name: 'variant') final String? variantAttribute,
+      @JsonKey(name: 'quantity') required final int quantity,
+      @JsonKey(name: 'price') required final int price,
+      @JsonKey(name: 'subtotal') required final int subtotal,
+      @JsonKey(name: 'thumbnail') final String? image,
+      @JsonKey(name: 'color') final String? color,
+      @JsonKey(name: 'category') final String? category,
+      @JsonKey(name: 'model') final String? model,
+      @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
+      final MainServiceType? mainServiceType}) = _$ProductSaleInfoModelImpl;
 
   factory _ProductSaleInfoModel.fromJson(Map<String, dynamic> json) =
       _$ProductSaleInfoModelImpl.fromJson;
@@ -1064,5 +1032,5 @@ abstract class _ProductSaleInfoModel implements ProductSaleInfoModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProductSaleInfoModelImplCopyWith<_$ProductSaleInfoModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

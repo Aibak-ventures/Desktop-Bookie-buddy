@@ -2,16 +2,50 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/api/api_paths.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class ServiceApi {
+  /// Fetches services with improved error handling and retry logic
   Future<CustomResponseModel> fetchServices() async {
-    try {
-      final response = await DioClient.dio.get(ApiPaths.service.selected);
+    return await safeApiCall<CustomResponseModel>(() async {
+      log('🔄 Fetching services from: ${ApiPaths.service.selected}');
+      
+      final response = await DioClient.dio.get(
+        ApiPaths.service.selected,
+        options: Options(
+          // Add extra timeout for this specific request
+          receiveTimeout: const Duration(seconds: 30),
+          sendTimeout: const Duration(seconds: 15),
+          // Add retry logic
+          extra: {'retries': 3},
+        ),
+      );
+
+      if (kDebugMode) {
+        log('✅ Services fetched successfully. Status: ${response.statusCode}');
+        log('📦 Response data type: ${response.data.runtimeType}');
+      }
 
       return CustomResponseModel.fromJson(response.data);
-    } catch (e, stackTrace) {
-      log('Failed to load services', error: e, stackTrace: stackTrace);
-      rethrow;
+    });
+  }
+  
+  /// Alternative method for testing network connectivity
+  Future<bool> checkApiConnectivity() async {
+    try {
+      final response = await DioClient.dio.get(
+        '/api/v3/health/', // Assuming there's a health check endpoint
+        options: Options(
+          receiveTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 5),
+        ),
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      log('❌ API connectivity check failed: $e');
+      return false;
     }
   }
 }

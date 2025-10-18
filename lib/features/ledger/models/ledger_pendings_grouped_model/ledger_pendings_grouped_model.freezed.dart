@@ -12,12 +12,10 @@ part of 'ledger_pendings_grouped_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LedgerPendingsGroupedModel _$LedgerPendingsGroupedModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerPendingsGroupedModel.fromJson(json);
 }
 
@@ -33,28 +31,22 @@ mixin _$LedgerPendingsGroupedModel {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $LedgerPendingsGroupedModelCopyWith<LedgerPendingsGroupedModel>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $LedgerPendingsGroupedModelCopyWith<$Res> {
-  factory $LedgerPendingsGroupedModelCopyWith(
-    LedgerPendingsGroupedModel value,
-    $Res Function(LedgerPendingsGroupedModel) then,
-  ) =
-      _$LedgerPendingsGroupedModelCopyWithImpl<
-        $Res,
-        LedgerPendingsGroupedModel
-      >;
+  factory $LedgerPendingsGroupedModelCopyWith(LedgerPendingsGroupedModel value,
+          $Res Function(LedgerPendingsGroupedModel) then) =
+      _$LedgerPendingsGroupedModelCopyWithImpl<$Res,
+          LedgerPendingsGroupedModel>;
   @useResult
   $Res call({List<LedgerPendingsDailyModel> dailyPendings});
 }
 
 /// @nodoc
-class _$LedgerPendingsGroupedModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerPendingsGroupedModel
->
+class _$LedgerPendingsGroupedModelCopyWithImpl<$Res,
+        $Val extends LedgerPendingsGroupedModel>
     implements $LedgerPendingsGroupedModelCopyWith<$Res> {
   _$LedgerPendingsGroupedModelCopyWithImpl(this._value, this._then);
 
@@ -67,16 +59,15 @@ class _$LedgerPendingsGroupedModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dailyPendings = null}) {
-    return _then(
-      _value.copyWith(
-            dailyPendings: null == dailyPendings
-                ? _value.dailyPendings
-                : dailyPendings // ignore: cast_nullable_to_non_nullable
-                      as List<LedgerPendingsDailyModel>,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? dailyPendings = null,
+  }) {
+    return _then(_value.copyWith(
+      dailyPendings: null == dailyPendings
+          ? _value.dailyPendings
+          : dailyPendings // ignore: cast_nullable_to_non_nullable
+              as List<LedgerPendingsDailyModel>,
+    ) as $Val);
   }
 }
 
@@ -84,9 +75,9 @@ class _$LedgerPendingsGroupedModelCopyWithImpl<
 abstract class _$$LedgerPendingsGroupedModelImplCopyWith<$Res>
     implements $LedgerPendingsGroupedModelCopyWith<$Res> {
   factory _$$LedgerPendingsGroupedModelImplCopyWith(
-    _$LedgerPendingsGroupedModelImpl value,
-    $Res Function(_$LedgerPendingsGroupedModelImpl) then,
-  ) = __$$LedgerPendingsGroupedModelImplCopyWithImpl<$Res>;
+          _$LedgerPendingsGroupedModelImpl value,
+          $Res Function(_$LedgerPendingsGroupedModelImpl) then) =
+      __$$LedgerPendingsGroupedModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<LedgerPendingsDailyModel> dailyPendings});
@@ -94,43 +85,40 @@ abstract class _$$LedgerPendingsGroupedModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$LedgerPendingsGroupedModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerPendingsGroupedModelCopyWithImpl<
-          $Res,
-          _$LedgerPendingsGroupedModelImpl
-        >
+    extends _$LedgerPendingsGroupedModelCopyWithImpl<$Res,
+        _$LedgerPendingsGroupedModelImpl>
     implements _$$LedgerPendingsGroupedModelImplCopyWith<$Res> {
   __$$LedgerPendingsGroupedModelImplCopyWithImpl(
-    _$LedgerPendingsGroupedModelImpl _value,
-    $Res Function(_$LedgerPendingsGroupedModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerPendingsGroupedModelImpl _value,
+      $Res Function(_$LedgerPendingsGroupedModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerPendingsGroupedModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dailyPendings = null}) {
-    return _then(
-      _$LedgerPendingsGroupedModelImpl(
-        dailyPendings: null == dailyPendings
-            ? _value._dailyPendings
-            : dailyPendings // ignore: cast_nullable_to_non_nullable
-                  as List<LedgerPendingsDailyModel>,
-      ),
-    );
+  $Res call({
+    Object? dailyPendings = null,
+  }) {
+    return _then(_$LedgerPendingsGroupedModelImpl(
+      dailyPendings: null == dailyPendings
+          ? _value._dailyPendings
+          : dailyPendings // ignore: cast_nullable_to_non_nullable
+              as List<LedgerPendingsDailyModel>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerPendingsGroupedModelImpl implements _LedgerPendingsGroupedModel {
-  const _$LedgerPendingsGroupedModelImpl({
-    required final List<LedgerPendingsDailyModel> dailyPendings,
-  }) : _dailyPendings = dailyPendings;
+  const _$LedgerPendingsGroupedModelImpl(
+      {required final List<LedgerPendingsDailyModel> dailyPendings})
+      : _dailyPendings = dailyPendings;
 
   factory _$LedgerPendingsGroupedModelImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$LedgerPendingsGroupedModelImplFromJson(json);
+          Map<String, dynamic> json) =>
+      _$$LedgerPendingsGroupedModelImplFromJson(json);
 
   final List<LedgerPendingsDailyModel> _dailyPendings;
   @override
@@ -150,18 +138,14 @@ class _$LedgerPendingsGroupedModelImpl implements _LedgerPendingsGroupedModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LedgerPendingsGroupedModelImpl &&
-            const DeepCollectionEquality().equals(
-              other._dailyPendings,
-              _dailyPendings,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._dailyPendings, _dailyPendings));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_dailyPendings),
-  );
+      runtimeType, const DeepCollectionEquality().hash(_dailyPendings));
 
   /// Create a copy of LedgerPendingsGroupedModel
   /// with the given fields replaced by the non-null parameter values.
@@ -169,22 +153,22 @@ class _$LedgerPendingsGroupedModelImpl implements _LedgerPendingsGroupedModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerPendingsGroupedModelImplCopyWith<_$LedgerPendingsGroupedModelImpl>
-  get copyWith =>
-      __$$LedgerPendingsGroupedModelImplCopyWithImpl<
-        _$LedgerPendingsGroupedModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerPendingsGroupedModelImplCopyWithImpl<
+          _$LedgerPendingsGroupedModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerPendingsGroupedModelImplToJson(this);
+    return _$$LedgerPendingsGroupedModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerPendingsGroupedModel
     implements LedgerPendingsGroupedModel {
-  const factory _LedgerPendingsGroupedModel({
-    required final List<LedgerPendingsDailyModel> dailyPendings,
-  }) = _$LedgerPendingsGroupedModelImpl;
+  const factory _LedgerPendingsGroupedModel(
+          {required final List<LedgerPendingsDailyModel> dailyPendings}) =
+      _$LedgerPendingsGroupedModelImpl;
 
   factory _LedgerPendingsGroupedModel.fromJson(Map<String, dynamic> json) =
       _$LedgerPendingsGroupedModelImpl.fromJson;
@@ -197,12 +181,11 @@ abstract class _LedgerPendingsGroupedModel
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerPendingsGroupedModelImplCopyWith<_$LedgerPendingsGroupedModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 LedgerPendingsDailyModel _$LedgerPendingsDailyModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerPendingsDailyModel.fromJson(json);
 }
 
@@ -225,23 +208,19 @@ mixin _$LedgerPendingsDailyModel {
 
 /// @nodoc
 abstract class $LedgerPendingsDailyModelCopyWith<$Res> {
-  factory $LedgerPendingsDailyModelCopyWith(
-    LedgerPendingsDailyModel value,
-    $Res Function(LedgerPendingsDailyModel) then,
-  ) = _$LedgerPendingsDailyModelCopyWithImpl<$Res, LedgerPendingsDailyModel>;
+  factory $LedgerPendingsDailyModelCopyWith(LedgerPendingsDailyModel value,
+          $Res Function(LedgerPendingsDailyModel) then) =
+      _$LedgerPendingsDailyModelCopyWithImpl<$Res, LedgerPendingsDailyModel>;
   @useResult
-  $Res call({
-    String date,
-    @JsonKey(name: 'total_pending', defaultValue: 0) int total,
-    List<LedgerPendingModel> pendings,
-  });
+  $Res call(
+      {String date,
+      @JsonKey(name: 'total_pending', defaultValue: 0) int total,
+      List<LedgerPendingModel> pendings});
 }
 
 /// @nodoc
-class _$LedgerPendingsDailyModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerPendingsDailyModel
->
+class _$LedgerPendingsDailyModelCopyWithImpl<$Res,
+        $Val extends LedgerPendingsDailyModel>
     implements $LedgerPendingsDailyModelCopyWith<$Res> {
   _$LedgerPendingsDailyModelCopyWithImpl(this._value, this._then);
 
@@ -259,23 +238,20 @@ class _$LedgerPendingsDailyModelCopyWithImpl<
     Object? total = null,
     Object? pendings = null,
   }) {
-    return _then(
-      _value.copyWith(
-            date: null == date
-                ? _value.date
-                : date // ignore: cast_nullable_to_non_nullable
-                      as String,
-            total: null == total
-                ? _value.total
-                : total // ignore: cast_nullable_to_non_nullable
-                      as int,
-            pendings: null == pendings
-                ? _value.pendings
-                : pendings // ignore: cast_nullable_to_non_nullable
-                      as List<LedgerPendingModel>,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as int,
+      pendings: null == pendings
+          ? _value.pendings
+          : pendings // ignore: cast_nullable_to_non_nullable
+              as List<LedgerPendingModel>,
+    ) as $Val);
   }
 }
 
@@ -283,30 +259,26 @@ class _$LedgerPendingsDailyModelCopyWithImpl<
 abstract class _$$LedgerPendingsDailyModelImplCopyWith<$Res>
     implements $LedgerPendingsDailyModelCopyWith<$Res> {
   factory _$$LedgerPendingsDailyModelImplCopyWith(
-    _$LedgerPendingsDailyModelImpl value,
-    $Res Function(_$LedgerPendingsDailyModelImpl) then,
-  ) = __$$LedgerPendingsDailyModelImplCopyWithImpl<$Res>;
+          _$LedgerPendingsDailyModelImpl value,
+          $Res Function(_$LedgerPendingsDailyModelImpl) then) =
+      __$$LedgerPendingsDailyModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String date,
-    @JsonKey(name: 'total_pending', defaultValue: 0) int total,
-    List<LedgerPendingModel> pendings,
-  });
+  $Res call(
+      {String date,
+      @JsonKey(name: 'total_pending', defaultValue: 0) int total,
+      List<LedgerPendingModel> pendings});
 }
 
 /// @nodoc
 class __$$LedgerPendingsDailyModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerPendingsDailyModelCopyWithImpl<
-          $Res,
-          _$LedgerPendingsDailyModelImpl
-        >
+    extends _$LedgerPendingsDailyModelCopyWithImpl<$Res,
+        _$LedgerPendingsDailyModelImpl>
     implements _$$LedgerPendingsDailyModelImplCopyWith<$Res> {
   __$$LedgerPendingsDailyModelImplCopyWithImpl(
-    _$LedgerPendingsDailyModelImpl _value,
-    $Res Function(_$LedgerPendingsDailyModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerPendingsDailyModelImpl _value,
+      $Res Function(_$LedgerPendingsDailyModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerPendingsDailyModel
   /// with the given fields replaced by the non-null parameter values.
@@ -317,33 +289,31 @@ class __$$LedgerPendingsDailyModelImplCopyWithImpl<$Res>
     Object? total = null,
     Object? pendings = null,
   }) {
-    return _then(
-      _$LedgerPendingsDailyModelImpl(
-        date: null == date
-            ? _value.date
-            : date // ignore: cast_nullable_to_non_nullable
-                  as String,
-        total: null == total
-            ? _value.total
-            : total // ignore: cast_nullable_to_non_nullable
-                  as int,
-        pendings: null == pendings
-            ? _value._pendings
-            : pendings // ignore: cast_nullable_to_non_nullable
-                  as List<LedgerPendingModel>,
-      ),
-    );
+    return _then(_$LedgerPendingsDailyModelImpl(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      total: null == total
+          ? _value.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as int,
+      pendings: null == pendings
+          ? _value._pendings
+          : pendings // ignore: cast_nullable_to_non_nullable
+              as List<LedgerPendingModel>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerPendingsDailyModelImpl implements _LedgerPendingsDailyModel {
-  const _$LedgerPendingsDailyModelImpl({
-    required this.date,
-    @JsonKey(name: 'total_pending', defaultValue: 0) required this.total,
-    required final List<LedgerPendingModel> pendings,
-  }) : _pendings = pendings;
+  const _$LedgerPendingsDailyModelImpl(
+      {required this.date,
+      @JsonKey(name: 'total_pending', defaultValue: 0) required this.total,
+      required final List<LedgerPendingModel> pendings})
+      : _pendings = pendings;
 
   factory _$LedgerPendingsDailyModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerPendingsDailyModelImplFromJson(json);
@@ -379,11 +349,7 @@ class _$LedgerPendingsDailyModelImpl implements _LedgerPendingsDailyModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    date,
-    total,
-    const DeepCollectionEquality().hash(_pendings),
-  );
+      runtimeType, date, total, const DeepCollectionEquality().hash(_pendings));
 
   /// Create a copy of LedgerPendingsDailyModel
   /// with the given fields replaced by the non-null parameter values.
@@ -391,23 +357,23 @@ class _$LedgerPendingsDailyModelImpl implements _LedgerPendingsDailyModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerPendingsDailyModelImplCopyWith<_$LedgerPendingsDailyModelImpl>
-  get copyWith =>
-      __$$LedgerPendingsDailyModelImplCopyWithImpl<
-        _$LedgerPendingsDailyModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerPendingsDailyModelImplCopyWithImpl<
+          _$LedgerPendingsDailyModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerPendingsDailyModelImplToJson(this);
+    return _$$LedgerPendingsDailyModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerPendingsDailyModel implements LedgerPendingsDailyModel {
-  const factory _LedgerPendingsDailyModel({
-    required final String date,
-    @JsonKey(name: 'total_pending', defaultValue: 0) required final int total,
-    required final List<LedgerPendingModel> pendings,
-  }) = _$LedgerPendingsDailyModelImpl;
+  const factory _LedgerPendingsDailyModel(
+      {required final String date,
+      @JsonKey(name: 'total_pending', defaultValue: 0) required final int total,
+      required final List<LedgerPendingModel>
+          pendings}) = _$LedgerPendingsDailyModelImpl;
 
   factory _LedgerPendingsDailyModel.fromJson(Map<String, dynamic> json) =
       _$LedgerPendingsDailyModelImpl.fromJson;
@@ -425,5 +391,5 @@ abstract class _LedgerPendingsDailyModel implements LedgerPendingsDailyModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerPendingsDailyModelImplCopyWith<_$LedgerPendingsDailyModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

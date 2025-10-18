@@ -12,12 +12,10 @@ part of 'ledger_payment_grouped_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LedgerPaymentGroupedModel _$LedgerPaymentGroupedModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerPaymentGroupedModel.fromJson(json);
 }
 
@@ -38,19 +36,16 @@ mixin _$LedgerPaymentGroupedModel {
 
 /// @nodoc
 abstract class $LedgerPaymentGroupedModelCopyWith<$Res> {
-  factory $LedgerPaymentGroupedModelCopyWith(
-    LedgerPaymentGroupedModel value,
-    $Res Function(LedgerPaymentGroupedModel) then,
-  ) = _$LedgerPaymentGroupedModelCopyWithImpl<$Res, LedgerPaymentGroupedModel>;
+  factory $LedgerPaymentGroupedModelCopyWith(LedgerPaymentGroupedModel value,
+          $Res Function(LedgerPaymentGroupedModel) then) =
+      _$LedgerPaymentGroupedModelCopyWithImpl<$Res, LedgerPaymentGroupedModel>;
   @useResult
   $Res call({List<LedgerPaymentsDailyModel> dailyPayments});
 }
 
 /// @nodoc
-class _$LedgerPaymentGroupedModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerPaymentGroupedModel
->
+class _$LedgerPaymentGroupedModelCopyWithImpl<$Res,
+        $Val extends LedgerPaymentGroupedModel>
     implements $LedgerPaymentGroupedModelCopyWith<$Res> {
   _$LedgerPaymentGroupedModelCopyWithImpl(this._value, this._then);
 
@@ -63,16 +58,15 @@ class _$LedgerPaymentGroupedModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dailyPayments = null}) {
-    return _then(
-      _value.copyWith(
-            dailyPayments: null == dailyPayments
-                ? _value.dailyPayments
-                : dailyPayments // ignore: cast_nullable_to_non_nullable
-                      as List<LedgerPaymentsDailyModel>,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? dailyPayments = null,
+  }) {
+    return _then(_value.copyWith(
+      dailyPayments: null == dailyPayments
+          ? _value.dailyPayments
+          : dailyPayments // ignore: cast_nullable_to_non_nullable
+              as List<LedgerPaymentsDailyModel>,
+    ) as $Val);
   }
 }
 
@@ -80,9 +74,9 @@ class _$LedgerPaymentGroupedModelCopyWithImpl<
 abstract class _$$LedgerPaymentGroupedModelImplCopyWith<$Res>
     implements $LedgerPaymentGroupedModelCopyWith<$Res> {
   factory _$$LedgerPaymentGroupedModelImplCopyWith(
-    _$LedgerPaymentGroupedModelImpl value,
-    $Res Function(_$LedgerPaymentGroupedModelImpl) then,
-  ) = __$$LedgerPaymentGroupedModelImplCopyWithImpl<$Res>;
+          _$LedgerPaymentGroupedModelImpl value,
+          $Res Function(_$LedgerPaymentGroupedModelImpl) then) =
+      __$$LedgerPaymentGroupedModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<LedgerPaymentsDailyModel> dailyPayments});
@@ -90,39 +84,36 @@ abstract class _$$LedgerPaymentGroupedModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$LedgerPaymentGroupedModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerPaymentGroupedModelCopyWithImpl<
-          $Res,
-          _$LedgerPaymentGroupedModelImpl
-        >
+    extends _$LedgerPaymentGroupedModelCopyWithImpl<$Res,
+        _$LedgerPaymentGroupedModelImpl>
     implements _$$LedgerPaymentGroupedModelImplCopyWith<$Res> {
   __$$LedgerPaymentGroupedModelImplCopyWithImpl(
-    _$LedgerPaymentGroupedModelImpl _value,
-    $Res Function(_$LedgerPaymentGroupedModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerPaymentGroupedModelImpl _value,
+      $Res Function(_$LedgerPaymentGroupedModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerPaymentGroupedModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? dailyPayments = null}) {
-    return _then(
-      _$LedgerPaymentGroupedModelImpl(
-        dailyPayments: null == dailyPayments
-            ? _value._dailyPayments
-            : dailyPayments // ignore: cast_nullable_to_non_nullable
-                  as List<LedgerPaymentsDailyModel>,
-      ),
-    );
+  $Res call({
+    Object? dailyPayments = null,
+  }) {
+    return _then(_$LedgerPaymentGroupedModelImpl(
+      dailyPayments: null == dailyPayments
+          ? _value._dailyPayments
+          : dailyPayments // ignore: cast_nullable_to_non_nullable
+              as List<LedgerPaymentsDailyModel>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerPaymentGroupedModelImpl implements _LedgerPaymentGroupedModel {
-  const _$LedgerPaymentGroupedModelImpl({
-    required final List<LedgerPaymentsDailyModel> dailyPayments,
-  }) : _dailyPayments = dailyPayments;
+  const _$LedgerPaymentGroupedModelImpl(
+      {required final List<LedgerPaymentsDailyModel> dailyPayments})
+      : _dailyPayments = dailyPayments;
 
   factory _$LedgerPaymentGroupedModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerPaymentGroupedModelImplFromJson(json);
@@ -145,18 +136,14 @@ class _$LedgerPaymentGroupedModelImpl implements _LedgerPaymentGroupedModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LedgerPaymentGroupedModelImpl &&
-            const DeepCollectionEquality().equals(
-              other._dailyPayments,
-              _dailyPayments,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._dailyPayments, _dailyPayments));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_dailyPayments),
-  );
+      runtimeType, const DeepCollectionEquality().hash(_dailyPayments));
 
   /// Create a copy of LedgerPaymentGroupedModel
   /// with the given fields replaced by the non-null parameter values.
@@ -164,21 +151,21 @@ class _$LedgerPaymentGroupedModelImpl implements _LedgerPaymentGroupedModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerPaymentGroupedModelImplCopyWith<_$LedgerPaymentGroupedModelImpl>
-  get copyWith =>
-      __$$LedgerPaymentGroupedModelImplCopyWithImpl<
-        _$LedgerPaymentGroupedModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerPaymentGroupedModelImplCopyWithImpl<
+          _$LedgerPaymentGroupedModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerPaymentGroupedModelImplToJson(this);
+    return _$$LedgerPaymentGroupedModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerPaymentGroupedModel implements LedgerPaymentGroupedModel {
-  const factory _LedgerPaymentGroupedModel({
-    required final List<LedgerPaymentsDailyModel> dailyPayments,
-  }) = _$LedgerPaymentGroupedModelImpl;
+  const factory _LedgerPaymentGroupedModel(
+          {required final List<LedgerPaymentsDailyModel> dailyPayments}) =
+      _$LedgerPaymentGroupedModelImpl;
 
   factory _LedgerPaymentGroupedModel.fromJson(Map<String, dynamic> json) =
       _$LedgerPaymentGroupedModelImpl.fromJson;
@@ -191,12 +178,11 @@ abstract class _LedgerPaymentGroupedModel implements LedgerPaymentGroupedModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerPaymentGroupedModelImplCopyWith<_$LedgerPaymentGroupedModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 LedgerPaymentsDailyModel _$LedgerPaymentsDailyModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _LedgerPaymentsDailyModel.fromJson(json);
 }
 
@@ -219,25 +205,21 @@ mixin _$LedgerPaymentsDailyModel {
 
 /// @nodoc
 abstract class $LedgerPaymentsDailyModelCopyWith<$Res> {
-  factory $LedgerPaymentsDailyModelCopyWith(
-    LedgerPaymentsDailyModel value,
-    $Res Function(LedgerPaymentsDailyModel) then,
-  ) = _$LedgerPaymentsDailyModelCopyWithImpl<$Res, LedgerPaymentsDailyModel>;
+  factory $LedgerPaymentsDailyModelCopyWith(LedgerPaymentsDailyModel value,
+          $Res Function(LedgerPaymentsDailyModel) then) =
+      _$LedgerPaymentsDailyModelCopyWithImpl<$Res, LedgerPaymentsDailyModel>;
   @useResult
-  $Res call({
-    String date,
-    List<PaymentModel> payments,
-    LedgerPaymentsSummaryModel? paymentsSummary,
-  });
+  $Res call(
+      {String date,
+      List<PaymentModel> payments,
+      LedgerPaymentsSummaryModel? paymentsSummary});
 
   $LedgerPaymentsSummaryModelCopyWith<$Res>? get paymentsSummary;
 }
 
 /// @nodoc
-class _$LedgerPaymentsDailyModelCopyWithImpl<
-  $Res,
-  $Val extends LedgerPaymentsDailyModel
->
+class _$LedgerPaymentsDailyModelCopyWithImpl<$Res,
+        $Val extends LedgerPaymentsDailyModel>
     implements $LedgerPaymentsDailyModelCopyWith<$Res> {
   _$LedgerPaymentsDailyModelCopyWithImpl(this._value, this._then);
 
@@ -255,23 +237,20 @@ class _$LedgerPaymentsDailyModelCopyWithImpl<
     Object? payments = null,
     Object? paymentsSummary = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            date: null == date
-                ? _value.date
-                : date // ignore: cast_nullable_to_non_nullable
-                      as String,
-            payments: null == payments
-                ? _value.payments
-                : payments // ignore: cast_nullable_to_non_nullable
-                      as List<PaymentModel>,
-            paymentsSummary: freezed == paymentsSummary
-                ? _value.paymentsSummary
-                : paymentsSummary // ignore: cast_nullable_to_non_nullable
-                      as LedgerPaymentsSummaryModel?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      payments: null == payments
+          ? _value.payments
+          : payments // ignore: cast_nullable_to_non_nullable
+              as List<PaymentModel>,
+      paymentsSummary: freezed == paymentsSummary
+          ? _value.paymentsSummary
+          : paymentsSummary // ignore: cast_nullable_to_non_nullable
+              as LedgerPaymentsSummaryModel?,
+    ) as $Val);
   }
 
   /// Create a copy of LedgerPaymentsDailyModel
@@ -283,9 +262,8 @@ class _$LedgerPaymentsDailyModelCopyWithImpl<
       return null;
     }
 
-    return $LedgerPaymentsSummaryModelCopyWith<$Res>(_value.paymentsSummary!, (
-      value,
-    ) {
+    return $LedgerPaymentsSummaryModelCopyWith<$Res>(_value.paymentsSummary!,
+        (value) {
       return _then(_value.copyWith(paymentsSummary: value) as $Val);
     });
   }
@@ -295,16 +273,15 @@ class _$LedgerPaymentsDailyModelCopyWithImpl<
 abstract class _$$LedgerPaymentsDailyModelImplCopyWith<$Res>
     implements $LedgerPaymentsDailyModelCopyWith<$Res> {
   factory _$$LedgerPaymentsDailyModelImplCopyWith(
-    _$LedgerPaymentsDailyModelImpl value,
-    $Res Function(_$LedgerPaymentsDailyModelImpl) then,
-  ) = __$$LedgerPaymentsDailyModelImplCopyWithImpl<$Res>;
+          _$LedgerPaymentsDailyModelImpl value,
+          $Res Function(_$LedgerPaymentsDailyModelImpl) then) =
+      __$$LedgerPaymentsDailyModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String date,
-    List<PaymentModel> payments,
-    LedgerPaymentsSummaryModel? paymentsSummary,
-  });
+  $Res call(
+      {String date,
+      List<PaymentModel> payments,
+      LedgerPaymentsSummaryModel? paymentsSummary});
 
   @override
   $LedgerPaymentsSummaryModelCopyWith<$Res>? get paymentsSummary;
@@ -312,16 +289,13 @@ abstract class _$$LedgerPaymentsDailyModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$LedgerPaymentsDailyModelImplCopyWithImpl<$Res>
-    extends
-        _$LedgerPaymentsDailyModelCopyWithImpl<
-          $Res,
-          _$LedgerPaymentsDailyModelImpl
-        >
+    extends _$LedgerPaymentsDailyModelCopyWithImpl<$Res,
+        _$LedgerPaymentsDailyModelImpl>
     implements _$$LedgerPaymentsDailyModelImplCopyWith<$Res> {
   __$$LedgerPaymentsDailyModelImplCopyWithImpl(
-    _$LedgerPaymentsDailyModelImpl _value,
-    $Res Function(_$LedgerPaymentsDailyModelImpl) _then,
-  ) : super(_value, _then);
+      _$LedgerPaymentsDailyModelImpl _value,
+      $Res Function(_$LedgerPaymentsDailyModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of LedgerPaymentsDailyModel
   /// with the given fields replaced by the non-null parameter values.
@@ -332,33 +306,31 @@ class __$$LedgerPaymentsDailyModelImplCopyWithImpl<$Res>
     Object? payments = null,
     Object? paymentsSummary = freezed,
   }) {
-    return _then(
-      _$LedgerPaymentsDailyModelImpl(
-        date: null == date
-            ? _value.date
-            : date // ignore: cast_nullable_to_non_nullable
-                  as String,
-        payments: null == payments
-            ? _value._payments
-            : payments // ignore: cast_nullable_to_non_nullable
-                  as List<PaymentModel>,
-        paymentsSummary: freezed == paymentsSummary
-            ? _value.paymentsSummary
-            : paymentsSummary // ignore: cast_nullable_to_non_nullable
-                  as LedgerPaymentsSummaryModel?,
-      ),
-    );
+    return _then(_$LedgerPaymentsDailyModelImpl(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      payments: null == payments
+          ? _value._payments
+          : payments // ignore: cast_nullable_to_non_nullable
+              as List<PaymentModel>,
+      paymentsSummary: freezed == paymentsSummary
+          ? _value.paymentsSummary
+          : paymentsSummary // ignore: cast_nullable_to_non_nullable
+              as LedgerPaymentsSummaryModel?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LedgerPaymentsDailyModelImpl implements _LedgerPaymentsDailyModel {
-  const _$LedgerPaymentsDailyModelImpl({
-    required this.date,
-    required final List<PaymentModel> payments,
-    this.paymentsSummary,
-  }) : _payments = payments;
+  const _$LedgerPaymentsDailyModelImpl(
+      {required this.date,
+      required final List<PaymentModel> payments,
+      this.paymentsSummary})
+      : _payments = payments;
 
   factory _$LedgerPaymentsDailyModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerPaymentsDailyModelImplFromJson(json);
@@ -394,12 +366,8 @@ class _$LedgerPaymentsDailyModelImpl implements _LedgerPaymentsDailyModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    date,
-    const DeepCollectionEquality().hash(_payments),
-    paymentsSummary,
-  );
+  int get hashCode => Object.hash(runtimeType, date,
+      const DeepCollectionEquality().hash(_payments), paymentsSummary);
 
   /// Create a copy of LedgerPaymentsDailyModel
   /// with the given fields replaced by the non-null parameter values.
@@ -407,23 +375,23 @@ class _$LedgerPaymentsDailyModelImpl implements _LedgerPaymentsDailyModel {
   @override
   @pragma('vm:prefer-inline')
   _$$LedgerPaymentsDailyModelImplCopyWith<_$LedgerPaymentsDailyModelImpl>
-  get copyWith =>
-      __$$LedgerPaymentsDailyModelImplCopyWithImpl<
-        _$LedgerPaymentsDailyModelImpl
-      >(this, _$identity);
+      get copyWith => __$$LedgerPaymentsDailyModelImplCopyWithImpl<
+          _$LedgerPaymentsDailyModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LedgerPaymentsDailyModelImplToJson(this);
+    return _$$LedgerPaymentsDailyModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LedgerPaymentsDailyModel implements LedgerPaymentsDailyModel {
-  const factory _LedgerPaymentsDailyModel({
-    required final String date,
-    required final List<PaymentModel> payments,
-    final LedgerPaymentsSummaryModel? paymentsSummary,
-  }) = _$LedgerPaymentsDailyModelImpl;
+  const factory _LedgerPaymentsDailyModel(
+          {required final String date,
+          required final List<PaymentModel> payments,
+          final LedgerPaymentsSummaryModel? paymentsSummary}) =
+      _$LedgerPaymentsDailyModelImpl;
 
   factory _LedgerPaymentsDailyModel.fromJson(Map<String, dynamic> json) =
       _$LedgerPaymentsDailyModelImpl.fromJson;
@@ -440,5 +408,5 @@ abstract class _LedgerPaymentsDailyModel implements LedgerPaymentsDailyModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LedgerPaymentsDailyModelImplCopyWith<_$LedgerPaymentsDailyModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
