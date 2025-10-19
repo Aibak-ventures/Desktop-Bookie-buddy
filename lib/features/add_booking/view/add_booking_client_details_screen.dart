@@ -382,7 +382,7 @@ class _AddBookingClientDetailsScreenState
       context.showSnackBar('Please select a client', isError: true);
       return;
     }
-
+ 
     try {
       await Navigator.push(
   context,

@@ -8,6 +8,7 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/ui/screens/success_animation_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/add_additional_charges_widget.dart';
@@ -326,12 +327,20 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                 context.showSnackBar(message, isError: true);
               },
               success: () {
-                context
-                  ..clearSnackBars()
-                  ..pushNamed(
-                    AppRoutes.successAnimation.name,
-                    queryParameters: {'message': 'Booked Successfully'},
-                  );
+               context.clearSnackBars();
+
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => SuccessAnimationScreen(
+      text: 'Booked Successfully',
+      afterSuccess: () {
+        // Optional: callback to run after animation success
+      },
+    ),
+  ),
+);
+
               },
             );
           },
@@ -447,12 +456,20 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                 context.showSnackBar(message, isError: true);
               },
               success: () {
-                context
-                  ..clearSnackBars()
-                  ..pushNamed(
-                    AppRoutes.successAnimation.name,
-                    queryParameters: {'message': 'Booked Successfully'},
-                  );
+               context.clearSnackBars();
+
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => SuccessAnimationScreen(
+      text: 'Booked Successfully',
+      afterSuccess: () {
+        // Optional: callback to run after animation success
+      },
+    ),
+  ),
+);
+
               },
             );
           },

@@ -14,6 +14,7 @@ import 'package:bookie_buddy_web/features/add_booking/models/request_booking_mod
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_client_details_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -603,17 +604,23 @@ await Navigator.push(
           } catch (e) {
             // Fallback navigation if GoRouter fails
             if (context.mounted) {
-              final result = await context.pushNamed(
-                AppRoutes.selectProducts.name,
-                extra: {
-                  'selected_products': context
-                      .read<AddBookingProductsCubit>()
-                      .state
-                      .products,
-                  'pickup_date_time': bookingData.pickupDate,
-                  'return_date_time': bookingData.returnDate,
-                },
-              );
+              final result = await Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => SelectProductScreen(
+      serviceId: bookingData.serviceId ?? 0, // provide a default value if null
+      pickupDate: bookingData.pickupDate ?? '',
+      returnDate: bookingData.returnDate??'',
+      availabilityCheckOnly: false, // default or pass if needed
+      pickupTime: bookingData.pickupTime,
+      returnTime: bookingData.returnTime,
+      preSelectedData: context.read<AddBookingProductsCubit>().state.products,
+      useAvailableProductsApi: true, // default or pass if needed
+      isSales: false, // default or pass if needed
+    ),
+  ),
+);
+
 
               if (result != null && result is List<ProductSelectedModel>) {
                 context

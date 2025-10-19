@@ -22,7 +22,12 @@ class SuccessAnimationScreen extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Timer(const Duration(seconds: 1, milliseconds: 500), () {
         if (afterSuccess == null) {
-          context.pushAndRemoveUntil(const BottomBarScreen());
+          Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(builder: (context) => const BottomBarScreen()),
+  (route) => false, // removes all previous routes
+);
+
         } else {
           afterSuccess?.call();
         }
@@ -31,7 +36,12 @@ class SuccessAnimationScreen extends StatelessWidget {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (afterSuccess == null)
-          context.pushAndRemoveUntil(const BottomBarScreen());
+          Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(builder: (context) => const BottomBarScreen()),
+  (route) => false, // removes all previous routes
+);
+
       },
       child: Scaffold(
         backgroundColor: Colors.white,

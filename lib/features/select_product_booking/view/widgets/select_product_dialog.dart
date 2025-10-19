@@ -73,350 +73,273 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: SingleChildScrollView(
-        child: Container(
-          width: context.isMobile ? null : 0.6.widthR,
-          padding: 24.padding,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: 20.radiusBorder,
-          ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Title
-                Text(
-                  'Size & Amount',
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
+@override
+Widget build(BuildContext context) {
+  final isWide = MediaQuery.of(context).size.width > 800;
+
+  return Dialog(
+    insetPadding: EdgeInsets.symmetric(
+      horizontal: isWide ? 0.3.widthR : 20, // Keeps modal compact on wide screens
+      vertical: 24,
+    ),
+    backgroundColor: Colors.white,
+    elevation: 8,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 500), // 👈 Web modal max width
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Title
+              Text(
+                'Size & Amount',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
                 ),
+              ),
+              const SizedBox(height: 16),
 
-                20.height,
-
-                // Product Image
-                SizedBox(
-                  height: 200,
-                  child: ClipRRect(
-                    borderRadius: 10.radiusBorder,
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: CustomNetworkImage(
-                        imageUrl: widget.productImageUrl,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: 16.radiusBorder,
-                            ),
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.grey[400],
-                            ),
-                          );
-                        },
-                      ),
+              // Product Image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SizedBox(
+                  height: 150, // smaller for web
+                  width: double.infinity,
+                  child: CustomNetworkImage(
+                    imageUrl: widget.productImageUrl,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, error, stackTrace) => Container(
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.image_not_supported, size: 48),
                     ),
                   ),
                 ),
+              ),
 
-                const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-                // Size Selection
-                if (widget.availableVariants.isNotEmpty &&
-                    widget.mainServiceType.isDress &&
-                    !VariantSizeType.isFreeSize(
-                        widget.availableVariants.first.attribute))
-                  SizedBox(
-                    height: 55,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.availableVariants.length,
-                      itemBuilder: (context, index) {
-                        final variant = widget.availableVariants[index];
-                        final isSelected = selectedVariant == variant;
-
-                        final isDisabled = widget.alreadySelectedVariants.any(
-                          (e) => e.variant.variantId == variant.id,
-                        );
-
-                        return Container(
-                          width: 50,
-                          height: 50,
-                          margin: const EdgeInsets.only(right: 12),
-                          decoration: BoxDecoration(
-                            color: isDisabled
-                                ? Colors.grey.shade300
-                                : isSelected
-                                    ? AppColors.purpleLight
-                                    : const Color(0xFFE8E4FF),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isDisabled
-                                  ? Colors.grey
-                                  : isSelected
-                                      ? const Color(0xFF6C5CE7)
-                                      : Colors.transparent,
-                              width: isSelected ? 2 : 0,
-                            ),
+              // Size selector (only if multiple variants)
+              if (widget.availableVariants.isNotEmpty &&
+                  widget.mainServiceType.isDress &&
+                  !VariantSizeType.isFreeSize(
+                      widget.availableVariants.first.attribute))
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: widget.availableVariants.map((variant) {
+                    final isSelected = selectedVariant == variant;
+                    final isDisabled = widget.alreadySelectedVariants.any(
+                      (e) => e.variant.variantId == variant.id,
+                    );
+                    return GestureDetector(
+                      onTap: isDisabled
+                          ? null
+                          : () => setState(() => selectedVariant = variant),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isDisabled
+                              ? Colors.grey.shade300
+                              : isSelected
+                                  ? AppColors.purpleLight
+                                  : const Color(0xFFE8E4FF),
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: isSelected
+                                ? const Color(0xFF6C5CE7)
+                                : Colors.transparent,
+                            width: 2,
                           ),
-                          child: Center(
-                            child: Text(
-                              variant.attribute,
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w600,
-                                color: isDisabled
-                                    ? Colors.grey.shade600
-                                    : isSelected
-                                        ? const Color(0xFF6C5CE7)
-                                        : Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ).onTap(
-                          () {
-                            if (!isDisabled)
-                              setState(() {
-                                selectedVariant = variant;
-                              });
-                          },
-                        );
-                      },
-                    ),
-                  ),
-
-                if (widget.initialAmount != null &&
-                    widget.initialAmount!.isNotEmpty &&
-                    widget.initialAmount?.toIntOrNull() != null &&
-                    widget.initialAmount?.toIntOrNull() != 0) ...[
-                  if (widget.mainServiceType.isDress)
-                    const SizedBox(height: 20),
-                  Text(
-                      'Standard price: Rs. ${widget.initialAmount?.toInt().toCurrency()}'),
-                ],
-
-                22.height,
-
-                // Quantity
-                Row(
-                  spacing: 10,
-                  children: [
-                    IconButton.filled(
-                      constraints:
-                          const BoxConstraints(minHeight: 55, minWidth: 55),
-                      onPressed: () {
-                        quantityErrorNotifier.value = '';
-                        final qty = quantityController.text.toIntOrNull();
-                        if (qty == null) {
-                          return;
-                        }
-
-                        if (qty <= 1) {
-                          quantityController.text = '1';
-                        } else {
-                          quantityController.text = (qty - 1).toString();
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.remove,
-                        color: AppColors.black,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.purpleLight,
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: 'Enter the amount',
-                        controller: quantityController,
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        errorText: null,
-                        onChanged: (value) => quantityErrorNotifier.value = '',
-                        onTapOutside:
-                            () {}, // To avoid keyboard dismiss when scrolling
-                        validator: null,
-                        // validator: (value) => AppInputValidators.amount(
-                        //   value,
-                        //   fieldName: 'Quantity',
-                        //   maxValue: selectedVariant?.remainingStock ?? 1,
-                        // ),
-
-                        fillColor: AppColors.purpleLight,
-                      ),
-                    ),
-                    IconButton.filled(
-                      constraints:
-                          const BoxConstraints(minHeight: 55, minWidth: 55),
-                      onPressed: () {
-                        quantityErrorNotifier.value = '';
-                        final qty = quantityController.text.toIntOrNull();
-                        if (qty == null) {
-                          return;
-                        }
-
-                        quantityController.text = (qty + 1).toString();
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        color: AppColors.black,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.purpleLight,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Quantity Error
-                ValueListenableBuilder(
-                  valueListenable: quantityErrorNotifier,
-                  builder: (context, error, child) {
-                    return error.isEmpty
-                        ? const SizedBox.shrink()
-                        : Padding(
-                            padding: 2.paddingOnly(top: true),
-                            child: Text(
-                              error,
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 12.sp,
-                              ),
-                            ),
-                          );
-                  },
-                ),
-
-                8.height,
-                // Amount Input
-                CustomTextField(
-                  hintText: 'Enter the amount',
-                  controller: amountController,
-                  autofocus: true,
-                  keyboardType: TextInputType.number,
-                  onTapOutside:
-                      () {}, // To avoid keyboard dismiss when scrolling
-                  validator: (value) => AppInputValidators.amount(
-                    value,
-                    allowZero: true,
-                    fieldName: 'Amount',
-                  ),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  fillColor: AppColors.purpleLight,
-                  prefixIcon: const Icon(
-                    Icons.currency_rupee,
-                    color: AppColors.grey,
-                  ),
-                ),
-
-                15.height,
-
-                // Action Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    10.width,
-                    SizedBox(
-                      height: context.mediaQueryHeight(0.045),
-                      width: context.mediaQueryWidth(0.28),
-                      child: ElevatedButton(
-                        onPressed: widget.alreadySelectedVariants.any(
-                          (e) => e.variant.variantId == selectedVariant?.id,
-                        )
-                            ? null
-                            : () async {
-                                print(selectedVariant);
-
-                                // Quantity error handling
-                                final qtyText = quantityController.text.trim();
-                                final qty = qtyText.toIntOrNull();
-
-                                final maxStock =
-                                    selectedVariant?.remainingStock;
-
-                                if (qty == null ||
-                                    qty <= 0 ||
-                                    (maxStock != null && qty > maxStock)) {
-                                  quantityErrorNotifier.value =
-                                      'Quantity must be less than remaining stock ${maxStock}';
-                                  return;
-                                } else {
-                                  quantityErrorNotifier.value = '';
-                                }
-
-                                if (!_formKey.currentState!.validate()) {
-                                  return;
-                                }
-                                if (quantityController.text
-                                        .trim()
-                                        .toIntOrNull() ==
-                                    null) {
-                                  return;
-                                }
-                                if (amountController.text.isNotEmpty) {
-                                  await widget.onConfirm?.call(
-                                    selectedVariant?.id ??
-                                        widget.availableVariants.first.id,
-                                    selectedVariant?.attribute,
-                                    amountController.text,
-                                    quantityController.text.trim().toInt(),
-                                  );
-                                  context.pop();
-                                }
-                              },
                         child: Text(
-                          'Confirm',
+                          variant.attribute,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            color: isDisabled
+                                ? Colors.grey
+                                : isSelected
+                                    ? const Color(0xFF6C5CE7)
+                                    : Colors.black87,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    );
+                  }).toList(),
                 ),
-              ],
-            ),
+
+              if (widget.initialAmount?.isNotEmpty == true)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    'Standard price: Rs. ${widget.initialAmount?.toIntOrNull()?.toCurrency() ?? ''}',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+
+              const SizedBox(height: 20),
+
+              // Quantity
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _qtyButton(Icons.remove, () {
+                    quantityErrorNotifier.value = '';
+                    final qty = quantityController.text.toIntOrNull() ?? 1;
+                    if (qty > 1) {
+                      quantityController.text = (qty - 1).toString();
+                    }
+                  }),
+                  SizedBox(
+                    width: 80,
+                    child: TextField(
+                      controller: quantityController,
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.purpleLight,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  _qtyButton(Icons.add, () {
+                    quantityErrorNotifier.value = '';
+                    final qty = quantityController.text.toIntOrNull() ?? 1;
+                    quantityController.text = (qty + 1).toString();
+                  }),
+                ],
+              ),
+
+              ValueListenableBuilder(
+                valueListenable: quantityErrorNotifier,
+                builder: (context, error, _) => error.isEmpty
+                    ? const SizedBox.shrink()
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(error,
+                            style:
+                                TextStyle(color: Colors.red, fontSize: 12.sp)),
+                      ),
+              ),
+
+              const SizedBox(height: 14),
+
+              // Amount
+              CustomTextField(
+                hintText: 'Enter amount',
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                validator: (v) => AppInputValidators.amount(v,
+                    allowZero: true, fieldName: 'Amount'),
+                prefixIcon: const Icon(Icons.currency_rupee,
+                    color: AppColors.grey, size: 20),
+                fillColor: AppColors.purpleLight,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Action Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6C5CE7),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                    ),
+                    onPressed: _onConfirmPressed,
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
-    );
+    ),
+  );
+}
+void _onConfirmPressed() async {
+  // Prevent confirm if variant already selected
+  if (widget.alreadySelectedVariants.any(
+    (e) => e.variant.variantId == selectedVariant?.id,
+  )) return;
+
+  // Quantity validation
+  final qtyText = quantityController.text.trim();
+  final qty = qtyText.toIntOrNull();
+  final maxStock = selectedVariant?.remainingStock;
+
+  if (qty == null || qty <= 0 || (maxStock != null && qty > maxStock)) {
+    quantityErrorNotifier.value =
+        'Quantity must be less than remaining stock ${maxStock ?? 1}';
+    return;
+  } else {
+    quantityErrorNotifier.value = '';
   }
+
+  // Form validation
+  if (!_formKey.currentState!.validate()) return;
+  if (amountController.text.trim().isEmpty) return;
+
+  // Confirm action callback
+  await widget.onConfirm?.call(
+    selectedVariant?.id ?? widget.availableVariants.first.id,
+    selectedVariant?.attribute,
+    amountController.text.trim(),
+    qty,
+  );
+
+  // Close modal after confirmation
+  if (context.mounted) Navigator.pop(context);
 }
 
+Widget _qtyButton(IconData icon, VoidCallback onPressed) => Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: IconButton(
+        onPressed: onPressed,
+        style: IconButton.styleFrom(
+          backgroundColor: AppColors.purpleLight,
+          minimumSize: const Size(45, 45),
+        ),
+        icon: Icon(icon, color: AppColors.black),
+      ),
+);
+
+
+
+}
 // Helper function to show the dialog
 void showSizeAmountDialog({
   required BuildContext context,
