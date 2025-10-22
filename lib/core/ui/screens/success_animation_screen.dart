@@ -1,16 +1,15 @@
 import 'dart:async';
-
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_sized_box.dart';
 import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
-class SuccessAnimationScreen extends StatelessWidget {
+class SuccessAnimationScreen extends StatefulWidget {
   final String text;
   final VoidCallback? afterSuccess;
+
   const SuccessAnimationScreen({
     super.key,
     required this.text,
@@ -18,30 +17,42 @@ class SuccessAnimationScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(const Duration(seconds: 1, milliseconds: 500), () {
-        if (afterSuccess == null) {
-          Navigator.pushAndRemoveUntil(
-  context,
-  MaterialPageRoute(builder: (context) => const BottomBarScreen()),
-  (route) => false, // removes all previous routes
-);
+  State<SuccessAnimationScreen> createState() => _SuccessAnimationScreenState();
+}
 
-        } else {
-          afterSuccess?.call();
-        }
-      });
+class _SuccessAnimationScreenState extends State<SuccessAnimationScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Delay navigation safely
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
+      if (widget.afterSuccess == null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const BottomBarScreen()),
+          (route) => false,
+        );
+      } else {
+        widget.afterSuccess?.call();
+      }
     });
-    return PopScope(
-      onPopInvokedWithResult: (didPop, result) {
-        if (afterSuccess == null)
-          Navigator.pushAndRemoveUntil(
-  context,
-  MaterialPageRoute(builder: (context) => const BottomBarScreen()),
-  (route) => false, // removes all previous routes
-);
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.afterSuccess == null) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const BottomBarScreen()),
+            (route) => false,
+          );
+        }
+        return false;
       },
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -59,7 +70,7 @@ class SuccessAnimationScreen extends StatelessWidget {
             const CustomSizedBoxHeight(0.08),
             Center(
               child: Text(
-                text,
+                widget.text,
                 style: TextStyle(
                   color: Colors.green[900],
                   fontSize: 22.sp,

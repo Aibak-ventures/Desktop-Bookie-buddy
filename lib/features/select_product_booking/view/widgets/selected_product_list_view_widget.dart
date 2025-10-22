@@ -22,46 +22,83 @@ class SelectedProductListViewWidget extends StatelessWidget {
       builder: (context, state) {
         return state.when(
           selected: (selectedProductsWithAmount) {
-            return selectedProductsWithAmount.isEmpty
-                ? const SizedBox.shrink()
-                : ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: screenHeight * 0.15,
-                      minHeight: 80,
+            print('SelectedProductListViewWidget: Building with ${selectedProductsWithAmount.length} products');
+            
+            if (selectedProductsWithAmount.isEmpty) {
+              return Container(
+                height: 60,
+                margin: (5, 10).padding,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: const Center(
+                  child: Text(
+                    'No products selected. Select products from the list below.',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
                     ),
-                    child: Container(
-                      margin: (5, 10).padding,
+                  ),
+                ),
+              );
+            }
+            
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: screenHeight * 0.15,
+                minHeight: 80,
+              ),
+              child: Container(
+                margin: (5, 10).padding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Selected Products (${selectedProductsWithAmount.length})',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
                       child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: selectedProductsWithAmount.length,
-                      itemBuilder: (context, index) {
-                        final serviceData = selectedProductsWithAmount[index];
-                        final product = serviceData.variant;
-                        final amount = serviceData.amount;
+                        scrollDirection: Axis.horizontal,
+                        itemCount: selectedProductsWithAmount.length,
+                        itemBuilder: (context, index) {
+                          final serviceData = selectedProductsWithAmount[index];
+                          final product = serviceData.variant;
+                          final amount = serviceData.amount;
 
-                        return SelectedProductCard(
-                          imageUrl: product.image!,
-                          price: amount.toCurrency(),
-                          quantity: product.quantity,
-                          size: product.variantAttribute ??
-                              product.model ??
-                              product.color ??
-                              product.category ??
-                              '',
-                          onRemove: () {
-                            print(
-                                'Product remove button clicked: ${product.name}');
-                            context
-                                .read<SelectedProductsCubit>()
-                                .removeSelectedProduct(
-                                  product.variantId ?? product.id,
-                                );
-                          },
-                        );
-                      },
+                          return SelectedProductCard(
+                            imageUrl: product.image!,
+                            price: amount.toCurrency(),
+                            quantity: product.quantity,
+                            size: product.variantAttribute ??
+                                product.model ??
+                                product.color ??
+                                product.category ??
+                                '',
+                            onRemove: () {
+                              print(
+                                  'Product remove button clicked: ${product.name}');
+                              context
+                                  .read<SelectedProductsCubit>()
+                                  .removeSelectedProduct(
+                                    product.variantId ?? product.id,
+                                  );
+                            },
+                          );
+                        },
+                      ),
                     ),
-                    ),
-                  );
+                  ],
+                ),
+              ),
+            );
           },
         );
       },

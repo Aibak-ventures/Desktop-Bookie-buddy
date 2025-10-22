@@ -15,6 +15,8 @@ import 'package:bookie_buddy_web/features/select_product_booking/view/view_model
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_grid_view_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/selected_product_list_view_widget.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/generate_available_products_pdf.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,12 +59,19 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
   @override
   void initState() {
     super.initState();
+    print('SelectProductScreen: initState called');
+    print('SelectProductScreen: preSelectedData: ${widget.preSelectedData?.length ?? 0} products');
+    if (widget.preSelectedData != null) {
+      print('SelectProductScreen: preSelectedData products: ${widget.preSelectedData!.map((p) => p.variant.name).toList()}');
+    }
+    
     selectedServiceIdNotifier = ValueNotifier(widget.serviceId);
     final services = context.read<ServiceBloc>().getServices();
     selectedMainServiceTypeNotifier = ValueNotifier(
       MainServiceType.fromServiceList(services, widget.serviceId),
     );
 
+    print('SelectProductScreen: Loading preSelected data into cubit');
     context.read<SelectedProductsCubit>().loadPreSelected(widget.preSelectedData);
 
     context.read<SelectProductBloc>().add(
@@ -161,14 +170,13 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: AppColors.purple.lighten(0.2),
-          onPressed: _onNextPressed,
-          label: const Text(
-            'Next',
-            style: TextStyle(color: AppColors.white),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.purple.lighten(0.1),
+          onPressed: _handleBack,
+          child: Icon(
+            widget.availabilityCheckOnly ? Icons.print : Icons.arrow_forward,
+            color: AppColors.white,
           ),
-          icon: const Icon(Icons.arrow_forward, color: AppColors.white),
         ),
       );
     });
@@ -242,25 +250,45 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
     );
   }
 
-  void _onNextPressed() {
-    final selectedProducts = context.read<SelectedProductsCubit>().state.when(
-          selected: (selected) => selected,
-        );
-    
-    // Check if any products are selected
-    if (selectedProducts.isEmpty) {
-      // Show a message if no products are selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one product to continue.'),
-          backgroundColor: Colors.orange,
-        ),
+  Future<void> _handleBack() async {
+    if (widget.availabilityCheckOnly) {
+      final products = context.read<SelectProductBloc>().state.maybeMap(
+        orElse: () => null,
+        loaded: (value) => value.products,
       );
-      return;
+      if (products == null || products.isEmpty) {
+        context.showSnackBar('No products to generate PDF');
+        return;
+      }
+      final shopDetails = context.read<UserCubit>().state?.shopDetails;
+      if (shopDetails == null) {
+        context.showSnackBar('Shop details not found');
+        return;
+      }
+      await GenerateAvailableProductsPdf.shareInvoice(
+        context: context,
+        products: products,
+        shopDetails: shopDetails,
+        availabilityDate: widget.pickupDate,
+      );
+    } else {
+      final selectedProductsWithAmount = context
+          .read<SelectedProductsCubit>()
+          .state
+          .when(selected: (s) => s);
+
+      print('SelectProductScreen: Selected products count: ${selectedProductsWithAmount.length}');
+      print('SelectProductScreen: Selected products: ${selectedProductsWithAmount.map((p) => p.variant.name).toList()}');
+
+      // Check if any products are selected
+      if (selectedProductsWithAmount.isEmpty) {
+        context.showSnackBar('Please select at least one product to continue.');
+        return;
+      }
+
+      print('SelectProductScreen: Returning selected products to calling screen');
+      context.pop(selectedProductsWithAmount);
     }
-    
-    // Return the selected products to the calling screen
-    context.pop(selectedProducts);
   }
 
   Widget _addProductButton() => _iconButton(

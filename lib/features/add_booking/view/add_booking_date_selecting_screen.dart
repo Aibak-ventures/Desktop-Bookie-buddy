@@ -42,7 +42,9 @@ class _AddBookingDateSelectingScreenState
   final returnDateController =
       TextEditingController(text: DateTime.now().add(1.days()).format());
   final pickupDateNotifier = ValueNotifier<DateTime>(DateTime.now());
-  final coolingPeriodDateController = TextEditingController();
+  final coolingPeriodDateController = TextEditingController(); // Initially empty
+  
+  bool coolingPeriodManuallySelected = false; // Track if user manually selected cooling period
 
   late final int coolingPeriodDuration;
   TimeOfDay? pickupTime;
@@ -55,10 +57,7 @@ class _AddBookingDateSelectingScreenState
     super.initState();
     coolingPeriodDuration =
         context.read<UserCubit>().state?.shopSettings.coolingPeriodDuration ?? 0;
-    coolingPeriodDateController.text = returnDateController.text
-        .parseToDateTime()
-        .add(coolingPeriodDuration.days())
-        .format();
+    // Don't auto-populate cooling period - let user select manually if needed
   }
 
   @override
@@ -225,6 +224,14 @@ class _AddBookingDateSelectingScreenState
                     CalenderWidget(
                       onDateSelected: (selectedDate) {
                         pickupDateNotifier.value = selectedDate;
+                        // Automatically set return date to pickup date + 1 day
+                        final newReturnDate = selectedDate.add(1.days());
+                        returnDateController.text = newReturnDate.format();
+                        // Only update cooling period if user has manually selected it
+                        if (coolingPeriodManuallySelected) {
+                          coolingPeriodDateController.text =
+                              newReturnDate.add(coolingPeriodDuration.days()).format();
+                        }
                       },
                       initialSelectedDate: pickupDateNotifier.value,
                     ),
@@ -341,19 +348,7 @@ class _AddBookingDateSelectingScreenState
                                   ),
                                   const SizedBox(height: 8),
                                   CustomTextField(
-                                    validator: (value) {
-                                      if (isReturnAndPickupSameDay) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please select pickup time.';
-                                        }
-                                        final selectedTime = value.parseToTimeOfDay();
-                                        final returnTimeOfDay = returnTime ?? const TimeOfDay(hour: 0, minute: 0);
-                                        if (selectedTime != null && selectedTime.isAfter(returnTimeOfDay)) {
-                                          return 'Pickup time cannot be after return time on the same day.';
-                                        }
-                                      }
-                                      return null;
-                                    },
+                                    validator: (value) => null, // No validation - time is optional
                                     controller: pickupTimeController,
                                     hintText: 'Pickup Time',
                                     prefixIcon: const Icon(Icons.access_time),
@@ -386,19 +381,7 @@ class _AddBookingDateSelectingScreenState
                                   ),
                                   const SizedBox(height: 8),
                                   CustomTextField(
-                                    validator: (value) {
-                                      if (isReturnAndPickupSameDay) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please select return time.';
-                                        }
-                                        final selectedTime = value.parseToTimeOfDay();
-                                        final pickupTimeOfDay = pickupTime ?? const TimeOfDay(hour: 0, minute: 0);
-                                        if (selectedTime != null && selectedTime.isBefore(pickupTimeOfDay)) {
-                                          return 'Return time cannot be before pickup time on the same day.';
-                                        }
-                                      }
-                                      return null;
-                                    },
+                                    validator: (value) => null, // No validation - time is optional
                                     controller: returnTimeController,
                                     hintText: 'Return Time',
                                     prefixIcon: const Icon(Icons.access_time),
@@ -469,19 +452,7 @@ class _AddBookingDateSelectingScreenState
                         ),
                         const SizedBox(height: 20),
                         CustomTextField(
-                          validator: (isReturnAndPickupSameDay
-                              ? (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select cooling period date.';
-                                  }
-                                  final selectedDate = value.parseToDateTime();
-                                  final minDate = returnDateController.text.parseToDateTime();
-                                  if (selectedDate.isBefore(minDate)) {
-                                    return 'Cooling period date cannot be before return date.';
-                                  }
-                                  return null;
-                                }
-                              : null),
+                          validator: (value) => null, // No validation - cooling period is optional
                           controller: coolingPeriodDateController,
                           hintText: 'Select cooling period',
                           prefixIcon: const Icon(Icons.calendar_month_outlined),
@@ -552,12 +523,18 @@ class _AddBookingDateSelectingScreenState
                           border: Border.all(color: Colors.purple.shade200),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: CalenderWidget(
-                          onDateSelected: (selectedDate) {
-                            pickupDateNotifier.value = selectedDate;
-                          },
-                          initialSelectedDate: pickupDateNotifier.value,
-                        ),
+                        // CalenderWidget(
+                        //   onDateSelected: (selectedDate) {
+                        //     pickupDateNotifier.value = selectedDate;
+                        //     // Automatically set return date to pickup date + 1 day
+                        //     final newReturnDate = selectedDate.add(1.days());
+                        //     returnDateController.text = newReturnDate.format();
+                        //     // Update cooling period date based on new return date
+                        //     coolingPeriodDateController.text =
+                        //         newReturnDate.add(coolingPeriodDuration.days()).format();
+                        //   },
+                        //   initialSelectedDate: pickupDateNotifier.value,
+                        // ),
                       ),
                     ),
                   ),
@@ -597,19 +574,7 @@ class _AddBookingDateSelectingScreenState
                             children: [
                               Expanded(
                                 child: CustomTextField(
-                                  validator: (value) {
-                                    if (isReturnAndPickupSameDay) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please select pickup time.';
-                                      }
-                                      final selectedTime = value.parseToTimeOfDay();
-                                  final returnTimeOfDay = returnTime ?? const TimeOfDay(hour: 0, minute: 0);
-                                  if (selectedTime != null && selectedTime.isAfter(returnTimeOfDay)) {
-                                        return 'Pickup time cannot be after return time on the same day.';
-                                      }
-                                    }
-                                    return null;
-                                  },
+                                  validator: (value) => null, // No validation - time is optional
                                   controller: pickupTimeController,
                                   hintText: 'Pickup Time',
                                   prefixIcon: const Icon(Icons.access_time),
@@ -628,19 +593,7 @@ class _AddBookingDateSelectingScreenState
                               12.horizontalSpace,
                               Expanded(
                                 child: CustomTextField(
-                                  validator: (value) {
-                                    if (isReturnAndPickupSameDay) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please select return time.';
-                                      }
-                                      final selectedTime = value.parseToTimeOfDay();
-                                  final pickupTimeOfDay = pickupTime ?? const TimeOfDay(hour: 0, minute: 0);
-                                  if (selectedTime != null && selectedTime.isBefore(pickupTimeOfDay)) {
-                                        return 'Return time cannot be before pickup time on the same day.';
-                                      }
-                                    }
-                                    return null;
-                                  },
+                                  validator: (value) => null, // No validation - time is optional
                                   controller: returnTimeController,
                                   hintText: 'Return Time',
                                   prefixIcon: const Icon(Icons.access_time),
@@ -663,19 +616,7 @@ class _AddBookingDateSelectingScreenState
                           Text("Cooling Period Date (Optional)", style: _labelStyle(context)),
                           8.verticalSpace,
                           CustomTextField(
-                            validator: (isReturnAndPickupSameDay
-                                ? (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please select cooling period date.';
-                                    }
-                                    final selectedDate = value.parseToDateTime();
-                                    final minDate = returnDateController.text.parseToDateTime();
-                                    if (selectedDate.isBefore(minDate)) {
-                                      return 'Cooling period date cannot be before return date.';
-                                    }
-                                    return null;
-                                  }
-                                : null),
+                            validator: (value) => null, // No validation - cooling period is optional
                             controller: coolingPeriodDateController,
                             hintText: 'Select cooling period',
                             prefixIcon: const Icon(Icons.calendar_month_outlined),
@@ -724,7 +665,10 @@ class _AddBookingDateSelectingScreenState
 
     final pickupDate = pickupDateNotifier.value.format(reverse: true);
     final returnDate = returnDateController.text.formatToUiDate();
-    final coolingPeriodDate = coolingPeriodDateController.text.formatToUiDate();
+    // Only send cooling period if user has manually selected it and it's different from return date
+    final coolingPeriodDate = coolingPeriodManuallySelected && coolingPeriodDateController.text.isNotEmpty
+        ? coolingPeriodDateController.text.formatToUiDate()
+        : null;
     final isEdit = widget.addBookingModel.staffId != null;
 
     if (context.mounted) {
@@ -734,8 +678,7 @@ class _AddBookingDateSelectingScreenState
           returnDate: returnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
-          coolingPeriodDate:
-              coolingPeriodDate == returnDate ? null : coolingPeriodDate,
+          coolingPeriodDate: coolingPeriodDate, // Will be null if not manually selected
         );
         
         await Navigator.of(context).push(
@@ -804,13 +747,16 @@ class _AddBookingDateSelectingScreenState
   Future<void> selectCoolingPeriodDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: coolingPeriodDateController.text.parseToDateTime(),
+      initialDate: coolingPeriodDateController.text.isNotEmpty 
+          ? coolingPeriodDateController.text.parseToDateTime()
+          : returnDateController.text.parseToDateTime().add(coolingPeriodDuration.days()),
       firstDate: returnDateController.text.parseToDateTime(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
  
     if (picked != null) {
       coolingPeriodDateController.text = picked.format();
+      coolingPeriodManuallySelected = true; // Mark as manually selected
     }
   }
 
@@ -824,8 +770,11 @@ class _AddBookingDateSelectingScreenState
 
     if (picked != null) {
       returnDateController.text = picked.format();
-      coolingPeriodDateController.text =
-          picked.add(coolingPeriodDuration.days()).format();
+      // Only update cooling period if user has manually selected it before
+      if (coolingPeriodManuallySelected) {
+        coolingPeriodDateController.text =
+            picked.add(coolingPeriodDuration.days()).format();
+      }
     }
   }
 

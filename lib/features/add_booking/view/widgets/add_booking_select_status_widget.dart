@@ -101,26 +101,26 @@ class AddBookingSelectStatusWidget extends StatelessWidget {
               ),
       ),
       5.height,
-      ValueListenableBuilder<bool>(
-        valueListenable: isSharingPdfToWhatsAppNotifier,
-        builder: (context, shouldShare, _) => CheckboxListTile(
-          title: const Text('Send Invoice to WhatsApp'),
-          secondary: const PremiumBadge(),
-          subtitle: whatsAppNumber.isNotEmpty
-              ? Text(
-                  whatsAppNumber.toString(),
-                  style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
-                )
-              : null,
-          value: shouldShare,
-          contentPadding: EdgeInsets.zero,
-          onChanged: (value) {
-            if (value != null) isSharingPdfToWhatsAppNotifier.value = value;
-          },
-          activeColor: AppColors.purple,
-          controlAffinity: ListTileControlAffinity.leading, // checkbox at start
-        ),
-      ),
+      // ValueListenableBuilder<bool>(
+      //   valueListenable: isSharingPdfToWhatsAppNotifier,
+      //   builder: (context, shouldShare, _) => CheckboxListTile(
+      //     title: const Text('Send Invoice to WhatsApp'),
+      //     secondary: const PremiumBadge(),
+      //     subtitle: whatsAppNumber.isNotEmpty
+      //         ? Text(
+      //             whatsAppNumber.toString(),
+      //             style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
+      //           )
+      //         : null,
+      //     value: shouldShare,
+      //     contentPadding: EdgeInsets.zero,
+      //     onChanged: (value) {
+      //       if (value != null) isSharingPdfToWhatsAppNotifier.value = value;
+      //     },
+      //     activeColor: AppColors.purple,
+      //     controlAffinity: ListTileControlAffinity.leading, // checkbox at start
+      //   ),
+      // ),
 
       // Text(
       //   'Purchase Mode',

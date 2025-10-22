@@ -43,11 +43,11 @@ class _CalenderWidgetState extends State<CalenderWidget> {
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     final DateTime today = DateTime.now();
+    final DateTime todayDateOnly = DateTime(today.year, today.month, today.day);
     debugPrint('selected: ' + selectedDay.toString());
-    if (selectedDay.isBefore(
-      widget.initialSelectedDate ??
-          DateTime(today.year, today.month, today.day),
-    )) {
+    
+    // Allow today and future dates only
+    if (selectedDay.isBefore(todayDateOnly)) {
       CustomSnackBar(message: 'You cannot select a past date');
       return; // Don't allow past dates
     }
@@ -77,7 +77,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
       child: TableCalendar(
         availableGestures: AvailableGestures.none,
         rowHeight: 45,
-        firstDay: widget.initialSelectedDate ?? DateTime.now(),
+        firstDay: DateTime.now(),
         lastDay: DateTime.utc(currentDate.year + 200, 12, 31),
         focusedDay: focusedDay ?? currentDate,
         calendarStyle: const CalendarStyle(

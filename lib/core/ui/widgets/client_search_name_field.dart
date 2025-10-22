@@ -98,10 +98,10 @@ class ClientSearchNameField extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) => ListTile(
           title: Row(
-            children: [CustomShimmerBox(width: 0.6.widthR, height: 20)],
+            children: [CustomShimmerBox(width: 0.11.widthR, height: 20)],
           ),
           subtitle: Row(
-            children: [CustomShimmerBox(width: 0.5.widthR, height: 15)],
+            children: [CustomShimmerBox(width: 0.12.widthR, height: 15)],
           ),
         ),
       ),

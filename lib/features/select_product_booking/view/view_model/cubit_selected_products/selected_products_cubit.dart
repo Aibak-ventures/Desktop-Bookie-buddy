@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,11 +13,14 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
 
   void loadPreSelected(List<ProductSelectedModel>? preSelected) {
     final selected = preSelected ?? [];
+    log('SelectedProductsCubit: Loading pre-selected products: ${selected.length}');
 
     emit(_Selected(selected));
   }
 
   void addSelectedProduct(ProductInfoModel product, int? amount, int quantity) {
+    log('SelectedProductsCubit: Adding product - ${product.name}, amount: $amount, quantity: $quantity');
+    
     final selected = ProductSelectedModel(
       variant: product,
       amount: amount ?? 0,
@@ -26,14 +31,22 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
     final newList = currentState.selectedProductsWithAmount
         .where((model) => model.variant.variantId != selected.variant.variantId)
         .toList();
-    emit(_Selected([...newList, selected]));
+    
+    final updatedList = [...newList, selected];
+    log('SelectedProductsCubit: Updated list length: ${updatedList.length}');
+    
+    emit(_Selected(updatedList));
   }
 
   void removeSelectedProduct(int productId) {
+    log('SelectedProductsCubit: Removing product with ID: $productId');
+    
     final s = state as _Selected;
     final newList = s.selectedProductsWithAmount
         .where((model) => model.variant.variantId != productId)
         .toList();
+    
+    log('SelectedProductsCubit: Updated list length after removal: ${newList.length}');
 
     emit(s.copyWith(selectedProductsWithAmount: newList));
   }

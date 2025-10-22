@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
+import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
@@ -12,9 +13,12 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_client_details_screen.dart';
+import 'package:bookie_buddy_web/features/add_booking/view/widgets/selected_product_in_add_booking.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -583,51 +587,47 @@ await Navigator.push(
       ),
       child: MaterialButton(
         onPressed: () async {
-          try {
-            final result = await GoRouter.of(context).pushNamed(
-              AppRoutes.selectProducts.name,
-              extra: {
-                'selected_products': context
-                    .read<AddBookingProductsCubit>()
-                    .state
-                    .products,
-                'pickup_date_time': bookingData.pickupDate,
-                'return_date_time': bookingData.returnDate,
-              },
-            );
-
-            if (result != null && result is List<ProductSelectedModel>) {
-              context
-                  .read<AddBookingProductsCubit>()
-                  .setAll(result);
-            }
-          } catch (e) {
-            // Fallback navigation if GoRouter fails
-            if (context.mounted) {
-              final result = await Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => SelectProductScreen(
-      serviceId: bookingData.serviceId ?? 0, // provide a default value if null
-      pickupDate: bookingData.pickupDate ?? '',
-      returnDate: bookingData.returnDate??'',
-      availabilityCheckOnly: false, // default or pass if needed
-      pickupTime: bookingData.pickupTime,
-      returnTime: bookingData.returnTime,
-      preSelectedData: context.read<AddBookingProductsCubit>().state.products,
-      useAvailableProductsApi: true, // default or pass if needed
-      isSales: false, // default or pass if needed
-    ),
-  ),
-);
-
-
-              if (result != null && result is List<ProductSelectedModel>) {
-                context
-                    .read<AddBookingProductsCubit>()
-                    .setAll(result);
-              }
-            }
+          final productRepository = context.read<ProductRepository>();
+          final currentProducts = context.read<AddBookingProductsCubit>().state.products;
+          debugPrint('AddBookingProductScreen: Navigating to SelectProductScreen');
+          debugPrint('AddBookingProductScreen: Current products count: ${currentProducts.length}');
+          
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => SelectProductBloc(
+                      repository: productRepository,
+                    ),
+                  ),
+                  BlocProvider(
+                    create: (context) => SelectedProductsCubit(),
+                  ),
+                ],
+                child: SelectProductScreen(
+                  serviceId: bookingData.serviceId ?? 0,
+                  pickupDate: bookingData.pickupDate ?? '',
+                  returnDate: bookingData.returnDate ?? '',
+                  availabilityCheckOnly: false,
+                  pickupTime: bookingData.pickupTime,
+                  returnTime: bookingData.returnTime,
+                  preSelectedData: currentProducts,
+                  useAvailableProductsApi: true,
+                  isSales: false,
+                ),
+              ),
+            ),
+          );
+          
+          if (result != null && result is List<ProductSelectedModel>) {
+            context
+                .read<AddBookingProductsCubit>()
+                .setAll(result);
+            debugPrint('AddBookingProductScreen: Updated selected products: ${result.length}');
+          } else {
+            debugPrint('AddBookingProductScreen: No products returned or invalid data');
           }
         },
         splashColor: AppColors.grey300,
@@ -684,20 +684,22 @@ await Navigator.push(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ...products.map(
-        //   (product) => Container(
-        //     margin: 3.paddingVertical,
-        //     child: SelectedProductInAddBooking(selected: ,
-        //       product: product,
-        //       onRemove: () {
-        //         log('removing product from cubit ${product.id}');
-        //         context
-        //             .read<AddBookingProductsCubit>()
-        //             .re(product);
-        //       },
-        //     ),
-        //   ),
-        // ),
+        ...products.map(
+          (product) => Container(
+            margin: 3.paddingVertical,
+            child: SelectedProductInAddBooking(
+              selected: product,
+              serviceId: product.variant.productId,
+              selectedProductsNotifier: products,
+              onRemove: () {
+                // log('removing product from cubit ${product.id}');
+                context
+                    .read<AddBookingProductsCubit>()
+                    .removeByVariantId(product.variant.variantId);
+              },
+            ),
+          ),
+        ),
       ],
     ),
   );
