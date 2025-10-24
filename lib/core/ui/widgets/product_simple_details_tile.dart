@@ -39,19 +39,19 @@ class ProductSimpleDetailsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: ClipRRect(
-      borderRadius: 5.radiusBorder,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: image.isNullOrEmpty
-            ? Image.asset(AppAssets.unknownProduct)
-            : CustomNetworkImage(
-                imageUrl: image!,
-                errorWidget: (context, url, error) =>
-                    Image.asset(AppAssets.unknownProduct),
-              ),
-      ),
-    ),
+    // leading: ClipRRect(
+    //   borderRadius: 5.radiusBorder,
+    //   child: AspectRatio(
+    //     aspectRatio: 1,
+    //     child: image.isNullOrEmpty
+    //         ? Image.asset(AppAssets.unknownProduct)
+    //         : CustomNetworkImage(
+    //             imageUrl: image!,
+    //             errorWidget: (context, url, error) =>
+    //                 Image.asset(AppAssets.unknownProduct),
+    //           ),
+    //   ),
+    // ),
     title: Text(name),
     subtitle: Column(
       crossAxisAlignment: CrossAxisAlignment.start,

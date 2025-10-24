@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -47,6 +48,22 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
         .toList();
     
     log('SelectedProductsCubit: Updated list length after removal: ${newList.length}');
+
+    emit(s.copyWith(selectedProductsWithAmount: newList));
+  }
+
+  void updateProductMeasurements(int productId, List<MeasurementValueModel> measurements) {
+    log('SelectedProductsCubit: Updating measurements for product ID: $productId');
+    
+    final s = state as _Selected;
+    final newList = s.selectedProductsWithAmount.map((model) {
+      if (model.variant.variantId == productId) {
+        return model.copyWith(measurements: measurements);
+      }
+      return model;
+    }).toList();
+    
+    log('SelectedProductsCubit: Updated measurements for product');
 
     emit(s.copyWith(selectedProductsWithAmount: newList));
   }

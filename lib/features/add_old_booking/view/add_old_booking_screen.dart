@@ -103,7 +103,7 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
               children: [
                 CustomTextField(
                   controller: descriptionController,
-                  hintText: 'Description',
+                  hintText: 'Add booking notes or special instructions',
                   prefixIcon: const SizedBox.shrink(),
                   maxLines: 3,
                   validator: (value) => AppInputValidators.isEmpty(value)
@@ -275,7 +275,7 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
             CustomTextField(
               controller: placeController,
               keyboardType: TextInputType.streetAddress,
-              hintText: 'Place',
+              hintText: 'Enter pickup/delivery location',
               prefixIcon: const SizedBox.shrink(),
               maxLines: 3,
               validator: AppInputValidators.address,

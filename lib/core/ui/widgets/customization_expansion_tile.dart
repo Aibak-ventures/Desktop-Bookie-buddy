@@ -39,7 +39,7 @@ class CustomizationExpansionTile extends StatelessWidget {
               children: measurements.map((e) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Expanded(
+                    Flexible(
                       child: Text(
                         e.name,
                         textAlign: TextAlign.left,
@@ -47,13 +47,17 @@ class CustomizationExpansionTile extends StatelessWidget {
                           fontSize: 14.sp,
                           color: AppColors.black,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                     const Text(':  '),
-                    Expanded(
+                    Flexible(
                       child: Text(
                         e.value,
                         textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   ],

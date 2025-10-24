@@ -591,11 +591,11 @@ class Navigations {
       // ),
 
       // Add booking - date selecting screen
-      GoRoute(
-        path: AppRoutes.addBookingDate.path,
-        name: AppRoutes.addBookingDate.name,
-        builder: (context, state) => const AddBookingDateSelectingScreen(),
-      ),
+      // GoRoute(
+      //   path: AppRoutes.addBookingDate.path,
+      //   name: AppRoutes.addBookingDate.name,
+      //   builder: (context, state) => const AddBookingDateSelectingScreen(),
+      // ),
 
       // Add booking - select service screen
       GoRoute(

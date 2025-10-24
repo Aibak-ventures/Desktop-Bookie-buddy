@@ -5,8 +5,11 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/booking_details_app_bar.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/buttons/complete_elevated_button.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/buttons/custom_swipe_button.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:go_router/go_router.dart';
+import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
@@ -23,14 +26,14 @@ class BookingDetailsScreen extends StatefulWidget {
 }
 
 class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
-  late final CustomSwipeButtonController swipeButtonController;
+
   final GlobalKey _paymentButtonKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     context.read<BookingDetailsPaymentHistoryCubit>().collapsePaymentHistory();
-    swipeButtonController = CustomSwipeButtonController();
+
     // Defer dispatch to ensure context is ready
     Future.microtask(() {
       if (!mounted) return;
@@ -42,119 +45,552 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   @override
   void dispose() {
-    swipeButtonController.dispose();
+
 
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    // Custom Appbar
-    appBar: BookingDetailsAppBar(),
+  Widget build(BuildContext context) {
+    final isWeb = context.screenWidth > 768;
+    
+    return Scaffold(
+      backgroundColor: isWeb ? const Color(0xFFF5F7FA) : null,
+      // Custom Appbar
+      appBar: BookingDetailsAppBar(),
 
-    body: BlocConsumer<BookingDetailsBloc, BookingDetailsState>(
-      listener: (context, state) {
-        state.maybeWhen(
-          orElse: () {},
-          failed: (value) {
-            swipeButtonController.reset();
-            context.showSnackBar(value, isError: true);
-          },
-          loaded: (booking) {
-            final bookingCubit = context.read<BookingSelectionCubit>();
+      body: BlocConsumer<BookingDetailsBloc, BookingDetailsState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            orElse: () {},
+            failed: (value) {
+              // swipeButtonController.reset();
+              context.showSnackBar(value, isError: true);
+            },
+            loaded: (booking) {
+              final bookingCubit = context.read<BookingSelectionCubit>();
 
-            final updatedBooking = bookingCubit.state.selectedBooking?.copyWith(
-              deliveryStatus: state.booking!.deliveryStatus,
-              bookedItems: state.booking!.bookedItems
-                  .map((e) => e.name)
-                  .toList(),
-              paymentStatus: state.booking!.paymentStatus == true
-                  ? PaymentStatus.completed
-                  : PaymentStatus.pending,
-            );
-            if (updatedBooking != null) {
-              bookingCubit.selectBooking(updatedBooking);
-            }
-          },
-          success: (message, didPop, needRefresh) {
-            swipeButtonController.reset();
-            final bookingCubit = context.read<BookingSelectionCubit>()
-              ..markModified();
-
-            final updatedBooking = state.booking != null
-                ? bookingCubit.state.selectedBooking?.copyWith(
-                    deliveryStatus: state.booking!.deliveryStatus,
-                    bookedItems: state.booking!.bookedItems
-                        .map((e) => e.name)
-                        .toList(),
-                    paymentStatus: state.booking!.paymentStatus == true
-                        ? PaymentStatus.completed
-                        : PaymentStatus.pending,
-                  )
-                : null;
-            if (updatedBooking != null) {
-              bookingCubit.selectBooking(updatedBooking);
-            }
-            if (didPop) {
-              bookingCubit.markModified(shouldRefresh: true);
-              context.pop(true);
-            }
-            context.showSnackBar(message);
-            if (needRefresh)
-              context.read<BookingDetailsBloc>().add(
-                BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
+              final updatedBooking = bookingCubit.state.selectedBooking?.copyWith(
+                deliveryStatus: state.booking!.deliveryStatus,
+                bookedItems: state.booking!.bookedItems
+                    .map((e) => e.name)
+                    .toList(),
+                paymentStatus: state.booking!.paymentStatus == true
+                    ? PaymentStatus.completed
+                    : PaymentStatus.pending,
               );
-          },
-        );
-      },
-      buildWhen: (previous, current) => current.maybeMap(
-        orElse: () => true,
-        failed: (value) => false,
-        success: (value) => false,
-      ),
-      builder: (context, state) => state.maybeWhen(
-        orElse: () => const SizedBox.shrink(),
-        loading: () => SizedBox(
-          height: context.mediaQueryHeight(0.8),
-          child: const Center(
-            child: SpinKitFadingCircle(color: AppColors.purple),
-          ),
-        ),
-        error: (error) => CustomErrorWidget(
-          errorText: error,
-          onRetry: () => context.read<BookingDetailsBloc>().add(
-            BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
-          ),
-        ),
-        // Body
-        //Booking details
-        loaded: (booking) => Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: 16.padding,
-                child: BookingDetailsRoot(
-                  booking: booking,
-                  paymentButtonKey: _paymentButtonKey,
-                ),
-              ),
-            ),
+              if (updatedBooking != null) {
+                bookingCubit.selectBooking(updatedBooking);
+              }
+            },
+            success: (message, didPop, needRefresh) {
+              // swipeButtonController.reset();
+              final bookingCubit = context.read<BookingSelectionCubit>()
+                ..markModified();
 
-            // Complete work button
-            Padding(
-              padding: 16.paddingOnly(left: true, right: true, bottom: true),
-              child: CompleteElevatedButton(
-                isLoading: state.isLoading,
-                isSuccess: state.isSuccess,
-                isFailure: state.isFailure,
-                swipeButtonController: swipeButtonController,
+              final updatedBooking = state.booking != null
+                  ? bookingCubit.state.selectedBooking?.copyWith(
+                      deliveryStatus: state.booking!.deliveryStatus,
+                      bookedItems: state.booking!.bookedItems
+                          .map((e) => e.name)
+                          .toList(),
+                      paymentStatus: state.booking!.paymentStatus == true
+                          ? PaymentStatus.completed
+                          : PaymentStatus.pending,
+                    )
+                  : null;
+              if (updatedBooking != null) {
+                bookingCubit.selectBooking(updatedBooking);
+              }
+              if (didPop) {
+                bookingCubit.markModified(shouldRefresh: true);
+                NavigatorX(context).pop();
+              }
+              context.showSnackBar(message);
+              if (needRefresh)
+                context.read<BookingDetailsBloc>().add(
+                  BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
+                );
+            },
+          );
+        },
+        buildWhen: (previous, current) => current.maybeMap(
+          orElse: () => true,
+          failed: (value) => false,
+          success: (value) => false,
+        ),
+        builder: (context, state) => state.maybeWhen(
+          orElse: () => const SizedBox.shrink(),
+          loading: () => SizedBox(
+            height: context.mediaQueryHeight(0.8),
+            child: const Center(
+              child: SpinKitFadingCircle(color: AppColors.purple),
+            ),
+          ),
+          error: (error) => CustomErrorWidget(
+            errorText: error,
+            onRetry: () => context.read<BookingDetailsBloc>().add(
+              BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
+            ),
+          ),
+          // Body - Web responsive design
+          loaded: (booking) => isWeb 
+              ? _buildWebLayout(context, state, booking)
+              : _buildMobileLayout(context, state, booking),
+        ),
+      ),
+      resizeToAvoidBottomInset: false,
+    );
+  }
+
+  Widget _buildWebLayout(BuildContext context, BookingDetailsState state, dynamic booking) {
+    return Container(
+      width: double.infinity,
+      child: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(
+              maxWidth: 1600,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Main content - Left side (70%)
+                Expanded(
+                  flex: 7,
+                  child: Container(
+                    padding: const EdgeInsets.all(40),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade100,
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                          spreadRadius: 2,
+                        ),
+                      ],
+                      border: Border.all(color: Colors.grey.shade100),
+                    ),
+                    child: BookingDetailsRoot(
+                      booking: booking,
+                      paymentButtonKey: _paymentButtonKey,
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(width: 32),
+                
+                // Action panel - Right side (30%)
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      // Quick actions card
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade200,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Quick Actions',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            
+                            // Primary action buttons for web
+                            _buildWebActionButtons(context, state, booking),
+                            
+                            const SizedBox(height: 20),
+                            
+                            // Secondary action buttons
+                            _buildSecondaryActionButtons(context, booking),
+                          ],
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Booking summary card
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.blue.shade200),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Booking Summary',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue.shade800,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            
+                            _buildSummaryRow('Booking ID', '#${booking.invoiceId}'),
+                            _buildSummaryRow('Status', booking.deliveryStatus.name.toUpperCase()),
+                            _buildSummaryRow('Total Amount', '₹${booking.totalAmount}'),
+                            _buildSummaryRow('Paid Amount', '₹${booking.paidAmount}'),
+                            
+                            if (booking.paidAmount < booking.totalAmount)
+                              _buildSummaryRow(
+                                'Remaining', 
+                                '₹${booking.totalAmount - booking.paidAmount}',
+                                isHighlight: true,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context, BookingDetailsState state, dynamic booking) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: 16.padding,
+            child: BookingDetailsRoot(
+              booking: booking,
+              paymentButtonKey: _paymentButtonKey,
+            ),
+          ),
+        ),
+
+        // Complete work button for mobile
+        Padding(
+          padding: 16.paddingOnly(left: true, right: true, bottom: true),
+          child: _buildMobileActionButton(context, state, booking),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileActionButton(BuildContext context, BookingDetailsState state, dynamic booking) {
+    final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
+    
+    if (isBookingCompleted) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.green.shade100,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.green.shade300),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.check_circle, color: Colors.green.shade700),
+            const SizedBox(width: 8),
+            Text(
+              'Booking Completed',
+              style: TextStyle(
+                color: Colors.green.shade700,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
           ],
         ),
+      );
+    }
+
+    return ElevatedButton.icon(
+      onPressed: state.isLoading ? null : () => _handleCompleteBooking(context, booking, 
+        (booking.totalAmount ?? 0) - (booking.paidAmount ?? 0) - (booking.discountAmount ?? 0)),
+      icon: state.isLoading 
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            )
+          : const Icon(Icons.check_circle, color: Colors.white),
+      label: Text(
+        state.isLoading ? 'Processing...' : 'Complete Booking',
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
       ),
-    ),
-    resizeToAvoidBottomInset: false,
-  );
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green.shade600,
+        foregroundColor: Colors.white,
+        minimumSize: const Size(double.infinity, 56),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 3,
+      ),
+    );
+  }
+
+  Widget _buildWebActionButtons(BuildContext context, BookingDetailsState state, dynamic booking) {
+    final isBookingCompleted = booking.bookingStatus.name == 'completed';
+    final balanceAmount = (booking.totalAmount ?? 0) - (booking.paidAmount ?? 0) - (booking.discountAmount ?? 0);
+    
+    return Column(
+      children: [
+        if (!isBookingCompleted) ...[
+          // Complete Booking Button (replacement for swipe)
+          ElevatedButton.icon(
+            onPressed: state.isLoading ? null : () => _handleCompleteBooking(context, booking, balanceAmount),
+            icon: state.isLoading 
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  )
+                : const Icon(Icons.check_circle, color: Colors.white),
+            label: Text(
+              state.isLoading ? 'Processing...' : 'Complete Booking',
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade600,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 52),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              elevation: 2,
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+        
+        // Mark as Delivered Button (if not completed)
+        if (!isBookingCompleted && booking.deliveryStatus.name != 'delivered')
+          ElevatedButton.icon(
+            onPressed: () => _handleMarkAsDelivered(context, booking),
+            icon: const Icon(Icons.local_shipping, color: Colors.white),
+            label: const Text(
+              'Mark as Delivered',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue.shade600,
+              minimumSize: const Size(double.infinity, 52),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              elevation: 2,
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
+    return Column(
+      children: [
+        // Edit Booking Button
+        OutlinedButton.icon(
+          onPressed: () => _handleEditBooking(context, booking),
+          icon: Icon(Icons.edit, color: Colors.blue.shade600),
+          label: Text(
+            'Edit Booking',
+            style: TextStyle(color: Colors.blue.shade600, fontWeight: FontWeight.w600),
+          ),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 48),
+            side: BorderSide(color: Colors.blue.shade300, width: 1.5),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Share Details Button
+        OutlinedButton.icon(
+          onPressed: () => _handleShareDetails(context, booking),
+          icon: Icon(Icons.share, color: Colors.grey.shade700),
+          label: Text(
+            'Share Details',
+            style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w600),
+          ),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 48),
+            side: BorderSide(color: Colors.grey.shade400, width: 1.5),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Print/Download Button
+        OutlinedButton.icon(
+          onPressed: () => _handlePrintBooking(context, booking),
+          icon: Icon(Icons.print, color: Colors.purple.shade600),
+          label: Text(
+            'Print/Download',
+            style: TextStyle(color: Colors.purple.shade600, fontWeight: FontWeight.w600),
+          ),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 48),
+            side: BorderSide(color: Colors.purple.shade300, width: 1.5),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _handleCompleteBooking(BuildContext context, dynamic booking, int balanceAmount) async {
+    if (balanceAmount > 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please clear the balance amount of ₹$balanceAmount before completing the booking.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Complete Booking'),
+        content: const Text('Are you sure you want to mark this booking as completed?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Complete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      context.read<BookingDetailsBloc>().add(
+        BookingDetailsEvent.updateBookingStatus(
+          bookingId: booking.id,
+          bookingStatus: BookingStatus.completed,
+        ),
+      );
+    }
+  }
+
+  void _handleMarkAsDelivered(BuildContext context, dynamic booking) {
+    context.read<BookingDetailsBloc>().add(
+      BookingDetailsEvent.updateDeliveryStatus(
+        bookingId: booking.id,
+        deliveryStatus: DeliveryStatus.delivered,
+      ),
+    );
+  }
+
+  void _handleEditBooking(BuildContext context, dynamic booking) {
+    try {
+      context.pushNamed(
+        AppRoutes.editBooking.name,
+        pathParameters: {'id': booking.id.toString()},
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Edit booking feature is not available at the moment.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    }
+  }
+
+  void _handleShareDetails(BuildContext context, dynamic booking) async {
+    try {
+      final shareText = '''
+📋 *Booking Details*
+
+🆔 Booking ID: #${booking.invoiceId}
+👤 Client: ${booking.client?.clientName ?? 'N/A'}
+📞 Phone: ${booking.client?.clientPhone1 ?? 'N/A'}
+📅 Pickup: ${booking.pickupDate ?? 'N/A'}
+📅 Return: ${booking.returnDate ?? 'N/A'}
+💰 Total Amount: ₹${booking.totalAmount}
+💳 Paid Amount: ₹${booking.paidAmount}
+📊 Status: ${booking.deliveryStatus.name.toUpperCase()}
+
+🛍️ Items:
+${booking.bookedItems.map((item) => '• ${item.productName} (₹${item.amount})').join('\n')}
+
+---
+Shared via Bookie Buddy
+      ''';
+
+      await Share.share(
+        shareText,
+        subject: 'Booking Details - #${booking.invoiceId}',
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to share booking details. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _handlePrintBooking(BuildContext context, dynamic booking) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Print/Download feature will be available soon.'),
+        backgroundColor: Colors.blue,
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value, {bool isHighlight = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: isHighlight ? FontWeight.bold : FontWeight.w600,
+              color: isHighlight ? Colors.red.shade700 : Colors.grey.shade800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

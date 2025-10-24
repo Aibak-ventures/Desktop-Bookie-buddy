@@ -2,10 +2,8 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
@@ -60,6 +58,26 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
     //   selectedVariant = widget.availableVariants.first;
     // } else {}
     selectedVariant = widget.availableVariants.first;
+    
+    // Auto-populate amount field if variant has a price
+    _updateAmountFromSelectedVariant();
+    
+    // Add listener to quantity controller to update amount when quantity changes
+    quantityController.addListener(_updateAmountFromSelectedVariant);
+  }
+  
+  void _updateAmountFromSelectedVariant() {
+    if (selectedVariant?.price != null && selectedVariant!.price! > 0) {
+      final quantity = int.tryParse(quantityController.text) ?? 1;
+      final totalAmount = selectedVariant!.price! * quantity;
+      amountController.text = totalAmount.toString();
+    } else if (widget.initialAmount?.isNotEmpty == true) {
+      // Fallback to initial amount if provided
+      final quantity = int.tryParse(quantityController.text) ?? 1;
+      final baseAmount = widget.initialAmount?.toIntOrNull() ?? 0;
+      final totalAmount = baseAmount * quantity;
+      amountController.text = totalAmount.toString();
+    }
   }
 
   @override
@@ -142,7 +160,12 @@ Widget build(BuildContext context) {
                     return GestureDetector(
                       onTap: isDisabled
                           ? null
-                          : () => setState(() => selectedVariant = variant),
+                          : () {
+                              setState(() {
+                                selectedVariant = variant;
+                                _updateAmountFromSelectedVariant();
+                              });
+                            },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         padding: const EdgeInsets.symmetric(
@@ -201,6 +224,7 @@ Widget build(BuildContext context) {
                     final qty = quantityController.text.toIntOrNull() ?? 1;
                     if (qty > 1) {
                       quantityController.text = (qty - 1).toString();
+                      _updateAmountFromSelectedVariant();
                     }
                   }),
                   SizedBox(
@@ -223,6 +247,7 @@ Widget build(BuildContext context) {
                     quantityErrorNotifier.value = '';
                     final qty = quantityController.text.toIntOrNull() ?? 1;
                     quantityController.text = (qty + 1).toString();
+                    _updateAmountFromSelectedVariant();
                   }),
                 ],
               ),

@@ -5,7 +5,6 @@ import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
@@ -17,8 +16,6 @@ import 'package:bookie_buddy_web/features/add_booking/view/widgets/selected_prod
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -115,39 +112,42 @@ class AddBookingProductScreen extends StatelessWidget {
         
         // Selected products section
         BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
-          builder: (context, state) => state.products.isEmpty
-              ? const SizedBox.shrink()
-              : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  margin: const EdgeInsets.only(bottom: 24),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade200,
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Selected Products',
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+          builder: (context, state) {
+            print('WebLayout: Building with ${state.products.length} products');
+            return state.products.isEmpty
+                ? const SizedBox.shrink()
+                : Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    margin: const EdgeInsets.only(bottom: 24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildSelectedProductSection(context, state.products),
-                    ],
-                  ),
-                ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Selected Products (${state.products.length})',
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSelectedProductSection(context, state.products),
+                      ],
+                    ),
+                  );
+          },
         ),
 
         // Add product section
@@ -352,12 +352,31 @@ class AddBookingProductScreen extends StatelessWidget {
                   AddBookingProductsCubit,
                   AddBookingProductsState
                 >(
-                  builder: (context, state) => state.products.isEmpty
-                      ? const SizedBox.shrink()
-                      : _buildSelectedProductSection(
-                          context,
-                          state.products,
-                        ),
+                  builder: (context, state) {
+                    print('MobileLayout: Building with ${state.products.length} products');
+                    return state.products.isEmpty
+                        ? const SizedBox.shrink()
+                        : Container(
+                            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Selected Products (${state.products.length})',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                _buildSelectedProductSection(
+                                  context,
+                                  state.products,
+                                ),
+                              ],
+                            ),
+                          );
+                  },
                 ),
 
                 // add product container
@@ -440,7 +459,7 @@ class AddBookingProductScreen extends StatelessWidget {
                       CustomTextField(
                         controller: descriptionController,
                         label: 'Description (Optional)',
-                        hintText: 'Description',
+                        hintText: 'Add any special notes or requirements',
                         maxLines: 4,
                         minLines: 4,
                         textInputAction: TextInputAction.newline,
@@ -587,30 +606,17 @@ await Navigator.push(
       ),
       child: MaterialButton(
         onPressed: () async {
-          final productRepository = context.read<ProductRepository>();
-          final currentProducts = context.read<AddBookingProductsCubit>().state.products;
-          debugPrint('AddBookingProductScreen: Navigating to SelectProductScreen');
-          debugPrint('AddBookingProductScreen: Current products count: ${currentProducts.length}');
-          
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (context) => SelectProductBloc(
-                      repository: productRepository,
-                    ),
-                  ),
-                  BlocProvider(
-                    create: (context) => SelectedProductsCubit(),
-                  ),
-                ],
-                child: SelectProductScreen(
+          try {
+            final currentProducts = context.read<AddBookingProductsCubit>().state.products;
+            print('Current products before navigation: ${currentProducts.length}');
+            
+            // Use MaterialPageRoute to directly navigate to SelectProductScreen
+            final result = await Navigator.of(context).push<List<ProductSelectedModel>>(
+              MaterialPageRoute(
+                builder: (context) => SelectProductScreen(
                   serviceId: bookingData.serviceId ?? 0,
                   pickupDate: bookingData.pickupDate ?? '',
                   returnDate: bookingData.returnDate ?? '',
-                  availabilityCheckOnly: false,
                   pickupTime: bookingData.pickupTime,
                   returnTime: bookingData.returnTime,
                   preSelectedData: currentProducts,
@@ -618,16 +624,29 @@ await Navigator.push(
                   isSales: false,
                 ),
               ),
-            ),
-          );
-          
-          if (result != null && result is List<ProductSelectedModel>) {
-            context
-                .read<AddBookingProductsCubit>()
-                .setAll(result);
-            debugPrint('AddBookingProductScreen: Updated selected products: ${result.length}');
-          } else {
-            debugPrint('AddBookingProductScreen: No products returned or invalid data');
+            );
+            
+            if (result != null && result.isNotEmpty) {
+              print('Navigation returned ${result.length} products');
+              for (int i = 0; i < result.length; i++) {
+                print('Returned product $i: ${result[i].variant.name}');
+              }
+              context.read<AddBookingProductsCubit>().setAll(result);
+              print('Updated products after navigation: ${result.length}');
+            } else {
+              print('Navigation returned empty or null result');
+            }
+          } catch (e) {
+            print('Navigation error: $e');
+            // Fallback: show a snackbar with error
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Unable to open product selection. Please try again.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           }
         },
         splashColor: AppColors.grey300,
@@ -655,7 +674,7 @@ await Navigator.push(
                     ),
                     8.width,
                     Text(
-                      'Add Service',
+                      'Add More Products',
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.purple,
@@ -680,27 +699,39 @@ await Navigator.push(
   Widget _buildSelectedProductSection(
     BuildContext context,
     List<ProductSelectedModel> products,
-  ) => Container(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...products.map(
-          (product) => Container(
-            margin: 3.paddingVertical,
+  ) {
+    print('_buildSelectedProductSection: Building with ${products.length} products');
+    for (int i = 0; i < products.length; i++) {
+      print('Product $i: ${products[i].variant.name}');
+    }
+    
+    return Container(
+      constraints: const BoxConstraints(
+        minHeight: 120,
+        maxHeight: 400,
+      ),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+          print('Building product card for: ${product.variant.name}');
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
             child: SelectedProductInAddBooking(
               selected: product,
               serviceId: product.variant.productId,
               selectedProductsNotifier: products,
               onRemove: () {
-                // log('removing product from cubit ${product.id}');
                 context
                     .read<AddBookingProductsCubit>()
                     .removeByVariantId(product.variant.variantId);
               },
             ),
-          ),
-        ),
-      ],
-    ),
-  );
+          );
+        },
+      ),
+    );
+  }
 }

@@ -32,6 +32,7 @@ class SelectedProductInAddBooking extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = selected.variant;
+    print('SelectedProductInAddBooking: Building for product ${product.name}');
     return Stack(
       clipBehavior: Clip.none,
       children: [

@@ -55,6 +55,197 @@ class BookingDetailsRoot extends StatelessWidget {
     if (kDebugMode) {
       log(booking.toString(), name: 'BookingDetailsWidget');
     }
+
+    final isWeb = MediaQuery.of(context).size.width > 768;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Title header for web
+        if (isWeb) ...[
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(bottom: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Booking Details',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Complete overview of booking #${booking.id}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+
+        // Responsive grid layout for web
+        if (isWeb) ...[
+          _buildWebSections(
+            booking,
+            locationStart,
+            locationFrom,
+            locationTo,
+            isHaveCoolingPeriod,
+            productTotalAmount,
+            additionalChargesTotal,
+            paymentHistoryCubit,
+            isPaymentCompleted,
+          ),
+        ] else ...[
+          _buildMobileSections(
+            booking,
+            locationStart,
+            locationFrom,
+            locationTo,
+            isHaveCoolingPeriod,
+            productTotalAmount,
+            additionalChargesTotal,
+            paymentHistoryCubit,
+            isPaymentCompleted,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildWebSections(
+    BookingDetailsModel booking,
+    String locationStart,
+    String locationFrom,
+    String locationTo,
+    bool isHaveCoolingPeriod,
+    int productTotalAmount,
+    int additionalChargesTotal,
+    BookingDetailsPaymentHistoryCubit paymentHistoryCubit,
+    bool isPaymentCompleted,
+  ) {
+    return Column(
+      children: [
+        // Top row - Invoice & Status
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          margin: const EdgeInsets.only(bottom: 24),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.blue.shade200),
+          ),
+          child: BookingDetailsInvoiceAndDeliveryStatusSection(booking: booking),
+        ),
+
+        // Two column layout for main sections
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left column
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  _buildWebCard(
+                    'Client Information',
+                    BookingDetailsClientSection(booking: booking),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  if (booking.bookedItems.firstOrNull?.mainServiceType.isVehicle ?? false)
+                    _buildWebCard(
+                      'Location Details',
+                      BookingDetailsLocationDetailsSection(
+                        locationStart: locationStart,
+                        locationFrom: locationFrom,
+                        locationTo: locationTo,
+                      ),
+                    ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  _buildWebCard(
+                    'Time Details',
+                    BookingDetailsTimeDetailsSection(booking: booking),
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(width: 24),
+            
+            // Right column
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  _buildWebCard(
+                    'Products & Services',
+                    BookingDetailsProductSection(booking: booking),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  _buildWebCard(
+                    'Date Information',
+                    BookingDetailsDateSection(
+                      booking: booking,
+                      isHaveCoolingPeriod: isHaveCoolingPeriod,
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+
+                  // if (booking.isHaveCoolingPeriod ?? false)
+                    _buildWebCard(
+                      'Additional Details',
+                      BookingDetailsOtherDetailsSection(booking: booking),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 32),
+
+        // Full width payment section
+        _buildWebCard(
+          'Payment Information',
+          BookingDetailsPaymentDetailsSection(
+            paymentButtonKey: paymentButtonKey,
+            booking: booking,
+            productTotalAmount: productTotalAmount,
+            additionalChargesTotal: additionalChargesTotal,
+            paymentHistoryCubit: paymentHistoryCubit,
+            isPaymentCompleted: isPaymentCompleted,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileSections(
+    BookingDetailsModel booking,
+    String locationStart,
+    String locationFrom,
+    String locationTo,
+    bool isHaveCoolingPeriod,
+    int productTotalAmount,
+    int additionalChargesTotal,
+    BookingDetailsPaymentHistoryCubit paymentHistoryCubit,
+    bool isPaymentCompleted,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 15.h,
@@ -100,6 +291,33 @@ class BookingDetailsRoot extends StatelessWidget {
 
         15.height,
       ],
+    );
+  }
+
+  Widget _buildWebCard(String title, Widget child) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade800,
+            ),
+          ),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
     );
   }
 }

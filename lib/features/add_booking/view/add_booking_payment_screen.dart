@@ -18,7 +18,6 @@ import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 // import 'package:go_router/go_router.dart';
 
 import '../../../core/ui/widgets/custom_button.dart';
@@ -53,6 +52,7 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
 
   // controllers
   final advanceAmountController = TextEditingController();
+  final additionalAmountController = TextEditingController(); // Additional charges field
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
 
@@ -80,6 +80,7 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
 
     // controllers
     advanceAmountController.dispose();
+    additionalAmountController.dispose();
     securityAmountController.dispose();
     discountAmountController.dispose();
   }
@@ -161,19 +162,49 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.green.shade200),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.attach_money, color: Colors.green.shade600),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Total Amount: ${totalAmount.toCurrency()}',
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green.shade800,
-                      ),
-                    ),
-                  ],
+                child: ValueListenableBuilder(
+                  valueListenable: additionalAmountController,
+                  builder: (context, value, child) {
+                    final additionalCharges = additionalAmountController.text.toIntOrNull() ?? 0;
+                    final finalTotal = totalAmount + additionalCharges;
+                    
+                    return Row(
+                      children: [
+                        Icon(Icons.attach_money, color: Colors.green.shade600),
+                        const SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Base Amount: ${totalAmount.toCurrency()}',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                            if (additionalCharges > 0) ...[
+                              Text(
+                                'Additional Charges: ${additionalCharges.toCurrency()}',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.orange.shade700,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                            ],
+                            Text(
+                              'Total Amount: ${finalTotal.toCurrency()}',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green.shade800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
@@ -242,6 +273,22 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                               value,
                               allowZero: true,
                               fieldName: 'Security Amount',
+                            ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+
+                    CustomTextField(
+                      controller: additionalAmountController,
+                      label: 'Additional Charges (Optional)',
+                      keyboardType: TextInputType.number,
+                      prefixIcon: const Icon(Icons.currency_rupee),
+                      validator: (value) => AppInputValidators.isEmpty(value)
+                          ? null
+                          : AppInputValidators.amount(
+                              value,
+                              allowZero: true,
+                              fieldName: 'Additional Charges',
                             ),
                     ),
                     
@@ -470,7 +517,12 @@ Navigator.push(
     builder: (context) => SuccessAnimationScreen(
       text: 'Booked Successfully',
       afterSuccess: () {
-        // Optional: callback to run after animation success
+        // Navigate to home and trigger refresh of dashboard
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const BottomBarScreen()),
+          (route) => false,
+        );
       },
     ),
   ),
@@ -530,16 +582,21 @@ Navigator.push(
                   securityAmountController.text.trim().toIntOrNull() ?? 0;
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
+              final additionalAmount =
+                  additionalAmountController.text.trim().toIntOrNull() ?? 0;
 
-              if (advanceAmount != null && advanceAmount > totalAmount) {
+              // Calculate final total including additional charges
+              final finalTotalAmount = totalAmount + additionalAmount;
+
+              if (advanceAmount != null && advanceAmount > finalTotalAmount) {
                 return context.showSnackBar(
-                  'Advance amount cannot be greater than total amount ${totalAmount.toCurrency()}',
+                  'Advance amount cannot be greater than total amount ${finalTotalAmount.toCurrency()}',
                   isError: true,
                 );
-              }
-              if (discountAmount > (totalAmount - (advanceAmount ?? 0))) {
+              }   
+              if (discountAmount > (finalTotalAmount - (advanceAmount ?? 0))) {
                 return context.showSnackBar(
-                  'Discount amount cannot be greater than remaining amount ${(totalAmount - (advanceAmount ?? 0)).toCurrency()}',
+                  'Discount amount cannot be greater than remaining amount ${(finalTotalAmount - (advanceAmount ?? 0)).toCurrency()}',
                   isError: true,
                 );
               }
@@ -559,7 +616,15 @@ Navigator.push(
                     ? null
                     : '${widget.newBooking.coolingPeriodDate}T23:59:59',
 
-                additionalCharges: additionalChargesNotifier.value,
+                additionalCharges: [
+                  ...additionalChargesNotifier.value,
+                  // Add the additional amount as a charge if entered
+                  if (additionalAmount > 0)
+                    AdditionalChargesModel(
+                      name: 'Additional Charges',
+                      amount: additionalAmount,
+                    ),
+                ],
                 sendPdfToWhatsApp: isSharingPdfToWhatsAppNotifier.value,
               );
 

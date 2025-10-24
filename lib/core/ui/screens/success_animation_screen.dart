@@ -25,8 +25,8 @@ class _SuccessAnimationScreenState extends State<SuccessAnimationScreen> {
   void initState() {
     super.initState();
 
-    // Delay navigation safely
-    Future.delayed(const Duration(seconds: 2), () {
+    // Delay navigation safely - Reduced from 2 seconds to 800ms for faster navigation
+    Future.delayed(const Duration(milliseconds: 800), () {
       if (!mounted) return;
 
       if (widget.afterSuccess == null) {

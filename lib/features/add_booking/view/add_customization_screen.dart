@@ -360,7 +360,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                                           flex: 1,
                                           child: CustomTextField(
                                             controller: field.controller,
-                                            hintText: 'Enter ${field.name.toLowerCase()}',
+                                            hintText: 'Enter measurement value (e.g., 32 inches)',
                                             validator: (value) =>
                                                 AppInputValidators.basicText(
                                                   value,
@@ -427,7 +427,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                             CustomTextField(
                               controller: customCustomizationController,
                               validator: AppInputValidators.basicText,
-                              hintText: 'Enter measurement name',
+                              hintText: 'Enter measurement name (e.g., Shoulder Width)',
                               prefixIcon: const Icon(Icons.straighten),
                             ),
                             const SizedBox(height: 16),

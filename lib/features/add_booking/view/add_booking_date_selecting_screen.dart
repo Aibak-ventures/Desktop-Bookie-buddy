@@ -1,26 +1,26 @@
 // ignore_for_file: library_private_types_in_public_api
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/view/widgets/calender_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_product_screen.dart';
-// import 'package:bookie_buddy_web/features/add_booking/view_model/add_booking_products_cubit/add_booking_products_cubit.dart';
 import 'dart:developer';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/widgets/calender_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class AddBookingDateSelectingScreen extends StatefulWidget {
   const AddBookingDateSelectingScreen({
@@ -583,8 +583,36 @@ class _AddBookingDateSelectingScreenState
                                   final picked = await showTimePicker(
                                     context: context,
                                     initialTime: pickupTime ?? TimeOfDay.now(),
+                                    builder: (context, child) => MediaQuery(
+                                      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                      child: child!,
+                                    ),
                                   );
                                   if (picked != null) {
+                                    // If pickup date is today, ensure pickup time is after current time
+                                    final pickupDate = pickupDateNotifier.value;
+                                    if (pickupDate.isSameDay(DateTime.now()) && picked.isBefore(TimeOfDay.now())) {
+                                      context.showSnackBar(
+                                        'Pickup time must be after current time',
+                                        title: 'Time Error',
+                                        isError: true,
+                                      );
+                                      return;
+                                    }
+                                    
+                                    // If pickup and return are on same day and return time is set, ensure pickup is before return
+                                    final returnDate = returnDateController.text.parseToDateTime();
+                                    if (pickupDate.isSameDay(returnDate) && returnTime != null) {
+                                      if (!picked.isBefore(returnTime!)) {
+                                        context.showSnackBar(
+                                          'Pickup time must be before return time on the same day',
+                                          title: 'Time Error',
+                                          isError: true,
+                                        );
+                                        return;
+                                      }
+                                    }
+                                    
                                     pickupTime = picked;
                                     pickupTimeController.text = picked.formatTime12Hour();
                                   }
@@ -602,8 +630,38 @@ class _AddBookingDateSelectingScreenState
                                   final picked = await showTimePicker(
                                     context: context,
                                     initialTime: returnTime ?? TimeOfDay.now(),
+                                    builder: (context, child) => MediaQuery(
+                                      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                      child: child!,
+                                    ),
                                   );
                                   if (picked != null) {
+                                    // Validate return time if on same day as pickup
+                                    final pickupDate = pickupDateNotifier.value;
+                                    final returnDate = returnDateController.text.parseToDateTime();
+                                    
+                                    // If return date is today, ensure return time is after current time
+                                    if (returnDate.isSameDay(DateTime.now()) && picked.isBefore(TimeOfDay.now())) {
+                                      context.showSnackBar(
+                                        'Return time must be after current time',
+                                        title: 'Time Error',
+                                        isError: true,
+                                      );
+                                      return;
+                                    }
+                                    
+                                    // If pickup and return are on same day, ensure return time is after pickup time
+                                    if (pickupDate.isSameDay(returnDate) && pickupTime != null) {
+                                      if (!picked.isAfter(pickupTime!)) {
+                                        context.showSnackBar(
+                                          'Return time must be after pickup time on the same day',
+                                          title: 'Time Error',
+                                          isError: true,
+                                        );
+                                        return;
+                                      }
+                                    }
+                                    
                                     returnTime = picked;
                                     returnTimeController.text = picked.formatTime12Hour();
                                   }
@@ -618,7 +676,7 @@ class _AddBookingDateSelectingScreenState
                           CustomTextField(
                             validator: (value) => null, // No validation - cooling period is optional
                             controller: coolingPeriodDateController,
-                            hintText: 'Select cooling period',
+                            hintText: 'Select cooling period date (optional)',
                             prefixIcon: const Icon(Icons.calendar_month_outlined),
                             ignorePointers: true,
                           ).onTap(() => selectCoolingPeriodDate(context)),
@@ -770,10 +828,31 @@ class _AddBookingDateSelectingScreenState
 
     if (picked != null) {
       returnDateController.text = picked.format();
-      // Only update cooling period if user has manually selected it before
-      if (coolingPeriodManuallySelected) {
-        coolingPeriodDateController.text =
-            picked.add(coolingPeriodDuration.days()).format();
+      
+      // Auto-populate cooling period date when return date changes
+      // Add cooling period duration to return date
+      final coolingPeriodDate = picked.add(coolingPeriodDuration.days());
+      coolingPeriodDateController.text = coolingPeriodDate.format();
+      
+      // Show snackbar to inform user about auto-populated cooling period
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Cooling period date automatically set to ${coolingPeriodDate.format()}',
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.green.shade600,
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'Dismiss',
+              textColor: Colors.white,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ),
+        );
       }
     }
   }

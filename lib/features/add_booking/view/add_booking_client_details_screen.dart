@@ -18,7 +18,6 @@ import 'package:bookie_buddy_web/features/add_booking/view/add_booking_payment_s
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class AddBookingClientDetailsScreen extends StatefulWidget {
   const AddBookingClientDetailsScreen({

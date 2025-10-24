@@ -46,57 +46,59 @@ class SelectedProductListViewWidget extends StatelessWidget {
               );
             }
             
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: screenHeight * 0.15,
-                minHeight: 80,
-              ),
-              child: Container(
-                margin: (5, 10).padding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Selected Products (${selectedProductsWithAmount.length})',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+            return Container(
+              width: double.infinity,
+              height: 250,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Selected Products (${selectedProductsWithAmount.length})',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: selectedProductsWithAmount.length,
-                        itemBuilder: (context, index) {
-                          final serviceData = selectedProductsWithAmount[index];
-                          final product = serviceData.variant;
-                          final amount = serviceData.amount;
-
-                          return SelectedProductCard(
-                            imageUrl: product.image!,
-                            price: amount.toCurrency(),
-                            quantity: product.quantity,
-                            size: product.variantAttribute ??
-                                product.model ??
-                                product.color ??
-                                product.category ??
-                                '',
-                            onRemove: () {
-                              print(
-                                  'Product remove button clicked: ${product.name}');
-                              context
-                                  .read<SelectedProductsCubit>()
-                                  .removeSelectedProduct(
-                                    product.variantId ?? product.id,
-                                  );
-                            },
-                          );
-                        },
-                      ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: selectedProductsWithAmount.length,
+                      itemBuilder: (context, index) {
+                        final serviceData = selectedProductsWithAmount[index];
+                        final product = serviceData.variant;
+                        final amount = serviceData.amount;
+            
+                        return SelectedProductCard(
+                          imageUrl: product.image!,
+                          price: amount.toCurrency(),
+                          quantity: product.quantity,
+                          size: product.variantAttribute ??
+                              product.model ??
+                              product.color ??
+                              product.category ??
+                              '',
+                          productModel: serviceData,
+                          onRemove: () {
+                            print(
+                                'Product remove button clicked: ${product.name}');
+                            context
+                                .read<SelectedProductsCubit>()
+                                .removeSelectedProduct(
+                                  product.variantId ?? product.id,
+                                );
+                          },
+                          onCustomizationUpdate: () {
+                            // Trigger a rebuild by refreshing the state
+                            print('Customization updated for ${product.name}');
+                            // The customization changes will be reflected automatically
+                            // since the measurements are part of the ProductSelectedModel
+                          },
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           },
