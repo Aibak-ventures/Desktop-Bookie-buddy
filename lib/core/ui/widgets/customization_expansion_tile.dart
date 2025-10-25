@@ -65,13 +65,35 @@ class CustomizationExpansionTile extends StatelessWidget {
             ),
           ),
         if (isButtonVisible)
-          TextButton.icon(
-            onPressed: onButtonTap,
-            label: Text(
-              measurements.isEmpty ? 'Add' : 'Edit',
-            ),
-            icon: Icon(
-              measurements.isEmpty ? Icons.add : Icons.edit,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: TextButton.icon(
+                onPressed: () {
+                  print('CustomizationExpansionTile: Button pressed');
+                  onButtonTap?.call();
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: AppColors.purpleLight,
+                  foregroundColor: AppColors.purple,
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                label: Text(
+                  measurements.isEmpty ? 'Add Measurements' : 'Edit Measurements',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                icon: Icon(
+                  measurements.isEmpty ? Icons.add : Icons.edit,
+                  size: 18,
+                ),
+              ),
             ),
           ),
         if (trailingWidget != null) trailingWidget!,

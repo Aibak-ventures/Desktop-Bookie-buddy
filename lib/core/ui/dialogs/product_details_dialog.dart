@@ -20,15 +20,21 @@ class ProductDetailsDialog extends StatelessWidget {
         borderRadius: 10.radiusBorder,
       ),
       backgroundColor: Colors.white,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Padding(
-            padding: 13.padding,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: context.isDesktop ? 600 : 400,
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: 13.padding,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 // Product Image
                 ClipRRect(
                   borderRadius: 10.radiusBorder,
@@ -64,29 +70,31 @@ class ProductDetailsDialog extends StatelessWidget {
                     fontSize: 15.sp,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: -20,
-            right: -20,
-            child: IconButton(
-              onPressed: () => context.pop(),
-              icon: const Icon(
-                Icons.close,
-                color: AppColors.purple,
+                  ],
+                ),
               ),
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: const CircleBorder(
-                    side: BorderSide(
+            ),
+            Positioned(
+              top: -20,
+              right: -20,
+              child: IconButton(
+                onPressed: () => context.pop(),
+                icon: const Icon(
+                  Icons.close,
                   color: AppColors.purple,
-                  width: 1.5,
-                )),
+                ),
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: const CircleBorder(
+                      side: BorderSide(
+                    color: AppColors.purple,
+                    width: 1.5,
+                  )),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
 }

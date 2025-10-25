@@ -581,8 +581,27 @@ Navigator.push(
                 deliveryStatus: deliveryStatusNotifier.value,
                 pickupDate:
                     '${widget.newBooking.pickupDate!.formatToUiDate()}T${widget.newBooking.pickupTime?.formatToTime(addSeconds: true) ?? '00:00:00'}',
-                returnDate:
-                    '${widget.newBooking.returnDate}T${widget.newBooking.returnTime?.formatToTime(addSeconds: true) ?? '23:59:59'}',
+                returnDate: () {
+                  final returnDateStr = widget.newBooking.returnDate!;
+                  var returnTimeStr = widget.newBooking.returnTime?.formatToTime(addSeconds: true) ?? '23:59:59';
+                  
+                  // If same day booking, ensure return time is after pickup time
+                  if (widget.newBooking.pickupDate!.formatToUiDate() == returnDateStr && 
+                      widget.newBooking.pickupTime != null && 
+                      widget.newBooking.returnTime != null) {
+                    final pickupMinutes = widget.newBooking.pickupTime!.hour * 60 + widget.newBooking.pickupTime!.minute;
+                    final returnMinutes = widget.newBooking.returnTime!.hour * 60 + widget.newBooking.returnTime!.minute;
+                    
+                    // If return time is not after pickup time, use pickup time + 1 hour
+                    if (returnMinutes <= pickupMinutes) {
+                      final newHour = (widget.newBooking.pickupTime!.hour + 1) % 24;
+                      final minute = widget.newBooking.pickupTime!.minute;
+                      returnTimeStr = '${newHour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:00';
+                    }
+                  }
+                  
+                  return '${returnDateStr}T${returnTimeStr}';
+                }(),
                 coolingPeriodDate:
                     widget.newBooking.coolingPeriodDate.isNullOrEmpty
                     ? null

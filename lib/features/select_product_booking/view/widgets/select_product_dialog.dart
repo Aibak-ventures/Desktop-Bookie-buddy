@@ -113,15 +113,18 @@ Widget build(BuildContext context) {
 
   return Dialog(
     insetPadding: EdgeInsets.symmetric(
-      horizontal: isWide ? 0.3.widthR : 20, // Keeps modal compact on wide screens
-      vertical: 24,
+      horizontal: isWide ? 0.2.widthR : 16, // Better responsive spacing
+      vertical: 40, // More vertical spacing
     ),
     backgroundColor: Colors.white,
     elevation: 8,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     child: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 500), // 👈 Web modal max width
-      child: Padding(
+      constraints: BoxConstraints(
+        maxWidth: isWide ? 600 : 500, // Wider on larger screens
+        maxHeight: MediaQuery.of(context).size.height * 0.85, // Limit height
+      ),
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
@@ -249,6 +252,11 @@ Widget build(BuildContext context) {
                       controller: quantityController,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        // Clear error when user types
+                        quantityErrorNotifier.value = '';
+                        _updateAmountFromSelectedVariant();
+                      },
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: AppColors.purpleLight,
@@ -262,8 +270,16 @@ Widget build(BuildContext context) {
                   _qtyButton(Icons.add, () {
                     quantityErrorNotifier.value = '';
                     final qty = quantityController.text.toIntOrNull() ?? 1;
-                    quantityController.text = (qty + 1).toString();
-                    _updateAmountFromSelectedVariant();
+                    final maxStock = selectedVariant?.remainingStock;
+                    
+                    // Only add if within stock limits (if stock info is available)
+                    if (maxStock == null || maxStock <= 0 || qty < maxStock) {
+                      quantityController.text = (qty + 1).toString();
+                      _updateAmountFromSelectedVariant();
+                    } else {
+                      // Show stock limit warning
+                      quantityErrorNotifier.value = 'Maximum quantity available: $maxStock';
+                    }
                   }),
                 ],
               ),
@@ -332,23 +348,25 @@ Widget build(BuildContext context) {
   );
 }
 void _onConfirmPressed() async {
-  // Prevent confirm if variant already selected
-  if (widget.alreadySelectedVariants.any(
-    (e) => e.variant.variantId == selectedVariant?.id,
-  )) return;
-
   // Quantity validation
   final qtyText = quantityController.text.trim();
   final qty = qtyText.toIntOrNull();
   final maxStock = selectedVariant?.remainingStock;
 
-  if (qty == null || qty <= 0 || (maxStock != null && qty > maxStock)) {
-    quantityErrorNotifier.value =
-        'Quantity must be less than remaining stock ${maxStock ?? 1}';
+  // Check if quantity is valid number and positive
+  if (qty == null || qty <= 0) {
+    quantityErrorNotifier.value = 'Quantity must be a positive number';
     return;
-  } else {
-    quantityErrorNotifier.value = '';
   }
+
+  // Check stock availability only if maxStock is available and valid
+  if (maxStock != null && maxStock > 0 && qty > maxStock) {
+    quantityErrorNotifier.value = 'Quantity must be less than or equal to remaining stock ($maxStock)';
+    return;
+  }
+  
+  // Clear any previous error
+  quantityErrorNotifier.value = '';
 
   // Form validation
   if (!_formKey.currentState!.validate()) return;

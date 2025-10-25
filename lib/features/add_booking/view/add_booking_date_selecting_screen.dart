@@ -280,7 +280,9 @@ class _AddBookingDateSelectingScreenState
                               return 'Please select return date.';
                             }
                             final selectedDate = value.parseToDateTime();
-                            if (selectedDate.isBefore(pickupDateNotifier.value)) {
+                            final pickupDate = pickupDateNotifier.value;
+                            // Only check if return date is before pickup date (allow same date)
+                            if (selectedDate.isBefore(pickupDate.dateOnly)) {
                               return 'Return date cannot be before pickup date.';
                             }
                             return null;
@@ -594,7 +596,9 @@ class _AddBookingDateSelectingScreenState
                                 return 'Please select return date.';
                               }
                               final selectedDate = value.parseToDateTime();
-                              if (selectedDate.isBefore(pickupDateNotifier.value)) {
+                              final pickupDate = pickupDateNotifier.value;
+                              // Only check if return date is before pickup date (allow same date)
+                              if (selectedDate.isBefore(pickupDate.dateOnly)) {
                                 return 'Return date cannot be before pickup date.';
                               }
                               return null;
@@ -759,8 +763,101 @@ class _AddBookingDateSelectingScreenState
       return;
     }
 
-    final pickupDate = pickupDateNotifier.value.format(reverse: true);
-    final returnDate = returnDateController.text.formatToUiDate();
+    // Comprehensive booking validation
+    final pickupDate = pickupDateNotifier.value;
+    final returnDate = returnDateController.text.parseToDateTime();
+    
+    // Check if same day booking with invalid times
+    if (pickupDate.isSameDay(returnDate)) {
+      // For same day bookings, ensure both times are provided
+      if (pickupTime == null || returnTime == null) {
+        context.showSnackBar(
+          'For same-day bookings, both pickup and return times are required.',
+          title: 'Time Required',
+          isError: true,
+        );
+        return;
+      }
+      
+      // Convert TimeOfDay to minutes for comparison
+      final pickupMinutes = pickupTime!.hour * 60 + pickupTime!.minute;
+      final returnMinutes = returnTime!.hour * 60 + returnTime!.minute;
+      
+      // Return time must be at least 1 hour after pickup time for same day
+      if (returnMinutes <= pickupMinutes) {
+        context.showSnackBar(
+          'Return time must be after pickup time on the same day.',
+          title: 'Invalid Time',
+          isError: true,
+        );
+        return;
+      }
+      
+      // Minimum rental duration check (at least 1 hour for same day)
+      if (returnMinutes - pickupMinutes < 60) {
+        context.showSnackBar(
+          'Minimum rental duration is 1 hour for same-day bookings.',
+          title: 'Duration Too Short',
+          isError: true,
+        );
+        return;
+      }
+    }
+    
+    // For different day bookings, if times are provided, validate them
+    if (!pickupDate.isSameDay(returnDate)) {
+      // If it's next day and times are provided, check if return is actually later
+      if (pickupTime != null && returnTime != null) {
+        final pickupDateTime = DateTime(
+          pickupDate.year, 
+          pickupDate.month, 
+          pickupDate.day,
+          pickupTime!.hour, 
+          pickupTime!.minute
+        );
+        final returnDateTime = DateTime(
+          returnDate.year, 
+          returnDate.month, 
+          returnDate.day,
+          returnTime!.hour, 
+          returnTime!.minute
+        );
+        
+        if (returnDateTime.isBefore(pickupDateTime)) {
+          context.showSnackBar(
+            'Return date and time cannot be before pickup date and time.',
+            title: 'Invalid Schedule',
+            isError: true,
+          );
+          return;
+        }
+      }
+    }
+    
+    // Additional business logic validation
+    final now = DateTime.now();
+    if (pickupTime != null) {
+      final pickupDateTime = DateTime(
+        pickupDate.year,
+        pickupDate.month,
+        pickupDate.day,
+        pickupTime!.hour,
+        pickupTime!.minute,
+      );
+      
+      // Cannot book in the past
+      if (pickupDateTime.isBefore(now)) {
+        context.showSnackBar(
+          'Cannot book pickup time in the past.',
+          title: 'Invalid Time',
+          isError: true,
+        );
+        return;
+      }
+    }
+
+    final pickupDateFormatted = pickupDateNotifier.value.format(reverse: true);
+    final returnDateFormatted = returnDateController.text.formatToUiDate();
     // Only send cooling period if user has manually selected it and it's different from return date
     final coolingPeriodDate = coolingPeriodManuallySelected && coolingPeriodDateController.text.isNotEmpty
         ? coolingPeriodDateController.text.formatToUiDate()
@@ -770,8 +867,8 @@ class _AddBookingDateSelectingScreenState
     if (context.mounted) {
       try {
         final bookingData = widget.addBookingModel.copyWith(
-          pickupDate: pickupDate,
-          returnDate: returnDate,
+          pickupDate: pickupDateFormatted,
+          returnDate: returnDateFormatted,
           pickupTime: pickupTime,
           returnTime: returnTime,
           coolingPeriodDate: coolingPeriodDate, // Will be null if not manually selected
@@ -792,8 +889,8 @@ class _AddBookingDateSelectingScreenState
                   MaterialPageRoute(
                     builder: (context) => SelectProductScreen(
                       serviceId: service.id,
-                      pickupDate: pickupDate,
-                      returnDate: returnDate,
+                      pickupDate: pickupDateFormatted,
+                      returnDate: returnDateFormatted,
                       pickupTime: pickupTime,
                       returnTime: returnTime,
                       preSelectedData: null,

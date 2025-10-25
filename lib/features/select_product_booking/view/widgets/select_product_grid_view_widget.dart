@@ -21,7 +21,7 @@ class SelectProductGridViewWidget extends StatelessWidget {
     required this.pickupDate,
     required this.returnDate,
     required this.mainServiceTypeNotifier,
-    this.pickupTime,
+    this.pickupTime,  
     this.returnTime,
     required this.useAvailableProductsApi,
     required this.isSales,

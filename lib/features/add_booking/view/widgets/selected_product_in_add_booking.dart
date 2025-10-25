@@ -2,18 +2,17 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_vehicle_customization_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_icon_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/product_simple_details_tile.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/view/add_customization_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class SelectedProductInAddBooking extends StatelessWidget {
   const SelectedProductInAddBooking({
@@ -71,34 +70,52 @@ class SelectedProductInAddBooking extends StatelessWidget {
                       : null,
                   measurements: selected.measurements,
                   onButtonTap: () async {
-                    final cubit = context.read<AddBookingProductsCubit>();
-                    // add customization
-                    if (selected.variant.mainServiceType.isVehicle) {
-                      final result = await showVehicleCustomizationDialog(
-                        context,
-                        selected.measurements.firstOrNull,
-                      );
-                      if (result != null) {
-                        cubit.updateProductMeasurements(
-                          selected.variant.variantId,
-                          [result],
+                    try {
+                      print('CustomizationExpansionTile button tapped');
+                      final cubit = context.read<AddBookingProductsCubit>();
+                      
+                      // add customization
+                      if (selected.variant.mainServiceType.isVehicle) {
+                        print('Opening vehicle customization dialog');
+                        final result = await showVehicleCustomizationDialog(
+                          context,
+                          selected.measurements.firstOrNull,
                         );
-                      }
-                    } else {
-                      final result = await context
-                          .pushNamed<List<MeasurementValueModel>>(
-                            AppRoutes.addCustomization.name,
-                            extra: selected.measurements,
+                        if (result != null) {
+                          print('Vehicle customization result: $result');
+                          cubit.updateProductMeasurements(
+                            selected.variant.variantId,
+                            [result],
                           );
-
-                      if (result != null) {
-                        log('got measurements: $result');
-
-                        cubit.updateProductMeasurements(
-                          selected.variant.variantId,
-                          result,
+                        }
+                      } else {
+                        print('Opening dress customization screen');
+                        final result = await Navigator.of(context).push<List<MeasurementValueModel>>(
+                          MaterialPageRoute(
+                            builder: (context) => AddCustomizationScreen(
+                              addedMeasurements: selected.measurements,
+                            ),
+                          ),
                         );
+
+                        if (result != null) {
+                          log('got measurements: $result');
+                          cubit.updateProductMeasurements(
+                            selected.variant.variantId,
+                            result,
+                          );
+                        } else {
+                          print('No measurements returned from customization screen');
+                        }
                       }
+                    } catch (e) {
+                      print('Error in customization button tap: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error opening customization: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   },
                 ),

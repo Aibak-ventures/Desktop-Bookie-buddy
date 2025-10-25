@@ -1,4 +1,5 @@
   // import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
   import 'package:bookie_buddy_web/core/navigation/navigations.dart';
   import 'package:bookie_buddy_web/core/theme/app_theme.dart';
@@ -92,11 +93,11 @@ import 'package:bookie_buddy_web/core/app_dependencies.dart';
           themeMode: ThemeMode.light,
           locale: const Locale('en', 'US'), // 12-hour format
           localizationsDelegates: [
-            // GlobalMaterialLocalizations.delegate,
-            // GlobalWidgetsLocalizations.delegate,
-            // GlobalCupertinoLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: [
+          supportedLocales: const [
             Locale('en', 'US'), // English (12-hour format)
           ],
           home: const SplashScreen(),

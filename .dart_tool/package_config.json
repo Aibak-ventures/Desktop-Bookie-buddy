@@ -446,6 +446,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "flutter_localizations",
+      "rootUri": "file:///C:/flutter/src/flutter/packages/flutter_localizations",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.30",
       "packageUri": "lib/",
