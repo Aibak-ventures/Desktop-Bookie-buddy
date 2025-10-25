@@ -14,6 +14,7 @@ import 'package:bookie_buddy_web/features/add_booking/models/request_booking_mod
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/add_additional_charges_widget.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/add_booking_select_status_widget.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_add_booking/add_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -162,49 +163,24 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.green.shade200),
                 ),
-                child: ValueListenableBuilder(
-                  valueListenable: additionalAmountController,
-                  builder: (context, value, child) {
-                    final additionalCharges = additionalAmountController.text.toIntOrNull() ?? 0;
-                    final finalTotal = totalAmount + additionalCharges;
-                    
-                    return Row(
+                child: Row(
+                  children: [
+                    Icon(Icons.attach_money, color: Colors.green.shade600),
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.attach_money, color: Colors.green.shade600),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Base Amount: ${totalAmount.toCurrency()}',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                            if (additionalCharges > 0) ...[
-                              Text(
-                                'Additional Charges: ${additionalCharges.toCurrency()}',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.orange.shade700,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                            Text(
-                              'Total Amount: ${finalTotal.toCurrency()}',
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green.shade800,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          'Total Amount: ${totalAmount.toCurrency()}',
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green.shade800,
+                          ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -278,21 +254,7 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                     
                     const SizedBox(height: 16),
 
-                    CustomTextField(
-                      controller: additionalAmountController,
-                      label: 'Additional Charges (Optional)',
-                      keyboardType: TextInputType.number,
-                      prefixIcon: const Icon(Icons.currency_rupee),
-                      validator: (value) => AppInputValidators.isEmpty(value)
-                          ? null
-                          : AppInputValidators.amount(
-                              value,
-                              allowZero: true,
-                              fieldName: 'Additional Charges',
-                            ),
-                    ),
-                    
-                    const SizedBox(height: 16),
+                    // Additional charges field removed as requested
                     
                     CustomTextField(
                       controller: discountAmountController,
@@ -376,6 +338,11 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
               },
               success: () {
                context.clearSnackBars();
+
+                // Refresh dashboard to show new booking
+                context.read<DashboardBloc>().add(
+                  const DashboardEvent.loadDashboardData(),
+                );
 
 Navigator.push(
   context,
@@ -511,6 +478,11 @@ Navigator.push(
               success: () {
                context.clearSnackBars();
 
+                // Refresh dashboard to show new booking
+                context.read<DashboardBloc>().add(
+                  const DashboardEvent.loadDashboardData(),
+                );
+
 Navigator.push(
   context,
   MaterialPageRoute(
@@ -616,15 +588,7 @@ Navigator.push(
                     ? null
                     : '${widget.newBooking.coolingPeriodDate}T23:59:59',
 
-                additionalCharges: [
-                  ...additionalChargesNotifier.value,
-                  // Add the additional amount as a charge if entered
-                  if (additionalAmount > 0)
-                    AdditionalChargesModel(
-                      name: 'Additional Charges',
-                      amount: additionalAmount,
-                    ),
-                ],
+                additionalCharges: [], // Removed additional charges as requested
                 sendPdfToWhatsApp: isSharingPdfToWhatsAppNotifier.value,
               );
 

@@ -359,6 +359,25 @@ class _AddBookingDateSelectingScreenState
                                       initialTime: pickupTime ?? TimeOfDay.now(),
                                     );
                                     if (picked != null) {
+                                      // Check if same day and same time as return
+                                      final returnDateStr = returnDateController.text;
+                                      final pickupDate = pickupDateNotifier.value;
+                                      
+                                      if (returnDateStr.isNotEmpty) {
+                                        final returnDate = returnDateStr.parseToDateTime();
+                                        
+                                        if (pickupDate.isSameDay(returnDate) && 
+                                            returnTime != null && picked == returnTime) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Pickup and return time cannot be the same on the same day'),
+                                              backgroundColor: Colors.orange,
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                      }
+                                      
                                       pickupTime = picked;
                                       pickupTimeController.text = picked.formatTime12Hour();
                                     }
@@ -392,6 +411,25 @@ class _AddBookingDateSelectingScreenState
                                       initialTime: returnTime ?? TimeOfDay.now(),
                                     );
                                     if (picked != null) {
+                                      // Check if same day and same time as pickup
+                                      final returnDateStr = returnDateController.text;
+                                      final pickupDate = pickupDateNotifier.value;
+                                      
+                                      if (returnDateStr.isNotEmpty) {
+                                        final returnDate = returnDateStr.parseToDateTime();
+                                        
+                                        if (pickupDate.isSameDay(returnDate) && 
+                                            pickupTime != null && picked == pickupTime) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Return and pickup time cannot be the same on the same day'),
+                                              backgroundColor: Colors.orange,
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                      }
+                                      
                                       returnTime = picked;
                                       returnTimeController.text = picked.formatTime12Hour();
                                     }

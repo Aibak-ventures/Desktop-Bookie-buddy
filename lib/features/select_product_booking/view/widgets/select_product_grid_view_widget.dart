@@ -8,6 +8,7 @@ import 'package:bookie_buddy_web/features/select_product_booking/view/view_model
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_card.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -165,6 +166,15 @@ class SelectProductGridViewWidget extends StatelessWidget {
                                     needAddButton: !availabilityCheckOnly,
                                     product: product,
                                     onTap: () async {
+                                      // Find existing selected product to persist values
+                                      ProductSelectedModel? existingSelection;
+                                      for (final selected in selectedProductsWithAmount) {
+                                        if (selected.variant.productId == product.id) {
+                                          existingSelection = selected;
+                                          break;
+                                        }
+                                      }
+                                      
                                       showSizeAmountDialog(
                                         context: context,
                                         isSales: isSales,
@@ -173,7 +183,8 @@ class SelectProductGridViewWidget extends StatelessWidget {
                                         mainServiceType: mainServiceType,
                                         productImageUrl: product.image!,
                                         initialAmount:
-                                            product.price?.toString(),
+                                            existingSelection?.amount.toString() ?? product.price?.toString(),
+                                        initialQuantity: existingSelection?.quantity,
                                         availableVariants: product.variants,
                                         onConfirm:
                                             (id, size, amount, quantity) {

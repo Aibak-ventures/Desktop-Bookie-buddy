@@ -1,11 +1,7 @@
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/show_vehicle_customization_dialog.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/add_customization_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +30,6 @@ class SelectedProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final needsCustomization = productModel != null && 
-        (productModel!.variant.mainServiceType.isDress || 
-         productModel!.variant.mainServiceType.isVehicle);
-
     return SizedBox(
       width: 160, // Smaller fixed width for horizontal ListView
       child: Stack(
@@ -123,20 +115,8 @@ class SelectedProductCard extends StatelessWidget {
                   ),
                 ),
                 
-                // Customization section (if needed)
-                if (needsCustomization)
-                  Container(
-                    margin: const EdgeInsets.only(top: 6),
-                    child: CustomizationExpansionTile(
-                      expansionTitle: productModel!.variant.mainServiceType.isVehicle
-                          ? 'More Details'
-                          : 'Customisation',
-                      measurements: productModel!.measurements,
-                      onButtonTap: () async {
-                        await _handleCustomization(context);
-                      },
-                    ),
-                  ),
+                // Customization removed from select products screen
+                // Only show in cart/add booking screen
               ],
             ),
           ),
@@ -172,42 +152,5 @@ class SelectedProductCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _handleCustomization(BuildContext context) async {
-    if (productModel == null) return;
-
-    if (productModel!.variant.mainServiceType.isVehicle) {
-      final result = await showVehicleCustomizationDialog(
-        context,
-        productModel!.measurements.isNotEmpty ? productModel!.measurements.first : null,
-      );
-      if (result != null) {
-        // Update the measurements using the cubit
-        context.read<SelectedProductsCubit>().updateProductMeasurements(
-          productModel!.variant.variantId!,
-          [result],
-        );
-        if (onCustomizationUpdate != null) {
-          onCustomizationUpdate!();
-        }
-      }
-    } else {
-      final result = await Navigator.of(context).push<List<MeasurementValueModel>>(
-        MaterialPageRoute(
-          builder: (context) => AddCustomizationScreen(addedMeasurements: productModel!.measurements),
-        ),
-      );
-      if (result != null) {
-        // Update the measurements using the cubit
-        context.read<SelectedProductsCubit>().updateProductMeasurements(
-          productModel!.variant.variantId!,
-          result,
-        );
-        if (onCustomizationUpdate != null) {
-          onCustomizationUpdate!();
-        }
-      }
-    }
   }
 }

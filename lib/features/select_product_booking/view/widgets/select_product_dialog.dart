@@ -19,6 +19,7 @@ class SizeAmountDialog extends StatefulWidget {
   final List<ProductVariantModel> availableVariants;
   final List<ProductSelectedModel> alreadySelectedVariants;
   final String? initialAmount;
+  final int? initialQuantity;
   final bool isSales;
   final Function(int variantId, String? size, String amount, int quantity)?
   onConfirm;
@@ -29,6 +30,7 @@ class SizeAmountDialog extends StatefulWidget {
     required this.availableVariants,
     this.alreadySelectedVariants = const [],
     this.initialAmount,
+    this.initialQuantity,
     this.onConfirm,
     super.key,
     this.isSales = false,
@@ -40,7 +42,7 @@ class SizeAmountDialog extends StatefulWidget {
 
 class _SizeAmountDialogState extends State<SizeAmountDialog> {
   ProductVariantModel? selectedVariant;
-  final quantityController = TextEditingController(text: '1');
+  late final TextEditingController quantityController;
   final amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -48,19 +50,33 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
   @override
   void initState() {
     super.initState();
+    
+    // Initialize quantity controller with either initial quantity or 1
+    final initialQty = widget.initialQuantity ?? 1;
+    quantityController = TextEditingController(text: initialQty.toString());
+    
     log(widget.availableVariants.first.toString());
-    // if (VariantSizeType.isFreeSize(widget.availableVariants.first.attribute)) {
-    //   selectedVariant = widget.availableVariants.first;
-    // }
-    // if (widget.alreadySelectedVariants.isNotEmpty) {
-    //   //!TODO: Note here
-    //   // selectedVariant = widget.selectedVariant;
-    //   selectedVariant = widget.availableVariants.first;
-    // } else {}
     selectedVariant = widget.availableVariants.first;
     
-    // Auto-populate amount field if variant has a price
-    _updateAmountFromSelectedVariant();
+    // Check if there's already a selected variant for this product
+    if (widget.alreadySelectedVariants.isNotEmpty) {
+      for (final selected in widget.alreadySelectedVariants) {
+        final matchingVariant = widget.availableVariants.firstWhere(
+          (variant) => variant.id == selected.variant.variantId,
+          orElse: () => widget.availableVariants.first,
+        );
+        if (matchingVariant.id == selected.variant.variantId) {
+          selectedVariant = matchingVariant;
+          quantityController.text = selected.quantity.toString();
+          amountController.text = selected.amount.toString();
+          break;
+        }
+      }
+    }
+    // Auto-populate amount field if variant has a price (only if not already set)
+    if (amountController.text.isEmpty) {
+      _updateAmountFromSelectedVariant();
+    }
     
     // Add listener to quantity controller to update amount when quantity changes
     quantityController.addListener(_updateAmountFromSelectedVariant);
@@ -373,6 +389,7 @@ void showSizeAmountDialog({
   List<ProductVariantModel> availableVariants = const [],
   List<ProductSelectedModel> alreadySelectedVariants = const [],
   String? initialAmount,
+  int? initialQuantity,
   bool isSales = false,
   void Function(int variantId, String? size, String amount, int quantity)?
   onConfirm,
@@ -385,6 +402,7 @@ void showSizeAmountDialog({
       availableVariants: availableVariants,
       alreadySelectedVariants: alreadySelectedVariants,
       initialAmount: initialAmount,
+      initialQuantity: initialQuantity,
       onConfirm: onConfirm,
       isSales: isSales,
     ),
