@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -17,7 +16,6 @@ import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/
 import 'package:bookie_buddy_web/utils/pick_and_compress_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -28,7 +26,7 @@ class AddOrEditProductScreen extends StatefulWidget {
   final int serviceId;
   final ProductModel? product;
 
-  AddOrEditProductScreen({
+  const AddOrEditProductScreen({
     required this.serviceId,
     this.product,
     super.key,
@@ -60,20 +58,19 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
       services,
       widget.serviceId,
     );
+
     final product = widget.product;
-    print(product);
     if (product != null) {
       _nameController.text = product.name;
       if (!mainServiceType.isDress) {
         _stockController.text = product.variants.first.stock.toString();
-      } else {
-        // variantsNotifier.value = product.variants;
       }
       _modelController.text = product.model ?? '';
       _categoryController.text = product.category ?? '';
       _colorController.text = product.color ?? '';
       _priceController.text = product.price?.toString() ?? '';
-      _purchaseAmountController.text = product.purchaseAmount?.toString() ?? '';
+      _purchaseAmountController.text =
+          product.purchaseAmount?.toString() ?? '';
       _descriptionController.text = product.description ?? '';
     }
   }
@@ -86,228 +83,255 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
       canPop: false,
       onPopInvokedWithResult: _onPopInvokedWithResult,
       child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
         appBar: AppBar(
+          title: Text(isEditMode ? 'Edit Product' : 'Add Product'),
           centerTitle: true,
-          title: Text(
-            isEditMode ? 'Edit Product' : 'Add Product',
-          ),
+          elevation: 0,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: context.isMobile ? 24.padding : (60, 40).padding,
-            child: Column(
-              children: [
-                ValueListenableBuilder(
-                  valueListenable: _imageNotifier,
-                  builder: (context, image, child) {
-                    return AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: 10.radiusBorder,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 10,
-                              color: AppColors.grey300,
-                              spreadRadius: 2,
-                            )
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: 10.radiusBorder,
-                          child: image != null
-                              ? Image.file(image, fit: BoxFit.cover)
-                              : widget.product?.image != null
-                                  ? CustomNetworkImage(
-                                      imageUrl: widget.product!.image!)
-                                  : const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.add_photo_alternate_rounded,
-                                          size: 50,
-                                          color: AppColors.purpleLight,
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          "Click to add image",
-                                          style: TextStyle(
-                                            color: AppColors.purpleLight,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                        ),
-                      ).onTap(
-                        () async {
-                          await showImageBottomSheet(context);
-                        },
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 40),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    spacing: 16,
-                    children: [
-                      //name
-                      CustomTextField(
-                        label:
-                            '${mainServiceType.isVehicle ? 'Vehicle' : 'Product'} name',
-                        controller: _nameController,
-                        validator: AppInputValidators.productName,
-                      ),
-
-                      if (mainServiceType.isDress && widget.product == null)
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Add variants',
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            //Variants
-                            VariantsWidget(
-                              variantsNotifier: variantsNotifier,
-                            ),
-                          ],
-                        ),
-
-                      // quantity
-                      if (!mainServiceType.isDress)
-                        CustomTextField(
-                          label:
-                              mainServiceType.isVehicle ? 'Unit' : 'Quantity',
-                          controller: _stockController,
-                          keyboardType: TextInputType.number,
-                          validator: (value) => mainServiceType.isDress
-                              ? null
-                              : AppInputValidators.quantity(
-                                  value,
-                                  allowZero: true,
-                                ),
-                        ),
-
-                      CustomTextField(
-                        label: 'Purchase amount (Optional)',
-                        controller: _purchaseAmountController,
-                        keyboardType: TextInputType.number,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.amount(
-                                value,
-                                allowZero: true,
-                              ),
-                      ),
-                      CustomTextField(
-                        label: 'Selling Price (Optional)',
-                        controller: _priceController,
-                        keyboardType: TextInputType.number,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.amount(
-                                value,
-                                allowZero: true,
-                              ),
-                      ),
-                      CustomTextField(
-                        label:
-                            '${mainServiceType.isVehicle ? 'Brand' : 'Category'} (Optional)',
-                        controller: _categoryController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.category(
-                                value,
-                                mainServiceType.isVehicle
-                                    ? 'Brand'
-                                    : 'Category',
-                              ),
-                      ),
-
-                      CustomTextField(
-                        label: 'Color (Optional)',
-                        controller: _colorController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.color(value),
-                      ),
-
-                      CustomTextField(
-                        label: 'Model (Optional)',
-                        controller: _modelController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.model(value),
-                      ),
-
-                      CustomTextField(
-                        label: 'Description (Optional)',
-                        maxLines: 10,
-                        minLines: 2,
-                        controller: _descriptionController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.description(value),
-                      ),
-
-                      1.height,
-
-                      // save button
-                      BlocConsumer<SaveProductCubit, SaveProductState>(
-                        listener: (context, state) {
-                          state.maybeWhen(
-                            orElse: () {},
-                            error: (error) => context.showSnackBar(
-                              error,
-                              isError: true,
-                            ),
-                            success: () {
-                              context.pop(
-                                isEditMode ? true : _nameController.text.trim(),
-                              );
-                              context.showSnackBar(
-                                widget.product?.id == null
-                                    ? "Product added successfully"
-                                    : "Product updated successfully",
-                                isError: false,
-                              );
-                            },
-                          );
-                        },
-                        builder: (context, state) {
-                          final isLoading = state.maybeWhen(
-                            orElse: () => false,
-                            submitted: () => true,
-                          );
-                          return CustomElevatedButton(
-                            onPressed: _submit, // submit function
-                            loadingText: 'Saving...',
-                            isLoading: isLoading,
-                            text: isEditMode ? 'Update Product' : 'Add Product',
-                          );
-                        },
-                      ),
-                    ],
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 40),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 900),
+              padding: const EdgeInsets.all(40),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(0, 6),
                   ),
-                ),
-              ],
+                ],
+              ),
+              child: _buildForm(context, isEditMode),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildForm(BuildContext context, bool isEditMode) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildImagePicker(context),
+          const SizedBox(height: 40),
+          Text(
+            '${isEditMode ? "Edit" : "Add"} Product Details',
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 30),
+
+          // Main form fields
+          Wrap(
+            runSpacing: 20,
+            spacing: 20,
+            children: [
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label:
+                      '${mainServiceType.isVehicle ? 'Vehicle' : 'Product'} name',
+                  controller: _nameController,
+                  validator: AppInputValidators.productName,
+                ),
+              ),
+              if (!mainServiceType.isDress)
+                SizedBox(
+                  width: 420,
+                  child: CustomTextField(
+                    label: mainServiceType.isVehicle ? 'Unit' : 'Quantity',
+                    controller: _stockController,
+                    keyboardType: TextInputType.number,
+                    validator: (value) => mainServiceType.isDress
+                        ? null
+                        : AppInputValidators.quantity(value, allowZero: true),
+                  ),
+                ),
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label: 'Purchase Amount (Optional)',
+                  controller: _purchaseAmountController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) => AppInputValidators.isEmpty(value)
+                      ? null
+                      : AppInputValidators.amount(value, allowZero: true),
+                ),
+              ),
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label: 'Selling Price (Optional)',
+                  controller: _priceController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) => AppInputValidators.isEmpty(value)
+                      ? null
+                      : AppInputValidators.amount(value, allowZero: true),
+                ),
+              ),
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label:
+                      '${mainServiceType.isVehicle ? 'Brand' : 'Category'} (Optional)',
+                  controller: _categoryController,
+                  validator: (value) => AppInputValidators.isEmpty(value)
+                      ? null
+                      : AppInputValidators.category(
+                          value,
+                          mainServiceType.isVehicle ? 'Brand' : 'Category',
+                        ),
+                ),
+              ),
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label: 'Color (Optional)',
+                  controller: _colorController,
+                  validator: (value) => AppInputValidators.isEmpty(value)
+                      ? null
+                      : AppInputValidators.color(value),
+                ),
+              ),
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label: 'Model (Optional)',
+                  controller: _modelController,
+                  validator: (value) => AppInputValidators.isEmpty(value)
+                      ? null
+                      : AppInputValidators.model(value),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          if (mainServiceType.isDress && widget.product == null)
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: VariantsWidget(
+                variantsNotifier: variantsNotifier,
+              ),
+            ),
+
+          const SizedBox(height: 30),
+          CustomTextField(
+            label: 'Description (Optional)',
+            maxLines: 5,
+            minLines: 3,
+            controller: _descriptionController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.description(value),
+          ),
+          const SizedBox(height: 40),
+
+          // Save Button
+          BlocConsumer<SaveProductCubit, SaveProductState>(
+            listener: (context, state) {
+              state.maybeWhen(
+                orElse: () {},
+                error: (error) =>
+                    context.showSnackBar(error, isError: true),
+                success: () {
+                  context.pop(
+                      isEditMode ? true : _nameController.text.trim());
+                  context.showSnackBar(
+                    isEditMode
+                        ? "Product updated successfully"
+                        : "Product added successfully",
+                    isError: false,
+                  );
+                },
+              );
+            },
+            builder: (context, state) {
+              final isLoading = state.maybeWhen(
+                submitted: () => true,
+                orElse: () => false,
+              );
+              return SizedBox(
+                width: double.infinity,
+                child: CustomElevatedButton(
+                  onPressed: _submit,
+                  text: isEditMode ? 'Update Product' : 'Add Product',
+                  isLoading: isLoading,
+                  loadingText: 'Saving...',
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImagePicker(BuildContext context) {
+    return ValueListenableBuilder<File?>(
+      valueListenable: _imageNotifier,
+      builder: (context, image, child) {
+        final imageWidget = image != null
+            ? Image.file(image, fit: BoxFit.cover)
+            : widget.product?.image != null
+                ? CustomNetworkImage(imageUrl: widget.product!.image!)
+                : const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_photo_alternate_rounded,
+                            size: 50, color: AppColors.purpleLight),
+                        SizedBox(height: 8),
+                        Text(
+                          "Click to add image",
+                          style: TextStyle(
+                            color: AppColors.purpleLight,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+
+        return GestureDetector(
+          onTap: () async => await showImageBottomSheet(context),
+          child: Container(
+            height: 300,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 6,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: imageWidget,
+          ),
+        );
+      },
     );
   }
 
@@ -329,7 +353,6 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           List<ProductVariantModel>.from(variantsNotifier.value);
 
       if (!mainServiceType.isDress) {
-        // Non-dress → Single variant only
         variantList.clear();
         variantList.add(
           ProductVariantModel(
@@ -341,112 +364,40 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
         );
       }
 
+      final saveCubit = context.read<SaveProductCubit>();
+
       if (widget.product != null) {
-        // Editing Existing Product
-
-        // Check changed fields
-        final bool isNameChanged =
-            !isStringEquals(widget.product?.name, _nameController.text);
-        final bool isPriceChanged = widget.product!.price
-            .toString()
-            .hasNumberChangedComparedTo(_priceController.text);
-
-        final isActualPriceChanged = widget.product!.purchaseAmount
-            .toString()
-            .hasNumberChangedComparedTo(_purchaseAmountController.text);
-
-        final bool isDescriptionChanged = !isStringEquals(
-          widget.product?.description,
-          _descriptionController.text,
-        );
-        final bool isModelChanged =
-            !isStringEquals(widget.product?.model, _modelController.text);
-        final bool isCategoryChanged =
-            !isStringEquals(widget.product?.category, _categoryController.text);
-        final bool isColorChanged =
-            !isStringEquals(widget.product?.color, _colorController.text);
-        final isStockChanged = !isStringEquals(
-          widget.product?.variants.first.stock.toString(),
-          _stockController.text.trim(),
-        );
-        final bool isImageChanged = _imageNotifier.value != null;
-        // Check variant changes
-        // final diffVariants = variantsNotifier.value
-        //     .where(
-        //       (newVariant) => !widget.product!.variants.any(
-        //         (oldVariant) =>
-        //             oldVariant.attribute == newVariant.attribute &&
-        //             oldVariant.stock == newVariant.stock,
-        //       ),
-        //     )
-        //     .toList();
-
-        // If no changes → show message and return
-        if (!isNameChanged &&
-            !isModelChanged &&
-            !isCategoryChanged &&
-            !isColorChanged &&
-            !isImageChanged &&
-            !isPriceChanged &&
-            !isActualPriceChanged &&
-            !isDescriptionChanged &&
-            !isStockChanged) {
-          context.pop();
-          context.showSnackBar(
-            "No changes made to product",
-          );
-          return;
-        }
-
         final product = ProductRequestModel(
           productId: widget.product?.id,
-          name: isNameChanged ? _nameController.text.trim() : null,
-          description:
-              isDescriptionChanged ? _descriptionController.text.trim() : null,
-          color: isColorChanged ? _colorController.text.trim() : null,
-          purchasePrice: isActualPriceChanged
-              ? _purchaseAmountController.text.trim().toIntOrNull()
-              : null,
-          price: isPriceChanged
-              ? _priceController.text.trim().toIntOrNull()
-              : null,
-          category: isCategoryChanged ? _categoryController.text.trim() : null,
-          model: isModelChanged ? _modelController.text.trim() : null,
-          variants: variantList.isEmpty ? null : variantList,
-          image: isImageChanged ? _imageNotifier.value : null,
-        );
-
-        // Prepare request only with changed fields
-        context.read<SaveProductCubit>().saveProduct(
-              product: product,
-            );
-      } else {
-        // Add New Product
-
-        final product = ProductRequestModel(
-          serviceId: widget.serviceId,
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
           color: _colorController.text.trim(),
-          purchasePrice: _purchaseAmountController.text.trim().toIntOrNull(),
+          purchasePrice:
+              _purchaseAmountController.text.trim().toIntOrNull(),
           price: _priceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
           variants: variantList.isEmpty ? null : variantList,
           image: _imageNotifier.value,
-          productId: widget.product?.id,
         );
-
-        context.read<SaveProductCubit>().saveProduct(
-              product: product,
-            );
+        saveCubit.saveProduct(product: product);
+      } else {
+        final product = ProductRequestModel(
+          serviceId: widget.serviceId,
+          name: _nameController.text.trim(),
+          description: _descriptionController.text.trim(),
+          color: _colorController.text.trim(),
+          purchasePrice:
+              _purchaseAmountController.text.trim().toIntOrNull(),
+          price: _priceController.text.trim().toIntOrNull(),
+          category: _categoryController.text.trim(),
+          model: _modelController.text.trim(),
+          variants: variantList.isEmpty ? null : variantList,
+          image: _imageNotifier.value,
+        );
+        saveCubit.saveProduct(product: product);
       }
     }
-  }
-
-  bool isStringEquals(String? a, String? b) {
-    if (a == null || b == null) return false;
-    return a.trim() == b.trim();
   }
 
   Future<void> showImageBottomSheet(BuildContext context) async {
@@ -457,7 +408,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
       ),
       builder: (_) {
         return Padding(
-          padding: 20.padding,
+          padding: const EdgeInsets.all(20),
           child: Wrap(
             alignment: WrapAlignment.center,
             children: [
@@ -495,30 +446,10 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    // controllers
-    _nameController.dispose();
-    _stockController.dispose();
-    _colorController.dispose();
-    _modelController.dispose();
-    _categoryController.dispose();
-    _purchaseAmountController.dispose();
-    _priceController.dispose();
-    _descriptionController.dispose();
-
-    // notifiers
-    variantsNotifier.dispose();
-    _imageNotifier.dispose();
-
-    super.dispose();
-  }
-
   void _onPopInvokedWithResult(bool didPop, Object? result) async {
-    if (didPop) return; // Pop already handled → do nothing
+    if (didPop) return;
 
     final product = widget.product;
-
     bool hasChanges = false;
 
     if (product == null) {
@@ -569,11 +500,12 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(ctx).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
             child: const Text(
               'Discard',
-              style: TextStyle(
-                color: AppColors.white,
-              ),
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -583,5 +515,25 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
     if (discard == true) {
       Navigator.of(context).pop();
     }
+  }
+
+  bool isStringEquals(String? a, String? b) {
+    if (a == null || b == null) return false;
+    return a.trim() == b.trim();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _stockController.dispose();
+    _colorController.dispose();
+    _modelController.dispose();
+    _categoryController.dispose();
+    _purchaseAmountController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    variantsNotifier.dispose();
+    _imageNotifier.dispose();
+    super.dispose();
   }
 }

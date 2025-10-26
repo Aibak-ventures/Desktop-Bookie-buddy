@@ -31,156 +31,156 @@ class BookingDetailsAppBar extends StatelessWidget
   Widget build(BuildContext context) => AppBar(
     title: const Text('Booking Details'),
     actions: [
-      ValueListenableBuilder<bool>(
-        valueListenable: isProcessing,
-        builder: (context, value, child) =>
-            BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
-              builder: (context, state) {
-                final booking = state.maybeWhen(
-                  orElse: () => null,
-                  loaded: (b) => b,
-                );
-                final isLoading = booking == null;
-                return IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed:
-                      value ||
-                          isLoading //if the data is loading the function is disabled
-                      ? null
-                      : () async {
-                          isProcessing.value = true;
-                          final shopData = context
-                              .read<UserCubit>()
-                              .state
-                              ?.shopDetails;
-                          if (shopData == null) {
-                            CustomSnackBar(message: 'Shop data not available');
-                            isProcessing.value = false;
-                            return;
-                          }
-                          try {
-                            await GenerateBookingPdf.shareInvoice(
-                              context: context,
-                              bookingDetails: booking,
-                              shopDetails: shopData,
-                            );
-                          } catch (e, stack) {
-                            log(e.toString(), stackTrace: stack);
-                            CustomSnackBar(
-                              message: 'Failed to generate PDF: $e',
-                            );
-                          } finally {
-                            isProcessing.value = false;
-                          }
-                        },
-                );
-              },
-            ),
-      ),
-      BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
-        builder: (context, state) {
-          final booking = state.maybeWhen(orElse: () => null, loaded: (b) => b);
-          final isBookingCompleted =
-              booking?.bookingStatus == BookingStatus.completed;
-          return PopupMenuButton(
-            borderRadius: 5.radiusBorder,
-            color: Colors.white,
-            tooltip: 'Actions',
-            icon: const Icon(Icons.more_vert),
-            itemBuilder: (context) {
-              bool isEditVisible = true;
-              if (booking != null &&
-                  booking.bookedItems.any(
-                    (element) => element.variantId == null,
-                  )) {
-                debugPrint('variantId is null, returning from edit action');
-                isEditVisible = false;
-              }
-              return [
-                //edit
-                if (isEditVisible && !isBookingCompleted)
-                  PopupMenuItem<int>(
-                    value: 0,
-                    onTap: () {
-                      if (booking == null) {
-                        debugPrint(
-                          'booking is null, returning from edit action',
-                        );
-                        return;
-                      }
+      // ValueListenableBuilder<bool>(
+      //   valueListenable: isProcessing,
+      //   builder: (context, value, child) =>
+      //       BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
+      //         builder: (context, state) {
+      //           final booking = state.maybeWhen(
+      //             orElse: () => null,
+      //             loaded: (b) => b,
+      //           );
+      //           final isLoading = booking == null;
+      //           return IconButton(
+      //             icon: const Icon(Icons.share),
+      //             onPressed:
+      //                 value ||
+      //                     isLoading //if the data is loading the function is disabled
+      //                 ? null
+      //                 : () async {
+      //                     isProcessing.value = true;
+      //                     final shopData = context
+      //                         .read<UserCubit>()
+      //                         .state
+      //                         ?.shopDetails;
+      //                     if (shopData == null) {
+      //                       CustomSnackBar(message: 'Shop data not available');
+      //                       isProcessing.value = false;
+      //                       return;
+      //                     }
+      //                     try {
+      //                       await GenerateBookingPdf.shareInvoice(
+      //                         context: context,
+      //                         bookingDetails: booking,
+      //                         shopDetails: shopData,
+      //                       );
+      //                     } catch (e, stack) {
+      //                       log(e.toString(), stackTrace: stack);
+      //                       CustomSnackBar(
+      //                         message: 'Failed to generate PDF: $e',
+      //                       );
+      //                     } finally {
+      //                       isProcessing.value = false;
+      //                     }
+      //                   },
+      //           );
+      //         },
+      //       ),
+      // ),
+      // BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
+      //   builder: (context, state) {
+      //     final booking = state.maybeWhen(orElse: () => null, loaded: (b) => b);
+      //     final isBookingCompleted =
+      //         booking?.bookingStatus == BookingStatus.completed;
+      //     return PopupMenuButton(
+      //       borderRadius: 5.radiusBorder,
+      //       color: Colors.white,
+      //       tooltip: 'Actions',
+      //       icon: const Icon(Icons.more_vert),
+      //       itemBuilder: (context) {
+      //         bool isEditVisible = true;
+      //         if (booking != null &&
+      //             booking.bookedItems.any(
+      //               (element) => element.variantId == null,
+      //             )) {
+      //           debugPrint('variantId is null, returning from edit action');
+      //           isEditVisible = false;
+      //         }
+      //         return [
+      // //           //edit
+      // //           if (isEditVisible && !isBookingCompleted)
+      // //             PopupMenuItem<int>(
+      // //               value: 0,
+      // //               onTap: () {
+      // //                 if (booking == null) {
+      // //                   debugPrint(
+      // //                     'booking is null, returning from edit action',
+      // //                   );
+      // //                   return;
+      // //                 }
 
-                      performSecureActionDialog(
-                        context,
-                        SecretPasswordLocations.bookingEdit,
-                        onSuccess: () {
-                          StaffModel? existingStaff;
-                          if (booking.staffId != null) {
-                            existingStaff = StaffModel(
-                              id: booking.staffId!,
-                              name: booking.staffName ?? 'Staff Name',
-                              phoneNumber: '',
-                            );
-                          }
-                          context
-                            ..read<StaffSearchCubit>().clearSelectedStaff()
-                            ..read<StaffSearchCubit>().getAllStaffs(
-                              booking.staffId,
-                              existingStaff,
-                            )
-                            ..read<ClientCubit>().clearSelected()
-                            ..push(
-                              BlocProvider(
-                                create: (context) => UpdateBookingCubit(
-                                  bookingRepository: getIt.get(),
-                                  clientRepository: getIt.get(),
-                                ),
-                                child: EditBookingScreen(booking: booking),
-                              ),
-                            );
-                        },
-                      );
-                    },
-                    child: const Row(
-                      spacing: 5,
-                      children: [
-                        Icon(Icons.edit_outlined, color: AppColors.purple),
-                        Text('Edit'),
-                      ],
-                    ),
-                  ),
+      // //                 performSecureActionDialog(
+      // //                   context,
+      // //                   SecretPasswordLocations.bookingEdit,
+      // //                   onSuccess: () {
+      // //                     StaffModel? existingStaff;
+      // //                     if (booking.staffId != null) {
+      // //                       existingStaff = StaffModel(
+      // //                         id: booking.staffId!,
+      // //                         name: booking.staffName ?? 'Staff Name',
+      // //                         phoneNumber: '',
+      // //                       );
+      // //                     }
+      // //                     context
+      // //                       ..read<StaffSearchCubit>().clearSelectedStaff()
+      // //                       ..read<StaffSearchCubit>().getAllStaffs(
+      // //                         booking.staffId,
+      // //                         existingStaff,
+      // //                       )
+      // //                       ..read<ClientCubit>().clearSelected()
+      // //                       ..push(
+      // //                         BlocProvider(
+      // //                           create: (context) => UpdateBookingCubit(
+      // //                             bookingRepository: getIt.get(),
+      // //                             clientRepository: getIt.get(),
+      // //                           ),
+      // //                           child: EditBookingScreen(booking: booking),
+      // //                         ),
+      // //                       );
+      // //                   },
+      // //                 );
+      // //               },
+      // //               child: const Row(
+      // //                 spacing: 5,
+      // //                 children: [
+      // //                   Icon(Icons.edit_outlined, color: AppColors.purple),
+      // //                   Text('Edit'),
+      // //                 ],
+      // //               ),
+      // //             ),
 
-                // delete
-                PopupMenuItem<int>(
-                  value: 1,
-                  onTap: () {
-                    if (booking == null) {
-                      debugPrint(
-                        'booking is null, returning from delete action',
-                      );
-                      return;
-                    }
+      //           // delete
+      //           // PopupMenuItem<int>(
+      //           //   value: 1,
+      //           //   onTap: () {
+      //           //     if (booking == null) {
+      //           //       debugPrint(
+      //           //         'booking is null, returning from delete action',
+      //           //       );
+      //           //       return;
+      //           //     }
 
-                    performSecureActionDialog(
-                      context,
-                      SecretPasswordLocations.bookingDelete,
-                      onSuccess: () async {
-                        await showDeleteBookingDialog(context, booking.id);
-                      },
-                    );
-                  },
-                  child: const Row(
-                    spacing: 5,
-                    children: [
-                      Icon(Icons.delete_outline, color: AppColors.redTomato),
-                      Text('Delete'),
-                    ],
-                  ),
-                ),
-              ];
-            },
-          );
-        },
-      ),
+      //           //     performSecureActionDialog(
+      //           //       context,
+      //           //       SecretPasswordLocations.bookingDelete,
+      //           //       onSuccess: () async {
+      //           //         await showDeleteBookingDialog(context, booking.id);
+      //           //       },
+      //           //     );
+      //           //   },
+      //           //   child: const Row(
+      //           //     spacing: 5,
+      //           //     children: [
+      //           //       Icon(Icons.delete_outline, color: AppColors.redTomato),
+      //           //       Text('Delete'),
+      //           //     ],
+      //           //   ),
+      //           // ),
+      //         ];
+      //       },
+      //     );
+      //   },
+      // ),
     ],
   );
 

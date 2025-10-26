@@ -11,6 +11,7 @@ import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summar
 import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BookingsTab extends StatefulWidget {
   const BookingsTab({super.key});
@@ -133,7 +134,151 @@ class _BookingsTabState extends State<BookingsTab> {
   }
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator.adaptive(
+  Widget build(BuildContext context) {
+    if (context.isDesktop) {
+      return _buildWebLayout(context);
+    } else {
+      return _buildMobileLayout(context);
+    }
+  }
+
+  Widget _buildWebLayout(BuildContext context) => Container(
+    margin: EdgeInsets.only(top: 16.h),
+    child: RefreshIndicator.adaptive(
+      onRefresh: () async {
+        context.read<LedgerSimpleSummaryCubit>().reset();
+        _currentlyShowingDate = ''; // Reset current date on refresh
+        _groupKeysWithTotal.clear();
+        _fetchData(context);
+      },
+      child: BlocBuilder<LedgerBookingsBloc, LedgerBookingsState>(
+        builder: (context, state) => state.when(
+          loading: () => ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: 8,
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+            // Use shimmer for loading
+            itemBuilder: (context, index) => Container(
+              margin: EdgeInsets.only(bottom: 12.h),
+              child: const LedgerBookingListTileShimmer(),
+            ),
+          ),
+          error: (error) => Center(
+            child: Container(
+              margin: EdgeInsets.all(24.w),
+              padding: EdgeInsets.all(32.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: CustomErrorWidget(
+                errorText: error,
+                onRetry: () => _fetchData(context),
+              ),
+            ),
+          ),
+          loaded:
+              (
+                ledgerBookings,
+                nextPageUrl,
+                isPaginating,
+                clientId,
+                isFirstFetch,
+              ) {
+                if (ledgerBookings.isEmpty) {
+                  return Container(
+                    margin: EdgeInsets.all(24.w),
+                    padding: EdgeInsets.all(32.w),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const EmptyDataWidget(
+                      message: 'No bookings found',
+                      isShowIcon: false,
+                      isScrollable: false,
+                    ),
+                  );
+                }
+                ledgerBookings.forEach((element) {
+                  _groupKeysWithTotal.putIfAbsent(
+                    element.date,
+                    () => (GlobalKey(), element.total),
+                  );
+                });
+
+                final firstDate = ledgerBookings.firstOrNull?.date;
+                if (firstDate != null && isFirstFetch) {
+                  _fetchAndSetSummary(firstDate);
+                  log('✅✅ Fetched summary for first date: $firstDate ✅✅');
+                }
+
+                return RepaintBoundary(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
+                    itemCount: ledgerBookings.length + (isPaginating ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == ledgerBookings.length) {
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 12.h),
+                          child: const LedgerBookingListTileShimmer(),
+                        );
+                      }
+                      final groupedData = ledgerBookings[index];
+                      final key = _groupKeysWithTotal
+                          .putIfAbsent(
+                            groupedData.date,
+                            () => (GlobalKey(), groupedData.total),
+                          )
+                          .$1;
+
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 16.h),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: KeyedSubtree(
+                          key: key,
+                          child: LedgerBookingsGroupedContainer(
+                            groupedDate: groupedData.date,
+                            bookings: groupedData.bookings,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+        ),
+      ),
+    ),
+  );
+
+  Widget _buildMobileLayout(BuildContext context) => RefreshIndicator.adaptive(
     onRefresh: () async {
       context.read<LedgerSimpleSummaryCubit>().reset();
       _currentlyShowingDate = ''; // Reset current date on refresh

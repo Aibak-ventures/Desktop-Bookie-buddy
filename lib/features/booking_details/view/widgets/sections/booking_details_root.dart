@@ -216,21 +216,6 @@ class BookingDetailsRoot extends StatelessWidget {
             ),
           ],
         ),
-
-        const SizedBox(height: 32),
-
-        // Full width payment section
-        _buildWebCard(
-          'Payment Information',
-          BookingDetailsPaymentDetailsSection(
-            paymentButtonKey: paymentButtonKey,
-            booking: booking,
-            productTotalAmount: productTotalAmount,
-            additionalChargesTotal: additionalChargesTotal,
-            paymentHistoryCubit: paymentHistoryCubit,
-            isPaymentCompleted: isPaymentCompleted,
-          ),
-        ),
       ],
     );
   }
@@ -274,16 +259,6 @@ class BookingDetailsRoot extends StatelessWidget {
         BookingDetailsDateSection(
           booking: booking,
           isHaveCoolingPeriod: isHaveCoolingPeriod,
-        ),
-
-        // Payment details section
-        BookingDetailsPaymentDetailsSection(
-          paymentButtonKey: paymentButtonKey,
-          booking: booking,
-          productTotalAmount: productTotalAmount,
-          additionalChargesTotal: additionalChargesTotal,
-          paymentHistoryCubit: paymentHistoryCubit,
-          isPaymentCompleted: isPaymentCompleted,
         ),
 
         // Other details section

@@ -74,267 +74,557 @@ class AddBookingProductScreen extends StatelessWidget {
   }
 
   Widget _buildWebLayout(BuildContext context, RequestBookingModel bookingData) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header section
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Select Products & Services',
-                style: TextStyle(
-                  fontSize: 28.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade800,
+        // Main Content Area (70%)
+        Expanded(
+          flex: 7,
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Choose products and configure additional details for your booking',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        
-        const SizedBox(height: 40),
-        
-        // Selected products section
-        BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
-          builder: (context, state) {
-            print('WebLayout: Building with ${state.products.length} products');
-            return state.products.isEmpty
-                ? const SizedBox.shrink()
-                : Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24),
-                    margin: const EdgeInsets.only(bottom: 24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Selected Products (${state.products.length})',
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _buildSelectedProductSection(context, state.products),
-                      ],
-                    ),
-                  );
-          },
-        ),
-
-        // Add product section
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade200,
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Add Products',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              _addProductContainerBuilder(context, bookingData),
-            ],
-          ),
-        ),
-        
-        const SizedBox(height: 24),
-
-        // Vehicle locations and description section
-        BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
-          builder: (context, state) {
-            final products = state.products;
-            final isVehicle = products.any(
-              (p) => p.variant.mainServiceType.isVehicle == true,
-            );
-            return Row(
+              ],
+            ),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Vehicle locations (left side)
-                if (isVehicle)
-                  Expanded(
-                    flex: 1,
-                    child: Container(
+                // Header section
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.blue.shade50, Colors.blue.shade100],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade600,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Select Products & Services',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue.shade800,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Choose products and configure additional details for your booking',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // Add Products Section
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.add_circle_outline, color: Colors.purple.shade600, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Add Products',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: () => _navigateToProductSelection(context, bookingData),
+                        icon: const Icon(Icons.add, size: 20),
+                        label: const Text('Browse Products'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple.shade600,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Selected Products Section
+                BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
+                  builder: (context, state) {
+                    return state.products.isEmpty
+                        ? Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(40),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade200),
+                            ),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.shopping_cart_outlined,
+                                  size: 48,
+                                  color: Colors.grey.shade400,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No products selected yet',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey.shade600,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Click "Browse Products" to add items to your booking',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.green.shade200),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.check_circle, color: Colors.green.shade600, size: 20),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Selected Products (${state.products.length})',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.green.shade800,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Container(
+                                  constraints: const BoxConstraints(maxHeight: 300),
+                                  child: _buildSelectedProductSection(context, state.products),
+                                ),
+                              ],
+                            ),
+                          );
+                  },
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Additional Details Section
+                BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
+                  builder: (context, state) {
+                    final products = state.products;
+                    final isVehicle = products.any(
+                      (p) => p.variant.mainServiceType.isVehicle == true,
+                    );
+                    return Container(
+                      width: double.infinity,
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade200,
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Vehicle Locations',
+                            'Additional Details',
                             style: TextStyle(
-                              fontSize: 20.sp,
+                              fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: Colors.black87,
                             ),
                           ),
                           const SizedBox(height: 20),
-                          CustomTextField(
-                            controller: locationStartController,
-                            label: 'Start Location',
-                            hintText: 'Location',
-                            prefixIcon: const Icon(Icons.place_outlined),
-                            textInputAction: TextInputAction.next,
-                            validator: (value) =>
-                                AppInputValidators.basicText(
-                                  value,
-                                  isRequired: false,
-                                  fieldName: 'Place',
+                          
+                          // Vehicle locations (if applicable)
+                          if (isVehicle) ...[
+                            Text(
+                              'Vehicle Locations',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    controller: locationStartController,
+                                    label: 'Start Location',
+                                    hintText: 'Location',
+                                    prefixIcon: const Icon(Icons.place_outlined),
+                                    textInputAction: TextInputAction.next,
+                                    validator: (value) => AppInputValidators.basicText(
+                                      value,
+                                      isRequired: false,
+                                      fieldName: 'Place',
+                                    ),
+                                  ),
                                 ),
-                          ),
-                          const SizedBox(height: 16),
-                          CustomTextField(
-                            controller: locationFromController,
-                            label: 'Pickup Location',
-                            hintText: 'Location',
-                            prefixIcon: const Icon(Icons.place_outlined),
-                            textInputAction: TextInputAction.next,
-                            validator: (value) =>
-                                AppInputValidators.basicText(
-                                  value,
-                                  isRequired: false,
-                                  fieldName: 'Place',
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: CustomTextField(
+                                    controller: locationFromController,
+                                    label: 'Pickup Location',
+                                    hintText: 'Location',
+                                    prefixIcon: const Icon(Icons.place_outlined),
+                                    textInputAction: TextInputAction.next,
+                                    validator: (value) => AppInputValidators.basicText(
+                                      value,
+                                      isRequired: false,
+                                      fieldName: 'Place',
+                                    ),
+                                  ),
                                 ),
-                          ),
-                          const SizedBox(height: 16),
-                          CustomTextField(
-                            controller: locationToController,
-                            label: 'Destination',
-                            hintText: 'Location',
-                            prefixIcon: const Icon(Icons.place_outlined),
-                            textInputAction: TextInputAction.next,
-                            validator: (value) =>
-                                AppInputValidators.basicText(
-                                  value,
-                                  isRequired: false,
-                                  fieldName: 'Place',
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: CustomTextField(
+                                    controller: locationToController,
+                                    label: 'Destination',
+                                    hintText: 'Location',
+                                    prefixIcon: const Icon(Icons.place_outlined),
+                                    textInputAction: TextInputAction.next,
+                                    validator: (value) => AppInputValidators.basicText(
+                                      value,
+                                      isRequired: false,
+                                      fieldName: 'Place',
+                                    ),
+                                  ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                          ],
+                          
+                          // Description
+                          CustomTextField(
+                            controller: descriptionController,
+                            label: 'Description (Optional)',
+                            hintText: 'Any additional notes or requirements',
+                            minLines: 3,
+                            maxLines: 5,
+                            textInputAction: TextInputAction.newline,
+                            validator: (value) => AppInputValidators.basicText(
+                              value,
+                              isRequired: false,
+                              fieldName: 'Description',
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                
-                if (isVehicle) const SizedBox(width: 24),
-                
-                // Description section (right side)
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Additional Details',
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        CustomTextField(
-                          controller: descriptionController,
-                          label: 'Description (Optional)',
-                          hintText: 'Any additional notes or requirements',
-                          minLines: 4,
-                          maxLines: 6,
-                          textInputAction: TextInputAction.newline,
-                          validator: (value) => AppInputValidators.basicText(
-                            value,
-                            isRequired: false,
-                            fieldName: 'Description',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
-            );
-          },
+            ),
+          ),
         ),
         
-        const SizedBox(height: 40),
+        const SizedBox(width: 24),
         
-        // Next button
-        Center(
-          child: SizedBox(
-            width: 300,
-            child: CustomElevatedButton(
-              text: 'Continue to Payment',
-              onPressed: () => _handleNext(context),
+        // Sidebar (30%)
+        Expanded(
+          flex: 3,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Booking Summary',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                
+                // Booking details summary
+                _buildBookingSummaryCard(context, bookingData),
+                
+                const SizedBox(height: 24),
+                
+                // Product count and total
+                BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
+                  builder: (context, state) {
+                    final total = state.products.fold<int>(
+                      0,
+                      (prev, element) => prev + element.amount,
+                    );
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.blue.shade200),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Products:',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                              Text(
+                                '${state.products.length} items',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blue.shade800,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Total Amount:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey.shade800,
+                                ),
+                              ),
+                              Text(
+                                '₹$total',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade800,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // Action buttons
+                Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _handleNext(context),
+                        icon: const Icon(Icons.arrow_forward, size: 20),
+                        label: const Text('Continue to Payment'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade600,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: OutlinedButton.icon(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back, size: 20),
+                        label: const Text('Back'),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.grey.shade400),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
       ],
     );
+  }
+
+  Widget _buildBookingSummaryCard(BuildContext context, RequestBookingModel bookingData) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSummaryRow('Service ID:', '${bookingData.serviceId ?? 'N/A'}'),
+          _buildSummaryRow('Pickup Date:', bookingData.pickupDate ?? 'Not set'),
+          _buildSummaryRow('Return Date:', bookingData.returnDate ?? 'Not set'),
+          if (bookingData.pickupTime != null)
+            _buildSummaryRow('Pickup Time:', bookingData.pickupTime!.format(context)),
+          if (bookingData.returnTime != null)
+            _buildSummaryRow('Return Time:', bookingData.returnTime!.format(context)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade800,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToProductSelection(BuildContext context, RequestBookingModel bookingData) async {
+    try {
+      final currentProducts = context.read<AddBookingProductsCubit>().state.products;
+      
+      final result = await Navigator.of(context).push<List<ProductSelectedModel>>(
+        MaterialPageRoute(
+          builder: (context) => SelectProductScreen(
+            serviceId: bookingData.serviceId ?? 0,
+            pickupDate: bookingData.pickupDate ?? '',
+            returnDate: bookingData.returnDate ?? '',
+            pickupTime: bookingData.pickupTime,
+            returnTime: bookingData.returnTime,
+            preSelectedData: currentProducts,
+            useAvailableProductsApi: true,
+            isSales: false,
+          ),
+        ),
+      );
+      
+      if (result != null && result.isNotEmpty) {
+        context.read<AddBookingProductsCubit>().setAll(result);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to open product selection. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildMobileLayout(BuildContext context, RequestBookingModel bookingData) {
@@ -380,7 +670,74 @@ class AddBookingProductScreen extends StatelessWidget {
                 ),
 
                 // add product container
-                _addProductContainerBuilder(context, bookingData),
+                Container(
+                  margin: 16.padding,
+                  padding: 20.padding,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: InkWell(
+                    onTap: () => _navigateToProductSelection(context, bookingData),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.purple.shade100,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.purple.shade600,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Add Products',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Browse and select products for your booking',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Colors.grey.shade400,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 0.01.heightCustom,
 
                 BlocBuilder<

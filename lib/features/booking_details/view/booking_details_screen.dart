@@ -1,16 +1,20 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/booking_details_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:go_router/go_router.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:flutter/material.dart';
@@ -229,40 +233,33 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                       
                       const SizedBox(height: 24),
                       
-                      // Booking summary card
+                      // Payment Details Section (Complete)
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.blue.shade200),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Booking Summary',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue.shade800,
-                              ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade200,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
                             ),
-                            const SizedBox(height: 16),
-                            
-                            _buildSummaryRow('Booking ID', '#${booking.invoiceId}'),
-                            _buildSummaryRow('Status', booking.deliveryStatus.name.toUpperCase()),
-                            _buildSummaryRow('Total Amount', '₹${booking.totalAmount}'),
-                            _buildSummaryRow('Paid Amount', '₹${booking.paidAmount}'),
-                            
-                            if (booking.paidAmount < booking.totalAmount)
-                              _buildSummaryRow(
-                                'Remaining', 
-                                '₹${booking.totalAmount - booking.paidAmount}',
-                                isHighlight: true,
-                              ),
                           ],
+                        ),
+                        child: BookingDetailsPaymentDetailsSection(
+                          paymentButtonKey: _paymentButtonKey,
+                          booking: booking,
+                          productTotalAmount: booking.bookedItems.fold<int>(
+                            0,
+                            (int previousValue, dynamic element) => previousValue + ((element.amount as int?) ?? 0),
+                          ),
+                          additionalChargesTotal: booking.additionalCharges?.fold<int>(
+                            0,
+                            (int previousValue, dynamic element) => previousValue + ((element.amount as int?) ?? 0),
+                          ) ?? 0,
+                          paymentHistoryCubit: context.read<BookingDetailsPaymentHistoryCubit>(),
+                          isPaymentCompleted: booking.paidAmount >= (booking.totalAmount - (booking.discountAmount ?? 0)),
                         ),
                       ),
                     ],
@@ -384,23 +381,6 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           ),
           const SizedBox(height: 16),
         ],
-        
-        // Mark as Delivered Button (if not completed)
-        if (!isBookingCompleted && booking.deliveryStatus.name != 'delivered')
-          ElevatedButton.icon(
-            onPressed: () => _handleMarkAsDelivered(context, booking),
-            icon: const Icon(Icons.local_shipping, color: Colors.white),
-            label: const Text(
-              'Mark as Delivered',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade600,
-              minimumSize: const Size(double.infinity, 52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              elevation: 2,
-            ),
-          ),
       ],
     );
   }
@@ -409,53 +389,72 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     return Column(
       children: [
         // Edit Booking Button
-        OutlinedButton.icon(
+        ElevatedButton.icon(
           onPressed: () => _handleEditBooking(context, booking),
-          icon: Icon(Icons.edit, color: Colors.blue.shade600),
-          label: Text(
+          icon: const Icon(Icons.edit, color: Colors.white),
+          label: const Text(
             'Edit Booking',
-            style: TextStyle(color: Colors.blue.shade600, fontWeight: FontWeight.w600),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
-          style: OutlinedButton.styleFrom(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue.shade600,
             minimumSize: const Size(double.infinity, 48),
-            side: BorderSide(color: Colors.blue.shade300, width: 1.5),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 2,
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Delete Booking Button
+        ElevatedButton.icon(
+          onPressed: () => _handleDeleteBooking(context, booking),
+          icon: const Icon(Icons.delete, color: Colors.white),
+          label: const Text(
+            'Delete Booking',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red.shade600,
+            minimumSize: const Size(double.infinity, 48),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 2,
           ),
         ),
         
         const SizedBox(height: 12),
         
         // Share Details Button
-        OutlinedButton.icon(
-          onPressed: () => _handleShareDetails(context, booking),
-          icon: Icon(Icons.share, color: Colors.grey.shade700),
-          label: Text(
-            'Share Details',
-            style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w600),
-          ),
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size(double.infinity, 48),
-            side: BorderSide(color: Colors.grey.shade400, width: 1.5),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        ),
+        // OutlinedButton.icon(
+        //   onPressed: () => _handleShareDetails(context, booking),
+        //   icon: Icon(Icons.share, color: Colors.grey.shade700),
+        //   label: Text(
+        //     'Share Details',
+        //     style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w600),
+        //   ),
+        //   style: OutlinedButton.styleFrom(
+        //     minimumSize: const Size(double.infinity, 48),
+        //     side: BorderSide(color: Colors.grey.shade400, width: 1.5),
+        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        //   ),
+        // ),
         
         const SizedBox(height: 12),
         
         // Print/Download Button
-        OutlinedButton.icon(
-          onPressed: () => _handlePrintBooking(context, booking),
-          icon: Icon(Icons.print, color: Colors.purple.shade600),
-          label: Text(
-            'Print/Download',
-            style: TextStyle(color: Colors.purple.shade600, fontWeight: FontWeight.w600),
-          ),
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size(double.infinity, 48),
-            side: BorderSide(color: Colors.purple.shade300, width: 1.5),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        ),
+        // OutlinedButton.icon(
+        //   onPressed: () => _handlePrintBooking(context, booking),
+        //   icon: Icon(Icons.print, color: Colors.purple.shade600),
+        //   label: Text(
+        //     'Print/Download',
+        //     style: TextStyle(color: Colors.purple.shade600, fontWeight: FontWeight.w600),
+        //   ),
+        //   style: OutlinedButton.styleFrom(
+        //     minimumSize: const Size(double.infinity, 48),
+        //     side: BorderSide(color: Colors.purple.shade300, width: 1.5),
+        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        //   ),
+        // ),
       ],
     );
   }
@@ -499,21 +498,67 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     }
   }
 
-  void _handleMarkAsDelivered(BuildContext context, dynamic booking) {
-    context.read<BookingDetailsBloc>().add(
-      BookingDetailsEvent.updateDeliveryStatus(
-        bookingId: booking.id,
-        deliveryStatus: DeliveryStatus.delivered,
+  void _handleDeleteBooking(BuildContext context, dynamic booking) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Booking'),
+        content: const Text('Are you sure you want to delete this booking? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Add delete booking logic here
+              context.read<BookingDetailsBloc>().add(
+                BookingDetailsEvent.deleteBooking(booking.id),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Booking deleted successfully!'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
       ),
     );
   }
 
   void _handleEditBooking(BuildContext context, dynamic booking) {
     try {
-      context.pushNamed(
-        AppRoutes.editBooking.name,
-        pathParameters: {'id': booking.id.toString()},
-      );
+           StaffModel? existingStaff;
+                          if (booking.staffId != null) {
+                            existingStaff = StaffModel(
+                              id: booking.staffId!,
+                              name: booking.staffName ?? 'Staff Name',
+                              phoneNumber: '',
+                            );
+                          }
+                          context
+                            ..read<StaffSearchCubit>().clearSelectedStaff()
+                            ..read<StaffSearchCubit>().getAllStaffs(
+                              booking.staffId,
+                              existingStaff,
+                            )
+                              ..read<ClientCubit>().clearSelected();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) => UpdateBookingCubit(
+                                    bookingRepository: getIt.get(),
+                                    clientRepository: getIt.get(),
+                                  ),
+                                  child: EditBookingScreen(booking: booking),
+                                ),
+                              ),
+                            );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -559,38 +604,13 @@ Shared via Bookie Buddy
     }
   }
 
-  void _handlePrintBooking(BuildContext context, dynamic booking) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Print/Download feature will be available soon.'),
-        backgroundColor: Colors.blue,
-      ),
-    );
-  }
+  // void _handlePrintBooking(BuildContext context, dynamic booking) {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text('Print/Download feature will be available soon.'),
+  //       backgroundColor: Colors.blue,
+  //     ),
+  //   );
+  // }
 
-  Widget _buildSummaryRow(String label, String value, {bool isHighlight = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade700,
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: isHighlight ? FontWeight.bold : FontWeight.w600,
-              color: isHighlight ? Colors.red.shade700 : Colors.grey.shade800,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
