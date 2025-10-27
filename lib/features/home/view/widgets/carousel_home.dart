@@ -1,13 +1,17 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CarouselHome extends StatelessWidget {
@@ -41,7 +45,21 @@ class CarouselHome extends StatelessWidget {
                 const Color(0xFF8A63FE).withValues(alpha: 0.9),
               ],
               icon: Icons.schedule,
-              onTap: () => context.push(AllBookingScreen()),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) => AllBookingBloc(repository: getIt.get()),
+                      ),
+                      BlocProvider(
+                        create: (context) => AllBookingPastBloc(repository: getIt.get()),
+                      ),
+                    ],
+                    child: AllBookingScreen(),
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 20),

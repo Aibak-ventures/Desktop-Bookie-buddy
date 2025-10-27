@@ -14,6 +14,8 @@ import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart'
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/change_secret_password_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/reset_password_screen.dart';
@@ -224,7 +226,21 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.access_time),
               text: 'Upcoming\nBookings',
               color: const Color(0xFF2673C6),
-              onTap: () => context.push(AllBookingScreen()),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) => AllBookingBloc(repository: getIt.get()),
+                      ),
+                      BlocProvider(
+                        create: (context) => AllBookingPastBloc(repository: getIt.get()),
+                      ),
+                    ],
+                    child: AllBookingScreen(),
+                  ),
+                ),
+              ),
             ),
 
             // completed booking

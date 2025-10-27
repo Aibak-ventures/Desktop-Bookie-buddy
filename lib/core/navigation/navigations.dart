@@ -28,8 +28,10 @@ import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booki
 import 'package:bookie_buddy_web/features/add_old_booking/view/add_old_booking_screen.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view_model/bloc_add_old_bookings/add_old_bookings_bloc.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/view_model/cubit_save_sales/save_sales_cubit.dart';
-import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
+import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/view/onboarding_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
@@ -239,7 +241,17 @@ class Navigations {
         name: AppRoutes.allBookings.name,
         builder: (context, state) {
           final index = state.uri.queryParameters['index']?.toIntOrNull() ?? 0;
-          return AllBookingScreen(index: index);
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => AllBookingBloc(repository: getIt.get()),
+              ),
+              BlocProvider(
+                create: (context) => AllBookingPastBloc(repository: getIt.get()),
+              ),
+            ],
+            child: AllBookingScreen(index: index),
+          );
         },
       ),
 

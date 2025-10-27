@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -203,7 +207,21 @@ class PushNotificationService {
 
       if (redirectTo == 'UPCOMING') {
         if (_NavigationGuard.shouldNavigate('upcoming:list')) {
-          nav.push(MaterialPageRoute(builder: (_) => AllBookingScreen()));
+          nav.push(
+            MaterialPageRoute(
+              builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => AllBookingBloc(repository: getIt.get()),
+                  ),
+                  BlocProvider(
+                    create: (context) => AllBookingPastBloc(repository: getIt.get()),
+                  ),
+                ],
+                child: AllBookingScreen(),
+              ),
+            ),
+          );
         }
         return;
       }
