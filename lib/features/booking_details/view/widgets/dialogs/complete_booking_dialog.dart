@@ -14,10 +14,12 @@ Future<void> showCompleteBookingDialog({
         title: const Text(
           'Complete Booking',
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 5,
-          children: [
+        content: SizedBox(
+          width: 400, // Constrain dialog width
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 5,
+            children: [
             const Text(
               'Are you sure you want to complete this booking?',
               style: TextStyle(color: AppColors.black),
@@ -56,7 +58,8 @@ Future<void> showCompleteBookingDialog({
             //     fontSize: 12.sp,
             //   ),
             // ),
-          ],
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton(
@@ -74,10 +77,13 @@ Future<void> showCompleteBookingDialog({
               context.pop();
               await onConfirm();
             },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+            ),
             child: const Text(
               'Confirm',
               style: TextStyle(
-                color: AppColors.white,
+                color: Colors.white,
               ),
             ),
           ),

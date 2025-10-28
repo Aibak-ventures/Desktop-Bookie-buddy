@@ -1,4 +1,5 @@
   // import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
   import 'package:bookie_buddy_web/core/navigation/navigations.dart';
@@ -66,12 +67,20 @@ import 'package:bookie_buddy_web/core/app_dependencies.dart';
                 const DashboardEvent.loadDashboardData(),
               ),
           ),
+          BlocProvider(
+  create: (context) => StaffListBloc(repository: getIt.get())
+..add(const StaffListEvent.loadStaffs()),),
           BlocProvider( 
               create: (context) =>
                   BookingDetailsPaymentHistoryCubit(repository: getIt.get())),
           BlocProvider(create: (context) => ProductBloc()),
           BlocProvider(
               create: (context) => StaffSearchCubit(repository: getIt.get())),
+          BlocProvider(
+  create: (context) => StaffListBloc(repository: getIt.get())
+    ..add(const StaffListEvent.loadStaffs()),
+),
+
           BlocProvider(create: (context) => SaveProductCubit()),
           BlocProvider(create: (context) => BookingSelectionCubit()),
           BlocProvider(

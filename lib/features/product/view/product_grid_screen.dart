@@ -1,5 +1,8 @@
 import 'package:bookie_buddy_web/core/utils/responsive_screen_mixin.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/product_card.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/product/view/product_info_screen.dart';
+import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +27,7 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
 
   @override
   Widget buildContent(BuildContext context) {
-    return const _ProductGridContent();
+    return _ProductGridContent(serviceId: serviceId ?? 1);
   }
 
   @override
@@ -34,12 +37,22 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
         icon: const Icon(Icons.add),
         onPressed: () {
           // Navigate to add product screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddOrEditProductScreen(
+                serviceId: serviceId ?? 1,
+              ),
+            ),
+          );
         },
       ),
       IconButton(
         icon: const Icon(Icons.search),
         onPressed: () {
-          // Show search dialog
+          // Find the state and call search dialog
+          final state = context.findAncestorStateOfType<_ProductGridScreenState>();
+          state?.showSearchDialog(context);
         },
       ),
     ];
@@ -50,27 +63,58 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
 }
 
 class _ProductGridScreenState extends State<ProductGridScreen> {
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     final serviceId = widget.serviceId ?? 1; // Default service ID
     context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-      final serviceId = widget.serviceId ?? 1;
-      context.read<ProductBloc>().add(ProductEvent.loadNextPageProducts(serviceId));
-    }
+  void showSearchDialog(BuildContext context) {
+    final TextEditingController searchController = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Search Products'),
+        content: SizedBox(
+          width: 300, // Constrain dialog width
+          child: TextField(
+            controller: searchController,
+            decoration: const InputDecoration(
+              hintText: 'Enter product name...',
+              border: OutlineInputBorder(),
+            ),
+            autofocus: true,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final query = searchController.text.trim();
+              if (query.isNotEmpty) {
+                final serviceId = widget.serviceId ?? 1;
+                context.read<ProductBloc>().add(
+                  ProductEvent.searchProducts(
+                    serviceId: serviceId,
+                    query: query,
+                    type: null,
+                    startPrice: null,
+                    endPrice: null,
+                  ),
+                );
+              }
+              Navigator.pop(context);
+            },
+            child: const Text('Search'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -80,7 +124,11 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
 }
 
 class _ProductGridContent extends StatelessWidget {
-  const _ProductGridContent();
+  final int serviceId;
+  
+  const _ProductGridContent({
+    required this.serviceId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +155,7 @@ class _ProductGridContent extends StatelessWidget {
               products: products,
               hasNextPage: nextPageUrl != null,
               isPaginating: isPaginating,
+              serviceId: serviceId,
             );
           },
           error: (message) => Center(
@@ -120,7 +169,7 @@ class _ProductGridContent extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     // Retry loading
-                    context.read<ProductBloc>().add(ProductEvent.loadProducts(1));
+                    context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
                   },
                   child: const Text('Retry'),
                 ),
@@ -137,11 +186,13 @@ class _ProductGrid extends StatefulWidget {
   final List products;
   final bool hasNextPage;
   final bool isPaginating;
+  final int serviceId;
 
   const _ProductGrid({
     required this.products,
     required this.hasNextPage,
     required this.isPaginating,
+    required this.serviceId,
   });
 
   @override
@@ -166,7 +217,7 @@ class _ProductGridState extends State<_ProductGrid> {
   void _onScroll() {
     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
       if (widget.hasNextPage && !widget.isPaginating) {
-        context.read<ProductBloc>().add(ProductEvent.loadNextPageProducts(1));
+        context.read<ProductBloc>().add(ProductEvent.loadNextPageProducts(widget.serviceId));
       }
     }
   }
@@ -209,7 +260,17 @@ class _ProductGridState extends State<_ProductGrid> {
           return ProductCard(
             product: widget.products[index],
             onTap: () {
-              // Navigate to product details
+              // Navigate to product overview
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductInfoScreen(
+                    serviceId: widget.products[index].serviceId ?? 1,
+                    productId: widget.products[index].id,
+                    mainServiceType: MainServiceType.others, // Default to others
+                  ),
+                ),
+              );
             },
           );
         },

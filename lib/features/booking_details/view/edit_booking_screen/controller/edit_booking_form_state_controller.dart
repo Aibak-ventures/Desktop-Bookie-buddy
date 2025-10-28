@@ -218,76 +218,78 @@ class EditBookingFormStateController {
   }
 
   // pickup date function
-  Future<void> selectPickupDate({
-    required BuildContext context,
-    // required void Function(void Function()) setState,
-  }) async {
-    final initial = originalBooking?.pickupDate?.parseToDateTime();
-    final lastDate = returnDateController.text.parseToDateTime();
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: pickUpdDateController.text.parseToDateTime(),
-      firstDate: initial ?? DateTime.now(),
-      lastDate: lastDate,
-    );
+Future<void> selectPickupDate({
+  required BuildContext context,
+}) async {
+  final initial = originalBooking?.pickupDate?.parseToDateTime();
+  final lastDate = returnDateController.text.parseToDateTime();
 
-    if (picked != null) {
-      if (validateTimeOnSameDay(context, pickupDate: picked)) {
-        // setState(() {
-        pickUpdDateController.text = picked.format();
-        final currentReturn = returnDateController.text.parseToDateTime();
-        if (currentReturn.isBefore(picked)) {
-          final newReturn = picked.add(1.days());
-          returnDateController.text = newReturn.format();
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: pickUpdDateController.text.parseToDateTime().isBefore(DateTime.now())
+        ? DateTime.now()
+        : pickUpdDateController.text.parseToDateTime(),
+    firstDate: DateTime.now(), // ✅ only today and future
+    lastDate: lastDate.isBefore(DateTime.now().add(const Duration(days: 365)))
+        ? DateTime.now().add(const Duration(days: 365))
+        : lastDate,
+  );
 
-          if (coolingPeriodDateController.text.isNullOrEmpty) {
-            return;
-          }
-          // Preserve existing cooling period offset from previous return date
-          final oldCooling = coolingPeriodDateController.text.parseToDateTime();
-          final offsetDays = currentReturn.difference(oldCooling).inDays.abs();
-          coolingPeriodDateController.text = newReturn
-              .add(offsetDays.days())
-              .format();
-        }
-        // });
+  if (picked != null) {
+    if (validateTimeOnSameDay(context, pickupDate: picked)) {
+      pickUpdDateController.text = picked.format();
+
+      final currentReturn = returnDateController.text.parseToDateTime();
+      if (currentReturn.isBefore(picked)) {
+        final newReturn = picked.add(1.days());
+        returnDateController.text = newReturn.format();
+
+        if (coolingPeriodDateController.text.isNullOrEmpty) return;
+
+        // Preserve existing cooling period offset from previous return date
+        final oldCooling = coolingPeriodDateController.text.parseToDateTime();
+        final offsetDays = currentReturn.difference(oldCooling).inDays.abs();
+        coolingPeriodDateController.text =
+            newReturn.add(offsetDays.days()).format();
       }
     }
   }
+}
+
 
   // return date function
-  Future<void> selectReturnDate({
-    required BuildContext context,
-    // required void Function(void Function()) setState,
-  }) async {
-    final pickupDate = pickUpdDateController.text.parseToDateTime();
-    final today = DateTime.now().dateOnly;
-    // Disallow selecting any return date before today or before pickup date
-    final firstDate = pickupDate.isAfter(today) ? pickupDate : today;
-    final initialDate = returnDateController.text.parseToDateTime();
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      firstDate: firstDate,
-      initialDate: firstDate.isAfter(initialDate) ? firstDate : initialDate,
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
+Future<void> selectReturnDate({
+  required BuildContext context,
+}) async {
+  final pickupDate = pickUpdDateController.text.parseToDateTime();
+  final initialDate = returnDateController.text.parseToDateTime();
 
-    if (picked != null && validateTimeOnSameDay(context, returnDate: picked)) {
-      // setState(() {
-      returnDateController.text = picked.format();
-      if (coolingPeriodDateController.text.isNullOrEmpty) {
-        return;
-      }
-      final coolingPeriodDays = initialDate
-          .difference(coolingPeriodDateController.text.parseToDateTime())
-          .inDays
-          .abs();
-      coolingPeriodDateController.text = picked
-          .add(coolingPeriodDays.days())
-          .format();
-      // });
-    }
+  final firstDate = pickupDate.isAfter(DateTime.now())
+      ? pickupDate
+      : DateTime.now(); // ✅ ensures no past dates
+
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    firstDate: firstDate,
+    initialDate: initialDate.isBefore(firstDate) ? firstDate : initialDate,
+    lastDate: DateTime.now().add(const Duration(days: 365)),
+  );
+
+  if (picked != null && validateTimeOnSameDay(context, returnDate: picked)) {
+    returnDateController.text = picked.format();
+
+    if (coolingPeriodDateController.text.isNullOrEmpty) return;
+
+    final coolingPeriodDays = initialDate
+        .difference(coolingPeriodDateController.text.parseToDateTime())
+        .inDays
+        .abs();
+
+    coolingPeriodDateController.text =
+        picked.add(coolingPeriodDays.days()).format();
   }
+}
+
 
   Future<void> selectCoolingPeriodDate(BuildContext context) async {
     final firstDate = returnDateController.text.parseToDateTime();

@@ -62,35 +62,6 @@ class BookingDetailsRoot extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Title header for web
-        if (isWeb) ...[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(bottom: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Booking Details',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Complete overview of booking #${booking.id}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-
         // Responsive grid layout for web
         if (isWeb) ...[
           _buildWebSections(

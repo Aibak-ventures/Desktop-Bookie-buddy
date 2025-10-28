@@ -9,8 +9,6 @@ import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart'
 import 'package:bookie_buddy_web/features/ledger/view/widgets/ledger_list_tile.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
-import 'package:bookie_buddy_web/features/product/view/product_info_screen.dart';
-import 'package:bookie_buddy_web/features/product/view_model/bloc_product_info/product_info_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_add_expense/add_expense_cubit.dart';
 import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.dart';
 import 'package:flutter/material.dart';
@@ -48,25 +46,7 @@ class LedgerExpenseGroupContainer extends StatelessWidget {
       ),
       ...expenses.map(
         (expense) => LedgerListTile(
-          onTap: () {
-            debugPrint('expense: $expense');
-            if (expense.productId != null && expense.serviceId != null) {
-              final mainService = _getMainServiceType(
-                context,
-                expense.serviceId,
-              );
-              final nextScreen = BlocProvider(
-                create: (context) => ProductInfoBloc(repository: getIt.get())
-                  ..add(ProductInfoEvent.loadProductInfo(expense.productId!)),
-                child: ProductInfoScreen(
-                  mainServiceType: mainService,
-                  serviceId: expense.serviceId!,
-                  productId: expense.productId!,
-                ),
-              );
-              context.push(nextScreen);
-            }
-          },
+          onTap: null, // Disable tap to prevent navigation
           icon: const Icon(Icons.currency_rupee),
           content: Column(
             children: [

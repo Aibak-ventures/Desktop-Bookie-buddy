@@ -38,6 +38,7 @@ import 'package:bookie_buddy_web/features/profile/view/contact_and_support_scree
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/profile_shop_details_card.dart';
+import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -329,7 +330,11 @@ class ProfileScreen extends StatelessWidget {
 
 
         const SizedBox(height: 5),
-
+  CustomProfileTile(
+          icon: Icons.business_center_outlined,
+          title: 'Staff',
+          onTap: () => context.push(const StaffListScreen()),
+        ),
         // stock
         CustomProfileTile(
           icon: Icons.bar_chart,

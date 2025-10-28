@@ -350,114 +350,92 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     );
   }
 
-  Widget _buildWebActionButtons(BuildContext context, BookingDetailsState state, dynamic booking) {
-    final isBookingCompleted = booking.bookingStatus.name == 'completed';
-    final balanceAmount = (booking.totalAmount ?? 0) - (booking.paidAmount ?? 0) - (booking.discountAmount ?? 0);
-    
-    return Column(
-      children: [
-        if (!isBookingCompleted) ...[
-          // Complete Booking Button (replacement for swipe)
-          ElevatedButton.icon(
-            onPressed: state.isLoading ? null : () => _handleCompleteBooking(context, booking, balanceAmount),
-            icon: state.isLoading 
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                  )
-                : const Icon(Icons.check_circle, color: Colors.white),
-            label: Text(
-              state.isLoading ? 'Processing...' : 'Complete Booking',
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green.shade600,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(double.infinity, 52),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              elevation: 2,
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
-      ],
-    );
-  }
+Widget _buildWebActionButtons(BuildContext context, BookingDetailsState state, dynamic booking) {
+  final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
+  final balanceAmount = (booking.totalAmount ?? 0) -
+      (booking.paidAmount ?? 0) -
+      (booking.discountAmount ?? 0);
 
-  Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
-    return Column(
-      children: [
-        // Edit Booking Button
-        ElevatedButton.icon(
-          onPressed: () => _handleEditBooking(context, booking),
-          icon: const Icon(Icons.edit, color: Colors.white),
-          label: const Text(
-            'Edit Booking',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue.shade600,
-            minimumSize: const Size(double.infinity, 48),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            elevation: 2,
-          ),
+  return Column(
+    children: [
+      // ✅ Disable "Complete Booking" if already completed
+      ElevatedButton.icon(
+        onPressed: isBookingCompleted || state.isLoading
+            ? null
+            : () => _handleCompleteBooking(context, booking, balanceAmount),
+        icon: state.isLoading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+            : const Icon(Icons.check_circle, color: Colors.white),
+        label: Text(
+          isBookingCompleted
+              ? 'Booking Completed'
+              : (state.isLoading ? 'Processing...' : 'Complete Booking'),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        
-        const SizedBox(height: 12),
-        
-        // Delete Booking Button
-        ElevatedButton.icon(
-          onPressed: () => _handleDeleteBooking(context, booking),
-          icon: const Icon(Icons.delete, color: Colors.white),
-          label: const Text(
-            'Delete Booking',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red.shade600,
-            minimumSize: const Size(double.infinity, 48),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            elevation: 2,
-          ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isBookingCompleted
+              ? Colors.grey.shade400
+              : Colors.green.shade600,
+          foregroundColor: Colors.white,
+          minimumSize: const Size(double.infinity, 52),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 2,
         ),
-        
-        const SizedBox(height: 12),
-        
-        // Share Details Button
-        // OutlinedButton.icon(
-        //   onPressed: () => _handleShareDetails(context, booking),
-        //   icon: Icon(Icons.share, color: Colors.grey.shade700),
-        //   label: Text(
-        //     'Share Details',
-        //     style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w600),
-        //   ),
-        //   style: OutlinedButton.styleFrom(
-        //     minimumSize: const Size(double.infinity, 48),
-        //     side: BorderSide(color: Colors.grey.shade400, width: 1.5),
-        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        //   ),
-        // ),
-        
-        const SizedBox(height: 12),
-        
-        // Print/Download Button
-        // OutlinedButton.icon(
-        //   onPressed: () => _handlePrintBooking(context, booking),
-        //   icon: Icon(Icons.print, color: Colors.purple.shade600),
-        //   label: Text(
-        //     'Print/Download',
-        //     style: TextStyle(color: Colors.purple.shade600, fontWeight: FontWeight.w600),
-        //   ),
-        //   style: OutlinedButton.styleFrom(
-        //     minimumSize: const Size(double.infinity, 48),
-        //     side: BorderSide(color: Colors.purple.shade300, width: 1.5),
-        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        //   ),
-        // ),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 16),
+    ],
+  );
+}
+
+
+Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
+  final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
+
+  return Column(
+    children: [
+      // ✅ Disable "Edit Booking" if completed
+      ElevatedButton.icon(
+        onPressed: isBookingCompleted ? null : () => _handleEditBooking(context, booking),
+        icon: const Icon(Icons.edit, color: Colors.white),
+        label: Text(
+          isBookingCompleted ? 'Edit Disabled' : 'Edit Booking',
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isBookingCompleted
+              ? Colors.grey.shade400
+              : Colors.blue.shade600,
+          minimumSize: const Size(double.infinity, 48),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 2,
+        ),
+      ),
+
+      const SizedBox(height: 12),
+
+      // ✅ Keep Delete Booking active (if you want to always allow deleting)
+      ElevatedButton.icon(
+        onPressed: () => _handleDeleteBooking(context, booking),
+        icon: const Icon(Icons.delete, color: Colors.white),
+        label: const Text(
+          'Delete Booking',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red.shade600,
+          minimumSize: const Size(double.infinity, 48),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 2,
+        ),
+      ),
+    ],
+  );
+}
+
 
   void _handleCompleteBooking(BuildContext context, dynamic booking, int balanceAmount) async {
     if (balanceAmount > 0) {
@@ -473,7 +451,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Complete Booking'),
+        title: const Text('Complete Booking',),
         content: const Text('Are you sure you want to mark this booking as completed?'),
         actions: [
           TextButton(
@@ -482,7 +460,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Complete'),
+            child: const Text('Complete',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
           ),
         ],
       ),

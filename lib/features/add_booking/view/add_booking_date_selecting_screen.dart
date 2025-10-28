@@ -359,6 +359,12 @@ class _AddBookingDateSelectingScreenState
                                     final picked = await showTimePicker(
                                       context: context,
                                       initialTime: pickupTime ?? TimeOfDay.now(),
+                                      builder: (BuildContext context, Widget? child) {
+                                        return MediaQuery(
+                                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                          child: child!,
+                                        );
+                                      },
                                     );
                                     if (picked != null) {
                                       // Check if same day and same time as return
@@ -411,6 +417,12 @@ class _AddBookingDateSelectingScreenState
                                     final picked = await showTimePicker(
                                       context: context,
                                       initialTime: returnTime ?? TimeOfDay.now(),
+                                      builder: (BuildContext context, Widget? child) {
+                                        return MediaQuery(
+                                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                          child: child!,
+                                        );
+                                      },
                                     );
                                     if (picked != null) {
                                       // Check if same day and same time as pickup
@@ -836,25 +848,29 @@ class _AddBookingDateSelectingScreenState
     
     // Additional business logic validation
     final now = DateTime.now();
-    if (pickupTime != null) {
-      final pickupDateTime = DateTime(
-        pickupDate.year,
-        pickupDate.month,
-        pickupDate.day,
-        pickupTime!.hour,
-        pickupTime!.minute,
-      );
-      
-      // Cannot book in the past
-      if (pickupDateTime.isBefore(now)) {
-        context.showSnackBar(
-          'Cannot book pickup time in the past.',
-          title: 'Invalid Time',
-          isError: true,
-        );
-        return;
-      }
-    }
+   if (pickupTime != null) {
+  final pickupDateTime = DateTime(
+    pickupDate.year,
+    pickupDate.month,
+    pickupDate.day,
+    pickupTime!.hour,
+    pickupTime!.minute,
+  );
+
+  // Add a small grace buffer of 1 minute to prevent false negatives
+  final adjustedNow = DateTime.now().subtract(const Duration(minutes: 1));
+
+  // Only restrict if pickup time is truly before the current moment
+  if (pickupDateTime.isBefore(adjustedNow)) {
+    context.showSnackBar(
+      'Cannot book pickup time in the past.',
+      title: 'Invalid Time',
+      isError: true,
+    );
+    return;
+  }
+}
+
 
     final pickupDateFormatted = pickupDateNotifier.value.format(reverse: true);
     final returnDateFormatted = returnDateController.text.formatToUiDate();
