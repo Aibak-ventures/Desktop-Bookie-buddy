@@ -13,7 +13,7 @@ class BookingDetailsTimeDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: 'Times',
+    title: '',
     padding: 12.padding,
     child: Wrap(
       alignment: WrapAlignment.spaceBetween,

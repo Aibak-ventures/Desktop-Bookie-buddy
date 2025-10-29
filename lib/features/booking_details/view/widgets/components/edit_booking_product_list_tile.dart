@@ -60,8 +60,8 @@ class EditBookingProductListTile extends StatelessWidget {
       ),
       if (isActionsVisible)
         Positioned(
-          right: -15,
-          top: -5,
+          right: 15,
+          top: 5,
           child: PopupMenuButton(
             tooltip: 'Actions',
             icon: const Icon(Icons.more_vert, color: AppColors.black),

@@ -1,9 +1,11 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/utils/responsive_screen_mixin.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/product_card.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/product/view/product_info_screen.dart';
 import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
+import 'package:bookie_buddy_web/features/product/view_model/bloc_product_info/product_info_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,9 +52,8 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
       IconButton(
         icon: const Icon(Icons.search),
         onPressed: () {
-          // Find the state and call search dialog
-          final state = context.findAncestorStateOfType<_ProductGridScreenState>();
-          state?.showSearchDialog(context);
+          // Call search dialog with current context and serviceId
+          _showSearchDialog(context, serviceId ?? 1);
         },
       ),
     ];
@@ -60,55 +61,47 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
 
   @override
   State<ProductGridScreen> createState() => _ProductGridScreenState();
-}
 
-class _ProductGridScreenState extends State<ProductGridScreen> {
-  @override
-  void initState() {
-    super.initState();
-    final serviceId = widget.serviceId ?? 1; // Default service ID
-    context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
-  }
-
-  void showSearchDialog(BuildContext context) {
+  static void _showSearchDialog(BuildContext context, int serviceId) {
     final TextEditingController searchController = TextEditingController();
     
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Search Products'),
         content: SizedBox(
-          width: 300, // Constrain dialog width
+          width: 300,
           child: TextField(
             controller: searchController,
             decoration: const InputDecoration(
               hintText: 'Enter product name...',
               border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.search),
             ),
             autofocus: true,
+            onSubmitted: (value) {
+              _triggerSearch(context, serviceId, value);
+              Navigator.pop(dialogContext);
+            },
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              // Clear search and reload products
+              _triggerSearch(context, serviceId, '');
+              Navigator.pop(dialogContext);
+            },
+            child: const Text('Clear'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
-              final query = searchController.text.trim();
-              if (query.isNotEmpty) {
-                final serviceId = widget.serviceId ?? 1;
-                context.read<ProductBloc>().add(
-                  ProductEvent.searchProducts(
-                    serviceId: serviceId,
-                    query: query,
-                    type: null,
-                    startPrice: null,
-                    endPrice: null,
-                  ),
-                );
-              }
-              Navigator.pop(context);
+              _triggerSearch(context, serviceId, searchController.text);
+              Navigator.pop(dialogContext);
             },
             child: const Text('Search'),
           ),
@@ -117,11 +110,39 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
     );
   }
 
+  static void _triggerSearch(BuildContext context, int serviceId, String query) {
+    final trimmedQuery = query.trim();
+
+    if (trimmedQuery.isEmpty) {
+      context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
+    } else {
+      context.read<ProductBloc>().add(
+        ProductEvent.searchProducts(
+          serviceId: serviceId,
+          query: trimmedQuery,
+          type: null,
+          startPrice: null,
+          endPrice: null,
+        ),
+      );
+    }
+  }
+}
+
+class _ProductGridScreenState extends State<ProductGridScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final serviceId = widget.serviceId ?? 1;
+    context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.buildResponsiveScreen(context);
   }
 }
+
 
 class _ProductGridContent extends StatelessWidget {
   final int serviceId;
@@ -261,16 +282,24 @@ class _ProductGridState extends State<_ProductGrid> {
             product: widget.products[index],
             onTap: () {
               // Navigate to product overview
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductInfoScreen(
-                    serviceId: widget.products[index].serviceId ?? 1,
-                    productId: widget.products[index].id,
-                    mainServiceType: MainServiceType.others, // Default to others
-                  ),
-                ),
-              );
+        Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => BlocProvider(
+      create: (context) => ProductInfoBloc(repository: getIt.get())
+        ..add(ProductInfoEvent.loadProductInfo(
+          widget.products[index].id, // ✅ only one positional parameter
+        )),
+      child: ProductInfoScreen(
+        serviceId: widget.serviceId,
+        productId: widget.products[index].id,
+        mainServiceType: MainServiceType.others,
+      ),
+    ),
+  ),
+);
+
+
             },
           );
         },

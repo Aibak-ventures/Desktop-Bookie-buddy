@@ -14,7 +14,7 @@ class BookingDetailsClientSection extends StatelessWidget {
   final BookingDetailsModel booking;
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: 'Client details',
+    title: '',
     padding: 18.padding,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -105,15 +105,15 @@ class StaffListScreen extends StatelessWidget {
                                 child: StaffListCard(
                                   name: staff.name,
                                   phoneNumber: staff.phoneNumber,
-                                  onTapAnalytics: () {
-                                    context.pushNamed(
-                                      AppRoutes.staffAnalytics.name,
-                                      pathParameters: {
-                                        'id': staff.id.toString(),
-                                      },
-                                      queryParameters: {'name': staff.name},
-                                    );
-                                  },
+                                  // onTapAnalytics: () {
+                                  //   context.pushNamed(
+                                  //     AppRoutes.staffAnalytics.name,
+                                  //     pathParameters: {
+                                  //       'id': staff.id.toString(),
+                                  //     },
+                                  //     queryParameters: {'name': staff.name},
+                                  //   );
+                                  // },
                                   onEdit: () => _showAddStaffDialog(
                                     context: context,
                                     staff: staff,

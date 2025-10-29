@@ -17,7 +17,7 @@ class BookingDetailsLocationDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: 'Location details',
+    title: '',
     padding: 18.padding,
     child: Column(
       spacing: 15,

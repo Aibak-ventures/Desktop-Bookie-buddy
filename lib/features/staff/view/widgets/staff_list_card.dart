@@ -42,9 +42,9 @@ class StaffListCard extends StatelessWidget {
       trailing: PopupMenuButton<String>(
         onSelected: (value) {
           switch (value) {
-            case 'analytics':
-              if (onTapAnalytics != null) onTapAnalytics!();
-              break;
+            // case 'analytics':
+            //   if (onTapAnalytics != null) onTapAnalytics!();
+            //   break;
             case 'edit':
               onEdit();
               break;
@@ -84,11 +84,11 @@ class StaffListCard extends StatelessWidget {
           //     ),
           //   ),
           // ),
-          const PremiumMenuItem(
-            value: 'analytics',
-            label: 'Analytics',
-            icon: Icon(Icons.show_chart_rounded),
-          ),
+          // const PremiumMenuItem(
+          //   value: 'analytics',
+          //   label: 'Analytics',
+          //   icon: Icon(Icons.show_chart_rounded),
+          // ),
           const PopupMenuItem(
             value: 'edit',
             child: Row(

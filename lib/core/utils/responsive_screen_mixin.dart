@@ -212,7 +212,7 @@ mixin ResponsiveScreenMixin on Widget {
                         ),
                       ),
                       Text(
-                        'Manage your ${screenTitle.toLowerCase()}',
+                        'Manage yours ${screenTitle.toLowerCase()}',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade600,
