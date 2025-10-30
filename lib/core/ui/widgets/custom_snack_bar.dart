@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/navigation/navigations.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 void CustomSnackBar({
@@ -20,5 +21,6 @@ void CustomSnackBar({
     flushbarPosition: FlushbarPosition.TOP,
     borderRadius: const BorderRadius.all(Radius.circular(10)),
     margin: 10.padding,
+    maxWidth: kIsWeb ? 500 : null,
   ).show(navigatorKey.currentContext!);
 }

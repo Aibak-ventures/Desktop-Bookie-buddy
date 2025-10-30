@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
@@ -26,6 +24,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+
+// Conditional import for web downloads
+import 'web_download_stub.dart'
+    if (dart.library.html) 'web_download_web.dart';
 
 // Usage service class
 class LedgerPDFService {
@@ -325,13 +327,8 @@ class LedgerPDFGenerator {
       final fileName =
           '${ledgerData.pdfName}_report_${ledgerData.fromDate}_to_${ledgerData.toDate}.pdf';
 
-      // Trigger download in browser
-      final blob = html.Blob([pdfBytes], 'application/pdf');
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      html.AnchorElement(href: url)
-        ..setAttribute('download', fileName)
-        ..click();
-      html.Url.revokeObjectUrl(url);
+      // Trigger download in browser using conditional import
+      downloadPdfWeb(pdfBytes, fileName);
 
       if (context.mounted) {
         context.showSnackBar('PDF downloaded successfully');

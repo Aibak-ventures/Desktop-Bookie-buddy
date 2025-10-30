@@ -10,6 +10,7 @@ import 'package:bookie_buddy_web/features/all_booking/view/all_booking_future_ta
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_past_tab.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -89,8 +90,10 @@ class _AllBookingScreenState extends State<AllBookingScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: kIsWeb ? AppColors.grey100 : Colors.white,
     appBar: AppBar(
       title: const Text('Bookings'),
+      centerTitle: kIsWeb,
       actions: [
         ValueListenableBuilder(
           valueListenable: isSearchingNotifier,
@@ -133,62 +136,76 @@ class _AllBookingScreenState extends State<AllBookingScreen>
         10.width,
       ],
     ),
-    body: Column(
-      children: [
-        // Active Search filed
-        ValueListenableBuilder(
-          valueListenable: isSearchingNotifier,
-          builder: (context, isSearching, child) => isSearching
-              ? CustomSearchField(
-                  searchController: searchController,
-                  padding: (16, 8).padding,
-                  focusNode: searchFocusNode,
-                  onChanged: (query) {
-                    _fetchBookingsWithFilter(context);
-                  },
-                  hintText: 'Search by name or ID...',
-                  suffixFunction: () {
-                    searchController.clear();
-                    _fetchBookingsWithFilter(context, 2);
-                  },
-                )
-              : const SizedBox.shrink(),
-        ),
-        // Active Filter Indicator
-        ValueListenableBuilder(
-          valueListenable: dateFilterNotifier,
-          builder: (context, value, child) => value.hasActiveFilter
-              ? _buildActiveFilterIndicator(context)
-              : const SizedBox.shrink(),
-        ),
+    body: Center(
+      child: Container(
+        constraints: kIsWeb ? const BoxConstraints(maxWidth: 1200) : null,
+        child: Column(
+          children: [
+            // Active Search filed
+            ValueListenableBuilder(
+              valueListenable: isSearchingNotifier,
+              builder: (context, isSearching, child) => isSearching
+                  ? Container(
+                      color: Colors.white,
+                      child: CustomSearchField(
+                        searchController: searchController,
+                        padding: (16, 8).padding,
+                        focusNode: searchFocusNode,
+                        onChanged: (query) {
+                          _fetchBookingsWithFilter(context);
+                        },
+                        hintText: 'Search by name or ID...',
+                        suffixFunction: () {
+                          searchController.clear();
+                          _fetchBookingsWithFilter(context, 2);
+                        },
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+            // Active Filter Indicator
+            ValueListenableBuilder(
+              valueListenable: dateFilterNotifier,
+              builder: (context, value, child) => value.hasActiveFilter
+                  ? Container(
+                      color: Colors.white,
+                      child: _buildActiveFilterIndicator(context),
+                    )
+                  : const SizedBox.shrink(),
+            ),
 
-        TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Pending'),
-            Tab(text: 'Past'),
+            Container(
+              color: Colors.white,
+              child: TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(text: 'Pending'),
+                  Tab(text: 'Past'),
+                ],
+              ),
+            ),
+            10.height,
+            Expanded(
+              child: Padding(
+                padding: kIsWeb ? const EdgeInsets.symmetric(horizontal: 24, vertical: 16) : 10.padding,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    AllBookingFutureTab(
+                      dateFilterNotifier: dateFilterNotifier,
+                      searchController: searchController,
+                    ),
+                    AllBookingPastTab(
+                      dateFilterNotifier: dateFilterNotifier,
+                      searchController: searchController,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
-        10.height,
-        Expanded(
-          child: Padding(
-            padding: 10.padding,
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                AllBookingFutureTab(
-                  dateFilterNotifier: dateFilterNotifier,
-                  searchController: searchController,
-                ),
-                AllBookingPastTab(
-                  dateFilterNotifier: dateFilterNotifier,
-                  searchController: searchController,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      ),
     ),
   );
 
