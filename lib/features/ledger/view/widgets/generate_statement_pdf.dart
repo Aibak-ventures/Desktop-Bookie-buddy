@@ -1,5 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
@@ -16,6 +19,7 @@ import 'package:bookie_buddy_web/features/ledger/models/ledger_invoice_entry_mod
 import 'package:bookie_buddy_web/features/ledger/models/ledger_summary_model.dart';
 import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.dart';
 import 'package:bookie_buddy_web/utils/get_pdf_image_provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -149,11 +153,21 @@ class LedgerPDFService {
     required BuildContext context,
   }) async {
     try {
-      final filePath = await LedgerPDFGenerator.generateLedgerStatement(
-        ledgerData,
-      );
-      GlobalLoadingOverlay.hide();
-      await shareFile(context: context, filePath: filePath);
+      if (kIsWeb) {
+        // Web-specific PDF generation and download
+        await LedgerPDFGenerator.generateAndDownloadLedgerStatementWeb(
+          ledgerData,
+          context,
+        );
+        GlobalLoadingOverlay.hide();
+      } else {
+        // Mobile/Desktop PDF generation
+        final filePath = await LedgerPDFGenerator.generateLedgerStatement(
+          ledgerData,
+        );
+        GlobalLoadingOverlay.hide();
+        await shareFile(context: context, filePath: filePath);
+      }
     } catch (e) {
       debugPrint('Error sharing ledger PDF: $e');
       rethrow;
@@ -265,7 +279,71 @@ class LedgerPDFGenerator {
 
   static PdfColor greyColor = const PdfColor.fromInt(0xFFEDEEFF); // Grey color
 
-  // Main function to generate ledger PDF
+  // Web-specific function to generate and download ledger PDF
+  static Future<void> generateAndDownloadLedgerStatementWeb(
+    LedgerSummaryModel ledgerData,
+    BuildContext context,
+  ) async {
+    try {
+      await _initializeFonts();
+      final pdf = pw.Document();
+
+      final businessImage = await getPdfImageProvider(
+        imagePath: ledgerData.shopDetails.image,
+        isAsset: false,
+        assetImagePath: AppAssets.appLogoLight,
+      );
+
+      pdf.addPage(
+        pw.MultiPage(
+          pageFormat: PdfPageFormat.a4,
+          margin: const pw.EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          build: (pw.Context context) => [
+            _buildHeader(ledgerData, businessImage),
+            pw.SizedBox(height: 2),
+            _buildDateRange(ledgerData),
+            pw.SizedBox(height: 10),
+            _buildSummarySection(ledgerData),
+            pw.SizedBox(height: 10),
+            _buildEntriesTable(ledgerData),
+          ],
+          footer: (pw.Context context) => pw.Align(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              'Powered by www.bookiebuddy.in',
+              style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+            ),
+          ),
+        ),
+      );
+
+      // Generate PDF bytes
+      final Uint8List pdfBytes = await pdf.save();
+
+      // Create filename
+      final fileName =
+          '${ledgerData.pdfName}_report_${ledgerData.fromDate}_to_${ledgerData.toDate}.pdf';
+
+      // Trigger download in browser
+      final blob = html.Blob([pdfBytes], 'application/pdf');
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      html.AnchorElement(href: url)
+        ..setAttribute('download', fileName)
+        ..click();
+      html.Url.revokeObjectUrl(url);
+
+      if (context.mounted) {
+        context.showSnackBar('PDF downloaded successfully');
+      }
+    } catch (e, stack) {
+      debugPrint('Error generating PDF for web: $e');
+      debugPrint('Stack trace: $stack');
+      rethrow;
+    }
+  }
+
+  // Main function to generate ledger PDF (for mobile/desktop)
   static Future<String> generateLedgerStatement(
     LedgerSummaryModel ledgerData,
   ) async {

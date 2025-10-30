@@ -330,19 +330,19 @@ class _WalletScreenState extends State<WalletScreen>
               Container(
                 margin: EdgeInsets.only(right: 16.w),
                 decoration: BoxDecoration(
-                  color: AppColors.purpleLightShade,
+                  color: AppColors.purple,
                   borderRadius: 8.radiusBorder,
                 ),
                 padding: 12.padding,
                 child: Row(
                   children: [
-                    Icon(Icons.print_outlined, size: 20.sp),
+                    Icon(Icons.download_outlined, size: 20.sp, color: AppColors.white),
                     8.width,
                     Text(
-                      'Print',
+                      'Download Report',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.black,
+                        color: AppColors.white,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -560,19 +560,19 @@ class _WalletScreenState extends State<WalletScreen>
           builder: (builderContext) =>
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.purpleLightShade,
+                  color: AppColors.purple,
                   borderRadius: 5.radiusBorder,
                 ),
                 padding: 8.padding,
                 child: Row(
                   children: [
-                    Icon(Icons.print_outlined, size: 18.sp),
+                    Icon(Icons.download_outlined, size: 18.sp, color: AppColors.white),
                     4.width,
                     Text(
-                      'Print',
+                      'Download',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.black,
+                        color: AppColors.white,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

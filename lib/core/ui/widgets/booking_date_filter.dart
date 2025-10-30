@@ -4,10 +4,11 @@ import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/show_custom_bottom_sheet.dart';
 import 'package:bookie_buddy_web/utils/app_date_utils.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-///Bottom Sheet for Filter
+///Bottom Sheet for Filter (Dialog on Web)
 Future<void> showDateFilterBottomSheet({
   required BuildContext context,
   double initialChildSize = 0.5,
@@ -24,36 +25,74 @@ Future<void> showDateFilterBottomSheet({
   void Function(bool, DateTime?, DateTime?)? onApplyButtonPressed,
   String? buttonText,
 }) async {
-  await showCustomBottomSheet(
-    context,
-    initialChildSize: initialChildSize,
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: 16.padding,
-          child: BookingDateFilter(
-            buttonText: buttonText,
-            isGeneratePdf: isGeneratePdf,
-            onDateFilterChanged: (startDate, endDate) {
-              onDateFilterChanged(startDate, endDate);
-              // Don't auto-close if checkboxes are shown
-              if (!showCheckboxOptions) {
-                Navigator.pop(context);
-              }
-            },
-            initialStartDate: initialStartDate,
-            initialEndDate: initialEndDate,
-            showCheckboxOptions: showCheckboxOptions,
-            checkboxOptions: checkboxOptions,
-            onCheckboxChanged: onCheckboxChanged,
-            title: title,
-            onApplyFilter: onApplyButtonPressed,
+  // Show dialog on web, bottom sheet on mobile
+  if (kIsWeb) {
+    await showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: 24.padding,
+              child: BookingDateFilter(
+                buttonText: buttonText,
+                isGeneratePdf: isGeneratePdf,
+                onDateFilterChanged: (startDate, endDate) {
+                  onDateFilterChanged(startDate, endDate);
+                  // Don't auto-close if checkboxes are shown
+                  if (!showCheckboxOptions) {
+                    Navigator.pop(context);
+                  }
+                },
+                initialStartDate: initialStartDate,
+                initialEndDate: initialEndDate,
+                showCheckboxOptions: showCheckboxOptions,
+                checkboxOptions: checkboxOptions,
+                onCheckboxChanged: onCheckboxChanged,
+                title: title,
+                onApplyFilter: onApplyButtonPressed,
+              ),
+            ),
           ),
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  } else {
+    await showCustomBottomSheet(
+      context,
+      initialChildSize: initialChildSize,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: 16.padding,
+            child: BookingDateFilter(
+              buttonText: buttonText,
+              isGeneratePdf: isGeneratePdf,
+              onDateFilterChanged: (startDate, endDate) {
+                onDateFilterChanged(startDate, endDate);
+                // Don't auto-close if checkboxes are shown
+                if (!showCheckboxOptions) {
+                  Navigator.pop(context);
+                }
+              },
+              initialStartDate: initialStartDate,
+              initialEndDate: initialEndDate,
+              showCheckboxOptions: showCheckboxOptions,
+              checkboxOptions: checkboxOptions,
+              onCheckboxChanged: onCheckboxChanged,
+              title: title,
+              onApplyFilter: onApplyButtonPressed,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 ///Date Filter
@@ -116,17 +155,19 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: 16.padding,
+    padding: kIsWeb ? EdgeInsets.zero : 16.padding,
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ],
+      boxShadow: kIsWeb
+          ? []
+          : [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,6 +189,13 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
                   'Clear',
                   style: TextStyle(color: Colors.red, fontSize: 12.sp),
                 ),
+              ),
+            if (kIsWeb && !widget.showCheckboxOptions)
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
               ),
           ],
         ),

@@ -14,6 +14,7 @@ import 'package:bookie_buddy_web/features/product/models/product_request_model/p
 import 'package:bookie_buddy_web/features/product/view/widgets/variants_widget.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:bookie_buddy_web/utils/pick_and_compress_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -93,9 +94,9 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
         ),
         body: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 40),
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 900),
+              constraints: const BoxConstraints(maxWidth: 1400),
               padding: const EdgeInsets.all(40),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -400,51 +401,59 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
     }
   }
 
-  Future<void> showImageBottomSheet(BuildContext context) async {
-    return showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            children: [
-              Text("Select Image",
-                  style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 15),
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text("Camera"),
-                onTap: () async {
-                  context.pop();
-                  final image = await pickAndCompressImage(
-                    context: context,
-                    source: ImageSource.camera,
-                  );
-                  if (image != null) _imageNotifier.value = image;
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text("Gallery"),
-                onTap: () async {
-                  context.pop();
-                  final image = await pickAndCompressImage(
-                    context: context,
-                    source: ImageSource.gallery,
-                  );
-                  if (image != null) _imageNotifier.value = image;
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+ Future<void> showImageBottomSheet(BuildContext context) async {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (context) {
+      return SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Choose from gallery'),
+              onTap: () async {
+                final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+                if (picked != null) {
+                  _imageNotifier.value = File(picked.path);
+                }
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Take a photo'),
+              onTap: () async {
+                final picked = await ImagePicker().pickImage(source: ImageSource.camera);
+                if (picked != null) {
+                  _imageNotifier.value = File(picked.path);
+                }
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.folder),
+              title: const Text('Pick from files'),
+              onTap: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['jpg', 'jpeg', 'png'],
+                );
+                if (result != null && result.files.single.path != null) {
+                  _imageNotifier.value = File(result.files.single.path!);
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   void _onPopInvokedWithResult(bool didPop, Object? result) async {
     if (didPop) return;

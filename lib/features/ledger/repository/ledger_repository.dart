@@ -13,6 +13,7 @@ import 'package:bookie_buddy_web/features/ledger/models/ledger_security_amount_g
 import 'package:bookie_buddy_web/features/ledger/services/ledger_service.dart';
 import 'package:bookie_buddy_web/features/ledger/services/payment_service.dart';
 import 'package:bookie_buddy_web/features/ledger/services/pending_service.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 
 class LedgerRepository {
@@ -240,10 +241,31 @@ class LedgerRepository {
     int? clientId,
   }) async {
     try {
-      final dir =
-          await getTemporaryDirectory(); // You can also use getExternalStorageDirectory()
-      final filePath =
-          '${dir.path}/${ledgerType.isAll ? 'ledger' : ledgerType.value}_report_${fromDate}_to_${toDate}.xlsx';
+      final fileName =
+          '${ledgerType.isAll ? 'ledger' : ledgerType.value}_report_${fromDate}_to_${toDate}.xlsx';
+      
+      // For web, we'll handle the file differently
+      if (kIsWeb) {
+        // Web implementation - we'll return a temp path that won't be used
+        final response = await safeApiCall(
+          () => _ledgerService.downloadLedgerInvoice(
+            fromDate: fromDate,
+            toDate: toDate,
+            type: type,
+            clientId: clientId,
+            filePath: fileName, // Just pass filename for web
+          ),
+        );
+        if (response != null) {
+          log('Download Ledger Invoice Error: ${response.devMessage}');
+          throw response.message;
+        }
+        return fileName; // Return filename for web
+      }
+      
+      // Mobile/Desktop implementation
+      final dir = await getTemporaryDirectory();
+      final filePath = '${dir.path}/$fileName';
       final response = await safeApiCall(
         () => _ledgerService.downloadLedgerInvoice(
           fromDate: fromDate,

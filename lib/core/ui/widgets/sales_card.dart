@@ -174,8 +174,8 @@ class SalesCardShimmer extends StatelessWidget {
       border: Border.all(color: const Color(0xFFF0F0F0)),
     ),
     child: Shimmer.fromColors(
-      baseColor: AppColors.grey[300]!,
-      highlightColor: AppColors.grey[100]!,
+      baseColor: AppColors.grey300!,
+      highlightColor: AppColors.grey100!,
       child: Row(
         children: [
           // Date Section Shimmer
