@@ -72,6 +72,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   go_router: ^16.2.4
   file_picker: ^8.0.0
+  msix: ^3.16.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -82,26 +83,26 @@ dev_dependencies:
 
 # App icon configuration
 flutter_launcher_icons:
-  image_path: "assets/image/app_icon_light.png"
+  image_path: "assets/assets/images/app_icon_light.png"
   android: true
   ios: true
   remove_alpha_ios: true
   min_sdk_android: 21
 
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/image/app_icon_light.png"
+  adaptive_icon_foreground: "assets/assets/images/app_icon_light.png"
 
   web:
     generate: true
-    image_path: "assets/image/app_icon_light.png"
+    image_path: "assets/assets/images/app_icon_light.png"
 
   windows:
     generate: true
-    image_path: "assets/image/app_icon_light.png"
+    image_path: "assets/assets/images/app_icon_light.png"
 
   macos:
     generate: true
-    image_path: "assets/image/app_icon_light.png"
+    image_path: "assets/assets/images/app_icon_light.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

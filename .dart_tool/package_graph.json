@@ -40,6 +40,7 @@
         "logger",
         "lottie",
         "lucide_icons_flutter",
+        "msix",
         "package_info_plus",
         "path_provider",
         "pdf",
@@ -165,6 +166,21 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "msix",
+      "version": "3.16.12",
+      "dependencies": [
+        "args",
+        "cli_util",
+        "console",
+        "get_it",
+        "image",
+        "package_config",
+        "path",
+        "pub_semver",
+        "yaml"
       ]
     },
     {
@@ -1073,6 +1089,13 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "console",
+      "version": "4.1.0",
+      "dependencies": [
+        "vector_math"
       ]
     },
     {

@@ -18,8 +18,39 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
-
+import 'dart:html' as html;
 class GenerateBookingPdf {
+   // 👈 add at the top (only for web)
+
+  static Future<void> printInvoice({
+    required BuildContext context,
+    required BookingDetailsModel bookingDetails,
+    required UserShopModel shopDetails,
+  }) async {
+    try {
+      GlobalLoadingOverlay.show(context, text: 'Preparing print preview...');
+      
+      // 1️⃣ Generate the same PDF bytes
+      final pdfBytes = await generateInvoice(bookingDetails, shopDetails);
+
+      // 2️⃣ Create a web blob and open in a new browser tab
+      final blob = html.Blob([pdfBytes], 'application/pdf');
+      final url = html.Url.createObjectUrlFromBlob(blob);
+
+      // 3️⃣ Open the PDF in a new tab and trigger print
+      html.window.open(url, '_blank');
+      await Future.delayed(const Duration(milliseconds: 500));
+      html.window.print();
+
+      // 4️⃣ Cleanup
+      html.Url.revokeObjectUrl(url);
+      GlobalLoadingOverlay.hide();
+    } catch (e, stack) {
+      log('Error printing invoice: $e', stackTrace: stack);
+      GlobalLoadingOverlay.hide();
+    }
+  }
+
   static Future<void> shareInvoice({
     required BuildContext context,
     required BookingDetailsModel bookingDetails,

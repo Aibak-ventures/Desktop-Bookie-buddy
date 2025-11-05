@@ -28,8 +28,8 @@ class BookingDetailsAppBar extends StatelessWidget
   final isProcessing = ValueNotifier(false);
 
   @override
-  Widget build(BuildContext context) => AppBar(
-    title: const Text('Booking Details'),
+  Widget build(BuildContext context) => AppBar(backgroundColor: Colors.black,
+    title: const Text('Booking Details',style: TextStyle(color: AppColors.white),),
     actions: [
       ValueListenableBuilder<bool>(
         valueListenable: isProcessing,
@@ -42,63 +42,64 @@ class BookingDetailsAppBar extends StatelessWidget
                 );
                 final isLoading = booking == null;
                 return PopupMenuButton<String>(
-                  icon: const Icon(Icons.download),
-                  tooltip: 'Download/Print Options',
-                  enabled: !value && !isLoading,
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'pdf',
-                      child: Row(
-                        children: [
-                          Icon(Icons.picture_as_pdf),
-                          SizedBox(width: 8),
-                          Text('Download PDF'),
-                        ],
-                      ),
-                    ),
-                    // const PopupMenuItem(
-                    //   value: 'print',
-                    //   child: Row(
-                    //     children: [
-                    //       Icon(Icons.print),
-                    //       SizedBox(width: 8),
-                    //       Text('Print'),
-                    //     ],
-                    //   ),
-                    // ),
-                  ],
-                  onSelected: (action) async {
-                    if (booking == null) return;
-                    
-                    isProcessing.value = true;
-                    final shopData = context
-                        .read<UserCubit>()
-                        .state
-                        ?.shopDetails;
-                    if (shopData == null) {
-                      CustomSnackBar(message: 'Shop data not available');
-                      isProcessing.value = false;
-                      return;
-                    }
-                    
-                    try {
-                      if (action == 'pdf') {
-                        await GenerateBookingPdf.shareInvoice(
-                          context: context,
-                          bookingDetails: booking,
-                          shopDetails: shopData,
-                        );
-                      } 
-                    } catch (e, stack) {
-                      log(e.toString(), stackTrace: stack);
-                      CustomSnackBar(
-                              message: 'Failed to generate PDF: $e',
-                            );
-                          } finally {
-                            isProcessing.value = false;
-                          }
-                        },
-                );
+  icon: const Icon(Icons.download, color: AppColors.black),
+  tooltip: 'Download/Print Options',
+  enabled: !value && !isLoading,
+  itemBuilder: (context) => const [
+    PopupMenuItem(
+      value: 'pdf',
+      child: Row(
+        children: [
+          Icon(Icons.picture_as_pdf),
+          SizedBox(width: 8),
+          Text('Download PDF'),
+        ],
+      ),
+    ),
+    PopupMenuItem(
+      value: 'print',
+      child: Row(
+        children: [
+          Icon(Icons.print),
+          SizedBox(width: 8),
+          Text('Print Invoice'),
+        ],
+      ),
+    ),
+  ],
+  onSelected: (action) async {
+    if (booking == null) return;
+    isProcessing.value = true;
+    final shopData = context.read<UserCubit>().state?.shopDetails;
+    if (shopData == null) {
+      CustomSnackBar(message: 'Shop data not available');
+      isProcessing.value = false;
+      return;
+    }
+
+    try {
+      if (action == 'pdf') {
+        await GenerateBookingPdf.shareInvoice(
+          context: context,
+          bookingDetails: booking,
+          shopDetails: shopData,
+        );
+      } else if (action == 'print') {
+        await GenerateBookingPdf.printInvoice(
+          context: context,
+          bookingDetails: booking,
+          shopDetails: shopData,
+        );
+      }
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      CustomSnackBar(message: 'Failed to generate: $e');
+    } finally {
+      isProcessing.value = false;
+    }
+  },
+);
+
               },
             ),
       ),
