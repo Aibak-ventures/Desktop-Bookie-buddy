@@ -28,8 +28,8 @@ class BookingDetailsAppBar extends StatelessWidget
   final isProcessing = ValueNotifier(false);
 
   @override
-  Widget build(BuildContext context) => AppBar(backgroundColor: Colors.black,
-    title: const Text('Booking Details',style: TextStyle(color: AppColors.white),),
+  Widget build(BuildContext context) => AppBar(backgroundColor: Colors.white,
+    title: const Text('Booking Details',style: TextStyle(color: AppColors.black),),
     actions: [
       ValueListenableBuilder<bool>(
         valueListenable: isProcessing,
@@ -42,7 +42,7 @@ class BookingDetailsAppBar extends StatelessWidget
                 );
                 final isLoading = booking == null;
                 return PopupMenuButton<String>(
-  icon: const Icon(Icons.download, color: AppColors.black),
+  icon: const Icon(Icons.download, color: Colors.black),
   tooltip: 'Download/Print Options',
   enabled: !value && !isLoading,
   itemBuilder: (context) => const [
