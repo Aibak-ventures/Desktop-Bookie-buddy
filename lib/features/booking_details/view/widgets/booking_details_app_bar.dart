@@ -1,26 +1,12 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-// import 'package:bookie_buddy_web/features/add_booking/view_model/cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/show_delete_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
-import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/enums/enums.dart';
 
 class BookingDetailsAppBar extends StatelessWidget
     implements PreferredSizeWidget {

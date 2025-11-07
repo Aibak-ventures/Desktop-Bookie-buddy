@@ -1,11 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/utils/download_file.dart';
 import 'package:bookie_buddy_web/utils/get_pdf_image_provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +16,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GenerateAvailableProductsPdf {
   static Future<void> shareInvoice({
@@ -25,35 +29,89 @@ class GenerateAvailableProductsPdf {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF...');
       final pdf = await generateAvailableProductsPdf(products, shopDetails, availabilityDate);
       
-      // Save PDF to device
-      final output = await getApplicationDocumentsDirectory();
-
-      final box = context.isMobile
-          ? null
-          : context.findRenderObject() as RenderBox?;
-
-      final file = File(
-        '${output.path}/available_products_${DateTime.now().millisecondsSinceEpoch}.pdf',
-      );
-      await file.writeAsBytes(pdf);
-      final fileName = file.path.split('/').last;
       GlobalLoadingOverlay.hide();
-      await SharePlus.instance.share(
-        ShareParams(
-          title: fileName,
-          subject: fileName,
-          previewThumbnail: XFile(file.path),
-          files: [XFile(file.path)],
-          sharePositionOrigin: box == null
-              ? null
-              : Rect.fromLTWH(
-                  box.localToGlobal(Offset.zero).dx,
-                  box.localToGlobal(Offset.zero).dy,
-                  box.size.width,
-                  box.size.height,
-                ),
-        ),
-      );
+      
+      final fileName = 'available_products_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      
+      if (kIsWeb) {
+        // On web, trigger browser download
+        downloadFileWeb(pdf, fileName);
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('PDF downloaded successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else if (Platform.isWindows) {
+        // For Windows desktop, save to Downloads folder and open
+        final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+        if (!downloadsDir.existsSync()) {
+          downloadsDir.createSync(recursive: true);
+        }
+        
+        final filePath = '${downloadsDir.path}\\$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(pdf);
+        
+        log('PDF saved to: $filePath');
+        
+        // Open the PDF with default viewer
+        try {
+          await launchUrl(Uri.file(filePath));
+        } catch (e) {
+          log('Could not open PDF: $e');
+        }
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('PDF saved to Downloads\\$fileName'),
+              backgroundColor: Colors.green,
+              action: SnackBarAction(
+                label: 'Open Folder',
+                textColor: Colors.white,
+                onPressed: () async {
+                  try {
+                    await launchUrl(Uri.file(downloadsDir.path));
+                  } catch (e) {
+                    log('Could not open folder: $e');
+                  }
+                },
+              ),
+            ),
+          );
+        }
+      } else {
+        // For mobile, save to temp and share
+        final output = await getApplicationDocumentsDirectory();
+        final box = context.isMobile
+            ? null
+            : context.findRenderObject() as RenderBox?;
+
+        final file = File('${output.path}/$fileName');
+        await file.writeAsBytes(pdf);
+        final fileNameShort = file.path.split('/').last;
+        
+        await SharePlus.instance.share(
+          ShareParams(
+            title: fileNameShort,
+            subject: fileNameShort,
+            previewThumbnail: XFile(file.path),
+            files: [XFile(file.path)],
+            sharePositionOrigin: box == null
+                ? null
+                : Rect.fromLTWH(
+                    box.localToGlobal(Offset.zero).dx,
+                    box.localToGlobal(Offset.zero).dy,
+                    box.size.width,
+                    box.size.height,
+                  ),
+          ),
+        );
+      }
     } catch (e, stackTrace) {
       GlobalLoadingOverlay.hide();
       log('Error sharing available products PDF: $e', stackTrace: stackTrace);
@@ -70,9 +128,19 @@ class GenerateAvailableProductsPdf {
   ) async {
     final pdf = pw.Document();
 
-    // Load font
-    final font = await rootBundle.load('assets/fonts/Roboto-Regular.ttf');
-    final ttf = pw.Font.ttf(font);
+    // Load fonts
+    final fontRegular = await rootBundle.load(AppAssets.interRegularFont);
+    final fontSemiBold = await rootBundle.load(AppAssets.interSemiBoldFont);
+    final ttfRegular = pw.Font.ttf(fontRegular);
+    final ttfSemiBold = pw.Font.ttf(fontSemiBold);
+
+    // Load the SVG header graphic for availability
+    final headerSvg = await rootBundle.loadString(
+      AppAssets.availabilityPdfLayoutHeaderSvg,
+    );
+    final footerSvg = await rootBundle.loadString(
+      AppAssets.bookingPdfLayoutFooterSvg,
+    );
 
     // Load logo
     pw.ImageProvider? logoProvider;
@@ -89,14 +157,45 @@ class GenerateAvailableProductsPdf {
 
     pdf.addPage(
       pw.MultiPage(
+        pageTheme: pw.PageTheme(
+          margin: const pw.EdgeInsets.fromLTRB(24, 60, 24, 40),
+          buildBackground: (context) {
+            if (context.pageNumber == 1) {
+              return pw.FullPage(
+                ignoreMargins: true,
+                child: pw.Column(
+                  children: [
+                    pw.SvgImage(
+                      svg: headerSvg,
+                      fit: pw.BoxFit.cover,
+                      alignment: pw.Alignment.topCenter,
+                    ),
+                    pw.Spacer(),
+                    pw.SvgImage(
+                      svg: footerSvg,
+                      alignment: pw.Alignment.bottomCenter,
+                    ),
+                  ],
+                ),
+              );
+            }
+            return pw.FullPage(
+              ignoreMargins: true,
+              child: pw.SvgImage(
+                svg: footerSvg,
+                alignment: pw.Alignment.bottomCenter,
+              ),
+            );
+          },
+        ),
         build: (pw.Context context) => [
-          _buildHeader(shopDetails, logoProvider, ttf),
+          _buildHeader(shopDetails, logoProvider, ttfRegular, ttfSemiBold),
           pw.SizedBox(height: 20),
-          _buildAvailabilityInfo(availabilityDate, ttf),
+          _buildAvailabilityInfo(availabilityDate, ttfRegular, ttfSemiBold),
           pw.SizedBox(height: 20),
-          _buildProductsTable(products, ttf),
+          _buildProductsTable(products, ttfRegular, ttfSemiBold),
           pw.SizedBox(height: 30),
-          _buildFooter(ttf),
+          _buildFooter(ttfRegular),
         ],
       ),
     );
@@ -107,7 +206,8 @@ class GenerateAvailableProductsPdf {
   static pw.Widget _buildHeader(
     UserShopModel shopDetails,
     pw.ImageProvider? logoProvider,
-    pw.Font font,
+    pw.Font fontRegular,
+    pw.Font fontSemiBold,
   ) {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -120,7 +220,7 @@ class GenerateAvailableProductsPdf {
               pw.Text(
                 shopDetails.name,
                 style: pw.TextStyle(
-                  font: font,
+                  font: fontSemiBold,
                   fontSize: 24,
                   fontWeight: pw.FontWeight.bold,
                 ),
@@ -129,21 +229,21 @@ class GenerateAvailableProductsPdf {
                 pw.SizedBox(height: 8),
                 pw.Text(
                   shopDetails.address,
-                  style: pw.TextStyle(font: font, fontSize: 12),
+                  style: pw.TextStyle(font: fontRegular, fontSize: 12),
                 ),
               ],
               if (shopDetails.phone.isNotEmpty) ...[
                 pw.SizedBox(height: 4),
                 pw.Text(
                   'Phone: ${shopDetails.phone}',
-                  style: pw.TextStyle(font: font, fontSize: 12),
+                  style: pw.TextStyle(font: fontRegular, fontSize: 12),
                 ),
               ],
               if (shopDetails.email?.isNotEmpty == true) ...[
                 pw.SizedBox(height: 4),
                 pw.Text(
                   'Email: ${shopDetails.email}',
-                  style: pw.TextStyle(font: font, fontSize: 12),
+                  style: pw.TextStyle(font: fontRegular, fontSize: 12),
                 ),
               ],
             ],
@@ -159,7 +259,11 @@ class GenerateAvailableProductsPdf {
     );
   }
 
-  static pw.Widget _buildAvailabilityInfo(String availabilityDate, pw.Font font) {
+  static pw.Widget _buildAvailabilityInfo(
+    String availabilityDate,
+    pw.Font fontRegular,
+    pw.Font fontSemiBold,
+  ) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(16),
       decoration: pw.BoxDecoration(
@@ -172,7 +276,7 @@ class GenerateAvailableProductsPdf {
           pw.Text(
             'Available Products Report',
             style: pw.TextStyle(
-              font: font,
+              font: fontSemiBold,
               fontSize: 18,
               fontWeight: pw.FontWeight.bold,
             ),
@@ -180,25 +284,29 @@ class GenerateAvailableProductsPdf {
           pw.SizedBox(height: 8),
           pw.Text(
             'Availability Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(availabilityDate))}',
-            style: pw.TextStyle(font: font, fontSize: 14),
+            style: pw.TextStyle(font: fontRegular, fontSize: 14),
           ),
           pw.Text(
             'Generated on: ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}',
-            style: pw.TextStyle(font: font, fontSize: 12, color: PdfColors.grey600),
+            style: pw.TextStyle(font: fontRegular, fontSize: 12, color: PdfColors.grey600),
           ),
         ],
       ),
     );
   }
 
-  static pw.Widget _buildProductsTable(List<ProductModel> products, pw.Font font) {
+  static pw.Widget _buildProductsTable(
+    List<ProductModel> products,
+    pw.Font fontRegular,
+    pw.Font fontSemiBold,
+  ) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
           'Available Products (${products.length})',
           style: pw.TextStyle(
-            font: font,
+            font: fontSemiBold,
             fontSize: 16,
             fontWeight: pw.FontWeight.bold,
           ),
@@ -217,10 +325,10 @@ class GenerateAvailableProductsPdf {
             pw.TableRow(
               decoration: const pw.BoxDecoration(color: PdfColors.grey200),
               children: [
-                _buildTableCell('S.No', font, isHeader: true),
-                _buildTableCell('Product Name', font, isHeader: true),
-                _buildTableCell('Category', font, isHeader: true),
-                _buildTableCell('Price', font, isHeader: true),
+                _buildTableCell('S.No', fontRegular, fontSemiBold, isHeader: true),
+                _buildTableCell('Product Name', fontRegular, fontSemiBold, isHeader: true),
+                _buildTableCell('Category', fontRegular, fontSemiBold, isHeader: true),
+                _buildTableCell('Price', fontRegular, fontSemiBold, isHeader: true),
               ],
             ),
             // Data rows
@@ -229,10 +337,10 @@ class GenerateAvailableProductsPdf {
               final product = entry.value;
               return pw.TableRow(
                 children: [
-                  _buildTableCell('${index + 1}', font),
-                  _buildTableCell(product.name, font),
-                  _buildTableCell(product.category ?? 'N/A', font),
-                  _buildTableCell('₹${product.price?.toStringAsFixed(2) ?? 'N/A'}', font),
+                  _buildTableCell('${index + 1}', fontRegular, fontSemiBold),
+                  _buildTableCell(product.name, fontRegular, fontSemiBold),
+                  _buildTableCell(product.category ?? 'N/A', fontRegular, fontSemiBold),
+                  _buildTableCell('₹${product.price?.toStringAsFixed(2) ?? 'N/A'}', fontRegular, fontSemiBold),
                 ],
               );
             }).toList(),
@@ -242,13 +350,18 @@ class GenerateAvailableProductsPdf {
     );
   }
 
-  static pw.Widget _buildTableCell(String text, pw.Font font, {bool isHeader = false}) {
+  static pw.Widget _buildTableCell(
+    String text,
+    pw.Font fontRegular,
+    pw.Font fontSemiBold,
+    {bool isHeader = false}
+  ) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(8),
       child: pw.Text(
         text,
         style: pw.TextStyle(
-          font: font,
+          font: isHeader ? fontSemiBold : fontRegular,
           fontSize: isHeader ? 12 : 10,
           fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
         ),

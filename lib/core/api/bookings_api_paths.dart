@@ -16,4 +16,8 @@ class BookingsApiPaths {
   static const clients = '${_rootV3}clients/';
   static const availableProducts = '${bookingsV3}available-products/';
   static const dashboard = '${_rootV3}dashboard/';
+  
+  // Download invoice
+  static String downloadBookingInvoice(int bookingId) =>
+      '${bookingsV5}$bookingId/download-invoice/';
 }

@@ -81,6 +81,8 @@ class _BookingsNamespace {
   String get clients => BookingsApiPaths.clients;
   String get availableProducts => BookingsApiPaths.availableProducts;
   String get dashboard => BookingsApiPaths.dashboard;
+  String downloadBookingInvoice(int bookingId) =>
+      BookingsApiPaths.downloadBookingInvoice(bookingId);
 }
 
 class _SalesNamespace {

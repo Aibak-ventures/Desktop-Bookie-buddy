@@ -10,6 +10,8 @@ import 'package:bookie_buddy_web/core/services/booking_service.dart';
 import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:path_provider/path_provider.dart';
 
 class BookingRepository {
   final BookingService _bookingService;
@@ -212,7 +214,40 @@ class BookingRepository {
       rethrow;
     }
   }
-
+  Future<String> downloadBookingInvoice({
+    required int bookingId,
+    required String fileName,
+  }) async {
+    try {
+      String filePath;
+      
+      if (kIsWeb) {
+        // For web, we don't need to save to filesystem
+        // Just return a temporary path identifier
+        filePath = '/temp/$fileName.pdf';
+      } else {
+        // For mobile/desktop, use path_provider
+        final dir = await getTemporaryDirectory();
+        filePath = '${dir.path}/$fileName.pdf';
+      }
+      
+      final response = await safeApiCall(
+        () => _bookingService.downloadBookingInvoice(
+          bookingId: bookingId,
+          filePath: filePath,
+        ),
+      );
+      if (response != null) {
+        log('Download Booking Invoice Error: ${response.devMessage}');
+        throw response.message;
+      }
+      return filePath;
+    } catch (e, stack) {
+      log('Error downloading booking invoice: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+   
   // Future<PaginationModel<BookingsModel>> searchBookings(
   //   String query, {
   //   required int page,

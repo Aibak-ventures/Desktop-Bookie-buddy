@@ -1,11 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/api/api_paths.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/utils/download_file.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class BookingService {
   final _dio = DioClient.dio;
@@ -200,6 +204,58 @@ class BookingService {
     } catch (e, stack) {
       log('Error creating old booking: $e', stackTrace: stack);
       rethrow;
+    }
+  }
+
+  Future<CustomResponseModel?> downloadBookingInvoice({
+    required int bookingId,
+    required String filePath,
+  }) async {
+    try {
+      final url = ApiPaths.bookings.downloadBookingInvoice(bookingId);
+      log('Downloading booking invoice from: $url');
+      
+      final response = await _dio.get(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) => status! < 500,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (kIsWeb) {
+          // For web, trigger browser download
+          final fileName = filePath.split('/').last;
+          downloadFileWeb(response.data, fileName);
+          log('Invoice download triggered for web: $fileName');
+        } else {
+          // For mobile/desktop, save to file
+          final file = File(filePath);
+          await file.writeAsBytes(response.data);
+          log('Invoice downloaded successfully to: $filePath');
+        }
+        return null; // Success, no error
+      } else {
+        log('Error downloading invoice: ${response.statusCode}');
+        return CustomResponseModel(
+          status: CustomResponseStatus.error,
+          message: 'Failed to download invoice',
+          devMessage: 'HTTP ${response.statusCode}',
+          meta: null,
+          data: null,
+        );
+      }
+    } catch (e, stack) {
+      log('Error downloading booking invoice: $e', stackTrace: stack);
+      return CustomResponseModel(
+        status: CustomResponseStatus.error,
+        message: 'Failed to download invoice',
+        devMessage: e.toString(),
+        meta: null,
+        data: null,
+      );
     }
   }
 }

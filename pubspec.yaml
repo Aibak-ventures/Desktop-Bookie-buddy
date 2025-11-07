@@ -81,7 +81,7 @@ dev_dependencies:
   freezed: ^2.5.8
   build_runner: ^2.5.4
   json_serializable: ^6.9.5
-  printing: ^5.13.4
+
 # App icon configuration
 flutter_launcher_icons:
   image_path: "assets/assets/images/app_icon_light.png"

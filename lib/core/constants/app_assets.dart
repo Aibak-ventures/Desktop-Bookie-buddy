@@ -61,6 +61,8 @@ class AppAssets {
       '${_images}booking_pdf_layout_header.svg';
   static const String bookingPdfLayoutFooterSvg =
       '${_images}booking_pdf_layout_footer.svg';
+  static const String availabilityPdfLayoutHeaderSvg =
+      '${_images}availability_pdf_layout_header.svg';
 
-      static const String crown = '${_icons}crown.png';
+  static const String crown = '${_icons}crown.png';
 }

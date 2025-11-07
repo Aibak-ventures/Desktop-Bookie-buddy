@@ -1,3 +1,5 @@
+import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:characters/characters.dart';
 import 'package:flutter/foundation.dart';
 
 class AppInputValidators {
@@ -6,8 +8,9 @@ class AppInputValidators {
       return 'Name is required';
     }
 
-    final nameRegex =
-        RegExp(r'^[A-Za-z\s]{3,}$'); // only letters & spaces, min 3 chars
+    final nameRegex = RegExp(
+      r'^[A-Za-z\s]{3,}$',
+    ); // only letters & spaces, min 3 chars
     if (!nameRegex.hasMatch(value.trim())) {
       return 'Enter a valid name (letters only, min 3 chars)';
     }
@@ -16,27 +19,24 @@ class AppInputValidators {
   }
 
   static String? productName(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    if (value.isNullOrEmpty) {
       return 'Product name is required';
     }
 
-    // Allow letters, numbers, spaces, hyphens, slashes, commas, dots
-    final nameRegex = RegExp(r'^[A-Za-z0-9\s\-,./]{3,}$');
-
-    if (!nameRegex.hasMatch(value.trim())) {
-      return 'Enter a valid product name (min 3 chars, no special symbols)';
-    }
-
-    return null;
+    return basicText(value, fieldName: 'Product name', minLength: 3);
   }
 
-  static String? phoneNumber(String? value) {
+  static String? phoneNumber(String? value, {bool isRequired = true}) {
+    // If not required and empty, return null
+    if (!isRequired && (value == null || value.trim().isEmpty)) {
+      return null;
+    }
+
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
     }
-
-    // Basic international or 10-digit Indian-style format
-    final phoneRegex = RegExp(r'^(?:\+?\d{1,3})?[3-9]\d{9}$');
+    // Allow optional leading '+' and digits only, any length
+    final phoneRegex = RegExp(r'^\+?\d+$');
 
     if (!phoneRegex.hasMatch(value.trim())) {
       return 'Enter a valid phone number';
@@ -58,31 +58,15 @@ class AppInputValidators {
     return null;
   }
 
-  static String? address(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Address is required';
-    }
+  static String? address(String? value, {bool isRequired = true}) => basicText(
+    value,
+    fieldName: 'Place',
+    minLength: 3,
+    isRequired: isRequired,
+  );
 
-    // Min 5 non-whitespace characters
-    if (value.trim().length < 3) {
-      return 'Address must be at least 3 characters';
-    }
-
-    return null;
-  }
-
-  static String? description(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Description is required';
-    }
-
-    // Min 5 non-whitespace characters
-    if (value.trim().length < 5) {
-      return 'Description must be at least 5 characters';
-    }
-
-    return null;
-  }
+  static String? description(String? value) =>
+      basicText(value, fieldName: 'Description', isRequired: false);
 
   static String? amount(
     String? value, {
@@ -90,7 +74,14 @@ class AppInputValidators {
     bool allowDecimal = false,
     String fieldName = 'Amount',
     int? maxValue,
+    bool isRequired = true,
   }) {
+    // If not required and empty, return null
+    if (!isRequired && (value == null || value.trim().isEmpty)) {
+      return null;
+    }
+
+    // Required check
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
     }
@@ -134,28 +125,42 @@ class AppInputValidators {
     String? value, {
     int? maxValue,
     bool allowZero = false,
+    bool allowDecimal = false,
   }) {
     if (value == null || value.trim().isEmpty) {
       return 'Quantity is required';
     }
 
-    final quantityRegex = RegExp(r'^\d+$'); // Only whole numbers allowed
-    if (!quantityRegex.hasMatch(value.trim())) {
-      return 'Enter a valid whole number';
+    final trimmed = value.trim();
+
+    // Allow integers or decimals (up to 2 places) based on allowDecimal
+    final quantityRegex = allowDecimal
+        ? RegExp(r'^\d+(\.\d{1,2})?$')
+        : RegExp(r'^\d+$');
+
+    if (!quantityRegex.hasMatch(trimmed)) {
+      return allowDecimal
+          ? 'Enter a valid number (e.g., 5 or 3.5)'
+          : 'Enter a valid number';
     }
 
-    if (!allowZero && int.parse(value) <= 0) {
-      return 'Quantity can\'t be 0';
-    } else if (allowZero && int.parse(value) < 0) {
+    final parsed = double.tryParse(trimmed);
+    if (parsed == null) {
+      return 'Invalid number format';
+    }
+
+    if (!allowZero && parsed <= 0) {
+      return 'Quantity can\'t be 0 or less';
+    } else if (allowZero && parsed < 0) {
       return 'Quantity can\'t be negative';
     }
 
-    if (maxValue != null && int.parse(value) > maxValue) {
+    if (maxValue != null && parsed > maxValue) {
       return 'Max quantity is $maxValue';
     }
 
-    if (value.length > 5) {
-      // Example: max 99,999 quantity
+    // Enforce upper bound: must be below 100,000
+    if (parsed >= 100000) {
       return 'Must be below 100,000';
     }
 
@@ -167,11 +172,11 @@ class AppInputValidators {
       return 'Color is required';
     }
 
-    // Allow only letters and spaces
-    final colorRegex = RegExp(r'^[A-Za-z\s]{3,}$');
+    // Allow letters, numbers, and spaces, min 3 chars
+    final colorRegex = RegExp(r'^[A-Za-z0-9\s]{3,}$');
 
     if (!colorRegex.hasMatch(value.trim())) {
-      return 'Enter a valid color name (min 3 letters)';
+      return 'Enter a valid color (only letters or numbers, min 3 characters)';
     }
 
     return null;
@@ -192,20 +197,28 @@ class AppInputValidators {
     return null;
   }
 
-  static String? category(String? value, [String fieldName = 'Category']) {
-    if (value == null || value.trim().isEmpty) {
-      return '$fieldName is required';
-    }
+  static String? category(
+    String? value, {
+    String fieldName = 'Category',
+    bool isRequired = false,
+  }) => basicText(
+    value,
+    fieldName: fieldName,
+    minLength: 3,
+    isRequired: isRequired,
+  );
+  // if (value == null || value.trim().isEmpty) {
+  //   return '$fieldName is required';
+  // }
 
-    // Allow only letters and spaces
-    final categoryRegex = RegExp(r'^[A-Za-z\s]{3,}$');
+  // // Allow only letters and spaces
+  // final categoryRegex = RegExp(r'^[A-Za-z\s]{3,}$');
 
-    if (!categoryRegex.hasMatch(value.trim())) {
-      return 'Enter a valid category (min 3 letters)';
-    }
+  // if (!categoryRegex.hasMatch(value.trim())) {
+  //   return 'Enter a valid category (min 3 letters)';
+  // }
 
-    return null;
-  }
+  // return null;
 
   static String? search(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -244,19 +257,62 @@ class AppInputValidators {
     int minLength = 1,
     String fieldName = 'This field',
   }) {
-    if ((value == null || value.trim().isEmpty)) {
+    final trimmed = value?.trim() ?? '';
+
+    // Required check
+    if (trimmed.isEmpty) {
       return isRequired ? '$fieldName is required' : null;
     }
 
-    // Only allow printable ASCII characters (no emojis or other unicode)
-    final regex = RegExp(r'^[\x20-\x7E]{' + minLength.toString() + r',}$');
+    if (trimmed.characters.length < minLength &&
+        trimmed.runes.length < minLength) {
+      return '$fieldName must be at least $minLength characters';
+    }
 
-    if (!regex.hasMatch(value)) {
-      return 'Emojis are not allowed and must be at least $minLength characters';
+    // Emoji check
+    if (_containsEmoji(trimmed)) {
+      return 'Emojis are not allowed in ${fieldName.toLowerCase()}.';
     }
 
     return null;
   }
+
+  // Detects most emojis, including multi-codepoint ones
+  static bool _containsEmoji(String text) {
+    for (final rune in text.runes) {
+      if (_isEmojiRune(rune)) return true;
+    }
+    return false;
+  }
+
+  static bool _isEmojiRune(int rune) =>
+      (rune >= 0x1F600 && rune <= 0x1F64F) || // Emoticons
+      (rune >= 0x1F300 && rune <= 0x1F5FF) || // Symbols & pictographs
+      (rune >= 0x1F680 && rune <= 0x1F6FF) || // Transport & map
+      (rune >= 0x2600 && rune <= 0x26FF) || // Misc symbols
+      (rune >= 0x2700 && rune <= 0x27BF) || // Dingbats
+      (rune >= 0x1F1E6 && rune <= 0x1F1FF) || // Flags
+      (rune >= 0x1F900 && rune <= 0x1F9FF) || // Supplemental pictographs
+      (rune >= 0x1FA70 && rune <= 0x1FAFF) || // Extended pictographs
+      rune == 0x200D || // Zero-width joiner (part of multi-emoji)
+      rune == 0xFE0F; // Variation selector
+
+  // Detects most emojis using a regular expression.
+  // static bool _containsEmojiRegex(String text) {
+  //   final emojiRegex = RegExp(
+  //       r'[\u{1F600}-\u{1F64F}]|' // Emoticons
+  //       r'[\u{1F300}-\u{1F5FF}]|' // Symbols & Pictographs
+  //       r'[\u{1F680}-\u{1F6FF}]|' // Transport & Map Symbols
+  //       r'[\u{2600}-\u{26FF}]|' // Miscellaneous Symbols
+  //       r'[\u{2700}-\u{27BF}]|' // Dingbats
+  //       r'[\u{1F1E6}-\u{1F1FF}]|' // Regional Indicator Symbols (Flags)
+  //       r'[\u{1F900}-\u{1F9FF}]|' // Supplemental Symbols and Pictographs
+  //       r'[\u{1FA70}-\u{1FAFF}]|' // Symbols and Pictographs Extended-A
+  //       r'[\u{200D}]|' // Zero Width Joiner
+  //       r'[\u{FE0F}]', // Variation Selector-16
+  //       unicode: true);
+  //   return emojiRegex.hasMatch(text);
+  // }
 
   static String? onEmpty(String? value, String fieldName) {
     if (isEmpty(value)) {
@@ -265,7 +321,5 @@ class AppInputValidators {
     return null;
   }
 
-  static bool isEmpty(String? value) {
-    return value == null || value.trim().isEmpty;
-  }
+  static bool isEmpty(String? value) => value == null || value.trim().isEmpty;
 }

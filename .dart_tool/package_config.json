@@ -920,12 +920,6 @@
       "languageVersion": "2.19"
     },
     {
-      "name": "pdf_widget_wrapper",
-      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/pdf_widget_wrapper-1.0.4",
-      "packageUri": "lib/",
-      "languageVersion": "2.18"
-    },
-    {
       "name": "permission_handler",
       "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler-12.0.1",
       "packageUri": "lib/",
@@ -1014,12 +1008,6 @@
       "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/posix-6.0.3",
       "packageUri": "lib/",
       "languageVersion": "3.0"
-    },
-    {
-      "name": "printing",
-      "rootUri": "file:///C:/Users/Adinan/AppData/Local/Pub/Cache/hosted/pub.dev/printing-5.14.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.3"
     },
     {
       "name": "provider",

@@ -193,7 +193,8 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
                       ? null
                       : AppInputValidators.category(
                           value,
-                          mainServiceType.isVehicle ? 'Brand' : 'Category',
+                          fieldName: mainServiceType.isVehicle ? 'Brand' : 'Category',
+                          isRequired: false,
                         ),
                 ),
               ),
