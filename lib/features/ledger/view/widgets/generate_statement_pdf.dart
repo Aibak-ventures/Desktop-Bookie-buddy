@@ -24,6 +24,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:url_launcher/url_launcher.dart';
 
 // Conditional import for web downloads
 import 'web_download_stub.dart'
@@ -162,8 +163,55 @@ class LedgerPDFService {
           context,
         );
         GlobalLoadingOverlay.hide();
+      } else if (Platform.isWindows) {
+        // Windows Desktop - save to Downloads and open
+        final pdfBytes = await LedgerPDFGenerator.generateLedgerStatementBytes(
+          ledgerData,
+        );
+        final fileName = '${ledgerData.pdfName}_report_${ledgerData.fromDate}_to_${ledgerData.toDate}.pdf';
+        
+        // Get Downloads folder path
+        final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+        if (!downloadsDir.existsSync()) {
+          downloadsDir.createSync(recursive: true);
+        }
+        
+        final filePath = '${downloadsDir.path}\\$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(pdfBytes);
+        
+        log('Ledger PDF saved to: $filePath');
+        
+        // Open the PDF with default viewer
+        try {
+          await launchUrl(Uri.file(filePath));
+        } catch (e) {
+          log('Could not open PDF: $e');
+        }
+        
+        GlobalLoadingOverlay.hide();
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('PDF saved to Downloads\\$fileName'),
+              backgroundColor: Colors.green,
+              action: SnackBarAction(
+                label: 'Open Folder',
+                textColor: Colors.white,
+                onPressed: () async {
+                  try {
+                    await launchUrl(Uri.file(downloadsDir.path));
+                  } catch (e) {
+                    log('Could not open folder: $e');
+                  }
+                },
+              ),
+            ),
+          );
+        }
       } else {
-        // Mobile/Desktop PDF generation
+        // Mobile - use share functionality
         final filePath = await LedgerPDFGenerator.generateLedgerStatement(
           ledgerData,
         );
@@ -288,7 +336,13 @@ class LedgerPDFGenerator {
   ) async {
     try {
       await _initializeFonts();
-      final pdf = pw.Document();
+     final pdf = pw.Document(
+  theme: pw.ThemeData.withFont(
+    base: _malayalamFont ?? _fallbackFont,
+    bold: _malayalamFont ?? _fallbackFont,
+  ),
+);
+
 
       final businessImage = await getPdfImageProvider(
         imagePath: ledgerData.shopDetails.image,
@@ -385,6 +439,52 @@ class LedgerPDFGenerator {
     await file.writeAsBytes(await pdf.save());
 
     return file.path;
+  }
+
+  // Generate ledger PDF bytes (for Windows desktop)
+  static Future<Uint8List> generateLedgerStatementBytes(
+    LedgerSummaryModel ledgerData,
+  ) async {
+    await _initializeFonts();
+    final pdf = pw.Document(
+      theme: pw.ThemeData.withFont(
+        base: _malayalamFont ?? _fallbackFont,
+        bold: _malayalamFont ?? _fallbackFont,
+      ),
+    );
+
+    final businessImage = await getPdfImageProvider(
+      imagePath: ledgerData.shopDetails.image,
+      isAsset: false,
+      assetImagePath: AppAssets.appLogoLight,
+    );
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        build: (pw.Context context) => [
+          _buildHeader(ledgerData, businessImage),
+          pw.SizedBox(height: 2),
+          _buildDateRange(ledgerData),
+          pw.SizedBox(height: 10),
+          _buildSummarySection(ledgerData),
+          pw.SizedBox(height: 10),
+          _buildEntriesTable(ledgerData),
+        ],
+        footer: (pw.Context context) => pw.Align(
+          alignment: pw.Alignment.centerRight,
+          child: pw.Text(
+            'Powered by www.bookiebuddy.in',
+            style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+          ),
+        ),
+      ),
+    );
+
+    // Return PDF bytes
+    return await pdf.save();
   }
 
   // Share PDF function

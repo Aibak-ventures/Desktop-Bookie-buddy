@@ -122,6 +122,8 @@ flutter:
     - assets/icons/
     - assets/animations/
     - assets/fonts/MaterialIcons-Regular.ttf
+    - assets/fonts/NotoSansMalayalam.ttf
+    - assets/fonts/Inter.ttf
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
