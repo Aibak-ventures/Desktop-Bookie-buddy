@@ -2,9 +2,7 @@ import 'dart:io';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
@@ -13,11 +11,9 @@ import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart'
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
 import 'package:bookie_buddy_web/features/product/view/widgets/variants_widget.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
-import 'package:bookie_buddy_web/utils/pick_and_compress_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/ui/widgets/custom_button.dart';
@@ -313,24 +309,28 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
                   );
 
         return GestureDetector(
-          onTap: () async => await showImageBottomSheet(context),
-          child: Container(
-            height: 300,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  blurRadius: 6,
-                  offset: const Offset(0, 4),
+          onTap: () async => await _pickProductImage(),
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 400),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade200,
+                      blurRadius: 6,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-              ],
+                clipBehavior: Clip.antiAlias,
+                child: imageWidget,
+              ),
             ),
-            clipBehavior: Clip.antiAlias,
-            child: imageWidget,
           ),
         );
       },
@@ -402,58 +402,28 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
     }
   }
 
- Future<void> showImageBottomSheet(BuildContext context) async {
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-    ),
-    builder: (context) {
-      return SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from gallery'),
-              onTap: () async {
-                final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-                if (picked != null) {
-                  _imageNotifier.value = File(picked.path);
-                }
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Take a photo'),
-              onTap: () async {
-                final picked = await ImagePicker().pickImage(source: ImageSource.camera);
-                if (picked != null) {
-                  _imageNotifier.value = File(picked.path);
-                }
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.folder),
-              title: const Text('Pick from files'),
-              onTap: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['jpg', 'jpeg', 'png'],
-                );
-                if (result != null && result.files.single.path != null) {
-                  _imageNotifier.value = File(result.files.single.path!);
-                }
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
+  Future<void> _pickProductImage() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        dialogTitle: 'Select Product Image',
       );
-    },
-  );
-}
+      
+      if (result != null && result.files.single.path != null) {
+        _imageNotifier.value = File(result.files.single.path!);
+      }
+    } catch (e) {
+      debugPrint('Error picking image: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to select image. Please try again.'),
+          ),
+        );
+      }
+    }
+  }
 
 
   void _onPopInvokedWithResult(bool didPop, Object? result) async {
