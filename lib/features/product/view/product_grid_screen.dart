@@ -248,27 +248,40 @@ class _ProductGridState extends State<_ProductGrid> {
     final screenWidth = MediaQuery.of(context).size.width;
     int crossAxisCount;
     double childAspectRatio;
+    double gridPadding;
+    double spacing;
 
-    if (screenWidth > 1200) {
+    if (screenWidth > 1400) {
+      crossAxisCount = 5;
+      childAspectRatio = 0.75;
+      gridPadding = 24;
+      spacing = 20;
+    } else if (screenWidth > 1200) {
       crossAxisCount = 4;
       childAspectRatio = 0.8;
+      gridPadding = 20;
+      spacing = 16;
     } else if (screenWidth > 768) {
       crossAxisCount = 3;
       childAspectRatio = 0.85;
+      gridPadding = 16;
+      spacing = 12;
     } else {
       crossAxisCount = 2;
       childAspectRatio = 0.9;
+      gridPadding = 12;
+      spacing = 10;
     }
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(gridPadding),
       child: GridView.builder(
         controller: _scrollController,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
           childAspectRatio: childAspectRatio,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+          crossAxisSpacing: spacing,
+          mainAxisSpacing: spacing,
         ),
         itemCount: widget.hasNextPage ? widget.products.length + 1 : widget.products.length,
         itemBuilder: (context, index) {
