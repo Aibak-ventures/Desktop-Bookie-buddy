@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bookie_buddy_web/core/enums/invoice_enums.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
@@ -263,9 +264,19 @@ class LedgerRepository {
         return fileName; // Return filename for web
       }
       
-      // Mobile/Desktop implementation
-      final dir = await getTemporaryDirectory();
-      final filePath = '${dir.path}/$fileName';
+      // Windows Desktop - use Downloads folder
+      String filePath;
+      if (Platform.isWindows) {
+        final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+        if (!downloadsDir.existsSync()) {
+          downloadsDir.createSync(recursive: true);
+        }
+        filePath = '${downloadsDir.path}\\$fileName';
+      } else {
+        // Mobile - use temp directory
+        final dir = await getTemporaryDirectory();
+        filePath = '${dir.path}/$fileName';
+      }
       final response = await safeApiCall(
         () => _ledgerService.downloadLedgerInvoice(
           fromDate: fromDate,

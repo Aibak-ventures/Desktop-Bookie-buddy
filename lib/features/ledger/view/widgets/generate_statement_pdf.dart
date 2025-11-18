@@ -93,7 +93,42 @@ class LedgerPDFService {
               ledgerType: type,
             );
         GlobalLoadingOverlay.hide();
-        await shareFile(context: context, filePath: filePath);
+        
+        // Windows Desktop - open file and show notification
+        if (!kIsWeb && Platform.isWindows) {
+          final fileName = filePath.split('\\').last;
+          final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+          
+          // Open the Excel file with default application
+          try {
+            await launchUrl(Uri.file(filePath));
+          } catch (e) {
+            log('Could not open Excel file: $e');
+          }
+          
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Excel saved to Downloads\\$fileName'),
+                backgroundColor: Colors.green,
+                action: SnackBarAction(
+                  label: 'Open Folder',
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    try {
+                      await launchUrl(Uri.file(downloadsDir.path));
+                    } catch (e) {
+                      log('Could not open folder: $e');
+                    }
+                  },
+                ),
+              ),
+            );
+          }
+        } else {
+          // Mobile - use share functionality
+          await shareFile(context: context, filePath: filePath);
+        }
       } catch (e, stack) {
         log('Error downloading ledger invoice: $e', stackTrace: stack);
         context.showSnackBar(e.toString(), isError: true);
