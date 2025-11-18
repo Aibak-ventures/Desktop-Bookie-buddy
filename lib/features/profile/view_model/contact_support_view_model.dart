@@ -26,7 +26,7 @@ class ContactSupportViewModel {
   }
 
   Future<void> launchWhatsApp() async {
-    const phone = '+9197448 98185';
+    const phone = '+919744898185';
     const message = 'Hi Team, I need support';
 
     final Uri whatsappUri =
