@@ -33,6 +33,7 @@ import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/
 import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
 import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/about_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/check_availability_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
 
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
@@ -336,25 +337,34 @@ class ProfileScreen extends StatelessWidget {
           onTap: () => context.push(const StaffListScreen()),
         ),
         // stock
+        // CustomProfileTile(
+        //   icon: Icons.bar_chart,
+        //   title: 'Stock management',
+        //   onTap: () => context.push(
+        //     SelectServiceScreen(
+        //       onServiceSelected: (service, ctx) {
+        //         print('Selected service: ${service.name}');
+        //         ctx.push(
+        //           ProductGridScreen(
+        //             serviceId: service.id,
+        //             name: service.name,
+        //             mainServiceType:
+        //                 MainServiceType.fromString(
+        //                     service.mainServiceName),
+        //           ),
+        //         );
+        //       },
+        //     ),
+        //   ),
+        // ),
+
+        const SizedBox(height: 5),
+
+        // Check Availability
         CustomProfileTile(
-          icon: Icons.bar_chart,
-          title: 'Stock management',
-          onTap: () => context.push(
-            SelectServiceScreen(
-              onServiceSelected: (service, ctx) {
-                print('Selected service: ${service.name}');
-                ctx.push(
-                  ProductGridScreen(
-                    serviceId: service.id,
-                    name: service.name,
-                    mainServiceType:
-                        MainServiceType.fromString(
-                            service.mainServiceName),
-                  ),
-                );
-              },
-            ),
-          ),
+          icon: Icons.search_outlined,
+          title: 'Check Availability',
+          onTap: () => context.push(const CheckAvailabilityScreen()),
         ),
 
         const SizedBox(height: 5),
