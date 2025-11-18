@@ -67,16 +67,13 @@ class HomeBookingListWidget extends StatelessWidget {
     bool isPaginating, 
     DashboardBloc bloc
   ) {
-    return Container(
-      constraints: const BoxConstraints(maxHeight: 500),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: group.length + (isPaginating ? 1 : 0),
-              itemBuilder: (context, groupIndex) {
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: group.length + (isPaginating ? 1 : 0),
+          itemBuilder: (context, groupIndex) {
                 if (groupIndex == group.length && isPaginating) {
                   return const BookingCardShimmer();
                 }
@@ -170,9 +167,7 @@ class HomeBookingListWidget extends StatelessWidget {
                 );
               },
             ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 
