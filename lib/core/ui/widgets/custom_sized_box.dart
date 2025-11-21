@@ -8,8 +8,8 @@ class CustomSizedBoxHeight extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      height: context.screenHeight * _height,
-    );
+        height: context.screenHeight * _height,
+      );
 }
 
 class CustomSizedBoxWidth extends StatelessWidget {
@@ -19,6 +19,6 @@ class CustomSizedBoxWidth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      width: context.getProportionateScreenWidth(width),
-    );
+        width: context.getProportionateScreenWidth(width),
+      );
 }

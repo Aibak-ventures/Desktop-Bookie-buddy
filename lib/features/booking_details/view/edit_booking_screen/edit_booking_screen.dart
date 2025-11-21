@@ -62,18 +62,18 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
 
   @override
   Widget build(BuildContext context) => PopScope(
-    canPop: false,
-    onPopInvokedWithResult: handlePop,
-    child: Scaffold(
-      backgroundColor: context.isDesktop ? const Color(0xFFF5F7FA) : null,
-      appBar: AppBar(
-        title: const Text('Edit Booking'),
-        backgroundColor: context.isDesktop ? Colors.white : null,
-        elevation: context.isDesktop ? 1 : null,
-      ),
-      body: context.isDesktop ? _buildWebLayout() : _buildMobileLayout(),
-    ),
-  );
+        canPop: false,
+        onPopInvokedWithResult: handlePop,
+        child: Scaffold(
+          backgroundColor: context.isDesktop ? const Color(0xFFF5F7FA) : null,
+          appBar: AppBar(
+            title: const Text('Edit Booking'),
+            backgroundColor: context.isDesktop ? Colors.white : null,
+            elevation: context.isDesktop ? 1 : null,
+          ),
+          body: context.isDesktop ? _buildWebLayout() : _buildMobileLayout(),
+        ),
+      );
 
   Widget _buildWebLayout() {
     return SingleChildScrollView(
@@ -114,16 +114,16 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
                           ),
                         ),
                         const SizedBox(height: 32),
-                        
+
                         // Two-column grid for form sections
                         _buildWebFormGrid(),
                       ],
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 24),
-                
+
                 // Action Panel (30%)
                 Expanded(
                   flex: 3,
@@ -152,15 +152,15 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        
+
                         // Save/Update Button
                         EditBookingButton(
                           formController: _formController,
                           booking: widget.booking,
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Cancel Button
                         SizedBox(
                           width: double.infinity,
@@ -215,39 +215,44 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
                 clientNameController: _formController.clientNameController,
                 clientPhone1Controller: _formController.clientPhone1Controller,
                 clientPhone2Controller: _formController.clientPhone2Controller,
-                clientAddressController: _formController.clientAddressController,
-                isClientSearchEnabledNotifier: _formController.isClientSearchEnabledNotifier,
+                clientAddressController:
+                    _formController.clientAddressController,
+                isClientSearchEnabledNotifier:
+                    _formController.isClientSearchEnabledNotifier,
               ),
             ),
           ],
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Row 2: Location Details (if vehicle) - Full Width
-        if (widget.booking.bookedItems.firstOrNull?.mainServiceType.isVehicle ?? false)
+        if (widget.booking.bookedItems.firstOrNull?.mainServiceType.isVehicle ??
+            false)
           Column(
             children: [
               EditBookingLocationDetailsSection(
-                locationStartController: _formController.locationStartController,
+                locationStartController:
+                    _formController.locationStartController,
                 locationFromController: _formController.locationFromController,
                 locationToController: _formController.locationToController,
               ),
               const SizedBox(height: 32),
             ],
           ),
-        
+
         // Row 3: Product Details - Full Width
         EditBookingEditProductListSection(
           selectedProductsNotifier: _formController.selectedProductsNotifier,
           formController: _formController,
           pickUpdDateController: _formController.pickUpdDateController,
           returnDateController: _formController.returnDateController,
-          coolingPeriodDateController: _formController.coolingPeriodDateController,
+          coolingPeriodDateController:
+              _formController.coolingPeriodDateController,
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Row 4: Notes & Time Section
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,28 +276,31 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
             ),
           ],
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Row 5: Date Section - Full Width
         EditBookingDateSection(formController: _formController),
-        
+
         const SizedBox(height: 32),
-        
+
         // Row 6: Additional Details & Additional Charges
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: EditBookingAdditionalDetailsSection(
-                securityAmountController: _formController.securityAmountController,
-                discountAmountController: _formController.discountAmountController,
+                securityAmountController:
+                    _formController.securityAmountController,
+                discountAmountController:
+                    _formController.discountAmountController,
               ),
             ),
             const SizedBox(width: 24),
             Expanded(
               child: EditBookingAdditionalChargesSection(
-                additionalChargesNotifier: _formController.additionalChargesNotifier,
+                additionalChargesNotifier:
+                    _formController.additionalChargesNotifier,
               ),
             ),
           ],
@@ -324,25 +332,31 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
               clientPhone1Controller: _formController.clientPhone1Controller,
               clientPhone2Controller: _formController.clientPhone2Controller,
               clientAddressController: _formController.clientAddressController,
-              isClientSearchEnabledNotifier: _formController.isClientSearchEnabledNotifier,
+              isClientSearchEnabledNotifier:
+                  _formController.isClientSearchEnabledNotifier,
             ),
 
             // location details
             // Only show if it's a vehicle
-            if (widget.booking.bookedItems.firstOrNull?.mainServiceType.isVehicle ?? false)
+            if (widget.booking.bookedItems.firstOrNull?.mainServiceType
+                    .isVehicle ??
+                false)
               EditBookingLocationDetailsSection(
-                locationStartController: _formController.locationStartController,
+                locationStartController:
+                    _formController.locationStartController,
                 locationFromController: _formController.locationFromController,
                 locationToController: _formController.locationToController,
               ),
 
             // product details
             EditBookingEditProductListSection(
-              selectedProductsNotifier: _formController.selectedProductsNotifier,
+              selectedProductsNotifier:
+                  _formController.selectedProductsNotifier,
               formController: _formController,
               pickUpdDateController: _formController.pickUpdDateController,
               returnDateController: _formController.returnDateController,
-              coolingPeriodDateController: _formController.coolingPeriodDateController,
+              coolingPeriodDateController:
+                  _formController.coolingPeriodDateController,
             ),
 
             // product notes (description)
@@ -364,13 +378,16 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
 
             // additional details
             EditBookingAdditionalDetailsSection(
-              securityAmountController: _formController.securityAmountController,
-              discountAmountController: _formController.discountAmountController,
+              securityAmountController:
+                  _formController.securityAmountController,
+              discountAmountController:
+                  _formController.discountAmountController,
             ),
 
             // additional charges
             EditBookingAdditionalChargesSection(
-              additionalChargesNotifier: _formController.additionalChargesNotifier,
+              additionalChargesNotifier:
+                  _formController.additionalChargesNotifier,
             ),
 
             // save button

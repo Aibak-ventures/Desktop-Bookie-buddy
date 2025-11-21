@@ -96,7 +96,6 @@ class BookingRepository {
   // Update full booking data
   Future<CustomResponseModel> updateBooking(
     int bookingId,
-
     RequestBookingModel updatedBooking,
   ) async {
     try {
@@ -214,13 +213,14 @@ class BookingRepository {
       rethrow;
     }
   }
+
   Future<String> downloadBookingInvoice({
     required int bookingId,
     required String fileName,
   }) async {
     try {
       String filePath;
-      
+
       if (kIsWeb) {
         // For web, we don't need to save to filesystem
         // Just return a temporary path identifier
@@ -230,7 +230,7 @@ class BookingRepository {
         final dir = await getTemporaryDirectory();
         filePath = '${dir.path}/$fileName.pdf';
       }
-      
+
       final response = await safeApiCall(
         () => _bookingService.downloadBookingInvoice(
           bookingId: bookingId,
@@ -247,7 +247,7 @@ class BookingRepository {
       rethrow;
     }
   }
-   
+
   // Future<PaginationModel<BookingsModel>> searchBookings(
   //   String query, {
   //   required int page,
@@ -292,9 +292,8 @@ class BookingRepository {
         () => _bookingService.fetchPaymentHistory(bookingId),
       );
       if (response.status.isSuccess) {
-        final paymentData =
-            (response.data as Map<String, dynamic>)['payments']
-                as List<dynamic>;
+        final paymentData = (response.data as Map<String, dynamic>)['payments']
+            as List<dynamic>;
         return paymentData
             .map((e) => BookingDetailsPaymentHistoryModel.fromJson(e))
             .toList();

@@ -105,33 +105,34 @@ class _WalletScreenState extends State<WalletScreen>
     switch (tabIndex) {
       case 0:
         context.read<LedgerBookingsBloc>().add(
-          LedgerBookingsEvent.loadBookings(clientId: clientId),
-        );
+              LedgerBookingsEvent.loadBookings(clientId: clientId),
+            );
         break;
       case 1:
         context.read<WalletPaymentsBloc>().add(
-          WalletPaymentsEvent.loadPayments(clientId: clientId),
-        );
+              WalletPaymentsEvent.loadPayments(clientId: clientId),
+            );
         break;
       case 2:
         context.read<WalletPendingBloc>().add(
-          WalletPendingEvent.loadPending(clientId: clientId),
-        );
+              WalletPendingEvent.loadPending(clientId: clientId),
+            );
         break;
       case 3:
         context.read<WalletExpenseBloc>().add(
-          const WalletExpenseEvent.loadExpense(),
-        );
+              const WalletExpenseEvent.loadExpense(),
+            );
         break;
       case 4:
         context.read<LedgerSalesBloc>().add(
-          LedgerSalesEvent.loadSales(clientId: clientId),
-        );
+              LedgerSalesEvent.loadSales(clientId: clientId),
+            );
         break;
       case 5:
         context.read<LedgerSecurityAmountsBloc>().add(
-          LedgerSecurityAmountsEvent.loadSecurityAmounts(clientId: clientId),
-        );
+              LedgerSecurityAmountsEvent.loadSecurityAmounts(
+                  clientId: clientId),
+            );
         break;
       default:
         break;
@@ -224,8 +225,7 @@ class _WalletScreenState extends State<WalletScreen>
       onCheckboxChanged: (options) {
         // Handle checkbox changes
         includeSales = options.any(
-          (option) =>
-              option.id == LedgerType.sales.value && option.isSelected,
+          (option) => option.id == LedgerType.sales.value && option.isSelected,
         );
 
         includeBookings = options.any(
@@ -290,44 +290,47 @@ class _WalletScreenState extends State<WalletScreen>
   }
 
   Widget _buildWebLayout(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Ledger'),
-      centerTitle: false,
-      actions: [
-        Container(
-          margin: EdgeInsets.only(right: 8.w),
-          decoration: BoxDecoration(
-            color: AppColors.purpleLightShade,
-            borderRadius: 8.radiusBorder,
-          ),
-          padding: 12.padding,
-          child: Icon(
-            isSearchBarVisible ? LucideIcons.x : LucideIcons.search,
-            size: 20.sp,
-          ),
-        ).onTap(() {
-          setState(() {
-            isSearchBarVisible = !isSearchBarVisible;
+        appBar: AppBar(
+          title: const Text('Ledger'),
+          centerTitle: false,
+          actions: [
+            Container(
+              margin: EdgeInsets.only(right: 8.w),
+              decoration: BoxDecoration(
+                color: AppColors.purpleLightShade,
+                borderRadius: 8.radiusBorder,
+              ),
+              padding: 12.padding,
+              child: Icon(
+                isSearchBarVisible ? LucideIcons.x : LucideIcons.search,
+                size: 20.sp,
+              ),
+            ).onTap(() {
+              setState(() {
+                isSearchBarVisible = !isSearchBarVisible;
 
-            if (isSearchBarVisible) {
-              nameSearchFocusNode.requestFocus();
-            } else {
-              nameSearchFocusNode.unfocus();
-              if (nameController.text.trim().isNotEmpty ||
-                  context.read<ClientCubit>().state.searchQuery.isNotEmpty) {
-                nameController.clear();
-                _fetchDataForTab(
-                  currentIndex,
-                  forceFetch: true,
-                  clearClient: true,
-                );
-              }
-            }
-          });
-        }),
-        Builder(
-          builder: (builderContext) =>
-              Container(
+                if (isSearchBarVisible) {
+                  nameSearchFocusNode.requestFocus();
+                } else {
+                  nameSearchFocusNode.unfocus();
+                  if (nameController.text.trim().isNotEmpty ||
+                      context
+                          .read<ClientCubit>()
+                          .state
+                          .searchQuery
+                          .isNotEmpty) {
+                    nameController.clear();
+                    _fetchDataForTab(
+                      currentIndex,
+                      forceFetch: true,
+                      clearClient: true,
+                    );
+                  }
+                }
+              });
+            }),
+            Builder(
+              builder: (builderContext) => Container(
                 margin: EdgeInsets.only(right: 16.w),
                 decoration: BoxDecoration(
                   color: AppColors.purple,
@@ -336,7 +339,8 @@ class _WalletScreenState extends State<WalletScreen>
                 padding: 12.padding,
                 child: Row(
                   children: [
-                    Icon(Icons.download_outlined, size: 20.sp, color: AppColors.white),
+                    Icon(Icons.download_outlined,
+                        size: 20.sp, color: AppColors.white),
                     8.width,
                     Text(
                       'Download Report',
@@ -349,216 +353,221 @@ class _WalletScreenState extends State<WalletScreen>
                   ],
                 ),
               ).onTap(() => _handlePrintAction(builderContext)),
-        ),
-      ],
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(
-          (currentIndex == 1 ? 200 : 160) + (isSearchBarVisible ? 80 : 0),
-        ),
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 1400.w),
-          margin: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            children: [
-              // Summary Section
-              Container(
-                padding: 20.padding,
-                margin: EdgeInsets.only(bottom: 16.h),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: 12.radiusBorder,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.grey400.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: BlocBuilder<LedgerSimpleSummaryCubit, DailySummaryModel?>(
-                  builder: (context, summaryState) {
-                    String title = 'Today summary';
-
-                    if (summaryState?.date.isNotEmpty ?? false) {
-                      title = summaryState!.date.getDateHeading() + ' summary';
-                    }
-
-                    switch (currentIndex) {
-                      case 0:
-                        return LedgerSummarySimpleWidget(
-                          title: title,
-                          amount: summaryState?.bookingAmount ?? 0,
-                        );
-                      case 1:
-                        return LedgerPaymentSummaryWidget(
-                          summaryDay: title,
-                          totalSummary: summaryState?.payments,
-                        );
-                      case 2:
-                        return LedgerSummarySimpleWidget(
-                          title: 'Total pendings',
-                          amount: summaryState?.pendings ?? 0,
-                        );
-                      case 3:
-                        return LedgerSummarySimpleWidget(
-                          title: title,
-                          amount: summaryState?.expenses ?? 0,
-                        );
-                      case 4:
-                        return LedgerSummarySimpleWidget(
-                          title: title,
-                          amount: summaryState?.salesAmount ?? 0,
-                        );
-                      case 5:
-                        return LedgerSummarySimpleWidget(
-                          title: 'Total Amount',
-                          amount: summaryState?.securityAmount ?? 0,
-                        );
-
-                      default:
-                        throw Exception(
-                          'Ledger summary not found for index $currentIndex',
-                        );
-                    }
-                  },
-                ),
-              ),
-              // Search Field
-              Visibility(
-                visible: isSearchBarVisible,
-                child: BlocListener<ClientCubit, ClientState>(
-                  listener: (context, state) {
-                    final selectedClient = state.selectedClient;
-                    if (selectedClient != null) {
-                      nameController.text = selectedClient.name;
-                      context.read<LedgerSimpleSummaryCubit>().reset();
-                      _fetchDataForTab(currentIndex, forceFetch: true);
-
-                      context.hideKeyboard();
-                    }
-                  },
-                  child: Container(
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(
+              (currentIndex == 1 ? 200 : 160) + (isSearchBarVisible ? 80 : 0),
+            ),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 1400.w),
+              margin: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Column(
+                children: [
+                  // Summary Section
+                  Container(
+                    padding: 20.padding,
                     margin: EdgeInsets.only(bottom: 16.h),
-                    child: ClientSearchNameField(
-                      hitText: 'Filter by customer',
-                      nameController: nameController,
-                      focusNode: nameSearchFocusNode,
-                      onClear: () {
-                        context.read<LedgerSimpleSummaryCubit>().reset();
-                        _fetchDataForTab(currentIndex);
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: 12.radiusBorder,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.grey400.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: BlocBuilder<LedgerSimpleSummaryCubit,
+                        DailySummaryModel?>(
+                      builder: (context, summaryState) {
+                        String title = 'Today summary';
+
+                        if (summaryState?.date.isNotEmpty ?? false) {
+                          title =
+                              summaryState!.date.getDateHeading() + ' summary';
+                        }
+
+                        switch (currentIndex) {
+                          case 0:
+                            return LedgerSummarySimpleWidget(
+                              title: title,
+                              amount: summaryState?.bookingAmount ?? 0,
+                            );
+                          case 1:
+                            return LedgerPaymentSummaryWidget(
+                              summaryDay: title,
+                              totalSummary: summaryState?.payments,
+                            );
+                          case 2:
+                            return LedgerSummarySimpleWidget(
+                              title: 'Total pendings',
+                              amount: summaryState?.pendings ?? 0,
+                            );
+                          case 3:
+                            return LedgerSummarySimpleWidget(
+                              title: title,
+                              amount: summaryState?.expenses ?? 0,
+                            );
+                          case 4:
+                            return LedgerSummarySimpleWidget(
+                              title: title,
+                              amount: summaryState?.salesAmount ?? 0,
+                            );
+                          case 5:
+                            return LedgerSummarySimpleWidget(
+                              title: 'Total Amount',
+                              amount: summaryState?.securityAmount ?? 0,
+                            );
+
+                          default:
+                            throw Exception(
+                              'Ledger summary not found for index $currentIndex',
+                            );
+                        }
                       },
                     ),
                   ),
-                ),
-              ),
-              // Tabs
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: 12.radiusBorder,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.grey400.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                  // Search Field
+                  Visibility(
+                    visible: isSearchBarVisible,
+                    child: BlocListener<ClientCubit, ClientState>(
+                      listener: (context, state) {
+                        final selectedClient = state.selectedClient;
+                        if (selectedClient != null) {
+                          nameController.text = selectedClient.name;
+                          context.read<LedgerSimpleSummaryCubit>().reset();
+                          _fetchDataForTab(currentIndex, forceFetch: true);
+
+                          context.hideKeyboard();
+                        }
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 16.h),
+                        child: ClientSearchNameField(
+                          hitText: 'Filter by customer',
+                          nameController: nameController,
+                          focusNode: nameSearchFocusNode,
+                          onClear: () {
+                            context.read<LedgerSimpleSummaryCubit>().reset();
+                            _fetchDataForTab(currentIndex);
+                          },
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                child: TabBar(
-                  controller: tabController,
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.start,
-                  indicatorColor: const Color(0xFF6132E4),
-                  indicatorWeight: 3,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  dividerColor: Colors.transparent,
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
                   ),
-                  unselectedLabelStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.sp,
+                  // Tabs
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: 12.radiusBorder,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.grey400.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TabBar(
+                      controller: tabController,
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      indicatorColor: const Color(0xFF6132E4),
+                      indicatorWeight: 3,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      dividerColor: Colors.transparent,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.sp,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                      ),
+                      labelColor: const Color(0xFF6132E4),
+                      unselectedLabelColor: AppColors.grey600,
+                      onTap: (index) {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      },
+                      tabs: const [
+                        Tab(text: 'Bookings'),
+                        Tab(text: 'Payments'),
+                        Tab(text: 'Pending'),
+                        Tab(text: 'Expenses'),
+                        Tab(text: 'Sales'),
+                        Tab(text: 'Security Amount'),
+                      ],
+                    ),
                   ),
-                  labelColor: const Color(0xFF6132E4),
-                  unselectedLabelColor: AppColors.grey600,
-                  onTap: (index) {
-                    setState(() {
-                      currentIndex = index;
-                    });
-                  },
-                  tabs: const [
-                    Tab(text: 'Bookings'),
-                    Tab(text: 'Payments'),
-                    Tab(text: 'Pending'),
-                    Tab(text: 'Expenses'),
-                    Tab(text: 'Sales'),
-                    Tab(text: 'Security Amount'),
-                  ],
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-    body: Center(
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 1400.w),
-        margin: EdgeInsets.symmetric(horizontal: 24.w),
-        child: TabBarView(
-          controller: tabController,
-          children: const [
-            BookingsTab(),
-            PaymentsTab(),
-            PendingTab(),
-            ExpensesTab(),
-            SalesTab(),
-            SecurityAmountTab(),
-          ],
+        body: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 1400.w),
+            margin: EdgeInsets.symmetric(horizontal: 24.w),
+            child: TabBarView(
+              controller: tabController,
+              children: const [
+                BookingsTab(),
+                PaymentsTab(),
+                PendingTab(),
+                ExpensesTab(),
+                SalesTab(),
+                SecurityAmountTab(),
+              ],
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildMobileLayout(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Ledger'),
-      actions: [
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.purpleLightShade,
-            borderRadius: 5.radiusBorder,
-          ),
-          padding: 8.padding,
-          child: Icon(
-            isSearchBarVisible ? LucideIcons.x : LucideIcons.search,
-            size: 18.sp,
-          ),
-        ).onTap(() {
-          setState(() {
-            isSearchBarVisible = !isSearchBarVisible;
+        appBar: AppBar(
+          title: const Text('Ledger'),
+          actions: [
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.purpleLightShade,
+                borderRadius: 5.radiusBorder,
+              ),
+              padding: 8.padding,
+              child: Icon(
+                isSearchBarVisible ? LucideIcons.x : LucideIcons.search,
+                size: 18.sp,
+              ),
+            ).onTap(() {
+              setState(() {
+                isSearchBarVisible = !isSearchBarVisible;
 
-            if (isSearchBarVisible) {
-              nameSearchFocusNode.requestFocus();
-            } else {
-              nameSearchFocusNode.unfocus();
-              if (nameController.text.trim().isNotEmpty ||
-                  context.read<ClientCubit>().state.searchQuery.isNotEmpty) {
-                nameController.clear();
-                _fetchDataForTab(
-                  currentIndex,
-                  forceFetch: true,
-                  clearClient: true,
-                );
-              }
-            }
-          });
-        }),
-        5.width,
-        Builder(
-          builder: (builderContext) =>
-              Container(
+                if (isSearchBarVisible) {
+                  nameSearchFocusNode.requestFocus();
+                } else {
+                  nameSearchFocusNode.unfocus();
+                  if (nameController.text.trim().isNotEmpty ||
+                      context
+                          .read<ClientCubit>()
+                          .state
+                          .searchQuery
+                          .isNotEmpty) {
+                    nameController.clear();
+                    _fetchDataForTab(
+                      currentIndex,
+                      forceFetch: true,
+                      clearClient: true,
+                    );
+                  }
+                }
+              });
+            }),
+            5.width,
+            Builder(
+              builder: (builderContext) => Container(
                 decoration: BoxDecoration(
                   color: AppColors.purple,
                   borderRadius: 5.radiusBorder,
@@ -566,7 +575,8 @@ class _WalletScreenState extends State<WalletScreen>
                 padding: 8.padding,
                 child: Row(
                   children: [
-                    Icon(Icons.download_outlined, size: 18.sp, color: AppColors.white),
+                    Icon(Icons.download_outlined,
+                        size: 18.sp, color: AppColors.white),
                     4.width,
                     Text(
                       'Download',
@@ -579,148 +589,150 @@ class _WalletScreenState extends State<WalletScreen>
                   ],
                 ),
               ).onTap(() => _handlePrintAction(builderContext)),
-        ),
-      ],
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(
-          (currentIndex == 1 ? 170 : 130) + (isSearchBarVisible ? 65 : 0),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: 10.padding,
-              child: BlocBuilder<LedgerSimpleSummaryCubit, DailySummaryModel?>(
-                builder: (context, summaryState) {
-                  String title = 'Today summary';
-
-                  if (summaryState?.date.isNotEmpty ?? false) {
-                    title = summaryState!.date.getDateHeading() + ' summary';
-                  }
-
-                  switch (currentIndex) {
-                    case 0:
-                      return LedgerSummarySimpleWidget(
-                        title: title,
-                        amount: summaryState?.bookingAmount ?? 0,
-                      );
-                    case 1:
-                      return LedgerPaymentSummaryWidget(
-                        summaryDay: title,
-                        totalSummary: summaryState?.payments,
-                      );
-                    case 2:
-                      return LedgerSummarySimpleWidget(
-                        title: 'Total pendings',
-                        amount: summaryState?.pendings ?? 0,
-                      );
-                    case 3:
-                      return LedgerSummarySimpleWidget(
-                        title: title,
-                        amount: summaryState?.expenses ?? 0,
-                      );
-                    case 4:
-                      return LedgerSummarySimpleWidget(
-                        title: title,
-                        amount: summaryState?.salesAmount ?? 0,
-                      );
-                    case 5:
-                      return LedgerSummarySimpleWidget(
-                        title: 'Total Amount',
-                        amount: summaryState?.securityAmount ?? 0,
-                      );
-
-                    default:
-                      throw Exception(
-                        'Ledger summary not found for index $currentIndex',
-                      );
-                  }
-                },
-              ),
             ),
-            Visibility(
-              visible: isSearchBarVisible,
-              child: BlocListener<ClientCubit, ClientState>(
-                listener: (context, state) {
-                  final selectedClient = state.selectedClient;
-                  if (selectedClient != null) {
-                    nameController.text = selectedClient.name;
-                    context.read<LedgerSimpleSummaryCubit>().reset();
-                    _fetchDataForTab(currentIndex, forceFetch: true);
+          ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(
+              (currentIndex == 1 ? 170 : 130) + (isSearchBarVisible ? 65 : 0),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: 10.padding,
+                  child:
+                      BlocBuilder<LedgerSimpleSummaryCubit, DailySummaryModel?>(
+                    builder: (context, summaryState) {
+                      String title = 'Today summary';
 
-                    context.hideKeyboard();
-                  }
-                },
-                child: Padding(
-                  padding: (10, 5).padding,
-                  child: ClientSearchNameField(
-                    hitText: 'Filter by customer',
-                    nameController: nameController,
-                    // scrollController: nameScrollController,
-                    focusNode: nameSearchFocusNode,
-                    onClear: () {
-                      context.read<LedgerSimpleSummaryCubit>().reset();
-                      _fetchDataForTab(currentIndex);
+                      if (summaryState?.date.isNotEmpty ?? false) {
+                        title =
+                            summaryState!.date.getDateHeading() + ' summary';
+                      }
+
+                      switch (currentIndex) {
+                        case 0:
+                          return LedgerSummarySimpleWidget(
+                            title: title,
+                            amount: summaryState?.bookingAmount ?? 0,
+                          );
+                        case 1:
+                          return LedgerPaymentSummaryWidget(
+                            summaryDay: title,
+                            totalSummary: summaryState?.payments,
+                          );
+                        case 2:
+                          return LedgerSummarySimpleWidget(
+                            title: 'Total pendings',
+                            amount: summaryState?.pendings ?? 0,
+                          );
+                        case 3:
+                          return LedgerSummarySimpleWidget(
+                            title: title,
+                            amount: summaryState?.expenses ?? 0,
+                          );
+                        case 4:
+                          return LedgerSummarySimpleWidget(
+                            title: title,
+                            amount: summaryState?.salesAmount ?? 0,
+                          );
+                        case 5:
+                          return LedgerSummarySimpleWidget(
+                            title: 'Total Amount',
+                            amount: summaryState?.securityAmount ?? 0,
+                          );
+
+                        default:
+                          throw Exception(
+                            'Ledger summary not found for index $currentIndex',
+                          );
+                      }
                     },
                   ),
                 ),
-              ),
-            ),
-            TabBar(
-              controller: tabController,
-              isScrollable: true,
-              indicatorColor: const Color(0xFF6132E4),
-              indicatorWeight: 2.5,
-              unselectedLabelStyle: const TextStyle(),
-              onTap: (index) {
-                // Fetch data for the selected tab
-                // _fetchDataForTab(index);
-                setState(() {
-                  currentIndex = index;
-                });
-              },
+                Visibility(
+                  visible: isSearchBarVisible,
+                  child: BlocListener<ClientCubit, ClientState>(
+                    listener: (context, state) {
+                      final selectedClient = state.selectedClient;
+                      if (selectedClient != null) {
+                        nameController.text = selectedClient.name;
+                        context.read<LedgerSimpleSummaryCubit>().reset();
+                        _fetchDataForTab(currentIndex, forceFetch: true);
 
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: AppColors.white,
-              labelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 17.sp,
-              ),
+                        context.hideKeyboard();
+                      }
+                    },
+                    child: Padding(
+                      padding: (10, 5).padding,
+                      child: ClientSearchNameField(
+                        hitText: 'Filter by customer',
+                        nameController: nameController,
+                        // scrollController: nameScrollController,
+                        focusNode: nameSearchFocusNode,
+                        onClear: () {
+                          context.read<LedgerSimpleSummaryCubit>().reset();
+                          _fetchDataForTab(currentIndex);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                TabBar(
+                  controller: tabController,
+                  isScrollable: true,
+                  indicatorColor: const Color(0xFF6132E4),
+                  indicatorWeight: 2.5,
+                  unselectedLabelStyle: const TextStyle(),
+                  onTap: (index) {
+                    // Fetch data for the selected tab
+                    // _fetchDataForTab(index);
+                    setState(() {
+                      currentIndex = index;
+                    });
+                  },
 
-              labelColor: const Color(
-                0xFF6132E4,
-              ), // Text color for selected tab
-              unselectedLabelColor: Colors.grey,
-              tabs: const [
-                Tab(text: 'Bookings'),
-                Tab(text: 'Payments'),
-                Tab(text: 'Pending'),
-                Tab(text: 'Expenses'),
-                Tab(text: 'Sales'),
-                Tab(text: 'Security Amount'),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: AppColors.white,
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17.sp,
+                  ),
+
+                  labelColor: const Color(
+                    0xFF6132E4,
+                  ), // Text color for selected tab
+                  unselectedLabelColor: Colors.grey,
+                  tabs: const [
+                    Tab(text: 'Bookings'),
+                    Tab(text: 'Payments'),
+                    Tab(text: 'Pending'),
+                    Tab(text: 'Expenses'),
+                    Tab(text: 'Sales'),
+                    Tab(text: 'Security Amount'),
+                  ],
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: 12.paddingHorizontal,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.grey300),
+                  ),
+                ),
               ],
             ),
-            Container(
-              width: double.infinity,
-              margin: 12.paddingHorizontal,
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.grey300),
-              ),
-            ),
+          ),
+        ),
+        body: TabBarView(
+          controller: tabController,
+          // physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            BookingsTab(),
+            PaymentsTab(),
+            PendingTab(),
+            ExpensesTab(),
+            SalesTab(),
+            SecurityAmountTab(),
           ],
         ),
-      ),
-    ),
-    body: TabBarView(
-      controller: tabController,
-      // physics: const NeverScrollableScrollPhysics(),
-      children: const [
-        BookingsTab(),
-        PaymentsTab(),
-        PendingTab(),
-        ExpensesTab(),
-        SalesTab(),
-        SecurityAmountTab(),
-      ],
-    ),
-  );
+      );
 }

@@ -64,8 +64,8 @@ class _AllBookingScreenState extends State<AllBookingScreen>
       context.read<AllBookingBloc>().add(const AllBookingEvent.loadBookings());
     } else {
       context.read<AllBookingPastBloc>().add(
-        const AllBookingPastEvent.loadBookings(),
-      );
+            const AllBookingPastEvent.loadBookings(),
+          );
     }
     tabCurrentState[index] = true;
   }
@@ -90,15 +90,14 @@ class _AllBookingScreenState extends State<AllBookingScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: kIsWeb ? AppColors.grey100 : Colors.white,
-    appBar: AppBar(
-      title: const Text('Bookings'),
-      centerTitle: kIsWeb,
-      actions: [
-        ValueListenableBuilder(
-          valueListenable: isSearchingNotifier,
-          builder: (context, isSearching, child) =>
-              Container(
+        backgroundColor: kIsWeb ? AppColors.grey100 : Colors.white,
+        appBar: AppBar(
+          title: const Text('Bookings'),
+          centerTitle: kIsWeb,
+          actions: [
+            ValueListenableBuilder(
+              valueListenable: isSearchingNotifier,
+              builder: (context, isSearching, child) => Container(
                 decoration: BoxDecoration(
                   color: AppColors.purpleLightShade,
                   borderRadius: BorderRadius.circular(5),
@@ -122,126 +121,129 @@ class _AllBookingScreenState extends State<AllBookingScreen>
                   }
                 }
               }),
-        ),
-        8.width,
-        // Date Filter Button
-        ValueListenableBuilder(
-          valueListenable: dateFilterNotifier,
-          builder: (context, value, child) => DateFilterButton(
-            hasActiveFilter: value.hasActiveFilter,
-            onTap: () => _showDateFilterBottomSheet(context),
-          ),
-        ),
-
-        10.width,
-      ],
-    ),
-    body: Center(
-      child: Container(
-        constraints: kIsWeb ? const BoxConstraints(maxWidth: 1200) : null,
-        child: Column(
-          children: [
-            // Active Search filed
-            ValueListenableBuilder(
-              valueListenable: isSearchingNotifier,
-              builder: (context, isSearching, child) => isSearching
-                  ? Container(
-                      color: Colors.white,
-                      child: CustomSearchField(
-                        searchController: searchController,
-                        padding: (16, 8).padding,
-                        focusNode: searchFocusNode,
-                        onChanged: (query) {
-                          _fetchBookingsWithFilter(context);
-                        },
-                        hintText: 'Search by name or ID...',
-                        suffixFunction: () {
-                          searchController.clear();
-                          _fetchBookingsWithFilter(context, 2);
-                        },
-                      ),
-                    )
-                  : const SizedBox.shrink(),
             ),
-            // Active Filter Indicator
+            8.width,
+            // Date Filter Button
             ValueListenableBuilder(
               valueListenable: dateFilterNotifier,
-              builder: (context, value, child) => value.hasActiveFilter
-                  ? Container(
-                      color: Colors.white,
-                      child: _buildActiveFilterIndicator(context),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-
-            Container(
-              color: Colors.white,
-              child: TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(text: 'Pending'),
-                  Tab(text: 'Past'),
-                ],
+              builder: (context, value, child) => DateFilterButton(
+                hasActiveFilter: value.hasActiveFilter,
+                onTap: () => _showDateFilterBottomSheet(context),
               ),
             ),
-            10.height,
+
+            10.width,
+          ],
+        ),
+        body: Center(
+          child: Container(
+            constraints: kIsWeb ? const BoxConstraints(maxWidth: 1200) : null,
+            child: Column(
+              children: [
+                // Active Search filed
+                ValueListenableBuilder(
+                  valueListenable: isSearchingNotifier,
+                  builder: (context, isSearching, child) => isSearching
+                      ? Container(
+                          color: Colors.white,
+                          child: CustomSearchField(
+                            searchController: searchController,
+                            padding: (16, 8).padding,
+                            focusNode: searchFocusNode,
+                            onChanged: (query) {
+                              _fetchBookingsWithFilter(context);
+                            },
+                            hintText: 'Search by name or ID...',
+                            suffixFunction: () {
+                              searchController.clear();
+                              _fetchBookingsWithFilter(context, 2);
+                            },
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                // Active Filter Indicator
+                ValueListenableBuilder(
+                  valueListenable: dateFilterNotifier,
+                  builder: (context, value, child) => value.hasActiveFilter
+                      ? Container(
+                          color: Colors.white,
+                          child: _buildActiveFilterIndicator(context),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+
+                Container(
+                  color: Colors.white,
+                  child: TabBar(
+                    controller: _tabController,
+                    tabs: const [
+                      Tab(text: 'Pending'),
+                      Tab(text: 'Past'),
+                    ],
+                  ),
+                ),
+                10.height,
+                Expanded(
+                  child: Padding(
+                    padding: kIsWeb
+                        ? const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 16)
+                        : 10.padding,
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        AllBookingFutureTab(
+                          dateFilterNotifier: dateFilterNotifier,
+                          searchController: searchController,
+                        ),
+                        AllBookingPastTab(
+                          dateFilterNotifier: dateFilterNotifier,
+                          searchController: searchController,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildActiveFilterIndicator(BuildContext context) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.purple.withValues(alpha: 0.1),
+          borderRadius: 8.radiusBorder,
+          border: Border.all(color: AppColors.purple),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.filter_list, size: 16.sp, color: AppColors.purple),
+            8.width,
             Expanded(
-              child: Padding(
-                padding: kIsWeb ? const EdgeInsets.symmetric(horizontal: 24, vertical: 16) : 10.padding,
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    AllBookingFutureTab(
-                      dateFilterNotifier: dateFilterNotifier,
-                      searchController: searchController,
-                    ),
-                    AllBookingPastTab(
-                      dateFilterNotifier: dateFilterNotifier,
-                      searchController: searchController,
-                    ),
-                  ],
+              child: Text(
+                _getFilterDisplayText(),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.purple,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
+            Container(
+              padding: 2.padding,
+              decoration: BoxDecoration(
+                color: AppColors.purple.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.close, size: 14.sp, color: AppColors.purple),
+            ).onTap(() => _clearDateFilter(context)),
           ],
         ),
-      ),
-    ),
-  );
-
-  Widget _buildActiveFilterIndicator(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-    decoration: BoxDecoration(
-      color: AppColors.purple.withValues(alpha: 0.1),
-      borderRadius: 8.radiusBorder,
-      border: Border.all(color: AppColors.purple),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.filter_list, size: 16.sp, color: AppColors.purple),
-        8.width,
-        Expanded(
-          child: Text(
-            _getFilterDisplayText(),
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.purple,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        Container(
-          padding: 2.padding,
-          decoration: BoxDecoration(
-            color: AppColors.purple.withValues(alpha: 0.2),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(Icons.close, size: 14.sp, color: AppColors.purple),
-        ).onTap(() => _clearDateFilter(context)),
-      ],
-    ),
-  );
+      );
 
   void _clearDateFilter(BuildContext context) {
     dateFilterNotifier.value = const DateFilterModel();
@@ -277,35 +279,35 @@ class _AllBookingScreenState extends State<AllBookingScreen>
         : searchController.text.trim();
     if (index == 0) {
       context.read<AllBookingBloc>().add(
-        AllBookingEvent.loadBookings(
-          startDate: startDate,
-          endDate: endDate,
-          searchQuery: searchQuery,
-        ),
-      );
+            AllBookingEvent.loadBookings(
+              startDate: startDate,
+              endDate: endDate,
+              searchQuery: searchQuery,
+            ),
+          );
     } else if (index == 1) {
       context.read<AllBookingPastBloc>().add(
-        AllBookingPastEvent.loadBookings(
-          startDate: startDate,
-          endDate: endDate,
-          searchQuery: searchQuery,
-        ),
-      );
+            AllBookingPastEvent.loadBookings(
+              startDate: startDate,
+              endDate: endDate,
+              searchQuery: searchQuery,
+            ),
+          );
     } else {
       context.read<AllBookingBloc>().add(
-        AllBookingEvent.loadBookings(
-          startDate: startDate,
-          endDate: endDate,
-          searchQuery: searchQuery,
-        ),
-      );
+            AllBookingEvent.loadBookings(
+              startDate: startDate,
+              endDate: endDate,
+              searchQuery: searchQuery,
+            ),
+          );
       context.read<AllBookingPastBloc>().add(
-        AllBookingPastEvent.loadBookings(
-          startDate: startDate,
-          endDate: endDate,
-          searchQuery: searchQuery,
-        ),
-      );
+            AllBookingPastEvent.loadBookings(
+              startDate: startDate,
+              endDate: endDate,
+              searchQuery: searchQuery,
+            ),
+          );
     }
   }
 

@@ -126,11 +126,11 @@ class _SalesTabState extends State<SalesTab> {
     log('Fetching summary for date: $date with total: $total');
     // ignore: unawaited_futures
     context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
-      date,
-      clientId: null,
-      total: total,
-      type: LedgerType.sales,
-    );
+          date,
+          clientId: null,
+          total: total,
+          type: LedgerType.sales,
+        );
   }
 
   @override
@@ -143,48 +143,48 @@ class _SalesTabState extends State<SalesTab> {
   }
 
   Widget _buildWebLayout(BuildContext context) => Container(
-    margin: EdgeInsets.only(top: 16.h),
-    child: RefreshIndicator.adaptive(
-      onRefresh: () async {
-        context.read<LedgerSimpleSummaryCubit>().reset();
-        _currentlyShowingDate = ''; // Reset current date on refresh
-        _groupKeysWithTotal.clear();
-        _fetchData(context);
-      },
-      child: BlocBuilder<LedgerSalesBloc, LedgerSalesState>(
-        builder: (context, state) => state.when(
-          loading: () => ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: 8,
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-            itemBuilder: (context, index) => Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              child: const LedgerSalesListTileShimmer(),
-            ),
-          ),
-          error: (error) => Center(
-            child: Container(
-              margin: EdgeInsets.all(24.w),
-              padding: EdgeInsets.all(32.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+        margin: EdgeInsets.only(top: 16.h),
+        child: RefreshIndicator.adaptive(
+          onRefresh: () async {
+            context.read<LedgerSimpleSummaryCubit>().reset();
+            _currentlyShowingDate = ''; // Reset current date on refresh
+            _groupKeysWithTotal.clear();
+            _fetchData(context);
+          },
+          child: BlocBuilder<LedgerSalesBloc, LedgerSalesState>(
+            builder: (context, state) => state.when(
+              loading: () => ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: 8,
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                itemBuilder: (context, index) => Container(
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  child: const LedgerSalesListTileShimmer(),
+                ),
+              ),
+              error: (error) => Center(
+                child: Container(
+                  margin: EdgeInsets.all(24.w),
+                  padding: EdgeInsets.all(32.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
+                  child: CustomErrorWidget(
+                    errorText: error,
+                    onRetry: () => _fetchData(context),
+                  ),
+                ),
               ),
-              child: CustomErrorWidget(
-                errorText: error,
-                onRetry: () => _fetchData(context),
-              ),
-            ),
-          ),
-          loaded:
-              (ledgerSales, nextPageUrl, isPaginating, clientId, isFirstFetch) {
+              loaded: (ledgerSales, nextPageUrl, isPaginating, clientId,
+                  isFirstFetch) {
                 if (ledgerSales.isEmpty) {
                   return Container(
                     margin: EdgeInsets.all(24.w),
@@ -224,7 +224,8 @@ class _SalesTabState extends State<SalesTab> {
                   child: ListView.builder(
                     controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
                     itemCount: ledgerSales.length + (isPaginating ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == ledgerSales.length) {
@@ -266,34 +267,35 @@ class _SalesTabState extends State<SalesTab> {
                   ),
                 );
               },
-        ),
-      ),
-    ),
-  );
-
-  Widget _buildMobileLayout(BuildContext context) => RefreshIndicator.adaptive(
-    onRefresh: () async {
-      context.read<LedgerSimpleSummaryCubit>().reset();
-      _currentlyShowingDate = ''; // Reset current date on refresh
-      _groupKeysWithTotal.clear();
-      _fetchData(context);
-    },
-    child: BlocBuilder<LedgerSalesBloc, LedgerSalesState>(
-      builder: (context, state) => state.when(
-        loading: () => ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: 15,
-          // Use shimmer for loading
-          itemBuilder: (context, index) => const LedgerSalesListTileShimmer(),
-        ),
-        error: (error) => Center(
-          child: CustomErrorWidget(
-            errorText: error,
-            onRetry: () => _fetchData(context),
+            ),
           ),
         ),
-        loaded:
-            (ledgerSales, nextPageUrl, isPaginating, clientId, isFirstFetch) {
+      );
+
+  Widget _buildMobileLayout(BuildContext context) => RefreshIndicator.adaptive(
+        onRefresh: () async {
+          context.read<LedgerSimpleSummaryCubit>().reset();
+          _currentlyShowingDate = ''; // Reset current date on refresh
+          _groupKeysWithTotal.clear();
+          _fetchData(context);
+        },
+        child: BlocBuilder<LedgerSalesBloc, LedgerSalesState>(
+          builder: (context, state) => state.when(
+            loading: () => ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: 15,
+              // Use shimmer for loading
+              itemBuilder: (context, index) =>
+                  const LedgerSalesListTileShimmer(),
+            ),
+            error: (error) => Center(
+              child: CustomErrorWidget(
+                errorText: error,
+                onRetry: () => _fetchData(context),
+              ),
+            ),
+            loaded: (ledgerSales, nextPageUrl, isPaginating, clientId,
+                isFirstFetch) {
               if (ledgerSales.isEmpty) {
                 return const EmptyDataWidget(
                   message: 'No sales found',
@@ -343,14 +345,14 @@ class _SalesTabState extends State<SalesTab> {
                 ),
               );
             },
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   void _fetchData(BuildContext context) {
     final clientId = context.read<ClientCubit>().getSelectedClient()?.id;
     context.read<LedgerSalesBloc>().add(
-      LedgerSalesEvent.loadSales(clientId: clientId),
-    );
+          LedgerSalesEvent.loadSales(clientId: clientId),
+        );
   }
 }

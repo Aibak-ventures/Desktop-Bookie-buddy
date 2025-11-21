@@ -24,7 +24,8 @@ mixin _$StaffListEvent {
     required TResult Function(int staffId) deleteStaff,
     required TResult Function(StaffRequestModel staff) editStaff,
     required TResult Function(StaffRequestModel staff) addStaff,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadStaffs,
@@ -32,7 +33,8 @@ mixin _$StaffListEvent {
     TResult? Function(int staffId)? deleteStaff,
     TResult? Function(StaffRequestModel staff)? editStaff,
     TResult? Function(StaffRequestModel staff)? addStaff,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadStaffs,
@@ -41,7 +43,8 @@ mixin _$StaffListEvent {
     TResult Function(StaffRequestModel staff)? editStaff,
     TResult Function(StaffRequestModel staff)? addStaff,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadStaffs value) loadStaffs,
@@ -49,7 +52,8 @@ mixin _$StaffListEvent {
     required TResult Function(_DeleteStaff value) deleteStaff,
     required TResult Function(_EditStaff value) editStaff,
     required TResult Function(_AddStaff value) addStaff,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadStaffs value)? loadStaffs,
@@ -57,7 +61,8 @@ mixin _$StaffListEvent {
     TResult? Function(_DeleteStaff value)? deleteStaff,
     TResult? Function(_EditStaff value)? editStaff,
     TResult? Function(_AddStaff value)? addStaff,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadStaffs value)? loadStaffs,
@@ -66,7 +71,8 @@ mixin _$StaffListEvent {
     TResult Function(_EditStaff value)? editStaff,
     TResult Function(_AddStaff value)? addStaff,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -370,7 +376,7 @@ class __$$DeleteStaffImplCopyWithImpl<$Res>
         null == staffId
             ? _value.staffId
             : staffId // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
       ),
     );
   }
@@ -532,7 +538,7 @@ class __$$EditStaffImplCopyWithImpl<$Res>
         null == staff
             ? _value.staff
             : staff // ignore: cast_nullable_to_non_nullable
-                  as StaffRequestModel,
+                as StaffRequestModel,
       ),
     );
   }
@@ -704,7 +710,7 @@ class __$$AddStaffImplCopyWithImpl<$Res>
         null == staff
             ? _value.staff
             : staff // ignore: cast_nullable_to_non_nullable
-                  as StaffRequestModel,
+                as StaffRequestModel,
       ),
     );
   }
@@ -856,10 +862,10 @@ mixin _$StaffListState {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
@@ -869,10 +875,10 @@ mixin _$StaffListState {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
@@ -882,30 +888,33 @@ mixin _$StaffListState {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -980,8 +989,7 @@ class _$LoadingImpl implements _Loading {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -997,8 +1005,7 @@ class _$LoadingImpl implements _Loading {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -1014,8 +1021,7 @@ class _$LoadingImpl implements _Loading {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -1105,23 +1111,23 @@ class __$$LoadedImplCopyWithImpl<$Res>
         staffs: null == staffs
             ? _value._staffs
             : staffs // ignore: cast_nullable_to_non_nullable
-                  as List<StaffModel>,
+                as List<StaffModel>,
         nextPageUrl: freezed == nextPageUrl
             ? _value.nextPageUrl
             : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         isPaginating: null == isPaginating
             ? _value.isPaginating
             : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
+                as bool,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
-                  as StaffListStatus,
+                as StaffListStatus,
         message: freezed == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
       ),
     );
   }
@@ -1178,13 +1184,13 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_staffs),
-    nextPageUrl,
-    isPaginating,
-    status,
-    message,
-  );
+        runtimeType,
+        const DeepCollectionEquality().hash(_staffs),
+        nextPageUrl,
+        isPaginating,
+        status,
+        message,
+      );
 
   /// Create a copy of StaffListState
   /// with the given fields replaced by the non-null parameter values.
@@ -1204,8 +1210,7 @@ class _$LoadedImpl implements _Loaded {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
   }) {
     return loaded(staffs, nextPageUrl, isPaginating, status, message);
@@ -1221,8 +1226,7 @@ class _$LoadedImpl implements _Loaded {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call(staffs, nextPageUrl, isPaginating, status, message);
@@ -1238,8 +1242,7 @@ class _$LoadedImpl implements _Loaded {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -1335,7 +1338,7 @@ class __$$ErrorImplCopyWithImpl<$Res>
         null == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
       ),
     );
   }
@@ -1383,8 +1386,7 @@ class _$ErrorImpl implements _Error {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -1400,8 +1402,7 @@ class _$ErrorImpl implements _Error {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -1417,8 +1418,7 @@ class _$ErrorImpl implements _Error {
       bool isPaginating,
       StaffListStatus status,
       String? message,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

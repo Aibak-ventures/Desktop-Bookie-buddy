@@ -139,9 +139,7 @@ class Navigations {
 
       // Bottom navigation bar
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            BottomBarScreen(),
-
+        builder: (context, state, navigationShell) => BottomBarScreen(),
         branches: [
           StatefulShellBranch(
             navigatorKey: _subNavKey,
@@ -247,7 +245,8 @@ class Navigations {
                 create: (context) => AllBookingBloc(repository: getIt.get()),
               ),
               BlocProvider(
-                create: (context) => AllBookingPastBloc(repository: getIt.get()),
+                create: (context) =>
+                    AllBookingPastBloc(repository: getIt.get()),
               ),
             ],
             child: AllBookingScreen(index: index),
@@ -308,7 +307,6 @@ class Navigations {
           ],
           child: const WalletScreen(),
         ),
-
         routes: [
           GoRoute(
             path: AppRoutes.editExpense.path,
@@ -787,8 +785,8 @@ class Navigations {
         name: AppRoutes.productDetails.name,
         builder: (context, state) {
           final productId = state.pathParameters['id']?.toIntOrNull();
-          final serviceId = state.uri.queryParameters['service_id']
-              ?.toIntOrNull();
+          final serviceId =
+              state.uri.queryParameters['service_id']?.toIntOrNull();
           final extra = state.extra as Map<String, dynamic>? ?? {};
           final mainServiceType =
               extra['main_service_type'] as MainServiceType?;
@@ -803,9 +801,8 @@ class Navigations {
             );
           }
           return BlocProvider(
-            create: (context) =>
-                ProductInfoBloc(repository: getIt.get())
-                  ..add(ProductInfoEvent.loadProductInfo(productId)),
+            create: (context) => ProductInfoBloc(repository: getIt.get())
+              ..add(ProductInfoEvent.loadProductInfo(productId)),
             child: ProductInfoScreen(
               serviceId: serviceId,
               productId: productId,
@@ -821,8 +818,8 @@ class Navigations {
         name: AppRoutes.productTransfer.name,
         builder: (context, state) {
           final variantId = state.pathParameters['variant_id']?.toIntOrNull();
-          final serviceId = state.uri.queryParameters['service_id']
-              ?.toIntOrNull();
+          final serviceId =
+              state.uri.queryParameters['service_id']?.toIntOrNull();
           final extra = state.extra as Map<String, dynamic>? ?? {};
           final mainServiceType =
               extra['main_service_type'] as MainServiceType?;
@@ -852,10 +849,10 @@ class Navigations {
         path: AppRoutes.productSelectAndTransfer.path,
         name: AppRoutes.productSelectAndTransfer.name,
         builder: (context, state) {
-          final fromVariantId = state.uri.queryParameters['from_variant_id']
-              ?.toIntOrNull();
-          final toShopId = state.uri.queryParameters['to_shop_id']
-              ?.toIntOrNull();
+          final fromVariantId =
+              state.uri.queryParameters['from_variant_id']?.toIntOrNull();
+          final toShopId =
+              state.uri.queryParameters['to_shop_id']?.toIntOrNull();
           final extra = state.extra as Map<String, dynamic>? ?? {};
           final fromProduct = extra['from_product'] as ProductInfoModel?;
           if (fromVariantId == null ||
@@ -870,14 +867,14 @@ class Navigations {
           }
           return MultiBlocProvider(
             providers: [
-                // BlocProvider(
-                //   create: (context) =>
-                    // MatchingProductBloc(repository: getIt.get())..add(
-                    //   MatchingProductEvent.loadMatchingProducts(
-                    //     fromVariantId: fromVariantId,
-                    //     toShopId: toShopId,
-                    //   ),
-                    // ),
+              // BlocProvider(
+              //   create: (context) =>
+              // MatchingProductBloc(repository: getIt.get())..add(
+              //   MatchingProductEvent.loadMatchingProducts(
+              //     fromVariantId: fromVariantId,
+              //     toShopId: toShopId,
+              //   ),
+              // ),
               // ),
               // BlocProvider(
               //   // create: (context) =>
@@ -943,9 +940,8 @@ class Navigations {
             );
           }
           return BlocProvider(
-            create: (context) =>
-                ProductGrowthBloc()
-                  ..add(ProductGrowthEvent.loadProductGrowthData(productId)),
+            create: (context) => ProductGrowthBloc()
+              ..add(ProductGrowthEvent.loadProductGrowthData(productId)),
             child: ProductGrowthScreen(productId: productId),
           );
         },
@@ -1184,7 +1180,7 @@ class CustomRouteErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(),
-    body: Center(child: Text(message)),
-  );
+        appBar: AppBar(),
+        body: Center(child: Text(message)),
+      );
 }

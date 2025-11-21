@@ -40,11 +40,11 @@ class _ExpensesTabState extends State<ExpensesTab> {
     _currentlyShowingDate = date;
     final total = _groupKeys[date]?.$2 ?? 0;
     await context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
-      date,
-      clientId: null,
-      type: LedgerType.expense,
-      total: total,
-    );
+          date,
+          clientId: null,
+          type: LedgerType.expense,
+          total: total,
+        );
   }
 
   void _checkVisibleSection() {
@@ -101,69 +101,68 @@ class _ExpensesTabState extends State<ExpensesTab> {
   }
 
   Widget _buildWebLayout(BuildContext context) => Container(
-    margin: EdgeInsets.only(top: 16.h),
-    child: RefreshIndicator.adaptive(
-      onRefresh: () async {
-        context.read<LedgerSimpleSummaryCubit>().reset();
-        _currentlyShowingDate = ''; // Reset current date on refresh
-        _fetchData(context);
-      },
-      child: BlocConsumer<WalletExpenseBloc, WalletExpenseState>(
-        listener: (context, state) {
-          state.maybeMap(
-            orElse: () {},
-            success: (value) {
-              context.showSnackBar(value.message, title: 'Delete Expense');
-              context.read<LedgerSimpleSummaryCubit>().reset();
-              _fetchData(context);
-            },
-            failure: (value) {
-              context.showSnackBar(
-                value.message,
-                title: 'Delete Expense',
-                isError: true,
+        margin: EdgeInsets.only(top: 16.h),
+        child: RefreshIndicator.adaptive(
+          onRefresh: () async {
+            context.read<LedgerSimpleSummaryCubit>().reset();
+            _currentlyShowingDate = ''; // Reset current date on refresh
+            _fetchData(context);
+          },
+          child: BlocConsumer<WalletExpenseBloc, WalletExpenseState>(
+            listener: (context, state) {
+              state.maybeMap(
+                orElse: () {},
+                success: (value) {
+                  context.showSnackBar(value.message, title: 'Delete Expense');
+                  context.read<LedgerSimpleSummaryCubit>().reset();
+                  _fetchData(context);
+                },
+                failure: (value) {
+                  context.showSnackBar(
+                    value.message,
+                    title: 'Delete Expense',
+                    isError: true,
+                  );
+                },
               );
             },
-          );
-        },
-        buildWhen: (previous, current) => current.maybeMap(
-          orElse: () => true,
-          failure: (value) => false,
-          success: (value) => false,
-        ),
-        builder: (context, state) => state.maybeWhen(
-          orElse: () => const SizedBox(),
-          loading: () => ListView.builder(
-            itemCount: 6,
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-            itemBuilder: (context, index) => Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              child: const LedgerExpenseGroupShimmer(),
+            buildWhen: (previous, current) => current.maybeMap(
+              orElse: () => true,
+              failure: (value) => false,
+              success: (value) => false,
             ),
-          ),
-          error: (error) => Center(
-            child: Container(
-              margin: EdgeInsets.all(24.w),
-              padding: EdgeInsets.all(32.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+            builder: (context, state) => state.maybeWhen(
+              orElse: () => const SizedBox(),
+              loading: () => ListView.builder(
+                itemCount: 6,
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                itemBuilder: (context, index) => Container(
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  child: const LedgerExpenseGroupShimmer(),
+                ),
+              ),
+              error: (error) => Center(
+                child: Container(
+                  margin: EdgeInsets.all(24.w),
+                  padding: EdgeInsets.all(32.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
+                  child: CustomErrorWidget(
+                    errorText: error,
+                    onRetry: () => _fetchData(context),
+                  ),
+                ),
               ),
-              child: CustomErrorWidget(
-                errorText: error,
-                onRetry: () => _fetchData(context),
-              ),
-            ),
-          ),
-          loaded:
-              (
+              loaded: (
                 expenseGrouped,
                 nextPageUrl,
                 isPaginating,
@@ -213,8 +212,8 @@ class _ExpensesTabState extends State<ExpensesTab> {
                         nextPageUrl != null &&
                         !isPaginating) {
                       context.read<WalletExpenseBloc>().add(
-                        const WalletExpenseEvent.loadNextPageExpense(),
-                      );
+                            const WalletExpenseEvent.loadNextPageExpense(),
+                          );
                     }
 
                     _checkVisibleSection();
@@ -223,7 +222,8 @@ class _ExpensesTabState extends State<ExpensesTab> {
                   child: RepaintBoundary(
                     child: ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
                       itemCount: expenseGrouped.length + (isPaginating ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index < expenseGrouped.length) {
@@ -267,54 +267,54 @@ class _ExpensesTabState extends State<ExpensesTab> {
                   ),
                 );
               },
-        ),
-      ),
-    ),
-  );
-
-  Widget _buildMobileLayout(BuildContext context) => RefreshIndicator.adaptive(
-    onRefresh: () async {
-      context.read<LedgerSimpleSummaryCubit>().reset();
-      _currentlyShowingDate = ''; // Reset current date on refresh
-      _fetchData(context);
-    },
-    child: BlocConsumer<WalletExpenseBloc, WalletExpenseState>(
-      listener: (context, state) {
-        state.maybeMap(
-          orElse: () {},
-          success: (value) {
-            context.showSnackBar(value.message, title: 'Delete Expense');
-            context.read<LedgerSimpleSummaryCubit>().reset();
-            _fetchData(context);
-          },
-          failure: (value) {
-            context.showSnackBar(
-              value.message,
-              title: 'Delete Expense',
-              isError: true,
-            );
-          },
-        );
-      },
-      buildWhen: (previous, current) => current.maybeMap(
-        orElse: () => true,
-        failure: (value) => false,
-        success: (value) => false,
-      ),
-      builder: (context, state) => state.maybeWhen(
-        orElse: () => const SizedBox(),
-        loading: () => ListView.builder(
-          itemCount: 4,
-          itemBuilder: (context, index) => const LedgerExpenseGroupShimmer(),
-        ),
-        error: (error) => Center(
-          child: CustomErrorWidget(
-            errorText: error,
-            onRetry: () => _fetchData(context),
+            ),
           ),
         ),
-        loaded:
-            (
+      );
+
+  Widget _buildMobileLayout(BuildContext context) => RefreshIndicator.adaptive(
+        onRefresh: () async {
+          context.read<LedgerSimpleSummaryCubit>().reset();
+          _currentlyShowingDate = ''; // Reset current date on refresh
+          _fetchData(context);
+        },
+        child: BlocConsumer<WalletExpenseBloc, WalletExpenseState>(
+          listener: (context, state) {
+            state.maybeMap(
+              orElse: () {},
+              success: (value) {
+                context.showSnackBar(value.message, title: 'Delete Expense');
+                context.read<LedgerSimpleSummaryCubit>().reset();
+                _fetchData(context);
+              },
+              failure: (value) {
+                context.showSnackBar(
+                  value.message,
+                  title: 'Delete Expense',
+                  isError: true,
+                );
+              },
+            );
+          },
+          buildWhen: (previous, current) => current.maybeMap(
+            orElse: () => true,
+            failure: (value) => false,
+            success: (value) => false,
+          ),
+          builder: (context, state) => state.maybeWhen(
+            orElse: () => const SizedBox(),
+            loading: () => ListView.builder(
+              itemCount: 4,
+              itemBuilder: (context, index) =>
+                  const LedgerExpenseGroupShimmer(),
+            ),
+            error: (error) => Center(
+              child: CustomErrorWidget(
+                errorText: error,
+                onRetry: () => _fetchData(context),
+              ),
+            ),
+            loaded: (
               expenseGrouped,
               nextPageUrl,
               isPaginating,
@@ -349,8 +349,8 @@ class _ExpensesTabState extends State<ExpensesTab> {
                       nextPageUrl != null &&
                       !isPaginating) {
                     context.read<WalletExpenseBloc>().add(
-                      const WalletExpenseEvent.loadNextPageExpense(),
-                    );
+                          const WalletExpenseEvent.loadNextPageExpense(),
+                        );
                   }
 
                   _checkVisibleSection();
@@ -386,13 +386,13 @@ class _ExpensesTabState extends State<ExpensesTab> {
                 ),
               );
             },
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   void _fetchData(BuildContext context) {
     context.read<WalletExpenseBloc>().add(
-      const WalletExpenseEvent.loadExpense(),
-    );
+          const WalletExpenseEvent.loadExpense(),
+        );
   }
 }

@@ -22,34 +22,40 @@ mixin _$AddBookingEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(RequestBookingModel booking) addNewBooking,
     required TResult Function(RequestBookingModel booking) updateBookingData,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(RequestBookingModel booking)? addNewBooking,
     TResult? Function(RequestBookingModel booking)? updateBookingData,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(RequestBookingModel booking)? addNewBooking,
     TResult Function(RequestBookingModel booking)? updateBookingData,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_AddNewBooking value) addNewBooking,
     required TResult Function(_UpdateBookingData value) updateBookingData,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_AddNewBooking value)? addNewBooking,
     TResult? Function(_UpdateBookingData value)? updateBookingData,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_AddNewBooking value)? addNewBooking,
     TResult Function(_UpdateBookingData value)? updateBookingData,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -87,12 +93,11 @@ class _$AddBookingEventCopyWithImpl<$Res, $Val extends AddBookingEvent>
   $Res call({Object? booking = null}) {
     return _then(
       _value.copyWith(
-            booking: null == booking
-                ? _value.booking
-                : booking // ignore: cast_nullable_to_non_nullable
-                      as RequestBookingModel,
-          )
-          as $Val,
+        booking: null == booking
+            ? _value.booking
+            : booking // ignore: cast_nullable_to_non_nullable
+                as RequestBookingModel,
+      ) as $Val,
     );
   }
 
@@ -141,7 +146,7 @@ class __$$AddNewBookingImplCopyWithImpl<$Res>
         null == booking
             ? _value.booking
             : booking // ignore: cast_nullable_to_non_nullable
-                  as RequestBookingModel,
+                as RequestBookingModel,
       ),
     );
   }
@@ -291,7 +296,7 @@ class __$$UpdateBookingDataImplCopyWithImpl<$Res>
         null == booking
             ? _value.booking
             : booking // ignore: cast_nullable_to_non_nullable
-                  as RequestBookingModel,
+                as RequestBookingModel,
       ),
     );
   }
@@ -418,14 +423,16 @@ mixin _$AddBookingState {
     required TResult Function() submitting,
     required TResult Function() success,
     required TResult Function(String error) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(RequestBookingModel booking)? initial,
     TResult? Function()? submitting,
     TResult? Function()? success,
     TResult? Function(String error)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(RequestBookingModel booking)? initial,
@@ -433,21 +440,24 @@ mixin _$AddBookingState {
     TResult Function()? success,
     TResult Function(String error)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Submitting value) submitting,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Submitting value)? submitting,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -455,7 +465,8 @@ mixin _$AddBookingState {
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -511,7 +522,7 @@ class __$$InitialImplCopyWithImpl<$Res>
         booking: null == booking
             ? _value.booking
             : booking // ignore: cast_nullable_to_non_nullable
-                  as RequestBookingModel,
+                as RequestBookingModel,
       ),
     );
   }
@@ -914,7 +925,7 @@ class __$$ErrorImplCopyWithImpl<$Res>
         null == error
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
       ),
     );
   }

@@ -18,32 +18,32 @@ class BookingDetailsDateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: '',
-    padding: 12.padding,
-    child: Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      spacing: 15.w,
-      runSpacing: 15.w,
-      children: [
-        BookingDetailsDetailsColumn(
-          label: 'Booked date',
-          value: booking.bookedDate.formatToUiDate(),
+        title: '',
+        padding: 12.padding,
+        child: Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          spacing: 15.w,
+          runSpacing: 15.w,
+          children: [
+            BookingDetailsDetailsColumn(
+              label: 'Booked date',
+              value: booking.bookedDate.formatToUiDate(),
+            ),
+            if (isHaveCoolingPeriod) 50.width,
+            BookingDetailsDetailsColumn(
+              label: 'Pickup date',
+              value: booking.pickupDate?.formatToUiDate() ?? 'N/A',
+            ),
+            BookingDetailsDetailsColumn(
+              label: 'Return date',
+              value: booking.returnDate.formatToUiDate(),
+            ),
+            if (isHaveCoolingPeriod)
+              BookingDetailsDetailsColumn(
+                label: 'Cooling period',
+                value: booking.coolingPeriodDate!.formatToUiDate(),
+              ),
+          ],
         ),
-        if (isHaveCoolingPeriod) 50.width,
-        BookingDetailsDetailsColumn(
-          label: 'Pickup date',
-          value: booking.pickupDate?.formatToUiDate() ?? 'N/A',
-        ),
-        BookingDetailsDetailsColumn(
-          label: 'Return date',
-          value: booking.returnDate.formatToUiDate(),
-        ),
-        if (isHaveCoolingPeriod)
-          BookingDetailsDetailsColumn(
-            label: 'Cooling period',
-            value: booking.coolingPeriodDate!.formatToUiDate(),
-          ),
-      ],
-    ),
-  );
+      );
 }

@@ -40,7 +40,7 @@ class BookingDetailsSection extends StatelessWidget {
         if (leading == null && trailing == null)
           titleWidget
         else
-           Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Leading widget

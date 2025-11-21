@@ -185,8 +185,7 @@ class AddOrEditSalesFormStateController {
       if (isExistingClient) {
         clientChanged = selectedClient?.id != original.client.id;
       } else {
-        clientChanged =
-            nameController.text.trim() != original.client.name ||
+        clientChanged = nameController.text.trim() != original.client.name ||
             phone1Controller.text.trim() != original.client.phone1.toString() ||
             (phone2Controller.text.trim().isNotEmpty
                     ? phone2Controller.text.trim()
@@ -273,18 +272,13 @@ class AddOrEditSalesFormStateController {
         clientPhone1: client?.phone1?.toString(),
         clientPhone2: client?.phone2?.toString(),
         address: addressChanged ? placeController.text.trim() : null,
-        products: productsChanged && newProducts.isNotEmpty
-            ? newProducts
-            : null,
-
-        description: descriptionChanged
-            ? descriptionController.text.trim()
-            : null,
+        products:
+            productsChanged && newProducts.isNotEmpty ? newProducts : null,
+        description:
+            descriptionChanged ? descriptionController.text.trim() : null,
         discountAmount: discountChanged ? discountAmount : null,
-
-        paymentMethod: paymentMethodChanged
-            ? paymentMethodNotifier.value
-            : null,
+        paymentMethod:
+            paymentMethodChanged ? paymentMethodNotifier.value : null,
       );
     }
     final client = isExistingClient

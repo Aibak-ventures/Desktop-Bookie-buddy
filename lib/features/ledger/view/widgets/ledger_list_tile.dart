@@ -24,66 +24,66 @@ class LedgerListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-      margin: padding,
-      padding: 10.padding,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: 10.radiusBorder,
-        border: Border.all(
-          color: AppColors.grey200,
+        margin: padding,
+        padding: 10.padding,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: 10.radiusBorder,
+          border: Border.all(
+            color: AppColors.grey200,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.grey300,
+              blurRadius: 8,
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.grey300,
-            blurRadius: 8,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          // icon
-          Expanded(
-            child: icon,
-          ),
-
-          ///  content
-          Expanded(
-            flex: 2,
-            child: DefaultTextStyle(
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              style: TextStyle(
-                color: AppColors.black,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
-              child: content,
-            ),
-          ),
-
-          // amount
-          if (amount != null)
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // icon
             Expanded(
-              child: Text(
-                amount!.toCurrency(
-                  symbol: false,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
+              child: icon,
+            ),
+
+            ///  content
+            Expanded(
+              flex: 2,
+              child: DefaultTextStyle(
                 overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                maxLines: 1,
                 style: TextStyle(
+                  color: AppColors.black,
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
+                child: content,
               ),
             ),
 
-          if (trailing != null) trailing!,
-        ],
-      ),
-    ).onTap(onTap);
+            // amount
+            if (amount != null)
+              Expanded(
+                child: Text(
+                  amount!.toCurrency(
+                    symbol: false,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+
+            if (trailing != null) trailing!,
+          ],
+        ),
+      ).onTap(onTap);
 }
 
 class LedgerListTileShimmer extends StatelessWidget {
@@ -95,94 +95,94 @@ class LedgerListTileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-      margin: padding,
-      padding: 10.padding,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10), // using same radiusBorder
-        border: Border.all(
-          color: Colors.grey.shade200,
+        margin: padding,
+        padding: 10.padding,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10), // using same radiusBorder
+          border: Border.all(
+            color: Colors.grey.shade200,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade300,
+              blurRadius: 8,
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 8,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          /// Icon Placeholder
-          Expanded(
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              child: Container(
-                height: 40,
-                width: 20,
-                decoration: BoxDecoration(
-                  borderRadius: 10.radiusBorder,
-                  color: Colors.grey.shade300,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            /// Icon Placeholder
+            Expanded(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Container(
+                  height: 40,
+                  width: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: 10.radiusBorder,
+                    color: Colors.grey.shade300,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          const SizedBox(width: 10),
+            const SizedBox(width: 10),
 
-          /// Content Placeholder
-          Expanded(
-            flex: 2,
-            child: Column(
-              children: [
-                Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: 10.radiusBorder,
-                      color: Colors.grey.shade300,
+            /// Content Placeholder
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: 10.radiusBorder,
+                        color: Colors.grey.shade300,
+                      ),
+                      height: 15,
+                      width: double.infinity,
                     ),
-                    height: 15,
-                    width: double.infinity,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: 10.radiusBorder,
-                      color: Colors.grey.shade300,
+                  const SizedBox(height: 8),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: 10.radiusBorder,
+                        color: Colors.grey.shade300,
+                      ),
+                      height: 12,
+                      width: 80,
                     ),
-                    height: 12,
-                    width: 80,
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 10),
-
-          /// Amount Placeholder
-          Expanded(
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: 10.radiusBorder,
-                  color: Colors.grey.shade300,
-                ),
-                height: 30,
-                width: 40,
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+
+            const SizedBox(width: 10),
+
+            /// Amount Placeholder
+            Expanded(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: 10.radiusBorder,
+                    color: Colors.grey.shade300,
+                  ),
+                  height: 30,
+                  width: 40,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 }

@@ -51,20 +51,19 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     const ProfileScreen(),
     BlocProvider(
       create: (context) => ProductBloc(),
-      child:    SelectServiceScreen(
-              onServiceSelected: (service, ctx) {
-                print('Selected service: ${service.name}');
-                ctx.push(
-                  ProductGridScreen(
-                    serviceId: service.id,
-                    name: service.name,
-                    mainServiceType:
-                        MainServiceType.fromString(
-                            service.mainServiceName),
-                  ),
-                );
-              },
+      child: SelectServiceScreen(
+        onServiceSelected: (service, ctx) {
+          print('Selected service: ${service.name}');
+          ctx.push(
+            ProductGridScreen(
+              serviceId: service.id,
+              name: service.name,
+              mainServiceType:
+                  MainServiceType.fromString(service.mainServiceName),
             ),
+          );
+        },
+      ),
     ),
   ];
 

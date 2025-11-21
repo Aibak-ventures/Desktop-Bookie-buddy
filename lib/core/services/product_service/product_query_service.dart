@@ -174,11 +174,11 @@ class ProductQueryService {
                 'service_id': serviceId,
                 'page': page,
                 'event_date': pickupDate.parseToDateTime().format(
-                  reverse: true,
-                ),
+                      reverse: true,
+                    ),
                 'return_date': returnDate.parseToDateTime().format(
-                  reverse: true,
-                ),
+                      reverse: true,
+                    ),
                 if (pickupTime != null)
                   'event_time': pickupTime.formatToTime(
                     date: pickupDate.parseToDateTime(),

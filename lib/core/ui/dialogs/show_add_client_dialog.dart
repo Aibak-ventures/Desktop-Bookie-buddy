@@ -25,63 +25,63 @@ Future<ClientModel?> showAddClientDialog({
   return showDialog<ClientModel>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-        title: const Text('Add Client'),
-        content: SizedBox(
-          width: context.isMobile ? null : 0.5.widthR,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              spacing: 15,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomTextField(
-                  controller: nameController,
-                  label: 'Client Name',
-                  validator: AppInputValidators.name,
-                ),
-                CustomTextField(
-                  controller: phone1Controller,
-                  label: 'Phone Number 1',
-                  maxLength: 10,
-                  validator: AppInputValidators.phoneNumber,
-                ),
-                CustomTextField(
-                  controller: phone2Controller,
-                  label: 'Phone Number 2',
-                  maxLength: 10,
-                  validator: (value) => AppInputValidators.isEmpty(value)
-                      ? null
-                      : AppInputValidators.phoneNumber(value),
-                )
-              ],
-            ),
+      title: const Text('Add Client'),
+      content: SizedBox(
+        width: context.isMobile ? null : 0.5.widthR,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            spacing: 15,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomTextField(
+                controller: nameController,
+                label: 'Client Name',
+                validator: AppInputValidators.name,
+              ),
+              CustomTextField(
+                controller: phone1Controller,
+                label: 'Phone Number 1',
+                maxLength: 10,
+                validator: AppInputValidators.phoneNumber,
+              ),
+              CustomTextField(
+                controller: phone2Controller,
+                label: 'Phone Number 2',
+                maxLength: 10,
+                validator: (value) => AppInputValidators.isEmpty(value)
+                    ? null
+                    : AppInputValidators.phoneNumber(value),
+              )
+            ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => dialogContext.pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            child: Text(
-              client != null ? 'Save' : 'Add',
-              style: const TextStyle(
-                color: AppColors.white,
-              ),
-            ),
-            onPressed: () {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              onPressed(
-                dialogContext,
-                nameController.text.trim(),
-                phone1Controller.text.trim(),
-                phone2Controller.text.trim(),
-              );
-            },
-          ),
-        ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () => dialogContext.pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          child: Text(
+            client != null ? 'Save' : 'Add',
+            style: const TextStyle(
+              color: AppColors.white,
+            ),
+          ),
+          onPressed: () {
+            if (!_formKey.currentState!.validate()) {
+              return;
+            }
+            onPressed(
+              dialogContext,
+              nameController.text.trim(),
+              phone1Controller.text.trim(),
+              phone2Controller.text.trim(),
+            );
+          },
+        ),
+      ],
+    ),
   );
 }

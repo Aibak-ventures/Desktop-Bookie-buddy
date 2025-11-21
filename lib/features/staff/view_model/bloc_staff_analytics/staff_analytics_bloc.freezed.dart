@@ -22,36 +22,42 @@ mixin _$StaffAnalyticsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int staffId, int year, int month)
-    getStaffAnalytics,
+        getStaffAnalytics,
     required TResult Function(int year, int month) changeMonth,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int staffId, int year, int month)? getStaffAnalytics,
     TResult? Function(int year, int month)? changeMonth,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int staffId, int year, int month)? getStaffAnalytics,
     TResult Function(int year, int month)? changeMonth,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_GetStaffAnalytics value) getStaffAnalytics,
     required TResult Function(_ChangeMonth value) changeMonth,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_GetStaffAnalytics value)? getStaffAnalytics,
     TResult? Function(_ChangeMonth value)? changeMonth,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_GetStaffAnalytics value)? getStaffAnalytics,
     TResult Function(_ChangeMonth value)? changeMonth,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of StaffAnalyticsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -87,16 +93,15 @@ class _$StaffAnalyticsEventCopyWithImpl<$Res, $Val extends StaffAnalyticsEvent>
   $Res call({Object? year = null, Object? month = null}) {
     return _then(
       _value.copyWith(
-            year: null == year
-                ? _value.year
-                : year // ignore: cast_nullable_to_non_nullable
-                      as int,
-            month: null == month
-                ? _value.month
-                : month // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
+        year: null == year
+            ? _value.year
+            : year // ignore: cast_nullable_to_non_nullable
+                as int,
+        month: null == month
+            ? _value.month
+            : month // ignore: cast_nullable_to_non_nullable
+                as int,
+      ) as $Val,
     );
   }
 }
@@ -136,15 +141,15 @@ class __$$GetStaffAnalyticsImplCopyWithImpl<$Res>
         staffId: null == staffId
             ? _value.staffId
             : staffId // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         year: null == year
             ? _value.year
             : year // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         month: null == month
             ? _value.month
             : month // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
       ),
     );
   }
@@ -199,7 +204,7 @@ class _$GetStaffAnalyticsImpl implements _GetStaffAnalytics {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int staffId, int year, int month)
-    getStaffAnalytics,
+        getStaffAnalytics,
     required TResult Function(int year, int month) changeMonth,
   }) {
     return getStaffAnalytics(staffId, year, month);
@@ -311,11 +316,11 @@ class __$$ChangeMonthImplCopyWithImpl<$Res>
         year: null == year
             ? _value.year
             : year // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         month: null == month
             ? _value.month
             : month // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
       ),
     );
   }
@@ -360,7 +365,7 @@ class _$ChangeMonthImpl implements _ChangeMonth {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int staffId, int year, int month)
-    getStaffAnalytics,
+        getStaffAnalytics,
     required TResult Function(int year, int month) changeMonth,
   }) {
     return changeMonth(year, month);
@@ -446,39 +451,45 @@ mixin _$StaffAnalyticsState {
     required TResult Function(int year, int month) loading,
     required TResult Function(StaffAnalyticsModel staffReport) loaded,
     required TResult Function(String message, int? month, int? year) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int year, int month)? loading,
     TResult? Function(StaffAnalyticsModel staffReport)? loaded,
     TResult? Function(String message, int? month, int? year)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int year, int month)? loading,
     TResult Function(StaffAnalyticsModel staffReport)? loaded,
     TResult Function(String message, int? month, int? year)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -532,11 +543,11 @@ class __$$LoadingImplCopyWithImpl<$Res>
         year: null == year
             ? _value.year
             : year // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         month: null == month
             ? _value.month
             : month // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
       ),
     );
   }
@@ -691,7 +702,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
         null == staffReport
             ? _value.staffReport
             : staffReport // ignore: cast_nullable_to_non_nullable
-                  as StaffAnalyticsModel,
+                as StaffAnalyticsModel,
       ),
     );
   }
@@ -854,15 +865,15 @@ class __$$ErrorImplCopyWithImpl<$Res>
         null == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
         freezed == month
             ? _value.month
             : month // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         freezed == year
             ? _value.year
             : year // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
       ),
     );
   }

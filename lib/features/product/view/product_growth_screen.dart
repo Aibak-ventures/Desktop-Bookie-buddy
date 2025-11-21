@@ -35,7 +35,7 @@ class ProductGrowthScreen extends StatelessWidget {
                 ),
                 loaded: (monthlyData) {
                   return monthlyData.isEmpty
-                      ?  Center(
+                      ? Center(
                           child: Text('No Data Available'),
                         )
                       : ListView.builder(

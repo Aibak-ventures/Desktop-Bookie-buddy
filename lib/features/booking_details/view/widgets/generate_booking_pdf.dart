@@ -32,14 +32,14 @@ class GenerateBookingPdf {
 
       // Generate PDF locally instead of downloading from server
       final pdfBytes = await generateInvoice(bookingDetails, shopDetails);
-      
+
       GlobalLoadingOverlay.hide();
-      
+
       if (kIsWeb) {
         // On web, trigger browser download
         final fileName = 'invoice_${bookingDetails.invoiceId}.pdf';
         downloadFileWeb(pdfBytes, fileName);
-        
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -51,28 +51,29 @@ class GenerateBookingPdf {
       } else {
         // On mobile/desktop, save to file
         final fileName = 'invoice_${bookingDetails.invoiceId}.pdf';
-        
+
         // For Windows desktop, save to Downloads folder and open
         if (Platform.isWindows) {
           // Get Downloads folder path
-          final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+          final downloadsDir =
+              Directory('${Platform.environment['USERPROFILE']}\\Downloads');
           if (!downloadsDir.existsSync()) {
             downloadsDir.createSync(recursive: true);
           }
-          
+
           final filePath = '${downloadsDir.path}\\$fileName';
           final file = File(filePath);
           await file.writeAsBytes(pdfBytes);
-          
+
           log('PDF saved to: $filePath');
-          
+
           // Open the PDF with default viewer
           try {
             await launchUrl(Uri.file(filePath));
           } catch (e) {
             log('Could not open PDF: $e');
           }
-          
+
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -117,7 +118,7 @@ class GenerateBookingPdf {
   }) async {
     try {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF for print...');
-      
+
       // For web, we'll use the share functionality
       // You could also implement a web-specific print dialog here
       await shareInvoice(
@@ -278,48 +279,49 @@ class GenerateBookingPdf {
     String? shopPhone2,
     String shopAddress,
     pw.Font fontBold,
-  ) => pw.Row(
-    children: [
-      pw.Image(shopImage, width: 60, height: 60),
-      pw.SizedBox(width: 12),
-      pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
+  ) =>
+      pw.Row(
         children: [
-          pw.Text(
-            shopName,
-            style: pw.TextStyle(
-              fontWeight: pw.FontWeight.bold,
-              color: _customColor,
-              fontSize: 16,
-              fontBold: fontBold,
-            ),
+          pw.Image(shopImage, width: 60, height: 60),
+          pw.SizedBox(width: 12),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                shopName,
+                style: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  color: _customColor,
+                  fontSize: 16,
+                  fontBold: fontBold,
+                ),
+              ),
+              pw.Text(shopPhone),
+              if (shopPhone2.isNotNullOrEmpty) pw.Text(shopPhone2!),
+              ...shopAddress.splitByWords(4).map(pw.Text.new),
+            ],
           ),
-          pw.Text(shopPhone),
-          if (shopPhone2.isNotNullOrEmpty) pw.Text(shopPhone2!),
-          ...shopAddress.splitByWords(4).map(pw.Text.new),
         ],
-      ),
-    ],
-  );
+      );
 
   // Invoice details
   static pw.Widget _buildInvoiceDetails(BookingDetailsModel bookingDetails) {
     pw.RichText text(String text, String secondText) => pw.RichText(
-      text: pw.TextSpan(
-        text: text,
-        children: [
-          pw.TextSpan(
-            text: secondText,
-            style: const pw.TextStyle(color: PdfColors.grey500),
+          text: pw.TextSpan(
+            text: text,
+            children: [
+              pw.TextSpan(
+                text: secondText,
+                style: const pw.TextStyle(color: PdfColors.grey500),
+              ),
+            ],
+            style: pw.TextStyle(
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.grey800,
+              letterSpacing: _letterSpacing,
+            ),
           ),
-        ],
-        style: pw.TextStyle(
-          fontWeight: pw.FontWeight.bold,
-          color: PdfColors.grey800,
-          letterSpacing: _letterSpacing,
-        ),
-      ),
-    );
+        );
 
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -350,8 +352,9 @@ class GenerateBookingPdf {
         if (client.phone1 != 0) pw.Text(client.phone1.toString()),
         if ((clientAddress ?? '').isNotEmpty)
           ...clientAddress!.splitByWords().map(
-            (line) => pw.Text(line, style: const pw.TextStyle(lineSpacing: 2)),
-          ),
+                (line) =>
+                    pw.Text(line, style: const pw.TextStyle(lineSpacing: 2)),
+              ),
       ],
     );
   }
@@ -366,15 +369,16 @@ class GenerateBookingPdf {
     pw.Text tableHeadingText(
       String text, {
       pw.TextAlign textAlign = pw.TextAlign.left,
-    }) => pw.Text(
-      text,
-      style: pw.TextStyle(
-        fontWeight: pw.FontWeight.bold,
-        color: PdfColors.black,
-        letterSpacing: _letterSpacing,
-      ),
-      textAlign: textAlign,
-    );
+    }) =>
+        pw.Text(
+          text,
+          style: pw.TextStyle(
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.black,
+            letterSpacing: _letterSpacing,
+          ),
+          textAlign: textAlign,
+        );
 
     return pw.Container(
       decoration: pw.BoxDecoration(border: pw.Border.all(color: _pdfGreyColor)),
@@ -556,10 +560,7 @@ class GenerateBookingPdf {
               pw.SizedBox(height: lineSpacing),
               if (bookingDetails.bookedItems.isNotEmpty &&
                   bookingDetails
-                      .bookedItems
-                      .first
-                      .mainServiceType
-                      .isVehicle) ...[
+                      .bookedItems.first.mainServiceType.isVehicle) ...[
                 if (locationStart.isNotEmpty)
                   pw.Padding(
                     padding: const pw.EdgeInsets.only(bottom: lineSpacing),
@@ -708,13 +709,14 @@ class GenerateBookingPdf {
 
   static Iterable<pw.Padding> _generateTermsAndConditions(
     List<String> termsAndConditions,
-  ) => termsAndConditions.map(
-    (e) => pw.Padding(
-      padding: const pw.EdgeInsets.only(bottom: 3),
-      child: pw.Text(
-        '- $e',
-        style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
-      ),
-    ),
-  );
+  ) =>
+      termsAndConditions.map(
+        (e) => pw.Padding(
+          padding: const pw.EdgeInsets.only(bottom: 3),
+          child: pw.Text(
+            '- $e',
+            style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+          ),
+        ),
+      );
 }

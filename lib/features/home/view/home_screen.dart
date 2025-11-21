@@ -17,11 +17,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     print('Current used domain: $baseUrl ✅');
     final bloc = context.read<DashboardBloc>();
-    
+
     return Scaffold(
-      backgroundColor: ResponsiveHelper.isMobile(context) 
-          ? null 
-          : const Color(0xFFF5F7FA),
+      backgroundColor:
+          ResponsiveHelper.isMobile(context) ? null : const Color(0xFFF5F7FA),
       body: ResponsiveWidget(
         mobile: _buildMobileLayout(context, bloc),
         tablet: _buildTabletLayout(context, bloc),
@@ -33,7 +32,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildDesktopLayout(BuildContext context, DashboardBloc bloc) {
     return _buildResponsiveLayout(
-      context, 
+      context,
       bloc,
       containerPadding: const EdgeInsets.all(24),
       titleFontSize: 32,
@@ -45,7 +44,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildTabletLayout(BuildContext context, DashboardBloc bloc) {
     return _buildResponsiveLayout(
-      context, 
+      context,
       bloc,
       containerPadding: const EdgeInsets.all(20),
       titleFontSize: 28,
@@ -57,7 +56,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildLargeDesktopLayout(BuildContext context, DashboardBloc bloc) {
     return _buildResponsiveLayout(
-      context, 
+      context,
       bloc,
       containerPadding: const EdgeInsets.all(32),
       titleFontSize: 36,
@@ -68,7 +67,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildResponsiveLayout(
-    BuildContext context, 
+    BuildContext context,
     DashboardBloc bloc, {
     required EdgeInsets containerPadding,
     required double titleFontSize,
@@ -98,7 +97,8 @@ class HomeScreen extends StatelessWidget {
                     onNotification: (scrollInfo) {
                       final (nextPageUrl, isPaginating) = bloc.state.maybeWhen(
                         orElse: () => (null, false),
-                        loaded: (bookings, carouselResponse, nextPageUrl, isPaginating) =>
+                        loaded: (bookings, carouselResponse, nextPageUrl,
+                                isPaginating) =>
                             (nextPageUrl, isPaginating),
                       );
                       if (scrollInfo.metrics.pixels >=
@@ -145,7 +145,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResponsiveHeader(BuildContext context, DashboardBloc bloc, double fontSize) {
+  Widget _buildResponsiveHeader(
+      BuildContext context, DashboardBloc bloc, double fontSize) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -365,7 +366,12 @@ class HomeScreen extends StatelessWidget {
                             );
                           },
                         ),
-                        SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 8, tablet: 8, desktop: 8, largeDesktop: 8)),
+                        SizedBox(
+                            height: ResponsiveHelper.getSpacing(context,
+                                mobile: 8,
+                                tablet: 8,
+                                desktop: 8,
+                                largeDesktop: 8)),
                         Text(
                           'Have a nice day',
                           style: TextStyle(
@@ -384,8 +390,10 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 15, tablet: 18, desktop: 20, largeDesktop: 24)),
-              
+              SizedBox(
+                  height: ResponsiveHelper.getSpacing(context,
+                      mobile: 15, tablet: 18, desktop: 20, largeDesktop: 24)),
+
               // Carousel Section
               BlocBuilder<DashboardBloc, DashboardState>(
                 buildWhen: (previous, current) {
@@ -397,8 +405,10 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 20, tablet: 22, desktop: 24, largeDesktop: 28)),
-              
+              SizedBox(
+                  height: ResponsiveHelper.getSpacing(context,
+                      mobile: 20, tablet: 22, desktop: 24, largeDesktop: 28)),
+
               // Bookings Section
               HomeBookingListWidget()
             ],

@@ -22,17 +22,17 @@ class StaffAnalyticsSalesScreen extends StatelessWidget {
   final int year;
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text('${month.value} Sales')),
-    body: Padding(
-      padding: 12.padding,
-      child: BlocBuilder<StaffAnalyticsSalesBloc, StaffAnalyticsSalesState>(
-        builder: (context, state) => state.when(
-          loading: () => ListView.builder(
-            itemCount: 6,
-            itemBuilder: (context, index) => const SalesCardShimmer(),
-          ),
-          loaded: (sales, nextPageUrl, isPaginating, _1, _2, _3) =>
-              RefreshIndicator.adaptive(
+        appBar: AppBar(title: Text('${month.value} Sales')),
+        body: Padding(
+          padding: 12.padding,
+          child: BlocBuilder<StaffAnalyticsSalesBloc, StaffAnalyticsSalesState>(
+            builder: (context, state) => state.when(
+              loading: () => ListView.builder(
+                itemCount: 6,
+                itemBuilder: (context, index) => const SalesCardShimmer(),
+              ),
+              loaded: (sales, nextPageUrl, isPaginating, _1, _2, _3) =>
+                  RefreshIndicator.adaptive(
                 onRefresh: () async => _fetchData(context),
                 child: sales.isEmpty
                     ? const EmptyDataWidget(
@@ -47,8 +47,9 @@ class StaffAnalyticsSalesScreen extends StatelessWidget {
                               scrollInfo.metrics.pixels >=
                                   scrollInfo.metrics.maxScrollExtent - 100) {
                             context.read<StaffAnalyticsSalesBloc>().add(
-                              const StaffAnalyticsSalesEvent.loadNextPageSales(),
-                            );
+                                  const StaffAnalyticsSalesEvent
+                                      .loadNextPageSales(),
+                                );
                           }
                           return false;
                         },
@@ -72,24 +73,24 @@ class StaffAnalyticsSalesScreen extends StatelessWidget {
                         ),
                       ),
               ),
-          error: (message) => CustomErrorWidget(
-            errorText: message,
-            onRetry: () {
-              _fetchData(context);
-            },
+              error: (message) => CustomErrorWidget(
+                errorText: message,
+                onRetry: () {
+                  _fetchData(context);
+                },
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   void _fetchData(BuildContext context) {
     context.read<StaffAnalyticsSalesBloc>().add(
-      StaffAnalyticsSalesEvent.loadSales(
-        staffId: staffId,
-        month: month.number,
-        year: year,
-      ),
-    );
+          StaffAnalyticsSalesEvent.loadSales(
+            staffId: staffId,
+            month: month.number,
+            year: year,
+          ),
+        );
   }
 }

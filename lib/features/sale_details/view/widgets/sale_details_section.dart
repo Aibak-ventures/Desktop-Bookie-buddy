@@ -21,44 +21,42 @@ class SaleDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (leading != null) leading!,
-          if (title.isNotEmpty)
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w300,
-                color: Colors.grey,
-              ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (leading != null) leading!,
+              if (title.isNotEmpty)
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.grey,
+                  ),
+                ),
+              if (trailing != null) trailing!,
+            ],
+          ),
+          10.height,
+          Container(
+            width: double.infinity,
+            padding: padding,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: 10.radiusBorder,
+              border: Border.all(color: AppColors.greyBorder),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.grey200,
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-          if (trailing != null) trailing!,
+            child: child,
+          ),
         ],
-      ),
-
-      10.height,
-
-      Container(
-        width: double.infinity,
-        padding: padding,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: 10.radiusBorder,
-          border: Border.all(color: AppColors.greyBorder),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.grey200,
-              spreadRadius: 1,
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: child,
-      ),
-    ],
-  );
+      );
 }

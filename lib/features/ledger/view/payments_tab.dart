@@ -26,7 +26,7 @@ class _PaymentsTabState extends State<PaymentsTab> {
   final ScrollController _scrollController = ScrollController();
   //
   final Map<String, (GlobalKey globalKey, LedgerPaymentsSummaryModel summary)>
-  _groupKeysWithTotal = {};
+      _groupKeysWithTotal = {};
 
   //
   final Debouncer debouncer = Debouncer(
@@ -111,11 +111,11 @@ class _PaymentsTabState extends State<PaymentsTab> {
     final summary = _groupKeysWithTotal[date]?.$2;
     // ignore: unawaited_futures
     context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
-      date,
-      clientId: null,
-      total: summary,
-      type: LedgerType.payments,
-    );
+          date,
+          clientId: null,
+          total: summary,
+          type: LedgerType.payments,
+        );
   }
 
   @override
@@ -133,29 +133,30 @@ class _PaymentsTabState extends State<PaymentsTab> {
   void _fetchPaymentData() {
     final clientId = context.read<ClientCubit>().getSelectedClient()?.id;
     context.read<WalletPaymentsBloc>().add(
-      WalletPaymentsEvent.loadPayments(clientId: clientId),
-    );
+          WalletPaymentsEvent.loadPayments(clientId: clientId),
+        );
   }
 
   @override
   Widget build(BuildContext context) => RefreshIndicator.adaptive(
-    onRefresh: () async {
-      //
-      context.read<LedgerSimpleSummaryCubit>().reset();
-      _currentlyShowingDate = ''; // Reset current date on refresh
-      _groupKeysWithTotal.clear(); // Clear cached keys and totals
-      _fetchPaymentData();
-    },
-    child: BlocBuilder<WalletPaymentsBloc, WalletPaymentsState>(
-      builder: (context, state) => state.when(
-        loading: () => ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context, index) => const LedgerPaymentGroupShimmer(),
-        ),
-        error: (error) =>
-            CustomErrorWidget(errorText: error, onRetry: _fetchPaymentData),
-        loaded:
-            (paymentList, nextPageUrl, isPaginating, clientId, isFirstFetch) {
+        onRefresh: () async {
+          //
+          context.read<LedgerSimpleSummaryCubit>().reset();
+          _currentlyShowingDate = ''; // Reset current date on refresh
+          _groupKeysWithTotal.clear(); // Clear cached keys and totals
+          _fetchPaymentData();
+        },
+        child: BlocBuilder<WalletPaymentsBloc, WalletPaymentsState>(
+          builder: (context, state) => state.when(
+            loading: () => ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) =>
+                  const LedgerPaymentGroupShimmer(),
+            ),
+            error: (error) =>
+                CustomErrorWidget(errorText: error, onRetry: _fetchPaymentData),
+            loaded: (paymentList, nextPageUrl, isPaginating, clientId,
+                isFirstFetch) {
               if (paymentList.isEmpty) {
                 return const EmptyDataWidget(
                   message: 'No payments',
@@ -219,7 +220,7 @@ class _PaymentsTabState extends State<PaymentsTab> {
                 ),
               );
             },
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 }

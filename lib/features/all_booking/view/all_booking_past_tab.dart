@@ -32,7 +32,7 @@ class AllBookingPastTab extends StatelessWidget {
             errorText: error,
             onRetry: () => _fetchBookingsWithFilter(context),
           ),
-          loading: () => kIsWeb 
+          loading: () => kIsWeb
               ? GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -45,127 +45,127 @@ class AllBookingPastTab extends StatelessWidget {
                   itemBuilder: (context, index) => const BookingCardShimmer(),
                 )
               : const BookingListShimmer(itemCount: 10),
-          loaded:
-              (
-                bookings,
-                nextPageUrl,
-                isPaginating,
-                startDate,
-                endDate,
-                searchQuery,
-              ) {
-                if (bookings.isEmpty) {
-                  return AllBookingEmptyWidget(
-                    dateFilterNotifier: dateFilterNotifier,
-                    onClearButtonPressed: () => _clearDateFilter(context),
+          loaded: (
+            bookings,
+            nextPageUrl,
+            isPaginating,
+            startDate,
+            endDate,
+            searchQuery,
+          ) {
+            if (bookings.isEmpty) {
+              return AllBookingEmptyWidget(
+                dateFilterNotifier: dateFilterNotifier,
+                onClearButtonPressed: () => _clearDateFilter(context),
+              );
+            }
+            return NotificationListener<ScrollNotification>(
+              onNotification: (scrollInfo) {
+                if (scrollInfo.metrics.pixels >=
+                        scrollInfo.metrics.maxScrollExtent - 200 &&
+                    nextPageUrl != null &&
+                    !isPaginating) {
+                  bloc.add(
+                    const AllBookingPastEvent.loadNextPageBookings(),
                   );
                 }
-                return NotificationListener<ScrollNotification>(
-                  onNotification: (scrollInfo) {
-                    if (scrollInfo.metrics.pixels >=
-                            scrollInfo.metrics.maxScrollExtent - 200 &&
-                        nextPageUrl != null &&
-                        !isPaginating) {
-                      bloc.add(
-                        const AllBookingPastEvent.loadNextPageBookings(),
-                      );
-                    }
 
-                    return false;
-                  },
-                  child: kIsWeb
-                      ? GridView.builder(
-                          key: const PageStorageKey('all-booking-past-grid'),
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 2.5,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                          itemCount: bookings.length + (isPaginating ? 1 : 0),
-                          itemBuilder: (context, index) {
-                            if (index < bookings.length) {
-                              final booking = bookings[index];
-
-                              return BookingCard(
-                                booking: booking,
-                                onTap: () async {
-                                  final bookingCubit =
-                                      context.read<BookingSelectionCubit>()
-                                        ..selectBooking(booking);
-
-                                  final result = await context.push(
-                                    BookingDetailsScreen(bookingId: booking.id!),
-                                  );
-                                  if (bookingCubit.state.isModified) {
-                                    final updated =
-                                        bookingCubit.state.selectedBooking;
-
-                                    // Update that specific booking in your list
-                                    bloc.add(
-                                      AllBookingPastEvent.updateBooking(
-                                        updated,
-                                        shouldRefresh:
-                                            bookingCubit.state.shouldRefresh,
-                                        isDeleted: result == true,
-                                      ),
-                                    );
-                                    log('update booking called');
-
-                                    bookingCubit.reset();
-                                  }
-                                },
-                              );
-                            } else {
-                              return const BookingCardShimmer();
-                            }
-                          },
-                        )
-                      : ListView.builder(
-                          key: const PageStorageKey('all-booking-past-list'),
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: bookings.length + (isPaginating ? 1 : 0),
-                          itemBuilder: (context, index) {
-                            if (index < bookings.length) {
-                              final booking = bookings[index];
-
-                              return BookingCard(
-                                booking: booking,
-                                onTap: () async {
-                                  final bookingCubit =
-                                      context.read<BookingSelectionCubit>()
-                                        ..selectBooking(booking);
-
-                                  final result = await context.push(
-                                    BookingDetailsScreen(bookingId: booking.id!),
-                                  );
-                                  if (bookingCubit.state.isModified) {
-                                    final updated =
-                                        bookingCubit.state.selectedBooking;
-
-                                    // Update that specific booking in your list
-                                    bloc.add(
-                                      AllBookingPastEvent.updateBooking(
-                                        updated,
-                                        shouldRefresh:
-                                            bookingCubit.state.shouldRefresh,
-                                        isDeleted: result == true,
-                                      ),
-                                    );
-                                    log('update booking called');
-
-                                    bookingCubit.reset();
-                                  }
-                                },
-                              );
-                            } else {
-                              return const BookingCardShimmer();
-                            }
-                          },
-                        ),
-                );
+                return false;
               },
+              child: kIsWeb
+                  ? GridView.builder(
+                      key: const PageStorageKey('all-booking-past-grid'),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 2.5,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: bookings.length + (isPaginating ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index < bookings.length) {
+                          final booking = bookings[index];
+
+                          return BookingCard(
+                            booking: booking,
+                            onTap: () async {
+                              final bookingCubit = context
+                                  .read<BookingSelectionCubit>()
+                                ..selectBooking(booking);
+
+                              final result = await context.push(
+                                BookingDetailsScreen(bookingId: booking.id!),
+                              );
+                              if (bookingCubit.state.isModified) {
+                                final updated =
+                                    bookingCubit.state.selectedBooking;
+
+                                // Update that specific booking in your list
+                                bloc.add(
+                                  AllBookingPastEvent.updateBooking(
+                                    updated,
+                                    shouldRefresh:
+                                        bookingCubit.state.shouldRefresh,
+                                    isDeleted: result == true,
+                                  ),
+                                );
+                                log('update booking called');
+
+                                bookingCubit.reset();
+                              }
+                            },
+                          );
+                        } else {
+                          return const BookingCardShimmer();
+                        }
+                      },
+                    )
+                  : ListView.builder(
+                      key: const PageStorageKey('all-booking-past-list'),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: bookings.length + (isPaginating ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index < bookings.length) {
+                          final booking = bookings[index];
+
+                          return BookingCard(
+                            booking: booking,
+                            onTap: () async {
+                              final bookingCubit = context
+                                  .read<BookingSelectionCubit>()
+                                ..selectBooking(booking);
+
+                              final result = await context.push(
+                                BookingDetailsScreen(bookingId: booking.id!),
+                              );
+                              if (bookingCubit.state.isModified) {
+                                final updated =
+                                    bookingCubit.state.selectedBooking;
+
+                                // Update that specific booking in your list
+                                bloc.add(
+                                  AllBookingPastEvent.updateBooking(
+                                    updated,
+                                    shouldRefresh:
+                                        bookingCubit.state.shouldRefresh,
+                                    isDeleted: result == true,
+                                  ),
+                                );
+                                log('update booking called');
+
+                                bookingCubit.reset();
+                              }
+                            },
+                          );
+                        } else {
+                          return const BookingCardShimmer();
+                        }
+                      },
+                    ),
+            );
+          },
         ),
       ),
     );
@@ -181,13 +181,14 @@ class AllBookingPastTab extends StatelessWidget {
     // Add your date filter parameters to the bloc event
     // You'll need to modify your AllBookingPastEvent to accept date parameters
     context.read<AllBookingPastBloc>().add(
-      AllBookingPastEvent.loadBookings(
-        startDate: dateFilterNotifier.value.startDate?.format(reverse: true),
-        endDate: dateFilterNotifier.value.endDate?.format(reverse: true),
-        searchQuery: searchController.text.trim().isEmpty
-            ? null
-            : searchController.text.trim(),
-      ),
-    );
+          AllBookingPastEvent.loadBookings(
+            startDate:
+                dateFilterNotifier.value.startDate?.format(reverse: true),
+            endDate: dateFilterNotifier.value.endDate?.format(reverse: true),
+            searchQuery: searchController.text.trim().isEmpty
+                ? null
+                : searchController.text.trim(),
+          ),
+        );
   }
 }

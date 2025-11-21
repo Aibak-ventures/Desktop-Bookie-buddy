@@ -8,10 +8,11 @@ class TokenManager {
   static Timer? _refreshTimer;
   static bool _isRefreshing = false; // To prevent concurrent refreshes
 
-  static bool get isTokenValid => (TokenStorage.accessToken != null &&
-            TokenStorage.accessToken!.isNotEmpty) &&
-        (TokenStorage.refreshToken != null &&
-            TokenStorage.refreshToken!.isNotEmpty);
+  static bool get isTokenValid =>
+      (TokenStorage.accessToken != null &&
+          TokenStorage.accessToken!.isNotEmpty) &&
+      (TokenStorage.refreshToken != null &&
+          TokenStorage.refreshToken!.isNotEmpty);
 
   static void startProactiveRefresh() async {
     await TokenStorage.loadTokenExpiry();

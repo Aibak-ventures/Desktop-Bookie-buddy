@@ -9,29 +9,30 @@ Future<void> showCustomAlertDialog({
   required VoidCallback onConfirm,
   VoidCallback? onCancel,
   String? confirmText,
-}) async => showDialog(
-  context: context,
-  builder: (dialogCtx) => AlertDialog(
-    title: Text(title),
-    content: Text(content),
-    actions: [
-      TextButton(
-        onPressed: () {
-          onCancel?.call();
-          dialogCtx.pop();
-        },
-        child: const Text('Cancel'),
+}) async =>
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () {
+              onCancel?.call();
+              dialogCtx.pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              onConfirm();
+              dialogCtx.pop();
+            },
+            child: Text(
+              confirmText ?? 'Confirm',
+              style: const TextStyle(color: AppColors.white),
+            ),
+          ),
+        ],
       ),
-      ElevatedButton(
-        onPressed: () {
-          onConfirm();
-          dialogCtx.pop();
-        },
-        child: Text(
-          confirmText ?? 'Confirm',
-          style: const TextStyle(color: AppColors.white),
-        ),
-      ),
-    ],
-  ),
-);
+    );

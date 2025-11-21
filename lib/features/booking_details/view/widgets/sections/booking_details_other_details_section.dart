@@ -11,21 +11,21 @@ class BookingDetailsOtherDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: '',
-    padding: 12.padding,
-    child: Column(
-      spacing: 10,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        BookingDetailsDetailsColumn(
-          label: 'Staff name',
-          value: booking.staffName ?? 'N/A',
+        title: '',
+        padding: 12.padding,
+        child: Column(
+          spacing: 10,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BookingDetailsDetailsColumn(
+              label: 'Staff name',
+              value: booking.staffName ?? 'N/A',
+            ),
+            BookingDetailsDetailsColumn(
+              label: 'Purchase mode',
+              value: booking.purchaseMode.name,
+            ),
+          ],
         ),
-        BookingDetailsDetailsColumn(
-          label: 'Purchase mode',
-          value: booking.purchaseMode.name,
-        ),
-      ],
-    ),
-  );
+      );
 }

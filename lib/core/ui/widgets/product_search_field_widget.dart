@@ -54,12 +54,11 @@ class ProductSearchFieldWidget extends StatelessWidget {
               label: 'Product (optional)',
               hintText: 'Search product',
               keyboardType: TextInputType.name,
-
               prefixIcon: const Icon(Icons.category_outlined),
               suffixIcon: ValueListenableBuilder(
                 valueListenable: controller,
-                builder: (context, searchValue, child) =>
-                    searchValue.text.isEmpty
+                builder: (context, searchValue, child) => searchValue
+                        .text.isEmpty
                     ? const SizedBox.shrink()
                     : IconButton(
                         onPressed: () {
@@ -100,26 +99,26 @@ class _ItemListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: AspectRatio(
-      aspectRatio: 1,
-      child: ClipRRect(
-        borderRadius: 5.radiusBorder,
-        child: CustomNetworkImage(
-          imageUrl: product.image ?? '',
-          errorWidget: (context, url, error) =>
-              Image.asset(AppAssets.unknownProduct),
+        leading: AspectRatio(
+          aspectRatio: 1,
+          child: ClipRRect(
+            borderRadius: 5.radiusBorder,
+            child: CustomNetworkImage(
+              imageUrl: product.image ?? '',
+              errorWidget: (context, url, error) =>
+                  Image.asset(AppAssets.unknownProduct),
+            ),
+          ),
         ),
-      ),
-    ),
-    title: Text(product.name),
-    subtitle: Text(
-      product.model?.toString() ??
-          product.category?.toString() ??
-          product.color?.toString() ??
-          '',
-    ),
-    trailing: Text(product.price?.toCurrency() ?? ''),
-  );
+        title: Text(product.name),
+        subtitle: Text(
+          product.model?.toString() ??
+              product.category?.toString() ??
+              product.color?.toString() ??
+              '',
+        ),
+        trailing: Text(product.price?.toCurrency() ?? ''),
+      );
 }
 
 class _LoadingBuilder extends StatelessWidget {
@@ -127,13 +126,13 @@ class _LoadingBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-    shrinkWrap: true,
-    itemCount: 4,
-    itemBuilder: (context, index) => const ListTile(
-      leading: CustomShimmerBox(width: 60, height: 60),
-      title: CustomShimmerBox(width: 50, height: 15),
-      subtitle: CustomShimmerBox(width: 30, height: 10),
-      trailing: CustomShimmerBox(width: 35, height: 15),
-    ),
-  );
+        shrinkWrap: true,
+        itemCount: 4,
+        itemBuilder: (context, index) => const ListTile(
+          leading: CustomShimmerBox(width: 60, height: 60),
+          title: CustomShimmerBox(width: 50, height: 15),
+          subtitle: CustomShimmerBox(width: 30, height: 10),
+          trailing: CustomShimmerBox(width: 35, height: 15),
+        ),
+      );
 }

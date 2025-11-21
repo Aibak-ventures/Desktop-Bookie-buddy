@@ -67,16 +67,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
-    
+
     return Scaffold(
       backgroundColor: isDesktop ? const Color(0xFFF5F7FA) : AppColors.white,
       body: Form(
         key: formKey,
-        child: isDesktop 
+        child: isDesktop
             ? _buildDesktopLayout(context)
             : _buildMobileLayout(context),
       ),
@@ -175,7 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.white,
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
                   child: Container(
                     constraints: BoxConstraints(maxWidth: 400),
                     child: Column(
@@ -239,7 +240,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 context.read<DashboardBloc>().add(
                                       const DashboardEvent.loadDashboardData(),
                                     );
-                                context.pushAndRemoveUntil(const BottomBarScreen());
+                                context.pushAndRemoveUntil(
+                                    const BottomBarScreen());
                               },
                               error: (error) => context.showSnackBar(
                                 error,
@@ -257,26 +259,31 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: double.infinity,
                               height: 56,
                               child: ElevatedButton(
-                                onPressed: isLoading ? null : () {
-                                  print('🔥 LOGIN BUTTON PRESSED');
-                                  if (!formKey.currentState!.validate()) {
-                                    context.showSnackBar(
-                                      'Please enter username and password',
-                                      isError: true,
-                                    );
-                                    return;
-                                  }
-                                  final phone = phoneController.text.trim();
-                                  final password = passwordController.text.trim();
-                                  print('🔥 About to call AuthBloc with phone: $phone');
-                                  
-                                  context.read<AuthBloc>().add(
-                                        AuthEvent.loginRequested(
-                                          phone: phone,
-                                          password: password,
-                                        ),
-                                      );
-                                },
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                        print('🔥 LOGIN BUTTON PRESSED');
+                                        if (!formKey.currentState!.validate()) {
+                                          context.showSnackBar(
+                                            'Please enter username and password',
+                                            isError: true,
+                                          );
+                                          return;
+                                        }
+                                        final phone =
+                                            phoneController.text.trim();
+                                        final password =
+                                            passwordController.text.trim();
+                                        print(
+                                            '🔥 About to call AuthBloc with phone: $phone');
+
+                                        context.read<AuthBloc>().add(
+                                              AuthEvent.loginRequested(
+                                                phone: phone,
+                                                password: password,
+                                              ),
+                                            );
+                                      },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF667eea),
                                   foregroundColor: Colors.white,
@@ -331,7 +338,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ).onTap(() async {
-                            await const ContactSupportViewModel().launchWhatsApp();
+                            await const ContactSupportViewModel()
+                                .launchWhatsApp();
                           }),
                         ),
                       ],
@@ -363,9 +371,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         Container(
-          width: context.isMobile
-              ? double.infinity
-              : context.mediaQueryWidth(0.8),
+          width:
+              context.isMobile ? double.infinity : context.mediaQueryWidth(0.8),
           height: context.mediaQueryHeight(0.7),
           decoration: BoxDecoration(
             color: AppColors.white,
@@ -495,8 +502,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SvgPicture.asset(
                     'assets/icons/whatsapp.svg',
                     colorFilter: const ColorFilter.mode(
-                      Color.fromARGB(
-                          255, 33, 192, 92), // WhatsApp green color
+                      Color.fromARGB(255, 33, 192, 92), // WhatsApp green color
                       BlendMode.srcIn,
                     ),
                     semanticsLabel: 'WhatsApp Icon',

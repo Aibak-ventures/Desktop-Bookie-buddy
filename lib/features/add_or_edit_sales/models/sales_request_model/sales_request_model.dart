@@ -7,9 +7,12 @@ part 'sales_request_model.g.dart';
 
 List<Map<String, dynamic>>? _variantsToJson(
   List<ProductSelectedModel>? variants,
-) => variants == null || variants.isEmpty
-    ? null
-    : variants.map((e) => e.toCustomJson(includeMeasurement: false)).toList();
+) =>
+    variants == null || variants.isEmpty
+        ? null
+        : variants
+            .map((e) => e.toCustomJson(includeMeasurement: false))
+            .toList();
 
 // Map<String, dynamic>? _clientToJson(ClientRequestModel? client) {
 //   if (client == null) return null;

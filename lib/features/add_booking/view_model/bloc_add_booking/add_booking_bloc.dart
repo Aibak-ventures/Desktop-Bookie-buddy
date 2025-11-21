@@ -16,9 +16,9 @@ class AddBookingBloc extends Bloc<AddBookingEvent, AddBookingState> {
   AddBookingBloc({
     required BookingRepository bookingRepository,
     // required ClientRepository clientRepository,
-  }) : _bookingRepository = bookingRepository,
-       //  _clientRepository = clientRepository,
-       super(const _Initial(booking: RequestBookingModel())) {
+  })  : _bookingRepository = bookingRepository,
+        //  _clientRepository = clientRepository,
+        super(const _Initial(booking: RequestBookingModel())) {
     //
     on<_UpdateBookingData>(_onUpdateBookingData);
     on<_AddNewBooking>(_onAddNewBooking);

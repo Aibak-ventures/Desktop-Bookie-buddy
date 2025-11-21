@@ -66,8 +66,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
       _categoryController.text = product.category ?? '';
       _colorController.text = product.color ?? '';
       _priceController.text = product.price?.toString() ?? '';
-      _purchaseAmountController.text =
-          product.purchaseAmount?.toString() ?? '';
+      _purchaseAmountController.text = product.purchaseAmount?.toString() ?? '';
       _descriptionController.text = product.description ?? '';
     }
   }
@@ -189,7 +188,8 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
                       ? null
                       : AppInputValidators.category(
                           value,
-                          fieldName: mainServiceType.isVehicle ? 'Brand' : 'Category',
+                          fieldName:
+                              mainServiceType.isVehicle ? 'Brand' : 'Category',
                           isRequired: false,
                         ),
                 ),
@@ -247,11 +247,9 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
             listener: (context, state) {
               state.maybeWhen(
                 orElse: () {},
-                error: (error) =>
-                    context.showSnackBar(error, isError: true),
+                error: (error) => context.showSnackBar(error, isError: true),
                 success: () {
-                  context.pop(
-                      isEditMode ? true : _nameController.text.trim());
+                  context.pop(isEditMode ? true : _nameController.text.trim());
                   context.showSnackBar(
                     isEditMode
                         ? "Product updated successfully"
@@ -374,8 +372,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
           color: _colorController.text.trim(),
-          purchasePrice:
-              _purchaseAmountController.text.trim().toIntOrNull(),
+          purchasePrice: _purchaseAmountController.text.trim().toIntOrNull(),
           price: _priceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
@@ -389,8 +386,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
           color: _colorController.text.trim(),
-          purchasePrice:
-              _purchaseAmountController.text.trim().toIntOrNull(),
+          purchasePrice: _purchaseAmountController.text.trim().toIntOrNull(),
           price: _priceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
@@ -409,7 +405,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
         allowMultiple: false,
         dialogTitle: 'Select Product Image',
       );
-      
+
       if (result != null && result.files.single.path != null) {
         _imageNotifier.value = File(result.files.single.path!);
       }
@@ -424,7 +420,6 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
       }
     }
   }
-
 
   void _onPopInvokedWithResult(bool didPop, Object? result) async {
     if (didPop) return;

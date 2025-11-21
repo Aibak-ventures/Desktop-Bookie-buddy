@@ -35,13 +35,14 @@ class DailySummaryModel with _$DailySummaryModel {
     int? securityAmount,
     int? bookingAmount,
     int? salesAmount,
-  }) => DailySummaryModel(
-    date: date ?? '',
-    payments: payments ?? LedgerPaymentsSummaryModel.empty(),
-    expenses: expenses ?? 0,
-    pendings: pendings ?? 0,
-    securityAmount: securityAmount ?? 0,
-    bookingAmount: bookingAmount ?? 0,
-    salesAmount: salesAmount ?? 0,
-  );
+  }) =>
+      DailySummaryModel(
+        date: date ?? '',
+        payments: payments ?? LedgerPaymentsSummaryModel.empty(),
+        expenses: expenses ?? 0,
+        pendings: pendings ?? 0,
+        securityAmount: securityAmount ?? 0,
+        bookingAmount: bookingAmount ?? 0,
+        salesAmount: salesAmount ?? 0,
+      );
 }

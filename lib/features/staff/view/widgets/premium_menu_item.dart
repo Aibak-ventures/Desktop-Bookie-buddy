@@ -28,44 +28,44 @@ class PremiumMenuItem extends PopupMenuEntry<String> {
 class _PremiumMenuItemState extends State<PremiumMenuItem> {
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap: () {
-      context.pop(widget.value);
-    },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Shimmer(
-            period: const Duration(seconds: 2),
-            gradient: const LinearGradient(
-              colors: [
-                Color(0xFF1B44B1),
-                Color.fromARGB(255, 167, 108, 255),
-                Color(0xFF1B44B1),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (widget.icon != null) widget.icon!,
-                6.width,
-                Text(
-                  widget.label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+        onTap: () {
+          context.pop(widget.value);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Shimmer(
+                period: const Duration(seconds: 2),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF1B44B1),
+                    Color.fromARGB(255, 167, 108, 255),
+                    Color(0xFF1B44B1),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-              ],
-            ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (widget.icon != null) widget.icon!,
+                    6.width,
+                    Text(
+                      widget.label,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              6.width,
+              Image.asset(AppAssets.crown, height: 20, width: 20),
+            ],
           ),
-          6.width,
-          Image.asset(AppAssets.crown, height: 20, width: 20),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

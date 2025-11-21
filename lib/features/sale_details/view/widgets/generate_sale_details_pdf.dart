@@ -30,9 +30,8 @@ class GenerateSaleDetailsPdf {
       // Save PDF to device
       final output = await getApplicationDocumentsDirectory();
 
-      final box = context.isMobile
-          ? null
-          : context.findRenderObject() as RenderBox?;
+      final box =
+          context.isMobile ? null : context.findRenderObject() as RenderBox?;
 
       final file = File(
         '${output.path}/sale_invoice_${saleDetails.invoiceId}.pdf',
@@ -46,9 +45,8 @@ class GenerateSaleDetailsPdf {
           subject: fileName,
           previewThumbnail: XFile(file.path),
           files: [XFile(file.path)],
-          sharePositionOrigin: box == null
-              ? null
-              : box.localToGlobal(Offset.zero) & box.size,
+          sharePositionOrigin:
+              box == null ? null : box.localToGlobal(Offset.zero) & box.size,
         ),
       );
     } catch (e, stack) {
@@ -208,48 +206,49 @@ class GenerateSaleDetailsPdf {
     String? shopPhone2,
     String shopAddress,
     pw.Font fontBold,
-  ) => pw.Row(
-    children: [
-      pw.Image(shopImage, width: 60, height: 60),
-      pw.SizedBox(width: 12),
-      pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
+  ) =>
+      pw.Row(
         children: [
-          pw.Text(
-            shopName,
-            style: pw.TextStyle(
-              fontWeight: pw.FontWeight.bold,
-              color: _customColor,
-              fontSize: 16,
-              fontBold: fontBold,
-            ),
+          pw.Image(shopImage, width: 60, height: 60),
+          pw.SizedBox(width: 12),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                shopName,
+                style: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  color: _customColor,
+                  fontSize: 16,
+                  fontBold: fontBold,
+                ),
+              ),
+              pw.Text(shopPhone),
+              if (shopPhone2.isNotNullOrEmpty) pw.Text(shopPhone2!),
+              ...shopAddress.splitByWords(4).map(pw.Text.new),
+            ],
           ),
-          pw.Text(shopPhone),
-          if (shopPhone2.isNotNullOrEmpty) pw.Text(shopPhone2!),
-          ...shopAddress.splitByWords(4).map(pw.Text.new),
         ],
-      ),
-    ],
-  );
+      );
 
   // Invoice details
   static pw.Widget _buildInvoiceDetails(SaleDetailsModel saleDetails) {
     pw.RichText text(String text, String secondText) => pw.RichText(
-      text: pw.TextSpan(
-        text: text,
-        children: [
-          pw.TextSpan(
-            text: secondText,
-            style: const pw.TextStyle(color: PdfColors.grey500),
+          text: pw.TextSpan(
+            text: text,
+            children: [
+              pw.TextSpan(
+                text: secondText,
+                style: const pw.TextStyle(color: PdfColors.grey500),
+              ),
+            ],
+            style: pw.TextStyle(
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.grey800,
+              letterSpacing: _letterSpacing,
+            ),
           ),
-        ],
-        style: pw.TextStyle(
-          fontWeight: pw.FontWeight.bold,
-          color: PdfColors.grey800,
-          letterSpacing: _letterSpacing,
-        ),
-      ),
-    );
+        );
 
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -280,8 +279,9 @@ class GenerateSaleDetailsPdf {
         if (client.phone1 != 0) pw.Text(client.phone1.toString()),
         if (clientAddress.isNotEmpty)
           ...clientAddress.splitByWords().map(
-            (line) => pw.Text(line, style: const pw.TextStyle(lineSpacing: 2)),
-          ),
+                (line) =>
+                    pw.Text(line, style: const pw.TextStyle(lineSpacing: 2)),
+              ),
       ],
     );
   }
@@ -296,15 +296,16 @@ class GenerateSaleDetailsPdf {
     pw.Text tableHeadingText(
       String text, {
       pw.TextAlign textAlign = pw.TextAlign.left,
-    }) => pw.Text(
-      text,
-      style: pw.TextStyle(
-        fontWeight: pw.FontWeight.bold,
-        color: PdfColors.black,
-        letterSpacing: _letterSpacing,
-      ),
-      textAlign: textAlign,
-    );
+    }) =>
+        pw.Text(
+          text,
+          style: pw.TextStyle(
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.black,
+            letterSpacing: _letterSpacing,
+          ),
+          textAlign: textAlign,
+        );
 
     return pw.Container(
       decoration: pw.BoxDecoration(border: pw.Border.all(color: _pdfGreyColor)),
@@ -471,7 +472,6 @@ class GenerateSaleDetailsPdf {
                 ),
               ),
               pw.SizedBox(height: 4),
-
               pw.Text('Sale : ${bookingDetails.saleDate.formatToUiDate()}'),
               pw.SizedBox(height: lineSpacing),
               pw.Text('Payment Method : ${bookingDetails.paymentMethod.name}'),
@@ -567,13 +567,14 @@ class GenerateSaleDetailsPdf {
 
   static Iterable<pw.Padding> _generateTermsAndConditions(
     List<String> termsAndConditions,
-  ) => termsAndConditions.map(
-    (e) => pw.Padding(
-      padding: const pw.EdgeInsets.only(bottom: 3),
-      child: pw.Text(
-        '- $e',
-        style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
-      ),
-    ),
-  );
+  ) =>
+      termsAndConditions.map(
+        (e) => pw.Padding(
+          padding: const pw.EdgeInsets.only(bottom: 3),
+          child: pw.Text(
+            '- $e',
+            style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+          ),
+        ),
+      );
 }

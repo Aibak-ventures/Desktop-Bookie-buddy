@@ -75,8 +75,7 @@ class PushNotificationService {
 
     await _local
         .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(_channel);
   }
 
@@ -84,10 +83,10 @@ class PushNotificationService {
     // iOS foreground presentation
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
     FirebaseMessaging.onMessage.listen((message) async {
       final notification = message.notification;
@@ -95,10 +94,10 @@ class PushNotificationService {
       final imageUrl =
           // "https://wpengine.com/wp-content/uploads/2021/05/optimize-images-1024x681.jpg";
           notification?.android?.imageUrl ??
-          notification?.apple?.imageUrl ??
-          notification?.web?.image ??
-          data['image'] ??
-          data['image_url'];
+              notification?.apple?.imageUrl ??
+              notification?.web?.image ??
+              data['image'] ??
+              data['image_url'];
 
       String? bigPicturePath;
       if (imageUrl != null) {
@@ -212,10 +211,12 @@ class PushNotificationService {
               builder: (context) => MultiBlocProvider(
                 providers: [
                   BlocProvider(
-                    create: (context) => AllBookingBloc(repository: getIt.get()),
+                    create: (context) =>
+                        AllBookingBloc(repository: getIt.get()),
                   ),
                   BlocProvider(
-                    create: (context) => AllBookingPastBloc(repository: getIt.get()),
+                    create: (context) =>
+                        AllBookingPastBloc(repository: getIt.get()),
                   ),
                 ],
                 child: AllBookingScreen(),

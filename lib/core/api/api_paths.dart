@@ -81,14 +81,22 @@ class _BookingsNamespace {
   String get clients => BookingsApiPaths.clients;
   String get availableProducts => BookingsApiPaths.availableProducts;
   String get dashboard => BookingsApiPaths.dashboard;
+  String deletePayment(int id) => BookingsApiPaths.deletePayment(id);
   String downloadBookingInvoice(int bookingId) =>
       BookingsApiPaths.downloadBookingInvoice(bookingId);
 }
 
 class _SalesNamespace {
   const _SalesNamespace();
+  // v3 paths (legacy)
   String get sales => SalesApiPaths.sales;
   String get updateSale => SalesApiPaths.updateSale;
+
+  // v4 paths (new standard)
+  String get salesV4 => SalesApiPaths.salesV4;
+  String salesDetailV4(int id) => SalesApiPaths.salesDetailV4(id);
+  String updateSaleV4(int id) => SalesApiPaths.updateSaleV4(id);
+  String deleteSaleV4(int id) => SalesApiPaths.deleteSaleV4(id);
 }
 
 class _ExpensesNamespace {

@@ -21,17 +21,18 @@ class StaffAnalyticsBookingsScreen extends StatelessWidget {
   final int year;
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text('${month.value} Bookings')),
-    body: Padding(
-      padding: 12.padding,
-      child: BlocBuilder<StaffAnalyticsBookingsBloc, StaffAnalyticsBookingsState>(
-        builder: (context, state) => state.when(
-          loading: () => ListView.builder(
-            itemCount: 6,
-            itemBuilder: (context, index) => const BookingCardShimmer(),
-          ),
-          loaded: (bookings, nextPageUrl, isPaginating, _1, _2, _3) =>
-              RefreshIndicator.adaptive(
+        appBar: AppBar(title: Text('${month.value} Bookings')),
+        body: Padding(
+          padding: 12.padding,
+          child: BlocBuilder<StaffAnalyticsBookingsBloc,
+              StaffAnalyticsBookingsState>(
+            builder: (context, state) => state.when(
+              loading: () => ListView.builder(
+                itemCount: 6,
+                itemBuilder: (context, index) => const BookingCardShimmer(),
+              ),
+              loaded: (bookings, nextPageUrl, isPaginating, _1, _2, _3) =>
+                  RefreshIndicator.adaptive(
                 onRefresh: () async => _fetchData(context),
                 child: bookings.isEmpty
                     ? const EmptyDataWidget(
@@ -46,8 +47,9 @@ class StaffAnalyticsBookingsScreen extends StatelessWidget {
                               scrollInfo.metrics.pixels >=
                                   scrollInfo.metrics.maxScrollExtent - 100) {
                             context.read<StaffAnalyticsBookingsBloc>().add(
-                              const StaffAnalyticsBookingsEvent.loadNextPageBookings(),
-                            );
+                                  const StaffAnalyticsBookingsEvent
+                                      .loadNextPageBookings(),
+                                );
                           }
                           return false;
                         },
@@ -71,24 +73,24 @@ class StaffAnalyticsBookingsScreen extends StatelessWidget {
                         ),
                       ),
               ),
-          error: (message) => CustomErrorWidget(
-            errorText: message,
-            onRetry: () {
-              _fetchData(context);
-            },
+              error: (message) => CustomErrorWidget(
+                errorText: message,
+                onRetry: () {
+                  _fetchData(context);
+                },
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   void _fetchData(BuildContext context) {
     context.read<StaffAnalyticsBookingsBloc>().add(
-      StaffAnalyticsBookingsEvent.loadBookings(
-        staffId: staffId,
-        month: month.number,
-        year: year,
-      ),
-    );
+          StaffAnalyticsBookingsEvent.loadBookings(
+            staffId: staffId,
+            month: month.number,
+            year: year,
+          ),
+        );
   }
 }

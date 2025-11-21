@@ -152,9 +152,9 @@
 //             ],
 //           ),
 //         ),
-        
+
 //         const SizedBox(height: 40),
-        
+
 //         // Main content with calendar and form
 //         Row(
 //           crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,9 +279,9 @@
 //                       ],
 //                     ),
 //                   ),
-                  
+
 //                   const SizedBox(height: 24),
-                  
+
 //                   // Time selection card
 //                   Container(
 //                     width: double.infinity,
@@ -414,9 +414,9 @@
 //                       ],
 //                     ),
 //                   ),
-                  
+
 //                   const SizedBox(height: 24),
-                  
+
 //                   // Cooling period card
 //                   Container(
 //                     width: double.infinity,
@@ -483,9 +483,9 @@
 //                       ],
 //                     ),
 //                   ),
-                  
+
 //                   const SizedBox(height: 40),
-                  
+
 //                   // Next button
 //                   SizedBox(
 //                     width: double.infinity,

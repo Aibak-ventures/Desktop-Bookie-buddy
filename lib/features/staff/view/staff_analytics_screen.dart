@@ -22,49 +22,49 @@ class StaffAnalyticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text('${staffName} Analytics'),
-      actions: const [PremiumBadge(needOnTap: true)],
-    ),
-    body: BlocBuilder<StaffAnalyticsBloc, StaffAnalyticsState>(
-      builder: (context, state) => state.when(
-        error: (message, month, year) => CustomErrorWidget(
-          errorText: message,
-          onRetry: () {
-            final now = DateTime.now();
-            context.read<StaffAnalyticsBloc>().add(
-              StaffAnalyticsEvent.getStaffAnalytics(
-                staffId: staffId,
-                month: month ?? now.month,
-                year: year ?? now.year,
-              ),
-            );
-          },
+        appBar: AppBar(
+          title: Text('${staffName} Analytics'),
+          actions: const [PremiumBadge(needOnTap: true)],
         ),
-        // loading: () => const Center(child: CircularProgressIndicator()),
-        loading: (year, monthNumber) {
-          final month = Month.fromInt(monthNumber);
-          final staffReport = StaffAnalyticsModel(
-            staffId: staffId,
-            staffName: staffName,
-            year: year,
-            month: month,
-            monthName: month.name.capitalizeFirstLetter(),
-            totalBookingsCount: 0,
-            totalSalesCount: 0,
-            totalPendingsCount: 0,
-            totalBookingsAmount: 0,
-            totalSalesAmount: 0,
-            totalPendingAmount: 0,
-            totalAmount: 0,
-            performancePercent: 0,
-          );
-          return _buildBody(staffReport);
-        },
-        loaded: (staffReport) => _buildBody(staffReport),
-      ),
-    ),
-  );
+        body: BlocBuilder<StaffAnalyticsBloc, StaffAnalyticsState>(
+          builder: (context, state) => state.when(
+            error: (message, month, year) => CustomErrorWidget(
+              errorText: message,
+              onRetry: () {
+                final now = DateTime.now();
+                context.read<StaffAnalyticsBloc>().add(
+                      StaffAnalyticsEvent.getStaffAnalytics(
+                        staffId: staffId,
+                        month: month ?? now.month,
+                        year: year ?? now.year,
+                      ),
+                    );
+              },
+            ),
+            // loading: () => const Center(child: CircularProgressIndicator()),
+            loading: (year, monthNumber) {
+              final month = Month.fromInt(monthNumber);
+              final staffReport = StaffAnalyticsModel(
+                staffId: staffId,
+                staffName: staffName,
+                year: year,
+                month: month,
+                monthName: month.name.capitalizeFirstLetter(),
+                totalBookingsCount: 0,
+                totalSalesCount: 0,
+                totalPendingsCount: 0,
+                totalBookingsAmount: 0,
+                totalSalesAmount: 0,
+                totalPendingAmount: 0,
+                totalAmount: 0,
+                performancePercent: 0,
+              );
+              return _buildBody(staffReport);
+            },
+            loaded: (staffReport) => _buildBody(staffReport),
+          ),
+        ),
+      );
 
   SingleChildScrollView _buildBody(StaffAnalyticsModel staffReport) =>
       SingleChildScrollView(

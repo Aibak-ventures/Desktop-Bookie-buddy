@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
 import 'package:bookie_buddy_web/core/error/error_handler.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
@@ -16,7 +17,7 @@ class DashboardService {
       fetchDashboardData(int page) async {
     try {
       final response = await DioClient.dio.get(
-        '/api/v2/bookings/dashboard/',
+        ApiPaths.bookings.dashboard,
         queryParameters: {'page': page},
       );
 

@@ -15,40 +15,40 @@ class StaffDeletedListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Recently Deleted Staffs')),
-    body: Padding(
-      padding: 16.padding,
-      child: BlocConsumer<StaffDeletedListBloc, StaffDeletedListState>(
-        listenWhen: (previous, current) =>
-            previous != current &&
-            current.maybeMap(
-              orElse: () => false,
-              error: (value) => true,
-              loaded: (value) =>
-                  value.status.isSuccess || value.status.isFailure,
-            ),
-        listener: (context, state) {
-          state.maybeMap(
-            error: (value) {
-              context.showSnackBar(value.message, isError: true);
+        appBar: AppBar(title: const Text('Recently Deleted Staffs')),
+        body: Padding(
+          padding: 16.padding,
+          child: BlocConsumer<StaffDeletedListBloc, StaffDeletedListState>(
+            listenWhen: (previous, current) =>
+                previous != current &&
+                current.maybeMap(
+                  orElse: () => false,
+                  error: (value) => true,
+                  loaded: (value) =>
+                      value.status.isSuccess || value.status.isFailure,
+                ),
+            listener: (context, state) {
+              state.maybeMap(
+                error: (value) {
+                  context.showSnackBar(value.message, isError: true);
+                },
+                orElse: () {},
+              );
             },
-            orElse: () {},
-          );
-        },
-        builder: (context, state) => state.when(
-          error: (message) => CustomErrorWidget(
-            errorText: message,
-            onRetry: () => _fetchData(context),
-          ),
-          loading: () => ListView.builder(
-            itemCount: 12,
-            itemBuilder: (context, index) => Padding(
-              padding: 8.paddingVertical,
-              child: const StaffDeletedListCardShimmer(),
-            ),
-          ),
-          loaded: (staffs, nextPageUrl, isPaginating, _, _1) =>
-              RefreshIndicator.adaptive(
+            builder: (context, state) => state.when(
+              error: (message) => CustomErrorWidget(
+                errorText: message,
+                onRetry: () => _fetchData(context),
+              ),
+              loading: () => ListView.builder(
+                itemCount: 12,
+                itemBuilder: (context, index) => Padding(
+                  padding: 8.paddingVertical,
+                  child: const StaffDeletedListCardShimmer(),
+                ),
+              ),
+              loaded: (staffs, nextPageUrl, isPaginating, _, _1) =>
+                  RefreshIndicator.adaptive(
                 onRefresh: () async => _fetchData(context),
                 child: staffs.isEmpty
                     ? const EmptyDataWidget(
@@ -63,12 +63,12 @@ class StaffDeletedListScreen extends StatelessWidget {
                               nextPageUrl != null) {
                             // Load more data when scrolled to the bottom
                             context.read<StaffDeletedListBloc>().add(
-                              const StaffDeletedListEvent.loadNextPageStaffs(),
-                            );
+                                  const StaffDeletedListEvent
+                                      .loadNextPageStaffs(),
+                                );
                           }
                           return false;
                         },
-
                         child: ListView.builder(
                           itemCount: staffs.length + (isPaginating ? 1 : 0),
                           itemBuilder: (context, index) {
@@ -94,8 +94,8 @@ class StaffDeletedListScreen extends StatelessWidget {
                                     staffName: staff.name,
                                     onRestoreSuccess: () {
                                       context.read<StaffListBloc>().add(
-                                        const StaffListEvent.loadStaffs(),
-                                      );
+                                            const StaffListEvent.loadStaffs(),
+                                          );
                                     },
                                   );
                                 },
@@ -105,10 +105,10 @@ class StaffDeletedListScreen extends StatelessWidget {
                         ),
                       ),
               ),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   void _fetchData(BuildContext context) => context
       .read<StaffDeletedListBloc>()
@@ -119,57 +119,58 @@ class StaffDeletedListScreen extends StatelessWidget {
     required int staffId,
     required String staffName,
     required VoidCallback? onRestoreSuccess,
-  }) => showDialog(
-    context: context,
-    builder: (dialogContext) => BlocProvider.value(
-      value: context.read<StaffDeletedListBloc>(),
-      child: AlertDialog(
-        title: const Text('Confirm Restore'),
-        content: Text('Are you sure you want to restore $staffName?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
-          ),
-          BlocConsumer<StaffDeletedListBloc, StaffDeletedListState>(
-            listener: (context, state) {
-              state.maybeMap(
-                orElse: () {},
-                loaded: (value) {
-                  if (value.status.isSuccess) {
-                    onRestoreSuccess?.call();
-                    NavigatorX(dialogContext).pop();
-                    dialogContext.showSnackBar(
-                      value.message ?? 'Staff restored successfully',
-                    );
-                  } else if (value.status.isFailure) {
-                    NavigatorX(context).pop();
-                    context.showSnackBar(
-                      value.message ?? 'Failed to restore staff',
-                        isError: true,
-                      );
-                  }
-                },
-              );
-            },
-            builder: (context, state) {
-              final isUpdating = state.maybeMap(
-                orElse: () => false,
-                loaded: (value) => value.status.isUpdating,
-              );
-              return CustomNormalElevatedButton(
-                text: 'Restore',
-                onPressed: () {
-                  context.read<StaffDeletedListBloc>().add(
-                    StaffDeletedListEvent.restoreStaff(staffId),
+  }) =>
+      showDialog(
+        context: context,
+        builder: (dialogContext) => BlocProvider.value(
+          value: context.read<StaffDeletedListBloc>(),
+          child: AlertDialog(
+            title: const Text('Confirm Restore'),
+            content: Text('Are you sure you want to restore $staffName?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text('Cancel'),
+              ),
+              BlocConsumer<StaffDeletedListBloc, StaffDeletedListState>(
+                listener: (context, state) {
+                  state.maybeMap(
+                    orElse: () {},
+                    loaded: (value) {
+                      if (value.status.isSuccess) {
+                        onRestoreSuccess?.call();
+                        NavigatorX(dialogContext).pop();
+                        dialogContext.showSnackBar(
+                          value.message ?? 'Staff restored successfully',
+                        );
+                      } else if (value.status.isFailure) {
+                        NavigatorX(context).pop();
+                        context.showSnackBar(
+                          value.message ?? 'Failed to restore staff',
+                          isError: true,
+                        );
+                      }
+                    },
                   );
                 },
-                isLoading: isUpdating,
-              );
-            },
+                builder: (context, state) {
+                  final isUpdating = state.maybeMap(
+                    orElse: () => false,
+                    loaded: (value) => value.status.isUpdating,
+                  );
+                  return CustomNormalElevatedButton(
+                    text: 'Restore',
+                    onPressed: () {
+                      context.read<StaffDeletedListBloc>().add(
+                            StaffDeletedListEvent.restoreStaff(staffId),
+                          );
+                    },
+                    isLoading: isUpdating,
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

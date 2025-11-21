@@ -27,26 +27,26 @@ class LedgerSalesGroupContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              groupedDate.getDateHeading(),
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.grey600,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            if (sales.isNotEmpty) // Only show share button if payments exist
-              Builder(
-                builder: (builderContext) =>
-                    Container(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  groupedDate.getDateHeading(),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.grey600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (sales
+                    .isNotEmpty) // Only show share button if payments exist
+                  Builder(
+                    builder: (builderContext) => Container(
                       decoration: BoxDecoration(
                         color: AppColors.purpleLightShade,
                         borderRadius: 5.radiusBorder,
@@ -82,62 +82,62 @@ class LedgerSalesGroupContainer extends StatelessWidget {
                         isExcel: false,
                       );
                     }),
-              ),
-          ],
-        ),
-      ),
-      ...sales.map((sale) {
-        final paymentMethod = sale.paymentMethods.firstOrNull;
-       return LedgerListTile(
-          onTap: () {
-            context.read<SaleDetailsBloc>().add(
-              SaleDetailsEvent.getSaleDetails(saleId: sale.saleId),
-            );
-            context.push(SaleDetailsScreen(saleId: sale.saleId));
-          },
-          icon: Column(
-            children: [
-              if (paymentMethod != null)
-                paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
-              Text(
-                sale.createdAt.formatToUiTime(),
-                style: TextStyle(fontSize: 12.sp, color: AppColors.grey600),
-              ),
-            ],
-          ),
-          content: Column(
-            children: [
-              Text(sale.clientName),
-              Text(
-                'Items: ${sale.products.join(', ')}',
-                style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-          trailing: Expanded(
-            child: Column(
-              children: [
-                Text(
-                  sale.totalAmount.toCurrency(),
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                // Text(
-                //   'Total',
-                //   style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
-                // ),
               ],
             ),
           ),
-        );
-      }),
-    ],
-  );
+          ...sales.map((sale) {
+            final paymentMethod = sale.paymentMethods.firstOrNull;
+            return LedgerListTile(
+              onTap: () {
+                context.read<SaleDetailsBloc>().add(
+                      SaleDetailsEvent.getSaleDetails(saleId: sale.saleId),
+                    );
+                context.push(SaleDetailsScreen(saleId: sale.saleId));
+              },
+              icon: Column(
+                children: [
+                  if (paymentMethod != null)
+                    paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
+                  Text(
+                    sale.createdAt.formatToUiTime(),
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.grey600),
+                  ),
+                ],
+              ),
+              content: Column(
+                children: [
+                  Text(sale.clientName),
+                  Text(
+                    'Items: ${sale.products.join(', ')}',
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+              trailing: Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      sale.totalAmount.toCurrency(),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    // Text(
+                    //   'Total',
+                    //   style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
+                    // ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        ],
+      );
 }
 
 class LedgerSalesListTileShimmer extends StatelessWidget {
@@ -145,24 +145,24 @@ class LedgerSalesListTileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LedgerListTile(
-    icon: Column(
-      children: [
-        CustomShimmerBox(width: 40.w, height: 12.sp),
-        4.height,
-        CustomShimmerBox(width: 30.w, height: 10.sp),
-      ],
-    ),
-    content: Column(
-      children: [
-        CustomShimmerBox(width: 100.w, height: 14.sp),
-        8.height,
-        CustomShimmerBox(width: 160.w, height: 12.sp),
-      ],
-    ),
-    trailing: Expanded(
-      child: Column(
-        children: [CustomShimmerBox(width: 50.w, height: 18.sp)],
-      ),
-    ),
-  );
+        icon: Column(
+          children: [
+            CustomShimmerBox(width: 40.w, height: 12.sp),
+            4.height,
+            CustomShimmerBox(width: 30.w, height: 10.sp),
+          ],
+        ),
+        content: Column(
+          children: [
+            CustomShimmerBox(width: 100.w, height: 14.sp),
+            8.height,
+            CustomShimmerBox(width: 160.w, height: 12.sp),
+          ],
+        ),
+        trailing: Expanded(
+          child: Column(
+            children: [CustomShimmerBox(width: 50.w, height: 18.sp)],
+          ),
+        ),
+      );
 }

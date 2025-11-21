@@ -16,8 +16,8 @@ class LedgerBookingsBloc
   final LedgerRepository _repository;
 
   LedgerBookingsBloc({required LedgerRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);
     on<_LoadNextPageBookings>(_onLoadNextPageBookings);
   }

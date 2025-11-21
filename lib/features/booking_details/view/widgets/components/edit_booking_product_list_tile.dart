@@ -28,69 +28,70 @@ class EditBookingProductListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Stack(
-    children: [
-      Container(
-        margin: 5.paddingOnly(top: true, bottom: true),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.grey200),
-          borderRadius: 5.radiusBorder,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: AppColors.grey200, spreadRadius: 2, blurRadius: 5),
-          ],
-        ),
-        child: Column(
-          children: [
-            ProductSimpleDetailsTile(
-              amount: amount,
-              name: product.name,
-              quantity: product.quantity,
-              category: product.category,
-              color: product.color,
-              image: product.image,
-              model: product.model,
-              variantAttribute: product.variantAttribute,
-              mainServiceType: product.mainServiceType,
-              needColor: needColor,
-              extraField: extraField,
+        children: [
+          Container(
+            margin: 5.paddingOnly(top: true, bottom: true),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.grey200),
+              borderRadius: 5.radiusBorder,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.grey200, spreadRadius: 2, blurRadius: 5),
+              ],
             ),
-            if (trailing != null) trailing!,
-          ],
-        ),
-      ),
-      if (isActionsVisible)
-        Positioned(
-          right: 15,
-          top: 5,
-          child: PopupMenuButton(
-            tooltip: 'Actions',
-            icon: const Icon(Icons.more_vert, color: AppColors.black),
-            itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                onTap: onEdit,
-                child: const Row(
-                  spacing: 5,
-                  children: [
-                    Icon(Icons.edit_outlined, color: AppColors.purple),
-                    Text('Edit'),
-                  ],
+            child: Column(
+              children: [
+                ProductSimpleDetailsTile(
+                  amount: amount,
+                  name: product.name,
+                  quantity: product.quantity,
+                  category: product.category,
+                  color: product.color,
+                  image: product.image,
+                  model: product.model,
+                  variantAttribute: product.variantAttribute,
+                  mainServiceType: product.mainServiceType,
+                  needColor: needColor,
+                  extraField: extraField,
                 ),
-              ),
-              PopupMenuItem<int>(
-                value: 1,
-                onTap: onRemove,
-                child: const Row(
-                  spacing: 5,
-                  children: [
-                    Icon(Icons.delete_outline, color: AppColors.redTomato),
-                    Text('Remove'),
-                  ],
-                ),
-              ),
-            ],
+                if (trailing != null) trailing!,
+              ],
+            ),
           ),
-        ),
-    ],
-  );
+          if (isActionsVisible)
+            Positioned(
+              right: 15,
+              top: 5,
+              child: PopupMenuButton(
+                tooltip: 'Actions',
+                icon: const Icon(Icons.more_vert, color: AppColors.black),
+                itemBuilder: (context) => [
+                  PopupMenuItem<int>(
+                    value: 0,
+                    onTap: onEdit,
+                    child: const Row(
+                      spacing: 5,
+                      children: [
+                        Icon(Icons.edit_outlined, color: AppColors.purple),
+                        Text('Edit'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    onTap: onRemove,
+                    child: const Row(
+                      spacing: 5,
+                      children: [
+                        Icon(Icons.delete_outline, color: AppColors.redTomato),
+                        Text('Remove'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      );
 }

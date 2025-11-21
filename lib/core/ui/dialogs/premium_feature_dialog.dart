@@ -41,7 +41,6 @@ class PremiumFeatureDialog {
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.purple,
-
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {

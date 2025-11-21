@@ -16,51 +16,51 @@ Future<MeasurementValueModel?> showVehicleCustomizationDialog(
   return showDialog<MeasurementValueModel>(
     context: context,
     builder: (dialogCtx) => AlertDialog(
-        title: const Text('Add Details'),
-        content: SizedBox(
-          width: context.isMobile ? null : 0.5.widthR,
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomTextField(
-                  controller: controller,
-                  hintText: 'Eg: 1000 or 2800',
-                  validator: AppInputValidators.numberOnly,
-                  keyboardType: TextInputType.number,
-                ),
+      title: const Text('Add Details'),
+      content: SizedBox(
+        width: context.isMobile ? null : 0.5.widthR,
+        child: Row(
+          children: [
+            Expanded(
+              child: CustomTextField(
+                controller: controller,
+                hintText: 'Eg: 1000 or 2800',
+                validator: AppInputValidators.numberOnly,
+                keyboardType: TextInputType.number,
               ),
-              16.width,
-              const Text('Km'),
-            ],
-          ),
+            ),
+            16.width,
+            const Text('Km'),
+          ],
         ),
-        actions: [
-          TextButton(
-            child: const Text(
-              'Cancel',
-            ),
-            onPressed: () {
-              dialogCtx.pop(); // Close the dialog
-            },
-          ),
-          ElevatedButton(
-            child: const Text(
-              'Confirm',
-              style: TextStyle(color: AppColors.white),
-            ),
-            onPressed: () {
-              final km = controller.text.trim().toIntOrNull();
-              if (km != null) {
-                final result = MeasurementValueModel(
-                  name: 'Running Kilometers',
-                  key: 'km',
-                  value: '$km Km',
-                );
-                dialogCtx.pop(result); // Close the dialog
-              }
-            },
-          ),
-        ],
       ),
+      actions: [
+        TextButton(
+          child: const Text(
+            'Cancel',
+          ),
+          onPressed: () {
+            dialogCtx.pop(); // Close the dialog
+          },
+        ),
+        ElevatedButton(
+          child: const Text(
+            'Confirm',
+            style: TextStyle(color: AppColors.white),
+          ),
+          onPressed: () {
+            final km = controller.text.trim().toIntOrNull();
+            if (km != null) {
+              final result = MeasurementValueModel(
+                name: 'Running Kilometers',
+                key: 'km',
+                value: '$km Km',
+              );
+              dialogCtx.pop(result); // Close the dialog
+            }
+          },
+        ),
+      ],
+    ),
   );
 }

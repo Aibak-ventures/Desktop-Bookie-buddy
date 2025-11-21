@@ -16,8 +16,8 @@ part 'client_list_state.dart';
 class ClientListBloc extends Bloc<ClientListEvent, ClientListState> {
   final ClientRepository _repository;
   ClientListBloc({required ClientRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadClients>(_onLoadClients);
     on<_LoadNextPageClients>(_onLoadNextPageClients);
     on<_DeleteClient>(_onDeleteClient);

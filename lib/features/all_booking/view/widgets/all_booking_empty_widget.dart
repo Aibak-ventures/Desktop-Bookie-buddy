@@ -14,39 +14,39 @@ class AllBookingEmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        SizedBox(height: context.screenHeight * 0.3),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.calendar_today_outlined,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              dateFilterNotifier.value.hasActiveFilter
-                  ? 'No bookings found for selected dates'
-                  : 'No bookings',
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w500,
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(height: context.screenHeight * 0.3),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.calendar_today_outlined,
+                size: 64,
+                color: Colors.grey.shade400,
               ),
-              textAlign: TextAlign.center,
-            ),
-            if (dateFilterNotifier.value.hasActiveFilter) ...[
-              const SizedBox(height: 8),
-              TextButton(
-                onPressed: onClearButtonPressed,
-                child: const Text('Clear filter to see all bookings'),
+              const SizedBox(height: 16),
+              Text(
+                dateFilterNotifier.value.hasActiveFilter
+                    ? 'No bookings found for selected dates'
+                    : 'No bookings',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
               ),
+              if (dateFilterNotifier.value.hasActiveFilter) ...[
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: onClearButtonPressed,
+                  child: const Text('Clear filter to see all bookings'),
+                ),
+              ],
             ],
-          ],
-        ),
-      ],
-    );
+          ),
+        ],
+      );
 }

@@ -19,8 +19,8 @@ class ClientRequestModel with _$ClientRequestModel {
 
 extension ClientRequestModelX on ClientRequestModel {
   Map<String, dynamic> toCustomJson() => {
-    'client_name': name,
-    'client_phone_1': phone1,
-    'client_phone_2': phone2,
-  };
+        'client_name': name,
+        'client_phone_1': phone1,
+        'client_phone_2': phone2,
+      };
 }

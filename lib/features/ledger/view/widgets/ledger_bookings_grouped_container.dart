@@ -25,26 +25,26 @@ class LedgerBookingsGroupedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              groupedDate.getDateHeading(),
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.grey600,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            if (bookings.isNotEmpty) // Only show share button if payments exist
-              Builder(
-                builder: (builderContext) =>
-                    Container(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  groupedDate.getDateHeading(),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.grey600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (bookings
+                    .isNotEmpty) // Only show share button if payments exist
+                  Builder(
+                    builder: (builderContext) => Container(
                       decoration: BoxDecoration(
                         color: AppColors.purpleLightShade,
                         borderRadius: BorderRadius.circular(5),
@@ -80,56 +80,57 @@ class LedgerBookingsGroupedContainer extends StatelessWidget {
                         isExcel: false,
                       );
                     }),
-              ),
-          ],
-        ),
-      ),
-      ...bookings.map(
-        (booking) => LedgerListTile(
-          onTap: () {
-            context.push(BookingDetailsScreen(bookingId: booking.bookingId));
-          },
-          icon: Column(
-            children: [
-              Text(
-                booking.advanceAmount.toCurrency(),
-                style: TextStyle(fontSize: 14.sp, color: AppColors.black),
-              ),
-              Text(
-                'Paid',
-                style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
-              ),
-            ],
-          ),
-          content: Column(
-            children: [
-              Text(booking.clientName),
-              Text(
-                'Items: ${booking.bookedItems.join(', ')}',
-                style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-          trailing: Expanded(
-            child: Column(
-              children: [
-                Text(
-                  booking.totalAmount.toCurrency(),
-                  style: TextStyle(fontSize: 14.sp, color: AppColors.black),
-                ),
-                Text(
-                  'Total',
-                  style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
-                ),
+                  ),
               ],
             ),
           ),
-        ),
-      ),
-    ],
-  );
+          ...bookings.map(
+            (booking) => LedgerListTile(
+              onTap: () {
+                context
+                    .push(BookingDetailsScreen(bookingId: booking.bookingId));
+              },
+              icon: Column(
+                children: [
+                  Text(
+                    booking.advanceAmount.toCurrency(),
+                    style: TextStyle(fontSize: 14.sp, color: AppColors.black),
+                  ),
+                  Text(
+                    'Paid',
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
+                  ),
+                ],
+              ),
+              content: Column(
+                children: [
+                  Text(booking.clientName),
+                  Text(
+                    'Items: ${booking.bookedItems.join(', ')}',
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+              trailing: Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      booking.totalAmount.toCurrency(),
+                      style: TextStyle(fontSize: 14.sp, color: AppColors.black),
+                    ),
+                    Text(
+                      'Total',
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
 }
 
 class LedgerBookingListTileShimmer extends StatelessWidget {
@@ -137,28 +138,28 @@ class LedgerBookingListTileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LedgerListTile(
-    icon: Column(
-      children: [
-        CustomShimmerBox(width: 40.w, height: 12.sp),
-        4.height,
-        CustomShimmerBox(width: 30.w, height: 10.sp),
-      ],
-    ),
-    content: Column(
-      children: [
-        CustomShimmerBox(width: 100.w, height: 14.sp),
-        8.height,
-        CustomShimmerBox(width: 160.w, height: 12.sp),
-      ],
-    ),
-    trailing: Expanded(
-      child: Column(
-        children: [
-          CustomShimmerBox(width: 50.w, height: 12.sp),
-          4.height,
-          CustomShimmerBox(width: 30.w, height: 10.sp),
-        ],
-      ),
-    ),
-  );
+        icon: Column(
+          children: [
+            CustomShimmerBox(width: 40.w, height: 12.sp),
+            4.height,
+            CustomShimmerBox(width: 30.w, height: 10.sp),
+          ],
+        ),
+        content: Column(
+          children: [
+            CustomShimmerBox(width: 100.w, height: 14.sp),
+            8.height,
+            CustomShimmerBox(width: 160.w, height: 12.sp),
+          ],
+        ),
+        trailing: Expanded(
+          child: Column(
+            children: [
+              CustomShimmerBox(width: 50.w, height: 12.sp),
+              4.height,
+              CustomShimmerBox(width: 30.w, height: 10.sp),
+            ],
+          ),
+        ),
+      );
 }

@@ -39,69 +39,67 @@ class ProductSimpleDetailsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: ClipRRect(
-      borderRadius: 5.radiusBorder,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: image.isNullOrEmpty
-            ? Image.asset(AppAssets.unknownProduct)
-            : CustomNetworkImage(
-                imageUrl: image!,
-                errorWidget: (context, url, error) =>
-                    Image.asset(AppAssets.unknownProduct),
-              ),
-      ),
-    ),
-    title: Text(name),
-    subtitle: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (mainServiceType.isDress)
-          Text(
-            'Size: ${variantAttribute ?? '-'}',
-            style: const TextStyle(color: AppColors.grey),
+        leading: ClipRRect(
+          borderRadius: 5.radiusBorder,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: image.isNullOrEmpty
+                ? Image.asset(AppAssets.unknownProduct)
+                : CustomNetworkImage(
+                    imageUrl: image!,
+                    errorWidget: (context, url, error) =>
+                        Image.asset(AppAssets.unknownProduct),
+                  ),
           ),
-        if (needColor && (mainServiceType.isDress || mainServiceType.isOthers))
-          Text(
-            'Color: ${color ?? '-'}',
-            style: const TextStyle(color: AppColors.grey),
-          ),
-        if (mainServiceType.isVehicle)
-          Text(
-            'Model: ${model ?? '-'}',
-            style: const TextStyle(color: AppColors.grey),
-          ),
-        if (mainServiceType.isVehicle ||
-            mainServiceType.isOthers ||
-            mainServiceType.isGadgets ||
-            mainServiceType.isEquipment)
-          Text(
-            '${mainServiceType.isVehicle
-                ? 'Brand'
-                : mainServiceType.isGadgets
-                ? 'Serial Number'
-                : 'Category'} : ${category ?? '-'}',
-            style: const TextStyle(color: AppColors.grey),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        Text(
-          'Quantity: ${quantity}',
-          style: const TextStyle(color: AppColors.grey),
         ),
-        if (extraField != null)
-          Text(extraField!, style: const TextStyle(color: AppColors.grey)),
-      ],
-    ),
-    trailing: trailing != null
-        ? trailing
-        : amount == null
-        ? null
-        : Text(
-            amount!.toCurrency(),
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
-          ),
-  );
+        title: Text(name),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (mainServiceType.isDress)
+              Text(
+                'Size: ${variantAttribute ?? '-'}',
+                style: const TextStyle(color: AppColors.grey),
+              ),
+            if (needColor &&
+                (mainServiceType.isDress || mainServiceType.isOthers))
+              Text(
+                'Color: ${color ?? '-'}',
+                style: const TextStyle(color: AppColors.grey),
+              ),
+            if (mainServiceType.isVehicle)
+              Text(
+                'Model: ${model ?? '-'}',
+                style: const TextStyle(color: AppColors.grey),
+              ),
+            if (mainServiceType.isVehicle ||
+                mainServiceType.isOthers ||
+                mainServiceType.isGadgets ||
+                mainServiceType.isEquipment)
+              Text(
+                '${mainServiceType.isVehicle ? 'Brand' : mainServiceType.isGadgets ? 'Serial Number' : 'Category'} : ${category ?? '-'}',
+                style: const TextStyle(color: AppColors.grey),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            Text(
+              'Quantity: ${quantity}',
+              style: const TextStyle(color: AppColors.grey),
+            ),
+            if (extraField != null)
+              Text(extraField!, style: const TextStyle(color: AppColors.grey)),
+          ],
+        ),
+        trailing: trailing != null
+            ? trailing
+            : amount == null
+                ? null
+                : Text(
+                    amount!.toCurrency(),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
+                  ),
+      );
 
   // ({String type, String title}) getProductSpecification(
   //     MainServiceType mainServiceType) {

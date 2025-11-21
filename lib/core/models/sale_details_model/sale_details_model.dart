@@ -39,7 +39,6 @@ class SaleDetailsModel with _$SaleDetailsModel {
     )
     @Default(PaymentMethod.cash)
     PaymentMethod paymentMethod,
-
     @JsonKey(name: 'staff_id') int? staffId,
     @JsonKey(name: 'staff_name') String? staffName,
   }) = _SaleDetailsModel;

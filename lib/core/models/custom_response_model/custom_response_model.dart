@@ -63,10 +63,11 @@ enum CustomResponseStatus {
   //   }
   // }
 
-  static CustomResponseStatus fromString(String status) => CustomResponseStatus.values.firstWhere(
-      (e) => e.apiName == status.toLowerCase(),
-      orElse: () => CustomResponseStatus.error,
-    );
+  static CustomResponseStatus fromString(String status) =>
+      CustomResponseStatus.values.firstWhere(
+        (e) => e.apiName == status.toLowerCase(),
+        orElse: () => CustomResponseStatus.error,
+      );
 
   static String toJson(CustomResponseStatus status) => status.apiName;
 

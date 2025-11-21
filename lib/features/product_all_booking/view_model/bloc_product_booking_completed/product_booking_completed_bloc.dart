@@ -12,8 +12,8 @@ class ProductBookingCompletedBloc
     extends Bloc<ProductBookingCompletedEvent, ProductBookingCompletedState> {
   final ProductRepository _repository;
   ProductBookingCompletedBloc({required ProductRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);
     on<_LoadNextBookings>(_onLoadNextPageBookings);
   }

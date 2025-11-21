@@ -69,12 +69,13 @@ class PaymentPDFGenerator {
     pw.FontWeight? weight,
     PdfColor? color,
     bool isFallback = false,
-  }) => pw.TextStyle(
-    fontSize: size,
-    fontWeight: weight ?? pw.FontWeight.normal,
-    font: isFallback ? _defaultFont : _fallbackFont,
-    color: color ?? PdfColors.black,
-  );
+  }) =>
+      pw.TextStyle(
+        fontSize: size,
+        fontWeight: weight ?? pw.FontWeight.normal,
+        font: isFallback ? _defaultFont : _fallbackFont,
+        color: color ?? PdfColors.black,
+      );
 
   static Future<String> generatePaymentStatement(
     PaymentSummary paymentData,
@@ -123,138 +124,138 @@ class PaymentPDFGenerator {
   static pw.Widget _buildHeader(
     PaymentSummary paymentData,
     pw.ImageProvider? businessImage,
-  ) => pw.Row(
-    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-    children: [
-      pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
+  ) =>
+      pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
-          pw.Text(
-            'Payment Statement',
-            style: _textStyle(24, weight: pw.FontWeight.bold),
-          ),
-          pw.SizedBox(height: 5),
-          pw.Text(paymentData.shopDetails.name, style: _textStyle(16)),
-          pw.Text(
-            paymentData.shopDetails.phone,
-            style: _textStyle(12, color: PdfColors.grey700),
-          ),
-          if (paymentData.shopDetails.phone2.isNotNullOrEmpty)
-            pw.Text(
-              paymentData.shopDetails.phone2!,
-              style: _textStyle(12, color: PdfColors.grey700),
-            ),
-          ...paymentData.shopDetails.fullAddress
-              .splitByWords(5)
-              .map(
-                (line) => pw.Text(
-                  line,
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                'Payment Statement',
+                style: _textStyle(24, weight: pw.FontWeight.bold),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Text(paymentData.shopDetails.name, style: _textStyle(16)),
+              pw.Text(
+                paymentData.shopDetails.phone,
+                style: _textStyle(12, color: PdfColors.grey700),
+              ),
+              if (paymentData.shopDetails.phone2.isNotNullOrEmpty)
+                pw.Text(
+                  paymentData.shopDetails.phone2!,
                   style: _textStyle(12, color: PdfColors.grey700),
                 ),
-              ),
+              ...paymentData.shopDetails.fullAddress.splitByWords(5).map(
+                    (line) => pw.Text(
+                      line,
+                      style: _textStyle(12, color: PdfColors.grey700),
+                    ),
+                  ),
+            ],
+          ),
+          // Shop image
+          if (businessImage != null)
+            pw.Image(businessImage, width: 100, height: 100),
         ],
-      ),
-      // Shop image
-      if (businessImage != null)
-        pw.Image(businessImage, width: 100, height: 100),
-    ],
-  );
+      );
 
   static pw.Widget _buildDateRange(PaymentSummary paymentData) => pw.Text(
-    'Payments from ${paymentData.fromDate} to ${paymentData.toDate}',
-    style: _textStyle(14, weight: pw.FontWeight.bold),
-  );
+        'Payments from ${paymentData.fromDate} to ${paymentData.toDate}',
+        style: _textStyle(14, weight: pw.FontWeight.bold),
+      );
 
   static pw.Widget _buildSummary(PaymentSummary paymentData) => pw.Container(
-    width: double.infinity,
-    color: greyColor,
-    padding: const pw.EdgeInsets.all(10),
-    child: pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      children: [
-        pw.Text('Total Payments:', style: _textStyle(14)),
-        pw.Text(
-          paymentData.totalAmount.toCurrency(),
-          style: _textStyle(14, weight: pw.FontWeight.bold),
-        ),
-      ],
-    ),
-  );
-
-  static pw.Widget _buildPaymentTable(List<PaymentEntry> entries) => pw.Column(
-    crossAxisAlignment: pw.CrossAxisAlignment.start,
-    children: [
-      pw.Container(
+        width: double.infinity,
         color: greyColor,
-        padding: const pw.EdgeInsets.all(8),
+        padding: const pw.EdgeInsets.all(10),
         child: pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                'Date',
-                style: _textStyle(12, weight: pw.FontWeight.bold),
-              ),
-            ),
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                'Time',
-                style: _textStyle(12, weight: pw.FontWeight.bold),
-              ),
-            ),
-            pw.Expanded(
-              flex: 4,
-              child: pw.Text(
-                'Details',
-                style: _textStyle(12, weight: pw.FontWeight.bold),
-              ),
-            ),
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                'Amount',
-                style: _textStyle(12, weight: pw.FontWeight.bold),
-                textAlign: pw.TextAlign.right,
-              ),
+            pw.Text('Total Payments:', style: _textStyle(14)),
+            pw.Text(
+              paymentData.totalAmount.toCurrency(),
+              style: _textStyle(14, weight: pw.FontWeight.bold),
             ),
           ],
         ),
-      ),
-      ...entries.asMap().entries.map((entry) {
-        final payment = entry.value;
+      );
 
-        return pw.Container(
-          color: PdfColors.white,
-          padding: const pw.EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-          child: pw.Row(
-            children: [
-              pw.Expanded(
-                flex: 2,
-                child: pw.Text(payment.date, style: _textStyle(12)),
-              ),
-              pw.Expanded(
-                flex: 2,
-                child: pw.Text(payment.time, style: _textStyle(12)),
-              ),
-              pw.Expanded(
-                flex: 4,
-                child: pw.Text(payment.details, style: _textStyle(12)),
-              ),
-              pw.Expanded(
-                flex: 2,
-                child: pw.Text(
-                  payment.amount.toCurrency(),
-                  style: _textStyle(12),
-                  textAlign: pw.TextAlign.right,
+  static pw.Widget _buildPaymentTable(List<PaymentEntry> entries) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Container(
+            color: greyColor,
+            padding: const pw.EdgeInsets.all(8),
+            child: pw.Row(
+              children: [
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text(
+                    'Date',
+                    style: _textStyle(12, weight: pw.FontWeight.bold),
+                  ),
                 ),
-              ),
-            ],
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text(
+                    'Time',
+                    style: _textStyle(12, weight: pw.FontWeight.bold),
+                  ),
+                ),
+                pw.Expanded(
+                  flex: 4,
+                  child: pw.Text(
+                    'Details',
+                    style: _textStyle(12, weight: pw.FontWeight.bold),
+                  ),
+                ),
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text(
+                    'Amount',
+                    style: _textStyle(12, weight: pw.FontWeight.bold),
+                    textAlign: pw.TextAlign.right,
+                  ),
+                ),
+              ],
+            ),
           ),
-        );
-      }).toList(),
-    ],
-  );
+          ...entries.asMap().entries.map((entry) {
+            final payment = entry.value;
+
+            return pw.Container(
+              color: PdfColors.white,
+              padding:
+                  const pw.EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text(payment.date, style: _textStyle(12)),
+                  ),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text(payment.time, style: _textStyle(12)),
+                  ),
+                  pw.Expanded(
+                    flex: 4,
+                    child: pw.Text(payment.details, style: _textStyle(12)),
+                  ),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text(
+                      payment.amount.toCurrency(),
+                      style: _textStyle(12),
+                      textAlign: pw.TextAlign.right,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
+      );
 }
 
 class PaymentPDFService {
@@ -283,9 +284,8 @@ class PaymentPDFService {
         paymentData,
       );
       GlobalLoadingOverlay.hide();
-      final box = context.isMobile
-          ? null
-          : context.findRenderObject() as RenderBox?;
+      final box =
+          context.isMobile ? null : context.findRenderObject() as RenderBox?;
 
       final fileName = filePath.split('/').last;
       await SharePlus.instance.share(
@@ -294,9 +294,8 @@ class PaymentPDFService {
           subject: fileName,
           previewThumbnail: XFile(filePath),
           files: [XFile(filePath)],
-          sharePositionOrigin: box == null
-              ? null
-              : box.localToGlobal(Offset.zero) & box.size,
+          sharePositionOrigin:
+              box == null ? null : box.localToGlobal(Offset.zero) & box.size,
         ),
       );
     } catch (e) {

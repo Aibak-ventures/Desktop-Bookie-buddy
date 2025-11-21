@@ -27,26 +27,26 @@ class LedgerPendingsGroupedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              groupedDate.getDateHeading(),
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.grey600,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            if (pendings.isNotEmpty) // Only show share button if payments exist
-              Builder(
-                builder: (builderContext) =>
-                    Container(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  groupedDate.getDateHeading(),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.grey600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (pendings
+                    .isNotEmpty) // Only show share button if payments exist
+                  Builder(
+                    builder: (builderContext) => Container(
                       decoration: BoxDecoration(
                         color: AppColors.purpleLightShade,
                         borderRadius: BorderRadius.circular(5),
@@ -82,44 +82,45 @@ class LedgerPendingsGroupedContainer extends StatelessWidget {
                         isExcel: false,
                       );
                     }),
-              ),
-          ],
-        ),
-      ),
-      ...pendings.map((pending) {
-        final date = pending.returnDate.parseToDateTime();
-        return LedgerListTile(
-          onTap: () {
-            context.push(BookingDetailsScreen(bookingId: pending.bookingId));
-          },
-          icon: const Icon(Icons.access_time_outlined, size: 28),
-          content: Column(
-            children: [
-              Text(pending.clientName),
-              Text.rich(
-                TextSpan(
-                  text: 'Return date: ',
-                  children: [
-                    TextSpan(
-                      text: date.format(),
-                      style: TextStyle(
-                        color: DateTime.now().isAfter(date.add(1.days()))
-                            ? AppColors.redTomato.lighten(0.2)
-                            : AppColors.black.lighten(0.2),
-                      ),
-                    ),
-                  ],
-                  style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
-                ),
-                maxLines: 2,
-              ),
-            ],
+                  ),
+              ],
+            ),
           ),
-          amount: pending.remainingAmount,
-        );
-      }),
-    ],
-  );
+          ...pendings.map((pending) {
+            final date = pending.returnDate.parseToDateTime();
+            return LedgerListTile(
+              onTap: () {
+                context
+                    .push(BookingDetailsScreen(bookingId: pending.bookingId));
+              },
+              icon: const Icon(Icons.access_time_outlined, size: 28),
+              content: Column(
+                children: [
+                  Text(pending.clientName),
+                  Text.rich(
+                    TextSpan(
+                      text: 'Return date: ',
+                      children: [
+                        TextSpan(
+                          text: date.format(),
+                          style: TextStyle(
+                            color: DateTime.now().isAfter(date.add(1.days()))
+                                ? AppColors.redTomato.lighten(0.2)
+                                : AppColors.black.lighten(0.2),
+                          ),
+                        ),
+                      ],
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
+                    ),
+                    maxLines: 2,
+                  ),
+                ],
+              ),
+              amount: pending.remainingAmount,
+            );
+          }),
+        ],
+      );
 }
 
 class LedgerPendingsListTileShimmer extends StatelessWidget {
@@ -127,20 +128,20 @@ class LedgerPendingsListTileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LedgerListTile(
-    icon: Column(
-      children: [CustomShimmerBox(width: 30.w, height: 30.sp)],
-    ),
-    content: Column(
-      children: [
-        CustomShimmerBox(width: 100.w, height: 14.sp),
-        8.height,
-        CustomShimmerBox(width: 160.w, height: 12.sp),
-      ],
-    ),
-    trailing: Expanded(
-      child: Column(
-        children: [CustomShimmerBox(width: 50.w, height: 20.sp)],
-      ),
-    ),
-  );
+        icon: Column(
+          children: [CustomShimmerBox(width: 30.w, height: 30.sp)],
+        ),
+        content: Column(
+          children: [
+            CustomShimmerBox(width: 100.w, height: 14.sp),
+            8.height,
+            CustomShimmerBox(width: 160.w, height: 12.sp),
+          ],
+        ),
+        trailing: Expanded(
+          child: Column(
+            children: [CustomShimmerBox(width: 50.w, height: 20.sp)],
+          ),
+        ),
+      );
 }

@@ -8,15 +8,17 @@ part 'add_booking_products_cubit.freezed.dart';
 
 class AddBookingProductsCubit extends Cubit<AddBookingProductsState> {
   AddBookingProductsCubit()
-    : super(const AddBookingProductsState(<ProductSelectedModel>[]));
+      : super(const AddBookingProductsState(<ProductSelectedModel>[]));
 
   void setAll(List<ProductSelectedModel> products) {
-    print('AddBookingProductsCubit.setAll: Setting ${products.length} products');
+    print(
+        'AddBookingProductsCubit.setAll: Setting ${products.length} products');
     for (int i = 0; i < products.length; i++) {
       print('Setting product $i: ${products[i].variant.name}');
     }
     emit(AddBookingProductsState(List<ProductSelectedModel>.from(products)));
-    print('AddBookingProductsCubit.setAll: Emitted state with ${state.products.length} products');
+    print(
+        'AddBookingProductsCubit.setAll: Emitted state with ${state.products.length} products');
   }
 
   void addOrReplace(ProductSelectedModel product) {

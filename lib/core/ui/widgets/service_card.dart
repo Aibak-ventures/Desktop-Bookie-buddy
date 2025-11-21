@@ -23,81 +23,81 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-      padding: 24.paddingOnly(
-        bottom: true,
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            width: isGrid ? 0.3.widthR : null,
-            decoration: BoxDecoration(
-              color: AppColors.purpleLight,
-              borderRadius: 10.radiusBorder,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.grey200,
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: isGrid
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildIcon(),
-                      Padding(
-                        padding: 16.padding,
-                        child: _buildName(),
-                      ),
-                    ],
-                  )
-                : Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 25.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      spacing: 10,
-                      children: [
-                        _buildName(),
-                      ],
-                    ),
+        padding: 24.paddingOnly(
+          bottom: true,
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: isGrid ? 0.3.widthR : null,
+              decoration: BoxDecoration(
+                color: AppColors.purpleLight,
+                borderRadius: 10.radiusBorder,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.grey200,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
                   ),
-          ),
-          if (!isGrid)
-            Positioned(
-              right: 8,
-              bottom: 0,
-              child: _buildIcon(),
+                ],
+              ),
+              child: isGrid
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildIcon(),
+                        Padding(
+                          padding: 16.padding,
+                          child: _buildName(),
+                        ),
+                      ],
+                    )
+                  : Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 25.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        spacing: 10,
+                        children: [
+                          _buildName(),
+                        ],
+                      ),
+                    ),
             ),
-        ],
-      ).onTap(onTap),
-    );
+            if (!isGrid)
+              Positioned(
+                right: 8,
+                bottom: 0,
+                child: _buildIcon(),
+              ),
+          ],
+        ).onTap(onTap),
+      );
 
   Text _buildName() => Text(
-      serviceName,
-      style: TextStyle(
-        fontSize: 20.sp,
-        fontWeight: FontWeight.w600,
-      ),
-      softWrap: true,
-      textAlign: TextAlign.center,
-    );
+        serviceName,
+        style: TextStyle(
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w600,
+        ),
+        softWrap: true,
+        textAlign: TextAlign.center,
+      );
 
   Widget _buildIcon() => icon != null
-        ? CustomNetworkImage(
-            imageUrl: icon!,
-            height: 100,
-            errorWidget: (context, url, error) => Image.asset(
-                AppAssets.product3d,
-                height: 100,
-              ),
-          )
-        : Image.asset(
+      ? CustomNetworkImage(
+          imageUrl: icon!,
+          height: 100,
+          errorWidget: (context, url, error) => Image.asset(
             AppAssets.product3d,
             height: 100,
-          );
+          ),
+        )
+      : Image.asset(
+          AppAssets.product3d,
+          height: 100,
+        );
 }
 
 class ServiceCardMini extends StatelessWidget {
@@ -151,10 +151,10 @@ class ServiceCardMini extends StatelessWidget {
                     height: iconHeight,
                     width: iconHeight,
                     errorWidget: (context, url, error) => Image.asset(
-                        AppAssets.product3d,
-                        height: iconHeight,
-                        width: iconHeight,
-                      ),
+                      AppAssets.product3d,
+                      height: iconHeight,
+                      width: iconHeight,
+                    ),
                   )
                 : Image.asset(
                     AppAssets.product3d,
@@ -164,18 +164,18 @@ class ServiceCardMini extends StatelessWidget {
             ShaderMask(
               blendMode: BlendMode.srcIn,
               shaderCallback: (bounds) => LinearGradient(
-                  colors: isSelected
-                      ? [
-                          Colors.white,
-                          Colors.white,
-                        ]
-                      : const [
-                          Color(0xFF5B97FF),
-                          Color(0xFF8255FF),
-                        ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ).createShader(bounds),
+                colors: isSelected
+                    ? [
+                        Colors.white,
+                        Colors.white,
+                      ]
+                    : const [
+                        Color(0xFF5B97FF),
+                        Color(0xFF8255FF),
+                      ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds),
               child: Text(
                 serviceName,
                 style: TextStyle(

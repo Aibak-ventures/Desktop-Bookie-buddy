@@ -34,344 +34,341 @@ class EditBookingButton extends StatelessWidget {
   @override
   Widget build(
     BuildContext context,
-  ) => BlocConsumer<UpdateBookingCubit, UpdateBookingState>(
-    listener: (context, state) {
-      state.maybeWhen(
-        orElse: () {},
-        error: (error) => context.showSnackBar(error, isError: true),
-        failure: (error) {
-          final stockBetween =
-              error['out_of_stock_between'] as Map<String, dynamic>?;
+  ) =>
+      BlocConsumer<UpdateBookingCubit, UpdateBookingState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            orElse: () {},
+            error: (error) => context.showSnackBar(error, isError: true),
+            failure: (error) {
+              final stockBetween =
+                  error['out_of_stock_between'] as Map<String, dynamic>?;
 
-          if (stockBetween == null ||
-              stockBetween['from'] == null ||
-              stockBetween['to'] == null) {
-            context.showSnackBar(
-              error['message'] ?? 'Failed to update booking',
-              isError: true,
-            );
-            return;
-          }
-          showUnavailableProductsDialog(
-            context: context,
-            unavailableDateFrom: stockBetween['from'],
-            unavailableDateTo: stockBetween['to'],
-            unavailableProducts: [error['variant_id']],
-            selectedProductsNotifier: formController.selectedProductsNotifier,
+              if (stockBetween == null ||
+                  stockBetween['from'] == null ||
+                  stockBetween['to'] == null) {
+                context.showSnackBar(
+                  error['message'] ?? 'Failed to update booking',
+                  isError: true,
+                );
+                return;
+              }
+              showUnavailableProductsDialog(
+                context: context,
+                unavailableDateFrom: stockBetween['from'],
+                unavailableDateTo: stockBetween['to'],
+                unavailableProducts: [error['variant_id']],
+                selectedProductsNotifier:
+                    formController.selectedProductsNotifier,
+              );
+            },
+            success: () {
+              context
+                ..pop()
+                ..showSnackBar('Booking Updated Successfully');
+              context.read<BookingDetailsBloc>().add(
+                    BookingDetailsEvent.fetchBookingDetails(booking.id),
+                  );
+              context.read<BookingSelectionCubit>().markModified(
+                    shouldRefresh: true,
+                  );
+            },
           );
         },
-        success: () {
-          context
-            ..pop()
-            ..showSnackBar('Booking Updated Successfully');
-          context.read<BookingDetailsBloc>().add(
-            BookingDetailsEvent.fetchBookingDetails(booking.id),
-          );
-          context.read<BookingSelectionCubit>().markModified(
-            shouldRefresh: true,
-          );
-        },
-      );
-    },
-    builder: (context, state) {
-      final isLoading = state.maybeWhen(
-        orElse: () => false,
-        submitting: () => true,
-      );
-
-      return CustomElevatedButton(
-        isLoading: isLoading,
-        width: double.infinity,
-        onPressed: () async {
-          if (formController.formKey.currentState?.validate() != true) return;
-
-          final selectedStaff = context
-              .read<StaffSearchCubit>()
-              .state
-              .selectedStaff;
-          if (booking.staffId != null && selectedStaff == null) {
-            context.showSnackBar(
-              'Please select a staff member',
-              isError: true,
-              title: 'Staff Required',
-            );
-            return;
-          }
-
-          final isExistingClient =
-              formController.isClientSearchEnabledNotifier.value;
-          final selectedClient = context
-              .read<ClientCubit>()
-              .state
-              .selectedClient;
-
-          if (selectedClient == null && isExistingClient) {
-            context.showSnackBar(
-              'Please select a client',
-              isError: true,
-              title: 'Client Required',
-            );
-            return;
-          }
-
-          // check product changes
-          if (formController.selectedProductsNotifier.value.isEmpty) {
-            context.showSnackBar(
-              'Select at least one product',
-              isError: true,
-              title: 'No Products',
-            );
-            return;
-          }
-
-          final oldItems = booking.bookedItems
-              .map(
-                (e) => ProductSelectedModel(
-                  variant: e,
-                  amount: e.amount,
-                  quantity: e.quantity,
-                  measurements: e.measurements,
-                ),
-              )
-              .toList();
-
-          final newItems = formController.selectedProductsNotifier.value;
-
-          final additionalChargesTotal = formController
-              .additionalChargesNotifier
-              .value
-              .fold(0, (pv, e) => pv + (e.amount ?? 0));
-
-          final newTotalAmount =
-              newItems.fold(0, (pv, e) => pv + e.amount) +
-              additionalChargesTotal;
-
-          if (newTotalAmount <= 0) {
-            context.showSnackBar(
-              'Total amount cannot be 0 or less',
-              isError: true,
-              title: 'Invalid Amount',
-            );
-            return;
-          }
-
-          if (newTotalAmount < booking.paidAmount) {
-            context.showSnackBar(
-              'Total amount cannot be less than paid amount ${booking.paidAmount}',
-              isError: true,
-              title: 'Invalid Amount',
-            );
-            return;
-          }
-
-          final rawMaxValue = newTotalAmount - booking.paidAmount;
-          final maxValue = rawMaxValue >= 0 ? rawMaxValue : 0;
-          if ((formController.discountAmountController.text.toIntOrNull() ??
-                  0) >
-              maxValue) {
-            context.showSnackBar(
-              'Discount amount cannot be greater than $maxValue',
-              isError: true,
-              title: 'Invalid Discount',
-            );
-            return;
-          }
-          debugPrint(
-            'pickup date: ${formController.pickUpdDateController.text} : ${booking.pickupDate?.formatToUiDate()}, return date: ${formController.returnDateController.text} : ${booking.returnDate.formatToUiDate()}',
+        builder: (context, state) {
+          final isLoading = state.maybeWhen(
+            orElse: () => false,
+            submitting: () => true,
           );
 
-          // check locations
-          final isLocationChanged =
-              isFieldChanged(
-                booking.otherDetails.locationTo ?? '',
-                formController.locationToController.text,
-              ) ||
-              isFieldChanged(
-                booking.otherDetails.locationFrom ?? '',
-                formController.locationFromController.text,
-              ) ||
-              isFieldChanged(
-                booking.otherDetails.locationStart ?? '',
-                formController.locationStartController.text,
+          return CustomElevatedButton(
+            isLoading: isLoading,
+            width: double.infinity,
+            onPressed: () async {
+              if (formController.formKey.currentState?.validate() != true)
+                return;
+
+              final selectedStaff =
+                  context.read<StaffSearchCubit>().state.selectedStaff;
+              if (booking.staffId != null && selectedStaff == null) {
+                context.showSnackBar(
+                  'Please select a staff member',
+                  isError: true,
+                  title: 'Staff Required',
+                );
+                return;
+              }
+
+              final isExistingClient =
+                  formController.isClientSearchEnabledNotifier.value;
+              final selectedClient =
+                  context.read<ClientCubit>().state.selectedClient;
+
+              if (selectedClient == null && isExistingClient) {
+                context.showSnackBar(
+                  'Please select a client',
+                  isError: true,
+                  title: 'Client Required',
+                );
+                return;
+              }
+
+              // check product changes
+              if (formController.selectedProductsNotifier.value.isEmpty) {
+                context.showSnackBar(
+                  'Select at least one product',
+                  isError: true,
+                  title: 'No Products',
+                );
+                return;
+              }
+
+              final oldItems = booking.bookedItems
+                  .map(
+                    (e) => ProductSelectedModel(
+                      variant: e,
+                      amount: e.amount,
+                      quantity: e.quantity,
+                      measurements: e.measurements,
+                    ),
+                  )
+                  .toList();
+
+              final newItems = formController.selectedProductsNotifier.value;
+
+              final additionalChargesTotal = formController
+                  .additionalChargesNotifier.value
+                  .fold(0, (pv, e) => pv + (e.amount ?? 0));
+
+              final newTotalAmount =
+                  newItems.fold(0, (pv, e) => pv + e.amount) +
+                      additionalChargesTotal;
+
+              if (newTotalAmount <= 0) {
+                context.showSnackBar(
+                  'Total amount cannot be 0 or less',
+                  isError: true,
+                  title: 'Invalid Amount',
+                );
+                return;
+              }
+
+              if (newTotalAmount < booking.paidAmount) {
+                context.showSnackBar(
+                  'Total amount cannot be less than paid amount ${booking.paidAmount}',
+                  isError: true,
+                  title: 'Invalid Amount',
+                );
+                return;
+              }
+
+              final rawMaxValue = newTotalAmount - booking.paidAmount;
+              final maxValue = rawMaxValue >= 0 ? rawMaxValue : 0;
+              if ((formController.discountAmountController.text.toIntOrNull() ??
+                      0) >
+                  maxValue) {
+                context.showSnackBar(
+                  'Discount amount cannot be greater than $maxValue',
+                  isError: true,
+                  title: 'Invalid Discount',
+                );
+                return;
+              }
+              debugPrint(
+                'pickup date: ${formController.pickUpdDateController.text} : ${booking.pickupDate?.formatToUiDate()}, return date: ${formController.returnDateController.text} : ${booking.returnDate.formatToUiDate()}',
               );
 
-          // check pickup and return time
-          final oldPickupTime = booking.pickupDate
-              ?.parseToDateTime()
-              .toTimeOfDay;
-          final oldReturnTime = booking.returnDate
-              .parseToDateTime()
-              .toTimeOfDay;
+              // check locations
+              final isLocationChanged = isFieldChanged(
+                    booking.otherDetails.locationTo ?? '',
+                    formController.locationToController.text,
+                  ) ||
+                  isFieldChanged(
+                    booking.otherDetails.locationFrom ?? '',
+                    formController.locationFromController.text,
+                  ) ||
+                  isFieldChanged(
+                    booking.otherDetails.locationStart ?? '',
+                    formController.locationStartController.text,
+                  );
 
-          final pickupTime = formController.pickupTimeController.text
-              .to24HourTimeOfDayFrom12Format();
-          final returnTime = formController.returnTimeController.text
-              .to24HourTimeOfDayFrom12Format();
+              // check pickup and return time
+              final oldPickupTime =
+                  booking.pickupDate?.parseToDateTime().toTimeOfDay;
+              final oldReturnTime =
+                  booking.returnDate.parseToDateTime().toTimeOfDay;
 
-          final isPickupTimeChanged = oldPickupTime != pickupTime;
-          final isReturnTimeChanged = oldReturnTime != returnTime;
+              final pickupTime = formController.pickupTimeController.text
+                  .to24HourTimeOfDayFrom12Format();
+              final returnTime = formController.returnTimeController.text
+                  .to24HourTimeOfDayFrom12Format();
 
-          // log(
-          //   'pickupTimeController: ${formController.pickupTimeController.text}, returnTimeController: ${formController.returnTimeController.text}',
-          // );
+              final isPickupTimeChanged = oldPickupTime != pickupTime;
+              final isReturnTimeChanged = oldReturnTime != returnTime;
 
-          // log(
-          //   'oldPickupTime: $oldPickupTime, newPickupTime: $pickupTime, oldReturnTime: $oldReturnTime, newReturnTime: $returnTime',
-          // );
+              // log(
+              //   'pickupTimeController: ${formController.pickupTimeController.text}, returnTimeController: ${formController.returnTimeController.text}',
+              // );
 
-          // check client phone
-          if (formController.clientPhone1Controller.text.trim().toIntOrNull() ==
-              null) {
-            context.showSnackBar(
-              'Enter a valid phone number',
-              isError: true,
-              title: 'Invalid Phone Number',
-            );
-            return;
-          }
+              // log(
+              //   'oldPickupTime: $oldPickupTime, newPickupTime: $pickupTime, oldReturnTime: $oldReturnTime, newReturnTime: $returnTime',
+              // );
 
-          // check client changes
-          bool isClientChanged = false;
-          if (isExistingClient) {
-            isClientChanged = selectedClient!.id != booking.client.id;
-          } else {
-            isClientChanged =
-                formController.clientNameController.text.trim() !=
-                    booking.client.name ||
-                formController.clientPhone1Controller.text.trim() !=
-                    booking.client.phone1.toString() ||
-                (formController.clientPhone2Controller.text.trim().isNotEmpty
-                        ? formController.clientPhone2Controller.text.trim()
-                        : null) !=
-                    booking.client.phone2?.toString();
-          }
-          final newClient = ClientRequestModel(
-            id: isExistingClient ? selectedClient!.id : null,
-            name: formController.clientNameController.text.trim(),
-            phone1: formController.clientPhone1Controller.text
-                .trim()
-                .toIntOrNull(),
-            phone2: formController.clientPhone2Controller.text.trim().isNotEmpty
-                ? formController.clientPhone2Controller.text
+              // check client phone
+              if (formController.clientPhone1Controller.text
                       .trim()
-                      .toIntOrNull()
-                : null,
-          );
+                      .toIntOrNull() ==
+                  null) {
+                context.showSnackBar(
+                  'Enter a valid phone number',
+                  isError: true,
+                  title: 'Invalid Phone Number',
+                );
+                return;
+              }
 
-          debugPrint(
-            'isDateChanged: ${booking.bookedDate}, ${booking.pickupDate} : ${formController.pickUpdDateController.text}, return date: ${booking.returnDate} : ${formController.returnDateController.text}',
-          );
+              // check client changes
+              bool isClientChanged = false;
+              if (isExistingClient) {
+                isClientChanged = selectedClient!.id != booking.client.id;
+              } else {
+                isClientChanged = formController.clientNameController.text
+                            .trim() !=
+                        booking.client.name ||
+                    formController.clientPhone1Controller.text.trim() !=
+                        booking.client.phone1.toString() ||
+                    (formController.clientPhone2Controller.text
+                                .trim()
+                                .isNotEmpty
+                            ? formController.clientPhone2Controller.text.trim()
+                            : null) !=
+                        booking.client.phone2?.toString();
+              }
+              final newClient = ClientRequestModel(
+                id: isExistingClient ? selectedClient!.id : null,
+                name: formController.clientNameController.text.trim(),
+                phone1: formController.clientPhone1Controller.text
+                    .trim()
+                    .toIntOrNull(),
+                phone2:
+                    formController.clientPhone2Controller.text.trim().isNotEmpty
+                        ? formController.clientPhone2Controller.text
+                            .trim()
+                            .toIntOrNull()
+                        : null,
+              );
 
-          // check date changes
-          final isPickupDateChanged = isFieldChanged(
-            booking.pickupDate?.formatToUiDate() ?? '',
-            formController.pickUpdDateController.text,
-          );
-          final isReturnDateChanged = isFieldChanged(
-            booking.returnDate.formatToUiDate(),
-            formController.returnDateController.text,
-          );
-          final isCoolingPeriodDateChanged = isFieldChanged(
-            booking.coolingPeriodDate?.formatToUiDate() ?? '',
-            formController.coolingPeriodDateController.text,
-          );
+              debugPrint(
+                'isDateChanged: ${booking.bookedDate}, ${booking.pickupDate} : ${formController.pickUpdDateController.text}, return date: ${booking.returnDate} : ${formController.returnDateController.text}',
+              );
 
-          // check amount changes
-          final securityAmount =
-              isFieldChanged(
+              // check date changes
+              final isPickupDateChanged = isFieldChanged(
+                booking.pickupDate?.formatToUiDate() ?? '',
+                formController.pickUpdDateController.text,
+              );
+              final isReturnDateChanged = isFieldChanged(
+                booking.returnDate.formatToUiDate(),
+                formController.returnDateController.text,
+              );
+              final isCoolingPeriodDateChanged = isFieldChanged(
+                booking.coolingPeriodDate?.formatToUiDate() ?? '',
+                formController.coolingPeriodDateController.text,
+              );
+
+              // check amount changes
+              final securityAmount = isFieldChanged(
                 booking.securityAmount?.toString() ?? '0',
                 formController.securityAmountController.text.trim(),
               )
-              ? formController.securityAmountController.text
-                    .trim()
-                    .toIntOrNull()
-              : null;
-          final discountAmount =
-              isFieldChanged(
+                  ? formController.securityAmountController.text
+                      .trim()
+                      .toIntOrNull()
+                  : null;
+              final discountAmount = isFieldChanged(
                 booking.discountAmount?.toString() ?? '0',
                 formController.discountAmountController.text.trim(),
               )
-              ? formController.discountAmountController.text
-                    .trim()
-                    .toIntOrNull()
-              : null;
+                  ? formController.discountAmountController.text
+                      .trim()
+                      .toIntOrNull()
+                  : null;
 
-          final isStaffChanged = booking.staffId != selectedStaff?.id;
+              final isStaffChanged = booking.staffId != selectedStaff?.id;
 
-          final changedProduct = formController.getChangedProductIds(
-            oldIds: oldItems,
-            newIds: newItems,
-          );
+              final changedProduct = formController.getChangedProductIds(
+                oldIds: oldItems,
+                newIds: newItems,
+              );
 
-          final requestModel = RequestBookingModel(
-            clientId: isExistingClient && isClientChanged
-                ? selectedClient!.id
-                : null,
-
-            staffId: isStaffChanged ? selectedStaff?.id : null,
-            address:
-                isFieldChanged(
+              final requestModel = RequestBookingModel(
+                clientId: isExistingClient && isClientChanged
+                    ? selectedClient!.id
+                    : null,
+                staffId: isStaffChanged ? selectedStaff?.id : null,
+                address: isFieldChanged(
                   booking.address ?? '',
                   formController.clientAddressController.text,
                 )
-                ? formController.clientAddressController.text.trim()
-                : null,
-            pickupDate: isPickupDateChanged || isPickupTimeChanged
-                ? '${formController.pickUpdDateController.text}T${pickupTime.formatToTime(addSeconds: true)}'
-                : null,
-            returnDate: isReturnDateChanged || isReturnTimeChanged
-                ? '${formController.returnDateController.text}T${returnTime.formatToTime(addSeconds: true)}'
-                : null,
-            coolingPeriodDate: isCoolingPeriodDateChanged
-                ? '${formController.coolingPeriodDateController.text}T23:59:59'
-                : null,
-            securityAmount: securityAmount,
-            discountAmount: discountAmount,
-            description:
-                isFieldChanged(
+                    ? formController.clientAddressController.text.trim()
+                    : null,
+                pickupDate: isPickupDateChanged || isPickupTimeChanged
+                    ? '${formController.pickUpdDateController.text}T${pickupTime.formatToTime(addSeconds: true)}'
+                    : null,
+                returnDate: isReturnDateChanged || isReturnTimeChanged
+                    ? '${formController.returnDateController.text}T${returnTime.formatToTime(addSeconds: true)}'
+                    : null,
+                coolingPeriodDate: isCoolingPeriodDateChanged
+                    ? '${formController.coolingPeriodDateController.text}T23:59:59'
+                    : null,
+                securityAmount: securityAmount,
+                discountAmount: discountAmount,
+                description: isFieldChanged(
                   booking.description ?? '',
                   formController.descriptionController.text,
                 )
-                ? formController.descriptionController.text.trim()
-                : null,
-            otherDetails: isLocationChanged
-                ? BookingOtherDetailsModel(
-                    locationStart: formController.locationStartController.text
-                        .trim(),
-                    locationFrom: formController.locationFromController.text
-                        .trim(),
-                    locationTo: formController.locationToController.text.trim(),
-                  )
-                : null,
-            products: changedProduct.isNotEmpty
-                ? formController.selectedProductsNotifier.value
-                : null,
+                    ? formController.descriptionController.text.trim()
+                    : null,
+                otherDetails: isLocationChanged
+                    ? BookingOtherDetailsModel(
+                        locationStart:
+                            formController.locationStartController.text.trim(),
+                        locationFrom:
+                            formController.locationFromController.text.trim(),
+                        locationTo:
+                            formController.locationToController.text.trim(),
+                      )
+                    : null,
+                products: changedProduct.isNotEmpty
+                    ? formController.selectedProductsNotifier.value
+                    : null,
+                additionalCharges: getAdditionalChargesIfChanged(
+                  oldCharges: booking.additionalCharges,
+                  newCharges: formController.additionalChargesNotifier.value,
+                ),
+              );
+              log(
+                'updated data: ${requestModel.toJson()}, client: $newClient, isClientChanged: $isClientChanged',
+              );
 
-            additionalCharges: getAdditionalChargesIfChanged(
-              oldCharges: booking.additionalCharges,
-              newCharges: formController.additionalChargesNotifier.value,
-            ),
-          );
-          log(
-            'updated data: ${requestModel.toJson()}, client: $newClient, isClientChanged: $isClientChanged',
-          );
-
-          if (!isStaffChanged && !requestModel.hasChanges && !isClientChanged) {
-            context
-              ..pop()
-              ..showSnackBar('Nothing to update');
-            return;
-          }
-          context.read<UpdateBookingCubit>().updateBooking(
-            bookingId: booking.id,
-            updatedBooking: requestModel,
-            client: isClientChanged ? newClient : null,
+              if (!isStaffChanged &&
+                  !requestModel.hasChanges &&
+                  !isClientChanged) {
+                context
+                  ..pop()
+                  ..showSnackBar('Nothing to update');
+                return;
+              }
+              context.read<UpdateBookingCubit>().updateBooking(
+                    bookingId: booking.id,
+                    updatedBooking: requestModel,
+                    client: isClientChanged ? newClient : null,
+                  );
+            },
+            text: 'Save Changes',
           );
         },
-        text: 'Save Changes',
       );
-    },
-  );
 
   List<AdditionalChargesModel>? getAdditionalChargesIfChanged({
     required List<AdditionalChargesModel> oldCharges,

@@ -18,8 +18,8 @@ class AllBookingPastBloc
   final BookingRepository _repository;
 
   AllBookingPastBloc({required BookingRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);
     on<_LoadNextPageBookings>(_onLoadNextPageBookings);
     on<_UpdateBooking>(_onUpdateBooking);
@@ -37,9 +37,8 @@ class AllBookingPastBloc
         status: LoadBookingType.past,
         startDate: event.startDate,
         endDate: event.endDate,
-        searchQuery: event.searchQuery.isNotNullOrEmpty
-            ? event.searchQuery
-            : null,
+        searchQuery:
+            event.searchQuery.isNotNullOrEmpty ? event.searchQuery : null,
       );
 
       emit(

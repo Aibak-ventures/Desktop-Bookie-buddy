@@ -15,9 +15,10 @@ class BookingsApiPaths {
   static const oldBookings = '${bookingsV3}old-bookings/';
   static const clients = '${_rootV3}clients/';
   static const availableProducts = '${bookingsV3}available-products/';
-  static const dashboard = '${_rootV3}dashboard/';
-  
-  // Download invoice
+  static const dashboard = '${_rootV4}dashboard/';
+
+  // Dynamic methods
+  static String deletePayment(int id) => '${bookingsV5}delete-payment/$id/';
   static String downloadBookingInvoice(int bookingId) =>
-      '${bookingsV5}$bookingId/download-invoice/';
+      '${_rootV4}bookings/$bookingId/download-invoice/';
 }

@@ -15,27 +15,27 @@ class PendingTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => RefreshIndicator.adaptive(
-    onRefresh: () async {
-      context.read<LedgerSimpleSummaryCubit>().reset();
-      _fetchData(context);
-    },
-    child: BlocBuilder<WalletPendingBloc, WalletPendingState>(
-      builder: (context, state) => state.when(
-        loading: () => ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: 15,
-          // Use shimmer for loading
-          itemBuilder: (context, index) =>
-              const LedgerPendingsListTileShimmer(),
-        ),
-        error: (error) => Center(
-          child: CustomErrorWidget(
-            errorText: error,
-            onRetry: () => _fetchData(context),
-          ),
-        ),
-        loaded:
-            (walletPending, nextPageUrl, isPaginating, clientId, isFirstFetch) {
+        onRefresh: () async {
+          context.read<LedgerSimpleSummaryCubit>().reset();
+          _fetchData(context);
+        },
+        child: BlocBuilder<WalletPendingBloc, WalletPendingState>(
+          builder: (context, state) => state.when(
+            loading: () => ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: 15,
+              // Use shimmer for loading
+              itemBuilder: (context, index) =>
+                  const LedgerPendingsListTileShimmer(),
+            ),
+            error: (error) => Center(
+              child: CustomErrorWidget(
+                errorText: error,
+                onRetry: () => _fetchData(context),
+              ),
+            ),
+            loaded: (walletPending, nextPageUrl, isPaginating, clientId,
+                isFirstFetch) {
               if (walletPending.isEmpty) {
                 return const EmptyDataWidget(
                   message: 'No pendings',
@@ -57,8 +57,8 @@ class PendingTab extends StatelessWidget {
                       nextPageUrl != null &&
                       !isPaginating) {
                     context.read<WalletPendingBloc>().add(
-                      const WalletPendingEvent.loadNextPagePending(),
-                    );
+                          const WalletPendingEvent.loadNextPagePending(),
+                        );
                   }
                   return false;
                 },
@@ -82,23 +82,23 @@ class PendingTab extends StatelessWidget {
                 ),
               );
             },
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   void _fetchData(BuildContext context) {
     final clientId = context.read<ClientCubit>().getSelectedClient()?.id;
     context.read<WalletPendingBloc>().add(
-      WalletPendingEvent.loadPending(clientId: clientId),
-    );
+          WalletPendingEvent.loadPending(clientId: clientId),
+        );
     // _fetchSummary(context, clientId);
   }
 
   void _fetchSummary(BuildContext context, int? clientId, String? date) {
     context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
-      date ?? DateTime.now().format(),
-      clientId: clientId,
-      force: true,
-    );
+          date ?? DateTime.now().format(),
+          clientId: clientId,
+          force: true,
+        );
   }
 }

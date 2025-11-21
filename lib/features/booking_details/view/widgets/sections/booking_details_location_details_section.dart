@@ -17,47 +17,47 @@ class BookingDetailsLocationDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: '',
-    padding: 18.padding,
-    child: Column(
-      spacing: 15,
-      children: [
-        Row(
+        title: '',
+        padding: 18.padding,
+        child: Column(
+          spacing: 15,
           children: [
-            const Expanded(child: _BookingDetailsText('Start Location')),
-            Expanded(
-              child: _BookingDetailsText(
-                locationStart.isNotEmpty ? locationStart : 'Not available',
-                textAlign: TextAlign.end,
-              ),
+            Row(
+              children: [
+                const Expanded(child: _BookingDetailsText('Start Location')),
+                Expanded(
+                  child: _BookingDetailsText(
+                    locationStart.isNotEmpty ? locationStart : 'Not available',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                const Expanded(child: _BookingDetailsText('Pickup Location')),
+                Expanded(
+                  child: _BookingDetailsText(
+                    locationFrom.isNotEmpty ? locationFrom : 'Not available',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                const Expanded(child: _BookingDetailsText('Destination')),
+                Expanded(
+                  child: _BookingDetailsText(
+                    locationTo.isNotEmpty ? locationTo : 'Not available',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-        Row(
-          children: [
-            const Expanded(child: _BookingDetailsText('Pickup Location')),
-            Expanded(
-              child: _BookingDetailsText(
-                locationFrom.isNotEmpty ? locationFrom : 'Not available',
-                textAlign: TextAlign.end,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            const Expanded(child: _BookingDetailsText('Destination')),
-            Expanded(
-              child: _BookingDetailsText(
-                locationTo.isNotEmpty ? locationTo : 'Not available',
-                textAlign: TextAlign.end,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
+      );
 }
 
 class _BookingDetailsText extends StatelessWidget {
@@ -67,12 +67,12 @@ class _BookingDetailsText extends StatelessWidget {
   final double fontSize = 14;
   @override
   Widget build(BuildContext context) => Text(
-    text,
-    textAlign: textAlign,
-    style: TextStyle(
-      fontSize: fontSize.sp,
-      color: Colors.black,
-      fontWeight: FontWeight.w400,
-    ),
-  );
+        text,
+        textAlign: textAlign,
+        style: TextStyle(
+          fontSize: fontSize.sp,
+          color: Colors.black,
+          fontWeight: FontWeight.w400,
+        ),
+      );
 }

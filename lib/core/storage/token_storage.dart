@@ -57,8 +57,7 @@ class TokenStorage {
     try {
       if (accessToken != null) {
         await _preferences.setString(AppConstants.accessTokenKey, accessToken);
-        final expiryTime =
-            getTokenExpiry(accessToken) ??
+        final expiryTime = getTokenExpiry(accessToken) ??
             DateTime.now().add(const Duration(minutes: 30));
         await setTokenExpiry(expiryTime);
       }

@@ -11,8 +11,8 @@ class BookingDetailsPaymentHistoryCubit
   final BookingRepository _repository;
 
   BookingDetailsPaymentHistoryCubit({required BookingRepository repository})
-    : _repository = repository,
-      super(const _Collapsed());
+      : _repository = repository,
+        super(const _Collapsed());
 
   void showPaymentHistory(int bookingId) async {
     emit(const _Loading());

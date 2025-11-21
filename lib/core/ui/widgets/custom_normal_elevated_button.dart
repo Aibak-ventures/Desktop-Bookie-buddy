@@ -18,19 +18,19 @@ class CustomNormalElevatedButton extends StatelessWidget {
   final Widget? loadingWidget;
   @override
   Widget build(BuildContext context) => ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: color,
-      foregroundColor: Colors.white,
-    ),
-    onPressed: isLoading ? () {} : onPressed,
-    child: isLoading
-        ? loadingWidget ??
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.white),
-                strokeCap: StrokeCap.round,
-                strokeWidth: 3,
-                constraints: BoxConstraints(minHeight: 25, minWidth: 25),
-              )
-        : Text(text, style: const TextStyle(color: Colors.white)),
-  );
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: isLoading ? () {} : onPressed,
+        child: isLoading
+            ? loadingWidget ??
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                  strokeCap: StrokeCap.round,
+                  strokeWidth: 3,
+                  constraints: BoxConstraints(minHeight: 25, minWidth: 25),
+                )
+            : Text(text, style: const TextStyle(color: Colors.white)),
+      );
 }

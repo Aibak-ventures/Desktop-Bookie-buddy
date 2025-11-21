@@ -27,8 +27,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:url_launcher/url_launcher.dart';
 
 // Conditional import for web downloads
-import 'web_download_stub.dart'
-    if (dart.library.html) 'web_download_web.dart';
+import 'web_download_stub.dart' if (dart.library.html) 'web_download_web.dart';
 
 // Usage service class
 class LedgerPDFService {
@@ -83,29 +82,29 @@ class LedgerPDFService {
     // Download Excel
     if (isExcel) {
       try {
-        final filePath = await getIt
-            .get<LedgerRepository>()
-            .downloadLedgerInvoice(
-              fromDate: fromDate,
-              toDate: toDate,
-              type: typeValue,
-              clientId: clientId,
-              ledgerType: type,
-            );
+        final filePath =
+            await getIt.get<LedgerRepository>().downloadLedgerInvoice(
+                  fromDate: fromDate,
+                  toDate: toDate,
+                  type: typeValue,
+                  clientId: clientId,
+                  ledgerType: type,
+                );
         GlobalLoadingOverlay.hide();
-        
+
         // Windows Desktop - open file and show notification
         if (!kIsWeb && Platform.isWindows) {
           final fileName = filePath.split('\\').last;
-          final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
-          
+          final downloadsDir =
+              Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+
           // Open the Excel file with default application
           try {
             await launchUrl(Uri.file(filePath));
           } catch (e) {
             log('Could not open Excel file: $e');
           }
-          
+
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -140,14 +139,13 @@ class LedgerPDFService {
 
     // Download PDF
     try {
-      final entries =
-          invoiceData ??
+      final entries = invoiceData ??
           await getIt.get<LedgerRepository>().getLedgerInvoiceData(
-            fromDate: fromDate,
-            toDate: toDate,
-            type: typeValue,
-            clientId: clientId,
-          );
+                fromDate: fromDate,
+                toDate: toDate,
+                type: typeValue,
+                clientId: clientId,
+              );
 
       double totalReceived = 0;
       double totalExpense = 0;
@@ -203,29 +201,31 @@ class LedgerPDFService {
         final pdfBytes = await LedgerPDFGenerator.generateLedgerStatementBytes(
           ledgerData,
         );
-        final fileName = '${ledgerData.pdfName}_report_${ledgerData.fromDate}_to_${ledgerData.toDate}.pdf';
-        
+        final fileName =
+            '${ledgerData.pdfName}_report_${ledgerData.fromDate}_to_${ledgerData.toDate}.pdf';
+
         // Get Downloads folder path
-        final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+        final downloadsDir =
+            Directory('${Platform.environment['USERPROFILE']}\\Downloads');
         if (!downloadsDir.existsSync()) {
           downloadsDir.createSync(recursive: true);
         }
-        
+
         final filePath = '${downloadsDir.path}\\$fileName';
         final file = File(filePath);
         await file.writeAsBytes(pdfBytes);
-        
+
         log('Ledger PDF saved to: $filePath');
-        
+
         // Open the PDF with default viewer
         try {
           await launchUrl(Uri.file(filePath));
         } catch (e) {
           log('Could not open PDF: $e');
         }
-        
+
         GlobalLoadingOverlay.hide();
-        
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -308,22 +308,22 @@ class LedgerPDFGenerator {
 
   // Reusable text styles
   static pw.TextStyle _getTitleStyle() => pw.TextStyle(
-    fontSize: 24,
-    fontWeight: pw.FontWeight.bold,
-    font: _getFont(),
-  );
+        fontSize: 24,
+        fontWeight: pw.FontWeight.bold,
+        font: _getFont(),
+      );
 
   static pw.TextStyle _getHeaderStyle() => pw.TextStyle(
-    fontSize: 16,
-    fontWeight: pw.FontWeight.bold,
-    font: _getFont(),
-  );
+        fontSize: 16,
+        fontWeight: pw.FontWeight.bold,
+        font: _getFont(),
+      );
 
   static pw.TextStyle _getSubHeaderStyle() => pw.TextStyle(
-    fontSize: 13,
-    fontWeight: pw.FontWeight.bold,
-    font: _getFont(),
-  );
+        fontSize: 13,
+        fontWeight: pw.FontWeight.bold,
+        font: _getFont(),
+      );
 
   static pw.TextStyle _getBodyStyle() =>
       pw.TextStyle(fontSize: 12, font: _getFont());
@@ -332,35 +332,35 @@ class LedgerPDFGenerator {
       pw.TextStyle(fontSize: 13, font: _getFont(), color: PdfColors.grey600);
 
   static pw.TextStyle _getAmountStyle({PdfColor? color}) => pw.TextStyle(
-    fontSize: 12,
-    fontWeight: pw.FontWeight.bold,
-    font: _getFont(),
-    color: color ?? PdfColors.black,
-  );
+        fontSize: 12,
+        fontWeight: pw.FontWeight.bold,
+        font: _getFont(),
+        color: color ?? PdfColors.black,
+      );
 
   static pw.TextStyle _getSummaryAmountStyle() => pw.TextStyle(
-    fontSize: 12,
-    fontWeight: pw.FontWeight.bold,
-    font: _getFont(),
-  );
+        fontSize: 12,
+        fontWeight: pw.FontWeight.bold,
+        font: _getFont(),
+      );
 
   static pw.Text upArrowIcon() => pw.Text(
-    String.fromCharCode(0xE5D8), // ↑ arrow_upward
-    style: pw.TextStyle(
-      font: materialIconFont,
-      fontSize: 16,
-      color: PdfColors.red,
-    ),
-  );
+        String.fromCharCode(0xE5D8), // ↑ arrow_upward
+        style: pw.TextStyle(
+          font: materialIconFont,
+          fontSize: 16,
+          color: PdfColors.red,
+        ),
+      );
 
   static pw.Text downArrowIcon() => pw.Text(
-    String.fromCharCode(0xE5DB), // ↓ arrow_downward
-    style: pw.TextStyle(
-      font: materialIconFont,
-      fontSize: 16,
-      color: PdfColors.green,
-    ),
-  );
+        String.fromCharCode(0xE5DB), // ↓ arrow_downward
+        style: pw.TextStyle(
+          font: materialIconFont,
+          fontSize: 16,
+          color: PdfColors.green,
+        ),
+      );
 
   static PdfColor greyColor = const PdfColor.fromInt(0xFFEDEEFF); // Grey color
 
@@ -371,13 +371,12 @@ class LedgerPDFGenerator {
   ) async {
     try {
       await _initializeFonts();
-     final pdf = pw.Document(
-  theme: pw.ThemeData.withFont(
-    base: _malayalamFont ?? _fallbackFont,
-    bold: _malayalamFont ?? _fallbackFont,
-  ),
-);
-
+      final pdf = pw.Document(
+        theme: pw.ThemeData.withFont(
+          base: _malayalamFont ?? _fallbackFont,
+          bold: _malayalamFont ?? _fallbackFont,
+        ),
+      );
 
       final businessImage = await getPdfImageProvider(
         imagePath: ledgerData.shopDetails.image,
@@ -529,114 +528,117 @@ class LedgerPDFGenerator {
   static pw.Widget _buildHeader(
     LedgerSummaryModel ledgerData,
     pw.ImageProvider businessImage,
-  ) => pw.Container(
-    width: double.infinity,
-    child: pw.Column(
-      children: [
-        // Title with underline
-        pw.Text(
-          'Ledger Book Statements',
-          style: _getTitleStyle().copyWith(
-            decorationStyle: pw.TextDecorationStyle.solid,
-            decorationColor: PdfColors.black,
-            decorationThickness: 1.5,
-            decoration: pw.TextDecoration.underline,
-          ),
-        ),
-        pw.SizedBox(),
-
-        // Business info with image
-        pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  ) =>
+      pw.Container(
+        width: double.infinity,
+        child: pw.Column(
           children: [
-            // Business name and location
-            pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text(ledgerData.shopDetails.name, style: _getHeaderStyle()),
-                pw.Text(ledgerData.shopDetails.phone, style: _getSmallStyle()),
-                if (ledgerData.shopDetails.phone2.isNotNullOrEmpty)
-                  pw.Text(
-                    ledgerData.shopDetails.phone2!,
-                    style: _getSmallStyle(),
-                  ),
-                ...ledgerData.shopDetails.fullAddress
-                    .splitByWords(5)
-                    .map((e) => pw.Text(e, style: _getSmallStyle())),
-              ],
+            // Title with underline
+            pw.Text(
+              'Ledger Book Statements',
+              style: _getTitleStyle().copyWith(
+                decorationStyle: pw.TextDecorationStyle.solid,
+                decorationColor: PdfColors.black,
+                decorationThickness: 1.5,
+                decoration: pw.TextDecoration.underline,
+              ),
             ),
+            pw.SizedBox(),
 
-            // Business image
-            pw.Padding(
-              padding: const pw.EdgeInsets.all(4),
-              child: pw.Image(businessImage, width: 100, height: 100),
+            // Business info with image
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                // Business name and location
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(ledgerData.shopDetails.name,
+                        style: _getHeaderStyle()),
+                    pw.Text(ledgerData.shopDetails.phone,
+                        style: _getSmallStyle()),
+                    if (ledgerData.shopDetails.phone2.isNotNullOrEmpty)
+                      pw.Text(
+                        ledgerData.shopDetails.phone2!,
+                        style: _getSmallStyle(),
+                      ),
+                    ...ledgerData.shopDetails.fullAddress
+                        .splitByWords(5)
+                        .map((e) => pw.Text(e, style: _getSmallStyle())),
+                  ],
+                ),
+
+                // Business image
+                pw.Padding(
+                  padding: const pw.EdgeInsets.all(4),
+                  child: pw.Image(businessImage, width: 100, height: 100),
+                ),
+              ],
             ),
           ],
         ),
-      ],
-    ),
-  );
+      );
 
   // Date range section
   static pw.Widget _buildDateRange(LedgerSummaryModel ledgerData) => pw.Row(
-    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-    children: [
-      pw.Text(
-        'Statements from ${ledgerData.fromDate} - ${ledgerData.toDate}',
-        style: _getSubHeaderStyle(),
-      ),
-      if (!ledgerData.isSinglePdf)
-        pw.Row(
-          children: [
-            pw.Container(
-              padding: const pw.EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 4,
-              ),
-              decoration: pw.BoxDecoration(
-                color: PdfColors.red50,
-                borderRadius: pw.BorderRadius.circular(4),
-              ),
-              child: pw.Row(
-                children: [
-                  upArrowIcon(),
-                  pw.Text(
-                    ' Expense',
-                    style: _getSmallStyle().copyWith(
-                      color: PdfColors.red,
-                      fontSize: 12,
-                    ),
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Text(
+            'Statements from ${ledgerData.fromDate} - ${ledgerData.toDate}',
+            style: _getSubHeaderStyle(),
+          ),
+          if (!ledgerData.isSinglePdf)
+            pw.Row(
+              children: [
+                pw.Container(
+                  padding: const pw.EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
                   ),
-                ],
-              ),
-            ),
-            pw.SizedBox(width: 10),
-            pw.Container(
-              padding: const pw.EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 4,
-              ),
-              decoration: pw.BoxDecoration(
-                color: PdfColors.green50,
-                borderRadius: pw.BorderRadius.circular(4),
-              ),
-              child: pw.Row(
-                children: [
-                  downArrowIcon(),
-                  pw.Text(
-                    ' Received',
-                    style: _getSmallStyle().copyWith(
-                      color: PdfColors.green,
-                      fontSize: 12,
-                    ),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.red50,
+                    borderRadius: pw.BorderRadius.circular(4),
                   ),
-                ],
-              ),
+                  child: pw.Row(
+                    children: [
+                      upArrowIcon(),
+                      pw.Text(
+                        ' Expense',
+                        style: _getSmallStyle().copyWith(
+                          color: PdfColors.red,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(width: 10),
+                pw.Container(
+                  padding: const pw.EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.green50,
+                    borderRadius: pw.BorderRadius.circular(4),
+                  ),
+                  child: pw.Row(
+                    children: [
+                      downArrowIcon(),
+                      pw.Text(
+                        ' Received',
+                        style: _getSmallStyle().copyWith(
+                          color: PdfColors.green,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-    ],
-  );
+        ],
+      );
 
   // Summary section with total amounts
   static pw.Widget _buildSummarySection(LedgerSummaryModel ledgerData) {
@@ -720,13 +722,14 @@ class LedgerPDFGenerator {
     String label,
     String value, {
     pw.TextStyle? overrideStyle,
-  }) => pw.Row(
-    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-    children: [
-      pw.Text(label, style: _getBodyStyle()),
-      pw.Text(value, style: overrideStyle ?? _getSummaryAmountStyle()),
-    ],
-  );
+  }) =>
+      pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Text(label, style: _getBodyStyle()),
+          pw.Text(value, style: overrideStyle ?? _getSummaryAmountStyle()),
+        ],
+      );
 
   // Entries table section
   static pw.Widget _buildEntriesTable(LedgerSummaryModel ledgerData) {
@@ -810,8 +813,8 @@ class LedgerPDFGenerator {
                     child: pw.Text(
                       isSales
                           ? ledgerEntry.products.isNotEmpty
-                                ? ledgerEntry.products.join(', ')
-                                : 'N/A'
+                              ? ledgerEntry.products.join(', ')
+                              : 'N/A'
                           : ledgerEntry.description,
                       style: _getBodyStyle(),
                     ),

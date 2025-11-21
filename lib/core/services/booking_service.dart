@@ -112,7 +112,6 @@ class BookingService {
 
   Future<CustomResponseModel> updateBooking(
     int bookingId,
-
     RequestBookingModel updatedBooking,
   ) async {
     try {
@@ -214,7 +213,7 @@ class BookingService {
     try {
       final url = ApiPaths.bookings.downloadBookingInvoice(bookingId);
       log('Downloading booking invoice from: $url');
-      
+
       final response = await _dio.get(
         url,
         options: Options(

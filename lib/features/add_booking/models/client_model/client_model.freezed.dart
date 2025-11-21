@@ -77,24 +77,23 @@ class _$ClientModelCopyWithImpl<$Res, $Val extends ClientModel>
   }) {
     return _then(
       _value.copyWith(
-            id: freezed == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            phone1: null == phone1
-                ? _value.phone1
-                : phone1 // ignore: cast_nullable_to_non_nullable
-                      as int,
-            phone2: freezed == phone2
-                ? _value.phone2
-                : phone2 // ignore: cast_nullable_to_non_nullable
-                      as int?,
-          )
-          as $Val,
+        id: freezed == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                as int?,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                as String,
+        phone1: null == phone1
+            ? _value.phone1
+            : phone1 // ignore: cast_nullable_to_non_nullable
+                as int,
+        phone2: freezed == phone2
+            ? _value.phone2
+            : phone2 // ignore: cast_nullable_to_non_nullable
+                as int?,
+      ) as $Val,
     );
   }
 }
@@ -140,19 +139,19 @@ class __$$ClientModelImplCopyWithImpl<$Res>
         id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         name: null == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
         phone1: null == phone1
             ? _value.phone1
             : phone1 // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         phone2: freezed == phone2
             ? _value.phone2
             : phone2 // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
       ),
     );
   }

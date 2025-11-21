@@ -21,7 +21,7 @@ class HomeBookingListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<DashboardBloc>();
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
@@ -52,21 +52,19 @@ class HomeBookingListWidget extends StatelessWidget {
                 ? const NoResultFoundAnimationWidget(
                     isScrollable: false,
                   )
-                : isDesktop 
-                    ? _buildDesktopBookingList(context, group, isPaginating, bloc)
-                    : _buildMobileBookingList(context, group, isPaginating, bloc);
+                : isDesktop
+                    ? _buildDesktopBookingList(
+                        context, group, isPaginating, bloc)
+                    : _buildMobileBookingList(
+                        context, group, isPaginating, bloc);
           },
         );
       },
     );
   }
 
-  Widget _buildDesktopBookingList(
-    BuildContext context, 
-    List<BookingGroupedModel> group, 
-    bool isPaginating, 
-    DashboardBloc bloc
-  ) {
+  Widget _buildDesktopBookingList(BuildContext context,
+      List<BookingGroupedModel> group, bool isPaginating, DashboardBloc bloc) {
     return Column(
       children: [
         ListView.builder(
@@ -74,109 +72,109 @@ class HomeBookingListWidget extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: group.length + (isPaginating ? 1 : 0),
           itemBuilder: (context, groupIndex) {
-                if (groupIndex == group.length && isPaginating) {
-                  return const BookingCardShimmer();
-                }
+            if (groupIndex == group.length && isPaginating) {
+              return const BookingCardShimmer();
+            }
 
-                final sub = group[groupIndex];
+            final sub = group[groupIndex];
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Group Header - Desktop Style
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: const Color(0xFFE5E7EB),
-                          width: 1,
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Group Header - Desktop Style
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3F4F6),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _getGroupIcon(sub.date),
+                        color: const Color(0xFF6B7280),
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        _getGroupTitle(sub.date),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF374151),
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            _getGroupIcon(sub.date),
-                            color: const Color(0xFF6B7280),
-                            size: 20,
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF667eea).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${sub.bookings.length}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF667eea),
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _getGroupTitle(sub.date),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF374151),
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF667eea).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${sub.bookings.length}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF667eea),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Booking Cards - Desktop Layout
-                    ...sub.bookings.map(
-                      (booking) => Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        child: BookingCard(
-                          booking: booking,
-                          onTap: () async {
-                            final bookingCubit = context.read<BookingSelectionCubit>();
-                            bookingCubit.selectBooking(booking);
-
-                            await context.push(
-                              BookingDetailsScreen(bookingId: booking.id!),
-                            );
-
-                            if (bookingCubit.state.isModified) {
-                              final updated = bookingCubit.state.selectedBooking;
-
-                              context.read<DashboardBloc>().add(
-                                    DashboardEvent.updateBooking(
-                                      updated,
-                                      shouldRefresh: bookingCubit.state.shouldRefresh,
-                                    ),
-                                  );
-                              log('update booking called');
-
-                              /// Optional: reset it
-                              bookingCubit.reset();
-                            }
-                          },
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                // Booking Cards - Desktop Layout
+                ...sub.bookings.map(
+                  (booking) => Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: BookingCard(
+                      booking: booking,
+                      onTap: () async {
+                        final bookingCubit =
+                            context.read<BookingSelectionCubit>();
+                        bookingCubit.selectBooking(booking);
+
+                        await context.push(
+                          BookingDetailsScreen(bookingId: booking.id!),
+                        );
+
+                        if (bookingCubit.state.isModified) {
+                          final updated = bookingCubit.state.selectedBooking;
+
+                          context.read<DashboardBloc>().add(
+                                DashboardEvent.updateBooking(
+                                  updated,
+                                  shouldRefresh:
+                                      bookingCubit.state.shouldRefresh,
+                                ),
+                              );
+                          log('update booking called');
+
+                          /// Optional: reset it
+                          bookingCubit.reset();
+                        }
+                      },
                     ),
-                    const SizedBox(height: 16),
-                  ],
-                );
-              },
-            ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            );
+          },
+        ),
       ],
     );
   }
 
-  Widget _buildMobileBookingList(
-    BuildContext context, 
-    List<BookingGroupedModel> group, 
-    bool isPaginating, 
-    DashboardBloc bloc
-  ) {
+  Widget _buildMobileBookingList(BuildContext context,
+      List<BookingGroupedModel> group, bool isPaginating, DashboardBloc bloc) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

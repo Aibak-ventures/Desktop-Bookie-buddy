@@ -13,8 +13,8 @@ part 'wallet_expense_state.dart';
 class WalletExpenseBloc extends Bloc<WalletExpenseEvent, WalletExpenseState> {
   final ExpenseRepository _repository;
   WalletExpenseBloc({required ExpenseRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadExpense>(_onLoadExpense);
     on<_LoadNextPageExpense>(_onLoadNextPageExpense);
     on<_DeleteExpense>(_onDeleteExpense);

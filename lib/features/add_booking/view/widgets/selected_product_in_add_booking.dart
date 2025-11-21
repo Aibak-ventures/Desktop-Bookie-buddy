@@ -73,7 +73,7 @@ class SelectedProductInAddBooking extends StatelessWidget {
                     try {
                       print('CustomizationExpansionTile button tapped');
                       final cubit = context.read<AddBookingProductsCubit>();
-                      
+
                       // add customization
                       if (selected.variant.mainServiceType.isVehicle) {
                         print('Opening vehicle customization dialog');
@@ -90,7 +90,8 @@ class SelectedProductInAddBooking extends StatelessWidget {
                         }
                       } else {
                         print('Opening dress customization screen');
-                        final result = await Navigator.of(context).push<List<MeasurementValueModel>>(
+                        final result = await Navigator.of(context)
+                            .push<List<MeasurementValueModel>>(
                           MaterialPageRoute(
                             builder: (context) => AddCustomizationScreen(
                               addedMeasurements: selected.measurements,
@@ -105,7 +106,8 @@ class SelectedProductInAddBooking extends StatelessWidget {
                             result,
                           );
                         } else {
-                          print('No measurements returned from customization screen');
+                          print(
+                              'No measurements returned from customization screen');
                         }
                       }
                     } catch (e) {

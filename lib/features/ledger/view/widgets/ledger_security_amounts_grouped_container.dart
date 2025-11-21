@@ -17,76 +17,76 @@ class LedgerSecurityAmountsGroupedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                groupedDate.getDateHeading(),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.grey600,
-                  fontWeight: FontWeight.w500,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  groupedDate.getDateHeading(),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.grey600,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              // if (securityAmounts
-              //     .isNotEmpty) // Only show share button if payments exist
-              //   Container(
-              //     decoration: BoxDecoration(
-              //       color: AppColors.purpleLightShade,
-              //       borderRadius: BorderRadius.circular(5),
-              //     ),
-              //     padding: 8.padding,
-              //     child: Row(
-              //       spacing: 4,
-              //       children: [
-              //         Icon(
-              //           Icons.share_outlined,
-              //           size: 18.sp,
-              //           semanticLabel: 'Share',
-              //         ),
-              //         Text(
-              //           'Share',
-              //           style: TextStyle(
-              //             fontSize: 14.sp,
-              //             color: AppColors.black,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ).onTap(
-              //     () async {
-              //       final date = groupedDate.formatToUiDate();
+                // if (securityAmounts
+                //     .isNotEmpty) // Only show share button if payments exist
+                //   Container(
+                //     decoration: BoxDecoration(
+                //       color: AppColors.purpleLightShade,
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //     padding: 8.padding,
+                //     child: Row(
+                //       spacing: 4,
+                //       children: [
+                //         Icon(
+                //           Icons.share_outlined,
+                //           size: 18.sp,
+                //           semanticLabel: 'Share',
+                //         ),
+                //         Text(
+                //           'Share',
+                //           style: TextStyle(
+                //             fontSize: 14.sp,
+                //             color: AppColors.black,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ).onTap(
+                //     () async {
+                //       final date = groupedDate.formatToUiDate();
 
-              //       final user = context.read<UserCubit>().state!;
-              //       await shareLedgerInvoice(
-              //         context: context,
-              //         user: user,
-              //         fromDate: date,
-              //         toDate: date,
-              //         includeExpense: false,
-              //         includePayments: false,
-              //         includePendings: true,
-              //         includeSecurity: false,
-              //         includeBookings: false,
-              //         isExcel: false,
-              //       );
-              //     },
-              //   ),
-            ],
+                //       final user = context.read<UserCubit>().state!;
+                //       await shareLedgerInvoice(
+                //         context: context,
+                //         user: user,
+                //         fromDate: date,
+                //         toDate: date,
+                //         includeExpense: false,
+                //         includePayments: false,
+                //         includePendings: true,
+                //         includeSecurity: false,
+                //         includeBookings: false,
+                //         isExcel: false,
+                //       );
+                //     },
+                //   ),
+              ],
+            ),
           ),
-        ),
-        ...securityAmounts.map((securityAmount) {
-          final date = securityAmount.bookingDate.parseToDateTime();
-          return LedgerSecurityAmountListTile(
-            securityAmountModel: securityAmount,
-            date: date,
-          );
-        })
-      ],
-    );
+          ...securityAmounts.map((securityAmount) {
+            final date = securityAmount.bookingDate.parseToDateTime();
+            return LedgerSecurityAmountListTile(
+              securityAmountModel: securityAmount,
+              date: date,
+            );
+          })
+        ],
+      );
 }

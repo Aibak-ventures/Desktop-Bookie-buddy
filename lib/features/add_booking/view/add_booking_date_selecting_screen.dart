@@ -42,9 +42,11 @@ class _AddBookingDateSelectingScreenState
   final returnDateController =
       TextEditingController(text: DateTime.now().add(1.days()).format());
   final pickupDateNotifier = ValueNotifier<DateTime>(DateTime.now());
-  final coolingPeriodDateController = TextEditingController(); // Initially empty
-  
-  bool coolingPeriodManuallySelected = false; // Track if user manually selected cooling period
+  final coolingPeriodDateController =
+      TextEditingController(); // Initially empty
+
+  bool coolingPeriodManuallySelected =
+      false; // Track if user manually selected cooling period
 
   late final int coolingPeriodDuration;
   TimeOfDay? pickupTime;
@@ -56,7 +58,8 @@ class _AddBookingDateSelectingScreenState
   void initState() {
     super.initState();
     coolingPeriodDuration =
-        context.read<UserCubit>().state?.shopSettings.coolingPeriodDuration ?? 0;
+        context.read<UserCubit>().state?.shopSettings.coolingPeriodDuration ??
+            0;
     // Don't auto-populate cooling period - let user select manually if needed
   }
 
@@ -82,12 +85,13 @@ class _AddBookingDateSelectingScreenState
               constraints: BoxConstraints(
                 maxWidth: isWeb ? 1200 : double.infinity,
               ),
-              padding: isWeb
-                  ? const EdgeInsets.all(40)
-                  : const EdgeInsets.all(16),
+              padding:
+                  isWeb ? const EdgeInsets.all(40) : const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
-                child: isWeb ? _buildWebLayout(isWideScreen) : _buildMobileLayout(),
+                child: isWeb
+                    ? _buildWebLayout(isWideScreen)
+                    : _buildMobileLayout(),
               ),
             ),
           ),
@@ -158,9 +162,9 @@ class _AddBookingDateSelectingScreenState
             ],
           ),
         ),
-        
+
         const SizedBox(height: 40),
-        
+
         // Main content with calendar and form
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,8 +233,9 @@ class _AddBookingDateSelectingScreenState
                         returnDateController.text = newReturnDate.format();
                         // Only update cooling period if user has manually selected it
                         if (coolingPeriodManuallySelected) {
-                          coolingPeriodDateController.text =
-                              newReturnDate.add(coolingPeriodDuration.days()).format();
+                          coolingPeriodDateController.text = newReturnDate
+                              .add(coolingPeriodDuration.days())
+                              .format();
                         }
                       },
                       initialSelectedDate: pickupDateNotifier.value,
@@ -295,9 +300,9 @@ class _AddBookingDateSelectingScreenState
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Time selection card
                   Container(
                     width: double.infinity,
@@ -350,7 +355,8 @@ class _AddBookingDateSelectingScreenState
                                   ),
                                   const SizedBox(height: 8),
                                   CustomTextField(
-                                    validator: (value) => null, // No validation - time is optional
+                                    validator: (value) =>
+                                        null, // No validation - time is optional
                                     controller: pickupTimeController,
                                     hintText: 'Pickup Time',
                                     prefixIcon: const Icon(Icons.access_time),
@@ -358,36 +364,46 @@ class _AddBookingDateSelectingScreenState
                                   ).onTap(() async {
                                     final picked = await showTimePicker(
                                       context: context,
-                                      initialTime: pickupTime ?? TimeOfDay.now(),
-                                      builder: (BuildContext context, Widget? child) {
+                                      initialTime:
+                                          pickupTime ?? TimeOfDay.now(),
+                                      builder: (BuildContext context,
+                                          Widget? child) {
                                         return MediaQuery(
-                                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                          data: MediaQuery.of(context).copyWith(
+                                              alwaysUse24HourFormat: false),
                                           child: child!,
                                         );
                                       },
                                     );
                                     if (picked != null) {
                                       // Check if same day and same time as return
-                                      final returnDateStr = returnDateController.text;
-                                      final pickupDate = pickupDateNotifier.value;
-                                      
+                                      final returnDateStr =
+                                          returnDateController.text;
+                                      final pickupDate =
+                                          pickupDateNotifier.value;
+
                                       if (returnDateStr.isNotEmpty) {
-                                        final returnDate = returnDateStr.parseToDateTime();
-                                        
-                                        if (pickupDate.isSameDay(returnDate) && 
-                                            returnTime != null && picked == returnTime) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                        final returnDate =
+                                            returnDateStr.parseToDateTime();
+
+                                        if (pickupDate.isSameDay(returnDate) &&
+                                            returnTime != null &&
+                                            picked == returnTime) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             const SnackBar(
-                                              content: Text('Pickup and return time cannot be the same on the same day'),
+                                              content: Text(
+                                                  'Pickup and return time cannot be the same on the same day'),
                                               backgroundColor: Colors.orange,
                                             ),
                                           );
                                           return;
                                         }
                                       }
-                                      
+
                                       pickupTime = picked;
-                                      pickupTimeController.text = picked.formatTime12Hour();
+                                      pickupTimeController.text =
+                                          picked.formatTime12Hour();
                                     }
                                   }),
                                 ],
@@ -408,7 +424,8 @@ class _AddBookingDateSelectingScreenState
                                   ),
                                   const SizedBox(height: 8),
                                   CustomTextField(
-                                    validator: (value) => null, // No validation - time is optional
+                                    validator: (value) =>
+                                        null, // No validation - time is optional
                                     controller: returnTimeController,
                                     hintText: 'Return Time',
                                     prefixIcon: const Icon(Icons.access_time),
@@ -416,36 +433,46 @@ class _AddBookingDateSelectingScreenState
                                   ).onTap(() async {
                                     final picked = await showTimePicker(
                                       context: context,
-                                      initialTime: returnTime ?? TimeOfDay.now(),
-                                      builder: (BuildContext context, Widget? child) {
+                                      initialTime:
+                                          returnTime ?? TimeOfDay.now(),
+                                      builder: (BuildContext context,
+                                          Widget? child) {
                                         return MediaQuery(
-                                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                          data: MediaQuery.of(context).copyWith(
+                                              alwaysUse24HourFormat: false),
                                           child: child!,
                                         );
                                       },
                                     );
                                     if (picked != null) {
                                       // Check if same day and same time as pickup
-                                      final returnDateStr = returnDateController.text;
-                                      final pickupDate = pickupDateNotifier.value;
-                                      
+                                      final returnDateStr =
+                                          returnDateController.text;
+                                      final pickupDate =
+                                          pickupDateNotifier.value;
+
                                       if (returnDateStr.isNotEmpty) {
-                                        final returnDate = returnDateStr.parseToDateTime();
-                                        
-                                        if (pickupDate.isSameDay(returnDate) && 
-                                            pickupTime != null && picked == pickupTime) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                        final returnDate =
+                                            returnDateStr.parseToDateTime();
+
+                                        if (pickupDate.isSameDay(returnDate) &&
+                                            pickupTime != null &&
+                                            picked == pickupTime) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             const SnackBar(
-                                              content: Text('Return and pickup time cannot be the same on the same day'),
+                                              content: Text(
+                                                  'Return and pickup time cannot be the same on the same day'),
                                               backgroundColor: Colors.orange,
                                             ),
                                           );
                                           return;
                                         }
                                       }
-                                      
+
                                       returnTime = picked;
-                                      returnTimeController.text = picked.formatTime12Hour();
+                                      returnTimeController.text =
+                                          picked.formatTime12Hour();
                                     }
                                   }),
                                 ],
@@ -456,9 +483,9 @@ class _AddBookingDateSelectingScreenState
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Cooling period card
                   Container(
                     width: double.infinity,
@@ -504,7 +531,8 @@ class _AddBookingDateSelectingScreenState
                         ),
                         const SizedBox(height: 20),
                         CustomTextField(
-                          validator: (value) => null, // No validation - cooling period is optional
+                          validator: (value) =>
+                              null, // No validation - cooling period is optional
                           controller: coolingPeriodDateController,
                           hintText: 'Select cooling period',
                           prefixIcon: const Icon(Icons.calendar_month_outlined),
@@ -513,9 +541,9 @@ class _AddBookingDateSelectingScreenState
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Next button
                   SizedBox(
                     width: double.infinity,
@@ -617,18 +645,19 @@ class _AddBookingDateSelectingScreenState
                             },
                             hintText: 'Select Return Date',
                             controller: returnDateController,
-                            prefixIcon: const Icon(Icons.calendar_month_outlined),
+                            prefixIcon:
+                                const Icon(Icons.calendar_month_outlined),
                             ignorePointers: true,
                           ).onTap(() => selectReturnDate(context)),
                           16.verticalSpace,
-
                           Text('Time (Optional)', style: _labelStyle(context)),
                           8.verticalSpace,
                           Row(
                             children: [
                               Expanded(
                                 child: CustomTextField(
-                                  validator: (value) => null, // No validation - time is optional
+                                  validator: (value) =>
+                                      null, // No validation - time is optional
                                   controller: pickupTimeController,
                                   hintText: 'Pickup Time',
                                   prefixIcon: const Icon(Icons.access_time),
@@ -638,14 +667,16 @@ class _AddBookingDateSelectingScreenState
                                     context: context,
                                     initialTime: pickupTime ?? TimeOfDay.now(),
                                     builder: (context, child) => MediaQuery(
-                                      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                      data: MediaQuery.of(context).copyWith(
+                                          alwaysUse24HourFormat: false),
                                       child: child!,
                                     ),
                                   );
                                   if (picked != null) {
                                     // If pickup date is today, ensure pickup time is after current time
                                     final pickupDate = pickupDateNotifier.value;
-                                    if (pickupDate.isSameDay(DateTime.now()) && picked.isBefore(TimeOfDay.now())) {
+                                    if (pickupDate.isSameDay(DateTime.now()) &&
+                                        picked.isBefore(TimeOfDay.now())) {
                                       context.showSnackBar(
                                         'Pickup time must be after current time',
                                         title: 'Time Error',
@@ -653,10 +684,12 @@ class _AddBookingDateSelectingScreenState
                                       );
                                       return;
                                     }
-                                    
+
                                     // If pickup and return are on same day and return time is set, ensure pickup is before return
-                                    final returnDate = returnDateController.text.parseToDateTime();
-                                    if (pickupDate.isSameDay(returnDate) && returnTime != null) {
+                                    final returnDate = returnDateController.text
+                                        .parseToDateTime();
+                                    if (pickupDate.isSameDay(returnDate) &&
+                                        returnTime != null) {
                                       if (!picked.isBefore(returnTime!)) {
                                         context.showSnackBar(
                                           'Pickup time must be before return time on the same day',
@@ -666,16 +699,18 @@ class _AddBookingDateSelectingScreenState
                                         return;
                                       }
                                     }
-                                    
+
                                     pickupTime = picked;
-                                    pickupTimeController.text = picked.formatTime12Hour();
+                                    pickupTimeController.text =
+                                        picked.formatTime12Hour();
                                   }
                                 }),
                               ),
                               12.horizontalSpace,
                               Expanded(
                                 child: CustomTextField(
-                                  validator: (value) => null, // No validation - time is optional
+                                  validator: (value) =>
+                                      null, // No validation - time is optional
                                   controller: returnTimeController,
                                   hintText: 'Return Time',
                                   prefixIcon: const Icon(Icons.access_time),
@@ -685,17 +720,20 @@ class _AddBookingDateSelectingScreenState
                                     context: context,
                                     initialTime: returnTime ?? TimeOfDay.now(),
                                     builder: (context, child) => MediaQuery(
-                                      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                      data: MediaQuery.of(context).copyWith(
+                                          alwaysUse24HourFormat: false),
                                       child: child!,
                                     ),
                                   );
                                   if (picked != null) {
                                     // Validate return time if on same day as pickup
                                     final pickupDate = pickupDateNotifier.value;
-                                    final returnDate = returnDateController.text.parseToDateTime();
-                                    
+                                    final returnDate = returnDateController.text
+                                        .parseToDateTime();
+
                                     // If return date is today, ensure return time is after current time
-                                    if (returnDate.isSameDay(DateTime.now()) && picked.isBefore(TimeOfDay.now())) {
+                                    if (returnDate.isSameDay(DateTime.now()) &&
+                                        picked.isBefore(TimeOfDay.now())) {
                                       context.showSnackBar(
                                         'Return time must be after current time',
                                         title: 'Time Error',
@@ -703,9 +741,10 @@ class _AddBookingDateSelectingScreenState
                                       );
                                       return;
                                     }
-                                    
+
                                     // If pickup and return are on same day, ensure return time is after pickup time
-                                    if (pickupDate.isSameDay(returnDate) && pickupTime != null) {
+                                    if (pickupDate.isSameDay(returnDate) &&
+                                        pickupTime != null) {
                                       if (!picked.isAfter(pickupTime!)) {
                                         context.showSnackBar(
                                           'Return time must be after pickup time on the same day',
@@ -715,27 +754,29 @@ class _AddBookingDateSelectingScreenState
                                         return;
                                       }
                                     }
-                                    
+
                                     returnTime = picked;
-                                    returnTimeController.text = picked.formatTime12Hour();
+                                    returnTimeController.text =
+                                        picked.formatTime12Hour();
                                   }
                                 }),
                               ),
                             ],
                           ),
                           24.verticalSpace,
-
-                          Text("Cooling Period Date (Optional)", style: _labelStyle(context)),
+                          Text("Cooling Period Date (Optional)",
+                              style: _labelStyle(context)),
                           8.verticalSpace,
                           CustomTextField(
-                            validator: (value) => null, // No validation - cooling period is optional
+                            validator: (value) =>
+                                null, // No validation - cooling period is optional
                             controller: coolingPeriodDateController,
                             hintText: 'Select cooling period date (optional)',
-                            prefixIcon: const Icon(Icons.calendar_month_outlined),
+                            prefixIcon:
+                                const Icon(Icons.calendar_month_outlined),
                             ignorePointers: true,
                           ).onTap(() => selectCoolingPeriodDate(context)),
                           32.verticalSpace,
-
                           Center(
                             child: CustomElevatedButton(
                               text: 'Next',
@@ -778,7 +819,7 @@ class _AddBookingDateSelectingScreenState
     // Comprehensive booking validation
     final pickupDate = pickupDateNotifier.value;
     final returnDate = returnDateController.text.parseToDateTime();
-    
+
     // Check if same day booking with invalid times
     if (pickupDate.isSameDay(returnDate)) {
       // For same day bookings, ensure both times are provided
@@ -790,11 +831,11 @@ class _AddBookingDateSelectingScreenState
         );
         return;
       }
-      
+
       // Convert TimeOfDay to minutes for comparison
       final pickupMinutes = pickupTime!.hour * 60 + pickupTime!.minute;
       final returnMinutes = returnTime!.hour * 60 + returnTime!.minute;
-      
+
       // Return time must be at least 1 hour after pickup time for same day
       if (returnMinutes <= pickupMinutes) {
         context.showSnackBar(
@@ -804,7 +845,7 @@ class _AddBookingDateSelectingScreenState
         );
         return;
       }
-      
+
       // Minimum rental duration check (at least 1 hour for same day)
       if (returnMinutes - pickupMinutes < 60) {
         context.showSnackBar(
@@ -815,26 +856,16 @@ class _AddBookingDateSelectingScreenState
         return;
       }
     }
-    
+
     // For different day bookings, if times are provided, validate them
     if (!pickupDate.isSameDay(returnDate)) {
       // If it's next day and times are provided, check if return is actually later
       if (pickupTime != null && returnTime != null) {
-        final pickupDateTime = DateTime(
-          pickupDate.year, 
-          pickupDate.month, 
-          pickupDate.day,
-          pickupTime!.hour, 
-          pickupTime!.minute
-        );
-        final returnDateTime = DateTime(
-          returnDate.year, 
-          returnDate.month, 
-          returnDate.day,
-          returnTime!.hour, 
-          returnTime!.minute
-        );
-        
+        final pickupDateTime = DateTime(pickupDate.year, pickupDate.month,
+            pickupDate.day, pickupTime!.hour, pickupTime!.minute);
+        final returnDateTime = DateTime(returnDate.year, returnDate.month,
+            returnDate.day, returnTime!.hour, returnTime!.minute);
+
         if (returnDateTime.isBefore(pickupDateTime)) {
           context.showSnackBar(
             'Return date and time cannot be before pickup date and time.',
@@ -845,37 +876,37 @@ class _AddBookingDateSelectingScreenState
         }
       }
     }
-    
+
     // Additional business logic validation
     final now = DateTime.now();
-   if (pickupTime != null) {
-  final pickupDateTime = DateTime(
-    pickupDate.year,
-    pickupDate.month,
-    pickupDate.day,
-    pickupTime!.hour,
-    pickupTime!.minute,
-  );
+    if (pickupTime != null) {
+      final pickupDateTime = DateTime(
+        pickupDate.year,
+        pickupDate.month,
+        pickupDate.day,
+        pickupTime!.hour,
+        pickupTime!.minute,
+      );
 
-  // Add a small grace buffer of 1 minute to prevent false negatives
-  final adjustedNow = DateTime.now().subtract(const Duration(minutes: 1));
+      // Add a small grace buffer of 1 minute to prevent false negatives
+      final adjustedNow = DateTime.now().subtract(const Duration(minutes: 1));
 
-  // Only restrict if pickup time is truly before the current moment
-  if (pickupDateTime.isBefore(adjustedNow)) {
-    context.showSnackBar(
-      'Cannot book pickup time in the past.',
-      title: 'Invalid Time',
-      isError: true,
-    );
-    return;
-  }
-}
-
+      // Only restrict if pickup time is truly before the current moment
+      if (pickupDateTime.isBefore(adjustedNow)) {
+        context.showSnackBar(
+          'Cannot book pickup time in the past.',
+          title: 'Invalid Time',
+          isError: true,
+        );
+        return;
+      }
+    }
 
     final pickupDateFormatted = pickupDateNotifier.value.format(reverse: true);
     final returnDateFormatted = returnDateController.text.formatToUiDate();
     // Only send cooling period if user has manually selected it and it's different from return date
-    final coolingPeriodDate = coolingPeriodManuallySelected && coolingPeriodDateController.text.isNotEmpty
+    final coolingPeriodDate = coolingPeriodManuallySelected &&
+            coolingPeriodDateController.text.isNotEmpty
         ? coolingPeriodDateController.text.formatToUiDate()
         : null;
     final isEdit = widget.addBookingModel.staffId != null;
@@ -887,9 +918,10 @@ class _AddBookingDateSelectingScreenState
           returnDate: returnDateFormatted,
           pickupTime: pickupTime,
           returnTime: returnTime,
-          coolingPeriodDate: coolingPeriodDate, // Will be null if not manually selected
+          coolingPeriodDate:
+              coolingPeriodDate, // Will be null if not manually selected
         );
-        
+
         await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => SelectServiceScreen(
@@ -901,7 +933,8 @@ class _AddBookingDateSelectingScreenState
                 );
 
                 // Navigate to select products screen
-                final selectedProducts = await Navigator.of(ctx).push<List<ProductSelectedModel>>(
+                final selectedProducts =
+                    await Navigator.of(ctx).push<List<ProductSelectedModel>>(
                   MaterialPageRoute(
                     builder: (context) => SelectProductScreen(
                       serviceId: service.id,
@@ -928,8 +961,10 @@ class _AddBookingDateSelectingScreenState
                   await Navigator.of(ctx).push(
                     MaterialPageRoute(
                       builder: (context) => BlocProvider(
-                        create: (context) => AddBookingProductsCubit()..setAll(selectedProducts),
-                        child: AddBookingProductScreen(addBookingModel: updatedBookingData),
+                        create: (context) =>
+                            AddBookingProductsCubit()..setAll(selectedProducts),
+                        child: AddBookingProductScreen(
+                            addBookingModel: updatedBookingData),
                       ),
                     ),
                   );
@@ -956,13 +991,15 @@ class _AddBookingDateSelectingScreenState
   Future<void> selectCoolingPeriodDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: coolingPeriodDateController.text.isNotEmpty 
+      initialDate: coolingPeriodDateController.text.isNotEmpty
           ? coolingPeriodDateController.text.parseToDateTime()
-          : returnDateController.text.parseToDateTime().add(coolingPeriodDuration.days()),
+          : returnDateController.text
+              .parseToDateTime()
+              .add(coolingPeriodDuration.days()),
       firstDate: returnDateController.text.parseToDateTime(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
- 
+
     if (picked != null) {
       coolingPeriodDateController.text = picked.format();
       coolingPeriodManuallySelected = true; // Mark as manually selected
@@ -979,12 +1016,12 @@ class _AddBookingDateSelectingScreenState
 
     if (picked != null) {
       returnDateController.text = picked.format();
-      
+
       // Auto-populate cooling period date when return date changes
       // Add cooling period duration to return date
       final coolingPeriodDate = picked.add(coolingPeriodDuration.days());
       coolingPeriodDateController.text = coolingPeriodDate.format();
-      
+
       // Show snackbar to inform user about auto-populated cooling period
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

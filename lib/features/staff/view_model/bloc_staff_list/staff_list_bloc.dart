@@ -16,8 +16,8 @@ class StaffListBloc extends Bloc<StaffListEvent, StaffListState> {
   final StaffRepository _repository;
 
   StaffListBloc({required StaffRepository repository})
-    : _repository = repository,
-      super(const StaffListState.loading()) {
+      : _repository = repository,
+        super(const StaffListState.loading()) {
     on<_LoadStaffs>(_onLoadStaffs);
     on<_LoadNextPageStaffs>(_onLoadNextPageStaffs);
     on<_AddStaff>(_onAddStaff);
@@ -172,9 +172,8 @@ class StaffListBloc extends Bloc<StaffListEvent, StaffListState> {
 
       await _repository.deleteStaff(event.staffId);
 
-      final updatedStaffs = s.staffs
-          .where((staff) => staff.id != event.staffId)
-          .toList();
+      final updatedStaffs =
+          s.staffs.where((staff) => staff.id != event.staffId).toList();
 
       emit(
         s.copyWith(

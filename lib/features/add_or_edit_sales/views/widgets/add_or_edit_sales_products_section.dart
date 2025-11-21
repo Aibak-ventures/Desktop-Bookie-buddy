@@ -32,103 +32,102 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AddOrEditSalesSection(
-    title: 'Products',
-    child: Column(
-      children: [
-        _buildProductList(context),
-        _buildAddMoreButton(context),
-        20.height,
+        title: 'Products',
+        child: Column(
+          children: [
+            _buildProductList(context),
+            _buildAddMoreButton(context),
+            20.height,
+            ValueListenableBuilder(
+              valueListenable: pickUpDateController,
+              builder: (context, pickupValue, child) => ValueListenableBuilder(
+                valueListenable: stockCountDecreaseNotifier,
+                builder: (context, stockCountDecrease, child) {
+                  final isVisible = stockCountDecrease == false ||
+                      (pickupValue.text.isNotEmpty &&
+                              pickupValue.text
+                                  .parseToDateTime()
+                                  .dateOnly
+                                  .isBefore(
+                                    DateTime.now().dateOnly,
+                                  )) &&
+                          !isEditMode;
 
-        ValueListenableBuilder(
-          valueListenable: pickUpDateController,
-          builder: (context, pickupValue, child) => ValueListenableBuilder(
-            valueListenable: stockCountDecreaseNotifier,
-            builder: (context, stockCountDecrease, child) {
-              final isVisible =
-                  stockCountDecrease == false ||
-                  (pickupValue.text.isNotEmpty &&
-                          pickupValue.text.parseToDateTime().dateOnly.isBefore(
-                            DateTime.now().dateOnly,
-                          )) &&
-                      !isEditMode;
-
-              return Visibility(
-                visible: isVisible,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.grey400),
-                    borderRadius: 5.radiusBorder,
-                    color: AppColors.purpleLightShade,
-                  ),
-                  child: CheckboxListTile.adaptive(
-                    secondary: const Icon(
-                      Icons.info_outline_rounded,
-                      color: AppColors.purple,
+                  return Visibility(
+                    visible: isVisible,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.grey400),
+                        borderRadius: 5.radiusBorder,
+                        color: AppColors.purpleLightShade,
+                      ),
+                      child: CheckboxListTile.adaptive(
+                        secondary: const Icon(
+                          Icons.info_outline_rounded,
+                          color: AppColors.purple,
+                        ),
+                        value: stockCountDecrease,
+                        onChanged: (value) {
+                          if (value != null)
+                            stockCountDecreaseNotifier.value = value;
+                        },
+                        title: const Text('Decrease Stock quantity'),
+                        subtitle: const Text(
+                          'If unchecked, the stock quantity will not be decreased from the inventory',
+                        ),
+                      ),
                     ),
-                    value: stockCountDecrease,
-
-                    onChanged: (value) {
-                      if (value != null)
-                        stockCountDecreaseNotifier.value = value;
-                    },
-                    title: const Text('Decrease Stock quantity'),
-
-                    subtitle: const Text(
-                      'If unchecked, the stock quantity will not be decreased from the inventory',
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildProductList(BuildContext context) => ValueListenableBuilder(
-    valueListenable: selectedProductsNotifier,
-    builder: (context, selectedProducts, _) => ListView.builder(
-      itemCount: selectedProducts.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final productModel = selectedProducts[index];
+        valueListenable: selectedProductsNotifier,
+        builder: (context, selectedProducts, _) => ListView.builder(
+          itemCount: selectedProducts.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final productModel = selectedProducts[index];
 
-     return EditBookingProductListTile(
-          amount: productModel.amount * productModel.quantity,
-          product: productModel.variant,
-          needColor: false,
-          extraField: 'Price: ${productModel.amount.toCurrency()}',
-          onEdit: () => _editProductAmount(context, productModel),
-          onRemove: () => _removeProduct(context, productModel),
-          // trailing: _buildCustomization(context, productModel),
-        );
-      },
-    ),
-  );
+            return EditBookingProductListTile(
+              amount: productModel.amount * productModel.quantity,
+              product: productModel.variant,
+              needColor: false,
+              extraField: 'Price: ${productModel.amount.toCurrency()}',
+              onEdit: () => _editProductAmount(context, productModel),
+              onRemove: () => _removeProduct(context, productModel),
+              // trailing: _buildCustomization(context, productModel),
+            );
+          },
+        ),
+      );
 
   Widget _buildAddMoreButton(BuildContext context) => ValueListenableBuilder(
-    valueListenable: selectedProductsNotifier,
-    child: const Icon(Icons.add, color: AppColors.purple),
-    builder: (context, products, child) => Container(
-      padding: (10, 3).padding,
-      decoration: ShapeDecoration(
-        color: AppColors.purpleLight,
-        shape: RoundedRectangleBorder(borderRadius: 5.radiusBorder),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (child != null) child,
-          Text(
-            products.isEmpty ? 'Add Products' : 'Add more',
-            style: const TextStyle(color: AppColors.purple),
+        valueListenable: selectedProductsNotifier,
+        child: const Icon(Icons.add, color: AppColors.purple),
+        builder: (context, products, child) => Container(
+          padding: (10, 3).padding,
+          decoration: ShapeDecoration(
+            color: AppColors.purpleLight,
+            shape: RoundedRectangleBorder(borderRadius: 5.radiusBorder),
           ),
-        ],
-      ),
-    ).onTap(() => _handleAddMore(context)),
-  );
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (child != null) child,
+              Text(
+                products.isEmpty ? 'Add Products' : 'Add more',
+                style: const TextStyle(color: AppColors.purple),
+              ),
+            ],
+          ),
+        ).onTap(() => _handleAddMore(context)),
+      );
 
   void _editProductAmount(
     BuildContext context,
@@ -233,7 +232,7 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
   //   }).toList();
   // }
 
-   Future<void> _handleAddMore(BuildContext context) async {
+  Future<void> _handleAddMore(BuildContext context) async {
     try {
       await context.push<List<ProductSelectedModel>>(
         SelectServiceScreen(

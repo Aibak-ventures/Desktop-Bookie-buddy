@@ -49,10 +49,8 @@ abstract class $MeasurementValueModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$MeasurementValueModelCopyWithImpl<
-  $Res,
-  $Val extends MeasurementValueModel
->
+class _$MeasurementValueModelCopyWithImpl<$Res,
+        $Val extends MeasurementValueModel>
     implements $MeasurementValueModelCopyWith<$Res> {
   _$MeasurementValueModelCopyWithImpl(this._value, this._then);
 
@@ -73,24 +71,23 @@ class _$MeasurementValueModelCopyWithImpl<
   }) {
     return _then(
       _value.copyWith(
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            key: null == key
-                ? _value.key
-                : key // ignore: cast_nullable_to_non_nullable
-                      as String,
-            value: null == value
-                ? _value.value
-                : value // ignore: cast_nullable_to_non_nullable
-                      as String,
-            gender: freezed == gender
-                ? _value.gender
-                : gender // ignore: cast_nullable_to_non_nullable
-                      as GenderType?,
-          )
-          as $Val,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                as String,
+        key: null == key
+            ? _value.key
+            : key // ignore: cast_nullable_to_non_nullable
+                as String,
+        value: null == value
+            ? _value.value
+            : value // ignore: cast_nullable_to_non_nullable
+                as String,
+        gender: freezed == gender
+            ? _value.gender
+            : gender // ignore: cast_nullable_to_non_nullable
+                as GenderType?,
+      ) as $Val,
     );
   }
 }
@@ -109,8 +106,8 @@ abstract class _$$MeasurementValueModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$MeasurementValueModelImplCopyWithImpl<$Res>
-    extends
-        _$MeasurementValueModelCopyWithImpl<$Res, _$MeasurementValueModelImpl>
+    extends _$MeasurementValueModelCopyWithImpl<$Res,
+        _$MeasurementValueModelImpl>
     implements _$$MeasurementValueModelImplCopyWith<$Res> {
   __$$MeasurementValueModelImplCopyWithImpl(
     _$MeasurementValueModelImpl _value,
@@ -132,19 +129,19 @@ class __$$MeasurementValueModelImplCopyWithImpl<$Res>
         name: null == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
         key: null == key
             ? _value.key
             : key // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
         value: null == value
             ? _value.value
             : value // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
         gender: freezed == gender
             ? _value.gender
             : gender // ignore: cast_nullable_to_non_nullable
-                  as GenderType?,
+                as GenderType?,
       ),
     );
   }
@@ -198,11 +195,11 @@ class _$MeasurementValueModelImpl implements _MeasurementValueModel {
   @override
   @pragma('vm:prefer-inline')
   _$$MeasurementValueModelImplCopyWith<_$MeasurementValueModelImpl>
-  get copyWith =>
-      __$$MeasurementValueModelImplCopyWithImpl<_$MeasurementValueModelImpl>(
-        this,
-        _$identity,
-      );
+      get copyWith => __$$MeasurementValueModelImplCopyWithImpl<
+              _$MeasurementValueModelImpl>(
+            this,
+            _$identity,
+          );
 
   @override
   Map<String, dynamic> toJson() {
@@ -235,5 +232,5 @@ abstract class _MeasurementValueModel implements MeasurementValueModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MeasurementValueModelImplCopyWith<_$MeasurementValueModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

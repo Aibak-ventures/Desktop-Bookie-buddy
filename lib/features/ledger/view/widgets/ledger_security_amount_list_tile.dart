@@ -23,42 +23,42 @@ class LedgerSecurityAmountListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LedgerListTile(
-      onTap: () {
-        context.push(BookingDetailsScreen(
-          bookingId: securityAmountModel.bookingId,
-        ));
-      },
-      icon: Icon(
-        LucideIcons.shieldUser,
-        size: 28.sp,
-      ),
-      content: Column(
-        children: [
-          Text(
-            securityAmountModel.clientName,
-          ),
-          Text.rich(
-            TextSpan(
-              text: 'Booking date: ',
-              children: [
-                TextSpan(
-                  text: date.format(),
-                  style: TextStyle(
-                    color: AppColors.black.lighten(0.2),
-                  ),
-                ),
-              ],
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.grey,
-              ),
+        onTap: () {
+          context.push(BookingDetailsScreen(
+            bookingId: securityAmountModel.bookingId,
+          ));
+        },
+        icon: Icon(
+          LucideIcons.shieldUser,
+          size: 28.sp,
+        ),
+        content: Column(
+          children: [
+            Text(
+              securityAmountModel.clientName,
             ),
-            maxLines: 2,
-          ),
-        ],
-      ),
-      amount: securityAmountModel.securityAmount,
-    );
+            Text.rich(
+              TextSpan(
+                text: 'Booking date: ',
+                children: [
+                  TextSpan(
+                    text: date.format(),
+                    style: TextStyle(
+                      color: AppColors.black.lighten(0.2),
+                    ),
+                  ),
+                ],
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.grey,
+                ),
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+        amount: securityAmountModel.securityAmount,
+      );
 }
 
 class LedgerSecurityAmountListTileShimmer extends StatelessWidget {
@@ -66,24 +66,24 @@ class LedgerSecurityAmountListTileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LedgerListTile(
-      icon: Column(
-        children: [
-          CustomShimmerBox(width: 30.w, height: 30.sp),
-        ],
-      ),
-      content: Column(
-        children: [
-          CustomShimmerBox(width: 100.w, height: 14.sp),
-          8.height,
-          CustomShimmerBox(width: 160.w, height: 12.sp),
-        ],
-      ),
-      trailing: Expanded(
-        child: Column(
+        icon: Column(
           children: [
-            CustomShimmerBox(width: 50.w, height: 20.sp),
+            CustomShimmerBox(width: 30.w, height: 30.sp),
           ],
         ),
-      ),
-    );
+        content: Column(
+          children: [
+            CustomShimmerBox(width: 100.w, height: 14.sp),
+            8.height,
+            CustomShimmerBox(width: 160.w, height: 12.sp),
+          ],
+        ),
+        trailing: Expanded(
+          child: Column(
+            children: [
+              CustomShimmerBox(width: 50.w, height: 20.sp),
+            ],
+          ),
+        ),
+      );
 }

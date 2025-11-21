@@ -12,13 +12,13 @@ class StaffAnalyticsBloc
     extends Bloc<StaffAnalyticsEvent, StaffAnalyticsState> {
   final StaffRepository _repository;
   StaffAnalyticsBloc({required StaffRepository repository})
-    : _repository = repository,
-      super(
-        StaffAnalyticsState.loading(
-          month: DateTime.now().month,
-          year: DateTime.now().year,
-        ),
-      ) {
+      : _repository = repository,
+        super(
+          StaffAnalyticsState.loading(
+            month: DateTime.now().month,
+            year: DateTime.now().year,
+          ),
+        ) {
     on<_GetStaffAnalytics>(_onGetAnalytics);
     on<_ChangeMonth>(_onMonthChanged);
   }

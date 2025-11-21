@@ -166,8 +166,7 @@ class EditBookingFormStateController {
     locationToController.text = booking.otherDetails.locationTo ?? '';
 
     // time
-    pickupTime =
-        booking.pickupDate?.parseToDateTime().toTimeOfDay ??
+    pickupTime = booking.pickupDate?.parseToDateTime().toTimeOfDay ??
         const TimeOfDay(hour: 0, minute: 0);
     returnTime = booking.returnDate.parseToDateTime().toTimeOfDay;
 
@@ -218,78 +217,77 @@ class EditBookingFormStateController {
   }
 
   // pickup date function
-Future<void> selectPickupDate({
-  required BuildContext context,
-}) async {
-  final initial = originalBooking?.pickupDate?.parseToDateTime();
-  final lastDate = returnDateController.text.parseToDateTime();
+  Future<void> selectPickupDate({
+    required BuildContext context,
+  }) async {
+    final initial = originalBooking?.pickupDate?.parseToDateTime();
+    final lastDate = returnDateController.text.parseToDateTime();
 
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: pickUpdDateController.text.parseToDateTime().isBefore(DateTime.now())
-        ? DateTime.now()
-        : pickUpdDateController.text.parseToDateTime(),
-    firstDate: DateTime.now(), // ✅ only today and future
-    lastDate: lastDate.isBefore(DateTime.now().add(const Duration(days: 365)))
-        ? DateTime.now().add(const Duration(days: 365))
-        : lastDate,
-  );
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate:
+          pickUpdDateController.text.parseToDateTime().isBefore(DateTime.now())
+              ? DateTime.now()
+              : pickUpdDateController.text.parseToDateTime(),
+      firstDate: DateTime.now(), // ✅ only today and future
+      lastDate: lastDate.isBefore(DateTime.now().add(const Duration(days: 365)))
+          ? DateTime.now().add(const Duration(days: 365))
+          : lastDate,
+    );
 
-  if (picked != null) {
-    if (validateTimeOnSameDay(context, pickupDate: picked)) {
-      pickUpdDateController.text = picked.format();
+    if (picked != null) {
+      if (validateTimeOnSameDay(context, pickupDate: picked)) {
+        pickUpdDateController.text = picked.format();
 
-      final currentReturn = returnDateController.text.parseToDateTime();
-      if (currentReturn.isBefore(picked)) {
-        final newReturn = picked.add(1.days());
-        returnDateController.text = newReturn.format();
+        final currentReturn = returnDateController.text.parseToDateTime();
+        if (currentReturn.isBefore(picked)) {
+          final newReturn = picked.add(1.days());
+          returnDateController.text = newReturn.format();
 
-        if (coolingPeriodDateController.text.isNullOrEmpty) return;
+          if (coolingPeriodDateController.text.isNullOrEmpty) return;
 
-        // Preserve existing cooling period offset from previous return date
-        final oldCooling = coolingPeriodDateController.text.parseToDateTime();
-        final offsetDays = currentReturn.difference(oldCooling).inDays.abs();
-        coolingPeriodDateController.text =
-            newReturn.add(offsetDays.days()).format();
+          // Preserve existing cooling period offset from previous return date
+          final oldCooling = coolingPeriodDateController.text.parseToDateTime();
+          final offsetDays = currentReturn.difference(oldCooling).inDays.abs();
+          coolingPeriodDateController.text =
+              newReturn.add(offsetDays.days()).format();
+        }
       }
     }
   }
-}
-
 
   // return date function
-Future<void> selectReturnDate({
-  required BuildContext context,
-}) async {
-  final pickupDate = pickUpdDateController.text.parseToDateTime();
-  final initialDate = returnDateController.text.parseToDateTime();
+  Future<void> selectReturnDate({
+    required BuildContext context,
+  }) async {
+    final pickupDate = pickUpdDateController.text.parseToDateTime();
+    final initialDate = returnDateController.text.parseToDateTime();
 
-  final firstDate = pickupDate.isAfter(DateTime.now())
-      ? pickupDate
-      : DateTime.now(); // ✅ ensures no past dates
+    final firstDate = pickupDate.isAfter(DateTime.now())
+        ? pickupDate
+        : DateTime.now(); // ✅ ensures no past dates
 
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    firstDate: firstDate,
-    initialDate: initialDate.isBefore(firstDate) ? firstDate : initialDate,
-    lastDate: DateTime.now().add(const Duration(days: 365)),
-  );
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      firstDate: firstDate,
+      initialDate: initialDate.isBefore(firstDate) ? firstDate : initialDate,
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
 
-  if (picked != null && validateTimeOnSameDay(context, returnDate: picked)) {
-    returnDateController.text = picked.format();
+    if (picked != null && validateTimeOnSameDay(context, returnDate: picked)) {
+      returnDateController.text = picked.format();
 
-    if (coolingPeriodDateController.text.isNullOrEmpty) return;
+      if (coolingPeriodDateController.text.isNullOrEmpty) return;
 
-    final coolingPeriodDays = initialDate
-        .difference(coolingPeriodDateController.text.parseToDateTime())
-        .inDays
-        .abs();
+      final coolingPeriodDays = initialDate
+          .difference(coolingPeriodDateController.text.parseToDateTime())
+          .inDays
+          .abs();
 
-    coolingPeriodDateController.text =
-        picked.add(coolingPeriodDays.days()).format();
+      coolingPeriodDateController.text =
+          picked.add(coolingPeriodDays.days()).format();
+    }
   }
-}
-
 
   Future<void> selectCoolingPeriodDate(BuildContext context) async {
     final firstDate = returnDateController.text.parseToDateTime();
@@ -309,8 +307,7 @@ Future<void> selectReturnDate({
   }
 
   bool hasUnsavedChanges(BookingDetailsModel booking) {
-    final isLocationChanged =
-        isFieldChanged(
+    final isLocationChanged = isFieldChanged(
           booking.otherDetails.locationTo ?? '',
           locationToController.text,
         ) ||
@@ -326,10 +323,10 @@ Future<void> selectReturnDate({
     final oldPickupTime = booking.pickupDate?.parseToDateTime().toTimeOfDay;
     final oldReturnTime = booking.returnDate.parseToDateTime().toTimeOfDay;
 
-    final pickupTime = pickupTimeController.text
-        .to24HourTimeOfDayFrom12Format();
-    final returnTime = returnTimeController.text
-        .to24HourTimeOfDayFrom12Format();
+    final pickupTime =
+        pickupTimeController.text.to24HourTimeOfDayFrom12Format();
+    final returnTime =
+        returnTimeController.text.to24HourTimeOfDayFrom12Format();
 
     final isPickupTimeChanged = oldPickupTime != pickupTime;
     final isReturnTimeChanged = oldReturnTime != returnTime;
@@ -339,16 +336,14 @@ Future<void> selectReturnDate({
       name: isFieldChanged(booking.client.name, clientNameController.text)
           ? clientNameController.text.trim()
           : null,
-      phone1:
-          booking.client.phone1.toString().hasNumberChangedComparedTo(
-            clientPhone1Controller.text,
-          )
+      phone1: booking.client.phone1.toString().hasNumberChangedComparedTo(
+                clientPhone1Controller.text,
+              )
           ? clientPhone1Controller.text.trim().toInt()
           : null,
-      phone2:
-          booking.client.phone2.toString().hasNumberChangedComparedTo(
-            clientPhone2Controller.text,
-          )
+      phone2: booking.client.phone2.toString().hasNumberChangedComparedTo(
+                clientPhone2Controller.text,
+              )
           ? clientPhone2Controller.text.trim().toIntOrNull()
           : null,
     );

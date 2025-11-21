@@ -8,7 +8,7 @@ class AuthRepository {
   final AuthService _authService;
 
   AuthRepository({required AuthService authService})
-    : _authService = authService;
+      : _authService = authService;
 
   Future<void> loginUser({
     required String phone,

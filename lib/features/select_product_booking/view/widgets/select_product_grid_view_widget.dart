@@ -21,7 +21,7 @@ class SelectProductGridViewWidget extends StatelessWidget {
     required this.pickupDate,
     required this.returnDate,
     required this.mainServiceTypeNotifier,
-    this.pickupTime,  
+    this.pickupTime,
     this.returnTime,
     required this.useAvailableProductsApi,
     required this.isSales,
@@ -59,181 +59,182 @@ class SelectProductGridViewWidget extends StatelessWidget {
     final cubit = context.read<SelectedProductsCubit>();
 
     return RefreshIndicator.adaptive(
-        onRefresh: () async => _onRefresh(context),
-        child: BlocBuilder<SelectProductBloc, SelectProductState>(
-          builder: (context, state) => state.when(
-            loading: () => GridView.builder(
-              padding: EdgeInsets.all(gridPadding),
-              itemCount: 16,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5,
-                crossAxisSpacing: gridSpacing,
-                mainAxisSpacing: gridSpacing,
-                childAspectRatio: aspectRatio,
-              ),
-              itemBuilder: (context, index) => SelectProductCardShimmer(
-                  needAddButton: !availabilityCheckOnly),
+      onRefresh: () async => _onRefresh(context),
+      child: BlocBuilder<SelectProductBloc, SelectProductState>(
+        builder: (context, state) => state.when(
+          loading: () => GridView.builder(
+            padding: EdgeInsets.all(gridPadding),
+            itemCount: 16,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+              crossAxisSpacing: gridSpacing,
+              mainAxisSpacing: gridSpacing,
+              childAspectRatio: aspectRatio,
             ),
-            error: (error) => SingleChildScrollView(
-              child: CustomErrorWidget(
-                height: 0.25,
-                errorText: error,
-                onRetry: () => _onRefresh(context),
-              ),
+            itemBuilder: (context, index) =>
+                SelectProductCardShimmer(needAddButton: !availabilityCheckOnly),
+          ),
+          error: (error) => SingleChildScrollView(
+            child: CustomErrorWidget(
+              height: 0.25,
+              errorText: error,
+              onRetry: () => _onRefresh(context),
             ),
-            loaded: (
-              products,
-              nextPageUrl,
-              unused1,
-              pickupDate,
-              returnDate,
-              isPaginating,
-              isSearching,
-              searchQuery,
-              searchType,
-              startPrice,
-              endPrice,
-              pickupTime,
-              returnTime,
-              unused2,
-              unused3,
-            ) =>
-                products.isEmpty
-                    ? isSearching
-                        ? const NoResultFoundAnimationWidget(
-                            adjustHeightTop: 0.15)
-                        : const NoProductFoundAnimationWidget(
-                            adjustHeightTop: 0.15)
-                    : NotificationListener<ScrollNotification>(
-                        onNotification: (scrollInfo) {
-                          if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent - 200 &&
-                              nextPageUrl != null &&
-                              !isPaginating) {
-                            if (isSearching) {
-                              context.read<SelectProductBloc>().add(
-                                    const SelectProductEvent
-                                        .loadNextSearchResults(),
-                                  );
-                            } else {
-                              context.read<SelectProductBloc>().add(
-                                    const SelectProductEvent
-                                        .loadNextPageProducts(),
-                                  );
-                            }
-                          }
-                          return false;
-                        },
-                        child: GridView.builder(
-                          key: const PageStorageKey('select-product-grid-list'),
-                          padding: EdgeInsets.all(gridPadding),
-                          itemCount: products.length + 1,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            crossAxisSpacing: gridSpacing,
-                            mainAxisSpacing: gridSpacing,
-                            childAspectRatio: aspectRatio,
-                          ),
-                          itemBuilder: (context, index) => BlocBuilder<
-                              SelectedProductsCubit, SelectedProductsState>(
-                            builder: (context, state) {
-                              final selectedProductsWithAmount = state.when(
-                                selected: (selected) => selected,
-                              );
-
-                              if (index < products.length) {
-                                final product = products[index];
-                                final selectedVariants =
-                                    selectedProductsWithAmount
-                                        .where(
-                                          (selected) => product.variants.any(
-                                            (variant) =>
-                                                variant.id ==
-                                                selected.variant.variantId,
-                                          ),
-                                        )
-                                        .toList();
-
-                                final isSelected = selectedVariants.isNotEmpty;
-
-                                return ValueListenableBuilder(
-                                  valueListenable: mainServiceTypeNotifier,
-                                  builder: (context, mainServiceType, _) =>
-                                      SelectProductCard(
-                                    isSelected: isSelected,
-                                    mainServiceType: mainServiceType,
-                                    needAddButton: !availabilityCheckOnly,
-                                    product: product,
-                                    onTap: () async {
-                                      // Find existing selected product to persist values
-                                      ProductSelectedModel? existingSelection;
-                                      for (final selected in selectedProductsWithAmount) {
-                                        if (selected.variant.productId == product.id) {
-                                          existingSelection = selected;
-                                          break;
-                                        }
-                                      }
-                                      
-                                      showSizeAmountDialog(
-                                        context: context,
-                                        isSales: isSales,
-                                        alreadySelectedVariants:
-                                            selectedVariants,
-                                        mainServiceType: mainServiceType,
-                                        productImageUrl: product.image!,
-                                        initialAmount:
-                                            existingSelection?.amount.toString() ?? product.price?.toString(),
-                                        initialQuantity: existingSelection?.quantity,
-                                        availableVariants: product.variants,
-                                        onConfirm:
-                                            (id, size, amount, quantity) {
-                                          final attribute =
-                                              size == null || size.isEmpty
-                                                  ? (product.variants.first
-                                                          .attribute.isEmpty
-                                                      ? product.model
-                                                      : product.variants.first
-                                                          .attribute)
-                                                  : size;
-
-                                          cubit.addSelectedProduct(
-                                            ProductInfoModel(
-                                              id: id,
-                                              variantId: id,
-                                              productId: product.id,
-                                              name: product.name,
-                                              image: product.image,
-                                              amount: amount.toInt(),
-                                              category: product.category,
-                                              color: product.color,
-                                              model: product.model,
-                                              mainServiceType: mainServiceType,
-                                              variantAttribute: attribute,
-                                              measurements: [],
-                                              quantity: quantity,
-                                            ),
-                                            amount.toInt(),
-                                            quantity,
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
+          ),
+          loaded: (
+            products,
+            nextPageUrl,
+            unused1,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            unused2,
+            unused3,
+          ) =>
+              products.isEmpty
+                  ? isSearching
+                      ? const NoResultFoundAnimationWidget(
+                          adjustHeightTop: 0.15)
+                      : const NoProductFoundAnimationWidget(
+                          adjustHeightTop: 0.15)
+                  : NotificationListener<ScrollNotification>(
+                      onNotification: (scrollInfo) {
+                        if (scrollInfo.metrics.pixels >=
+                                scrollInfo.metrics.maxScrollExtent - 200 &&
+                            nextPageUrl != null &&
+                            !isPaginating) {
+                          if (isSearching) {
+                            context.read<SelectProductBloc>().add(
+                                  const SelectProductEvent
+                                      .loadNextSearchResults(),
                                 );
-                              } else {
-                                if (nextPageUrl == null || !isPaginating) {
-                                  return const SizedBox();
-                                }
-                                return const SelectProductCardShimmer();
+                          } else {
+                            context.read<SelectProductBloc>().add(
+                                  const SelectProductEvent
+                                      .loadNextPageProducts(),
+                                );
+                          }
+                        }
+                        return false;
+                      },
+                      child: GridView.builder(
+                        key: const PageStorageKey('select-product-grid-list'),
+                        padding: EdgeInsets.all(gridPadding),
+                        itemCount: products.length + 1,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5,
+                          crossAxisSpacing: gridSpacing,
+                          mainAxisSpacing: gridSpacing,
+                          childAspectRatio: aspectRatio,
+                        ),
+                        itemBuilder: (context, index) => BlocBuilder<
+                            SelectedProductsCubit, SelectedProductsState>(
+                          builder: (context, state) {
+                            final selectedProductsWithAmount = state.when(
+                              selected: (selected) => selected,
+                            );
+
+                            if (index < products.length) {
+                              final product = products[index];
+                              final selectedVariants =
+                                  selectedProductsWithAmount
+                                      .where(
+                                        (selected) => product.variants.any(
+                                          (variant) =>
+                                              variant.id ==
+                                              selected.variant.variantId,
+                                        ),
+                                      )
+                                      .toList();
+
+                              final isSelected = selectedVariants.isNotEmpty;
+
+                              return ValueListenableBuilder(
+                                valueListenable: mainServiceTypeNotifier,
+                                builder: (context, mainServiceType, _) =>
+                                    SelectProductCard(
+                                  isSelected: isSelected,
+                                  mainServiceType: mainServiceType,
+                                  needAddButton: !availabilityCheckOnly,
+                                  product: product,
+                                  onTap: () async {
+                                    // Find existing selected product to persist values
+                                    ProductSelectedModel? existingSelection;
+                                    for (final selected
+                                        in selectedProductsWithAmount) {
+                                      if (selected.variant.productId ==
+                                          product.id) {
+                                        existingSelection = selected;
+                                        break;
+                                      }
+                                    }
+
+                                    showSizeAmountDialog(
+                                      context: context,
+                                      isSales: isSales,
+                                      alreadySelectedVariants: selectedVariants,
+                                      mainServiceType: mainServiceType,
+                                      productImageUrl: product.image!,
+                                      initialAmount: existingSelection?.amount
+                                              .toString() ??
+                                          product.price?.toString(),
+                                      initialQuantity:
+                                          existingSelection?.quantity,
+                                      availableVariants: product.variants,
+                                      onConfirm: (id, size, amount, quantity) {
+                                        final attribute =
+                                            size == null || size.isEmpty
+                                                ? (product.variants.first
+                                                        .attribute.isEmpty
+                                                    ? product.model
+                                                    : product.variants.first
+                                                        .attribute)
+                                                : size;
+
+                                        cubit.addSelectedProduct(
+                                          ProductInfoModel(
+                                            id: id,
+                                            variantId: id,
+                                            productId: product.id,
+                                            name: product.name,
+                                            image: product.image,
+                                            amount: amount.toInt(),
+                                            category: product.category,
+                                            color: product.color,
+                                            model: product.model,
+                                            mainServiceType: mainServiceType,
+                                            variantAttribute: attribute,
+                                            measurements: [],
+                                            quantity: quantity,
+                                          ),
+                                          amount.toInt(),
+                                          quantity,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              );
+                            } else {
+                              if (nextPageUrl == null || !isPaginating) {
+                                return const SizedBox();
                               }
-                            },
-                          ),
+                              return const SelectProductCardShimmer();
+                            }
+                          },
                         ),
                       ),
-          ),
+                    ),
         ),
-      );
+      ),
+    );
   }
 
   void _onRefresh(BuildContext context) {

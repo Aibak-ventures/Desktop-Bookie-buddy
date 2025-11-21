@@ -33,7 +33,7 @@ class AllBookingFutureTab extends StatelessWidget {
             errorText: error,
             onRetry: () => _fetchBookingsWithFilter(context),
           ),
-          loading: () => kIsWeb 
+          loading: () => kIsWeb
               ? GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -46,7 +46,8 @@ class AllBookingFutureTab extends StatelessWidget {
                   itemBuilder: (context, index) => const BookingCardShimmer(),
                 )
               : const BookingListShimmer(itemCount: 10),
-          loaded: (bookings, nextPageUrl, isPaginating, unused1, unused2, unused3) {
+          loaded:
+              (bookings, nextPageUrl, isPaginating, unused1, unused2, unused3) {
             if (bookings.isEmpty) {
               return AllBookingEmptyWidget(
                 dateFilterNotifier: dateFilterNotifier,
@@ -68,7 +69,8 @@ class AllBookingFutureTab extends StatelessWidget {
                   ? GridView.builder(
                       key: const PageStorageKey('all-booking-future-grid'),
                       physics: const AlwaysScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 2.5,
                         crossAxisSpacing: 16,
@@ -82,21 +84,23 @@ class AllBookingFutureTab extends StatelessWidget {
                           return BookingCard(
                             booking: booking,
                             onTap: () async {
-                              final bookingCubit =
-                                  context.read<BookingSelectionCubit>()
-                                    ..selectBooking(booking);
+                              final bookingCubit = context
+                                  .read<BookingSelectionCubit>()
+                                ..selectBooking(booking);
 
                               final result = await context.push(
                                 BookingDetailsScreen(bookingId: booking.id!),
                               );
                               if (bookingCubit.state.isModified) {
-                                final updated = bookingCubit.state.selectedBooking;
+                                final updated =
+                                    bookingCubit.state.selectedBooking;
 
                                 // Update that specific booking in your list
                                 bloc.add(
                                   AllBookingEvent.updateBooking(
                                     updated,
-                                    shouldRefresh: bookingCubit.state.shouldRefresh,
+                                    shouldRefresh:
+                                        bookingCubit.state.shouldRefresh,
                                     isDeleted: result == true,
                                   ),
                                 );
@@ -122,21 +126,23 @@ class AllBookingFutureTab extends StatelessWidget {
                           return BookingCard(
                             booking: booking,
                             onTap: () async {
-                              final bookingCubit =
-                                  context.read<BookingSelectionCubit>()
-                                    ..selectBooking(booking);
+                              final bookingCubit = context
+                                  .read<BookingSelectionCubit>()
+                                ..selectBooking(booking);
 
                               final result = await context.push(
                                 BookingDetailsScreen(bookingId: booking.id!),
                               );
                               if (bookingCubit.state.isModified) {
-                                final updated = bookingCubit.state.selectedBooking;
+                                final updated =
+                                    bookingCubit.state.selectedBooking;
 
                                 // Update that specific booking in your list
                                 bloc.add(
                                   AllBookingEvent.updateBooking(
                                     updated,
-                                    shouldRefresh: bookingCubit.state.shouldRefresh,
+                                    shouldRefresh:
+                                        bookingCubit.state.shouldRefresh,
                                     isDeleted: result == true,
                                   ),
                                 );
@@ -168,13 +174,14 @@ class AllBookingFutureTab extends StatelessWidget {
     // Add your date filter parameters to the bloc event
     // You'll need to modify your AllBookingEvent to accept date parameters
     context.read<AllBookingBloc>().add(
-      AllBookingEvent.loadBookings(
-        startDate: dateFilterNotifier.value.startDate?.format(reverse: true),
-        endDate: dateFilterNotifier.value.endDate?.format(reverse: true),
-        searchQuery: searchController.text.trim().isEmpty
-            ? null
-            : searchController.text.trim(),
-      ),
-    );
+          AllBookingEvent.loadBookings(
+            startDate:
+                dateFilterNotifier.value.startDate?.format(reverse: true),
+            endDate: dateFilterNotifier.value.endDate?.format(reverse: true),
+            searchQuery: searchController.text.trim().isEmpty
+                ? null
+                : searchController.text.trim(),
+          ),
+        );
   }
 }

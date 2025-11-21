@@ -13,8 +13,8 @@ part 'sale_details_bloc.freezed.dart';
 class SaleDetailsBloc extends Bloc<SaleDetailsEvent, SaleDetailsState> {
   final SalesRepository _repository;
   SaleDetailsBloc({required SalesRepository repository})
-    : _repository = repository,
-      super(const SaleDetailsState.loading()) {
+      : _repository = repository,
+        super(const SaleDetailsState.loading()) {
     on<_GetSaleDetails>(_getSaleDetails);
     on<_DeleteSale>(_deleteSale);
   }

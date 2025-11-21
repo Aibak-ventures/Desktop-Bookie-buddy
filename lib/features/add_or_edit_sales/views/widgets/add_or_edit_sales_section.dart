@@ -13,18 +13,18 @@ class AddOrEditSalesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    spacing: 10.w,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        title,
-        style: TextStyle(
-          // color: AppColors.grey600,
-          fontWeight: FontWeight.w600,
-          fontSize: 16.sp,
-        ),
-      ),
-      child,
-    ],
-  );
+        spacing: 10.w,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              // color: AppColors.grey600,
+              fontWeight: FontWeight.w600,
+              fontSize: 16.sp,
+            ),
+          ),
+          child,
+        ],
+      );
 }

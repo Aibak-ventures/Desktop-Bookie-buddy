@@ -104,17 +104,17 @@ class ProductGridViewWidget extends StatelessWidget {
                           return ProductCard(
                             product: product,
                             onTap: () {
-                             context.push(
-                              BlocProvider(
-                                create: (context) =>
-                                    ProductInfoBloc(repository: getIt.get()),
-                                child: ProductInfoScreen(
-                                  serviceId: serviceId,
-                                  productId: product.id,
-                                  mainServiceType: mainServiceType,
+                              context.push(
+                                BlocProvider(
+                                  create: (context) =>
+                                      ProductInfoBloc(repository: getIt.get()),
+                                  child: ProductInfoScreen(
+                                    serviceId: serviceId,
+                                    productId: product.id,
+                                    mainServiceType: mainServiceType,
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
                             },
                             onOptionSelected: (value) async {},
                           );

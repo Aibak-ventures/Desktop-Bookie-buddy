@@ -16,11 +16,6 @@ class ProductMonthlyDataModel with _$ProductMonthlyDataModel {
       _$ProductMonthlyDataModelFromJson(json);
 }
 
-
-
-
-
-
 // @freezed
 // class ProductMonthlyExpenseModel with _$ProductMonthlyExpenseModel {
 //   const factory ProductMonthlyExpenseModel({
@@ -32,8 +27,6 @@ class ProductMonthlyDataModel with _$ProductMonthlyDataModel {
 //   factory ProductMonthlyExpenseModel.fromJson(Map<String, dynamic> json) =>
 //       _$ProductMonthlyExpenseModelFromJson(json);
 // }
-
-
 
 // @freezed
 // class Expense with _$Expense {

@@ -16,14 +16,14 @@ class StaffAnalyticsIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: Icon(Icons.square_rounded, color: color, size: 20),
-    title: Text(
-      title,
-      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
-    ),
-    trailing: Text(
-      amount.toCurrency(),
-      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
-    ),
-  );
+        leading: Icon(Icons.square_rounded, color: color, size: 20),
+        title: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
+        ),
+        trailing: Text(
+          amount.toCurrency(),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
+        ),
+      );
 }

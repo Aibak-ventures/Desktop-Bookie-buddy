@@ -126,11 +126,11 @@ class _BookingsTabState extends State<BookingsTab> {
     log('Fetching summary for date: $date with total: $total');
     // ignore: unawaited_futures
     context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
-      date,
-      clientId: null,
-      total: total,
-      type: LedgerType.bookings,
-    );
+          date,
+          clientId: null,
+          total: total,
+          type: LedgerType.bookings,
+        );
   }
 
   @override
@@ -143,49 +143,48 @@ class _BookingsTabState extends State<BookingsTab> {
   }
 
   Widget _buildWebLayout(BuildContext context) => Container(
-    margin: EdgeInsets.only(top: 16.h),
-    child: RefreshIndicator.adaptive(
-      onRefresh: () async {
-        context.read<LedgerSimpleSummaryCubit>().reset();
-        _currentlyShowingDate = ''; // Reset current date on refresh
-        _groupKeysWithTotal.clear();
-        _fetchData(context);
-      },
-      child: BlocBuilder<LedgerBookingsBloc, LedgerBookingsState>(
-        builder: (context, state) => state.when(
-          loading: () => ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: 8,
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-            // Use shimmer for loading
-            itemBuilder: (context, index) => Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              child: const LedgerBookingListTileShimmer(),
-            ),
-          ),
-          error: (error) => Center(
-            child: Container(
-              margin: EdgeInsets.all(24.w),
-              padding: EdgeInsets.all(32.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+        margin: EdgeInsets.only(top: 16.h),
+        child: RefreshIndicator.adaptive(
+          onRefresh: () async {
+            context.read<LedgerSimpleSummaryCubit>().reset();
+            _currentlyShowingDate = ''; // Reset current date on refresh
+            _groupKeysWithTotal.clear();
+            _fetchData(context);
+          },
+          child: BlocBuilder<LedgerBookingsBloc, LedgerBookingsState>(
+            builder: (context, state) => state.when(
+              loading: () => ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: 8,
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                // Use shimmer for loading
+                itemBuilder: (context, index) => Container(
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  child: const LedgerBookingListTileShimmer(),
+                ),
+              ),
+              error: (error) => Center(
+                child: Container(
+                  margin: EdgeInsets.all(24.w),
+                  padding: EdgeInsets.all(32.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
+                  child: CustomErrorWidget(
+                    errorText: error,
+                    onRetry: () => _fetchData(context),
+                  ),
+                ),
               ),
-              child: CustomErrorWidget(
-                errorText: error,
-                onRetry: () => _fetchData(context),
-              ),
-            ),
-          ),
-          loaded:
-              (
+              loaded: (
                 ledgerBookings,
                 nextPageUrl,
                 isPaginating,
@@ -231,7 +230,8 @@ class _BookingsTabState extends State<BookingsTab> {
                   child: ListView.builder(
                     controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
                     itemCount: ledgerBookings.length + (isPaginating ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == ledgerBookings.length) {
@@ -273,34 +273,34 @@ class _BookingsTabState extends State<BookingsTab> {
                   ),
                 );
               },
-        ),
-      ),
-    ),
-  );
-
-  Widget _buildMobileLayout(BuildContext context) => RefreshIndicator.adaptive(
-    onRefresh: () async {
-      context.read<LedgerSimpleSummaryCubit>().reset();
-      _currentlyShowingDate = ''; // Reset current date on refresh
-      _groupKeysWithTotal.clear();
-      _fetchData(context);
-    },
-    child: BlocBuilder<LedgerBookingsBloc, LedgerBookingsState>(
-      builder: (context, state) => state.when(
-        loading: () => ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: 15,
-          // Use shimmer for loading
-          itemBuilder: (context, index) => const LedgerBookingListTileShimmer(),
-        ),
-        error: (error) => Center(
-          child: CustomErrorWidget(
-            errorText: error,
-            onRetry: () => _fetchData(context),
+            ),
           ),
         ),
-        loaded:
-            (
+      );
+
+  Widget _buildMobileLayout(BuildContext context) => RefreshIndicator.adaptive(
+        onRefresh: () async {
+          context.read<LedgerSimpleSummaryCubit>().reset();
+          _currentlyShowingDate = ''; // Reset current date on refresh
+          _groupKeysWithTotal.clear();
+          _fetchData(context);
+        },
+        child: BlocBuilder<LedgerBookingsBloc, LedgerBookingsState>(
+          builder: (context, state) => state.when(
+            loading: () => ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: 15,
+              // Use shimmer for loading
+              itemBuilder: (context, index) =>
+                  const LedgerBookingListTileShimmer(),
+            ),
+            error: (error) => Center(
+              child: CustomErrorWidget(
+                errorText: error,
+                onRetry: () => _fetchData(context),
+              ),
+            ),
+            loaded: (
               ledgerBookings,
               nextPageUrl,
               isPaginating,
@@ -356,14 +356,14 @@ class _BookingsTabState extends State<BookingsTab> {
                 ),
               );
             },
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   void _fetchData(BuildContext context) {
     final clientId = context.read<ClientCubit>().getSelectedClient()?.id;
     context.read<LedgerBookingsBloc>().add(
-      LedgerBookingsEvent.loadBookings(clientId: clientId),
-    );
+          LedgerBookingsEvent.loadBookings(clientId: clientId),
+        );
   }
 }

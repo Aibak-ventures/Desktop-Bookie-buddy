@@ -15,55 +15,55 @@ class EditBookingDateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => EditBookingSectionColumn(
-    title: 'Dates',
-    child: Column(
-      spacing: 15.w,
-      children: [
-        CustomTextField(
-          ignorePointers: true,
-          controller: _formController.pickUpdDateController,
-          keyboardType: TextInputType.datetime,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select a pickup date';
-            }
-            return null;
-          },
-          hintText: 'Select Pickup Date',
-          label: 'Pickup Date',
-        ).onTap(
-          () => _formController.selectPickupDate(
-            context: context,
-            // setState: setState,
-          ),
+        title: 'Dates',
+        child: Column(
+          spacing: 15.w,
+          children: [
+            CustomTextField(
+              ignorePointers: true,
+              controller: _formController.pickUpdDateController,
+              keyboardType: TextInputType.datetime,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select a pickup date';
+                }
+                return null;
+              },
+              hintText: 'Select Pickup Date',
+              label: 'Pickup Date',
+            ).onTap(
+              () => _formController.selectPickupDate(
+                context: context,
+                // setState: setState,
+              ),
+            ),
+            CustomTextField(
+              ignorePointers: true,
+              controller: _formController.returnDateController,
+              keyboardType: TextInputType.datetime,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select a return date';
+                }
+                return null;
+              },
+              hintText: 'Select Return Date',
+              label: 'Return Date',
+            ).onTap(
+              () => _formController.selectReturnDate(
+                context: context,
+                // setState: setState,
+              ),
+            ),
+            CustomTextField(
+              ignorePointers: true,
+              controller: _formController.coolingPeriodDateController,
+              keyboardType: TextInputType.datetime,
+              validator: (value) => null,
+              hintText: 'Select Cooling Period Date',
+              label: 'Cooling Period Date',
+            ).onTap(() => _formController.selectCoolingPeriodDate(context)),
+          ],
         ),
-        CustomTextField(
-          ignorePointers: true,
-          controller: _formController.returnDateController,
-          keyboardType: TextInputType.datetime,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select a return date';
-            }
-            return null;
-          },
-          hintText: 'Select Return Date',
-          label: 'Return Date',
-        ).onTap(
-          () => _formController.selectReturnDate(
-            context: context,
-            // setState: setState,
-          ),
-        ),
-        CustomTextField(
-          ignorePointers: true,
-          controller: _formController.coolingPeriodDateController,
-          keyboardType: TextInputType.datetime,
-          validator: (value) => null,
-          hintText: 'Select Cooling Period Date',
-          label: 'Cooling Period Date',
-        ).onTap(() => _formController.selectCoolingPeriodDate(context)),
-      ],
-    ),
-  );
+      );
 }

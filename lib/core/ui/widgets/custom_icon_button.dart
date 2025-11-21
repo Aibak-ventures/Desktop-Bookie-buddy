@@ -32,23 +32,23 @@ class CustomIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-      alignment: Alignment.center,
-      height: height,
-      width: width,
-      padding: padding,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: radius.radiusBorder,
-      ),
-      child: label == null
-          ? icon
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 5,
-              children: [
-                icon,
-                label!,
-              ],
-            ),
-    ).onTap(onTap);
+        alignment: Alignment.center,
+        height: height,
+        width: width,
+        padding: padding,
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: radius.radiusBorder,
+        ),
+        child: label == null
+            ? icon
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 5,
+                children: [
+                  icon,
+                  label!,
+                ],
+              ),
+      ).onTap(onTap);
 }

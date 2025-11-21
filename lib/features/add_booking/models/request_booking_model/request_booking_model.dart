@@ -15,7 +15,8 @@ Map<String, dynamic>? _clientToJson(ClientRequestModel? client) =>
 
 List<Map<String, dynamic>>? _productsToJson(
   List<ProductSelectedModel>? products,
-) => products?.map((e) => e.toCustomJson()).toList();
+) =>
+    products?.map((e) => e.toCustomJson()).toList();
 
 @freezed
 class RequestBookingModel with _$RequestBookingModel {

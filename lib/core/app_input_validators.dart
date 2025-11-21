@@ -59,11 +59,11 @@ class AppInputValidators {
   }
 
   static String? address(String? value, {bool isRequired = true}) => basicText(
-    value,
-    fieldName: 'Place',
-    minLength: 3,
-    isRequired: isRequired,
-  );
+        value,
+        fieldName: 'Place',
+        minLength: 3,
+        isRequired: isRequired,
+      );
 
   static String? description(String? value) =>
       basicText(value, fieldName: 'Description', isRequired: false);
@@ -134,9 +134,8 @@ class AppInputValidators {
     final trimmed = value.trim();
 
     // Allow integers or decimals (up to 2 places) based on allowDecimal
-    final quantityRegex = allowDecimal
-        ? RegExp(r'^\d+(\.\d{1,2})?$')
-        : RegExp(r'^\d+$');
+    final quantityRegex =
+        allowDecimal ? RegExp(r'^\d+(\.\d{1,2})?$') : RegExp(r'^\d+$');
 
     if (!quantityRegex.hasMatch(trimmed)) {
       return allowDecimal
@@ -201,12 +200,13 @@ class AppInputValidators {
     String? value, {
     String fieldName = 'Category',
     bool isRequired = false,
-  }) => basicText(
-    value,
-    fieldName: fieldName,
-    minLength: 3,
-    isRequired: isRequired,
-  );
+  }) =>
+      basicText(
+        value,
+        fieldName: fieldName,
+        minLength: 3,
+        isRequired: isRequired,
+      );
   // if (value == null || value.trim().isEmpty) {
   //   return '$fieldName is required';
   // }

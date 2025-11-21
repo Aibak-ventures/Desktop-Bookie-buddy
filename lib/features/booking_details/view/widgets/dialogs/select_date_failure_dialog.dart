@@ -13,13 +13,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 List<ProductSelectedModel> _getUnavailableProducts(
   List<int> unavailableProducts,
   ValueNotifier<List<ProductSelectedModel>> selectedProductsNotifier,
-) => selectedProductsNotifier.value
-    .where(
-      (selectedProduct) => unavailableProducts.any(
-        (id) => id == selectedProduct.variant.variantId,
-      ),
-    )
-    .toList();
+) =>
+    selectedProductsNotifier.value
+        .where(
+          (selectedProduct) => unavailableProducts.any(
+            (id) => id == selectedProduct.variant.variantId,
+          ),
+        )
+        .toList();
 
 // Show unavailable products dialog
 Future<void> showUnavailableProductsDialog({
@@ -64,11 +65,7 @@ Future<void> showUnavailableProductsDialog({
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'The product is booked for another customer on that date ${unavailableDateFrom != null && unavailableDateTo != null
-                  ? '${unavailableDateFrom.formatToUiDate()} - ${unavailableDateTo.formatToUiDate()}'
-                  : unavailableDateFrom != null
-                  ? unavailableDateFrom.formatToUiDate()
-                  : ''}:',
+              'The product is booked for another customer on that date ${unavailableDateFrom != null && unavailableDateTo != null ? '${unavailableDateFrom.formatToUiDate()} - ${unavailableDateTo.formatToUiDate()}' : unavailableDateFrom != null ? unavailableDateFrom.formatToUiDate() : ''}:',
               style: TextStyle(color: Colors.grey[600], fontSize: 14.sp),
             ),
             const SizedBox(height: 16),

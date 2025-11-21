@@ -13,7 +13,7 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
   final int? serviceId;
   final String? name;
   final dynamic mainServiceType;
-  
+
   const ProductGridScreen({
     super.key,
     this.serviceId,
@@ -64,7 +64,7 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
 
   static void _showSearchDialog(BuildContext context, int serviceId) {
     final TextEditingController searchController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -110,21 +110,22 @@ class ProductGridScreen extends StatefulWidget with ResponsiveScreenMixin {
     );
   }
 
-  static void _triggerSearch(BuildContext context, int serviceId, String query) {
+  static void _triggerSearch(
+      BuildContext context, int serviceId, String query) {
     final trimmedQuery = query.trim();
 
     if (trimmedQuery.isEmpty) {
       context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
     } else {
       context.read<ProductBloc>().add(
-        ProductEvent.searchProducts(
-          serviceId: serviceId,
-          query: trimmedQuery,
-          type: null,
-          startPrice: null,
-          endPrice: null,
-        ),
-      );
+            ProductEvent.searchProducts(
+              serviceId: serviceId,
+              query: trimmedQuery,
+              type: null,
+              startPrice: null,
+              endPrice: null,
+            ),
+          );
     }
   }
 }
@@ -143,10 +144,9 @@ class _ProductGridScreenState extends State<ProductGridScreen> {
   }
 }
 
-
 class _ProductGridContent extends StatelessWidget {
   final int serviceId;
-  
+
   const _ProductGridContent({
     required this.serviceId,
   });
@@ -158,13 +158,15 @@ class _ProductGridContent extends StatelessWidget {
         return state.when(
           initial: () => const _LoadingGrid(),
           loading: () => const _LoadingGrid(),
-          loaded: (products, nextPageUrl, isPaginating, isSearching, searchQuery, searchType, startPrice, endPrice) {
+          loaded: (products, nextPageUrl, isPaginating, isSearching,
+              searchQuery, searchType, startPrice, endPrice) {
             if (products.isEmpty) {
               return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey),
+                    Icon(Icons.inventory_2_outlined,
+                        size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text('No products found'),
                   ],
@@ -190,7 +192,9 @@ class _ProductGridContent extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     // Retry loading
-                    context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
+                    context
+                        .read<ProductBloc>()
+                        .add(ProductEvent.loadProducts(serviceId));
                   },
                   child: const Text('Retry'),
                 ),
@@ -236,9 +240,12 @@ class _ProductGridState extends State<_ProductGrid> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
       if (widget.hasNextPage && !widget.isPaginating) {
-        context.read<ProductBloc>().add(ProductEvent.loadNextPageProducts(widget.serviceId));
+        context
+            .read<ProductBloc>()
+            .add(ProductEvent.loadNextPageProducts(widget.serviceId));
       }
     }
   }
@@ -283,36 +290,38 @@ class _ProductGridState extends State<_ProductGrid> {
           crossAxisSpacing: spacing,
           mainAxisSpacing: spacing,
         ),
-        itemCount: widget.hasNextPage ? widget.products.length + 1 : widget.products.length,
+        itemCount: widget.hasNextPage
+            ? widget.products.length + 1
+            : widget.products.length,
         itemBuilder: (context, index) {
           if (index >= widget.products.length) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-          
+
           return ProductCard(
             product: widget.products[index],
             onTap: () {
               // Navigate to product overview
-        Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => BlocProvider(
-      create: (context) => ProductInfoBloc(repository: getIt.get())
-        ..add(ProductInfoEvent.loadProductInfo(
-          widget.products[index].id, // ✅ only one positional parameter
-        )),
-      child: ProductInfoScreen(
-        serviceId: widget.serviceId,
-        productId: widget.products[index].id,
-        mainServiceType: MainServiceType.others,
-      ),
-    ),
-  ),
-);
-
-
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) =>
+                        ProductInfoBloc(repository: getIt.get())
+                          ..add(ProductInfoEvent.loadProductInfo(
+                            widget.products[index]
+                                .id, // ✅ only one positional parameter
+                          )),
+                    child: ProductInfoScreen(
+                      serviceId: widget.serviceId,
+                      productId: widget.products[index].id,
+                      mainServiceType: MainServiceType.others,
+                    ),
+                  ),
+                ),
+              );
             },
           );
         },

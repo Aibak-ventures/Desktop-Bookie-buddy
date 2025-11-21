@@ -31,19 +31,17 @@ class BookingDetailsRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paymentHistoryCubit = context
-        .read<BookingDetailsPaymentHistoryCubit>();
-    final isPaymentCompleted =
-        booking.paidAmount >=
+    final paymentHistoryCubit =
+        context.read<BookingDetailsPaymentHistoryCubit>();
+    final isPaymentCompleted = booking.paidAmount >=
         (booking.totalAmount - (booking.discountAmount ?? 0));
     final locationStart = booking.otherDetails.locationStart ?? '';
     final locationFrom = booking.otherDetails.locationFrom ?? '';
     final locationTo = booking.otherDetails.locationTo ?? '';
-    final isHaveCoolingPeriod =
-        booking.coolingPeriodDate != null &&
+    final isHaveCoolingPeriod = booking.coolingPeriodDate != null &&
         !booking.coolingPeriodDate!.parseToDateTime().isSameDay(
-          booking.returnDate.parseToDateTime(),
-        );
+              booking.returnDate.parseToDateTime(),
+            );
     final productTotalAmount = booking.bookedItems.fold<int>(
       0,
       (previousValue, element) => previousValue + element.amount,
@@ -115,7 +113,8 @@ class BookingDetailsRoot extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.blue.shade200),
           ),
-          child: BookingDetailsInvoiceAndDeliveryStatusSection(booking: booking),
+          child:
+              BookingDetailsInvoiceAndDeliveryStatusSection(booking: booking),
         ),
 
         // Two column layout for main sections
@@ -132,8 +131,9 @@ class BookingDetailsRoot extends StatelessWidget {
                     BookingDetailsClientSection(booking: booking),
                   ),
                   const SizedBox(height: 24),
-                  
-                  if (booking.bookedItems.firstOrNull?.mainServiceType.isVehicle ?? false)
+                  if (booking
+                          .bookedItems.firstOrNull?.mainServiceType.isVehicle ??
+                      false)
                     _buildWebCard(
                       'Location Details',
                       BookingDetailsLocationDetailsSection(
@@ -142,9 +142,7 @@ class BookingDetailsRoot extends StatelessWidget {
                         locationTo: locationTo,
                       ),
                     ),
-                  
                   const SizedBox(height: 24),
-                  
                   _buildWebCard(
                     'Time Details',
                     BookingDetailsTimeDetailsSection(booking: booking),
@@ -152,9 +150,9 @@ class BookingDetailsRoot extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(width: 24),
-            
+
             // Right column
             Expanded(
               flex: 1,
@@ -164,9 +162,9 @@ class BookingDetailsRoot extends StatelessWidget {
                     'Products & Services',
                     BookingDetailsProductSection(booking: booking),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   _buildWebCard(
                     'Date Information',
                     BookingDetailsDateSection(
@@ -174,14 +172,14 @@ class BookingDetailsRoot extends StatelessWidget {
                       isHaveCoolingPeriod: isHaveCoolingPeriod,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
 
                   // if (booking.isHaveCoolingPeriod ?? false)
-                    _buildWebCard(
-                      'Additional Details',
-                      BookingDetailsOtherDetailsSection(booking: booking),
-                    ),
+                  _buildWebCard(
+                    'Additional Details',
+                    BookingDetailsOtherDetailsSection(booking: booking),
+                  ),
                 ],
               ),
             ),

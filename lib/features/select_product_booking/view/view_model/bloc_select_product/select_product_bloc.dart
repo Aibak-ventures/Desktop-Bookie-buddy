@@ -14,8 +14,8 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
   final ProductRepository _repository;
 
   SelectProductBloc({required ProductRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadProducts>(_onLoadProducts);
     on<_LoadNextPageProducts>(
       _onLoadNextPageProducts,

@@ -28,8 +28,7 @@ class BookingCard extends StatelessWidget {
     final DateTime? pickupDate = booking.pickupDate != null
         ? booking.pickupDate!.parseToDateTime()
         : null;
-    final isAfterReturnDate =
-        booking.returnDate != null &&
+    final isAfterReturnDate = booking.returnDate != null &&
         booking.bookingStatus != BookingStatus.completed &&
         DateTime.now().isAfter(
           booking.returnDate!.parseToDateTime().dateOnly.add(1.days()),
@@ -188,95 +187,96 @@ class BookingCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: 16.padding,
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.black.withValues(alpha: 0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 2),
-        ),
-      ],
-      border: Border.all(color: const Color(0xFFF0F0F0)),
-    ),
-    child: Shimmer.fromColors(
-      baseColor: AppColors.grey300!,
-      highlightColor: AppColors.grey100!,
-      child: Row(
-        children: [
-          // Date Section Shimmer
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(12),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: 16.padding,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
-          ),
-
-          const SizedBox(width: 16),
-
-          // Content Section Shimmer
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 5,
-              children: [
-                // Client Name Shimmer
-                Container(
-                  height: 24,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
+          ],
+          border: Border.all(color: const Color(0xFFF0F0F0)),
+        ),
+        child: Shimmer.fromColors(
+          baseColor: AppColors.grey300!,
+          highlightColor: AppColors.grey100!,
+          child: Row(
+            children: [
+              // Date Section Shimmer
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(12),
                 ),
+              ),
 
-                // Payment Status Row Shimmer
-                Row(
+              const SizedBox(width: 16),
+
+              // Content Section Shimmer
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 5,
                   children: [
+                    // Client Name Shimmer
                     Container(
-                      width: 30,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      height: 16,
-                      width: 120,
+                      height: 24,
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         color: AppColors.white,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
+
+                    // Payment Status Row Shimmer
+                    Row(
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          height: 16,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Status Badge Shimmer
+                    Container(
+                      height: 24,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
                   ],
                 ),
+              ),
 
-                // Status Badge Shimmer
-                Container(
-                  height: 24,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ],
-            ),
+              // Arrow Icon
+              const Icon(Icons.arrow_forward_ios,
+                  color: AppColors.grey, size: 16),
+            ],
           ),
-
-          // Arrow Icon
-          const Icon(Icons.arrow_forward_ios, color: AppColors.grey, size: 16),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 // Shimmer List Widget for multiple cards
@@ -292,11 +292,11 @@ class BookingListShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-    shrinkWrap: true,
-    physics: alwaysScrollable
-        ? const AlwaysScrollableScrollPhysics()
-        : const NeverScrollableScrollPhysics(),
-    itemCount: itemCount,
-    itemBuilder: (context, index) => const BookingCardShimmer(),
-  );
+        shrinkWrap: true,
+        physics: alwaysScrollable
+            ? const AlwaysScrollableScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
+        itemCount: itemCount,
+        itemBuilder: (context, index) => const BookingCardShimmer(),
+      );
 }

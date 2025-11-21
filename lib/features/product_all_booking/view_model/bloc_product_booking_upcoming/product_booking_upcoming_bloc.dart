@@ -12,8 +12,8 @@ class ProductBookingUpcomingBloc
     extends Bloc<ProductBookingUpcomingEvent, ProductBookingUpcomingState> {
   final ProductRepository _repository;
   ProductBookingUpcomingBloc({required ProductRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);
     on<_LoadNextBookings>(_onLoadNextPageBookings);
   }

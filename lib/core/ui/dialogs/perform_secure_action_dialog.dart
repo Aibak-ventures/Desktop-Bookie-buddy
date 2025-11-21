@@ -47,20 +47,17 @@ Future<void> performSecureActionDialog(
   required VoidCallback? onSuccess,
 }) async {
   final shopRole = context.read<UserCubit>().state?.shopRole ?? ShopRole.staff;
-  final passwordSetting = context
-      .read<UserCubit>()
-      .state
-      ?.passwordSettings
-      .firstWhere(
-        (e) => e.location == location,
-        orElse: () {
-          debugPrint('No password setting found for location: $location');
-          return UserPasswordSettingsModel(
-            location: location,
-            role: UserPasswordSettingRole.all,
-          );
-        },
+  final passwordSetting =
+      context.read<UserCubit>().state?.passwordSettings.firstWhere(
+    (e) => e.location == location,
+    orElse: () {
+      debugPrint('No password setting found for location: $location');
+      return UserPasswordSettingsModel(
+        location: location,
+        role: UserPasswordSettingRole.all,
       );
+    },
+  );
   if (!_roleCheck(passwordSetting, shopRole)) {
     log(
       '🟢 User is authorized to perform this action without password, ask for: ${passwordSetting?.role.value}, Location: $location, shopRole: ${shopRole.value}',
@@ -115,7 +112,8 @@ void _verifyPasswordThenPerformActionDialog(
               // Call the reAuth function with the entered password
               try {
                 await getIt.get<AuthRepository>().secretLogin(password);
-                SecureActionAuthSessionManager.markVerified(); // Mark as verified for to skip re auth for next 1 min
+                SecureActionAuthSessionManager
+                    .markVerified(); // Mark as verified for to skip re auth for next 1 min
                 context.pop();
                 onSuccessfulPasswordVerification(); // Call the callback after successful authentication
               } catch (e) {

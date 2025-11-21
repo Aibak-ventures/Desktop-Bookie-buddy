@@ -18,9 +18,9 @@ class AddOldBookingsBloc
   AddOldBookingsBloc({
     required BookingRepository bookingRepository,
     required ClientRepository clientRepository,
-  }) : _bookingRepository = bookingRepository,
-       _clientRepository = clientRepository,
-       super(const _Initial()) {
+  })  : _bookingRepository = bookingRepository,
+        _clientRepository = clientRepository,
+        super(const _Initial()) {
     on<_AddBooking>(_onAddBooking);
   }
 

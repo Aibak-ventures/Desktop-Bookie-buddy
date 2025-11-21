@@ -16,75 +16,78 @@ class AdditionalChargesListWidget extends StatelessWidget {
   @override
   Widget build(
     BuildContext context,
-  ) => ValueListenableBuilder<List<AdditionalChargesModel>>(
-    valueListenable: additionalChargesNotifier,
-    builder: (context, selectedValue, _) => selectedValue.isEmpty
-        // ? const Center(child: Text('No additional charges'))
-        ? const SizedBox()
-        : ListView.builder(
-            shrinkWrap: true,
-            primary: false,
-            padding: EdgeInsets.zero,
-            itemCount: selectedValue.length,
-            itemBuilder: (context, index) {
-              final charge = selectedValue[index];
-              return Container(
-                margin: EdgeInsets.only(bottom: 8.h),
-                padding: (15, 6).padding,
-                decoration: BoxDecoration(
-                  color: AppColors.grey300.withValues(alpha: 0.7),
-                  borderRadius: 8.radiusBorder,
-                  border: Border.all(color: AppColors.grey300),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            charge.name ?? '',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
+  ) =>
+      ValueListenableBuilder<List<AdditionalChargesModel>>(
+        valueListenable: additionalChargesNotifier,
+        builder: (context, selectedValue, _) => selectedValue.isEmpty
+            // ? const Center(child: Text('No additional charges'))
+            ? const SizedBox()
+            : ListView.builder(
+                shrinkWrap: true,
+                primary: false,
+                padding: EdgeInsets.zero,
+                itemCount: selectedValue.length,
+                itemBuilder: (context, index) {
+                  final charge = selectedValue[index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 8.h),
+                    padding: (15, 6).padding,
+                    decoration: BoxDecoration(
+                      color: AppColors.grey300.withValues(alpha: 0.7),
+                      borderRadius: 8.radiusBorder,
+                      border: Border.all(color: AppColors.grey300),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                charge.name ?? '',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                'Amount: ${charge.amount?.toCurrency() ?? 0}',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: AppColors.grey600,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Amount: ${charge.amount?.toCurrency() ?? 0}',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AppColors.grey600,
-                            ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.edit_outlined,
+                            // color: AppColors.black,
                           ),
-                        ],
-                      ),
+                          onPressed: () {
+                            showAddAdditionalChargeDialog(
+                              context: context,
+                              additionalChargesNotifier:
+                                  additionalChargesNotifier,
+                              existingCharge: charge,
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close,
+                              color: AppColors.redTomato),
+                          onPressed: () {
+                            final newList = List<AdditionalChargesModel>.from(
+                              selectedValue,
+                            )..removeAt(index);
+                            additionalChargesNotifier.value = newList;
+                          },
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.edit_outlined,
-                        // color: AppColors.black,
-                      ),
-                      onPressed: () {
-                        showAddAdditionalChargeDialog(
-                          context: context,
-                          additionalChargesNotifier: additionalChargesNotifier,
-                          existingCharge: charge,
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: AppColors.redTomato),
-                      onPressed: () {
-                        final newList = List<AdditionalChargesModel>.from(
-                          selectedValue,
-                        )..removeAt(index);
-                        additionalChargesNotifier.value = newList;
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-  );
+                  );
+                },
+              ),
+      );
 }

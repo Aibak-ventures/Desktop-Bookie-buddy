@@ -54,10 +54,8 @@ abstract class $AdditionalChargesModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$AdditionalChargesModelCopyWithImpl<
-  $Res,
-  $Val extends AdditionalChargesModel
->
+class _$AdditionalChargesModelCopyWithImpl<$Res,
+        $Val extends AdditionalChargesModel>
     implements $AdditionalChargesModelCopyWith<$Res> {
   _$AdditionalChargesModelCopyWithImpl(this._value, this._then);
 
@@ -77,20 +75,19 @@ class _$AdditionalChargesModelCopyWithImpl<
   }) {
     return _then(
       _value.copyWith(
-            id: freezed == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            name: freezed == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            amount: freezed == amount
-                ? _value.amount
-                : amount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-          )
-          as $Val,
+        id: freezed == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                as int?,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                as String?,
+        amount: freezed == amount
+            ? _value.amount
+            : amount // ignore: cast_nullable_to_non_nullable
+                as int?,
+      ) as $Val,
     );
   }
 }
@@ -113,8 +110,8 @@ abstract class _$$AdditionalChargesModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AdditionalChargesModelImplCopyWithImpl<$Res>
-    extends
-        _$AdditionalChargesModelCopyWithImpl<$Res, _$AdditionalChargesModelImpl>
+    extends _$AdditionalChargesModelCopyWithImpl<$Res,
+        _$AdditionalChargesModelImpl>
     implements _$$AdditionalChargesModelImplCopyWith<$Res> {
   __$$AdditionalChargesModelImplCopyWithImpl(
     _$AdditionalChargesModelImpl _value,
@@ -135,15 +132,15 @@ class __$$AdditionalChargesModelImplCopyWithImpl<$Res>
         id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         name: freezed == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         amount: freezed == amount
             ? _value.amount
             : amount // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
       ),
     );
   }
@@ -195,11 +192,11 @@ class _$AdditionalChargesModelImpl implements _AdditionalChargesModel {
   @override
   @pragma('vm:prefer-inline')
   _$$AdditionalChargesModelImplCopyWith<_$AdditionalChargesModelImpl>
-  get copyWith =>
-      __$$AdditionalChargesModelImplCopyWithImpl<_$AdditionalChargesModelImpl>(
-        this,
-        _$identity,
-      );
+      get copyWith => __$$AdditionalChargesModelImplCopyWithImpl<
+              _$AdditionalChargesModelImpl>(
+            this,
+            _$identity,
+          );
 
   @override
   Map<String, dynamic> toJson() {
@@ -231,5 +228,5 @@ abstract class _AdditionalChargesModel implements AdditionalChargesModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AdditionalChargesModelImplCopyWith<_$AdditionalChargesModelImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

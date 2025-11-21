@@ -12,8 +12,8 @@ part 'service_state.dart';
 class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final ServiceRepository _repository;
   ServiceBloc({required ServiceRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadServices>((event, emit) async {
       if (!event.force) {
         if (state is _Loaded) {

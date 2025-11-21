@@ -8,9 +8,10 @@ Future<void> showCompleteBookingDialog({
   required BuildContext context,
   required Future<void> Function() onConfirm,
   VoidCallback? onCancel,
-}) => showDialog(
-    context: context,
-    builder: (BuildContext context) => AlertDialog(
+}) =>
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
         title: const Text(
           'Complete Booking',
         ),
@@ -20,44 +21,44 @@ Future<void> showCompleteBookingDialog({
             mainAxisSize: MainAxisSize.min,
             spacing: 5,
             children: [
-            const Text(
-              'Are you sure you want to complete this booking?',
-              style: TextStyle(color: AppColors.black),
-            ),
+              const Text(
+                'Are you sure you want to complete this booking?',
+                style: TextStyle(color: AppColors.black),
+              ),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 12.0),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: Colors.orange,
-                    size: 20.sp,
-                  ),
-                  8.width,
-                  Expanded(
-                    child: Text(
-                      'Note: Please ensure all products are returned before marking the booking as complete.',
-                      softWrap: true,
-                      maxLines: 3,
-                      style: TextStyle(
-                        color: Colors.orange[800],
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w500,
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.orange,
+                      size: 20.sp,
+                    ),
+                    8.width,
+                    Expanded(
+                      child: Text(
+                        'Note: Please ensure all products are returned before marking the booking as complete.',
+                        softWrap: true,
+                        maxLines: 3,
+                        style: TextStyle(
+                          color: Colors.orange[800],
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            // Text(
-            //   'NB: Ensure that your booked product is returned in your hand',
-            //   style: TextStyle(
-            //     fontWeight: FontWeight.w600,
-            //     color: Colors.grey,
-            //     fontSize: 12.sp,
-            //   ),
-            // ),
+              // Text(
+              //   'NB: Ensure that your booked product is returned in your hand',
+              //   style: TextStyle(
+              //     fontWeight: FontWeight.w600,
+              //     color: Colors.grey,
+              //     fontSize: 12.sp,
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -89,4 +90,4 @@ Future<void> showCompleteBookingDialog({
           ),
         ],
       ),
-  );
+    );

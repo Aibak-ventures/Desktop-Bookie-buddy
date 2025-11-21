@@ -8,9 +8,8 @@ Future<void> shareFile({
   final VoidCallback? onBeforeShare,
 }) async {
   try {
-    final box = context.isMobile
-        ? null
-        : context.findRenderObject() as RenderBox?;
+    final box =
+        context.isMobile ? null : context.findRenderObject() as RenderBox?;
     final fileName = filePath.split('/').last;
     onBeforeShare?.call();
     await SharePlus.instance.share(
@@ -18,9 +17,8 @@ Future<void> shareFile({
         title: fileName,
         subject: fileName,
         files: [XFile(filePath)],
-        sharePositionOrigin: box == null
-            ? null
-            : box.localToGlobal(Offset.zero) & box.size,
+        sharePositionOrigin:
+            box == null ? null : box.localToGlobal(Offset.zero) & box.size,
       ),
     );
   } catch (e) {

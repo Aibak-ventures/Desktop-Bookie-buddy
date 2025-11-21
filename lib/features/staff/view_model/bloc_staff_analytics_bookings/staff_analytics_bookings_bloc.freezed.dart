@@ -21,34 +21,40 @@ mixin _$StaffAnalyticsBookingsEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int staffId, int month, int year) loadBookings,
     required TResult Function() loadNextPageBookings,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int staffId, int month, int year)? loadBookings,
     TResult? Function()? loadNextPageBookings,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int staffId, int month, int year)? loadBookings,
     TResult Function()? loadNextPageBookings,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_LoadBookings value) loadBookings,
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_LoadBookings value)? loadBookings,
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_LoadBookings value)? loadBookings,
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -56,18 +62,13 @@ abstract class $StaffAnalyticsBookingsEventCopyWith<$Res> {
   factory $StaffAnalyticsBookingsEventCopyWith(
     StaffAnalyticsBookingsEvent value,
     $Res Function(StaffAnalyticsBookingsEvent) then,
-  ) =
-      _$StaffAnalyticsBookingsEventCopyWithImpl<
-        $Res,
-        StaffAnalyticsBookingsEvent
-      >;
+  ) = _$StaffAnalyticsBookingsEventCopyWithImpl<$Res,
+      StaffAnalyticsBookingsEvent>;
 }
 
 /// @nodoc
-class _$StaffAnalyticsBookingsEventCopyWithImpl<
-  $Res,
-  $Val extends StaffAnalyticsBookingsEvent
->
+class _$StaffAnalyticsBookingsEventCopyWithImpl<$Res,
+        $Val extends StaffAnalyticsBookingsEvent>
     implements $StaffAnalyticsBookingsEventCopyWith<$Res> {
   _$StaffAnalyticsBookingsEventCopyWithImpl(this._value, this._then);
 
@@ -113,15 +114,15 @@ class __$$LoadBookingsImplCopyWithImpl<$Res>
         staffId: null == staffId
             ? _value.staffId
             : staffId // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         month: null == month
             ? _value.month
             : month // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         year: null == year
             ? _value.year
             : year // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
       ),
     );
   }
@@ -260,11 +261,8 @@ abstract class _$$LoadNextPageBookingsImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$LoadNextPageBookingsImplCopyWithImpl<$Res>
-    extends
-        _$StaffAnalyticsBookingsEventCopyWithImpl<
-          $Res,
-          _$LoadNextPageBookingsImpl
-        >
+    extends _$StaffAnalyticsBookingsEventCopyWithImpl<$Res,
+        _$LoadNextPageBookingsImpl>
     implements _$$LoadNextPageBookingsImplCopyWith<$Res> {
   __$$LoadNextPageBookingsImplCopyWithImpl(
     _$LoadNextPageBookingsImpl _value,
@@ -374,10 +372,10 @@ mixin _$StaffAnalyticsBookingsState {
       int staffId,
       int month,
       int year,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
@@ -388,10 +386,10 @@ mixin _$StaffAnalyticsBookingsState {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
@@ -402,30 +400,33 @@ mixin _$StaffAnalyticsBookingsState {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loading value) loading,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_Error value) error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_Error value)? error,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loading value)? loading,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_Error value)? error,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -433,18 +434,13 @@ abstract class $StaffAnalyticsBookingsStateCopyWith<$Res> {
   factory $StaffAnalyticsBookingsStateCopyWith(
     StaffAnalyticsBookingsState value,
     $Res Function(StaffAnalyticsBookingsState) then,
-  ) =
-      _$StaffAnalyticsBookingsStateCopyWithImpl<
-        $Res,
-        StaffAnalyticsBookingsState
-      >;
+  ) = _$StaffAnalyticsBookingsStateCopyWithImpl<$Res,
+      StaffAnalyticsBookingsState>;
 }
 
 /// @nodoc
-class _$StaffAnalyticsBookingsStateCopyWithImpl<
-  $Res,
-  $Val extends StaffAnalyticsBookingsState
->
+class _$StaffAnalyticsBookingsStateCopyWithImpl<$Res,
+        $Val extends StaffAnalyticsBookingsState>
     implements $StaffAnalyticsBookingsStateCopyWith<$Res> {
   _$StaffAnalyticsBookingsStateCopyWithImpl(this._value, this._then);
 
@@ -508,8 +504,7 @@ class _$LoadingImpl implements _Loading {
       int staffId,
       int month,
       int year,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -526,8 +521,7 @@ class _$LoadingImpl implements _Loading {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -544,8 +538,7 @@ class _$LoadingImpl implements _Loading {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -637,27 +630,27 @@ class __$$LoadedImplCopyWithImpl<$Res>
         bookings: null == bookings
             ? _value._bookings
             : bookings // ignore: cast_nullable_to_non_nullable
-                  as List<BookingsModel>,
+                as List<BookingsModel>,
         nextPageUrl: freezed == nextPageUrl
             ? _value.nextPageUrl
             : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         isPaginating: null == isPaginating
             ? _value.isPaginating
             : isPaginating // ignore: cast_nullable_to_non_nullable
-                  as bool,
+                as bool,
         staffId: null == staffId
             ? _value.staffId
             : staffId // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         month: null == month
             ? _value.month
             : month // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
         year: null == year
             ? _value.year
             : year // ignore: cast_nullable_to_non_nullable
-                  as int,
+                as int,
       ),
     );
   }
@@ -717,14 +710,14 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_bookings),
-    nextPageUrl,
-    isPaginating,
-    staffId,
-    month,
-    year,
-  );
+        runtimeType,
+        const DeepCollectionEquality().hash(_bookings),
+        nextPageUrl,
+        isPaginating,
+        staffId,
+        month,
+        year,
+      );
 
   /// Create a copy of StaffAnalyticsBookingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -745,8 +738,7 @@ class _$LoadedImpl implements _Loaded {
       int staffId,
       int month,
       int year,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
   }) {
     return loaded(bookings, nextPageUrl, isPaginating, staffId, month, year);
@@ -763,8 +755,7 @@ class _$LoadedImpl implements _Loaded {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call(
@@ -788,8 +779,7 @@ class _$LoadedImpl implements _Loaded {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -887,7 +877,7 @@ class __$$ErrorImplCopyWithImpl<$Res>
         null == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
       ),
     );
   }
@@ -936,8 +926,7 @@ class _$ErrorImpl implements _Error {
       int staffId,
       int month,
       int year,
-    )
-    loaded,
+    ) loaded,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -954,8 +943,7 @@ class _$ErrorImpl implements _Error {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -972,8 +960,7 @@ class _$ErrorImpl implements _Error {
       int staffId,
       int month,
       int year,
-    )?
-    loaded,
+    )? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

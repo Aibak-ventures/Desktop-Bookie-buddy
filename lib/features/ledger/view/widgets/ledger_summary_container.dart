@@ -10,18 +10,18 @@ class LedgerSummaryContainer extends StatelessWidget {
   final Widget child;
   @override
   Widget build(BuildContext context) => Container(
-      padding: 18.padding,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF8A63FE),
-            Color(0xFF6132E4),
-          ],
+        padding: 18.padding,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF8A63FE),
+              Color(0xFF6132E4),
+            ],
+          ),
+          borderRadius: 10.radiusBorder,
         ),
-        borderRadius: 10.radiusBorder,
-      ),
-      child: child,
-    );
+        child: child,
+      );
 }

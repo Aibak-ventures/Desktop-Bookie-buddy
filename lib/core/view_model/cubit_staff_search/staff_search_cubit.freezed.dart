@@ -68,24 +68,23 @@ class _$StaffSearchStateCopyWithImpl<$Res, $Val extends StaffSearchState>
   }) {
     return _then(
       _value.copyWith(
-            staffs: null == staffs
-                ? _value.staffs
-                : staffs // ignore: cast_nullable_to_non_nullable
-                      as List<StaffModel>,
-            selectedStaff: freezed == selectedStaff
-                ? _value.selectedStaff
-                : selectedStaff // ignore: cast_nullable_to_non_nullable
-                      as StaffModel?,
-            errorMessage: freezed == errorMessage
-                ? _value.errorMessage
-                : errorMessage // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            isLoading: null == isLoading
-                ? _value.isLoading
-                : isLoading // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
+        staffs: null == staffs
+            ? _value.staffs
+            : staffs // ignore: cast_nullable_to_non_nullable
+                as List<StaffModel>,
+        selectedStaff: freezed == selectedStaff
+            ? _value.selectedStaff
+            : selectedStaff // ignore: cast_nullable_to_non_nullable
+                as StaffModel?,
+        errorMessage: freezed == errorMessage
+            ? _value.errorMessage
+            : errorMessage // ignore: cast_nullable_to_non_nullable
+                as String?,
+        isLoading: null == isLoading
+            ? _value.isLoading
+            : isLoading // ignore: cast_nullable_to_non_nullable
+                as bool,
+      ) as $Val,
     );
   }
 
@@ -148,19 +147,19 @@ class __$$StaffSearchStateImplCopyWithImpl<$Res>
         staffs: null == staffs
             ? _value._staffs
             : staffs // ignore: cast_nullable_to_non_nullable
-                  as List<StaffModel>,
+                as List<StaffModel>,
         selectedStaff: freezed == selectedStaff
             ? _value.selectedStaff
             : selectedStaff // ignore: cast_nullable_to_non_nullable
-                  as StaffModel?,
+                as StaffModel?,
         errorMessage: freezed == errorMessage
             ? _value.errorMessage
             : errorMessage // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         isLoading: null == isLoading
             ? _value.isLoading
             : isLoading // ignore: cast_nullable_to_non_nullable
-                  as bool,
+                as bool,
       ),
     );
   }
@@ -214,12 +213,12 @@ class _$StaffSearchStateImpl implements _StaffSearchState {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_staffs),
-    selectedStaff,
-    errorMessage,
-    isLoading,
-  );
+        runtimeType,
+        const DeepCollectionEquality().hash(_staffs),
+        selectedStaff,
+        errorMessage,
+        isLoading,
+      );
 
   /// Create a copy of StaffSearchState
   /// with the given fields replaced by the non-null parameter values.

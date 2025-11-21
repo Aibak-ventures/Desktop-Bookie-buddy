@@ -51,13 +51,10 @@ class SalesCard extends StatelessWidget {
                   (() {
                     final name = sale.clientName.trim();
                     if (name.isEmpty) return '--';
-                    final parts = name
-                        .split(RegExp(r'\s+'))
-                        .where((e) => e.isNotEmpty);
-                    final initials = parts
-                        .map((w) => w[0].toUpperCase())
-                        .take(2)
-                        .join();
+                    final parts =
+                        name.split(RegExp(r'\s+')).where((e) => e.isNotEmpty);
+                    final initials =
+                        parts.map((w) => w[0].toUpperCase()).take(2).join();
                     return initials;
                   })(),
                   style: TextStyle(
@@ -159,106 +156,106 @@ class SalesCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: 16.padding,
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.black.withValues(alpha: 0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 2),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: 16.padding,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          border: Border.all(color: const Color(0xFFF0F0F0)),
         ),
-      ],
-      border: Border.all(color: const Color(0xFFF0F0F0)),
-    ),
-    child: Shimmer.fromColors(
-      baseColor: AppColors.grey300!,
-      highlightColor: AppColors.grey100!,
-      child: Row(
-        children: [
-          // Date Section Shimmer
-          Container(
-            width: 84,
-            height: 84,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: 10.radiusBorder,
-            ),
-          ),
+        child: Shimmer.fromColors(
+          baseColor: AppColors.grey300!,
+          highlightColor: AppColors.grey100!,
+          child: Row(
+            children: [
+              // Date Section Shimmer
+              Container(
+                width: 84,
+                height: 84,
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: 10.radiusBorder,
+                ),
+              ),
 
-          const SizedBox(width: 16),
+              const SizedBox(width: 16),
 
-          // Content Section Shimmer
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 5,
-              children: [
-                // Client Name Shimmer
-                Row(
+              // Content Section Shimmer
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 5,
                   children: [
-                    Expanded(
-                      child: Container(
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(4),
+                    // Client Name Shimmer
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
                         ),
-                      ),
+                        Container(
+                          height: 24,
+                          width: 80,
+                          margin: 10.paddingOnly(left: true),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ],
                     ),
+
+                    // Payment Status Row Shimmer
+                    Row(
+                      children: [
+                        Container(
+                          height: 18,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          height: 18,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Status Badge Shimmer
                     Container(
-                      height: 24,
+                      height: 18,
                       width: 80,
-                      margin: 10.paddingOnly(left: true),
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                   ],
                 ),
-
-                // Payment Status Row Shimmer
-                Row(
-                  children: [
-                    Container(
-                      height: 18,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      height: 18,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Status Badge Shimmer
-                Container(
-                  height: 18,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 /// Convenience shimmer list.
@@ -268,10 +265,10 @@ class SalesListShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-    physics: const NeverScrollableScrollPhysics(),
-    padding: 12.padding,
-    // shrinkWrap: true,
-    itemCount: count,
-    itemBuilder: (c, i) => const SalesCardShimmer(),
-  );
+        physics: const NeverScrollableScrollPhysics(),
+        padding: 12.padding,
+        // shrinkWrap: true,
+        itemCount: count,
+        itemBuilder: (c, i) => const SalesCardShimmer(),
+      );
 }

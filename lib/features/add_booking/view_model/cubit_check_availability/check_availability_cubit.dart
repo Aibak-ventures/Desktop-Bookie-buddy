@@ -17,24 +17,24 @@
 //     throw UnimplementedError(
 //       'This method is not implemented yet. Please implement this before using it.',
 //     );
-    // emit(const _Checking());
-    // log('eventDate: $eventDate, returnDate: $returnDate, productIds: $productIds');
-    // try {
-    //   final result = await _repository.checkAvailability(
-    //     eventDate: eventDate,
-    //     returnDate: returnDate,
-    //     productIds: productIds,
-    //   );
-    //   final status = result.status;
+// emit(const _Checking());
+// log('eventDate: $eventDate, returnDate: $returnDate, productIds: $productIds');
+// try {
+//   final result = await _repository.checkAvailability(
+//     eventDate: eventDate,
+//     returnDate: returnDate,
+//     productIds: productIds,
+//   );
+//   final status = result.status;
 
-    //   if (status == CheckAvailabilityStatus.available) {
-    //     emit(const _Success());
-    //   } else {
-    //     emit(_Failure(result.unavailableProducts));
-    //   }
-    // } catch (e, stack) {
-    //   log(e.toString(), stackTrace: stack);
-    //   emit(_Error(e.toString()));
-    // }
+//   if (status == CheckAvailabilityStatus.available) {
+//     emit(const _Success());
+//   } else {
+//     emit(_Failure(result.unavailableProducts));
+//   }
+// } catch (e, stack) {
+//   log(e.toString(), stackTrace: stack);
+//   emit(_Error(e.toString()));
+// }
 //   }
 // }

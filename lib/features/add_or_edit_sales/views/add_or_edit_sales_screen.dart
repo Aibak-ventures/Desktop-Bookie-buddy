@@ -105,11 +105,8 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                 nameController: _formController.staffNameController,
               ),
               15.height,
-
               buildClientSection(),
-
               15.height,
-
               AddOrEditSalesProductsSection(
                 selectedProductsNotifier:
                     _formController.selectedProductsNotifier,
@@ -119,9 +116,7 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                 returnDateController: _formController.saleDateController,
                 isEditMode: isEditMode,
               ),
-
               20.height,
-
               Stack(
                 children: [
                   CustomTextField(
@@ -143,9 +138,7 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                   ),
                 ],
               ),
-
               20.height,
-
               AddOrEditSalesSection(
                 title: 'Payment Details',
                 child: Column(
@@ -179,9 +172,7 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                         ),
                       ),
                     ),
-
                     15.height,
-
                     CustomTextField(
                       controller: _formController.discountController,
                       hintText: 'Discount Amount (Optional)',
@@ -199,7 +190,6 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                   ],
                 ),
               ),
-
               20.height,
               Row(
                 children: [
@@ -211,8 +201,7 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                             _formController.selectedProductsNotifier.value;
                         final discountText =
                             _formController.discountController.text;
-                        final total =
-                            products.fold(
+                        final total = products.fold(
                               0,
                               (pv, e) => pv + (e.variant.quantity * e.amount),
                             ) -
@@ -279,9 +268,9 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                             log('Sales Request: $req');
                             if (req == null) return;
                             context.read<SaveSalesCubit>().saveSales(
-                              salesRequest: req,
-                              isEditMode: isEditMode,
-                            );
+                                  salesRequest: req,
+                                  isEditMode: isEditMode,
+                                );
                           },
                         );
                       },
@@ -289,7 +278,6 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                   ),
                 ],
               ),
-
               20.height,
             ],
           ),
@@ -299,39 +287,39 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
   }
 
   Widget buildClientSection() => Column(
-    children: [
-      ClientSelectWidget(
-        nameController: _formController.nameController,
-        phone1Controller: _formController.phone1Controller,
-        phone2Controller: _formController.phone2Controller,
-        textSize: 16,
-        spacing: 15,
-        isClientSearchEnabledNotifier:
-            _formController.isClientSearchEnabledNotifier,
-      ),
-      15.height,
-      Stack(
         children: [
-          CustomTextField(
-            controller: _formController.placeController,
-            keyboardType: TextInputType.streetAddress,
-            hintText: 'Place',
-            prefixIcon: const SizedBox.shrink(),
-            maxLines: 3,
-            validator: AppInputValidators.address,
+          ClientSelectWidget(
+            nameController: _formController.nameController,
+            phone1Controller: _formController.phone1Controller,
+            phone2Controller: _formController.phone2Controller,
+            textSize: 16,
+            spacing: 15,
+            isClientSearchEnabledNotifier:
+                _formController.isClientSearchEnabledNotifier,
           ),
-          Positioned(
-            top: 16,
-            left: 12,
-            child: Icon(
-              Icons.location_on,
-              color: AppColors.purple.lighten(0.2),
-            ),
+          15.height,
+          Stack(
+            children: [
+              CustomTextField(
+                controller: _formController.placeController,
+                keyboardType: TextInputType.streetAddress,
+                hintText: 'Place',
+                prefixIcon: const SizedBox.shrink(),
+                maxLines: 3,
+                validator: AppInputValidators.address,
+              ),
+              Positioned(
+                top: 16,
+                left: 12,
+                child: Icon(
+                  Icons.location_on,
+                  color: AppColors.purple.lighten(0.2),
+                ),
+              ),
+            ],
           ),
         ],
-      ),
-    ],
-  );
+      );
 
   // booked date function
   Future<void> selectBookedDate(BuildContext context) async {
@@ -372,10 +360,9 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
     if (original == null) {
       final anyClientInput =
           _formController.nameController.text.trim().isNotEmpty ||
-          _formController.phone1Controller.text.trim().isNotEmpty ||
-          _formController.phone2Controller.text.trim().isNotEmpty;
-      final anyOther =
-          _formController.placeController.text.trim().isNotEmpty ||
+              _formController.phone1Controller.text.trim().isNotEmpty ||
+              _formController.phone2Controller.text.trim().isNotEmpty;
+      final anyOther = _formController.placeController.text.trim().isNotEmpty ||
           _formController.descriptionController.text.trim().isNotEmpty ||
           discountText.isNotEmpty ||
           products.isNotEmpty;
@@ -387,20 +374,17 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
 
     // Sale date
     if (_formController.saleDateController.text.formatToUiDate() !=
-        original.saleDate.formatToUiDate())
-      changed = true;
+        original.saleDate.formatToUiDate()) changed = true;
 
     // Client (existing vs new not strictly needed; treat by field diff)
     if (_formController.nameController.text.trim() != original.client.name)
       changed = true;
     if (_formController.phone1Controller.text.trim() !=
-        original.client.phone1.toString())
-      changed = true;
+        original.client.phone1.toString()) changed = true;
     if ((_formController.phone2Controller.text.trim().isNotEmpty
             ? _formController.phone2Controller.text.trim()
             : '') !=
-        (original.client.phone2?.toString() ?? ''))
-      changed = true;
+        (original.client.phone2?.toString() ?? '')) changed = true;
 
     // Address
     if (_formController.placeController.text.trim() != original.address.trim())
@@ -408,13 +392,11 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
 
     // Description
     if (_formController.descriptionController.text.trim() !=
-        original.description.trim())
-      changed = true;
+        original.description.trim()) changed = true;
 
     // Discount
-    final originalDiscount = original.discountAmount > 0
-        ? original.discountAmount.toString()
-        : '';
+    final originalDiscount =
+        original.discountAmount > 0 ? original.discountAmount.toString() : '';
     if (discountText != originalDiscount) changed = true;
 
     // Payment method

@@ -21,8 +21,8 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: ResponsiveHelper.isDesktop(context) 
-//           ? const Color(0xFFF8F9FA) 
+//       backgroundColor: ResponsiveHelper.isDesktop(context)
+//           ? const Color(0xFFF8F9FA)
 //           : null,
 //       appBar: ResponsiveHelper.isMobile(context)
 //           ? AppBar(
@@ -118,7 +118,7 @@
 //                 ],
 //               ),
 //             ),
-          
+
 //           // Content Section
 //           Expanded(
 //             child: Center(
@@ -140,7 +140,7 @@
 //               ),
 //             ),
 //           ),
-          
+
 //           const SizedBox(height: 60),
 //         ],
 //       ),
@@ -221,7 +221,7 @@
 //               ],
 //             ),
 //           ),
-          
+
 //           // Content Section
 //           Expanded(
 //             child: Center(
@@ -243,7 +243,7 @@
 //               ),
 //             ),
 //           ),
-          
+
 //           const SizedBox(height: 80),
 //         ],
 //       ),

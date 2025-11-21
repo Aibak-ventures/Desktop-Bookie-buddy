@@ -27,16 +27,18 @@ class GenerateAvailableProductsPdf {
   }) async {
     try {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF...');
-      final pdf = await generateAvailableProductsPdf(products, shopDetails, availabilityDate);
-      
+      final pdf = await generateAvailableProductsPdf(
+          products, shopDetails, availabilityDate);
+
       GlobalLoadingOverlay.hide();
-      
-      final fileName = 'available_products_${DateTime.now().millisecondsSinceEpoch}.pdf';
-      
+
+      final fileName =
+          'available_products_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
       if (kIsWeb) {
         // On web, trigger browser download
         downloadFileWeb(pdf, fileName);
-        
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -47,24 +49,25 @@ class GenerateAvailableProductsPdf {
         }
       } else if (Platform.isWindows) {
         // For Windows desktop, save to Downloads folder and open
-        final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+        final downloadsDir =
+            Directory('${Platform.environment['USERPROFILE']}\\Downloads');
         if (!downloadsDir.existsSync()) {
           downloadsDir.createSync(recursive: true);
         }
-        
+
         final filePath = '${downloadsDir.path}\\$fileName';
         final file = File(filePath);
         await file.writeAsBytes(pdf);
-        
+
         log('PDF saved to: $filePath');
-        
+
         // Open the PDF with default viewer
         try {
           await launchUrl(Uri.file(filePath));
         } catch (e) {
           log('Could not open PDF: $e');
         }
-        
+
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -87,14 +90,13 @@ class GenerateAvailableProductsPdf {
       } else {
         // For mobile, save to temp and share
         final output = await getApplicationDocumentsDirectory();
-        final box = context.isMobile
-            ? null
-            : context.findRenderObject() as RenderBox?;
+        final box =
+            context.isMobile ? null : context.findRenderObject() as RenderBox?;
 
         final file = File('${output.path}/$fileName');
         await file.writeAsBytes(pdf);
         final fileNameShort = file.path.split('/').last;
-        
+
         await SharePlus.instance.share(
           ShareParams(
             title: fileNameShort,
@@ -288,7 +290,8 @@ class GenerateAvailableProductsPdf {
           ),
           pw.Text(
             'Generated on: ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}',
-            style: pw.TextStyle(font: fontRegular, fontSize: 12, color: PdfColors.grey600),
+            style: pw.TextStyle(
+                font: fontRegular, fontSize: 12, color: PdfColors.grey600),
           ),
         ],
       ),
@@ -325,10 +328,14 @@ class GenerateAvailableProductsPdf {
             pw.TableRow(
               decoration: const pw.BoxDecoration(color: PdfColors.grey200),
               children: [
-                _buildTableCell('S.No', fontRegular, fontSemiBold, isHeader: true),
-                _buildTableCell('Product Name', fontRegular, fontSemiBold, isHeader: true),
-                _buildTableCell('Category', fontRegular, fontSemiBold, isHeader: true),
-                _buildTableCell('Price', fontRegular, fontSemiBold, isHeader: true),
+                _buildTableCell('S.No', fontRegular, fontSemiBold,
+                    isHeader: true),
+                _buildTableCell('Product Name', fontRegular, fontSemiBold,
+                    isHeader: true),
+                _buildTableCell('Category', fontRegular, fontSemiBold,
+                    isHeader: true),
+                _buildTableCell('Price', fontRegular, fontSemiBold,
+                    isHeader: true),
               ],
             ),
             // Data rows
@@ -339,8 +346,12 @@ class GenerateAvailableProductsPdf {
                 children: [
                   _buildTableCell('${index + 1}', fontRegular, fontSemiBold),
                   _buildTableCell(product.name, fontRegular, fontSemiBold),
-                  _buildTableCell(product.category ?? 'N/A', fontRegular, fontSemiBold),
-                  _buildTableCell('₹${product.price?.toStringAsFixed(2) ?? 'N/A'}', fontRegular, fontSemiBold),
+                  _buildTableCell(
+                      product.category ?? 'N/A', fontRegular, fontSemiBold),
+                  _buildTableCell(
+                      '₹${product.price?.toStringAsFixed(2) ?? 'N/A'}',
+                      fontRegular,
+                      fontSemiBold),
                 ],
               );
             }).toList(),
@@ -351,11 +362,8 @@ class GenerateAvailableProductsPdf {
   }
 
   static pw.Widget _buildTableCell(
-    String text,
-    pw.Font fontRegular,
-    pw.Font fontSemiBold,
-    {bool isHeader = false}
-  ) {
+      String text, pw.Font fontRegular, pw.Font fontSemiBold,
+      {bool isHeader = false}) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(8),
       child: pw.Text(

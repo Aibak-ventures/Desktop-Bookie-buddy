@@ -14,39 +14,39 @@ class LedgerSummarySimpleWidget extends StatelessWidget {
   final int amount;
   @override
   Widget build(BuildContext context) => LedgerSummaryContainer(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.w),
-            decoration: BoxDecoration(
-                color: AppColors.purpleLightShade,
-                borderRadius: 5.radiusBorder,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.black.withAlpha(80),
-                    blurRadius: 4,
-                    offset: const Offset(0, 1.5),
-                  )
-                ]),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: AppColors.purple,
-                fontWeight: FontWeight.w500,
-                fontSize: 13.sp,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.w),
+              decoration: BoxDecoration(
+                  color: AppColors.purpleLightShade,
+                  borderRadius: 5.radiusBorder,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withAlpha(80),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1.5),
+                    )
+                  ]),
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: AppColors.purple,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13.sp,
+                ),
               ),
             ),
-          ),
-          Text(
-            amount.toCurrency(),
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
+            Text(
+              amount.toCurrency(),
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 }

@@ -16,8 +16,8 @@ class StaffDeletedListBloc
   final StaffRepository _repository;
 
   StaffDeletedListBloc({required StaffRepository repository})
-    : _repository = repository,
-      super(const StaffDeletedListState.loading()) {
+      : _repository = repository,
+        super(const StaffDeletedListState.loading()) {
     on<_LoadStaffs>(_onLoadStaffs);
     on<_LoadNextPageStaffs>(_onLoadNextPageStaffs);
     on<_RestoreStaff>(_onRestoreStaff);
@@ -30,7 +30,7 @@ class StaffDeletedListBloc
     if (state is! _Loading) emit(const StaffDeletedListState.loading());
 
     try {
-      final result = await _repository.getStaffs( 
+      final result = await _repository.getStaffs(
         page: 1,
         // isDeleted: true,
       );

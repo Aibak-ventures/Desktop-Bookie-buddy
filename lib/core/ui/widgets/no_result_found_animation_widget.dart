@@ -17,30 +17,30 @@ class NoResultFoundAnimationWidget extends StatelessWidget {
   final bool isScrollable;
   @override
   Widget build(BuildContext context) => ListView(
-    shrinkWrap: !isScrollable,
-    physics: isScrollable
-        ? const AlwaysScrollableScrollPhysics()
-        : const NeverScrollableScrollPhysics(),
-    children: [
-      if (adjustHeightTop != null)
-        SizedBox(height: context.screenHeight * adjustHeightTop!),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+        shrinkWrap: !isScrollable,
+        physics: isScrollable
+            ? const AlwaysScrollableScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         children: [
-          Lottie.asset(
-            AppAssets.noDataAnimation,
-            width: 200.w,
-            height: 200.w,
-            // height: context.mediaQueryHeight(0.3),
-            // width: context.mediaQueryWidth(0.45),
+          if (adjustHeightTop != null)
+            SizedBox(height: context.screenHeight * adjustHeightTop!),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                AppAssets.noDataAnimation,
+                width: 200.w,
+                height: 200.w,
+                // height: context.mediaQueryHeight(0.3),
+                // width: context.mediaQueryWidth(0.45),
+              ),
+              const Text('No result found'),
+            ],
           ),
-          const Text('No result found'),
+          if (adjustHeightBottom != null) SizedBox(height: adjustHeightBottom),
         ],
-      ),
-      if (adjustHeightBottom != null) SizedBox(height: adjustHeightBottom),
-    ],
-  );
+      );
 }
 
 class NoProductFoundAnimationWidget extends StatelessWidget {
@@ -53,23 +53,23 @@ class NoProductFoundAnimationWidget extends StatelessWidget {
   final double? adjustHeightBottom;
   @override
   Widget build(BuildContext context) => ListView(
-    physics: const AlwaysScrollableScrollPhysics(),
-    children: [
-      if (adjustHeightTop != null)
-        SizedBox(height: context.screenHeight * adjustHeightTop!),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+        physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          Lottie.asset(
-            AppAssets.noProductAnimation,
-            height: context.mediaQueryHeight(0.3),
-            width: context.mediaQueryWidth(0.45),
+          if (adjustHeightTop != null)
+            SizedBox(height: context.screenHeight * adjustHeightTop!),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                AppAssets.noProductAnimation,
+                height: context.mediaQueryHeight(0.3),
+                width: context.mediaQueryWidth(0.45),
+              ),
+              const Text('No product found'),
+            ],
           ),
-          const Text('No product found'),
+          if (adjustHeightBottom != null) SizedBox(height: adjustHeightBottom),
         ],
-      ),
-      if (adjustHeightBottom != null) SizedBox(height: adjustHeightBottom),
-    ],
-  );
+      );
 }

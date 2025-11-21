@@ -45,7 +45,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
     final DateTime today = DateTime.now();
     final DateTime todayDateOnly = DateTime(today.year, today.month, today.day);
     debugPrint('selected: ' + selectedDay.toString());
-    
+
     // Allow today and future dates only
     if (selectedDay.isBefore(todayDateOnly)) {
       CustomSnackBar(message: 'You cannot select a past date');

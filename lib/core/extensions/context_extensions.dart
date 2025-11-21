@@ -173,8 +173,8 @@ extension NavigatorX<T> on BuildContext {
   /// Returns a [Future] that completes to the [T] type once the push
   /// operation is complete.
   Future<T?> pushAndRemoveUntil<T>(Widget screen) async => Navigator.of(
-    this,
-  ).pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
+        this,
+      ).pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
 
   /// Creates a route for navigation based on the specified [transitionType].
   ///

@@ -24,97 +24,99 @@ class StaffListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: 9.radiusBorder,
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.black.withValues(alpha: 0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 2),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: 9.radiusBorder,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          border: Border.all(color: AppColors.grey200),
         ),
-      ],
-      border: Border.all(color: AppColors.grey200),
-    ),
-    child: ListTile(
-      title: Text(name, style: const TextStyle(fontWeight: FontWeight.w500)),
-      subtitle: Text(phoneNumber, style: TextStyle(color: AppColors.grey600)),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          switch (value) {
-            // case 'analytics':
-            //   if (onTapAnalytics != null) onTapAnalytics!();
-            //   break;
-            case 'edit':
-              onEdit();
-              break;
-            case 'delete':
-              onDelete();
-              break;
-            default:
-          }
-        },
-        itemBuilder: (context) => [
-          // const PopupMenuItem(
-          //   value: 'analytics',
-          //   child: Row(
-          //     spacing: 5,
-          //     children: [
-          //       Icon(Icons.show_chart_rounded, color: AppColors.purple),
-          //       Text('Analytics'),
-          //       SizedBox(width: 5),
-          //       PremiumBadge(showLabel: false),
-          //     ],
-          //   ),
-          // ),
-          // PopupMenuItem(
-          //   value: 'analytics',
-          //   child: Shimmer.fromColors(
-          //     baseColor: Colors.amber.shade700,
-          //     highlightColor: Colors.amber.shade500,
-          //     child: const Row(
-          //       spacing: 5,
-          //       children: [
-          //         Icon(Icons.show_chart_rounded, color: AppColors.purple),
-          //         Text('Analytics'),
-          //         const SizedBox(width: 5),
-          //         // PremiumBadge(showLabel: false),
-          //         Icon(CustomIcons.premium, size: 20),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          // const PremiumMenuItem(
-          //   value: 'analytics',
-          //   label: 'Analytics',
-          //   icon: Icon(Icons.show_chart_rounded),
-          // ),
-          const PopupMenuItem(
-            value: 'edit',
-            child: Row(
-              spacing: 5,
-              children: [
-                Icon(Icons.edit_outlined, color: AppColors.purple),
-                Text('Edit'),
-              ],
-            ),
+        child: ListTile(
+          title:
+              Text(name, style: const TextStyle(fontWeight: FontWeight.w500)),
+          subtitle:
+              Text(phoneNumber, style: TextStyle(color: AppColors.grey600)),
+          trailing: PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                // case 'analytics':
+                //   if (onTapAnalytics != null) onTapAnalytics!();
+                //   break;
+                case 'edit':
+                  onEdit();
+                  break;
+                case 'delete':
+                  onDelete();
+                  break;
+                default:
+              }
+            },
+            itemBuilder: (context) => [
+              // const PopupMenuItem(
+              //   value: 'analytics',
+              //   child: Row(
+              //     spacing: 5,
+              //     children: [
+              //       Icon(Icons.show_chart_rounded, color: AppColors.purple),
+              //       Text('Analytics'),
+              //       SizedBox(width: 5),
+              //       PremiumBadge(showLabel: false),
+              //     ],
+              //   ),
+              // ),
+              // PopupMenuItem(
+              //   value: 'analytics',
+              //   child: Shimmer.fromColors(
+              //     baseColor: Colors.amber.shade700,
+              //     highlightColor: Colors.amber.shade500,
+              //     child: const Row(
+              //       spacing: 5,
+              //       children: [
+              //         Icon(Icons.show_chart_rounded, color: AppColors.purple),
+              //         Text('Analytics'),
+              //         const SizedBox(width: 5),
+              //         // PremiumBadge(showLabel: false),
+              //         Icon(CustomIcons.premium, size: 20),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // const PremiumMenuItem(
+              //   value: 'analytics',
+              //   label: 'Analytics',
+              //   icon: Icon(Icons.show_chart_rounded),
+              // ),
+              const PopupMenuItem(
+                value: 'edit',
+                child: Row(
+                  spacing: 5,
+                  children: [
+                    Icon(Icons.edit_outlined, color: AppColors.purple),
+                    Text('Edit'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  spacing: 5,
+                  children: [
+                    Icon(Icons.delete_outline, color: AppColors.redTomato),
+                    Text('Delete'),
+                  ],
+                ),
+              ),
+            ],
+            padding: EdgeInsets.zero,
+            child: Icon(Icons.more_vert_rounded, size: 20.sp),
           ),
-          const PopupMenuItem(
-            value: 'delete',
-            child: Row(
-              spacing: 5,
-              children: [
-                Icon(Icons.delete_outline, color: AppColors.redTomato),
-                Text('Delete'),
-              ],
-            ),
-          ),
-        ],
-        padding: EdgeInsets.zero,
-        child: Icon(Icons.more_vert_rounded, size: 20.sp),
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 class StaffListCardShimmer extends StatelessWidget {
@@ -122,40 +124,40 @@ class StaffListCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: 9.radiusBorder,
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.black.withValues(alpha: 0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 2),
-        ),
-      ],
-      border: Border.all(color: AppColors.grey200),
-    ),
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-      child: Row(
-        children: [
-          // Content (title + subtitle) shimmer
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomShimmerBox(width: 160.w, height: 14.h),
-                8.height,
-                CustomShimmerBox(width: 110.w, height: 12.h),
-              ],
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: 9.radiusBorder,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
+          ],
+          border: Border.all(color: AppColors.grey200),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          child: Row(
+            children: [
+              // Content (title + subtitle) shimmer
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomShimmerBox(width: 160.w, height: 14.h),
+                    8.height,
+                    CustomShimmerBox(width: 110.w, height: 12.h),
+                  ],
+                ),
+              ),
+              12.width,
+              // Trailing menu icon shimmer
+              Icon(Icons.more_vert_rounded, size: 20.sp),
+              10.width,
+            ],
           ),
-          12.width,
-          // Trailing menu icon shimmer
-          Icon(Icons.more_vert_rounded, size: 20.sp),
-          10.width,
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

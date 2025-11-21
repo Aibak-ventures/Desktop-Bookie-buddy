@@ -9,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   DioClient.init(); // Initialize DioClient
   await SharedPreferenceHelper.init(); // Initialize
   AppDependencies.init(); // Initialize AppDependencies

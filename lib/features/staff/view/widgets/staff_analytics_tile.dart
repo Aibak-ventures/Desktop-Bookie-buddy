@@ -16,21 +16,21 @@ class StaffAnalyticsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    onTap: onTap,
-    title: Text(
-      title,
-      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
-    ),
-    trailing: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          count.toString(),
+        onTap: onTap,
+        title: Text(
+          title,
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
         ),
-        10.width,
-        const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-      ],
-    ),
-  );
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              count.toString(),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
+            ),
+            10.width,
+            const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+          ],
+        ),
+      );
 }

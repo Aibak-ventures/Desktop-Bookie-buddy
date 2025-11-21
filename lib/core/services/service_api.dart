@@ -11,7 +11,7 @@ class ServiceApi {
   Future<CustomResponseModel> fetchServices() async {
     return await safeApiCall<CustomResponseModel>(() async {
       log('🔄 Fetching services from: ${ApiPaths.service.selected}');
-      
+
       final response = await DioClient.dio.get(
         ApiPaths.service.selected,
         options: Options(
@@ -31,7 +31,7 @@ class ServiceApi {
       return CustomResponseModel.fromJson(response.data);
     });
   }
-  
+
   /// Alternative method for testing network connectivity
   Future<bool> checkApiConnectivity() async {
     try {

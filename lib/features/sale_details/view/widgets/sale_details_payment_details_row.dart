@@ -18,25 +18,25 @@ class SaleDetailsPaymentDetailsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(title, style: TextStyle(fontSize: 16.sp)),
-      !isTotal
-          ? Text(
-              trailing ?? amount.toCurrency(),
-              style: TextStyle(fontSize: 16.sp),
-            )
-          : Container(
-              padding: 5.padding,
-              decoration: BoxDecoration(
-                color: AppColors.purpleLight,
-                borderRadius: 5.radiusBorder,
-              ),
-              child: Text(
-                amount.toCurrency(),
-                style: TextStyle(fontSize: 16.sp, color: AppColors.purple),
-              ),
-            ),
-    ],
-  );
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: TextStyle(fontSize: 16.sp)),
+          !isTotal
+              ? Text(
+                  trailing ?? amount.toCurrency(),
+                  style: TextStyle(fontSize: 16.sp),
+                )
+              : Container(
+                  padding: 5.padding,
+                  decoration: BoxDecoration(
+                    color: AppColors.purpleLight,
+                    borderRadius: 5.radiusBorder,
+                  ),
+                  child: Text(
+                    amount.toCurrency(),
+                    style: TextStyle(fontSize: 16.sp, color: AppColors.purple),
+                  ),
+                ),
+        ],
+      );
 }

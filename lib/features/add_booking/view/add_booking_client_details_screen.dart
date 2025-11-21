@@ -67,7 +67,7 @@ class _AddBookingClientDetailsScreenState
   @override
   Widget build(BuildContext context) {
     final isWeb = context.screenWidth > 768;
-    
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: handlePop,
@@ -87,9 +87,8 @@ class _AddBookingClientDetailsScreenState
                 constraints: BoxConstraints(
                   maxWidth: isWeb ? 1000 : double.infinity,
                 ),
-                padding: isWeb
-                    ? const EdgeInsets.all(40)
-                    : const EdgeInsets.all(16),
+                padding:
+                    isWeb ? const EdgeInsets.all(40) : const EdgeInsets.all(16),
                 child: Form(
                   key: _formKey,
                   child: isWeb ? _buildWebLayout() : _buildMobileLayout(),
@@ -136,9 +135,9 @@ class _AddBookingClientDetailsScreenState
             ],
           ),
         ),
-        
+
         const SizedBox(height: 40),
-        
+
         // Main content
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +170,6 @@ class _AddBookingClientDetailsScreenState
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
                     StaffSearchNameField(
                       nameController: _staffNameController,
                     ),
@@ -179,9 +177,9 @@ class _AddBookingClientDetailsScreenState
                 ),
               ),
             ),
-            
+
             const SizedBox(width: 24),
-            
+
             // Right column - Client Details & Address
             Expanded(
               flex: 2,
@@ -213,19 +211,19 @@ class _AddBookingClientDetailsScreenState
                           ),
                         ),
                         const SizedBox(height: 20),
-                        
                         ClientSelectWidget(
                           nameController: _nameController,
                           phone1Controller: _phone1Controller,
                           phone2Controller: _phone2Controller,
-                          isClientSearchEnabledNotifier: isClientSearchEnabledNotifier,
+                          isClientSearchEnabledNotifier:
+                              isClientSearchEnabledNotifier,
                         ),
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Address card
                   Container(
                     padding: const EdgeInsets.all(24),
@@ -252,7 +250,6 @@ class _AddBookingClientDetailsScreenState
                           ),
                         ),
                         const SizedBox(height: 20),
-                        
                         Stack(
                           children: [
                             CustomTextField(
@@ -281,9 +278,9 @@ class _AddBookingClientDetailsScreenState
             ),
           ],
         ),
-        
+
         const SizedBox(height: 40),
-        
+
         // Continue button
         Center(
           child: SizedBox(
@@ -353,9 +350,9 @@ class _AddBookingClientDetailsScreenState
           ],
         ),
         if (context.isKeyboardVisible) 0.25.heightCustom,
-        
+
         const SizedBox(height: 40),
-        
+
         CustomElevatedButton(
           text: 'Next',
           width: double.infinity,
@@ -381,32 +378,31 @@ class _AddBookingClientDetailsScreenState
       context.showSnackBar('Please select a client', isError: true);
       return;
     }
- 
+
     try {
       await Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => AddBookingPaymentScreen(
-      whatsAppPhoneNumber: _phone1Controller.text.trim(),
-      newBooking: widget.addBookingModel.copyWith(
-        address: _addressController.text.trim(),
-        staffId: staff.id,
-        clientId: isExistingClient ? client?.id : null,
-        client: isExistingClient
-            ? null
-            : ClientRequestModel(
-                id: null,
-                name: _nameController.text.trim(),
-                phone1: _phone1Controller.text.toInt(),
-                phone2: _phone2Controller.text.isNotEmpty
-                    ? _phone2Controller.text.toIntOrNull()
-                    : null,
-              ),
-      ),
-    ),
-  ),
-);
-
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddBookingPaymentScreen(
+            whatsAppPhoneNumber: _phone1Controller.text.trim(),
+            newBooking: widget.addBookingModel.copyWith(
+              address: _addressController.text.trim(),
+              staffId: staff.id,
+              clientId: isExistingClient ? client?.id : null,
+              client: isExistingClient
+                  ? null
+                  : ClientRequestModel(
+                      id: null,
+                      name: _nameController.text.trim(),
+                      phone1: _phone1Controller.text.toInt(),
+                      phone2: _phone2Controller.text.isNotEmpty
+                          ? _phone2Controller.text.toIntOrNull()
+                          : null,
+                    ),
+            ),
+          ),
+        ),
+      );
     } catch (e) {
       debugPrint('Navigation error: $e');
       context.showSnackBar('Navigation error occurred', isError: true);
@@ -421,7 +417,7 @@ class _AddBookingClientDetailsScreenState
     if (_staffNameController.text.trim().isEmpty &&
         _nameController.text.trim().isEmpty &&
         _addressController.text.trim().isEmpty) {
-     NavigatorX(context).pop(); 
+      NavigatorX(context).pop();
       return;
     }
     final result = await showDiscardDialog(context);

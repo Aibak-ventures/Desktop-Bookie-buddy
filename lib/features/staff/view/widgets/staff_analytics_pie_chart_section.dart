@@ -25,76 +25,76 @@ class _StaffAnalyticsPieChartSectionState
     extends State<StaffAnalyticsPieChartSection> {
   bool get hasPending => widget.staffReport.totalPendingAmount > 0;
   int touchedIndex = -1;
-  List<PieChartSectionData>
-  showingSections() => List.generate(widget.staffReport.totalAmount > 0 ? 2 : 1, (
-    i,
-  ) {
-    final isTouched = i == touchedIndex;
-    final fontSize = isTouched ? 25.0 : 16.0;
-    final radius = isTouched ? 60.0 : 50.0;
-    const shadows = [Shadow(blurRadius: 2)];
+  List<PieChartSectionData> showingSections() =>
+      List.generate(widget.staffReport.totalAmount > 0 ? 2 : 1, (
+        i,
+      ) {
+        final isTouched = i == touchedIndex;
+        final fontSize = isTouched ? 25.0 : 16.0;
+        final radius = isTouched ? 60.0 : 50.0;
+        const shadows = [Shadow(blurRadius: 2)];
 
-    if (widget.staffReport.totalAmount == 0) {
-      return PieChartSectionData(
-        color: AppColors.grey300,
-        value: 1,
-        title: '',
-        radius: radius,
-        titleStyle: TextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-          color: AppColors.white,
-          shadows: shadows,
-        ),
-      );
-    }
+        if (widget.staffReport.totalAmount == 0) {
+          return PieChartSectionData(
+            color: AppColors.grey300,
+            value: 1,
+            title: '',
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: AppColors.white,
+              shadows: shadows,
+            ),
+          );
+        }
 
-    switch (i) {
-      case 0:
-        return PieChartSectionData(
-          color: AppColors.purple,
-          value: widget.staffReport.totalBookingsAmount.toDouble(),
-          title:
-              '${widget.staffReport.totalBookingsAmount.percentageOf(widget.staffReport.totalAmount)}%',
-          radius: radius,
-          titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: AppColors.white,
-            shadows: shadows,
-          ),
-        );
-      case 1:
-        return PieChartSectionData(
-          color: AppColors.aquamarineMedium,
-          value: widget.staffReport.totalSalesAmount.toDouble(),
-          title:
-              '${widget.staffReport.totalSalesAmount.percentageOf(widget.staffReport.totalAmount)}%',
-          radius: radius,
-          titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: AppColors.white,
-            shadows: shadows,
-          ),
-        );
-      // case 2:
-      //   return PieChartSectionData(
-      //     color: AppColors.green2,
-      //     value: 3000,
-      //     radius: radius,
-      //     titleStyle: TextStyle(
-      //       fontSize: fontSize,
-      //       fontWeight: FontWeight.bold,
-      //       color: AppColors.white,
-      //       shadows: shadows,
-      //     ),
-      //   );
+        switch (i) {
+          case 0:
+            return PieChartSectionData(
+              color: AppColors.purple,
+              value: widget.staffReport.totalBookingsAmount.toDouble(),
+              title:
+                  '${widget.staffReport.totalBookingsAmount.percentageOf(widget.staffReport.totalAmount)}%',
+              radius: radius,
+              titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: AppColors.white,
+                shadows: shadows,
+              ),
+            );
+          case 1:
+            return PieChartSectionData(
+              color: AppColors.aquamarineMedium,
+              value: widget.staffReport.totalSalesAmount.toDouble(),
+              title:
+                  '${widget.staffReport.totalSalesAmount.percentageOf(widget.staffReport.totalAmount)}%',
+              radius: radius,
+              titleStyle: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: AppColors.white,
+                shadows: shadows,
+              ),
+            );
+          // case 2:
+          //   return PieChartSectionData(
+          //     color: AppColors.green2,
+          //     value: 3000,
+          //     radius: radius,
+          //     titleStyle: TextStyle(
+          //       fontSize: fontSize,
+          //       fontWeight: FontWeight.bold,
+          //       color: AppColors.white,
+          //       shadows: shadows,
+          //     ),
+          //   );
 
-      default:
-        throw Error();
-    }
-  });
+          default:
+            throw Error();
+        }
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -152,18 +152,17 @@ class _StaffAnalyticsPieChartSectionState
                         pieTouchData: PieTouchData(
                           touchCallback:
                               (FlTouchEvent event, pieTouchResponse) {
-                                setState(() {
-                                  if (!event.isInterestedForInteractions ||
-                                      pieTouchResponse == null ||
-                                      pieTouchResponse.touchedSection == null) {
-                                    touchedIndex = -1;
-                                    return;
-                                  }
-                                  touchedIndex = pieTouchResponse
-                                      .touchedSection!
-                                      .touchedSectionIndex;
-                                });
-                              },
+                            setState(() {
+                              if (!event.isInterestedForInteractions ||
+                                  pieTouchResponse == null ||
+                                  pieTouchResponse.touchedSection == null) {
+                                touchedIndex = -1;
+                                return;
+                              }
+                              touchedIndex = pieTouchResponse
+                                  .touchedSection!.touchedSectionIndex;
+                            });
+                          },
                         ),
                         borderData: FlBorderData(show: false),
                         sectionsSpace: 0,
@@ -179,8 +178,8 @@ class _StaffAnalyticsPieChartSectionState
                       Text(
                         widget.staffReport.totalAmount.toCurrency(),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const Text('Total'),
                     ],
@@ -230,72 +229,69 @@ class _StaffAnalyticsPieChartSectionState
   }
 
   Row _buildDateChangeSection(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      IconButton(
-        onPressed: () {
-          _onPressPreviousMonth(context);
-        },
-        icon: const Icon(Icons.arrow_back_ios),
-      ),
-      Text(
-        '${widget.staffReport.monthName} ${widget.staffReport.year}',
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      ).onTapInkWell(() {
-        showMonthAndYearPicker(
-          context: context,
-          initialDate: DateTime(
-            widget.staffReport.year,
-            widget.staffReport.month.number,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {
+              _onPressPreviousMonth(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios),
           ),
-          onDateSelected: (selectedMonth, selectedYear) {
-            context.read<StaffAnalyticsBloc>().add(
-              StaffAnalyticsEvent.getStaffAnalytics(
-                staffId: widget.staffReport.staffId,
-                year: selectedYear,
-                month: selectedMonth,
+          Text(
+            '${widget.staffReport.monthName} ${widget.staffReport.year}',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ).onTapInkWell(() {
+            showMonthAndYearPicker(
+              context: context,
+              initialDate: DateTime(
+                widget.staffReport.year,
+                widget.staffReport.month.number,
               ),
+              onDateSelected: (selectedMonth, selectedYear) {
+                context.read<StaffAnalyticsBloc>().add(
+                      StaffAnalyticsEvent.getStaffAnalytics(
+                        staffId: widget.staffReport.staffId,
+                        year: selectedYear,
+                        month: selectedMonth,
+                      ),
+                    );
+              },
             );
-          },
-        );
-      }),
-
-      IconButton(
-        onPressed: () {
-          _onPressNextMonth(context);
-        },
-        icon: const Icon(Icons.arrow_forward_ios),
-      ),
-    ],
-  );
+          }),
+          IconButton(
+            onPressed: () {
+              _onPressNextMonth(context);
+            },
+            icon: const Icon(Icons.arrow_forward_ios),
+          ),
+        ],
+      );
 
   void _onPressPreviousMonth(BuildContext context) {
     final newMonth = widget.staffReport.month.number - 1;
     final month = newMonth < 1 ? 12 : newMonth;
-    final year = newMonth < 1
-        ? widget.staffReport.year - 1
-        : widget.staffReport.year;
+    final year =
+        newMonth < 1 ? widget.staffReport.year - 1 : widget.staffReport.year;
     context.read<StaffAnalyticsBloc>().add(
-      StaffAnalyticsEvent.getStaffAnalytics(
-        staffId: widget.staffReport.staffId,
-        year: year,
-        month: month,
-      ),
-    );
+          StaffAnalyticsEvent.getStaffAnalytics(
+            staffId: widget.staffReport.staffId,
+            year: year,
+            month: month,
+          ),
+        );
   }
 
   void _onPressNextMonth(BuildContext context) {
     final newMonth = widget.staffReport.month.number + 1;
     final month = newMonth > 12 ? 1 : newMonth;
-    final year = newMonth > 12
-        ? widget.staffReport.year + 1
-        : widget.staffReport.year;
+    final year =
+        newMonth > 12 ? widget.staffReport.year + 1 : widget.staffReport.year;
     context.read<StaffAnalyticsBloc>().add(
-      StaffAnalyticsEvent.getStaffAnalytics(
-        staffId: widget.staffReport.staffId,
-        year: year,
-        month: month,
-      ),
-    );
+          StaffAnalyticsEvent.getStaffAnalytics(
+            staffId: widget.staffReport.staffId,
+            year: year,
+            month: month,
+          ),
+        );
   }
 }

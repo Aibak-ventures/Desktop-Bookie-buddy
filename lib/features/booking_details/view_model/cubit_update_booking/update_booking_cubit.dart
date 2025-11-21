@@ -17,13 +17,12 @@ class UpdateBookingCubit extends Cubit<UpdateBookingState> {
   UpdateBookingCubit({
     required BookingRepository bookingRepository,
     required ClientRepository clientRepository,
-  }) : _bookingRepository = bookingRepository,
-       _clientRepository = clientRepository,
-       super(const _Initial());
+  })  : _bookingRepository = bookingRepository,
+        _clientRepository = clientRepository,
+        super(const _Initial());
 
   void updateBooking({
     required int bookingId,
-
     required RequestBookingModel updatedBooking,
     ClientRequestModel? client,
   }) async {
@@ -40,7 +39,6 @@ class UpdateBookingCubit extends Cubit<UpdateBookingState> {
       // 1. Call Booking update first
       final res = await _bookingRepository.updateBooking(
         bookingId,
-
         updatedBooking,
       );
 

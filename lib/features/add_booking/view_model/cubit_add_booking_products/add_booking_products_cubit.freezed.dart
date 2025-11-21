@@ -37,10 +37,8 @@ abstract class $AddBookingProductsStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$AddBookingProductsStateCopyWithImpl<
-  $Res,
-  $Val extends AddBookingProductsState
->
+class _$AddBookingProductsStateCopyWithImpl<$Res,
+        $Val extends AddBookingProductsState>
     implements $AddBookingProductsStateCopyWith<$Res> {
   _$AddBookingProductsStateCopyWithImpl(this._value, this._then);
 
@@ -56,12 +54,11 @@ class _$AddBookingProductsStateCopyWithImpl<
   $Res call({Object? products = null}) {
     return _then(
       _value.copyWith(
-            products: null == products
-                ? _value.products
-                : products // ignore: cast_nullable_to_non_nullable
-                      as List<ProductSelectedModel>,
-          )
-          as $Val,
+        products: null == products
+            ? _value.products
+            : products // ignore: cast_nullable_to_non_nullable
+                as List<ProductSelectedModel>,
+      ) as $Val,
     );
   }
 }
@@ -80,11 +77,8 @@ abstract class _$$AddBookingProductsStateImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AddBookingProductsStateImplCopyWithImpl<$Res>
-    extends
-        _$AddBookingProductsStateCopyWithImpl<
-          $Res,
-          _$AddBookingProductsStateImpl
-        >
+    extends _$AddBookingProductsStateCopyWithImpl<$Res,
+        _$AddBookingProductsStateImpl>
     implements _$$AddBookingProductsStateImplCopyWith<$Res> {
   __$$AddBookingProductsStateImplCopyWithImpl(
     _$AddBookingProductsStateImpl _value,
@@ -101,7 +95,7 @@ class __$$AddBookingProductsStateImplCopyWithImpl<$Res>
         null == products
             ? _value._products
             : products // ignore: cast_nullable_to_non_nullable
-                  as List<ProductSelectedModel>,
+                as List<ProductSelectedModel>,
       ),
     );
   }
@@ -111,7 +105,7 @@ class __$$AddBookingProductsStateImplCopyWithImpl<$Res>
 
 class _$AddBookingProductsStateImpl implements _AddBookingProductsState {
   const _$AddBookingProductsStateImpl(final List<ProductSelectedModel> products)
-    : _products = products;
+      : _products = products;
 
   final List<ProductSelectedModel> _products;
   @override
@@ -144,10 +138,8 @@ class _$AddBookingProductsStateImpl implements _AddBookingProductsState {
   @override
   @pragma('vm:prefer-inline')
   _$$AddBookingProductsStateImplCopyWith<_$AddBookingProductsStateImpl>
-  get copyWith =>
-      __$$AddBookingProductsStateImplCopyWithImpl<
-        _$AddBookingProductsStateImpl
-      >(this, _$identity);
+      get copyWith => __$$AddBookingProductsStateImplCopyWithImpl<
+          _$AddBookingProductsStateImpl>(this, _$identity);
 }
 
 abstract class _AddBookingProductsState implements AddBookingProductsState {
@@ -163,5 +155,5 @@ abstract class _AddBookingProductsState implements AddBookingProductsState {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddBookingProductsStateImplCopyWith<_$AddBookingProductsStateImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

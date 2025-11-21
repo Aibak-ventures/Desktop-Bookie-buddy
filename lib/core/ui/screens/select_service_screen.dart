@@ -19,7 +19,7 @@ class SelectServiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-                context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+        context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
       },
     );
     return Scaffold(

@@ -8,7 +8,7 @@ class ResponsiveHelper {
   /// Get screen breakpoint type
   static ScreenType getScreenType(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    
+
     if (width < _mobileMaxWidth) {
       return ScreenType.mobile;
     } else if (width < _tabletMaxWidth) {
@@ -45,7 +45,7 @@ class ResponsiveHelper {
     T? largeDesktop,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -175,7 +175,7 @@ class ResponsiveBreakpoints extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveHelper.getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile ?? const SizedBox.shrink();
@@ -184,7 +184,11 @@ class ResponsiveBreakpoints extends StatelessWidget {
       case ScreenType.desktop:
         return desktop ?? tablet ?? mobile ?? const SizedBox.shrink();
       case ScreenType.largeDesktop:
-        return largeDesktop ?? desktop ?? tablet ?? mobile ?? const SizedBox.shrink();
+        return largeDesktop ??
+            desktop ??
+            tablet ??
+            mobile ??
+            const SizedBox.shrink();
     }
   }
 }

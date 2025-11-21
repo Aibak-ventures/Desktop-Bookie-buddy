@@ -12,8 +12,8 @@ class AddExpenseCubit extends Cubit<AddExpenseState> {
   final ProductRepository _repository;
 
   AddExpenseCubit({required ProductRepository repository})
-    : _repository = repository,
-      super(const _Initial());
+      : _repository = repository,
+        super(const _Initial());
 
   Future<void> saveExpense({required ExpenseRequestModel expense}) async {
     emit(const _Submitted());

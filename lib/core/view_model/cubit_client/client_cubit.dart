@@ -12,14 +12,14 @@ part 'client_state.dart';
 class ClientCubit extends Cubit<ClientState> {
   final ClientRepository _repository;
   ClientCubit({required ClientRepository repository})
-    : _repository = repository,
-      super(
-        const ClientState(
-          selectedClient: null,
-          suggestions: [],
-          searchQuery: '',
-        ),
-      );
+      : _repository = repository,
+        super(
+          const ClientState(
+            selectedClient: null,
+            suggestions: [],
+            searchQuery: '',
+          ),
+        );
 
   ClientModel? _clientModel;
 

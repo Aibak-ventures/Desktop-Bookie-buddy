@@ -26,12 +26,12 @@ class LedgerRepository {
     required LedgerService ledgerService,
     required PendingService balanceService,
     required PaymentService paymentService,
-  }) : _ledgerService = ledgerService,
-       _balanceService = balanceService,
-       _paymentService = paymentService;
+  })  : _ledgerService = ledgerService,
+        _balanceService = balanceService,
+        _paymentService = paymentService;
 
   Future<PaginationModel<LedgerSecurityAmountDailyModel>>
-  getSecurityAmountsPagination({required int page, int? clientId}) async {
+      getSecurityAmountsPagination({required int page, int? clientId}) async {
     try {
       final response = await safeApiCall(
         () => _ledgerService.fetchSecurityAmountsPagination(
@@ -141,8 +141,8 @@ class LedgerRepository {
               LedgerBookingDailyModel.fromJson(item as Map<String, dynamic>),
           customJsonParser: (dataJson, itemFromJson) =>
               LedgerBookingsGroupedModel.fromCustomJson(
-                dataJson as Map<String, dynamic>,
-              ).dailyBookings,
+            dataJson as Map<String, dynamic>,
+          ).dailyBookings,
         );
       }
       log('Get ledger Bookings Pagination Error: ${response.devMessage}');
@@ -168,8 +168,8 @@ class LedgerRepository {
           (item) => LedgerSaleDailyModel.fromJson(item as Map<String, dynamic>),
           customJsonParser: (dataJson, itemFromJson) =>
               LedgerSalesGroupedModel.fromCustomJson(
-                dataJson as Map<String, dynamic>,
-              ).dailySales,
+            dataJson as Map<String, dynamic>,
+          ).dailySales,
         );
       }
       log('Get ledger Sales Pagination Error: ${response.devMessage}');
@@ -244,7 +244,7 @@ class LedgerRepository {
     try {
       final fileName =
           '${ledgerType.isAll ? 'ledger' : ledgerType.value}_report_${fromDate}_to_${toDate}.xlsx';
-      
+
       // For web, we'll handle the file differently
       if (kIsWeb) {
         // Web implementation - we'll return a temp path that won't be used
@@ -263,11 +263,12 @@ class LedgerRepository {
         }
         return fileName; // Return filename for web
       }
-      
+
       // Windows Desktop - use Downloads folder
       String filePath;
       if (Platform.isWindows) {
-        final downloadsDir = Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+        final downloadsDir =
+            Directory('${Platform.environment['USERPROFILE']}\\Downloads');
         if (!downloadsDir.existsSync()) {
           downloadsDir.createSync(recursive: true);
         }

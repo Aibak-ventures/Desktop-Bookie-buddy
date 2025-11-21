@@ -15,8 +15,8 @@ class LedgerSecurityAmountsBloc
   final LedgerRepository _repository;
 
   LedgerSecurityAmountsBloc({required LedgerRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadSecurityAmounts>(_onLoadSecurityAmounts);
     on<_LoadNextPageSecurityAmounts>(_onLoadNextPageSecurityAmounts);
   }

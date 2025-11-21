@@ -11,39 +11,39 @@ class StaffAnalyticsCountSection extends StatelessWidget {
   final StaffAnalyticsModel staffReport;
   @override
   Widget build(BuildContext context) => StaffAnalyticsCard(
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          StaffAnalyticsTile(
-            title: 'Bookings',
-            count: staffReport.totalBookingsCount,
-            onTap: () {
-              _pushBookings(context);
-            },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              StaffAnalyticsTile(
+                title: 'Bookings',
+                count: staffReport.totalBookingsCount,
+                onTap: () {
+                  _pushBookings(context);
+                },
+              ),
+              const Divider(height: 0.5),
+              StaffAnalyticsTile(
+                title: 'Sales',
+                count: staffReport.totalSalesCount,
+                onTap: () {
+                  _pushSales(context);
+                },
+              ),
+              // if (staffReport.totalPendingsCount > 0) ...[
+              //   const Divider(height: 0.5),
+              //   StaffAnalyticsTile(
+              //     title: 'Pendings',
+              //     count: staffReport.totalPendingsCount,
+              //     onTap: () {
+              //       _pushBookings(context);
+              //     },
+              //   ),
+              // ],
+            ],
           ),
-          const Divider(height: 0.5),
-          StaffAnalyticsTile(
-            title: 'Sales',
-            count: staffReport.totalSalesCount,
-            onTap: () {
-              _pushSales(context);
-            },
-          ),
-          // if (staffReport.totalPendingsCount > 0) ...[
-          //   const Divider(height: 0.5),
-          //   StaffAnalyticsTile(
-          //     title: 'Pendings',
-          //     count: staffReport.totalPendingsCount,
-          //     onTap: () {
-          //       _pushBookings(context);
-          //     },
-          //   ),
-          // ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   void _pushSales(BuildContext context) {
     context.pushNamed(

@@ -12,8 +12,8 @@ part 'staff_search_cubit.freezed.dart';
 class StaffSearchCubit extends Cubit<StaffSearchState> {
   final StaffRepository _repository;
   StaffSearchCubit({required StaffRepository repository})
-    : _repository = repository,
-      super(const StaffSearchState());
+      : _repository = repository,
+        super(const StaffSearchState());
 
   void selectStaff(StaffModel staff) {
     log('Selected staff: ${staff.name}');

@@ -8,12 +8,13 @@ Future<T> safeApiCall<T>(Future<T> Function() apiCall) async {
   } on DioException catch (e) {
     // Log the error for debugging
     if (kDebugMode) {
-      print('HTTP Error - Status: ${e.response?.statusCode}, Type: ${e.type}, Message: ${e.message}');
+      print(
+          'HTTP Error - Status: ${e.response?.statusCode}, Type: ${e.type}, Message: ${e.message}');
       print('*** DioException ***:');
       print('uri: ${e.requestOptions.uri}');
       print('${e.toString()}');
     }
-    
+
     if (e.type == DioExceptionType.connectionTimeout) {
       throw 'Connection timed out. Please try again.';
     } else if (e.type == DioExceptionType.connectionError) {
@@ -21,8 +22,8 @@ Future<T> safeApiCall<T>(Future<T> Function() apiCall) async {
       if (kIsWeb) {
         if (kDebugMode) {
           throw 'CORS Error: Please run the app with CORS disabled.\n'
-                'Use: run_web_dev.bat or flutter run -d chrome --web-browser-flag "--disable-web-security"\n'
-                'Or install a CORS browser extension for development.';
+              'Use: run_web_dev.bat or flutter run -d chrome --web-browser-flag "--disable-web-security"\n'
+              'Or install a CORS browser extension for development.';
         } else {
           throw 'Network connection error. Please check your internet connection.';
         }
@@ -32,15 +33,15 @@ Future<T> safeApiCall<T>(Future<T> Function() apiCall) async {
     } else if (e.type == DioExceptionType.badResponse) {
       final statusCode = e.response?.statusCode;
       final responseData = e.response?.data;
-      
+
       // Try to extract error message from response
       String? serverMessage;
       if (responseData is Map<String, dynamic>) {
-        serverMessage = responseData['message'] ?? 
-                       responseData['error'] ?? 
-                       responseData['detail'];
+        serverMessage = responseData['message'] ??
+            responseData['error'] ??
+            responseData['detail'];
       }
-      
+
       // Use server message if available, otherwise use status code mapping
       if (serverMessage != null && serverMessage.isNotEmpty) {
         throw serverMessage;

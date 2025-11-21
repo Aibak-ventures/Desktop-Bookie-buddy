@@ -19,13 +19,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
 
     return Scaffold(
-      body: isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(context),
+      body: isDesktop
+          ? _buildDesktopLayout(context)
+          : _buildMobileLayout(context),
     );
   }
 

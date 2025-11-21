@@ -49,13 +49,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      final user = context.read<UserCubit>().state;
+    final user = context.read<UserCubit>().state;
     final shopRole = user?.shopRole ?? ShopRole.staff;
-     debugPrint('Shop role in profile screen: $shopRole');
+    debugPrint('Shop role in profile screen: $shopRole');
     return SafeArea(
       child: Scaffold(
-        backgroundColor: ResponsiveHelper.isDesktop(context) 
-            ? const Color(0xFFF8F9FA) 
+        backgroundColor: ResponsiveHelper.isDesktop(context)
+            ? const Color(0xFFF8F9FA)
             : null,
         extendBody: true,
         body: ResponsiveWidget(
@@ -83,7 +83,10 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Padding(
                 padding: 16.padding,
-                child: _buildProfileContent(context, context.read<UserCubit>().state?.shopRole ?? ShopRole.staff),
+                child: _buildProfileContent(
+                    context,
+                    context.read<UserCubit>().state?.shopRole ??
+                        ShopRole.staff),
               ),
             ),
           ],
@@ -123,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Content Section
               Center(
                 child: Container(
@@ -141,10 +144,13 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: _buildProfileContent(context, context.read<UserCubit>().state?.shopRole ?? ShopRole.staff),
+                  child: _buildProfileContent(
+                      context,
+                      context.read<UserCubit>().state?.shopRole ??
+                          ShopRole.staff),
                 ),
               ),
-              
+
               const SizedBox(height: 60),
             ],
           ),
@@ -184,7 +190,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Content Section
               Center(
                 child: Container(
@@ -202,10 +208,13 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: _buildProfileContent(context, context.read<UserCubit>().state?.shopRole ?? ShopRole.staff),
+                  child: _buildProfileContent(
+                      context,
+                      context.read<UserCubit>().state?.shopRole ??
+                          ShopRole.staff),
                 ),
               ),
-              
+
               const SizedBox(height: 80),
             ],
           ),
@@ -214,7 +223,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileContent(BuildContext context,ShopRole shopRole) {
+  Widget _buildProfileContent(BuildContext context, ShopRole shopRole) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -233,10 +242,12 @@ class ProfileScreen extends StatelessWidget {
                   builder: (context) => MultiBlocProvider(
                     providers: [
                       BlocProvider(
-                        create: (context) => AllBookingBloc(repository: getIt.get()),
+                        create: (context) =>
+                            AllBookingBloc(repository: getIt.get()),
                       ),
                       BlocProvider(
-                        create: (context) => AllBookingPastBloc(repository: getIt.get()),
+                        create: (context) =>
+                            AllBookingPastBloc(repository: getIt.get()),
                       ),
                     ],
                     child: AllBookingScreen(),
@@ -250,8 +261,7 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.done_all),
               text: 'Completed\nBookings',
               color: const Color(0xFF219A00),
-              onTap: () =>
-                  context.push(CompletedBookingsScreen()),
+              onTap: () => context.push(CompletedBookingsScreen()),
             ),
           ],
         ),
@@ -260,78 +270,71 @@ class ProfileScreen extends StatelessWidget {
 
         // ledger
         if (!shopRole.isStaff)
-                          CustomProfileTile(
-                            icon: Icons.menu_book_outlined,
-                            title: 'Ledger',
-                            onTap: () {
-                              context.read<ServiceBloc>().add(
-                                const ServiceEvent.loadServices(force: false),
-                              );
-                              performSecureActionDialog(
-                                context,
-                                SecretPasswordLocations.ledgerView,
-                                onSuccess: () {
-                                  context.push(
-                                    MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider(
-                                          create: (context) => ClientCubit(
-                                            repository: getIt.get(),
-                                          )..clearSelected(),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              WalletExpenseBloc(
-                                                repository: getIt.get(),
-                                              ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              WalletPaymentsBloc(
-                                                repository: getIt.get(),
-                                              ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              LedgerSimpleSummaryCubit(
-                                                repository: getIt.get(),
-                                              ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              WalletPendingBloc(
-                                                repository: getIt.get(),
-                                              ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              LedgerBookingsBloc(
-                                                repository: getIt.get(),
-                                              ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) => LedgerSalesBloc(
-                                            repository: getIt.get(),
-                                          ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              LedgerSecurityAmountsBloc(
-                                                repository: getIt.get(),
-                                              ),
-                                        ),
-                                      ],
-                                      child: const WalletScreen(),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+          CustomProfileTile(
+            icon: Icons.menu_book_outlined,
+            title: 'Ledger',
+            onTap: () {
+              context.read<ServiceBloc>().add(
+                    const ServiceEvent.loadServices(force: false),
+                  );
+              performSecureActionDialog(
+                context,
+                SecretPasswordLocations.ledgerView,
+                onSuccess: () {
+                  context.push(
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (context) => ClientCubit(
+                            repository: getIt.get(),
+                          )..clearSelected(),
+                        ),
+                        BlocProvider(
+                          create: (context) => WalletExpenseBloc(
+                            repository: getIt.get(),
                           ),
-
+                        ),
+                        BlocProvider(
+                          create: (context) => WalletPaymentsBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerSimpleSummaryCubit(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => WalletPendingBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerBookingsBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerSalesBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerSecurityAmountsBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                      ],
+                      child: const WalletScreen(),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
 
         const SizedBox(height: 5),
-  CustomProfileTile(
+        CustomProfileTile(
           icon: Icons.business_center_outlined,
           title: 'Staff',
           onTap: () => context.push(const StaffListScreen()),

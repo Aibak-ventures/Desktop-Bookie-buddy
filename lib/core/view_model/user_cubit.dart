@@ -10,8 +10,8 @@ class UserCubit extends Cubit<UserModel?> {
 
   // The dependency is now a required constructor argument.
   UserCubit({required UserRepository repository})
-    : _repository = repository,
-      super(null);
+      : _repository = repository,
+        super(null);
 
   Future<void> loadUserData() async {
     try {

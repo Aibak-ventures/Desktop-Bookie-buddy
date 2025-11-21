@@ -20,130 +20,133 @@ class StaffListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Staff'),
-      actions: [
-        IconButton(
-          onPressed: () {
-            NavigatorX(context).push(const StaffDeletedListScreen());
-          },
-          icon: const Icon(Icons.history),
+        appBar: AppBar(
+          title: const Text('Staff'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                NavigatorX(context).push(const StaffDeletedListScreen());
+              },
+              icon: const Icon(Icons.history),
+            ),
+          ],
         ),
-      ],
-    ),
-    body: Padding(
-      padding: 16.padding,
-      child: BlocConsumer<StaffListBloc, StaffListState>(
-        listenWhen: (previous, current) =>
-            previous != current &&
-            current.maybeMap(
-              orElse: () => false,
-              error: (value) => true,
-              loaded: (value) =>
-                  value.status.isSuccess || value.status.isFailure,
-            ),
-        listener: (context, state) {
-          state.maybeMap(
-            error: (value) {
-              context.showSnackBar(value.message, isError: true);
+        body: Padding(
+          padding: 16.padding,
+          child: BlocConsumer<StaffListBloc, StaffListState>(
+            listenWhen: (previous, current) =>
+                previous != current &&
+                current.maybeMap(
+                  orElse: () => false,
+                  error: (value) => true,
+                  loaded: (value) =>
+                      value.status.isSuccess || value.status.isFailure,
+                ),
+            listener: (context, state) {
+              state.maybeMap(
+                error: (value) {
+                  context.showSnackBar(value.message, isError: true);
+                },
+                orElse: () {},
+              );
             },
-            orElse: () {},
-          );
-        },
-        builder: (context, state) => state.when(
-          error: (message) => CustomErrorWidget(
-            errorText: message,
-            onRetry: () => _fetchData(context),
-          ),
-          loading: () => ListView.builder(
-            itemCount: 12,
-            itemBuilder: (context, index) => Padding(
-              padding: 8.paddingVertical,
-              child: const StaffListCardShimmer(),
-            ),
-          ),
-          loaded: (staffs, nextPageUrl, isPaginating, _, _1) => Column(
-            children: [
-              //!TODO: search bar
-              Expanded(
-                child: RefreshIndicator.adaptive(
-                  onRefresh: () async => _fetchData(context),
-                  child: staffs.isEmpty
-                      ? const EmptyDataWidget(
-                          message: 'No staff found. Tap + to add new staff.',
-                          isShowIcon: false,
-                        )
-                      : NotificationListener<ScrollNotification>(
-                          onNotification: (scrollInfo) {
-                            if (scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent - 50 &&
-                                !isPaginating &&
-                                nextPageUrl != null) {
-                              // Load more data when scrolled to the bottom
-                              context.read<StaffListBloc>().add(
-                                const StaffListEvent.loadNextPageStaffs(),
-                              );
-                            }
-                            return false;
-                          },
-
-                          child: ListView.builder(
-                            itemCount: staffs.length + (isPaginating ? 1 : 0),
-                            itemBuilder: (context, index) {
-                              if (index >= staffs.length) {
-                                // Load more indicator
-                                return const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 16),
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              }
-                              final staff = staffs[index];
-                              return Padding(
-                                padding: 8.paddingVertical,
-                                child: StaffListCard(
-                                  name: staff.name,
-                                  phoneNumber: staff.phoneNumber,
-                                  // onTapAnalytics: () {
-                                  //   context.pushNamed(
-                                  //     AppRoutes.staffAnalytics.name,
-                                  //     pathParameters: {
-                                  //       'id': staff.id.toString(),
-                                  //     },
-                                  //     queryParameters: {'name': staff.name},
-                                  //   );
-                                  // },
-                                  onEdit: () => _showAddStaffDialog(
-                                    context: context,
-                                    staff: staff,
-                                  ),
-                                  onDelete: () => _showDeleteStaffDialog(
-                                    context: context,
-                                    staffId: staff.id,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+            builder: (context, state) => state.when(
+              error: (message) => CustomErrorWidget(
+                errorText: message,
+                onRetry: () => _fetchData(context),
+              ),
+              loading: () => ListView.builder(
+                itemCount: 12,
+                itemBuilder: (context, index) => Padding(
+                  padding: 8.paddingVertical,
+                  child: const StaffListCardShimmer(),
                 ),
               ),
-            ],
+              loaded: (staffs, nextPageUrl, isPaginating, _, _1) => Column(
+                children: [
+                  //!TODO: search bar
+                  Expanded(
+                    child: RefreshIndicator.adaptive(
+                      onRefresh: () async => _fetchData(context),
+                      child: staffs.isEmpty
+                          ? const EmptyDataWidget(
+                              message:
+                                  'No staff found. Tap + to add new staff.',
+                              isShowIcon: false,
+                            )
+                          : NotificationListener<ScrollNotification>(
+                              onNotification: (scrollInfo) {
+                                if (scrollInfo.metrics.pixels >=
+                                        scrollInfo.metrics.maxScrollExtent -
+                                            50 &&
+                                    !isPaginating &&
+                                    nextPageUrl != null) {
+                                  // Load more data when scrolled to the bottom
+                                  context.read<StaffListBloc>().add(
+                                        const StaffListEvent
+                                            .loadNextPageStaffs(),
+                                      );
+                                }
+                                return false;
+                              },
+                              child: ListView.builder(
+                                itemCount:
+                                    staffs.length + (isPaginating ? 1 : 0),
+                                itemBuilder: (context, index) {
+                                  if (index >= staffs.length) {
+                                    // Load more indicator
+                                    return const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 16),
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  }
+                                  final staff = staffs[index];
+                                  return Padding(
+                                    padding: 8.paddingVertical,
+                                    child: StaffListCard(
+                                      name: staff.name,
+                                      phoneNumber: staff.phoneNumber,
+                                      // onTapAnalytics: () {
+                                      //   context.pushNamed(
+                                      //     AppRoutes.staffAnalytics.name,
+                                      //     pathParameters: {
+                                      //       'id': staff.id.toString(),
+                                      //     },
+                                      //     queryParameters: {'name': staff.name},
+                                      //   );
+                                      // },
+                                      onEdit: () => _showAddStaffDialog(
+                                        context: context,
+                                        staff: staff,
+                                      ),
+                                      onDelete: () => _showDeleteStaffDialog(
+                                        context: context,
+                                        staffId: staff.id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-
-    floatingActionButton: FloatingActionButton.extended(
-      label: const Text('Add Staff', style: TextStyle(color: Colors.white)),
-      icon: const Icon(Icons.person_add_alt_1_rounded, color: Colors.white),
-      onPressed: () {
-        _showAddStaffDialog(context: context);
-      },
-      backgroundColor: AppColors.purple,
-    ),
-  );
+        floatingActionButton: FloatingActionButton.extended(
+          label: const Text('Add Staff', style: TextStyle(color: Colors.white)),
+          icon: const Icon(Icons.person_add_alt_1_rounded, color: Colors.white),
+          onPressed: () {
+            _showAddStaffDialog(context: context);
+          },
+          backgroundColor: AppColors.purple,
+        ),
+      );
 
   void _fetchData(BuildContext context) =>
       context.read<StaffListBloc>().add(const StaffListEvent.loadStaffs());
@@ -198,8 +201,8 @@ class StaffListScreen extends StatelessWidget {
                 text: 'Delete',
                 onPressed: () {
                   context.read<StaffListBloc>().add(
-                    StaffListEvent.deleteStaff(staffId),
-                  );
+                        StaffListEvent.deleteStaff(staffId),
+                      );
                 },
                 isLoading: isUpdating,
                 color: AppColors.redTomato,

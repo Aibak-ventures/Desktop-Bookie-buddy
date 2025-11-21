@@ -21,29 +21,35 @@ mixin _$ClientSaveEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(ClientRequestModel client) saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(ClientRequestModel client)? saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(ClientRequestModel client)? saveClient,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_SaveClient value) saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_SaveClient value)? saveClient,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_SaveClient value)? saveClient,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ClientSaveEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -81,12 +87,11 @@ class _$ClientSaveEventCopyWithImpl<$Res, $Val extends ClientSaveEvent>
   $Res call({Object? client = null}) {
     return _then(
       _value.copyWith(
-            client: null == client
-                ? _value.client
-                : client // ignore: cast_nullable_to_non_nullable
-                      as ClientRequestModel,
-          )
-          as $Val,
+        client: null == client
+            ? _value.client
+            : client // ignore: cast_nullable_to_non_nullable
+                as ClientRequestModel,
+      ) as $Val,
     );
   }
 
@@ -135,7 +140,7 @@ class __$$SaveClientImplCopyWithImpl<$Res>
         null == client
             ? _value.client
             : client // ignore: cast_nullable_to_non_nullable
-                  as ClientRequestModel,
+                as ClientRequestModel,
       ),
     );
   }
@@ -252,14 +257,16 @@ mixin _$ClientSaveState {
     required TResult Function() saving,
     required TResult Function(String message, ClientModel client) success,
     required TResult Function(String message) failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? saving,
     TResult? Function(String message, ClientModel client)? success,
     TResult? Function(String message)? failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
@@ -267,21 +274,24 @@ mixin _$ClientSaveState {
     TResult Function(String message, ClientModel client)? success,
     TResult Function(String message)? failure,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Saving value) saving,
     required TResult Function(_Success value) success,
     required TResult Function(_Failure value) failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Saving value)? saving,
     TResult? Function(_Success value)? success,
     TResult? Function(_Failure value)? failure,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
@@ -289,7 +299,8 @@ mixin _$ClientSaveState {
     TResult Function(_Success value)? success,
     TResult Function(_Failure value)? failure,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -583,11 +594,11 @@ class __$$SuccessImplCopyWithImpl<$Res>
         null == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
         null == client
             ? _value.client
             : client // ignore: cast_nullable_to_non_nullable
-                  as ClientModel,
+                as ClientModel,
       ),
     );
   }
@@ -756,7 +767,7 @@ class __$$FailureImplCopyWithImpl<$Res>
         null == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                  as String,
+                as String,
       ),
     );
   }

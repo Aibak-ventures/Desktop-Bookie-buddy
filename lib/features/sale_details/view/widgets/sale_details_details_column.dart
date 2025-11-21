@@ -11,25 +11,25 @@ class SaleDetailsDetailsColumn extends StatelessWidget {
   final String value;
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 13.sp,
-          color: Colors.grey[600],
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-      const SizedBox(height: 4),
-      Text(
-        value,
-        style: TextStyle(
-          fontSize: 16.sp,
-          color: Colors.black,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      );
 }

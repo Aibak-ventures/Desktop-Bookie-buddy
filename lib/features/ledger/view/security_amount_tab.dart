@@ -16,29 +16,29 @@ class SecurityAmountTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => RefreshIndicator.adaptive(
-    onRefresh: () async {
-      context.read<LedgerSimpleSummaryCubit>().reset();
-      _fetchData(context);
-    },
-    child: BlocBuilder<LedgerSecurityAmountsBloc, LedgerSecurityAmountsState>(
-      builder: (context, state) => state.when(
-        loading: () => ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: 15,
-          // Use shimmer for loading
-          itemBuilder: (context, index) =>
-              const LedgerSecurityAmountListTileShimmer(),
-        ),
-        error: (error) => Center(
-          child: CustomErrorWidget(
-            errorText: error,
-            onRetry: () {
-              _fetchData(context);
-            },
-          ),
-        ),
-        loaded:
-            (
+        onRefresh: () async {
+          context.read<LedgerSimpleSummaryCubit>().reset();
+          _fetchData(context);
+        },
+        child:
+            BlocBuilder<LedgerSecurityAmountsBloc, LedgerSecurityAmountsState>(
+          builder: (context, state) => state.when(
+            loading: () => ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: 15,
+              // Use shimmer for loading
+              itemBuilder: (context, index) =>
+                  const LedgerSecurityAmountListTileShimmer(),
+            ),
+            error: (error) => Center(
+              child: CustomErrorWidget(
+                errorText: error,
+                onRetry: () {
+                  _fetchData(context);
+                },
+              ),
+            ),
+            loaded: (
               ledgerSecurityAmounts,
               nextPageUrl,
               isPaginating,
@@ -66,8 +66,9 @@ class SecurityAmountTab extends StatelessWidget {
                       nextPageUrl != null &&
                       !isPaginating) {
                     context.read<LedgerSecurityAmountsBloc>().add(
-                      const LedgerSecurityAmountsEvent.loadNextPageSecurityAmounts(),
-                    );
+                          const LedgerSecurityAmountsEvent
+                              .loadNextPageSecurityAmounts(),
+                        );
                   }
                   return false;
                 },
@@ -92,22 +93,22 @@ class SecurityAmountTab extends StatelessWidget {
                 ),
               );
             },
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   void _fetchData(BuildContext context) {
     final clientId = context.read<ClientCubit>().getSelectedClient()?.id;
     context.read<LedgerSecurityAmountsBloc>().add(
-      LedgerSecurityAmountsEvent.loadSecurityAmounts(clientId: clientId),
-    );
+          LedgerSecurityAmountsEvent.loadSecurityAmounts(clientId: clientId),
+        );
   }
 
   void _fetchSummary(BuildContext context, int? clientId, String? date) {
     context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
-      date ?? DateTime.now().format(),
-      clientId: clientId,
-      force: true,
-    );
+          date ?? DateTime.now().format(),
+          clientId: clientId,
+          force: true,
+        );
   }
 }

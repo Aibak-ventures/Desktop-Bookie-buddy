@@ -60,11 +60,13 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
   void initState() {
     super.initState();
     print('SelectProductScreen: initState called');
-    print('SelectProductScreen: preSelectedData: ${widget.preSelectedData?.length ?? 0} products');
+    print(
+        'SelectProductScreen: preSelectedData: ${widget.preSelectedData?.length ?? 0} products');
     if (widget.preSelectedData != null) {
-      print('SelectProductScreen: preSelectedData products: ${widget.preSelectedData!.map((p) => p.variant.name).toList()}');
+      print(
+          'SelectProductScreen: preSelectedData products: ${widget.preSelectedData!.map((p) => p.variant.name).toList()}');
     }
-    
+
     selectedServiceIdNotifier = ValueNotifier(widget.serviceId);
     final services = context.read<ServiceBloc>().getServices();
     selectedMainServiceTypeNotifier = ValueNotifier(
@@ -72,7 +74,9 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
     );
 
     print('SelectProductScreen: Loading preSelected data into cubit');
-    context.read<SelectedProductsCubit>().loadPreSelected(widget.preSelectedData);
+    context
+        .read<SelectedProductsCubit>()
+        .loadPreSelected(widget.preSelectedData);
 
     context.read<SelectProductBloc>().add(
           SelectProductEvent.loadProducts(
@@ -118,7 +122,8 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: maxWidth),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 20),
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding, vertical: 20),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +141,8 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                                 returnDate: widget.returnDate,
                                 pickupTime: widget.pickupTime,
                                 returnTime: widget.returnTime,
-                                useAvailableProductsApi: widget.useAvailableProductsApi,
+                                useAvailableProductsApi:
+                                    widget.useAvailableProductsApi,
                               ),
                             );
                       },
@@ -156,7 +162,8 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                         serviceIdNotifier: selectedServiceIdNotifier,
                         pickupDate: widget.pickupDate,
                         returnDate: widget.returnDate,
-                        mainServiceTypeNotifier: selectedMainServiceTypeNotifier,
+                        mainServiceTypeNotifier:
+                            selectedMainServiceTypeNotifier,
                         pickupTime: widget.pickupTime,
                         returnTime: widget.returnTime,
                         useAvailableProductsApi: widget.useAvailableProductsApi,
@@ -207,8 +214,10 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                         returnDate: widget.returnDate,
                         pickupTime: widget.pickupTime,
                         returnTime: widget.returnTime,
-                        startPrice: isPriceEnabled ? priceRange.start.toInt() : null,
-                        endPrice: isPriceEnabled ? priceRange.end.toInt() : null,
+                        startPrice:
+                            isPriceEnabled ? priceRange.start.toInt() : null,
+                        endPrice:
+                            isPriceEnabled ? priceRange.end.toInt() : null,
                         useAvailableProductsApi: widget.useAvailableProductsApi,
                         isSales: widget.isSales,
                       ),
@@ -226,7 +235,8 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                     );
                   }
                 },
-                onApply: (type, priceRange, isPriceEnabled, searchQuery, searchType) {
+                onApply: (type, priceRange, isPriceEnabled, searchQuery,
+                    searchType) {
                   context.read<SelectProductBloc>().add(
                         SelectProductEvent.searchProducts(
                           serviceId: selectedServiceIdNotifier.value,
@@ -234,11 +244,14 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                           returnDate: widget.returnDate,
                           pickupTime: widget.pickupTime,
                           returnTime: widget.returnTime,
-                          startPrice: isPriceEnabled ? priceRange.start.toInt() : null,
-                          endPrice: isPriceEnabled ? priceRange.end.toInt() : null,
+                          startPrice:
+                              isPriceEnabled ? priceRange.start.toInt() : null,
+                          endPrice:
+                              isPriceEnabled ? priceRange.end.toInt() : null,
                           query: searchQuery,
                           type: searchType,
-                          useAvailableProductsApi: widget.useAvailableProductsApi,
+                          useAvailableProductsApi:
+                              widget.useAvailableProductsApi,
                         ),
                       );
                 },
@@ -253,9 +266,9 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
   Future<void> _handleBack() async {
     if (widget.availabilityCheckOnly) {
       final products = context.read<SelectProductBloc>().state.maybeMap(
-        orElse: () => null,
-        loaded: (value) => value.products,
-      );
+            orElse: () => null,
+            loaded: (value) => value.products,
+          );
       if (products == null || products.isEmpty) {
         context.showSnackBar('No products to generate PDF');
         return;
@@ -272,13 +285,13 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
         availabilityDate: widget.pickupDate,
       );
     } else {
-      final selectedProductsWithAmount = context
-          .read<SelectedProductsCubit>()
-          .state
-          .when(selected: (s) => s);
+      final selectedProductsWithAmount =
+          context.read<SelectedProductsCubit>().state.when(selected: (s) => s);
 
-      print('SelectProductScreen: Selected products count: ${selectedProductsWithAmount.length}');
-      print('SelectProductScreen: Selected products: ${selectedProductsWithAmount.map((p) => p.variant.name).toList()}');
+      print(
+          'SelectProductScreen: Selected products count: ${selectedProductsWithAmount.length}');
+      print(
+          'SelectProductScreen: Selected products: ${selectedProductsWithAmount.map((p) => p.variant.name).toList()}');
 
       // Check if any products are selected
       if (selectedProductsWithAmount.isEmpty) {
@@ -286,7 +299,8 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
         return;
       }
 
-      print('SelectProductScreen: Returning selected products to calling screen');
+      print(
+          'SelectProductScreen: Returning selected products to calling screen');
       context.pop(selectedProductsWithAmount);
     }
   }
@@ -394,12 +408,14 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
               children: services
                   .map(
                     (service) => ConstrainedBox(
-                      constraints: const BoxConstraints(minWidth: 120, minHeight: 50),
+                      constraints:
+                          const BoxConstraints(minWidth: 120, minHeight: 50),
                       child: ServiceCardMini(
                         serviceName: service.name,
                         onTap: () => context.pop(service.id),
                         icon: service.icon,
-                        isSelected: selectedServiceIdNotifier.value == service.id,
+                        isSelected:
+                            selectedServiceIdNotifier.value == service.id,
                       ),
                     ),
                   )

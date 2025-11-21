@@ -12,18 +12,18 @@ class EditBookingAdditionalChargesSection extends StatelessWidget {
   final ValueNotifier<List<AdditionalChargesModel>> additionalChargesNotifier;
   @override
   Widget build(BuildContext context) => EditBookingSectionColumn(
-    title: 'Additional Charges',
-    trailing: IconButton(
-      onPressed: () {
-        showAddAdditionalChargeDialog(
-          context: context,
+        title: 'Additional Charges',
+        trailing: IconButton(
+          onPressed: () {
+            showAddAdditionalChargeDialog(
+              context: context,
+              additionalChargesNotifier: additionalChargesNotifier,
+            );
+          },
+          icon: const Icon(Icons.add),
+        ),
+        child: AdditionalChargesListWidget(
           additionalChargesNotifier: additionalChargesNotifier,
-        );
-      },
-      icon: const Icon(Icons.add),
-    ),
-    child: AdditionalChargesListWidget(
-      additionalChargesNotifier: additionalChargesNotifier,
-    ),
-  );
+        ),
+      );
 }

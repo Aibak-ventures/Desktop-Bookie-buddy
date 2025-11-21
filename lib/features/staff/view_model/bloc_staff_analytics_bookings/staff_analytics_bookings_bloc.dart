@@ -15,8 +15,8 @@ class StaffAnalyticsBookingsBloc
     extends Bloc<StaffAnalyticsBookingsEvent, StaffAnalyticsBookingsState> {
   final StaffRepository _repository;
   StaffAnalyticsBookingsBloc({required StaffRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);
     on<_LoadNextPageBookings>(_onLoadNextPageBookings);
   }

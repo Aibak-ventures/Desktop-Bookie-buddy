@@ -20,67 +20,68 @@ class BookingDetailsInvoiceAndDeliveryStatusSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: '',
-    child: null,
-    leading: Flexible(
-      child: Container(
-        padding: 8.padding,
-        decoration: BoxDecoration(
-          color: AppColors.purpleLightShade,
-          borderRadius: 5.radiusBorder,
-        ),
-        child: Text(
-          'ID: ${booking.invoiceId}',
-          style: TextStyle(
-            color: AppColors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 14.sp,
+        title: '',
+        child: null,
+        leading: Flexible(
+          child: Container(
+            padding: 8.padding,
+            decoration: BoxDecoration(
+              color: AppColors.purpleLightShade,
+              borderRadius: 5.radiusBorder,
+            ),
+            child: Text(
+              'ID: ${booking.invoiceId}',
+              style: TextStyle(
+                color: AppColors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.sp,
+              ),
+            ),
           ),
         ),
-      ),
-    ),
 
-    // Delivery status
-    trailing: Container(
-      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 6.w),
-      decoration: BoxDecoration(
-        color: booking.deliveryStatus.color.lighten(0.9),
-        borderRadius: 50.radiusBorder,
-      ),
-      child: RepaintBoundary(
-        child: DropdownButton<DeliveryStatus>(
-          alignment: Alignment.center,
-          value: booking.deliveryStatus,
-          underline: const SizedBox(),
-          dropdownColor: AppColors.white,
-          isDense: true,
-          borderRadius: 10.radiusBorder,
-          onChanged: booking.bookingStatus == BookingStatus.completed
-              ? null
-              : (newValue) {
-                  if (newValue != null && newValue != booking.deliveryStatus) {
-                    _confirmStatusChange(context, newValue);
-                  }
-                },
-          items: DeliveryStatus.values
-              .map(
-                (status) => DropdownMenuItem<DeliveryStatus>(
-                  alignment: Alignment.center,
-                  value: status,
-                  child: Text(
-                    status.name,
-                    style: TextStyle(
-                      color: status.color,
-                      fontWeight: FontWeight.w500,
+        // Delivery status
+        trailing: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 6.w),
+          decoration: BoxDecoration(
+            color: booking.deliveryStatus.color.lighten(0.9),
+            borderRadius: 50.radiusBorder,
+          ),
+          child: RepaintBoundary(
+            child: DropdownButton<DeliveryStatus>(
+              alignment: Alignment.center,
+              value: booking.deliveryStatus,
+              underline: const SizedBox(),
+              dropdownColor: AppColors.white,
+              isDense: true,
+              borderRadius: 10.radiusBorder,
+              onChanged: booking.bookingStatus == BookingStatus.completed
+                  ? null
+                  : (newValue) {
+                      if (newValue != null &&
+                          newValue != booking.deliveryStatus) {
+                        _confirmStatusChange(context, newValue);
+                      }
+                    },
+              items: DeliveryStatus.values
+                  .map(
+                    (status) => DropdownMenuItem<DeliveryStatus>(
+                      alignment: Alignment.center,
+                      value: status,
+                      child: Text(
+                        status.name,
+                        style: TextStyle(
+                          color: status.color,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
-              .toList(),
+                  )
+                  .toList(),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   void _confirmStatusChange(BuildContext context, DeliveryStatus newStatus) {
     showDialog(
@@ -97,11 +98,11 @@ class BookingDetailsInvoiceAndDeliveryStatusSection extends StatelessWidget {
               context.pop();
 
               context.read<BookingDetailsBloc>().add(
-                BookingDetailsEvent.updateDeliveryStatus(
-                  bookingId: booking.id,
-                  deliveryStatus: newStatus,
-                ),
-              );
+                    BookingDetailsEvent.updateDeliveryStatus(
+                      bookingId: booking.id,
+                      deliveryStatus: newStatus,
+                    ),
+                  );
             },
             child: const Text('Confirm', style: TextStyle(color: Colors.white)),
           ),

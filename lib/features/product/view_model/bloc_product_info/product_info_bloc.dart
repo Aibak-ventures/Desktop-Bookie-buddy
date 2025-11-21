@@ -13,8 +13,8 @@ class ProductInfoBloc extends Bloc<ProductInfoEvent, ProductInfoState> {
   final ProductRepository _repository;
 
   ProductInfoBloc({required ProductRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadProductInfo>(_onLoadProductInfo);
     on<_DeleteProduct>(_onDeleteProduct);
 

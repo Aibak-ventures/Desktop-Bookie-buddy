@@ -9,13 +9,14 @@ extension WidgetX on Widget {
     BorderRadius? borderRadius,
     Color? splashColor,
     Color? highlightColor,
-  }) => InkWell(
-    borderRadius: borderRadius,
-    onTap: onTap,
-    splashColor: splashColor ?? Colors.transparent,
-    highlightColor: highlightColor ?? Colors.transparent,
-    child: this,
-  );
+  }) =>
+      InkWell(
+        borderRadius: borderRadius,
+        onTap: onTap,
+        splashColor: splashColor ?? Colors.transparent,
+        highlightColor: highlightColor ?? Colors.transparent,
+        child: this,
+      );
 
   Widget absorbPointer({bool absorbing = true}) =>
       AbsorbPointer(absorbing: absorbing, child: this);

@@ -28,26 +28,26 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              summaryDay,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.grey600,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            if (payments.isNotEmpty) // Only show share button if payments exist
-              Builder(
-                builder: (builderContext) =>
-                    Container(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  summaryDay,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.grey600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (payments
+                    .isNotEmpty) // Only show share button if payments exist
+                  Builder(
+                    builder: (builderContext) => Container(
                       decoration: BoxDecoration(
                         color: AppColors.purpleLightShade,
                         borderRadius: BorderRadius.circular(5),
@@ -71,8 +71,8 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
                         ],
                       ),
                     ).onTap(() async {
-                      final currentDate = payments.first.createdAt
-                          .formatToUiDate();
+                      final currentDate =
+                          payments.first.createdAt.formatToUiDate();
                       final total = payments.fold<double>(
                         0,
                         (previousValue, payment) =>
@@ -101,34 +101,35 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
                         ),
                       );
                     }),
-              ),
-          ],
-        ),
-      ),
-      ...payments.map(
-        (payment) => LedgerListTile(
-          onTap: () {
-            context.push(BookingDetailsScreen(bookingId: payment.bookingId));
-          },
-          icon: Column(
-            children: [
-              payment.paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
-              Text(
-                payment.createdAt.formatToUiTime(),
-                style: TextStyle(fontSize: 12.sp, color: AppColors.grey600),
-              ),
-            ],
+                  ),
+              ],
+            ),
           ),
-          content: Text(
-            payment.clientName,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+          ...payments.map(
+            (payment) => LedgerListTile(
+              onTap: () {
+                context
+                    .push(BookingDetailsScreen(bookingId: payment.bookingId));
+              },
+              icon: Column(
+                children: [
+                  payment.paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
+                  Text(
+                    payment.createdAt.formatToUiTime(),
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.grey600),
+                  ),
+                ],
+              ),
+              content: Text(
+                payment.clientName,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+              ),
+              amount: payment.paymentAmount,
+            ),
           ),
-          amount: payment.paymentAmount,
-        ),
-      ),
-    ],
-  );
+        ],
+      );
 }
 
 class LedgerPaymentGroupShimmer extends StatelessWidget {
@@ -136,66 +137,68 @@ class LedgerPaymentGroupShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      /// Header shimmer (summaryDay + Share button)
-      Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            shimmerBox(height: 14), // summaryDay shimmer
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Row(
-                children: [
-                  shimmerCircle(size: 16),
-                  const SizedBox(width: 6),
-                  shimmerBox(width: 40, height: 14),
-                ],
-              ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Header shimmer (summaryDay + Share button)
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                shimmerBox(height: 14), // summaryDay shimmer
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Row(
+                    children: [
+                      shimmerCircle(size: 16),
+                      const SizedBox(width: 6),
+                      shimmerBox(width: 40, height: 14),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-      const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
 
-      /// 3 Ledger List Tile Shimmers (you can adjust how many based on need)
-      ...List.generate(3, (index) => const LedgerListTileShimmer()),
-    ],
-  );
+          /// 3 Ledger List Tile Shimmers (you can adjust how many based on need)
+          ...List.generate(3, (index) => const LedgerListTileShimmer()),
+        ],
+      );
 
   Widget shimmerBox({
     double width = 100,
     double height = 16,
     double radius = 6,
-  }) => Shimmer.fromColors(
-    baseColor: Colors.grey.shade300,
-    highlightColor: Colors.grey.shade100,
-    child: Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(radius),
-      ),
-    ),
-  );
+  }) =>
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(radius),
+          ),
+        ),
+      );
 
   Widget shimmerCircle({double size = 20}) => Shimmer.fromColors(
-    baseColor: Colors.grey.shade300,
-    highlightColor: Colors.grey.shade100,
-    child: Container(
-      width: size,
-      height: size,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-    ),
-  );
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          width: size,
+          height: size,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+        ),
+      );
 }

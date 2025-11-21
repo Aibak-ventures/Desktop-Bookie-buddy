@@ -12,8 +12,8 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
   final SalesRepository _repository;
 
   SaveSalesCubit({required SalesRepository repository})
-    : _repository = repository,
-      super(const SaveSalesState.initial());
+      : _repository = repository,
+        super(const SaveSalesState.initial());
 
   void saveSales({
     required SalesRequestModel salesRequest,

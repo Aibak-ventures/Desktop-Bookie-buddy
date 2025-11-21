@@ -39,7 +39,9 @@ class ProductInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProductInfoBloc>().add(ProductInfoEvent.loadProductInfo(productId));
+      context
+          .read<ProductInfoBloc>()
+          .add(ProductInfoEvent.loadProductInfo(productId));
     });
 
     return Scaffold(
@@ -58,7 +60,8 @@ class ProductInfoScreen extends StatelessWidget {
   }
 
   List<Widget> _buildAppBarActions(BuildContext context) {
-    final showMoreOption = context.read<UserCubit>().state?.haveMultipleShops ?? false;
+    final showMoreOption =
+        context.read<UserCubit>().state?.haveMultipleShops ?? false;
 
     if (!showMoreOption) return [];
 
@@ -67,7 +70,8 @@ class ProductInfoScreen extends StatelessWidget {
         builder: (context, state) {
           final isVisible = state.maybeMap(
             orElse: () => false,
-            loaded: (value) => value.productInfo.variants.every((v) => v.stock != 0),
+            loaded: (value) =>
+                value.productInfo.variants.every((v) => v.stock != 0),
           );
 
           if (!isVisible) return const SizedBox.shrink();
@@ -76,7 +80,8 @@ class ProductInfoScreen extends StatelessWidget {
             padding: EdgeInsets.only(right: 16.w),
             child: ElevatedButton.icon(
               onPressed: () async {
-                final product = context.read<ProductInfoBloc>().getProductInfo();
+                final product =
+                    context.read<ProductInfoBloc>().getProductInfo();
                 if (product == null) {
                   context.showSnackBar('Product not found', isError: true);
                   return;
@@ -107,7 +112,9 @@ class ProductInfoScreen extends StatelessWidget {
                     );
 
                     if (result is bool && result) {
-                      context.read<ProductInfoBloc>().add(ProductInfoEvent.loadProductInfo(productId));
+                      context
+                          .read<ProductInfoBloc>()
+                          .add(ProductInfoEvent.loadProductInfo(productId));
                     }
                   },
                 );
@@ -140,9 +147,13 @@ class ProductInfoScreen extends StatelessWidget {
           success: (message, needPop) {
             if (needPop) {
               context.pop();
-              context.read<ProductBloc>().add(ProductEvent.loadProducts(serviceId));
+              context
+                  .read<ProductBloc>()
+                  .add(ProductEvent.loadProducts(serviceId));
             } else {
-              context.read<ProductInfoBloc>().add(ProductInfoEvent.loadProductInfo(productId));
+              context
+                  .read<ProductInfoBloc>()
+                  .add(ProductInfoEvent.loadProductInfo(productId));
             }
             context.showSnackBar(message);
           },
@@ -207,14 +218,17 @@ class ProductInfoScreen extends StatelessWidget {
             ),
             SizedBox(height: 32.h),
             ElevatedButton.icon(
-              onPressed: () => context.read<ProductInfoBloc>().add(ProductInfoEvent.loadProductInfo(productId)),
+              onPressed: () => context
+                  .read<ProductInfoBloc>()
+                  .add(ProductInfoEvent.loadProductInfo(productId)),
               icon: const Icon(Icons.refresh),
               label: const Text('Try Again'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.purple,
                 foregroundColor: AppColors.white,
                 padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ],
@@ -233,19 +247,21 @@ class ProductInfoScreen extends StatelessWidget {
             // Hero Section with Product Image and Basic Info
             _buildHeroSection(context, product),
             SizedBox(height: 32.h),
-            
+
             // Main Content Grid
             LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth > 1200;
-                
+
                 if (isWide) {
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(flex: 2, child: _buildLeftColumn(context, product)),
+                      Expanded(
+                          flex: 2, child: _buildLeftColumn(context, product)),
                       SizedBox(width: 32.w),
-                      Expanded(flex: 1, child: _buildRightColumn(context, product)),
+                      Expanded(
+                          flex: 1, child: _buildRightColumn(context, product)),
                     ],
                   );
                 } else {
@@ -259,9 +275,9 @@ class ProductInfoScreen extends StatelessWidget {
                 }
               },
             ),
-            
+
             SizedBox(height: 32.h),
-            
+
             // Action Buttons Section
             _buildActionSection(context, product),
           ],
@@ -305,9 +321,9 @@ class ProductInfoScreen extends StatelessWidget {
                     ),
             ),
           ),
-          
+
           SizedBox(width: 32.w),
-          
+
           // Product Info
           Expanded(
             child: Column(
@@ -329,9 +345,9 @@ class ProductInfoScreen extends StatelessWidget {
                     _buildStatusBadge(product),
                   ],
                 ),
-                
+
                 SizedBox(height: 8.h),
-                
+
                 Text(
                   'Product ID: #${product.id}',
                   style: TextStyle(
@@ -340,10 +356,11 @@ class ProductInfoScreen extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                
+
                 SizedBox(height: 16.h),
-                
-                if (product.description != null && product.description!.isNotEmpty)
+
+                if (product.description != null &&
+                    product.description!.isNotEmpty)
                   Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
@@ -360,9 +377,9 @@ class ProductInfoScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                
+
                 SizedBox(height: 24.h),
-                
+
                 // Quick Stats Row
                 Row(
                   children: [
@@ -399,7 +416,7 @@ class ProductInfoScreen extends StatelessWidget {
   Widget _buildStatusBadge(ProductModel product) {
     final totalStock = product.variants.fold<int>(0, (p, v) => p + v.stock);
     final isInStock = totalStock > 0;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
@@ -428,7 +445,8 @@ class ProductInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickStat(String label, String value, IconData icon, Color color) {
+  Widget _buildQuickStat(
+      String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12.w),
@@ -494,17 +512,15 @@ class ProductInfoScreen extends StatelessWidget {
             ],
           ),
         ),
-        
         SizedBox(height: 24.h),
-        
         _buildModernCard(
           'Variants & Stock',
           Icons.inventory_2_outlined,
           AppColors.green,
           Column(
-            children: product.variants.map((variant) => 
-              _buildVariantCard(variant)
-            ).toList(),
+            children: product.variants
+                .map((variant) => _buildVariantCard(variant))
+                .toList(),
           ),
         ),
       ],
@@ -550,9 +566,7 @@ class ProductInfoScreen extends StatelessWidget {
             ],
           ),
         ),
-        
         SizedBox(height: 24.h),
-        
         _buildModernCard(
           'Danger Zone',
           Icons.warning_outlined,
@@ -613,7 +627,8 @@ class ProductInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildModernCard(String title, IconData icon, Color accentColor, Widget child) {
+  Widget _buildModernCard(
+      String title, IconData icon, Color accentColor, Widget child) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
@@ -737,7 +752,8 @@ class ProductInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, Color color, VoidCallback onPressed) {
+  Widget _buildActionButton(
+      String label, IconData icon, Color color, VoidCallback onPressed) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
@@ -766,7 +782,9 @@ class ProductInfoScreen extends StatelessWidget {
     );
 
     if (result is bool && result) {
-      context.read<ProductInfoBloc>().add(ProductInfoEvent.loadProductInfo(productId));
+      context
+          .read<ProductInfoBloc>()
+          .add(ProductInfoEvent.loadProductInfo(productId));
     }
   }
 
@@ -778,7 +796,9 @@ class ProductInfoScreen extends StatelessWidget {
         context.read<ProductInfoBloc>().add(
               ProductInfoEvent.deleteProduct(
                 productId: productId,
-                variantId: product.variants.length == 1 ? null : product.variants.first.id,
+                variantId: product.variants.length == 1
+                    ? null
+                    : product.variants.first.id,
               ),
             );
       },
@@ -817,8 +837,12 @@ class ProductInfoScreen extends StatelessWidget {
     await context.push(
       MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => ProductBookingUpcomingBloc(repository: getIt.get())),
-          BlocProvider(create: (_) => ProductBookingCompletedBloc(repository: getIt.get())),
+          BlocProvider(
+              create: (_) =>
+                  ProductBookingUpcomingBloc(repository: getIt.get())),
+          BlocProvider(
+              create: (_) =>
+                  ProductBookingCompletedBloc(repository: getIt.get())),
         ],
         child: ProductAllBookingsScreen(
           productId: productId,

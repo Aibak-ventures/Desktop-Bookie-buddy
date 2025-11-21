@@ -9,8 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LedgerSimpleSummaryCubit extends Cubit<DailySummaryModel?> {
   final LedgerRepository _repository;
   LedgerSimpleSummaryCubit({required LedgerRepository repository})
-    : _repository = repository,
-      super(null);
+      : _repository = repository,
+        super(null);
 
   final _cacheSummary = <String, DailySummaryModel>{}; // Cache summaries
 

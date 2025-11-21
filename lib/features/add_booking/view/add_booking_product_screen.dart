@@ -37,7 +37,7 @@ class AddBookingProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bookingData = addBookingModel;
     final isWeb = context.screenWidth > 768;
-    
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) =>
@@ -57,12 +57,13 @@ class AddBookingProductScreen extends StatelessWidget {
                 constraints: BoxConstraints(
                   maxWidth: isWeb ? 1000 : double.infinity,
                 ),
-                padding: isWeb
-                    ? const EdgeInsets.all(40)
-                    : const EdgeInsets.all(16),
+                padding:
+                    isWeb ? const EdgeInsets.all(40) : const EdgeInsets.all(16),
                 child: Form(
                   key: _formKey,
-                  child: isWeb ? _buildWebLayout(context, bookingData) : _buildMobileLayout(context, bookingData),
+                  child: isWeb
+                      ? _buildWebLayout(context, bookingData)
+                      : _buildMobileLayout(context, bookingData),
                 ),
               ),
             ),
@@ -73,7 +74,8 @@ class AddBookingProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWebLayout(BuildContext context, RequestBookingModel bookingData) {
+  Widget _buildWebLayout(
+      BuildContext context, RequestBookingModel bookingData) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -149,9 +151,9 @@ class AddBookingProductScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Add Products Section
                 Container(
                   width: double.infinity,
@@ -165,7 +167,8 @@ class AddBookingProductScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.add_circle_outline, color: Colors.purple.shade600, size: 20),
+                          Icon(Icons.add_circle_outline,
+                              color: Colors.purple.shade600, size: 20),
                           const SizedBox(width: 8),
                           Text(
                             'Add Products',
@@ -179,13 +182,15 @@ class AddBookingProductScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton.icon(
-                        onPressed: () => _navigateToProductSelection(context, bookingData),
+                        onPressed: () =>
+                            _navigateToProductSelection(context, bookingData),
                         icon: const Icon(Icons.add, size: 20),
                         label: const Text('Browse Products'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple.shade600,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -194,9 +199,9 @@ class AddBookingProductScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Selected Products Section
                 BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
                   builder: (context, state) {
@@ -249,7 +254,8 @@ class AddBookingProductScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.check_circle, color: Colors.green.shade600, size: 20),
+                                    Icon(Icons.check_circle,
+                                        color: Colors.green.shade600, size: 20),
                                     const SizedBox(width: 8),
                                     Text(
                                       'Selected Products (${state.products.length})',
@@ -263,17 +269,19 @@ class AddBookingProductScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16),
                                 Container(
-                                  constraints: const BoxConstraints(maxHeight: 300),
-                                  child: _buildSelectedProductSection(context, state.products),
+                                  constraints:
+                                      const BoxConstraints(maxHeight: 300),
+                                  child: _buildSelectedProductSection(
+                                      context, state.products),
                                 ),
                               ],
                             ),
                           );
                   },
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Additional Details Section
                 BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
                   builder: (context, state) {
@@ -301,7 +309,7 @@ class AddBookingProductScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          
+
                           // Vehicle locations (if applicable)
                           if (isVehicle) ...[
                             Text(
@@ -320,9 +328,11 @@ class AddBookingProductScreen extends StatelessWidget {
                                     controller: locationStartController,
                                     label: 'Start Location',
                                     hintText: 'Location',
-                                    prefixIcon: const Icon(Icons.place_outlined),
+                                    prefixIcon:
+                                        const Icon(Icons.place_outlined),
                                     textInputAction: TextInputAction.next,
-                                    validator: (value) => AppInputValidators.basicText(
+                                    validator: (value) =>
+                                        AppInputValidators.basicText(
                                       value,
                                       isRequired: false,
                                       fieldName: 'Place',
@@ -335,9 +345,11 @@ class AddBookingProductScreen extends StatelessWidget {
                                     controller: locationFromController,
                                     label: 'Pickup Location',
                                     hintText: 'Location',
-                                    prefixIcon: const Icon(Icons.place_outlined),
+                                    prefixIcon:
+                                        const Icon(Icons.place_outlined),
                                     textInputAction: TextInputAction.next,
-                                    validator: (value) => AppInputValidators.basicText(
+                                    validator: (value) =>
+                                        AppInputValidators.basicText(
                                       value,
                                       isRequired: false,
                                       fieldName: 'Place',
@@ -350,9 +362,11 @@ class AddBookingProductScreen extends StatelessWidget {
                                     controller: locationToController,
                                     label: 'Destination',
                                     hintText: 'Location',
-                                    prefixIcon: const Icon(Icons.place_outlined),
+                                    prefixIcon:
+                                        const Icon(Icons.place_outlined),
                                     textInputAction: TextInputAction.next,
-                                    validator: (value) => AppInputValidators.basicText(
+                                    validator: (value) =>
+                                        AppInputValidators.basicText(
                                       value,
                                       isRequired: false,
                                       fieldName: 'Place',
@@ -363,7 +377,7 @@ class AddBookingProductScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 24),
                           ],
-                          
+
                           // Description
                           CustomTextField(
                             controller: descriptionController,
@@ -387,9 +401,9 @@ class AddBookingProductScreen extends StatelessWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(width: 24),
-        
+
         // Sidebar (30%)
         Expanded(
           flex: 3,
@@ -418,12 +432,12 @@ class AddBookingProductScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Booking details summary
                 _buildBookingSummaryCard(context, bookingData),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Product count and total
                 BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
                   builder: (context, state) {
@@ -489,9 +503,9 @@ class AddBookingProductScreen extends StatelessWidget {
                     );
                   },
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Action buttons
                 Column(
                   children: [
@@ -537,7 +551,8 @@ class AddBookingProductScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBookingSummaryCard(BuildContext context, RequestBookingModel bookingData) {
+  Widget _buildBookingSummaryCard(
+      BuildContext context, RequestBookingModel bookingData) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -553,9 +568,11 @@ class AddBookingProductScreen extends StatelessWidget {
           _buildSummaryRow('Pickup Date:', bookingData.pickupDate ?? 'Not set'),
           _buildSummaryRow('Return Date:', bookingData.returnDate ?? 'Not set'),
           if (bookingData.pickupTime != null)
-            _buildSummaryRow('Pickup Time:', bookingData.pickupTime!.format(context)),
+            _buildSummaryRow(
+                'Pickup Time:', bookingData.pickupTime!.format(context)),
           if (bookingData.returnTime != null)
-            _buildSummaryRow('Return Time:', bookingData.returnTime!.format(context)),
+            _buildSummaryRow(
+                'Return Time:', bookingData.returnTime!.format(context)),
         ],
       ),
     );
@@ -593,11 +610,14 @@ class AddBookingProductScreen extends StatelessWidget {
     );
   }
 
-  void _navigateToProductSelection(BuildContext context, RequestBookingModel bookingData) async {
+  void _navigateToProductSelection(
+      BuildContext context, RequestBookingModel bookingData) async {
     try {
-      final currentProducts = context.read<AddBookingProductsCubit>().state.products;
-      
-      final result = await Navigator.of(context).push<List<ProductSelectedModel>>(
+      final currentProducts =
+          context.read<AddBookingProductsCubit>().state.products;
+
+      final result =
+          await Navigator.of(context).push<List<ProductSelectedModel>>(
         MaterialPageRoute(
           builder: (context) => SelectProductScreen(
             serviceId: bookingData.serviceId ?? 0,
@@ -611,7 +631,7 @@ class AddBookingProductScreen extends StatelessWidget {
           ),
         ),
       );
-      
+
       if (result != null && result.isNotEmpty) {
         context.read<AddBookingProductsCubit>().setAll(result);
       }
@@ -619,7 +639,8 @@ class AddBookingProductScreen extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Unable to open product selection. Please try again.'),
+            content:
+                Text('Unable to open product selection. Please try again.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -627,7 +648,8 @@ class AddBookingProductScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildMobileLayout(BuildContext context, RequestBookingModel bookingData) {
+  Widget _buildMobileLayout(
+      BuildContext context, RequestBookingModel bookingData) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -638,16 +660,15 @@ class AddBookingProductScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 15.height,
-                BlocBuilder<
-                  AddBookingProductsCubit,
-                  AddBookingProductsState
-                >(
+                BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
                   builder: (context, state) {
-                    print('MobileLayout: Building with ${state.products.length} products');
+                    print(
+                        'MobileLayout: Building with ${state.products.length} products');
                     return state.products.isEmpty
                         ? const SizedBox.shrink()
                         : Container(
-                            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -686,7 +707,8 @@ class AddBookingProductScreen extends StatelessWidget {
                     ],
                   ),
                   child: InkWell(
-                    onTap: () => _navigateToProductSelection(context, bookingData),
+                    onTap: () =>
+                        _navigateToProductSelection(context, bookingData),
                     borderRadius: BorderRadius.circular(12),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -740,10 +762,7 @@ class AddBookingProductScreen extends StatelessWidget {
                 ),
                 0.01.heightCustom,
 
-                BlocBuilder<
-                  AddBookingProductsCubit,
-                  AddBookingProductsState
-                >(
+                BlocBuilder<AddBookingProductsCubit, AddBookingProductsState>(
                   builder: (context, state) {
                     final products = state.products;
                     final isVehicle = products.any(
@@ -770,12 +789,11 @@ class AddBookingProductScreen extends StatelessWidget {
                             hintText: 'Location',
                             prefixIcon: const Icon(Icons.place_outlined),
                             textInputAction: TextInputAction.next,
-                            validator: (value) =>
-                                AppInputValidators.basicText(
-                                  value,
-                                  isRequired: false,
-                                  fieldName: 'Place',
-                                ),
+                            validator: (value) => AppInputValidators.basicText(
+                              value,
+                              isRequired: false,
+                              fieldName: 'Place',
+                            ),
                           ),
                           CustomTextField(
                             controller: locationFromController,
@@ -783,12 +801,11 @@ class AddBookingProductScreen extends StatelessWidget {
                             hintText: 'Location',
                             prefixIcon: const Icon(Icons.place_outlined),
                             textInputAction: TextInputAction.next,
-                            validator: (value) =>
-                                AppInputValidators.basicText(
-                                  value,
-                                  isRequired: false,
-                                  fieldName: 'Place',
-                                ),
+                            validator: (value) => AppInputValidators.basicText(
+                              value,
+                              isRequired: false,
+                              fieldName: 'Place',
+                            ),
                           ),
                           CustomTextField(
                             controller: locationToController,
@@ -796,12 +813,11 @@ class AddBookingProductScreen extends StatelessWidget {
                             hintText: 'Location',
                             prefixIcon: const Icon(Icons.place_outlined),
                             textInputAction: TextInputAction.next,
-                            validator: (value) =>
-                                AppInputValidators.basicText(
-                                  value,
-                                  isRequired: false,
-                                  fieldName: 'Place',
-                                ),
+                            validator: (value) => AppInputValidators.basicText(
+                              value,
+                              isRequired: false,
+                              fieldName: 'Place',
+                            ),
                           ),
                         ],
                       ),
@@ -851,10 +867,7 @@ class AddBookingProductScreen extends StatelessWidget {
   }
 
   void _handleNext(BuildContext context) async {
-    final products = context
-        .read<AddBookingProductsCubit>()
-        .state
-        .products;
+    final products = context.read<AddBookingProductsCubit>().state.products;
     if (products.isEmpty) {
       CustomSnackBar(
         message: 'Please select at least one product',
@@ -878,26 +891,25 @@ class AddBookingProductScreen extends StatelessWidget {
     }
 
     try {
-     final addBookingProductsState = context.read<AddBookingProductsCubit>().state;
+      final addBookingProductsState =
+          context.read<AddBookingProductsCubit>().state;
 
-await Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => AddBookingClientDetailsScreen(
-      addBookingModel: addBookingModel.copyWith(
-        products: addBookingProductsState.products,
-        description: descriptionController.text.trim(),
-        otherDetails: BookingOtherDetailsModel(
-          locationStart: locationStartController.text.nullIfEmpty,
-          locationFrom: locationFromController.text.nullIfEmpty,
-          locationTo: locationToController.text.nullIfEmpty,
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddBookingClientDetailsScreen(
+            addBookingModel: addBookingModel.copyWith(
+              products: addBookingProductsState.products,
+              description: descriptionController.text.trim(),
+              otherDetails: BookingOtherDetailsModel(
+                locationStart: locationStartController.text.nullIfEmpty,
+                locationFrom: locationFromController.text.nullIfEmpty,
+                locationTo: locationToController.text.nullIfEmpty,
+              ),
+            ),
+          ),
         ),
-      ),
-    ),
-  ),
-);
-
-
+      );
     } catch (e) {
       // Fallback navigation if GoRouter fails
       if (context.mounted) {
@@ -905,16 +917,11 @@ await Navigator.push(
           AppRoutes.addBookingDetails.name,
           extra: {
             'add_booking_model': addBookingModel.copyWith(
-              products: context
-                  .read<AddBookingProductsCubit>()
-                  .state
-                  .products,
+              products: context.read<AddBookingProductsCubit>().state.products,
               description: descriptionController.text.trim(),
               otherDetails: BookingOtherDetailsModel(
-                locationStart:
-                    locationStartController.text.nullIfEmpty,
-                locationFrom:
-                    locationFromController.text.nullIfEmpty,
+                locationStart: locationStartController.text.nullIfEmpty,
+                locationFrom: locationFromController.text.nullIfEmpty,
                 locationTo: locationToController.text.nullIfEmpty,
               ),
             ),
@@ -928,12 +935,10 @@ await Navigator.push(
     if (didPop) {
       return;
     }
-    final selectedProducts = context
-        .read<AddBookingProductsCubit>()
-        .state
-        .products;
+    final selectedProducts =
+        context.read<AddBookingProductsCubit>().state.products;
     if (selectedProducts.isEmpty) {
-      NavigatorX(context).pop(); 
+      NavigatorX(context).pop();
 
       return;
     }
@@ -946,122 +951,128 @@ await Navigator.push(
   Container _addProductContainerBuilder(
     BuildContext context,
     RequestBookingModel bookingData,
-  ) => Container(
-    margin: 16.padding,
-    padding: 30.padding,
-    alignment: Alignment.center,
-    decoration: ShapeDecoration(
-      shape: RoundedRectangleBorder(
-        borderRadius: 5.radiusBorder,
-        side: BorderSide(color: AppColors.grey400),
-      ),
-    ),
-    child: Container(
-      decoration: BoxDecoration(
-        color: AppColors.purpleLightShade,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: MaterialButton(
-        onPressed: () async {
-          try {
-            final currentProducts = context.read<AddBookingProductsCubit>().state.products;
-            print('Current products before navigation: ${currentProducts.length}');
-            
-            // Use MaterialPageRoute to directly navigate to SelectProductScreen
-            final result = await Navigator.of(context).push<List<ProductSelectedModel>>(
-              MaterialPageRoute(
-                builder: (context) => SelectProductScreen(
-                  serviceId: bookingData.serviceId ?? 0,
-                  pickupDate: bookingData.pickupDate ?? '',
-                  returnDate: bookingData.returnDate ?? '',
-                  pickupTime: bookingData.pickupTime,
-                  returnTime: bookingData.returnTime,
-                  preSelectedData: currentProducts,
-                  useAvailableProductsApi: true,
-                  isSales: false,
-                ),
-              ),
-            );
-            
-            if (result != null && result.isNotEmpty) {
-              print('Navigation returned ${result.length} products');
-              for (int i = 0; i < result.length; i++) {
-                print('Returned product $i: ${result[i].variant.name}');
-              }
-              context.read<AddBookingProductsCubit>().setAll(result);
-              print('Updated products after navigation: ${result.length}');
-            } else {
-              print('Navigation returned empty or null result');
-            }
-          } catch (e) {
-            print('Navigation error: $e');
-            // Fallback: show a snackbar with error
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Unable to open product selection. Please try again.'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          }
-        },
-        splashColor: AppColors.grey300,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        child: Container(
-          padding: 10.padding,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: 8.padding,
-                      decoration: const BoxDecoration(
-                        color: AppColors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: AppColors.purple,
-                        size: 18.sp,
-                      ),
-                    ),
-                    8.width,
-                    Text(
-                      'Add More Products',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: AppColors.purple,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: AppColors.purple,
-                size: 16.sp,
-              ),
-            ],
+  ) =>
+      Container(
+        margin: 16.padding,
+        padding: 30.padding,
+        alignment: Alignment.center,
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: 5.radiusBorder,
+            side: BorderSide(color: AppColors.grey400),
           ),
         ),
-      ),
-    ),
-  );
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.purpleLightShade,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: MaterialButton(
+            onPressed: () async {
+              try {
+                final currentProducts =
+                    context.read<AddBookingProductsCubit>().state.products;
+                print(
+                    'Current products before navigation: ${currentProducts.length}');
+
+                // Use MaterialPageRoute to directly navigate to SelectProductScreen
+                final result = await Navigator.of(context)
+                    .push<List<ProductSelectedModel>>(
+                  MaterialPageRoute(
+                    builder: (context) => SelectProductScreen(
+                      serviceId: bookingData.serviceId ?? 0,
+                      pickupDate: bookingData.pickupDate ?? '',
+                      returnDate: bookingData.returnDate ?? '',
+                      pickupTime: bookingData.pickupTime,
+                      returnTime: bookingData.returnTime,
+                      preSelectedData: currentProducts,
+                      useAvailableProductsApi: true,
+                      isSales: false,
+                    ),
+                  ),
+                );
+
+                if (result != null && result.isNotEmpty) {
+                  print('Navigation returned ${result.length} products');
+                  for (int i = 0; i < result.length; i++) {
+                    print('Returned product $i: ${result[i].variant.name}');
+                  }
+                  context.read<AddBookingProductsCubit>().setAll(result);
+                  print('Updated products after navigation: ${result.length}');
+                } else {
+                  print('Navigation returned empty or null result');
+                }
+              } catch (e) {
+                print('Navigation error: $e');
+                // Fallback: show a snackbar with error
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Unable to open product selection. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            splashColor: AppColors.grey300,
+            elevation: 0,
+            padding: EdgeInsets.zero,
+            child: Container(
+              padding: 10.padding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: 8.padding,
+                          decoration: const BoxDecoration(
+                            color: AppColors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            color: AppColors.purple,
+                            size: 18.sp,
+                          ),
+                        ),
+                        8.width,
+                        Text(
+                          'Add More Products',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppColors.purple,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.purple,
+                    size: 16.sp,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
 
   Widget _buildSelectedProductSection(
     BuildContext context,
     List<ProductSelectedModel> products,
   ) {
-    print('_buildSelectedProductSection: Building with ${products.length} products');
+    print(
+        '_buildSelectedProductSection: Building with ${products.length} products');
     for (int i = 0; i < products.length; i++) {
       print('Product $i: ${products[i].variant.name}');
     }
-    
+
     return Container(
       constraints: const BoxConstraints(
         minHeight: 120,

@@ -22,8 +22,9 @@ class SelectedProductListViewWidget extends StatelessWidget {
       builder: (context, state) {
         return state.when(
           selected: (selectedProductsWithAmount) {
-            print('SelectedProductListViewWidget: Building with ${selectedProductsWithAmount.length} products');
-            
+            print(
+                'SelectedProductListViewWidget: Building with ${selectedProductsWithAmount.length} products');
+
             if (selectedProductsWithAmount.isEmpty) {
               return Container(
                 height: 60,
@@ -45,7 +46,7 @@ class SelectedProductListViewWidget extends StatelessWidget {
                 ),
               );
             }
-            
+
             return Container(
               width: double.infinity,
               height: 250,
@@ -68,7 +69,7 @@ class SelectedProductListViewWidget extends StatelessWidget {
                         final serviceData = selectedProductsWithAmount[index];
                         final product = serviceData.variant;
                         final amount = serviceData.amount;
-            
+
                         return SelectedProductCard(
                           imageUrl: product.image!,
                           price: amount.toCurrency(),

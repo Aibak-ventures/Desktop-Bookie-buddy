@@ -12,14 +12,14 @@ part 'product_search_cubit.freezed.dart';
 class ProductSearchCubit extends Cubit<ProductSearchState> {
   final ProductRepository _repository;
   ProductSearchCubit({required ProductRepository repository})
-    : _repository = repository,
-      super(
-        const ProductSearchState(
-          suggestions: [],
-          searchQuery: '',
-          selectedProduct: null,
-        ),
-      );
+      : _repository = repository,
+        super(
+          const ProductSearchState(
+            suggestions: [],
+            searchQuery: '',
+            selectedProduct: null,
+          ),
+        );
 
   Future<List<ProductModel>> searchProducts(String query) async {
     try {

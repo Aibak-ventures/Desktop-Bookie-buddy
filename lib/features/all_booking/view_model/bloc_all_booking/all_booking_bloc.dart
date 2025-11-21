@@ -18,8 +18,8 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
   final BookingRepository _repository;
 
   AllBookingBloc({required BookingRepository repository})
-    : _repository = repository,
-      super(const AllBookingState.loading()) {
+      : _repository = repository,
+        super(const AllBookingState.loading()) {
     on<_LoadBookings>(_onFetchBookings);
     on<_LoadNextPageBookings>(
       _onFetchNextPage,
@@ -41,9 +41,8 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
         status: LoadBookingType.future,
         startDate: event.startDate,
         endDate: event.endDate,
-        searchQuery: event.searchQuery.isNotNullOrEmpty
-            ? event.searchQuery
-            : null,
+        searchQuery:
+            event.searchQuery.isNotNullOrEmpty ? event.searchQuery : null,
       );
 
       emit(

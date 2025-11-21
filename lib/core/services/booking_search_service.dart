@@ -32,55 +32,55 @@
 //     }
 //   }
 
-  // Future<List<BookingsModel>> searchUpcomingBookings(String query) async {
-  //   try {
-  //     final response = await DioClient.dio.post(
-  //       "/booking/search_for_upcoming_bookings",
-  //       data: {"search": query},
-  //     );
+// Future<List<BookingsModel>> searchUpcomingBookings(String query) async {
+//   try {
+//     final response = await DioClient.dio.post(
+//       "/booking/search_for_upcoming_bookings",
+//       data: {"search": query},
+//     );
 
-  //     if (response.statusCode == 200) {
-  //       final data = response.data;
-  //       log('search data: ${response.data}');
-  //       return (data['bookings'] as List)
-  //           .map((e) => BookingsModel.fromJson(e))
-  //           .toList();
-  //     } else if (response.statusCode == 404) {
-  //       log('status code: ${response.statusCode}, search data: ${response.data}');
-  //       return [];
-  //     } else {
-  //       log('status code: ${response.statusCode}, search data: ${response.data}');
-  //       throw 'Failed to fetch search results';
-  //     }
-  //   } catch (e, stackTrace) {
-  //     log(e.toString(), stackTrace: stackTrace);
-  //     rethrow;
-  //   }
-  // }
+//     if (response.statusCode == 200) {
+//       final data = response.data;
+//       log('search data: ${response.data}');
+//       return (data['bookings'] as List)
+//           .map((e) => BookingsModel.fromJson(e))
+//           .toList();
+//     } else if (response.statusCode == 404) {
+//       log('status code: ${response.statusCode}, search data: ${response.data}');
+//       return [];
+//     } else {
+//       log('status code: ${response.statusCode}, search data: ${response.data}');
+//       throw 'Failed to fetch search results';
+//     }
+//   } catch (e, stackTrace) {
+//     log(e.toString(), stackTrace: stackTrace);
+//     rethrow;
+//   }
+// }
 
-  // Future<List<BookingsModel>> searchCompletedBookings(String query) async {
-  //   try {
-  //     final response = await DioClient.dio.post(
-  //       "/booking/search_for_completed_bookings",
-  //       data: {"search": query},
-  //     );
+// Future<List<BookingsModel>> searchCompletedBookings(String query) async {
+//   try {
+//     final response = await DioClient.dio.post(
+//       "/booking/search_for_completed_bookings",
+//       data: {"search": query},
+//     );
 
-  //     if (response.statusCode == 200) {
-  //       final data = response.data;
-  //       log('search data: ${response.data}');
-  //       return (data['bookings'] as List)
-  //           .map((e) => BookingsModel.fromJson(e))
-  //           .toList();
-  //     } else if (response.statusCode == 404) {
-  //       log('status code: ${response.statusCode}, search data: ${response.data}');
-  //       return [];
-  //     } else {
-  //       log('status code: ${response.statusCode}, search data: ${response.data}');
-  //       throw 'Failed to fetch search results';
-  //     }
-  //   } catch (e, stackTrace) {
-  //     log(e.toString(), stackTrace: stackTrace);
-  //     rethrow;
-  //   }
-  // }
+//     if (response.statusCode == 200) {
+//       final data = response.data;
+//       log('search data: ${response.data}');
+//       return (data['bookings'] as List)
+//           .map((e) => BookingsModel.fromJson(e))
+//           .toList();
+//     } else if (response.statusCode == 404) {
+//       log('status code: ${response.statusCode}, search data: ${response.data}');
+//       return [];
+//     } else {
+//       log('status code: ${response.statusCode}, search data: ${response.data}');
+//       throw 'Failed to fetch search results';
+//     }
+//   } catch (e, stackTrace) {
+//     log(e.toString(), stackTrace: stackTrace);
+//     rethrow;
+//   }
+// }
 // }

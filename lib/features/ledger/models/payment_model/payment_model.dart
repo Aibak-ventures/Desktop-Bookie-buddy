@@ -1,7 +1,6 @@
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-
 part 'payment_model.freezed.dart';
 part 'payment_model.g.dart';
 

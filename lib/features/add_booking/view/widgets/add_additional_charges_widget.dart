@@ -16,34 +16,34 @@ class AddAdditionalChargesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'Additional Charges',
-            style: TextStyle(
-              color: AppColors.black,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            children: [
+              Text(
+                'Additional Charges',
+                style: TextStyle(
+                  color: AppColors.black,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () {
+                  showAddAdditionalChargeDialog(
+                    context: context,
+                    additionalChargesNotifier: additionalChargesNotifier,
+                  );
+                },
+                icon: const Icon(Icons.add),
+              ),
+            ],
           ),
-          const Spacer(),
-          IconButton(
-            onPressed: () {
-              showAddAdditionalChargeDialog(
-                context: context,
-                additionalChargesNotifier: additionalChargesNotifier,
-              );
-            },
-            icon: const Icon(Icons.add),
+          2.height,
+          AdditionalChargesListWidget(
+            additionalChargesNotifier: additionalChargesNotifier,
           ),
         ],
-      ),
-      2.height,
-      AdditionalChargesListWidget(
-        additionalChargesNotifier: additionalChargesNotifier,
-      ),
-    ],
-  );
+      );
 }

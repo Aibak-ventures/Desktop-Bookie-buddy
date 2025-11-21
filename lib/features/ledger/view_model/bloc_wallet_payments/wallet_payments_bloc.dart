@@ -15,8 +15,8 @@ class WalletPaymentsBloc
     extends Bloc<WalletPaymentsEvent, WalletPaymentsState> {
   final LedgerRepository _repository;
   WalletPaymentsBloc({required LedgerRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadPayments>(_onLoadPayments);
     on<_LoadNextPagePayments>(_onLoadNextPagePayments);
   }

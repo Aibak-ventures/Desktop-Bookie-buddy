@@ -169,100 +169,99 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
   }) {
     return _then(
       _value.copyWith(
-            clientId: freezed == clientId
-                ? _value.clientId
-                : clientId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            staffId: freezed == staffId
-                ? _value.staffId
-                : staffId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            client: freezed == client
-                ? _value.client
-                : client // ignore: cast_nullable_to_non_nullable
-                      as ClientRequestModel?,
-            address: freezed == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            bookedDate: freezed == bookedDate
-                ? _value.bookedDate
-                : bookedDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            pickupDate: freezed == pickupDate
-                ? _value.pickupDate
-                : pickupDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            returnDate: freezed == returnDate
-                ? _value.returnDate
-                : returnDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            coolingPeriodDate: freezed == coolingPeriodDate
-                ? _value.coolingPeriodDate
-                : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            advanceAmount: freezed == advanceAmount
-                ? _value.advanceAmount
-                : advanceAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            securityAmount: freezed == securityAmount
-                ? _value.securityAmount
-                : securityAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            discountAmount: freezed == discountAmount
-                ? _value.discountAmount
-                : discountAmount // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            purchaseMode: freezed == purchaseMode
-                ? _value.purchaseMode
-                : purchaseMode // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            description: freezed == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            paymentMethod: freezed == paymentMethod
-                ? _value.paymentMethod
-                : paymentMethod // ignore: cast_nullable_to_non_nullable
-                      as PaymentMethod?,
-            deliveryStatus: freezed == deliveryStatus
-                ? _value.deliveryStatus
-                : deliveryStatus // ignore: cast_nullable_to_non_nullable
-                      as DeliveryStatus?,
-            bookingStatus: freezed == bookingStatus
-                ? _value.bookingStatus
-                : bookingStatus // ignore: cast_nullable_to_non_nullable
-                      as BookingStatus?,
-            products: freezed == products
-                ? _value.products
-                : products // ignore: cast_nullable_to_non_nullable
-                      as List<ProductSelectedModel>?,
-            otherDetails: freezed == otherDetails
-                ? _value.otherDetails
-                : otherDetails // ignore: cast_nullable_to_non_nullable
-                      as BookingOtherDetailsModel?,
-            additionalCharges: freezed == additionalCharges
-                ? _value.additionalCharges
-                : additionalCharges // ignore: cast_nullable_to_non_nullable
-                      as List<AdditionalChargesModel>?,
-            serviceId: freezed == serviceId
-                ? _value.serviceId
-                : serviceId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            pickupTime: freezed == pickupTime
-                ? _value.pickupTime
-                : pickupTime // ignore: cast_nullable_to_non_nullable
-                      as TimeOfDay?,
-            returnTime: freezed == returnTime
-                ? _value.returnTime
-                : returnTime // ignore: cast_nullable_to_non_nullable
-                      as TimeOfDay?,
-            sendPdfToWhatsApp: null == sendPdfToWhatsApp
-                ? _value.sendPdfToWhatsApp
-                : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
+        clientId: freezed == clientId
+            ? _value.clientId
+            : clientId // ignore: cast_nullable_to_non_nullable
+                as int?,
+        staffId: freezed == staffId
+            ? _value.staffId
+            : staffId // ignore: cast_nullable_to_non_nullable
+                as int?,
+        client: freezed == client
+            ? _value.client
+            : client // ignore: cast_nullable_to_non_nullable
+                as ClientRequestModel?,
+        address: freezed == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                as String?,
+        bookedDate: freezed == bookedDate
+            ? _value.bookedDate
+            : bookedDate // ignore: cast_nullable_to_non_nullable
+                as String?,
+        pickupDate: freezed == pickupDate
+            ? _value.pickupDate
+            : pickupDate // ignore: cast_nullable_to_non_nullable
+                as String?,
+        returnDate: freezed == returnDate
+            ? _value.returnDate
+            : returnDate // ignore: cast_nullable_to_non_nullable
+                as String?,
+        coolingPeriodDate: freezed == coolingPeriodDate
+            ? _value.coolingPeriodDate
+            : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
+                as String?,
+        advanceAmount: freezed == advanceAmount
+            ? _value.advanceAmount
+            : advanceAmount // ignore: cast_nullable_to_non_nullable
+                as int?,
+        securityAmount: freezed == securityAmount
+            ? _value.securityAmount
+            : securityAmount // ignore: cast_nullable_to_non_nullable
+                as int?,
+        discountAmount: freezed == discountAmount
+            ? _value.discountAmount
+            : discountAmount // ignore: cast_nullable_to_non_nullable
+                as int?,
+        purchaseMode: freezed == purchaseMode
+            ? _value.purchaseMode
+            : purchaseMode // ignore: cast_nullable_to_non_nullable
+                as String?,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                as String?,
+        paymentMethod: freezed == paymentMethod
+            ? _value.paymentMethod
+            : paymentMethod // ignore: cast_nullable_to_non_nullable
+                as PaymentMethod?,
+        deliveryStatus: freezed == deliveryStatus
+            ? _value.deliveryStatus
+            : deliveryStatus // ignore: cast_nullable_to_non_nullable
+                as DeliveryStatus?,
+        bookingStatus: freezed == bookingStatus
+            ? _value.bookingStatus
+            : bookingStatus // ignore: cast_nullable_to_non_nullable
+                as BookingStatus?,
+        products: freezed == products
+            ? _value.products
+            : products // ignore: cast_nullable_to_non_nullable
+                as List<ProductSelectedModel>?,
+        otherDetails: freezed == otherDetails
+            ? _value.otherDetails
+            : otherDetails // ignore: cast_nullable_to_non_nullable
+                as BookingOtherDetailsModel?,
+        additionalCharges: freezed == additionalCharges
+            ? _value.additionalCharges
+            : additionalCharges // ignore: cast_nullable_to_non_nullable
+                as List<AdditionalChargesModel>?,
+        serviceId: freezed == serviceId
+            ? _value.serviceId
+            : serviceId // ignore: cast_nullable_to_non_nullable
+                as int?,
+        pickupTime: freezed == pickupTime
+            ? _value.pickupTime
+            : pickupTime // ignore: cast_nullable_to_non_nullable
+                as TimeOfDay?,
+        returnTime: freezed == returnTime
+            ? _value.returnTime
+            : returnTime // ignore: cast_nullable_to_non_nullable
+                as TimeOfDay?,
+        sendPdfToWhatsApp: null == sendPdfToWhatsApp
+            ? _value.sendPdfToWhatsApp
+            : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
+                as bool,
+      ) as $Val,
     );
   }
 
@@ -391,95 +390,95 @@ class __$$RequestBookingModelImplCopyWithImpl<$Res>
         clientId: freezed == clientId
             ? _value.clientId
             : clientId // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         staffId: freezed == staffId
             ? _value.staffId
             : staffId // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         client: freezed == client
             ? _value.client
             : client // ignore: cast_nullable_to_non_nullable
-                  as ClientRequestModel?,
+                as ClientRequestModel?,
         address: freezed == address
             ? _value.address
             : address // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         bookedDate: freezed == bookedDate
             ? _value.bookedDate
             : bookedDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         pickupDate: freezed == pickupDate
             ? _value.pickupDate
             : pickupDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         returnDate: freezed == returnDate
             ? _value.returnDate
             : returnDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         coolingPeriodDate: freezed == coolingPeriodDate
             ? _value.coolingPeriodDate
             : coolingPeriodDate // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         advanceAmount: freezed == advanceAmount
             ? _value.advanceAmount
             : advanceAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         securityAmount: freezed == securityAmount
             ? _value.securityAmount
             : securityAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         discountAmount: freezed == discountAmount
             ? _value.discountAmount
             : discountAmount // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         purchaseMode: freezed == purchaseMode
             ? _value.purchaseMode
             : purchaseMode // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                as String?,
         paymentMethod: freezed == paymentMethod
             ? _value.paymentMethod
             : paymentMethod // ignore: cast_nullable_to_non_nullable
-                  as PaymentMethod?,
+                as PaymentMethod?,
         deliveryStatus: freezed == deliveryStatus
             ? _value.deliveryStatus
             : deliveryStatus // ignore: cast_nullable_to_non_nullable
-                  as DeliveryStatus?,
+                as DeliveryStatus?,
         bookingStatus: freezed == bookingStatus
             ? _value.bookingStatus
             : bookingStatus // ignore: cast_nullable_to_non_nullable
-                  as BookingStatus?,
+                as BookingStatus?,
         products: freezed == products
             ? _value._products
             : products // ignore: cast_nullable_to_non_nullable
-                  as List<ProductSelectedModel>?,
+                as List<ProductSelectedModel>?,
         otherDetails: freezed == otherDetails
             ? _value.otherDetails
             : otherDetails // ignore: cast_nullable_to_non_nullable
-                  as BookingOtherDetailsModel?,
+                as BookingOtherDetailsModel?,
         additionalCharges: freezed == additionalCharges
             ? _value._additionalCharges
             : additionalCharges // ignore: cast_nullable_to_non_nullable
-                  as List<AdditionalChargesModel>?,
+                as List<AdditionalChargesModel>?,
         serviceId: freezed == serviceId
             ? _value.serviceId
             : serviceId // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                as int?,
         pickupTime: freezed == pickupTime
             ? _value.pickupTime
             : pickupTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
+                as TimeOfDay?,
         returnTime: freezed == returnTime
             ? _value.returnTime
             : returnTime // ignore: cast_nullable_to_non_nullable
-                  as TimeOfDay?,
+                as TimeOfDay?,
         sendPdfToWhatsApp: null == sendPdfToWhatsApp
             ? _value.sendPdfToWhatsApp
             : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
-                  as bool,
+                as bool,
       ),
     );
   }
@@ -523,8 +522,8 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
     this.returnTime,
     @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
     this.sendPdfToWhatsApp = false,
-  }) : _products = products,
-       _additionalCharges = additionalCharges;
+  })  : _products = products,
+        _additionalCharges = additionalCharges;
 
   factory _$RequestBookingModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$RequestBookingModelImplFromJson(json);
@@ -675,31 +674,31 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-    runtimeType,
-    clientId,
-    staffId,
-    client,
-    address,
-    bookedDate,
-    pickupDate,
-    returnDate,
-    coolingPeriodDate,
-    advanceAmount,
-    securityAmount,
-    discountAmount,
-    purchaseMode,
-    description,
-    paymentMethod,
-    deliveryStatus,
-    bookingStatus,
-    const DeepCollectionEquality().hash(_products),
-    otherDetails,
-    const DeepCollectionEquality().hash(_additionalCharges),
-    serviceId,
-    pickupTime,
-    returnTime,
-    sendPdfToWhatsApp,
-  ]);
+        runtimeType,
+        clientId,
+        staffId,
+        client,
+        address,
+        bookedDate,
+        pickupDate,
+        returnDate,
+        coolingPeriodDate,
+        advanceAmount,
+        securityAmount,
+        discountAmount,
+        purchaseMode,
+        description,
+        paymentMethod,
+        deliveryStatus,
+        bookingStatus,
+        const DeepCollectionEquality().hash(_products),
+        otherDetails,
+        const DeepCollectionEquality().hash(_additionalCharges),
+        serviceId,
+        pickupTime,
+        returnTime,
+        sendPdfToWhatsApp,
+      ]);
 
   /// Create a copy of RequestBookingModel
   /// with the given fields replaced by the non-null parameter values.

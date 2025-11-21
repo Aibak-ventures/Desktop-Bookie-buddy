@@ -150,12 +150,12 @@ void showBookingDetailsAddPaymentDialog({
 
                     try {
                       context.read<BookingDetailsBloc>().add(
-                        BookingDetailsEvent.updatePayment(
-                          bookingId: id,
-                          amount: amount,
-                          paymentMethod: paymentMethodNotifier.value,
-                        ),
-                      );
+                            BookingDetailsEvent.updatePayment(
+                              bookingId: id,
+                              amount: amount,
+                              paymentMethod: paymentMethodNotifier.value,
+                            ),
+                          );
                       // Close the dialog after update
                       context.pop();
                     } catch (e) {

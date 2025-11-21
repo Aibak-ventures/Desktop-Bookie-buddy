@@ -16,85 +16,85 @@ class ProductDetailsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: 10.radiusBorder,
-      ),
-      backgroundColor: Colors.white,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: context.isDesktop ? 600 : 400,
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        shape: RoundedRectangleBorder(
+          borderRadius: 10.radiusBorder,
         ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: 13.padding,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                // Product Image
-                ClipRRect(
-                  borderRadius: 10.radiusBorder,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: CustomNetworkImage(
-                      imageUrl: product.image ?? '',
-                      width: double.infinity,
-                    ),
+        backgroundColor: Colors.white,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: context.isDesktop ? 600 : 400,
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+          ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: 13.padding,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Product Image
+                      ClipRRect(
+                        borderRadius: 10.radiusBorder,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: CustomNetworkImage(
+                            imageUrl: product.image ?? '',
+                            width: double.infinity,
+                          ),
+                        ),
+                      ),
+                      10.height,
+                      // Product Name
+                      Text(
+                        product.name,
+                        style: TextStyle(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      // Product Name
+                      Text(
+                        product.category ?? 'Category: -',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      // Product Name
+                      Text(
+                        product.color ?? 'Color: -',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                10.height,
-                // Product Name
-                Text(
-                  product.name,
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                // Product Name
-                Text(
-                  product.category ?? 'Category: -',
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    color: AppColors.grey,
-                  ),
-                ),
-                // Product Name
-                Text(
-                  product.color ?? 'Color: -',
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                  ),
-                ),
-                  ],
                 ),
               ),
-            ),
-            Positioned(
-              top: -20,
-              right: -20,
-              child: IconButton(
-                onPressed: () => context.pop(),
-                icon: const Icon(
-                  Icons.close,
-                  color: AppColors.purple,
-                ),
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: const CircleBorder(
-                      side: BorderSide(
+              Positioned(
+                top: -20,
+                right: -20,
+                child: IconButton(
+                  onPressed: () => context.pop(),
+                  icon: const Icon(
+                    Icons.close,
                     color: AppColors.purple,
-                    width: 1.5,
-                  )),
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(
+                        side: BorderSide(
+                      color: AppColors.purple,
+                      width: 1.5,
+                    )),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }

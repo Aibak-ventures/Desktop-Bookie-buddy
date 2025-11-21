@@ -14,44 +14,44 @@ class BookingDetailsClientSection extends StatelessWidget {
   final BookingDetailsModel booking;
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: '',
-    padding: 18.padding,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10.h,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(
-          child: BookingDetailsDetailsColumn(
-            label: 'Name',
-            value: booking.client.name,
-          ),
-        ),
-        BookingDetailsDetailsColumn(
-          label: 'Phone 1',
-          value: booking.client.phone1.toString(),
-          trailing: [
-            _launchPhoneCall(phone: booking.client.phone1.toString()),
-            25.width,
-            _launchWhatsApp(phone: booking.client.phone1.toString()),
+        title: '',
+        padding: 18.padding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10.h,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: BookingDetailsDetailsColumn(
+                label: 'Name',
+                value: booking.client.name,
+              ),
+            ),
+            BookingDetailsDetailsColumn(
+              label: 'Phone 1',
+              value: booking.client.phone1.toString(),
+              trailing: [
+                _launchPhoneCall(phone: booking.client.phone1.toString()),
+                25.width,
+                _launchWhatsApp(phone: booking.client.phone1.toString()),
+              ],
+            ),
+            if (booking.client.phone2 != null)
+              BookingDetailsDetailsColumn(
+                label: 'Phone 2',
+                value: booking.client.phone2.toString(),
+                trailing: [
+                  _launchPhoneCall(phone: booking.client.phone2.toString()),
+                  25.width,
+                  _launchWhatsApp(phone: booking.client.phone2.toString()),
+                ],
+              ),
+            if (booking.address != null && booking.address!.isNotEmpty)
+              BookingDetailsDetailsColumn(
+                  label: 'Place', value: booking.address!),
           ],
         ),
-
-        if (booking.client.phone2 != null)
-          BookingDetailsDetailsColumn(
-            label: 'Phone 2',
-            value: booking.client.phone2.toString(),
-            trailing: [
-              _launchPhoneCall(phone: booking.client.phone2.toString()),
-              25.width,
-              _launchWhatsApp(phone: booking.client.phone2.toString()),
-            ],
-          ),
-        if (booking.address != null && booking.address!.isNotEmpty)
-          BookingDetailsDetailsColumn(label: 'Place', value: booking.address!),
-      ],
-    ),
-  );
+      );
 }
 
 class _launchPhoneCall extends StatelessWidget {
@@ -71,13 +71,14 @@ class _launchWhatsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SvgPicture.asset(
-    AppAssets.whatsAppSvg,
-    colorFilter: const ColorFilter.mode(
-      Color.fromARGB(255, 33, 192, 92), // WhatsApp green color
-      BlendMode.srcIn,
-    ),
-    semanticsLabel: 'WhatsApp Icon',
-    width: 20,
-    height: 20,
-  ).onTapInkWell(() => OpenExternalApplications.launchWhatsApp(phone: phone));
+        AppAssets.whatsAppSvg,
+        colorFilter: const ColorFilter.mode(
+          Color.fromARGB(255, 33, 192, 92), // WhatsApp green color
+          BlendMode.srcIn,
+        ),
+        semanticsLabel: 'WhatsApp Icon',
+        width: 20,
+        height: 20,
+      ).onTapInkWell(
+          () => OpenExternalApplications.launchWhatsApp(phone: phone));
 }

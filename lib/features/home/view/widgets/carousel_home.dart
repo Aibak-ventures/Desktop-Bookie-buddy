@@ -20,12 +20,12 @@ class CarouselHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
 
-    return isDesktop 
+    return isDesktop
         ? _buildDesktopCarousel(context)
         : _buildMobileCarousel(context);
   }
@@ -50,10 +50,12 @@ class CarouselHome extends StatelessWidget {
                   builder: (context) => MultiBlocProvider(
                     providers: [
                       BlocProvider(
-                        create: (context) => AllBookingBloc(repository: getIt.get()),
+                        create: (context) =>
+                            AllBookingBloc(repository: getIt.get()),
                       ),
                       BlocProvider(
-                        create: (context) => AllBookingPastBloc(repository: getIt.get()),
+                        create: (context) =>
+                            AllBookingPastBloc(repository: getIt.get()),
                       ),
                     ],
                     child: AllBookingScreen(),

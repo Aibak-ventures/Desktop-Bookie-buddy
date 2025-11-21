@@ -15,8 +15,8 @@ class LedgerSalesBloc extends Bloc<LedgerSalesEvent, LedgerSalesState> {
   final LedgerRepository _repository;
 
   LedgerSalesBloc({required LedgerRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadSales>(_onLoadSales);
     on<_LoadNextPageSales>(_onLoadNextPageSales);
   }

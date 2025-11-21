@@ -22,16 +22,16 @@ class CustomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-      text,
-      textAlign: textAlign,
-      style: TextStyle(
-        fontWeight: weight,
+        text,
+        textAlign: textAlign,
+        style: TextStyle(
+          fontWeight: weight,
+          overflow: textOverflow,
+          color: color,
+          fontSize: context.mediaQueryWidth(size),
+        ),
+        softWrap: true,
+        maxLines: maxLines,
         overflow: textOverflow,
-        color: color,
-        fontSize: context.mediaQueryWidth(size),
-      ),
-      softWrap: true,
-      maxLines: maxLines,
-      overflow: textOverflow,
-    );
+      );
 }

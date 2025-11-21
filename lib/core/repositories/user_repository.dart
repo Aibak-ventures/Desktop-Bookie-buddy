@@ -17,8 +17,8 @@ class UserRepository {
   UserRepository({
     required UserService userService,
     required SharedPreferenceHelper prefs,
-  }) : _userService = userService,
-       _prefs = prefs;
+  })  : _userService = userService,
+        _prefs = prefs;
 
   Future<UserModel> fetchUserData() async {
     try {

@@ -14,8 +14,8 @@ class WalletPendingBloc extends Bloc<WalletPendingEvent, WalletPendingState> {
   final LedgerRepository _repository;
 
   WalletPendingBloc({required LedgerRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadPending>(_onLoadPending);
     on<_LoadNextPagePending>(_onLoadNextPagePending);
   }

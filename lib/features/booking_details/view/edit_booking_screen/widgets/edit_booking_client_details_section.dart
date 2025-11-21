@@ -23,20 +23,20 @@ class EditBookingClientDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    spacing: 15.w,
-    children: [
-      ClientSelectWidget(
-        nameController: clientNameController,
-        phone1Controller: clientPhone1Controller,
-        phone2Controller: clientPhone2Controller,
-        isClientSearchEnabledNotifier: isClientSearchEnabledNotifier,
-        textStyle: TextStyle(color: AppColors.grey600, fontSize: 16.sp),
-      ),
-      CustomTextField(
-        controller: clientAddressController,
-        validator: AppInputValidators.address,
-        label: 'Place',
-      ),
-    ],
-  );
+        spacing: 15.w,
+        children: [
+          ClientSelectWidget(
+            nameController: clientNameController,
+            phone1Controller: clientPhone1Controller,
+            phone2Controller: clientPhone2Controller,
+            isClientSearchEnabledNotifier: isClientSearchEnabledNotifier,
+            textStyle: TextStyle(color: AppColors.grey600, fontSize: 16.sp),
+          ),
+          CustomTextField(
+            controller: clientAddressController,
+            validator: AppInputValidators.address,
+            label: 'Place',
+          ),
+        ],
+      );
 }

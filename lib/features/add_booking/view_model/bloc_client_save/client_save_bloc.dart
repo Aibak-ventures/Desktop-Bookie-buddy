@@ -13,8 +13,8 @@ part 'client_save_state.dart';
 class ClientSaveBloc extends Bloc<ClientSaveEvent, ClientSaveState> {
   final ClientRepository _repository;
   ClientSaveBloc({required ClientRepository repository})
-    : _repository = repository,
-      super(const _Initial()) {
+      : _repository = repository,
+        super(const _Initial()) {
     on<_SaveClient>((event, emit) async {
       emit(const _Saving());
 

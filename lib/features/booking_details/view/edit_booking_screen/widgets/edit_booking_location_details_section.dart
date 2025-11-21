@@ -17,41 +17,41 @@ class EditBookingLocationDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => EditBookingSectionColumn(
-      title: 'Location Details',
-      child: Column(
-        spacing: 15,
-        children: [
-          CustomTextField(
-            controller: locationStartController,
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Start Location',
+        title: 'Location Details',
+        child: Column(
+          spacing: 15,
+          children: [
+            CustomTextField(
+              controller: locationStartController,
+              validator: (value) => AppInputValidators.basicText(
+                value,
+                isRequired: false,
+                fieldName: 'Start Location',
+              ),
+              label: 'Start Location',
+              hintText: 'Location',
             ),
-            label: 'Start Location',
-            hintText: 'Location',
-          ),
-          CustomTextField(
-            controller: locationFromController,
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Pickup Location',
+            CustomTextField(
+              controller: locationFromController,
+              validator: (value) => AppInputValidators.basicText(
+                value,
+                isRequired: false,
+                fieldName: 'Pickup Location',
+              ),
+              label: 'Pickup Location',
+              hintText: 'Location',
             ),
-            label: 'Pickup Location',
-            hintText: 'Location',
-          ),
-          CustomTextField(
-            controller: locationToController,
-            validator: (value) => AppInputValidators.basicText(
-              value,
-              isRequired: false,
-              fieldName: 'Destination',
+            CustomTextField(
+              controller: locationToController,
+              validator: (value) => AppInputValidators.basicText(
+                value,
+                isRequired: false,
+                fieldName: 'Destination',
+              ),
+              label: 'Destination',
+              hintText: 'Location',
             ),
-            label: 'Destination',
-            hintText: 'Location',
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 }

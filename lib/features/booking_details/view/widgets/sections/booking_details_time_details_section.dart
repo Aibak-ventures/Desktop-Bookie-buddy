@@ -13,22 +13,22 @@ class BookingDetailsTimeDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: '',
-    padding: 12.padding,
-    child: Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      spacing: 15.w,
-      runSpacing: 15.w,
-      children: [
-        BookingDetailsDetailsColumn(
-          label: 'Pickup Time',
-          value: booking.pickupDate?.formatToUiTime() ?? 'N/A',
+        title: '',
+        padding: 12.padding,
+        child: Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          spacing: 15.w,
+          runSpacing: 15.w,
+          children: [
+            BookingDetailsDetailsColumn(
+              label: 'Pickup Time',
+              value: booking.pickupDate?.formatToUiTime() ?? 'N/A',
+            ),
+            BookingDetailsDetailsColumn(
+              label: 'Return Time',
+              value: booking.returnDate.formatToUiTime(),
+            ),
+          ],
         ),
-        BookingDetailsDetailsColumn(
-          label: 'Return Time',
-          value: booking.returnDate.formatToUiTime(),
-        ),
-      ],
-    ),
-  );
+      );
 }

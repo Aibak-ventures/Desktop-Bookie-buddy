@@ -73,9 +73,9 @@ class SelectedProductCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 8.height,
-                
+
                 // Product details
                 Text(
                   price,
@@ -87,9 +87,9 @@ class SelectedProductCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
+
                 4.height,
-                
+
                 Text(
                   size,
                   style: TextStyle(
@@ -100,9 +100,9 @@ class SelectedProductCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
+
                 2.height,
-                
+
                 Text(
                   'Qty: $quantity',
                   style: TextStyle(
@@ -111,13 +111,13 @@ class SelectedProductCard extends StatelessWidget {
                     color: AppColors.purple,
                   ),
                 ),
-                
+
                 // Customization removed from select products screen
                 // Only show in cart/add booking screen
               ],
             ),
           ),
-          
+
           // Close button
           Positioned(
             top: -2,

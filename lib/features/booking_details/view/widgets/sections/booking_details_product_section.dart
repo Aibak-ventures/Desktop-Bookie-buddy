@@ -15,64 +15,64 @@ class BookingDetailsProductSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BookingDetailsSection(
-    title: '',
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListView.builder(
-          itemCount: booking.bookedItems.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final product = booking.bookedItems[index];
+        title: '',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListView.builder(
+              itemCount: booking.bookedItems.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                final product = booking.bookedItems[index];
 
-            return Column(
-              children: [
-                ProductSimpleDetailsTile(
-                  name: product.name,
-                  quantity: product.quantity,
-                  category: product.category,
-                  color: product.color,
-                  image: product.image,
-                  model: product.model,
-                  variantAttribute: product.variantAttribute,
-                  mainServiceType: product.mainServiceType,
-                  amount: product.amount,
+                return Column(
+                  children: [
+                    ProductSimpleDetailsTile(
+                      name: product.name,
+                      quantity: product.quantity,
+                      category: product.category,
+                      color: product.color,
+                      image: product.image,
+                      model: product.model,
+                      variantAttribute: product.variantAttribute,
+                      mainServiceType: product.mainServiceType,
+                      amount: product.amount,
+                    ),
+                    if ((product.mainServiceType.isDress ||
+                            product.mainServiceType.isVehicle) &&
+                        product.measurements.isNotEmpty)
+                      CustomizationExpansionTile(
+                        expansionTitle: product.mainServiceType.isVehicle
+                            ? 'More Details'
+                            : null,
+                        measurements: product.measurements,
+                        isButtonVisible: false,
+                        trailingWidget: product.measurements.isNotEmpty
+                            ? 5.height
+                            : Padding(
+                                padding: 10.padding,
+                                child: const Text('No measurements'),
+                              ),
+                      ),
+                  ],
+                );
+              },
+            ),
+            if (booking.description != null && booking.description!.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.only(
+                  // top: 16.w,
+                  left: 16.w,
+                  right: 16.w,
+                  bottom: 20.w,
                 ),
-                if ((product.mainServiceType.isDress ||
-                        product.mainServiceType.isVehicle) &&
-                    product.measurements.isNotEmpty)
-                  CustomizationExpansionTile(
-                    expansionTitle: product.mainServiceType.isVehicle
-                        ? 'More Details'
-                        : null,
-                    measurements: product.measurements,
-                    isButtonVisible: false,
-                    trailingWidget: product.measurements.isNotEmpty
-                        ? 5.height
-                        : Padding(
-                            padding: 10.padding,
-                            child: const Text('No measurements'),
-                          ),
-                  ),
-              ],
-            );
-          },
+                child: BookingDetailsDetailsColumn(
+                  label: 'Note',
+                  value: booking.description!,
+                ),
+              ),
+          ],
         ),
-        if (booking.description != null && booking.description!.isNotEmpty)
-          Padding(
-            padding: EdgeInsets.only(
-              // top: 16.w,
-              left: 16.w,
-              right: 16.w,
-              bottom: 20.w,
-            ),
-            child: BookingDetailsDetailsColumn(
-              label: 'Note',
-              value: booking.description!,
-            ),
-          ),
-      ],
-    ),
-  );
+      );
 }

@@ -17,8 +17,8 @@ class BookingDetailsBloc
   final BookingRepository _repository;
 
   BookingDetailsBloc({required BookingRepository repository})
-    : _repository = repository,
-      super(const BookingDetailsState.loading()) {
+      : _repository = repository,
+        super(const BookingDetailsState.loading()) {
     on<_FetchBookingDetails>(_onFetchBookingDetails);
     on<_UpdateDeliveryStatus>(_onUpdateDeliveryStatus);
     on<_UpdateBookingStatus>(_onUpdateBookingStatus);

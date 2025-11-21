@@ -36,7 +36,7 @@ class SalesService {
 
   Future<CustomResponseModel> getSaleDetails(int saleId) async {
     try {
-      final response = await _dio.get('${ApiPaths.sales.sales}/$saleId/');
+      final response = await _dio.get(ApiPaths.sales.salesDetailV4(saleId));
       log('Sales get response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -48,7 +48,7 @@ class SalesService {
   Future<CustomResponseModel> createSale(SalesRequestModel salesRequest) async {
     try {
       final response = await _dio.post(
-        ApiPaths.sales.sales,
+        ApiPaths.sales.salesV4,
         data: salesRequest.toJson(),
       );
       log('Sales create response: ${response.data}');
@@ -62,7 +62,7 @@ class SalesService {
   Future<CustomResponseModel> updateSale(SalesRequestModel salesRequest) async {
     try {
       final response = await _dio.patch(
-        '${ApiPaths.sales.updateSale}/${salesRequest.id}/',
+        ApiPaths.sales.updateSaleV4(salesRequest.id!),
         data: salesRequest.toJson(),
       );
       log('Sales update response: ${response.data}');
@@ -96,7 +96,7 @@ class SalesService {
 
   Future<CustomResponseModel> deleteSale(int saleId) async {
     try {
-      final response = await _dio.delete('${ApiPaths.sales.sales}/$saleId/');
+      final response = await _dio.delete(ApiPaths.sales.deleteSaleV4(saleId));
       log('Sales delete response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {

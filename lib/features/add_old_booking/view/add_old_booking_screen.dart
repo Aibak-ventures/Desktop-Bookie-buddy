@@ -185,10 +185,10 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
                           onPressed: () {
                             if (isLoading) return;
                             if (!formKey.currentState!.validate()) return;
-                           final clientId = context
-                                    .read<ClientCubit>()
-                                    .getSelectedClient()
-                                    ?.id;
+                            final clientId = context
+                                .read<ClientCubit>()
+                                .getSelectedClient()
+                                ?.id;
                             if (clientId == null) {
                               context.showSnackBar(
                                 'Please select a client',
@@ -219,16 +219,16 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
                               returnDate:
                                   returnDateController.text.formatToUiDate(),
                               clientId: clientId,
-                            address: placeController.text.trim(),
-                                  description:
-                                      descriptionController.text.trim().isEmpty
+                              address: placeController.text.trim(),
+                              description:
+                                  descriptionController.text.trim().isEmpty
                                       ? null
                                       : descriptionController.text.trim(),
-                                  products: selectedProductsNotifier.value,
-                                  deliveryStatus: DeliveryStatus.returned,
-                                  paymentMethod: PaymentMethod.cash,
-                                  bookingStatus: BookingStatus.completed,
-                                  advanceAmount: totalAmount,
+                              products: selectedProductsNotifier.value,
+                              deliveryStatus: DeliveryStatus.returned,
+                              paymentMethod: PaymentMethod.cash,
+                              bookingStatus: BookingStatus.completed,
+                              advanceAmount: totalAmount,
                             );
 
                             context.read<AddOldBookingsBloc>().add(
@@ -262,7 +262,8 @@ class _AddOldBookingScreenState extends State<AddOldBookingScreen> {
   Widget buildClientSection() {
     return Column(
       children: [
-        ClientSelectWidget(isClientSearchEnabledNotifier: ValueNotifier(true),
+        ClientSelectWidget(
+          isClientSearchEnabledNotifier: ValueNotifier(true),
           nameController: nameController,
           phone1Controller: phone1Controller,
           phone2Controller: phone2Controller,

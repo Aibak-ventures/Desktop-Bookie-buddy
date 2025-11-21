@@ -53,7 +53,8 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
 
   // controllers
   final advanceAmountController = TextEditingController();
-  final additionalAmountController = TextEditingController(); // Additional charges field
+  final additionalAmountController =
+      TextEditingController(); // Additional charges field
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
 
@@ -89,7 +90,7 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
   @override
   Widget build(BuildContext context) {
     final isWeb = context.screenWidth > 768;
-    
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: handlePop,
@@ -109,9 +110,8 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                 constraints: BoxConstraints(
                   maxWidth: isWeb ? 1000 : double.infinity,
                 ),
-                padding: isWeb
-                    ? const EdgeInsets.all(40)
-                    : const EdgeInsets.all(16),
+                padding:
+                    isWeb ? const EdgeInsets.all(40) : const EdgeInsets.all(16),
                 child: Form(
                   key: _formKey,
                   child: isWeb ? _buildWebLayout() : _buildMobileLayout(),
@@ -186,9 +186,9 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 40),
-        
+
         // Main content in two columns
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +221,7 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     CustomTextField(
                       controller: advanceAmountController,
                       label: 'Advance Amount (Optional)',
@@ -235,7 +235,7 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                               fieldName: 'Advance Amount',
                             ),
                     ),
-                    
+
                     const SizedBox(height: 16),
 
                     CustomTextField(
@@ -251,11 +251,11 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                               fieldName: 'Security Amount',
                             ),
                     ),
-                    
+
                     const SizedBox(height: 16),
 
                     // Additional charges field removed as requested
-                    
+
                     CustomTextField(
                       controller: discountAmountController,
                       label: 'Discount Amount (Optional)',
@@ -269,9 +269,9 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                               fieldName: 'Discount Amount',
                             ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     AddAdditionalChargesWidget(
                       additionalChargesNotifier: additionalChargesNotifier,
                     ),
@@ -279,9 +279,9 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(width: 24),
-            
+
             // Right column - Booking Settings
             Expanded(
               flex: 1,
@@ -310,11 +310,11 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
                     AddBookingSelectStatusWidget(
                       deliveryStatusNotifier: deliveryStatusNotifier,
                       paymentOptionNotifier: paymentOptionNotifier,
-                      isSharingPdfToWhatsAppNotifier: isSharingPdfToWhatsAppNotifier,
+                      isSharingPdfToWhatsAppNotifier:
+                          isSharingPdfToWhatsAppNotifier,
                       advanceAmountController: advanceAmountController,
                       whatsAppNumber: widget.whatsAppPhoneNumber,
                     ),
@@ -324,9 +324,9 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
             ),
           ],
         ),
-        
+
         const SizedBox(height: 40),
-        
+
         // Confirm button
         BlocConsumer<AddBookingBloc, AddBookingState>(
           listener: (context, state) {
@@ -337,30 +337,30 @@ class _AddBookingPaymentScreenState extends State<AddBookingPaymentScreen> {
                 context.showSnackBar(message, isError: true);
               },
               success: () {
-               context.clearSnackBars();
+                context.clearSnackBars();
 
                 // Refresh dashboard to show new booking
                 context.read<DashboardBloc>().add(
-                  const DashboardEvent.loadDashboardData(),
+                      const DashboardEvent.loadDashboardData(),
+                    );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SuccessAnimationScreen(
+                      text: 'Booked Successfully',
+                      afterSuccess: () {
+                        // Optional: callback to run after animation success
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const BottomBarScreen()),
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ),
                 );
-
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => SuccessAnimationScreen(
-      text: 'Booked Successfully',
-      afterSuccess: () {
-        // Optional: callback to run after animation success
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const BottomBarScreen()),
-          (route) => false,
-        );
-      },
-    ),
-  ),
-);
-
               },
             );
           },
@@ -410,7 +410,6 @@ Navigator.push(
             fontWeight: FontWeight.w600,
           ),
         ),
-
         CustomTextField(
           controller: advanceAmountController,
           label: 'Advance Amount (Optional)',
@@ -424,7 +423,6 @@ Navigator.push(
                   fieldName: 'Advance Amount',
                 ),
         ),
-
         CustomTextField(
           controller: securityAmountController,
           label: 'Security Amount (Optional)',
@@ -438,7 +436,6 @@ Navigator.push(
                   fieldName: 'Security Amount',
                 ),
         ),
-        
         CustomTextField(
           controller: discountAmountController,
           label: 'Discount Amount (Optional)',
@@ -452,11 +449,9 @@ Navigator.push(
                   fieldName: 'Discount Amount',
                 ),
         ),
-
         AddAdditionalChargesWidget(
           additionalChargesNotifier: additionalChargesNotifier,
         ),
-
         AddBookingSelectStatusWidget(
           deliveryStatusNotifier: deliveryStatusNotifier,
           paymentOptionNotifier: paymentOptionNotifier,
@@ -464,9 +459,7 @@ Navigator.push(
           advanceAmountController: advanceAmountController,
           whatsAppNumber: widget.whatsAppPhoneNumber,
         ),
-        
         const SizedBox(height: 40),
-        
         BlocConsumer<AddBookingBloc, AddBookingState>(
           listener: (context, state) {
             state.maybeWhen(
@@ -476,30 +469,30 @@ Navigator.push(
                 context.showSnackBar(message, isError: true);
               },
               success: () {
-               context.clearSnackBars();
+                context.clearSnackBars();
 
                 // Refresh dashboard to show new booking
                 context.read<DashboardBloc>().add(
-                  const DashboardEvent.loadDashboardData(),
+                      const DashboardEvent.loadDashboardData(),
+                    );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SuccessAnimationScreen(
+                      text: 'Booked Successfully',
+                      afterSuccess: () {
+                        // Navigate to home and trigger refresh of dashboard
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const BottomBarScreen()),
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ),
                 );
-
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => SuccessAnimationScreen(
-      text: 'Booked Successfully',
-      afterSuccess: () {
-        // Navigate to home and trigger refresh of dashboard
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const BottomBarScreen()),
-          (route) => false,
-        );
-      },
-    ),
-  ),
-);
-
               },
             );
           },
@@ -546,10 +539,9 @@ Navigator.push(
               style: TextStyle(color: AppColors.white),
             ),
             onPressed: () async {
-              NavigatorX(context).pop(); 
-              final advanceAmount = advanceAmountController.text
-                  .trim()
-                  .toIntOrNull();
+              NavigatorX(context).pop();
+              final advanceAmount =
+                  advanceAmountController.text.trim().toIntOrNull();
               final securityAmount =
                   securityAmountController.text.trim().toIntOrNull() ?? 0;
               final discountAmount =
@@ -565,7 +557,7 @@ Navigator.push(
                   'Advance amount cannot be greater than total amount ${finalTotalAmount.toCurrency()}',
                   isError: true,
                 );
-              }   
+              }
               if (discountAmount > (finalTotalAmount - (advanceAmount ?? 0))) {
                 return context.showSnackBar(
                   'Discount amount cannot be greater than remaining amount ${(finalTotalAmount - (advanceAmount ?? 0)).toCurrency()}',
@@ -583,37 +575,46 @@ Navigator.push(
                     '${widget.newBooking.pickupDate!.formatToUiDate()}T${widget.newBooking.pickupTime?.formatToTime(addSeconds: true) ?? '00:00:00'}',
                 returnDate: () {
                   final returnDateStr = widget.newBooking.returnDate!;
-                  var returnTimeStr = widget.newBooking.returnTime?.formatToTime(addSeconds: true) ?? '23:59:59';
-                  
+                  var returnTimeStr = widget.newBooking.returnTime
+                          ?.formatToTime(addSeconds: true) ??
+                      '23:59:59';
+
                   // If same day booking, ensure return time is after pickup time
-                  if (widget.newBooking.pickupDate!.formatToUiDate() == returnDateStr && 
-                      widget.newBooking.pickupTime != null && 
+                  if (widget.newBooking.pickupDate!.formatToUiDate() ==
+                          returnDateStr &&
+                      widget.newBooking.pickupTime != null &&
                       widget.newBooking.returnTime != null) {
-                    final pickupMinutes = widget.newBooking.pickupTime!.hour * 60 + widget.newBooking.pickupTime!.minute;
-                    final returnMinutes = widget.newBooking.returnTime!.hour * 60 + widget.newBooking.returnTime!.minute;
-                    
+                    final pickupMinutes =
+                        widget.newBooking.pickupTime!.hour * 60 +
+                            widget.newBooking.pickupTime!.minute;
+                    final returnMinutes =
+                        widget.newBooking.returnTime!.hour * 60 +
+                            widget.newBooking.returnTime!.minute;
+
                     // If return time is not after pickup time, use pickup time + 1 hour
                     if (returnMinutes <= pickupMinutes) {
-                      final newHour = (widget.newBooking.pickupTime!.hour + 1) % 24;
+                      final newHour =
+                          (widget.newBooking.pickupTime!.hour + 1) % 24;
                       final minute = widget.newBooking.pickupTime!.minute;
-                      returnTimeStr = '${newHour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:00';
+                      returnTimeStr =
+                          '${newHour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:00';
                     }
                   }
-                  
+
                   return '${returnDateStr}T${returnTimeStr}';
                 }(),
                 coolingPeriodDate:
                     widget.newBooking.coolingPeriodDate.isNullOrEmpty
-                    ? null
-                    : '${widget.newBooking.coolingPeriodDate}T23:59:59',
+                        ? null
+                        : '${widget.newBooking.coolingPeriodDate}T23:59:59',
 
                 additionalCharges: [], // Removed additional charges as requested
                 sendPdfToWhatsApp: isSharingPdfToWhatsAppNotifier.value,
               );
 
               context.read<AddBookingBloc>().add(
-                AddBookingEvent.addNewBooking(newBooking),
-              );
+                    AddBookingEvent.addNewBooking(newBooking),
+                  );
             },
           ),
         ],
@@ -629,7 +630,7 @@ Navigator.push(
     if (advanceAmountController.text.trim().isEmpty &&
         securityAmountController.text.trim().isEmpty &&
         discountAmountController.text.trim().isEmpty) {
-     NavigatorX(context).pop(); 
+      NavigatorX(context).pop();
       return;
     }
     final result = await showDiscardDialog(context);

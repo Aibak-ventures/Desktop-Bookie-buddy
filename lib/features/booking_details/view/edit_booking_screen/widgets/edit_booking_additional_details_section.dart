@@ -16,37 +16,37 @@ class EditBookingAdditionalDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => EditBookingSectionColumn(
-    title: 'Additional',
-    child: Column(
-      spacing: 15.w,
-      children: [
-        CustomTextField(
-          controller: securityAmountController,
-          validator: (value) => AppInputValidators.isEmpty(value)
-              ? null
-              : AppInputValidators.amount(
-                  value,
-                  allowZero: true,
-                  fieldName: 'Security',
-                ),
-          label: 'Security Amount (Optional)',
-          hintText: 'Enter Security',
-          keyboardType: TextInputType.number,
+        title: 'Additional',
+        child: Column(
+          spacing: 15.w,
+          children: [
+            CustomTextField(
+              controller: securityAmountController,
+              validator: (value) => AppInputValidators.isEmpty(value)
+                  ? null
+                  : AppInputValidators.amount(
+                      value,
+                      allowZero: true,
+                      fieldName: 'Security',
+                    ),
+              label: 'Security Amount (Optional)',
+              hintText: 'Enter Security',
+              keyboardType: TextInputType.number,
+            ),
+            CustomTextField(
+              controller: discountAmountController,
+              validator: (value) => AppInputValidators.isEmpty(value)
+                  ? null
+                  : AppInputValidators.amount(
+                      value,
+                      allowZero: true,
+                      fieldName: 'Discount',
+                    ),
+              label: 'Discount Amount (Optional)',
+              hintText: 'Enter Discount',
+              keyboardType: TextInputType.number,
+            ),
+          ],
         ),
-        CustomTextField(
-          controller: discountAmountController,
-          validator: (value) => AppInputValidators.isEmpty(value)
-              ? null
-              : AppInputValidators.amount(
-                  value,
-                  allowZero: true,
-                  fieldName: 'Discount',
-                ),
-          label: 'Discount Amount (Optional)',
-          hintText: 'Enter Discount',
-          keyboardType: TextInputType.number,
-        ),
-      ],
-    ),
-  );
+      );
 }

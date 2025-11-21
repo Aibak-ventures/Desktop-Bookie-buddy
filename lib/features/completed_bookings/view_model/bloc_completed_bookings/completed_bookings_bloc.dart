@@ -18,8 +18,8 @@ class CompletedBookingsBloc
   final BookingRepository _repository;
 
   CompletedBookingsBloc({required BookingRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+      : _repository = repository,
+        super(const _Loading()) {
     on<_LoadCompletedBookings>(_onLoadCompletedBookings);
     on<_LoadNextPageCompletedBookings>(
       _onLoadNextPageCompletedBookings,
@@ -41,9 +41,8 @@ class CompletedBookingsBloc
         status: LoadBookingType.completed,
         startDate: event.startDate,
         endDate: event.endDate,
-        searchQuery: event.searchQuery.isNotNullOrEmpty
-            ? event.searchQuery
-            : null,
+        searchQuery:
+            event.searchQuery.isNotNullOrEmpty ? event.searchQuery : null,
       );
 
       emit(

@@ -14,8 +14,8 @@ part 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final BookingRepository _repository;
   SearchBloc({required BookingRepository repository})
-    : _repository = repository,
-      super(const _Initial()) {
+      : _repository = repository,
+        super(const _Initial()) {
     on<_Search>(_onSearch);
     on<_LoadNextSearchResults>(_onLoadNextSearchResult);
     on<_Reset>(_onReset);

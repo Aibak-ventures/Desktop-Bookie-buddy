@@ -15,9 +15,10 @@ class BookingSelectionState {
     BookingsModel? selectedBooking,
     bool? isModified,
     bool? shouldRefresh,
-  }) => BookingSelectionState(
-      selectedBooking: selectedBooking ?? this.selectedBooking,
-      isModified: isModified ?? this.isModified,
-      shouldRefresh: shouldRefresh ?? this.shouldRefresh,
-    );
+  }) =>
+      BookingSelectionState(
+        selectedBooking: selectedBooking ?? this.selectedBooking,
+        isModified: isModified ?? this.isModified,
+        shouldRefresh: shouldRefresh ?? this.shouldRefresh,
+      );
 }

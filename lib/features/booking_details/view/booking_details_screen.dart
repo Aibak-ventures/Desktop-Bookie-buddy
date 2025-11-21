@@ -30,7 +30,6 @@ class BookingDetailsScreen extends StatefulWidget {
 }
 
 class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
-
   final GlobalKey _paymentButtonKey = GlobalKey();
 
   @override
@@ -42,22 +41,20 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     Future.microtask(() {
       if (!mounted) return;
       context.read<BookingDetailsBloc>().add(
-        BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
-      );
+            BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
+          );
     });
   }
 
   @override
   void dispose() {
-
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final isWeb = context.screenWidth > 768;
-    
+
     return Scaffold(
       backgroundColor: isWeb ? const Color(0xFFF5F7FA) : null,
       // Custom Appbar
@@ -74,11 +71,11 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             loaded: (booking) {
               final bookingCubit = context.read<BookingSelectionCubit>();
 
-              final updatedBooking = bookingCubit.state.selectedBooking?.copyWith(
+              final updatedBooking =
+                  bookingCubit.state.selectedBooking?.copyWith(
                 deliveryStatus: state.booking!.deliveryStatus,
-                bookedItems: state.booking!.bookedItems
-                    .map((e) => e.name)
-                    .toList(),
+                bookedItems:
+                    state.booking!.bookedItems.map((e) => e.name).toList(),
                 paymentStatus: state.booking!.paymentStatus == true
                     ? PaymentStatus.completed
                     : PaymentStatus.pending,
@@ -113,8 +110,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               context.showSnackBar(message);
               if (needRefresh)
                 context.read<BookingDetailsBloc>().add(
-                  BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
-                );
+                      BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
+                    );
             },
           );
         },
@@ -134,11 +131,11 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           error: (error) => CustomErrorWidget(
             errorText: error,
             onRetry: () => context.read<BookingDetailsBloc>().add(
-              BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
-            ),
+                  BookingDetailsEvent.fetchBookingDetails(widget.bookingId),
+                ),
           ),
           // Body - Web responsive design
-          loaded: (booking) => isWeb 
+          loaded: (booking) => isWeb
               ? _buildWebLayout(context, state, booking)
               : _buildMobileLayout(context, state, booking),
         ),
@@ -147,7 +144,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     );
   }
 
-  Widget _buildWebLayout(BuildContext context, BookingDetailsState state, dynamic booking) {
+  Widget _buildWebLayout(
+      BuildContext context, BookingDetailsState state, dynamic booking) {
     return Container(
       width: double.infinity,
       child: SingleChildScrollView(
@@ -184,9 +182,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 32),
-                
+
                 // Action panel - Right side (30%)
                 Expanded(
                   flex: 3,
@@ -219,20 +217,20 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            
+
                             // Primary action buttons for web
                             _buildWebActionButtons(context, state, booking),
-                            
+
                             const SizedBox(height: 20),
-                            
+
                             // Secondary action buttons
                             _buildSecondaryActionButtons(context, booking),
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Payment Details Section (Complete)
                       Container(
                         width: double.infinity,
@@ -252,14 +250,22 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                           booking: booking,
                           productTotalAmount: booking.bookedItems.fold<int>(
                             0,
-                            (int previousValue, dynamic element) => previousValue + ((element.amount as int?) ?? 0),
+                            (int previousValue, dynamic element) =>
+                                previousValue + ((element.amount as int?) ?? 0),
                           ),
-                          additionalChargesTotal: booking.additionalCharges?.fold<int>(
-                            0,
-                            (int previousValue, dynamic element) => previousValue + ((element.amount as int?) ?? 0),
-                          ) ?? 0,
-                          paymentHistoryCubit: context.read<BookingDetailsPaymentHistoryCubit>(),
-                          isPaymentCompleted: booking.paidAmount >= (booking.totalAmount - (booking.discountAmount ?? 0)),
+                          additionalChargesTotal:
+                              booking.additionalCharges?.fold<int>(
+                                    0,
+                                    (int previousValue, dynamic element) =>
+                                        previousValue +
+                                        ((element.amount as int?) ?? 0),
+                                  ) ??
+                                  0,
+                          paymentHistoryCubit:
+                              context.read<BookingDetailsPaymentHistoryCubit>(),
+                          isPaymentCompleted: booking.paidAmount >=
+                              (booking.totalAmount -
+                                  (booking.discountAmount ?? 0)),
                         ),
                       ),
                     ],
@@ -273,7 +279,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, BookingDetailsState state, dynamic booking) {
+  Widget _buildMobileLayout(
+      BuildContext context, BookingDetailsState state, dynamic booking) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -296,9 +303,10 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     );
   }
 
-  Widget _buildMobileActionButton(BuildContext context, BookingDetailsState state, dynamic booking) {
+  Widget _buildMobileActionButton(
+      BuildContext context, BookingDetailsState state, dynamic booking) {
     final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
-    
+
     if (isBookingCompleted) {
       return Container(
         width: double.infinity,
@@ -327,18 +335,26 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     }
 
     return ElevatedButton.icon(
-      onPressed: state.isLoading ? null : () => _handleCompleteBooking(context, booking, 
-        (booking.totalAmount ?? 0) - (booking.paidAmount ?? 0) - (booking.discountAmount ?? 0)),
-      icon: state.isLoading 
+      onPressed: state.isLoading
+          ? null
+          : () => _handleCompleteBooking(
+              context,
+              booking,
+              (booking.totalAmount ?? 0) -
+                  (booking.paidAmount ?? 0) -
+                  (booking.discountAmount ?? 0)),
+      icon: state.isLoading
           ? const SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              child: CircularProgressIndicator(
+                  strokeWidth: 2, color: Colors.white),
             )
           : const Icon(Icons.check_circle, color: Colors.white),
       label: Text(
         state.isLoading ? 'Processing...' : 'Complete Booking',
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+        style: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green.shade600,
@@ -350,98 +366,107 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     );
   }
 
-Widget _buildWebActionButtons(BuildContext context, BookingDetailsState state, dynamic booking) {
-  final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
-  final balanceAmount = (booking.totalAmount ?? 0) -
-      (booking.paidAmount ?? 0) -
-      (booking.discountAmount ?? 0);
+  Widget _buildWebActionButtons(
+      BuildContext context, BookingDetailsState state, dynamic booking) {
+    final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
+    final balanceAmount = (booking.totalAmount ?? 0) -
+        (booking.paidAmount ?? 0) -
+        (booking.discountAmount ?? 0);
 
-  return Column(
-    children: [
-      // ✅ Disable "Complete Booking" if already completed
-      ElevatedButton.icon(
-        onPressed: isBookingCompleted || state.isLoading
-            ? null
-            : () => _handleCompleteBooking(context, booking, balanceAmount),
-        icon: state.isLoading
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-              )
-            : const Icon(Icons.check_circle, color: Colors.white),
-        label: Text(
-          isBookingCompleted
-              ? 'Booking Completed'
-              : (state.isLoading ? 'Processing...' : 'Complete Booking'),
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    return Column(
+      children: [
+        // ✅ Disable "Complete Booking" if already completed
+        ElevatedButton.icon(
+          onPressed: isBookingCompleted || state.isLoading
+              ? null
+              : () => _handleCompleteBooking(context, booking, balanceAmount),
+          icon: state.isLoading
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white),
+                )
+              : const Icon(Icons.check_circle, color: Colors.white),
+          label: Text(
+            isBookingCompleted
+                ? 'Booking Completed'
+                : (state.isLoading ? 'Processing...' : 'Complete Booking'),
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isBookingCompleted
+                ? Colors.grey.shade400
+                : Colors.green.shade600,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 52),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 2,
+          ),
         ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isBookingCompleted
-              ? Colors.grey.shade400
-              : Colors.green.shade600,
-          foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          elevation: 2,
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
+    final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
+
+    return Column(
+      children: [
+        // ✅ Disable "Edit Booking" if completed
+        ElevatedButton.icon(
+          onPressed: isBookingCompleted
+              ? null
+              : () => _handleEditBooking(context, booking),
+          icon: const Icon(Icons.edit, color: Colors.white),
+          label: Text(
+            isBookingCompleted ? 'Edit Disabled' : 'Edit Booking',
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isBookingCompleted
+                ? Colors.grey.shade400
+                : Colors.blue.shade600,
+            minimumSize: const Size(double.infinity, 48),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 2,
+          ),
         ),
-      ),
-      const SizedBox(height: 16),
-    ],
-  );
-}
 
+        const SizedBox(height: 12),
 
-Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
-  final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
-
-  return Column(
-    children: [
-      // ✅ Disable "Edit Booking" if completed
-      ElevatedButton.icon(
-        onPressed: isBookingCompleted ? null : () => _handleEditBooking(context, booking),
-        icon: const Icon(Icons.edit, color: Colors.white),
-        label: Text(
-          isBookingCompleted ? 'Edit Disabled' : 'Edit Booking',
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        // ✅ Keep Delete Booking active (if you want to always allow deleting)
+        ElevatedButton.icon(
+          onPressed: () => _handleDeleteBooking(context, booking),
+          icon: const Icon(Icons.delete, color: Colors.white),
+          label: const Text(
+            'Delete Booking',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red.shade600,
+            minimumSize: const Size(double.infinity, 48),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 2,
+          ),
         ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isBookingCompleted
-              ? Colors.grey.shade400
-              : Colors.blue.shade600,
-          minimumSize: const Size(double.infinity, 48),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          elevation: 2,
-        ),
-      ),
+      ],
+    );
+  }
 
-      const SizedBox(height: 12),
-
-      // ✅ Keep Delete Booking active (if you want to always allow deleting)
-      ElevatedButton.icon(
-        onPressed: () => _handleDeleteBooking(context, booking),
-        icon: const Icon(Icons.delete, color: Colors.white),
-        label: const Text(
-          'Delete Booking',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red.shade600,
-          minimumSize: const Size(double.infinity, 48),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          elevation: 2,
-        ),
-      ),
-    ],
-  );
-}
-
-
-  void _handleCompleteBooking(BuildContext context, dynamic booking, int balanceAmount) async {
+  void _handleCompleteBooking(
+      BuildContext context, dynamic booking, int balanceAmount) async {
     if (balanceAmount > 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please clear the balance amount of ₹$balanceAmount before completing the booking.'),
+          content: Text(
+              'Please clear the balance amount of ₹$balanceAmount before completing the booking.'),
           backgroundColor: Colors.orange,
         ),
       );
@@ -451,8 +476,11 @@ Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Complete Booking',),
-        content: const Text('Are you sure you want to mark this booking as completed?'),
+        title: const Text(
+          'Complete Booking',
+        ),
+        content: const Text(
+            'Are you sure you want to mark this booking as completed?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -460,7 +488,9 @@ Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Complete',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+            child: const Text('Complete',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ),
         ],
       ),
@@ -468,11 +498,11 @@ Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
 
     if (confirm == true) {
       context.read<BookingDetailsBloc>().add(
-        BookingDetailsEvent.updateBookingStatus(
-          bookingId: booking.id,
-          bookingStatus: BookingStatus.completed,
-        ),
-      );
+            BookingDetailsEvent.updateBookingStatus(
+              bookingId: booking.id,
+              bookingStatus: BookingStatus.completed,
+            ),
+          );
     }
   }
 
@@ -481,7 +511,8 @@ Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Booking'),
-        content: const Text('Are you sure you want to delete this booking? This action cannot be undone.'),
+        content: const Text(
+            'Are you sure you want to delete this booking? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -492,8 +523,8 @@ Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
               Navigator.of(context).pop();
               // Add delete booking logic here
               context.read<BookingDetailsBloc>().add(
-                BookingDetailsEvent.deleteBooking(booking.id),
-              );
+                    BookingDetailsEvent.deleteBooking(booking.id),
+                  );
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Booking deleted successfully!'),
@@ -511,32 +542,32 @@ Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
 
   void _handleEditBooking(BuildContext context, dynamic booking) {
     try {
-           StaffModel? existingStaff;
-                          if (booking.staffId != null) {
-                            existingStaff = StaffModel(
-                              id: booking.staffId!,
-                              name: booking.staffName ?? 'Staff Name',
-                              phoneNumber: '',
-                            );
-                          }
-                          context
-                            ..read<StaffSearchCubit>().clearSelectedStaff()
-                            ..read<StaffSearchCubit>().getAllStaffs(
-                              booking.staffId,
-                              existingStaff,
-                            )
-                              ..read<ClientCubit>().clearSelected();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (context) => UpdateBookingCubit(
-                                    bookingRepository: getIt.get(),
-                                    clientRepository: getIt.get(),
-                                  ),
-                                  child: EditBookingScreen(booking: booking),
-                                ),
-                              ),
-                            );
+      StaffModel? existingStaff;
+      if (booking.staffId != null) {
+        existingStaff = StaffModel(
+          id: booking.staffId!,
+          name: booking.staffName ?? 'Staff Name',
+          phoneNumber: '',
+        );
+      }
+      context
+        ..read<StaffSearchCubit>().clearSelectedStaff()
+        ..read<StaffSearchCubit>().getAllStaffs(
+          booking.staffId,
+          existingStaff,
+        )
+        ..read<ClientCubit>().clearSelected();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => UpdateBookingCubit(
+              bookingRepository: getIt.get(),
+              clientRepository: getIt.get(),
+            ),
+            child: EditBookingScreen(booking: booking),
+          ),
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -590,5 +621,4 @@ Shared via Bookie Buddy
   //     ),
   //   );
   // }
-
 }
