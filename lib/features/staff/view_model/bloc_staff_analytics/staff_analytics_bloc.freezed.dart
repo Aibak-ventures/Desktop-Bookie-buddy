@@ -12,8 +12,7 @@ part of 'staff_analytics_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$StaffAnalyticsEvent {
@@ -69,9 +68,8 @@ mixin _$StaffAnalyticsEvent {
 /// @nodoc
 abstract class $StaffAnalyticsEventCopyWith<$Res> {
   factory $StaffAnalyticsEventCopyWith(
-    StaffAnalyticsEvent value,
-    $Res Function(StaffAnalyticsEvent) then,
-  ) = _$StaffAnalyticsEventCopyWithImpl<$Res, StaffAnalyticsEvent>;
+          StaffAnalyticsEvent value, $Res Function(StaffAnalyticsEvent) then) =
+      _$StaffAnalyticsEventCopyWithImpl<$Res, StaffAnalyticsEvent>;
   @useResult
   $Res call({int year, int month});
 }
@@ -90,29 +88,29 @@ class _$StaffAnalyticsEventCopyWithImpl<$Res, $Val extends StaffAnalyticsEvent>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? year = null, Object? month = null}) {
-    return _then(
-      _value.copyWith(
-        year: null == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                as int,
-        month: null == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                as int,
-      ) as $Val,
-    );
+  $Res call({
+    Object? year = null,
+    Object? month = null,
+  }) {
+    return _then(_value.copyWith(
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$GetStaffAnalyticsImplCopyWith<$Res>
     implements $StaffAnalyticsEventCopyWith<$Res> {
-  factory _$$GetStaffAnalyticsImplCopyWith(
-    _$GetStaffAnalyticsImpl value,
-    $Res Function(_$GetStaffAnalyticsImpl) then,
-  ) = __$$GetStaffAnalyticsImplCopyWithImpl<$Res>;
+  factory _$$GetStaffAnalyticsImplCopyWith(_$GetStaffAnalyticsImpl value,
+          $Res Function(_$GetStaffAnalyticsImpl) then) =
+      __$$GetStaffAnalyticsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int staffId, int year, int month});
@@ -122,10 +120,9 @@ abstract class _$$GetStaffAnalyticsImplCopyWith<$Res>
 class __$$GetStaffAnalyticsImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsEventCopyWithImpl<$Res, _$GetStaffAnalyticsImpl>
     implements _$$GetStaffAnalyticsImplCopyWith<$Res> {
-  __$$GetStaffAnalyticsImplCopyWithImpl(
-    _$GetStaffAnalyticsImpl _value,
-    $Res Function(_$GetStaffAnalyticsImpl) _then,
-  ) : super(_value, _then);
+  __$$GetStaffAnalyticsImplCopyWithImpl(_$GetStaffAnalyticsImpl _value,
+      $Res Function(_$GetStaffAnalyticsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -136,33 +133,28 @@ class __$$GetStaffAnalyticsImplCopyWithImpl<$Res>
     Object? year = null,
     Object? month = null,
   }) {
-    return _then(
-      _$GetStaffAnalyticsImpl(
-        staffId: null == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                as int,
-        year: null == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                as int,
-        month: null == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                as int,
-      ),
-    );
+    return _then(_$GetStaffAnalyticsImpl(
+      staffId: null == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int,
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$GetStaffAnalyticsImpl implements _GetStaffAnalytics {
-  const _$GetStaffAnalyticsImpl({
-    required this.staffId,
-    required this.year,
-    required this.month,
-  });
+  const _$GetStaffAnalyticsImpl(
+      {required this.staffId, required this.year, required this.month});
 
   @override
   final int staffId;
@@ -196,9 +188,7 @@ class _$GetStaffAnalyticsImpl implements _GetStaffAnalytics {
   @pragma('vm:prefer-inline')
   _$$GetStaffAnalyticsImplCopyWith<_$GetStaffAnalyticsImpl> get copyWith =>
       __$$GetStaffAnalyticsImplCopyWithImpl<_$GetStaffAnalyticsImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -265,11 +255,10 @@ class _$GetStaffAnalyticsImpl implements _GetStaffAnalytics {
 }
 
 abstract class _GetStaffAnalytics implements StaffAnalyticsEvent {
-  const factory _GetStaffAnalytics({
-    required final int staffId,
-    required final int year,
-    required final int month,
-  }) = _$GetStaffAnalyticsImpl;
+  const factory _GetStaffAnalytics(
+      {required final int staffId,
+      required final int year,
+      required final int month}) = _$GetStaffAnalyticsImpl;
 
   int get staffId;
   @override
@@ -289,9 +278,8 @@ abstract class _GetStaffAnalytics implements StaffAnalyticsEvent {
 abstract class _$$ChangeMonthImplCopyWith<$Res>
     implements $StaffAnalyticsEventCopyWith<$Res> {
   factory _$$ChangeMonthImplCopyWith(
-    _$ChangeMonthImpl value,
-    $Res Function(_$ChangeMonthImpl) then,
-  ) = __$$ChangeMonthImplCopyWithImpl<$Res>;
+          _$ChangeMonthImpl value, $Res Function(_$ChangeMonthImpl) then) =
+      __$$ChangeMonthImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int year, int month});
@@ -302,27 +290,27 @@ class __$$ChangeMonthImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsEventCopyWithImpl<$Res, _$ChangeMonthImpl>
     implements _$$ChangeMonthImplCopyWith<$Res> {
   __$$ChangeMonthImplCopyWithImpl(
-    _$ChangeMonthImpl _value,
-    $Res Function(_$ChangeMonthImpl) _then,
-  ) : super(_value, _then);
+      _$ChangeMonthImpl _value, $Res Function(_$ChangeMonthImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? year = null, Object? month = null}) {
-    return _then(
-      _$ChangeMonthImpl(
-        year: null == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                as int,
-        month: null == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                as int,
-      ),
-    );
+  $Res call({
+    Object? year = null,
+    Object? month = null,
+  }) {
+    return _then(_$ChangeMonthImpl(
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
@@ -426,10 +414,8 @@ class _$ChangeMonthImpl implements _ChangeMonth {
 }
 
 abstract class _ChangeMonth implements StaffAnalyticsEvent {
-  const factory _ChangeMonth({
-    required final int year,
-    required final int month,
-  }) = _$ChangeMonthImpl;
+  const factory _ChangeMonth(
+      {required final int year, required final int month}) = _$ChangeMonthImpl;
 
   @override
   int get year;
@@ -495,9 +481,8 @@ mixin _$StaffAnalyticsState {
 /// @nodoc
 abstract class $StaffAnalyticsStateCopyWith<$Res> {
   factory $StaffAnalyticsStateCopyWith(
-    StaffAnalyticsState value,
-    $Res Function(StaffAnalyticsState) then,
-  ) = _$StaffAnalyticsStateCopyWithImpl<$Res, StaffAnalyticsState>;
+          StaffAnalyticsState value, $Res Function(StaffAnalyticsState) then) =
+      _$StaffAnalyticsStateCopyWithImpl<$Res, StaffAnalyticsState>;
 }
 
 /// @nodoc
@@ -517,9 +502,8 @@ class _$StaffAnalyticsStateCopyWithImpl<$Res, $Val extends StaffAnalyticsState>
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int year, int month});
 }
@@ -529,27 +513,27 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? year = null, Object? month = null}) {
-    return _then(
-      _$LoadingImpl(
-        year: null == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                as int,
-        month: null == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                as int,
-      ),
-    );
+  $Res call({
+    Object? year = null,
+    Object? month = null,
+  }) {
+    return _then(_$LoadingImpl(
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
@@ -674,9 +658,8 @@ abstract class _Loading implements StaffAnalyticsState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({StaffAnalyticsModel staffReport});
 
@@ -688,23 +671,22 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? staffReport = null}) {
-    return _then(
-      _$LoadedImpl(
-        null == staffReport
-            ? _value.staffReport
-            : staffReport // ignore: cast_nullable_to_non_nullable
-                as StaffAnalyticsModel,
-      ),
-    );
+  $Res call({
+    Object? staffReport = null,
+  }) {
+    return _then(_$LoadedImpl(
+      null == staffReport
+          ? _value.staffReport
+          : staffReport // ignore: cast_nullable_to_non_nullable
+              as StaffAnalyticsModel,
+    ));
   }
 
   /// Create a copy of StaffAnalyticsState
@@ -835,9 +817,8 @@ abstract class _Loaded implements StaffAnalyticsState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message, int? month, int? year});
 }
@@ -847,9 +828,8 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsState
   /// with the given fields replaced by the non-null parameter values.
@@ -860,22 +840,20 @@ class __$$ErrorImplCopyWithImpl<$Res>
     Object? month = freezed,
     Object? year = freezed,
   }) {
-    return _then(
-      _$ErrorImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                as String,
-        freezed == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                as int?,
-        freezed == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                as int?,
-      ),
-    );
+    return _then(_$ErrorImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      freezed == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as int?,
+      freezed == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
@@ -987,11 +965,8 @@ class _$ErrorImpl implements _Error {
 }
 
 abstract class _Error implements StaffAnalyticsState {
-  const factory _Error(
-    final String message, [
-    final int? month,
-    final int? year,
-  ]) = _$ErrorImpl;
+  const factory _Error(final String message,
+      [final int? month, final int? year]) = _$ErrorImpl;
 
   String get message;
   int? get month;

@@ -12,8 +12,7 @@ part of 'add_booking_products_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AddBookingProductsState {
@@ -28,10 +27,9 @@ mixin _$AddBookingProductsState {
 
 /// @nodoc
 abstract class $AddBookingProductsStateCopyWith<$Res> {
-  factory $AddBookingProductsStateCopyWith(
-    AddBookingProductsState value,
-    $Res Function(AddBookingProductsState) then,
-  ) = _$AddBookingProductsStateCopyWithImpl<$Res, AddBookingProductsState>;
+  factory $AddBookingProductsStateCopyWith(AddBookingProductsState value,
+          $Res Function(AddBookingProductsState) then) =
+      _$AddBookingProductsStateCopyWithImpl<$Res, AddBookingProductsState>;
   @useResult
   $Res call({List<ProductSelectedModel> products});
 }
@@ -51,15 +49,15 @@ class _$AddBookingProductsStateCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? products = null}) {
-    return _then(
-      _value.copyWith(
-        products: null == products
-            ? _value.products
-            : products // ignore: cast_nullable_to_non_nullable
-                as List<ProductSelectedModel>,
-      ) as $Val,
-    );
+  $Res call({
+    Object? products = null,
+  }) {
+    return _then(_value.copyWith(
+      products: null == products
+          ? _value.products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>,
+    ) as $Val);
   }
 }
 
@@ -67,9 +65,9 @@ class _$AddBookingProductsStateCopyWithImpl<$Res,
 abstract class _$$AddBookingProductsStateImplCopyWith<$Res>
     implements $AddBookingProductsStateCopyWith<$Res> {
   factory _$$AddBookingProductsStateImplCopyWith(
-    _$AddBookingProductsStateImpl value,
-    $Res Function(_$AddBookingProductsStateImpl) then,
-  ) = __$$AddBookingProductsStateImplCopyWithImpl<$Res>;
+          _$AddBookingProductsStateImpl value,
+          $Res Function(_$AddBookingProductsStateImpl) then) =
+      __$$AddBookingProductsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<ProductSelectedModel> products});
@@ -81,23 +79,23 @@ class __$$AddBookingProductsStateImplCopyWithImpl<$Res>
         _$AddBookingProductsStateImpl>
     implements _$$AddBookingProductsStateImplCopyWith<$Res> {
   __$$AddBookingProductsStateImplCopyWithImpl(
-    _$AddBookingProductsStateImpl _value,
-    $Res Function(_$AddBookingProductsStateImpl) _then,
-  ) : super(_value, _then);
+      _$AddBookingProductsStateImpl _value,
+      $Res Function(_$AddBookingProductsStateImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddBookingProductsState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? products = null}) {
-    return _then(
-      _$AddBookingProductsStateImpl(
-        null == products
-            ? _value._products
-            : products // ignore: cast_nullable_to_non_nullable
-                as List<ProductSelectedModel>,
-      ),
-    );
+  $Res call({
+    Object? products = null,
+  }) {
+    return _then(_$AddBookingProductsStateImpl(
+      null == products
+          ? _value._products
+          : products // ignore: cast_nullable_to_non_nullable
+              as List<ProductSelectedModel>,
+    ));
   }
 }
 
@@ -144,8 +142,8 @@ class _$AddBookingProductsStateImpl implements _AddBookingProductsState {
 
 abstract class _AddBookingProductsState implements AddBookingProductsState {
   const factory _AddBookingProductsState(
-    final List<ProductSelectedModel> products,
-  ) = _$AddBookingProductsStateImpl;
+          final List<ProductSelectedModel> products) =
+      _$AddBookingProductsStateImpl;
 
   @override
   List<ProductSelectedModel> get products;

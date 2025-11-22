@@ -7,8 +7,7 @@ part of 'measurement_value_model.dart';
 // **************************************************************************
 
 _$MeasurementValueModelImpl _$$MeasurementValueModelImplFromJson(
-  Map<String, dynamic> json,
-) =>
+        Map<String, dynamic> json) =>
     _$MeasurementValueModelImpl(
       name: json['name'] as String,
       key: json['key'] as String,
@@ -17,8 +16,7 @@ _$MeasurementValueModelImpl _$$MeasurementValueModelImplFromJson(
     );
 
 Map<String, dynamic> _$$MeasurementValueModelImplToJson(
-  _$MeasurementValueModelImpl instance,
-) =>
+        _$MeasurementValueModelImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'key': instance.key,

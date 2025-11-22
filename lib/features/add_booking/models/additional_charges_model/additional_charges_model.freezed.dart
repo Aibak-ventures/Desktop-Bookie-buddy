@@ -12,12 +12,10 @@ part of 'additional_charges_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 AdditionalChargesModel _$AdditionalChargesModelFromJson(
-  Map<String, dynamic> json,
-) {
+    Map<String, dynamic> json) {
   return _AdditionalChargesModel.fromJson(json);
 }
 
@@ -41,16 +39,14 @@ mixin _$AdditionalChargesModel {
 
 /// @nodoc
 abstract class $AdditionalChargesModelCopyWith<$Res> {
-  factory $AdditionalChargesModelCopyWith(
-    AdditionalChargesModel value,
-    $Res Function(AdditionalChargesModel) then,
-  ) = _$AdditionalChargesModelCopyWithImpl<$Res, AdditionalChargesModel>;
+  factory $AdditionalChargesModelCopyWith(AdditionalChargesModel value,
+          $Res Function(AdditionalChargesModel) then) =
+      _$AdditionalChargesModelCopyWithImpl<$Res, AdditionalChargesModel>;
   @useResult
-  $Res call({
-    @JsonKey(includeIfNull: false) int? id,
-    String? name,
-    @JsonKey(fromJson: _amountFromJson) int? amount,
-  });
+  $Res call(
+      {@JsonKey(includeIfNull: false) int? id,
+      String? name,
+      @JsonKey(fromJson: _amountFromJson) int? amount});
 }
 
 /// @nodoc
@@ -73,22 +69,20 @@ class _$AdditionalChargesModelCopyWithImpl<$Res,
     Object? name = freezed,
     Object? amount = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-        id: freezed == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                as int?,
-        name: freezed == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                as String?,
-        amount: freezed == amount
-            ? _value.amount
-            : amount // ignore: cast_nullable_to_non_nullable
-                as int?,
-      ) as $Val,
-    );
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      amount: freezed == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
   }
 }
 
@@ -96,16 +90,15 @@ class _$AdditionalChargesModelCopyWithImpl<$Res,
 abstract class _$$AdditionalChargesModelImplCopyWith<$Res>
     implements $AdditionalChargesModelCopyWith<$Res> {
   factory _$$AdditionalChargesModelImplCopyWith(
-    _$AdditionalChargesModelImpl value,
-    $Res Function(_$AdditionalChargesModelImpl) then,
-  ) = __$$AdditionalChargesModelImplCopyWithImpl<$Res>;
+          _$AdditionalChargesModelImpl value,
+          $Res Function(_$AdditionalChargesModelImpl) then) =
+      __$$AdditionalChargesModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    @JsonKey(includeIfNull: false) int? id,
-    String? name,
-    @JsonKey(fromJson: _amountFromJson) int? amount,
-  });
+  $Res call(
+      {@JsonKey(includeIfNull: false) int? id,
+      String? name,
+      @JsonKey(fromJson: _amountFromJson) int? amount});
 }
 
 /// @nodoc
@@ -114,9 +107,9 @@ class __$$AdditionalChargesModelImplCopyWithImpl<$Res>
         _$AdditionalChargesModelImpl>
     implements _$$AdditionalChargesModelImplCopyWith<$Res> {
   __$$AdditionalChargesModelImplCopyWithImpl(
-    _$AdditionalChargesModelImpl _value,
-    $Res Function(_$AdditionalChargesModelImpl) _then,
-  ) : super(_value, _then);
+      _$AdditionalChargesModelImpl _value,
+      $Res Function(_$AdditionalChargesModelImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AdditionalChargesModel
   /// with the given fields replaced by the non-null parameter values.
@@ -127,33 +120,30 @@ class __$$AdditionalChargesModelImplCopyWithImpl<$Res>
     Object? name = freezed,
     Object? amount = freezed,
   }) {
-    return _then(
-      _$AdditionalChargesModelImpl(
-        id: freezed == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                as int?,
-        name: freezed == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                as String?,
-        amount: freezed == amount
-            ? _value.amount
-            : amount // ignore: cast_nullable_to_non_nullable
-                as int?,
-      ),
-    );
+    return _then(_$AdditionalChargesModelImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      amount: freezed == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AdditionalChargesModelImpl implements _AdditionalChargesModel {
-  const _$AdditionalChargesModelImpl({
-    @JsonKey(includeIfNull: false) this.id,
-    this.name,
-    @JsonKey(fromJson: _amountFromJson) this.amount,
-  });
+  const _$AdditionalChargesModelImpl(
+      {@JsonKey(includeIfNull: false) this.id,
+      this.name,
+      @JsonKey(fromJson: _amountFromJson) this.amount});
 
   factory _$AdditionalChargesModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AdditionalChargesModelImplFromJson(json);
@@ -193,23 +183,22 @@ class _$AdditionalChargesModelImpl implements _AdditionalChargesModel {
   @pragma('vm:prefer-inline')
   _$$AdditionalChargesModelImplCopyWith<_$AdditionalChargesModelImpl>
       get copyWith => __$$AdditionalChargesModelImplCopyWithImpl<
-              _$AdditionalChargesModelImpl>(
-            this,
-            _$identity,
-          );
+          _$AdditionalChargesModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AdditionalChargesModelImplToJson(this);
+    return _$$AdditionalChargesModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _AdditionalChargesModel implements AdditionalChargesModel {
-  const factory _AdditionalChargesModel({
-    @JsonKey(includeIfNull: false) final int? id,
-    final String? name,
-    @JsonKey(fromJson: _amountFromJson) final int? amount,
-  }) = _$AdditionalChargesModelImpl;
+  const factory _AdditionalChargesModel(
+          {@JsonKey(includeIfNull: false) final int? id,
+          final String? name,
+          @JsonKey(fromJson: _amountFromJson) final int? amount}) =
+      _$AdditionalChargesModelImpl;
 
   factory _AdditionalChargesModel.fromJson(Map<String, dynamic> json) =
       _$AdditionalChargesModelImpl.fromJson;

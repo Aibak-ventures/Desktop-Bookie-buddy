@@ -12,8 +12,7 @@ part of 'add_booking_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AddBookingEvent {
@@ -67,9 +66,8 @@ mixin _$AddBookingEvent {
 /// @nodoc
 abstract class $AddBookingEventCopyWith<$Res> {
   factory $AddBookingEventCopyWith(
-    AddBookingEvent value,
-    $Res Function(AddBookingEvent) then,
-  ) = _$AddBookingEventCopyWithImpl<$Res, AddBookingEvent>;
+          AddBookingEvent value, $Res Function(AddBookingEvent) then) =
+      _$AddBookingEventCopyWithImpl<$Res, AddBookingEvent>;
   @useResult
   $Res call({RequestBookingModel booking});
 
@@ -90,15 +88,15 @@ class _$AddBookingEventCopyWithImpl<$Res, $Val extends AddBookingEvent>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? booking = null}) {
-    return _then(
-      _value.copyWith(
-        booking: null == booking
-            ? _value.booking
-            : booking // ignore: cast_nullable_to_non_nullable
-                as RequestBookingModel,
-      ) as $Val,
-    );
+  $Res call({
+    Object? booking = null,
+  }) {
+    return _then(_value.copyWith(
+      booking: null == booking
+          ? _value.booking
+          : booking // ignore: cast_nullable_to_non_nullable
+              as RequestBookingModel,
+    ) as $Val);
   }
 
   /// Create a copy of AddBookingEvent
@@ -116,9 +114,8 @@ class _$AddBookingEventCopyWithImpl<$Res, $Val extends AddBookingEvent>
 abstract class _$$AddNewBookingImplCopyWith<$Res>
     implements $AddBookingEventCopyWith<$Res> {
   factory _$$AddNewBookingImplCopyWith(
-    _$AddNewBookingImpl value,
-    $Res Function(_$AddNewBookingImpl) then,
-  ) = __$$AddNewBookingImplCopyWithImpl<$Res>;
+          _$AddNewBookingImpl value, $Res Function(_$AddNewBookingImpl) then) =
+      __$$AddNewBookingImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({RequestBookingModel booking});
@@ -132,23 +129,22 @@ class __$$AddNewBookingImplCopyWithImpl<$Res>
     extends _$AddBookingEventCopyWithImpl<$Res, _$AddNewBookingImpl>
     implements _$$AddNewBookingImplCopyWith<$Res> {
   __$$AddNewBookingImplCopyWithImpl(
-    _$AddNewBookingImpl _value,
-    $Res Function(_$AddNewBookingImpl) _then,
-  ) : super(_value, _then);
+      _$AddNewBookingImpl _value, $Res Function(_$AddNewBookingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? booking = null}) {
-    return _then(
-      _$AddNewBookingImpl(
-        null == booking
-            ? _value.booking
-            : booking // ignore: cast_nullable_to_non_nullable
-                as RequestBookingModel,
-      ),
-    );
+  $Res call({
+    Object? booking = null,
+  }) {
+    return _then(_$AddNewBookingImpl(
+      null == booking
+          ? _value.booking
+          : booking // ignore: cast_nullable_to_non_nullable
+              as RequestBookingModel,
+    ));
   }
 }
 
@@ -265,10 +261,9 @@ abstract class _AddNewBooking implements AddBookingEvent {
 /// @nodoc
 abstract class _$$UpdateBookingDataImplCopyWith<$Res>
     implements $AddBookingEventCopyWith<$Res> {
-  factory _$$UpdateBookingDataImplCopyWith(
-    _$UpdateBookingDataImpl value,
-    $Res Function(_$UpdateBookingDataImpl) then,
-  ) = __$$UpdateBookingDataImplCopyWithImpl<$Res>;
+  factory _$$UpdateBookingDataImplCopyWith(_$UpdateBookingDataImpl value,
+          $Res Function(_$UpdateBookingDataImpl) then) =
+      __$$UpdateBookingDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({RequestBookingModel booking});
@@ -281,24 +276,23 @@ abstract class _$$UpdateBookingDataImplCopyWith<$Res>
 class __$$UpdateBookingDataImplCopyWithImpl<$Res>
     extends _$AddBookingEventCopyWithImpl<$Res, _$UpdateBookingDataImpl>
     implements _$$UpdateBookingDataImplCopyWith<$Res> {
-  __$$UpdateBookingDataImplCopyWithImpl(
-    _$UpdateBookingDataImpl _value,
-    $Res Function(_$UpdateBookingDataImpl) _then,
-  ) : super(_value, _then);
+  __$$UpdateBookingDataImplCopyWithImpl(_$UpdateBookingDataImpl _value,
+      $Res Function(_$UpdateBookingDataImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddBookingEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? booking = null}) {
-    return _then(
-      _$UpdateBookingDataImpl(
-        null == booking
-            ? _value.booking
-            : booking // ignore: cast_nullable_to_non_nullable
-                as RequestBookingModel,
-      ),
-    );
+  $Res call({
+    Object? booking = null,
+  }) {
+    return _then(_$UpdateBookingDataImpl(
+      null == booking
+          ? _value.booking
+          : booking // ignore: cast_nullable_to_non_nullable
+              as RequestBookingModel,
+    ));
   }
 }
 
@@ -333,9 +327,7 @@ class _$UpdateBookingDataImpl implements _UpdateBookingData {
   @pragma('vm:prefer-inline')
   _$$UpdateBookingDataImplCopyWith<_$UpdateBookingDataImpl> get copyWith =>
       __$$UpdateBookingDataImplCopyWithImpl<_$UpdateBookingDataImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -472,9 +464,8 @@ mixin _$AddBookingState {
 /// @nodoc
 abstract class $AddBookingStateCopyWith<$Res> {
   factory $AddBookingStateCopyWith(
-    AddBookingState value,
-    $Res Function(AddBookingState) then,
-  ) = _$AddBookingStateCopyWithImpl<$Res, AddBookingState>;
+          AddBookingState value, $Res Function(AddBookingState) then) =
+      _$AddBookingStateCopyWithImpl<$Res, AddBookingState>;
 }
 
 /// @nodoc
@@ -494,9 +485,8 @@ class _$AddBookingStateCopyWithImpl<$Res, $Val extends AddBookingState>
 /// @nodoc
 abstract class _$$InitialImplCopyWith<$Res> {
   factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
   @useResult
   $Res call({RequestBookingModel booking});
 
@@ -508,23 +498,22 @@ class __$$InitialImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? booking = null}) {
-    return _then(
-      _$InitialImpl(
-        booking: null == booking
-            ? _value.booking
-            : booking // ignore: cast_nullable_to_non_nullable
-                as RequestBookingModel,
-      ),
-    );
+  $Res call({
+    Object? booking = null,
+  }) {
+    return _then(_$InitialImpl(
+      booking: null == booking
+          ? _value.booking
+          : booking // ignore: cast_nullable_to_non_nullable
+              as RequestBookingModel,
+    ));
   }
 
   /// Create a copy of AddBookingState
@@ -661,9 +650,8 @@ abstract class _Initial implements AddBookingState {
 /// @nodoc
 abstract class _$$SubmittingImplCopyWith<$Res> {
   factory _$$SubmittingImplCopyWith(
-    _$SubmittingImpl value,
-    $Res Function(_$SubmittingImpl) then,
-  ) = __$$SubmittingImplCopyWithImpl<$Res>;
+          _$SubmittingImpl value, $Res Function(_$SubmittingImpl) then) =
+      __$$SubmittingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -671,9 +659,8 @@ class __$$SubmittingImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$SubmittingImpl>
     implements _$$SubmittingImplCopyWith<$Res> {
   __$$SubmittingImplCopyWithImpl(
-    _$SubmittingImpl _value,
-    $Res Function(_$SubmittingImpl) _then,
-  ) : super(_value, _then);
+      _$SubmittingImpl _value, $Res Function(_$SubmittingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -780,9 +767,8 @@ abstract class _Submitting implements AddBookingState {
 /// @nodoc
 abstract class _$$SuccessImplCopyWith<$Res> {
   factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -790,9 +776,8 @@ class __$$SuccessImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$SuccessImpl>
     implements _$$SuccessImplCopyWith<$Res> {
   __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -899,9 +884,8 @@ abstract class _Success implements AddBookingState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String error});
 }
@@ -911,23 +895,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$AddBookingStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddBookingState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? error = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                as String,
-      ),
-    );
+  $Res call({
+    Object? error = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

@@ -24,6 +24,8 @@ mixin _$CarouselDataModel {
   int get upComingCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'completed_count', defaultValue: 0)
   int get completedCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'expired_count', defaultValue: 0)
+  int get expiredCount => throw _privateConstructorUsedError;
 
   /// Serializes this CarouselDataModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,7 +45,8 @@ abstract class $CarouselDataModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'upcoming_count', defaultValue: 0) int upComingCount,
-      @JsonKey(name: 'completed_count', defaultValue: 0) int completedCount});
+      @JsonKey(name: 'completed_count', defaultValue: 0) int completedCount,
+      @JsonKey(name: 'expired_count', defaultValue: 0) int expiredCount});
 }
 
 /// @nodoc
@@ -63,6 +66,7 @@ class _$CarouselDataModelCopyWithImpl<$Res, $Val extends CarouselDataModel>
   $Res call({
     Object? upComingCount = null,
     Object? completedCount = null,
+    Object? expiredCount = null,
   }) {
     return _then(_value.copyWith(
       upComingCount: null == upComingCount
@@ -72,6 +76,10 @@ class _$CarouselDataModelCopyWithImpl<$Res, $Val extends CarouselDataModel>
       completedCount: null == completedCount
           ? _value.completedCount
           : completedCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      expiredCount: null == expiredCount
+          ? _value.expiredCount
+          : expiredCount // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -87,7 +95,8 @@ abstract class _$$CarouselDataModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'upcoming_count', defaultValue: 0) int upComingCount,
-      @JsonKey(name: 'completed_count', defaultValue: 0) int completedCount});
+      @JsonKey(name: 'completed_count', defaultValue: 0) int completedCount,
+      @JsonKey(name: 'expired_count', defaultValue: 0) int expiredCount});
 }
 
 /// @nodoc
@@ -105,6 +114,7 @@ class __$$CarouselDataModelImplCopyWithImpl<$Res>
   $Res call({
     Object? upComingCount = null,
     Object? completedCount = null,
+    Object? expiredCount = null,
   }) {
     return _then(_$CarouselDataModelImpl(
       upComingCount: null == upComingCount
@@ -114,6 +124,10 @@ class __$$CarouselDataModelImplCopyWithImpl<$Res>
       completedCount: null == completedCount
           ? _value.completedCount
           : completedCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      expiredCount: null == expiredCount
+          ? _value.expiredCount
+          : expiredCount // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -126,7 +140,9 @@ class _$CarouselDataModelImpl implements _CarouselDataModel {
       {@JsonKey(name: 'upcoming_count', defaultValue: 0)
       required this.upComingCount,
       @JsonKey(name: 'completed_count', defaultValue: 0)
-      required this.completedCount});
+      required this.completedCount,
+      @JsonKey(name: 'expired_count', defaultValue: 0)
+      required this.expiredCount});
 
   factory _$CarouselDataModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CarouselDataModelImplFromJson(json);
@@ -137,10 +153,13 @@ class _$CarouselDataModelImpl implements _CarouselDataModel {
   @override
   @JsonKey(name: 'completed_count', defaultValue: 0)
   final int completedCount;
+  @override
+  @JsonKey(name: 'expired_count', defaultValue: 0)
+  final int expiredCount;
 
   @override
   String toString() {
-    return 'CarouselDataModel(upComingCount: $upComingCount, completedCount: $completedCount)';
+    return 'CarouselDataModel(upComingCount: $upComingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
   }
 
   @override
@@ -151,12 +170,15 @@ class _$CarouselDataModelImpl implements _CarouselDataModel {
             (identical(other.upComingCount, upComingCount) ||
                 other.upComingCount == upComingCount) &&
             (identical(other.completedCount, completedCount) ||
-                other.completedCount == completedCount));
+                other.completedCount == completedCount) &&
+            (identical(other.expiredCount, expiredCount) ||
+                other.expiredCount == expiredCount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, upComingCount, completedCount);
+  int get hashCode =>
+      Object.hash(runtimeType, upComingCount, completedCount, expiredCount);
 
   /// Create a copy of CarouselDataModel
   /// with the given fields replaced by the non-null parameter values.
@@ -180,7 +202,9 @@ abstract class _CarouselDataModel implements CarouselDataModel {
       {@JsonKey(name: 'upcoming_count', defaultValue: 0)
       required final int upComingCount,
       @JsonKey(name: 'completed_count', defaultValue: 0)
-      required final int completedCount}) = _$CarouselDataModelImpl;
+      required final int completedCount,
+      @JsonKey(name: 'expired_count', defaultValue: 0)
+      required final int expiredCount}) = _$CarouselDataModelImpl;
 
   factory _CarouselDataModel.fromJson(Map<String, dynamic> json) =
       _$CarouselDataModelImpl.fromJson;
@@ -191,6 +215,9 @@ abstract class _CarouselDataModel implements CarouselDataModel {
   @override
   @JsonKey(name: 'completed_count', defaultValue: 0)
   int get completedCount;
+  @override
+  @JsonKey(name: 'expired_count', defaultValue: 0)
+  int get expiredCount;
 
   /// Create a copy of CarouselDataModel
   /// with the given fields replaced by the non-null parameter values.

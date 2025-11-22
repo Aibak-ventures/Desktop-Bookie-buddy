@@ -7,8 +7,7 @@ part of 'additional_charges_model.dart';
 // **************************************************************************
 
 _$AdditionalChargesModelImpl _$$AdditionalChargesModelImplFromJson(
-  Map<String, dynamic> json,
-) =>
+        Map<String, dynamic> json) =>
     _$AdditionalChargesModelImpl(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
@@ -16,8 +15,7 @@ _$AdditionalChargesModelImpl _$$AdditionalChargesModelImplFromJson(
     );
 
 Map<String, dynamic> _$$AdditionalChargesModelImplToJson(
-  _$AdditionalChargesModelImpl instance,
-) =>
+        _$AdditionalChargesModelImpl instance) =>
     <String, dynamic>{
       if (instance.id case final value?) 'id': value,
       'name': instance.name,

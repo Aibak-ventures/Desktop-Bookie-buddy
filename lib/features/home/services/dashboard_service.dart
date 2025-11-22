@@ -28,7 +28,10 @@ class DashboardService {
       _validateResponse(response); // throw exception if status code is not 200
 
       final result = response.data as Map<String, dynamic>;
-      final data = (result['results']['upcoming_bookings'] as List)
+      final dataWrapper = result['data'] as Map<String, dynamic>;
+      final innerData = dataWrapper['data'] as Map<String, dynamic>;
+
+      final data = (innerData['upcoming'] as List)
           .map(
             (e) => BookingsModel.fromJson(e),
           )
@@ -36,10 +39,10 @@ class DashboardService {
       return (
         PaginationModel<BookingsModel>(
           data: data,
-          totalData: result['count'],
-          nextPageUrl: result['next'],
+          totalData: dataWrapper['count'],
+          nextPageUrl: dataWrapper['next'],
         ),
-        CarouselDataModel.fromJson(result['results']),
+        CarouselDataModel.fromJson(innerData),
       );
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);

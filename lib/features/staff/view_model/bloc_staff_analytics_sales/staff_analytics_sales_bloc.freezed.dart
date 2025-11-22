@@ -12,8 +12,7 @@ part of 'staff_analytics_sales_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$StaffAnalyticsSalesEvent {
@@ -59,10 +58,9 @@ mixin _$StaffAnalyticsSalesEvent {
 
 /// @nodoc
 abstract class $StaffAnalyticsSalesEventCopyWith<$Res> {
-  factory $StaffAnalyticsSalesEventCopyWith(
-    StaffAnalyticsSalesEvent value,
-    $Res Function(StaffAnalyticsSalesEvent) then,
-  ) = _$StaffAnalyticsSalesEventCopyWithImpl<$Res, StaffAnalyticsSalesEvent>;
+  factory $StaffAnalyticsSalesEventCopyWith(StaffAnalyticsSalesEvent value,
+          $Res Function(StaffAnalyticsSalesEvent) then) =
+      _$StaffAnalyticsSalesEventCopyWithImpl<$Res, StaffAnalyticsSalesEvent>;
 }
 
 /// @nodoc
@@ -83,9 +81,8 @@ class _$StaffAnalyticsSalesEventCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$LoadSalesImplCopyWith<$Res> {
   factory _$$LoadSalesImplCopyWith(
-    _$LoadSalesImpl value,
-    $Res Function(_$LoadSalesImpl) then,
-  ) = __$$LoadSalesImplCopyWithImpl<$Res>;
+          _$LoadSalesImpl value, $Res Function(_$LoadSalesImpl) then) =
+      __$$LoadSalesImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int staffId, int month, int year});
 }
@@ -95,9 +92,8 @@ class __$$LoadSalesImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsSalesEventCopyWithImpl<$Res, _$LoadSalesImpl>
     implements _$$LoadSalesImplCopyWith<$Res> {
   __$$LoadSalesImplCopyWithImpl(
-    _$LoadSalesImpl _value,
-    $Res Function(_$LoadSalesImpl) _then,
-  ) : super(_value, _then);
+      _$LoadSalesImpl _value, $Res Function(_$LoadSalesImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsSalesEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -108,33 +104,28 @@ class __$$LoadSalesImplCopyWithImpl<$Res>
     Object? month = null,
     Object? year = null,
   }) {
-    return _then(
-      _$LoadSalesImpl(
-        staffId: null == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                as int,
-        month: null == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                as int,
-        year: null == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                as int,
-      ),
-    );
+    return _then(_$LoadSalesImpl(
+      staffId: null == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as int,
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadSalesImpl implements _LoadSales {
-  const _$LoadSalesImpl({
-    required this.staffId,
-    required this.month,
-    required this.year,
-  });
+  const _$LoadSalesImpl(
+      {required this.staffId, required this.month, required this.year});
 
   @override
   final int staffId;
@@ -233,11 +224,10 @@ class _$LoadSalesImpl implements _LoadSales {
 }
 
 abstract class _LoadSales implements StaffAnalyticsSalesEvent {
-  const factory _LoadSales({
-    required final int staffId,
-    required final int month,
-    required final int year,
-  }) = _$LoadSalesImpl;
+  const factory _LoadSales(
+      {required final int staffId,
+      required final int month,
+      required final int year}) = _$LoadSalesImpl;
 
   int get staffId;
   int get month;
@@ -252,10 +242,9 @@ abstract class _LoadSales implements StaffAnalyticsSalesEvent {
 
 /// @nodoc
 abstract class _$$LoadNextPageSalesImplCopyWith<$Res> {
-  factory _$$LoadNextPageSalesImplCopyWith(
-    _$LoadNextPageSalesImpl value,
-    $Res Function(_$LoadNextPageSalesImpl) then,
-  ) = __$$LoadNextPageSalesImplCopyWithImpl<$Res>;
+  factory _$$LoadNextPageSalesImplCopyWith(_$LoadNextPageSalesImpl value,
+          $Res Function(_$LoadNextPageSalesImpl) then) =
+      __$$LoadNextPageSalesImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -263,10 +252,9 @@ class __$$LoadNextPageSalesImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsSalesEventCopyWithImpl<$Res,
         _$LoadNextPageSalesImpl>
     implements _$$LoadNextPageSalesImplCopyWith<$Res> {
-  __$$LoadNextPageSalesImplCopyWithImpl(
-    _$LoadNextPageSalesImpl _value,
-    $Res Function(_$LoadNextPageSalesImpl) _then,
-  ) : super(_value, _then);
+  __$$LoadNextPageSalesImplCopyWithImpl(_$LoadNextPageSalesImpl _value,
+      $Res Function(_$LoadNextPageSalesImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsSalesEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -363,42 +351,27 @@ mixin _$StaffAnalyticsSalesState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    ) loaded,
+    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)
+        loaded,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -429,10 +402,9 @@ mixin _$StaffAnalyticsSalesState {
 
 /// @nodoc
 abstract class $StaffAnalyticsSalesStateCopyWith<$Res> {
-  factory $StaffAnalyticsSalesStateCopyWith(
-    StaffAnalyticsSalesState value,
-    $Res Function(StaffAnalyticsSalesState) then,
-  ) = _$StaffAnalyticsSalesStateCopyWithImpl<$Res, StaffAnalyticsSalesState>;
+  factory $StaffAnalyticsSalesStateCopyWith(StaffAnalyticsSalesState value,
+          $Res Function(StaffAnalyticsSalesState) then) =
+      _$StaffAnalyticsSalesStateCopyWithImpl<$Res, StaffAnalyticsSalesState>;
 }
 
 /// @nodoc
@@ -453,9 +425,8 @@ class _$StaffAnalyticsSalesStateCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$LoadingImplCopyWith<$Res> {
   factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -463,9 +434,8 @@ class __$$LoadingImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsSalesStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsSalesState
   /// with the given fields replaced by the non-null parameter values.
@@ -494,14 +464,9 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    ) loaded,
+    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)
+        loaded,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -511,14 +476,9 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -528,14 +488,9 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -587,18 +542,16 @@ abstract class _Loading implements StaffAnalyticsSalesState {
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({
-    List<SaleModel> sales,
-    String? nextPageUrl,
-    bool isPaginating,
-    int staffId,
-    int month,
-    int year,
-  });
+  $Res call(
+      {List<SaleModel> sales,
+      String? nextPageUrl,
+      bool isPaginating,
+      int staffId,
+      int month,
+      int year});
 }
 
 /// @nodoc
@@ -606,9 +559,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsSalesStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsSalesState
   /// with the given fields replaced by the non-null parameter values.
@@ -622,48 +574,46 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? month = null,
     Object? year = null,
   }) {
-    return _then(
-      _$LoadedImpl(
-        sales: null == sales
-            ? _value._sales
-            : sales // ignore: cast_nullable_to_non_nullable
-                as List<SaleModel>,
-        nextPageUrl: freezed == nextPageUrl
-            ? _value.nextPageUrl
-            : nextPageUrl // ignore: cast_nullable_to_non_nullable
-                as String?,
-        isPaginating: null == isPaginating
-            ? _value.isPaginating
-            : isPaginating // ignore: cast_nullable_to_non_nullable
-                as bool,
-        staffId: null == staffId
-            ? _value.staffId
-            : staffId // ignore: cast_nullable_to_non_nullable
-                as int,
-        month: null == month
-            ? _value.month
-            : month // ignore: cast_nullable_to_non_nullable
-                as int,
-        year: null == year
-            ? _value.year
-            : year // ignore: cast_nullable_to_non_nullable
-                as int,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      sales: null == sales
+          ? _value._sales
+          : sales // ignore: cast_nullable_to_non_nullable
+              as List<SaleModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPaginating: null == isPaginating
+          ? _value.isPaginating
+          : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      staffId: null == staffId
+          ? _value.staffId
+          : staffId // ignore: cast_nullable_to_non_nullable
+              as int,
+      month: null == month
+          ? _value.month
+          : month // ignore: cast_nullable_to_non_nullable
+              as int,
+      year: null == year
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    required final List<SaleModel> sales,
-    required this.nextPageUrl,
-    this.isPaginating = false,
-    required this.staffId,
-    required this.month,
-    required this.year,
-  }) : _sales = sales;
+  const _$LoadedImpl(
+      {required final List<SaleModel> sales,
+      required this.nextPageUrl,
+      this.isPaginating = false,
+      required this.staffId,
+      required this.month,
+      required this.year})
+      : _sales = sales;
 
   final List<SaleModel> _sales;
   @override
@@ -707,14 +657,13 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-        runtimeType,
-        const DeepCollectionEquality().hash(_sales),
-        nextPageUrl,
-        isPaginating,
-        staffId,
-        month,
-        year,
-      );
+      runtimeType,
+      const DeepCollectionEquality().hash(_sales),
+      nextPageUrl,
+      isPaginating,
+      staffId,
+      month,
+      year);
 
   /// Create a copy of StaffAnalyticsSalesState
   /// with the given fields replaced by the non-null parameter values.
@@ -728,14 +677,9 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    ) loaded,
+    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)
+        loaded,
     required TResult Function(String message) error,
   }) {
     return loaded(sales, nextPageUrl, isPaginating, staffId, month, year);
@@ -745,14 +689,9 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call(sales, nextPageUrl, isPaginating, staffId, month, year);
@@ -762,14 +701,9 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -815,14 +749,13 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements StaffAnalyticsSalesState {
-  const factory _Loaded({
-    required final List<SaleModel> sales,
-    required final String? nextPageUrl,
-    final bool isPaginating,
-    required final int staffId,
-    required final int month,
-    required final int year,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final List<SaleModel> sales,
+      required final String? nextPageUrl,
+      final bool isPaginating,
+      required final int staffId,
+      required final int month,
+      required final int year}) = _$LoadedImpl;
 
   List<SaleModel> get sales;
   String? get nextPageUrl;
@@ -841,9 +774,8 @@ abstract class _Loaded implements StaffAnalyticsSalesState {
 /// @nodoc
 abstract class _$$ErrorImplCopyWith<$Res> {
   factory _$$ErrorImplCopyWith(
-    _$ErrorImpl value,
-    $Res Function(_$ErrorImpl) then,
-  ) = __$$ErrorImplCopyWithImpl<$Res>;
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
@@ -853,23 +785,22 @@ class __$$ErrorImplCopyWithImpl<$Res>
     extends _$StaffAnalyticsSalesStateCopyWithImpl<$Res, _$ErrorImpl>
     implements _$$ErrorImplCopyWith<$Res> {
   __$$ErrorImplCopyWithImpl(
-    _$ErrorImpl _value,
-    $Res Function(_$ErrorImpl) _then,
-  ) : super(_value, _then);
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffAnalyticsSalesState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$ErrorImpl(
-        null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$ErrorImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -909,14 +840,9 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    ) loaded,
+    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)
+        loaded,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -926,14 +852,9 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -943,14 +864,9 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(
-      List<SaleModel> sales,
-      String? nextPageUrl,
-      bool isPaginating,
-      int staffId,
-      int month,
-      int year,
-    )? loaded,
+    TResult Function(List<SaleModel> sales, String? nextPageUrl,
+            bool isPaginating, int staffId, int month, int year)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

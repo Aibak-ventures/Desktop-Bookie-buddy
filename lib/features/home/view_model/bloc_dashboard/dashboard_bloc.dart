@@ -31,6 +31,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   CarouselDataModel carouselResponse = CarouselDataModel(
     upComingCount: 0,
     completedCount: 0,
+    expiredCount: 0,
   );
   Map<String, List<BookingsModel>> _groupBookings(
       List<BookingsModel> bookings) {
@@ -209,6 +210,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     carouselResponse = CarouselDataModel(
       upComingCount: 0,
       completedCount: 0,
+      expiredCount: 0,
     );
   }
 }

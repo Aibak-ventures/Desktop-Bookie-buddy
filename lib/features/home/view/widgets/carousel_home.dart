@@ -78,6 +78,36 @@ class CarouselHome extends StatelessWidget {
               onTap: () => context.push(CompletedBookingsScreen()),
             ),
           ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: _buildDesktopCard(
+              context,
+              title: 'Expired',
+              value: data.expiredCount.toString(),
+              gradient: [
+                const Color(0xFFFF4757).withValues(alpha: 0.9),
+                const Color(0xFFFF6B7A).withValues(alpha: 0.9),
+              ],
+              icon: Icons.event_busy,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) =>
+                            AllBookingBloc(repository: getIt.get()),
+                      ),
+                      BlocProvider(
+                        create: (context) =>
+                            AllBookingPastBloc(repository: getIt.get()),
+                      ),
+                    ],
+                    child: AllBookingScreen(index: 1),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

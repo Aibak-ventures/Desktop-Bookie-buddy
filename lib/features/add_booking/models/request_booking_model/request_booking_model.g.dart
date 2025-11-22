@@ -7,8 +7,7 @@ part of 'request_booking_model.dart';
 // **************************************************************************
 
 _$RequestBookingModelImpl _$$RequestBookingModelImplFromJson(
-  Map<String, dynamic> json,
-) =>
+        Map<String, dynamic> json) =>
     _$RequestBookingModelImpl(
       clientId: (json['client_id'] as num?)?.toInt(),
       staffId: (json['staff_id'] as num?)?.toInt(),
@@ -25,26 +24,19 @@ _$RequestBookingModelImpl _$$RequestBookingModelImplFromJson(
       discountAmount: (json['discount_amount'] as num?)?.toInt(),
       purchaseMode: json['purchase_mode'] as String?,
       description: json['description'] as String?,
-      paymentMethod: $enumDecodeNullable(
-        _$PaymentMethodEnumMap,
-        json['payment_method'],
-      ),
-      deliveryStatus: $enumDecodeNullable(
-        _$DeliveryStatusEnumMap,
-        json['delivery_status'],
-      ),
-      bookingStatus: $enumDecodeNullable(
-        _$BookingStatusEnumMap,
-        json['booking_status'],
-      ),
+      paymentMethod:
+          $enumDecodeNullable(_$PaymentMethodEnumMap, json['payment_method']),
+      deliveryStatus:
+          $enumDecodeNullable(_$DeliveryStatusEnumMap, json['delivery_status']),
+      bookingStatus:
+          $enumDecodeNullable(_$BookingStatusEnumMap, json['booking_status']),
       products: (json['variants'] as List<dynamic>?)
           ?.map((e) => ProductSelectedModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       otherDetails: json['details'] == null
           ? null
           : BookingOtherDetailsModel.fromJson(
-              json['details'] as Map<String, dynamic>,
-            ),
+              json['details'] as Map<String, dynamic>),
       additionalCharges: (json['additional_charges'] as List<dynamic>?)
           ?.map(
               (e) => AdditionalChargesModel.fromJson(e as Map<String, dynamic>))
@@ -52,8 +44,7 @@ _$RequestBookingModelImpl _$$RequestBookingModelImplFromJson(
     );
 
 Map<String, dynamic> _$$RequestBookingModelImplToJson(
-  _$RequestBookingModelImpl instance,
-) =>
+        _$RequestBookingModelImpl instance) =>
     <String, dynamic>{
       if (instance.clientId case final value?) 'client_id': value,
       if (instance.staffId case final value?) 'staff_id': value,

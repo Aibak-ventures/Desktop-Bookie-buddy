@@ -12,8 +12,7 @@ part of 'staff_search_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$StaffSearchState {
@@ -32,16 +31,14 @@ mixin _$StaffSearchState {
 /// @nodoc
 abstract class $StaffSearchStateCopyWith<$Res> {
   factory $StaffSearchStateCopyWith(
-    StaffSearchState value,
-    $Res Function(StaffSearchState) then,
-  ) = _$StaffSearchStateCopyWithImpl<$Res, StaffSearchState>;
+          StaffSearchState value, $Res Function(StaffSearchState) then) =
+      _$StaffSearchStateCopyWithImpl<$Res, StaffSearchState>;
   @useResult
-  $Res call({
-    List<StaffModel> staffs,
-    StaffModel? selectedStaff,
-    String? errorMessage,
-    bool isLoading,
-  });
+  $Res call(
+      {List<StaffModel> staffs,
+      StaffModel? selectedStaff,
+      String? errorMessage,
+      bool isLoading});
 
   $StaffModelCopyWith<$Res>? get selectedStaff;
 }
@@ -66,26 +63,24 @@ class _$StaffSearchStateCopyWithImpl<$Res, $Val extends StaffSearchState>
     Object? errorMessage = freezed,
     Object? isLoading = null,
   }) {
-    return _then(
-      _value.copyWith(
-        staffs: null == staffs
-            ? _value.staffs
-            : staffs // ignore: cast_nullable_to_non_nullable
-                as List<StaffModel>,
-        selectedStaff: freezed == selectedStaff
-            ? _value.selectedStaff
-            : selectedStaff // ignore: cast_nullable_to_non_nullable
-                as StaffModel?,
-        errorMessage: freezed == errorMessage
-            ? _value.errorMessage
-            : errorMessage // ignore: cast_nullable_to_non_nullable
-                as String?,
-        isLoading: null == isLoading
-            ? _value.isLoading
-            : isLoading // ignore: cast_nullable_to_non_nullable
-                as bool,
-      ) as $Val,
-    );
+    return _then(_value.copyWith(
+      staffs: null == staffs
+          ? _value.staffs
+          : staffs // ignore: cast_nullable_to_non_nullable
+              as List<StaffModel>,
+      selectedStaff: freezed == selectedStaff
+          ? _value.selectedStaff
+          : selectedStaff // ignore: cast_nullable_to_non_nullable
+              as StaffModel?,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
   }
 
   /// Create a copy of StaffSearchState
@@ -106,18 +101,16 @@ class _$StaffSearchStateCopyWithImpl<$Res, $Val extends StaffSearchState>
 /// @nodoc
 abstract class _$$StaffSearchStateImplCopyWith<$Res>
     implements $StaffSearchStateCopyWith<$Res> {
-  factory _$$StaffSearchStateImplCopyWith(
-    _$StaffSearchStateImpl value,
-    $Res Function(_$StaffSearchStateImpl) then,
-  ) = __$$StaffSearchStateImplCopyWithImpl<$Res>;
+  factory _$$StaffSearchStateImplCopyWith(_$StaffSearchStateImpl value,
+          $Res Function(_$StaffSearchStateImpl) then) =
+      __$$StaffSearchStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    List<StaffModel> staffs,
-    StaffModel? selectedStaff,
-    String? errorMessage,
-    bool isLoading,
-  });
+  $Res call(
+      {List<StaffModel> staffs,
+      StaffModel? selectedStaff,
+      String? errorMessage,
+      bool isLoading});
 
   @override
   $StaffModelCopyWith<$Res>? get selectedStaff;
@@ -127,10 +120,9 @@ abstract class _$$StaffSearchStateImplCopyWith<$Res>
 class __$$StaffSearchStateImplCopyWithImpl<$Res>
     extends _$StaffSearchStateCopyWithImpl<$Res, _$StaffSearchStateImpl>
     implements _$$StaffSearchStateImplCopyWith<$Res> {
-  __$$StaffSearchStateImplCopyWithImpl(
-    _$StaffSearchStateImpl _value,
-    $Res Function(_$StaffSearchStateImpl) _then,
-  ) : super(_value, _then);
+  __$$StaffSearchStateImplCopyWithImpl(_$StaffSearchStateImpl _value,
+      $Res Function(_$StaffSearchStateImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of StaffSearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -142,38 +134,36 @@ class __$$StaffSearchStateImplCopyWithImpl<$Res>
     Object? errorMessage = freezed,
     Object? isLoading = null,
   }) {
-    return _then(
-      _$StaffSearchStateImpl(
-        staffs: null == staffs
-            ? _value._staffs
-            : staffs // ignore: cast_nullable_to_non_nullable
-                as List<StaffModel>,
-        selectedStaff: freezed == selectedStaff
-            ? _value.selectedStaff
-            : selectedStaff // ignore: cast_nullable_to_non_nullable
-                as StaffModel?,
-        errorMessage: freezed == errorMessage
-            ? _value.errorMessage
-            : errorMessage // ignore: cast_nullable_to_non_nullable
-                as String?,
-        isLoading: null == isLoading
-            ? _value.isLoading
-            : isLoading // ignore: cast_nullable_to_non_nullable
-                as bool,
-      ),
-    );
+    return _then(_$StaffSearchStateImpl(
+      staffs: null == staffs
+          ? _value._staffs
+          : staffs // ignore: cast_nullable_to_non_nullable
+              as List<StaffModel>,
+      selectedStaff: freezed == selectedStaff
+          ? _value.selectedStaff
+          : selectedStaff // ignore: cast_nullable_to_non_nullable
+              as StaffModel?,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$StaffSearchStateImpl implements _StaffSearchState {
-  const _$StaffSearchStateImpl({
-    final List<StaffModel> staffs = const [],
-    this.selectedStaff,
-    this.errorMessage,
-    this.isLoading = false,
-  }) : _staffs = staffs;
+  const _$StaffSearchStateImpl(
+      {final List<StaffModel> staffs = const [],
+      this.selectedStaff,
+      this.errorMessage,
+      this.isLoading = false})
+      : _staffs = staffs;
 
   final List<StaffModel> _staffs;
   @override
@@ -213,12 +203,11 @@ class _$StaffSearchStateImpl implements _StaffSearchState {
 
   @override
   int get hashCode => Object.hash(
-        runtimeType,
-        const DeepCollectionEquality().hash(_staffs),
-        selectedStaff,
-        errorMessage,
-        isLoading,
-      );
+      runtimeType,
+      const DeepCollectionEquality().hash(_staffs),
+      selectedStaff,
+      errorMessage,
+      isLoading);
 
   /// Create a copy of StaffSearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -227,18 +216,15 @@ class _$StaffSearchStateImpl implements _StaffSearchState {
   @pragma('vm:prefer-inline')
   _$$StaffSearchStateImplCopyWith<_$StaffSearchStateImpl> get copyWith =>
       __$$StaffSearchStateImplCopyWithImpl<_$StaffSearchStateImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 }
 
 abstract class _StaffSearchState implements StaffSearchState {
-  const factory _StaffSearchState({
-    final List<StaffModel> staffs,
-    final StaffModel? selectedStaff,
-    final String? errorMessage,
-    final bool isLoading,
-  }) = _$StaffSearchStateImpl;
+  const factory _StaffSearchState(
+      {final List<StaffModel> staffs,
+      final StaffModel? selectedStaff,
+      final String? errorMessage,
+      final bool isLoading}) = _$StaffSearchStateImpl;
 
   @override
   List<StaffModel> get staffs;
