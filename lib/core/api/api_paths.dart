@@ -8,6 +8,7 @@ import 'package:bookie_buddy_web/core/api/sales_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/service_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/shop_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/staff_api_paths.dart';
+import 'package:bookie_buddy_web/core/api/tailor_api_paths.dart';
 
 /// Centralized, namespaced API paths facade used across the app.
 ///
@@ -28,6 +29,7 @@ class ApiPaths {
   static const ledger = _LedgerNamespace();
   static const notifications = _NotificationsNamespace();
   static const staff = _StaffNamespace();
+  static const tailor = _TailorNamespace();
 }
 
 class _ApiConfigNamespace {
@@ -138,4 +140,14 @@ class _StaffNamespace {
   String staffById(int id) => StaffApiPaths.staffById(id);
   String staffAnalyticsReportById(int id) =>
       StaffApiPaths.staffAnalyticsReportById(id);
+}
+
+class _TailorNamespace {
+  const _TailorNamespace();
+  String get tailors => TailorApiPaths.tailors;
+  String tailorById(int id) => TailorApiPaths.tailorById(id);
+  String tailorMonthlySummary(int id) =>
+      TailorApiPaths.tailorMonthlySummary(id);
+  String restoreDeletedTailor(int id) =>
+      TailorApiPaths.restoreDeletedTailor(id);
 }
