@@ -84,6 +84,7 @@ class _BookingsNamespace {
   String deletePayment(int id) => BookingsApiPaths.deletePayment(id);
   String downloadBookingInvoice(int bookingId) =>
       BookingsApiPaths.downloadBookingInvoice(bookingId);
+  String clientById(int id) => BookingsApiPaths.clientById(id); // Added
 }
 
 class _SalesNamespace {
@@ -97,6 +98,7 @@ class _SalesNamespace {
   String salesDetailV4(int id) => SalesApiPaths.salesDetailV4(id);
   String updateSaleV4(int id) => SalesApiPaths.updateSaleV4(id);
   String deleteSaleV4(int id) => SalesApiPaths.deleteSaleV4(id);
+  String downloadInvoice(int id) => SalesApiPaths.downloadInvoice(id); // Added
 }
 
 class _ExpensesNamespace {

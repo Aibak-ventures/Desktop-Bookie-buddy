@@ -20,5 +20,6 @@ class BookingsApiPaths {
   // Dynamic methods
   static String deletePayment(int id) => '${bookingsV5}delete-payment/$id/';
   static String downloadBookingInvoice(int bookingId) =>
-      '${_rootV4}bookings/$bookingId/download-invoice/';
+      '${bookingsV5}$bookingId/send-invoice/'; // Fixed: was download-invoice
+  static String clientById(int id) => '${clients}$id/'; // Added missing method
 }

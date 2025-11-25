@@ -13,4 +13,7 @@ class SalesApiPaths {
   static String salesDetailV4(int id) => '${salesV4}$id/';
   static String updateSaleV4(int id) => '${salesV4}$id/';
   static String deleteSaleV4(int id) => '${salesV4}$id/';
+
+  // Invoice download (v3)
+  static String downloadInvoice(int id) => '${_rootV3}sales/send-invoice/$id/';
 }
