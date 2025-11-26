@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/models/shop_model/shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
+// import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/features/main/widgets/shop_switcher_bottom_sheet.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/widgets/show_shop_list_bottom_sheet.dart';
@@ -23,6 +24,7 @@ class TransferProductSelectShopSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shop = user.shopDetails;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,11 +32,11 @@ class TransferProductSelectShopSection extends StatelessWidget {
         6.height,
         ShopListItem(
           shop: ShopModel(
-            id: user.shopId!,
-            name: user.shopName,
-            phone: user.shopPhone,
-            address: user.shopAddress,
-            image: user.shopeImage,
+            id: shop.id,
+            name: shop.name,
+            phone: shop.phone,
+            address: shop.address,
+            image: shop.image,
           ),
           isSelected: false,
           onTap: null,

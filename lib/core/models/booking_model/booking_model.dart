@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_model.freezed.dart';
@@ -14,11 +15,7 @@ dynamic _clientCustomRead(Map json, String key) =>
 @freezed
 class BookingsModel with _$BookingsModel {
   const factory BookingsModel({
-    @JsonKey(
-      name: 'id',
-      readValue: _idCustomRead,
-    )
-    int? id,
+    @JsonKey(name: 'id', readValue: _idCustomRead) int? id,
     @JsonKey(
       name: 'client',
       defaultValue: 'Unknown',
@@ -48,11 +45,7 @@ class BookingsModel with _$BookingsModel {
       toJson: PaymentStatus.toJson,
     )
     required PaymentStatus paymentStatus,
-    @JsonKey(
-      name: 'booked_items',
-    )
-    @Default(const [])
-    List<String> bookedItems,
+    @JsonKey(name: 'booked_items') @Default(const []) List<String> bookedItems,
   }) = _BookingsModel;
 
   factory BookingsModel.fromJson(Map<String, dynamic> json) =>

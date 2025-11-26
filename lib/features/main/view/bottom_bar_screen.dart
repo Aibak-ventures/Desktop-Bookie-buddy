@@ -1,17 +1,21 @@
 import 'dart:io';
 
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
 import 'package:bookie_buddy_web/features/main/widgets/shop_switcher_bottom_sheet.dart';
+import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
+import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
 import 'package:bookie_buddy_web/features/search/view_model/bloc_search/search_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,11 +44,27 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   final List<Widget> screens = [
     const HomeScreen(),
     BlocProvider(
-      create: (context) => SearchBloc(),
+      create: (context) => SearchBloc(repository: getIt.get()),
       child: const SearchScreen(),
     ),
     const AddExpenseScreen(),
     const ProfileScreen(),
+    BlocProvider(
+      create: (context) => ProductBloc(),
+      child: SelectServiceScreen(
+        onServiceSelected: (service, ctx) {
+          print('Selected service: ${service.name}');
+          ctx.push(
+            ProductGridScreen(
+              serviceId: service.id,
+              name: service.name,
+              mainServiceType:
+                  MainServiceType.fromString(service.mainServiceName),
+            ),
+          );
+        },
+      ),
+    ),
   ];
 
   @override
@@ -61,7 +81,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
@@ -73,7 +93,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         if (!didPop) await _onWillPop(context);
         print('on pop invoke after dialog function');
       },
-      child: isDesktop 
+      child: isDesktop
           ? _buildDesktopLayout(context)
           : _buildMobileLayout(context),
     );
@@ -194,7 +214,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: CustomNetworkImage(
-                          imageUrl: user?.shopeImage ?? "",
+                          imageUrl: user?.shopDetails.image ?? "",
                           imageBuilder: (context, imageProvider) {
                             return Container(
                               decoration: BoxDecoration(
@@ -232,7 +252,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user?.shopName ?? 'Shop Name',
+                            user?.firstName ?? 'Shop Name',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -242,7 +262,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            user?.userName ?? 'Owner',
+                            user?.lastName ?? 'Owner',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white.withOpacity(0.8),
@@ -295,6 +315,13 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             Icons.person,
             "Profile",
           ),
+          const Divider(height: 24),
+          _buildDesktopNavItem(
+            4,
+            Icons.inventory_2_outlined,
+            Icons.inventory_2,
+            "Stock",
+          ),
         ],
       ),
     );
@@ -328,11 +355,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: isSelected 
+              color: isSelected
                   ? const Color(0xFF667eea).withOpacity(0.1)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(12),
-              border: isSelected 
+              border: isSelected
                   ? Border.all(color: const Color(0xFF667eea).withOpacity(0.3))
                   : null,
             ),
@@ -340,7 +367,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               children: [
                 Icon(
                   isSelected ? filledIcon : outlinedIcon,
-                  color: isSelected 
+                  color: isSelected
                       ? const Color(0xFF667eea)
                       : const Color(0xFF6B7280),
                   size: 22,
@@ -351,7 +378,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected 
+                    color: isSelected
                         ? const Color(0xFF667eea)
                         : const Color(0xFF374151),
                   ),
@@ -373,9 +400,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         child: ElevatedButton(
           onPressed: () {
             context.push(
-              const AddBookingDateSelectingScreen(
-                addBookingModel: AddBookingModel(),
-              ),
+              const AddBookingDateSelectingScreen(),
             );
           },
           style: ElevatedButton.styleFrom(
@@ -407,128 +432,128 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
-        body: PageView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: pageController,
-          onPageChanged: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
-          children: screens,
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
+        onPageChanged: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        children: screens,
+      ),
+      extendBody: currentIndex != 3 ? true : false,
+      // resizeToAvoidBottomInset: currentIndex == 2 ? false : true,
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: AppColors.greyBorder, width: 1),
         ),
-        extendBody: currentIndex != 3 ? true : false,
-        // resizeToAvoidBottomInset: currentIndex == 2 ? false : true,
-        resizeToAvoidBottomInset: false,
-        bottomNavigationBar: Container(
-          margin: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: AppColors.greyBorder, width: 1),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Container(
-              height: 70,
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildNavItem(
-                    0,
-                    Icons.home_outlined,
-                    Icons.home,
-                    "Home",
-                  ),
-                  _buildNavItem(
-                    1,
-                    LucideIcons.search,
-                    LucideIcons.search,
-                    "Search",
-                  ),
-                  // Center button
-                  _buildCenterButton(),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            height: 70,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(
+                  0,
+                  Icons.home_outlined,
+                  Icons.home,
+                  "Home",
+                ),
+                _buildNavItem(
+                  1,
+                  LucideIcons.search,
+                  LucideIcons.search,
+                  "Search",
+                ),
+                // Center button
+                _buildCenterButton(),
 
-                  _buildNavItem(
-                    2,
-                    Icons.attach_money_outlined,
-                    Icons.attach_money,
-                    "Expense",
-                  ),
-                  // _buildNavItem(
-                  //   3,
-                  //   Icons.person_outline,
-                  //   Icons.person,
-                  //   "Profile",
-                  // ),
-                  BlocBuilder<UserCubit, UserModel?>(
-                    builder: (context, user) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            currentIndex = 3;
-                            pageController.jumpToPage(currentIndex);
-                          });
+                _buildNavItem(
+                  2,
+                  Icons.attach_money_outlined,
+                  Icons.attach_money,
+                  "Expense",
+                ),
+                // _buildNavItem(
+                //   3,
+                //   Icons.person_outline,
+                //   Icons.person,
+                //   "Profile",
+                // ),
+                BlocBuilder<UserCubit, UserModel?>(
+                  builder: (context, user) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          currentIndex = 3;
+                          pageController.jumpToPage(currentIndex);
+                        });
+                      },
+                      onLongPress: () {
+                        print(
+                            'user have multiple shop : ${user?.haveMultipleShops}');
+                        if (user?.haveMultipleShops ?? false) {
+                          context
+                              .read<ShopListBloc>()
+                              .add(const ShopListEvent.loadShops());
+                          showAccountSwitcherBottomSheet(context);
+                        }
+                      },
+                      child: CustomNetworkImage(
+                        width: 40,
+                        height: 40,
+                        imageUrl: user?.shopDetails.image ?? "",
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
                         },
-                        onLongPress: () {
-                          print(
-                              'user have multiple shop : ${user?.haveMultipleShops}');
-                          if (user?.haveMultipleShops ?? false) {
-                            context
-                                .read<ShopListBloc>()
-                                .add(const ShopListEvent.loadShops());
-                            showAccountSwitcherBottomSheet(context);
-                          }
+                        placeholder: (context, url) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.greyBorder,
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              color: AppColors.grey600,
+                            ),
+                          );
                         },
-                        child: CustomNetworkImage(
-                          width: 40,
-                          height: 40,
-                          imageUrl: user?.shopeImage ?? "",
-                          imageBuilder: (context, imageProvider) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
-                          placeholder: (context, url) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.greyBorder,
-                              ),
-                              child: Icon(
-                                Icons.person,
-                                color: AppColors.grey600,
-                              ),
-                            );
-                          },
-                          errorWidget: (context, url, error) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.greyBorder,
-                              ),
-                              child: Icon(
-                                Icons.person,
-                                color: AppColors.grey600,
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  )
-                ],
-              ),
+                        errorWidget: (context, url, error) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.greyBorder,
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              color: AppColors.grey600,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
           ),
         ),
+      ),
     );
   }
 
@@ -613,9 +638,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     ).onTap(
       () {
         context.push(
-          const AddBookingDateSelectingScreen(
-            addBookingModel: AddBookingModel(),
-          ),
+          const AddBookingDateSelectingScreen(),
         );
       },
     );

@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
 import 'package:bookie_buddy_web/core/error/error_handler.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/network_exceptions.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+// import 'package:bookie_buddy_web/core/models/pagination_model.dart';
 import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
 import 'package:dio/dio.dart';
 
@@ -15,7 +17,7 @@ class DashboardService {
       fetchDashboardData(int page) async {
     try {
       final response = await DioClient.dio.get(
-        '/api/v2/bookings/dashboard/',
+        ApiPaths.bookings.dashboard,
         queryParameters: {'page': page},
       );
 
@@ -26,7 +28,10 @@ class DashboardService {
       _validateResponse(response); // throw exception if status code is not 200
 
       final result = response.data as Map<String, dynamic>;
-      final data = (result['results']['upcoming_bookings'] as List)
+      final dataWrapper = result['data'] as Map<String, dynamic>;
+      final innerData = dataWrapper['data'] as Map<String, dynamic>;
+
+      final data = (innerData['upcoming'] as List)
           .map(
             (e) => BookingsModel.fromJson(e),
           )
@@ -34,10 +39,10 @@ class DashboardService {
       return (
         PaginationModel<BookingsModel>(
           data: data,
-          totalData: result['count'],
-          nextPageUrl: result['next'],
+          totalData: dataWrapper['count'],
+          nextPageUrl: dataWrapper['next'],
         ),
-        CarouselDataModel.fromJson(result['results']),
+        CarouselDataModel.fromJson(innerData),
       );
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);

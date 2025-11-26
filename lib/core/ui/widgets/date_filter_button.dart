@@ -16,41 +16,39 @@ class DateFilterButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.purpleLightShade,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      padding: 8.padding,
-      child: Row(
-        children: [
-          Icon(
-            Icons.tune,
-            size: 22.sp,
-            color: hasActiveFilter ? AppColors.purple : AppColors.black,
-          ),
-          // SvgPicture.asset(
-          //   AppIcons.filterSvg,
-          //   height: 18,
-          //   semanticsLabel: 'Filter Booking',
-          //   colorFilter: ColorFilter.mode(
-          //     hasActiveFilter ? AppColors.purple : AppColors.black,
-          //     BlendMode.srcIn,
-          //   ),
-          // ),
-          if (showLabel) ...[
-            4.width,
-            Text(
-              'Filter',
-              style: TextStyle(
-                fontSize: 15.sp,
-                color: hasActiveFilter ? AppColors.purple : AppColors.black,
-              ),
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: AppColors.purpleLightShade,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        padding: 8.padding,
+        child: Row(
+          children: [
+            Icon(
+              Icons.tune,
+              size: 22.sp,
+              color: hasActiveFilter ? AppColors.purple : AppColors.black,
             ),
-          ]
-        ],
-      ),
-    ).onTap(onTap);
-  }
+            // SvgPicture.asset(
+            //   AppIcons.filterSvg,
+            //   height: 18,
+            //   semanticsLabel: 'Filter Booking',
+            //   colorFilter: ColorFilter.mode(
+            //     hasActiveFilter ? AppColors.purple : AppColors.black,
+            //     BlendMode.srcIn,
+            //   ),
+            // ),
+            if (showLabel) ...[
+              4.width,
+              Text(
+                'Filter',
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: hasActiveFilter ? AppColors.purple : AppColors.black,
+                ),
+              ),
+            ]
+          ],
+        ),
+      ).onTap(onTap);
 }

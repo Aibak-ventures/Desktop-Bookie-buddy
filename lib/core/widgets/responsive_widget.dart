@@ -18,7 +18,7 @@ class ResponsiveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveHelper.getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;

@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 
 class ClientServices {
-  static const String clientUrl = "/api/v2/bookings/clients/";
-  Future<PaginationModel<ClientModel>> getClients({
+  static final String clientUrl = ApiPaths.bookings.clients;
+  Future<CustomResponseModel> getClients({
     int page = 1,
     String? searchName,
     String? searchPhone,
@@ -22,91 +22,57 @@ class ClientServices {
         },
       );
       log(response.realUri.toString());
-
-      if (response.statusCode == 200) {
-        final data = (response.data['results'] as List)
-            .map(
-              (e) => ClientModel.fromJson(e),
-            )
-            .toList();
-
-        return PaginationModel<ClientModel>(
-          data: data,
-          totalData: response.data['count'],
-          nextPageUrl: response.data['next'],
-        );
-      } else {
-        if (response.statusCode == 400) {
-          return PaginationModel<ClientModel>(
-            data: [],
-            totalData: 0,
-            nextPageUrl: null,
-          );
-        }
-        log('status code: ${response.statusCode}, data: ${response.data}');
-        throw response.data['error'] ??
-            response.data['message'] ??
-            'Failed to fetch clients';
-      }
+      // log('get clients response: ${response.realUri.toString()}, data: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error fetching clients: ${e.toString()}', stackTrace: stack);
       rethrow;
     }
   }
 
-  Future<ClientModel> addClient(ClientRequestModel client) async {
+  Future<CustomResponseModel> addClient(ClientRequestModel client) async {
     try {
       final response = await DioClient.dio.post(
         clientUrl,
         data: client.toJson(),
       );
 
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        return ClientModel.fromJson(response.data['data']);
-      } else {
-        throw response.data['error'] ??
-            response.data['message'] ??
-            'Failed to add client';
-      }
+      log(
+        'add client response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error adding client: ${e.toString()}', stackTrace: stack);
       rethrow;
     }
   }
 
-  Future<ClientModel> updateClient(ClientRequestModel client) async {
+  Future<CustomResponseModel> updateClient(ClientRequestModel client) async {
     try {
       final response = await DioClient.dio.patch(
         '$clientUrl${client.id}/',
         data: client.toJson(),
       );
-
-      if (response.statusCode == 200) {
-        return ClientModel.fromJson(response.data['data']);
-      } else {
-        throw response.data['error'] ??
-            response.data['message'] ??
-            'Failed to edit client';
-      }
+      log(
+        'update client response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error updating client: ${e.toString()}', stackTrace: stack);
       rethrow;
     }
   }
 
-  Future<void> deleteClient(int clientId) async {
+  Future<CustomResponseModel> deleteClient(int clientId) async {
     try {
       final response = await DioClient.dio.delete('$clientUrl$clientId/');
 
-      if (response.statusCode == 204 || response.statusCode == 200) {
-        return;
-      } else {
-        throw response.data['error'] ??
-            response.data['message'] ??
-            'Failed to delete client';
-      }
+      log(
+        'delete client response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error deleting client: ${e.toString()}', stackTrace: stack);
       rethrow;
     }
   }

@@ -16,6 +16,11 @@ class CarouselDataModel with _$CarouselDataModel {
       defaultValue: 0,
     )
     required int completedCount,
+    @JsonKey(
+      name: 'expired_count',
+      defaultValue: 0,
+    )
+    required int expiredCount,
   }) = _CarouselDataModel;
 
   factory CarouselDataModel.fromJson(Map<String, dynamic> json) =>

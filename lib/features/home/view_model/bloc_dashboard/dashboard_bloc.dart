@@ -5,7 +5,8 @@ import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/error/failures.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+// import 'package:bookie_buddy_web/core/models/pagination_model.dart';
 import 'package:bookie_buddy_web/core/navigation/navigations.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
@@ -30,6 +31,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   CarouselDataModel carouselResponse = CarouselDataModel(
     upComingCount: 0,
     completedCount: 0,
+    expiredCount: 0,
   );
   Map<String, List<BookingsModel>> _groupBookings(
       List<BookingsModel> bookings) {
@@ -208,6 +210,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     carouselResponse = CarouselDataModel(
       upComingCount: 0,
       completedCount: 0,
+      expiredCount: 0,
     );
   }
 }

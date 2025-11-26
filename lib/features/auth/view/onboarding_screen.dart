@@ -12,14 +12,14 @@ class OnboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
-    
+
     return Scaffold(
       backgroundColor: isDesktop ? const Color(0xFFF5F7FA) : null,
-      body: isDesktop 
+      body: isDesktop
           ? _buildDesktopAppLayout(context)
           : _buildMobileLayout(context),
     );
@@ -111,7 +111,8 @@ class OnboardingScreen extends StatelessWidget {
                           children: [
                             _buildFeatureItem(Icons.calendar_today, 'Bookings'),
                             _buildFeatureItem(Icons.inventory_2, 'Inventory'),
-                            _buildFeatureItem(Icons.account_balance_wallet, 'Ledger'),
+                            _buildFeatureItem(
+                                Icons.account_balance_wallet, 'Ledger'),
                           ],
                         ),
                       ],
@@ -128,7 +129,8 @@ class OnboardingScreen extends StatelessWidget {
               color: Colors.white,
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
                   child: Container(
                     constraints: BoxConstraints(maxWidth: 400),
                     child: Column(
@@ -256,9 +258,9 @@ class OnboardingScreen extends StatelessWidget {
           child: Container(
             width: double.infinity,
             constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height - 
-                        MediaQuery.of(context).padding.top - 
-                        MediaQuery.of(context).padding.bottom,
+              minHeight: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top -
+                  MediaQuery.of(context).padding.bottom,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -327,14 +329,14 @@ class _LoginButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isFilled;
-  
+
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb || 
+    final isDesktop = kIsWeb ||
         Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
-    
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 0 : 30,

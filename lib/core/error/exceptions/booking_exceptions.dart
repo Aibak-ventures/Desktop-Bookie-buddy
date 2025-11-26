@@ -27,7 +27,7 @@ class BookingNotFoundException extends BookingException {
 
 class BookingSaveException extends BookingException {
   BookingSaveException([
-    super.message = "Could not save booking",
+    super.message = 'Could not save booking',
     super.errorCode,
   ]);
 }

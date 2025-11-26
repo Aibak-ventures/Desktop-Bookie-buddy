@@ -15,7 +15,7 @@ class GlobalLoadingOverlay {
     _overlayEntry = OverlayEntry(
       builder: (context) => Material(
         color: Colors.transparent,
-        child: Container(
+        child: ColoredBox(
           color: Colors.black38,
           child: Center(
             child: Column(
@@ -41,9 +41,7 @@ class GlobalLoadingOverlay {
                     },
                     label: const Text(
                       'Close',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(color: Colors.white),
                     ),
                     icon: const Icon(
                       Icons.cancel_outlined,

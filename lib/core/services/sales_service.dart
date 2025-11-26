@@ -1,0 +1,107 @@
+import 'dart:developer';
+
+import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';
+import 'package:dio/dio.dart';
+
+class SalesService {
+  Dio get _dio => DioClient.dio;
+
+  Future<CustomResponseModel> getSalesPagination({
+    int page = 1,
+    String? search,
+    String? fromDate,
+    String? toDate,
+  }) async {
+    try {
+      final response = await _dio.get(
+        ApiPaths.sales.sales,
+        queryParameters: {
+          'page': page,
+          'search': search,
+          'from': fromDate,
+          'to': toDate,
+        },
+      );
+      log('sales pagination api: ${response.realUri.toString()}');
+      // log('Sales get pagination response: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error get pagination sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> getSaleDetails(int saleId) async {
+    try {
+      final response = await _dio.get(ApiPaths.sales.salesDetailV4(saleId));
+      log('Sales get response: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error get sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> createSale(SalesRequestModel salesRequest) async {
+    try {
+      final response = await _dio.post(
+        ApiPaths.sales.salesV4,
+        data: salesRequest.toJson(),
+      );
+      log('Sales create response: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error creating sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> updateSale(SalesRequestModel salesRequest) async {
+    try {
+      final response = await _dio.patch(
+        ApiPaths.sales.updateSaleV4(salesRequest.id!),
+        data: salesRequest.toJson(),
+      );
+      log('Sales update response: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error updating sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  // Future<CustomResponseModel> updateSaleVariants({
+  //   required int saleId,
+  //   required List<ProductSelectedModel> products,
+  // }) async {
+  //   try {
+  //     final response = await _dio.patch(
+  //       '${ApiPaths.salesUpdateVariant}/$saleId/',
+  //       data: {
+  //         'variants': products
+  //             .map((e) => e.toCustomJson(includeMeasurement: false))
+  //             .toList(),
+  //       },
+  //     );
+  //     log('Sales update variants response: ${response.data}');
+  //     return CustomResponseModel.fromJson(response.data);
+  //   } catch (e, stack) {
+  //     log('Error updating sale: $e', stackTrace: stack);
+  //     rethrow;
+  //   }
+  // }
+
+  Future<CustomResponseModel> deleteSale(int saleId) async {
+    try {
+      final response = await _dio.delete(ApiPaths.sales.deleteSaleV4(saleId));
+      log('Sales delete response: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error deleting sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+}

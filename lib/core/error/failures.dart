@@ -3,9 +3,7 @@ sealed class Failure {
   const Failure(this.message);
 
   @override
-  String toString() {
-    return message;
-  }
+  String toString() => message;
 }
 
 class AuthFailure extends Failure {

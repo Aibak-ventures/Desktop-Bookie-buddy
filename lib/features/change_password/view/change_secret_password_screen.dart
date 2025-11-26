@@ -263,7 +263,7 @@ class _ChangeSecretPasswordScreenState
       hintText: hint,
       isEnabled: isEnabled,
       textInputAction: textInputAction,
-      submitFun: onSubmitted ??
+      onFieldSubmit: onSubmitted ??
           (_) {
             if (nextFocusNode != null) {
               FocusScope.of(context).requestFocus(nextFocusNode);

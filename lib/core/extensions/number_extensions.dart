@@ -24,9 +24,8 @@ extension NumX on num {
   Widget get width => SizedBox(width: w); // w is from ScreenUtil (this.w == w)
 
   /// Returns a [Widget] that represents a vertical space of the specified height relative to the screen height.
-  Widget get heightCustom => SizedBox(
-        height: navigatorKey.currentContext!.screenHeight * toDouble(),
-      );
+  Widget get heightCustom =>
+      SizedBox(height: navigatorKey.currentContext!.screenHeight * toDouble());
 
   /// Returns double value relative to screen width
   double get widthR => navigatorKey.currentContext!.mediaQueryWidth(toDouble());
@@ -36,12 +35,15 @@ extension NumX on num {
       navigatorKey.currentContext!.mediaQueryHeight(toDouble());
 
   /// Returns a [BorderRadius] with the specified corner radius.
-  BorderRadius get radiusBorder {
-    return BorderRadius.circular(toDouble());
-  }
+  BorderRadius get radiusBorder => BorderRadius.circular(toDouble());
 
   /// Returns a [Radius] with the specified corner radius.
   Radius get radius => Radius.circular(toDouble());
+
+  double percentageOf(num total) {
+    if (total == 0) return 0;
+    return ((this / total) * 100).roundToDouble();
+  }
 }
 
 extension IntX on int {
@@ -56,6 +58,8 @@ extension IntX on int {
   Duration minutes() => Duration(minutes: this);
 
   Duration seconds() => Duration(seconds: this);
+
+  Duration milliSeconds() => Duration(milliseconds: this);
 }
 
 extension NumPadding on num {
@@ -75,14 +79,13 @@ extension NumPadding on num {
     bool right = false,
     bool top = false,
     bool bottom = false,
-  }) {
-    return EdgeInsets.only(
-      left: left ? w : 0,
-      right: right ? w : 0,
-      top: top ? w : 0,
-      bottom: bottom ? w : 0,
-    );
-  }
+  }) =>
+      EdgeInsets.only(
+        left: left ? w : 0,
+        right: right ? w : 0,
+        top: top ? w : 0,
+        bottom: bottom ? w : 0,
+      );
 }
 
 extension RecordX on (num, num) {
@@ -92,7 +95,12 @@ extension RecordX on (num, num) {
   ///```
   /// (20, 10).padding => EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w)
   /// ```
-  EdgeInsetsGeometry get padding {
-    return EdgeInsets.symmetric(horizontal: this.$1.w, vertical: this.$2.w);
-  }
+  EdgeInsetsGeometry get padding =>
+      EdgeInsets.symmetric(horizontal: this.$1.w, vertical: this.$2.w);
+}
+
+extension NumXNullable on num? {
+  bool get isNullOrZero => this == null || this == 0;
+
+  bool get isNotNullOrZero => !isNullOrZero;
 }

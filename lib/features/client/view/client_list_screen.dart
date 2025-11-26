@@ -1,339 +1,264 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/show_add_client_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_responsive_builder.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_search_field.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/features/client/view/widgets/client_list_tile.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/features/client/view_model/bloc_client_list/client_list_bloc.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/models/client_request_model/client_request_model.dart';
+import '../../../core/ui/dialogs/show_add_client_dialog.dart';
 
 class ClientListScreen extends StatelessWidget {
   const ClientListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ClientListBloc()..add(const ClientListEvent.loadClients()),
-      child: ClientListView(),
-    );
-  }
+  Widget build(BuildContext context) => BlocProvider(
+        create: (context) => ClientListBloc(repository: getIt.get())
+          ..add(const ClientListEvent.loadClients()),
+        child: const _ClientListView(),
+      );
 }
 
-class ClientListView extends StatelessWidget {
-  ClientListView({super.key});
+class _ClientListView extends StatefulWidget {
+  const _ClientListView({super.key});
+
+  @override
+  State<_ClientListView> createState() => _ClientListViewState();
+}
+
+class _ClientListViewState extends State<_ClientListView> {
   final TextEditingController searchController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Clients',
-        ),
-      ),
-      body: Column(
-        children: [
-          CustomSearchField(
-            searchController: searchController,
-            hintText: 'Search by name or phone number',
-            onChanged: (query) {
-              context
-                  .read<ClientListBloc>()
-                  .add(ClientListEvent.loadClients(searchQuery: query));
-            },
-            suffixFunction: () {
-              searchController.clear();
-              context
-                  .read<ClientListBloc>()
-                  .add(const ClientListEvent.loadClients());
-            },
-          ),
-          Expanded(
-            child: BlocConsumer<ClientListBloc, ClientListState>(
-              listener: (context, state) {
-                state.maybeMap(
-                  orElse: () {},
-                  error: (value) => context.showSnackBar(
-                    value.error,
-                    isError: true,
-                  ),
-                  failure: (value) => context.showSnackBar(
-                    value.message,
-                    isError: true,
-                  ),
-                  success: (value) {
-                    if (value.didPop) {
-                      context.pop();
-                    }
-
-                    context.showSnackBar(
-                      value.message,
-                    );
-
-                    if (value.needRefresh)
-                      context
-                          .read<ClientListBloc>()
-                          .add(const ClientListEvent.loadClients());
-                  },
-                );
-              },
-              buildWhen: (previous, current) {
-                return current.maybeMap(
-                  orElse: () => true,
-                  failure: (value) => false,
-                  success: (value) => false,
-                );
-              },
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () => const SizedBox(),
-                  loading: () => CustomResponsiveBuilder(
-                    builder: (context, deviceType) {
-                      if (!deviceType.isMobile) {
-                        return GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 15,
-                            childAspectRatio: 2,
-                          ),
-                          padding: 16.padding,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: 12.paddingOnly(
-                                bottom: true,
-                              ),
-                              child: const ClientListTileShimmer(),
-                            );
-                          },
-                        );
-                      }
-                      return ListView.builder(
-                          padding: 14.padding,
-                          itemCount: 15,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: 12.paddingOnly(
-                                bottom: true,
-                              ),
-                              child: const ClientListTileShimmer(),
-                            );
-                          });
-                    },
-                  ),
-                  error: (error) => CustomErrorWidget(
-                    errorText: error,
-                    onRetry: () {
-                      context.read<ClientListBloc>().add(
-                            ClientListEvent.loadClients(
-                              searchQuery: searchController.text.isNotEmpty
-                                  ? searchController.text.trim()
-                                  : null,
-                            ),
-                          );
-                    },
-                  ),
-                  loaded: (
-                    clients,
-                    nextPageUrl,
-                    isPaginating,
-                    isLoading,
-                    searchQuery,
-                  ) {
-                    if (clients.isEmpty) {
-                      return const CustomErrorWidget(
-                        icon: Icon(Icons.people_outline_rounded),
-                        errorText: 'No clients found',
-                        showRetry: false,
-                      );
-                    }
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        context
-                            .read<ClientListBloc>()
-                            .add(ClientListEvent.loadClients(
-                              searchQuery: searchQuery,
-                            ));
-                      },
-                      child: NotificationListener<ScrollNotification>(
-                        onNotification: (notification) {
-                          if (!isPaginating &&
-                              !isLoading &&
-                              nextPageUrl != null &&
-                              notification.metrics.pixels >=
-                                  notification.metrics.maxScrollExtent - 200) {
-                            context.read<ClientListBloc>().add(
-                                const ClientListEvent.loadNextPageClients());
-                          }
-                          return false;
-                        },
-                        child: CustomResponsiveBuilder(
-                          builder: (context, deviceType) {
-                            if (deviceType.isMobile) {
-                              return ListView.builder(
-                                padding: 14.padding,
-                                itemCount:
-                                    clients.length + (isPaginating ? 1 : 0),
-                                itemBuilder: (context, index) {
-                                  return _buildListItem(
-                                    context,
-                                    index,
-                                    clients,
-                                  );
-                                },
-                              );
-                            }
-                            return GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 15,
-                                childAspectRatio: 2,
-                              ),
-                              padding: 16.padding,
-                              itemCount:
-                                  clients.length + (isPaginating ? 1 : 0),
-                              itemBuilder: (context, index) {
-                                return _buildListItem(
-                                  context,
-                                  index,
-                                  clients,
-                                  isGrid: true,
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _addClient(context),
-        icon: const Icon(Icons.person_add_rounded),
-        label: const Text('Add Client'),
-        foregroundColor: AppColors.white,
-        backgroundColor: AppColors.purple,
-      ),
-    );
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
-  Widget? _buildListItem(
-    BuildContext context,
-    int index,
-    List<ClientModel> clients, {
-    bool isGrid = false,
-  }) {
-    if (index == clients.length) {
-      return const Center(
-        child: ClientListTileShimmer(),
-      );
-    }
-    final client = clients[index];
-    return Padding(
-      padding: 12.paddingOnly(
-        bottom: true,
-      ),
-      child: ClientListTile(
-        client: client,
-        isGrid: isGrid,
-        onDelete: () {
-          if (client.id == null) {
-            return;
-          }
-          _deleteClient(
-            context,
-            client,
-          );
-        },
-        onEdit: () {
-          showAddClientDialog(
-            context: context,
-            client: client,
-            onPressed: (dialogContext, name, phone1, phone2) {
-              if (client.name == name &&
-                  client.phone1 == phone1.toInt() &&
-                  client.phone2 == phone2.toIntOrNull()) {
-                context.pop();
-                context.showSnackBar(
-                  'No changes were made',
-                );
-                return;
-              }
-              context.read<ClientListBloc>().add(
-                    ClientListEvent.editClient(
-                      ClientRequestModel(
-                        id: client.id,
-                        name: name,
-                        phone1: phone1.toInt(),
-                        phone2: phone2.toIntOrNull(),
-                      ),
-                    ),
-                  );
-            },
-          );
-        },
-      ),
-    );
+  void _fetchData(BuildContext context) {
+    context.read<ClientListBloc>().add(const ClientListEvent.loadClients());
   }
 
-  void _addClient(BuildContext context) {
+  void _onSearch(String query) {
+    context.read<ClientListBloc>().add(
+          ClientListEvent.loadClients(
+            searchQuery: query.trim().isEmpty ? null : query.trim(),
+          ),
+        );
+  }
+
+  void _showAddClientDialog({ClientModel? client}) {
     showAddClientDialog(
       context: context,
+      client: client,
       onPressed: (dialogContext, name, phone1, phone2) {
-        context.read<ClientListBloc>().add(
-              ClientListEvent.addClient(
-                ClientRequestModel(
-                  id: null,
-                  name: name,
-                  phone1: phone1.toInt(),
-                  phone2: phone2.toIntOrNull(),
-                ),
-              ),
-            );
+        final bloc = context.read<ClientListBloc>();
+        final model = ClientRequestModel(
+          id: client?.id,
+          name: name,
+          phone1: int.tryParse(phone1) ?? 0,
+          phone2: int.tryParse(phone2),
+        );
+
+        if (client == null) {
+          bloc.add(ClientListEvent.addClient(model));
+        } else {
+          bloc.add(ClientListEvent.editClient(model));
+        }
       },
     );
   }
 
-  Future<void> _deleteClient(BuildContext context, ClientModel client) async {
-    final shouldDelete = await showDialog<bool>(
+  void _showDeleteDialog(ClientModel client) {
+    showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Client'),
-        content: Text('Are you sure you want to delete ${client.name}?'),
+        content: Text('Are you sure you want to delete "${client.name}"?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('Cancel'),
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: AppColors.white),
-            ),
+          BlocConsumer<ClientListBloc, ClientListState>(
+            listener: (context, state) {
+              state.maybeMap(
+                orElse: () {},
+                success: (value) {
+                  Navigator.of(dialogContext).pop();
+                  context.showSnackBar(value.message);
+                  if (value.needRefresh) {
+                    _fetchData(context);
+                  }
+                },
+                error: (value) {
+                  context.showSnackBar(value.error, isError: true);
+                },
+              );
+            },
+            builder: (context, state) {
+              final isDeleting = state.maybeMap(
+                orElse: () => false,
+                loading: (_) => true,
+              );
+
+              return CustomNormalElevatedButton(
+                text: 'Delete',
+                color: AppColors.redTomato,
+                isLoading: isDeleting,
+                onPressed: () {
+                  context
+                      .read<ClientListBloc>()
+                      .add(ClientListEvent.deleteClient(client));
+                },
+              );
+            },
           ),
         ],
       ),
     );
-
-    if (shouldDelete == true && client.id != null) {
-      context.read<ClientListBloc>().add(ClientListEvent.deleteClient(client));
-    }
   }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Clients'),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: 16.padding,
+          child: Column(
+            children: [
+// 🔍 Search bar
+              TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search by name or phone number...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            searchController.clear();
+                            _onSearch('');
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onChanged: _onSearch,
+              ),
+              const SizedBox(height: 16),
+
+              // 📋 Client list
+              Expanded(
+                child: BlocConsumer<ClientListBloc, ClientListState>(
+                  listener: (context, state) {
+                    state.maybeMap(
+                      error: (value) =>
+                          context.showSnackBar(value.error, isError: true),
+                      success: (value) {
+                        context.showSnackBar(value.message);
+                        if (value.needRefresh) _fetchData(context);
+                      },
+                      orElse: () {},
+                    );
+                  },
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      loading: () => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      error: (error) => CustomErrorWidget(
+                        errorText: error,
+                        onRetry: () => _fetchData(context),
+                      ),
+                      loaded: (clients, nextPageUrl, isPaginating, _, __) {
+                        if (clients.isEmpty) {
+                          return const EmptyDataWidget(
+                            message: 'No clients found. Tap + to add new.',
+                            isShowIcon: false,
+                          );
+                        }
+
+                        return RefreshIndicator.adaptive(
+                          onRefresh: () async => _fetchData(context),
+                          child: ListView.builder(
+                            itemCount: clients.length + (isPaginating ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index >= clients.length) {
+                                return const Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+                              final client = clients[index];
+                              return Card(
+                                margin: 8.paddingVertical,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor:
+                                        AppColors.purple.withOpacity(0.2),
+                                    child: const Icon(Icons.person,
+                                        color: AppColors.purple),
+                                  ),
+                                  title: Text(client.name ?? '-'),
+                                  subtitle: Text(
+                                    'Phone 1: ${client.phone1 ?? '-'}\n'
+                                    'Phone 2: ${client.phone2 ?? '-'}',
+                                  ),
+                                  isThreeLine: true,
+                                  trailing: Wrap(
+                                    spacing: 8,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit,
+                                            color: Colors.blue),
+                                        onPressed: () => _showAddClientDialog(
+                                            client: client),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.red),
+                                        onPressed: () =>
+                                            _showDeleteDialog(client),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      orElse: () => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          label:
+              const Text('Add Client', style: TextStyle(color: Colors.white)),
+          icon: const Icon(Icons.person_add_alt_1_rounded, color: Colors.white),
+          backgroundColor: AppColors.purple,
+          onPressed: () => _showAddClientDialog(),
+        ),
+      );
 }

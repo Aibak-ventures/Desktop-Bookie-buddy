@@ -12,61 +12,77 @@ enum InvoiceType {
   }
 }
 
-enum InvoiceIncludeType {
+enum LedgerType {
   all,
   payments,
   expense,
   pendings,
-  security;
+  security,
+  bookings,
+  sales;
 
   String get name {
     switch (this) {
-      case InvoiceIncludeType.all:
+      case LedgerType.all:
         return 'All';
-      case InvoiceIncludeType.payments:
+      case LedgerType.payments:
         return 'Payments';
-      case InvoiceIncludeType.expense:
+      case LedgerType.expense:
         return 'Expenses';
-      case InvoiceIncludeType.pendings:
+      case LedgerType.pendings:
         return 'Pendings';
-      case InvoiceIncludeType.security:
+      case LedgerType.security:
         return 'Security';
+      case LedgerType.bookings:
+        return 'Bookings';
+      case LedgerType.sales:
+        return 'Sales';
     }
   }
 
   String get value {
     switch (this) {
-      case InvoiceIncludeType.all:
+      case LedgerType.all:
         return 'all';
-      case InvoiceIncludeType.payments:
+      case LedgerType.payments:
         return 'payments';
-      case InvoiceIncludeType.expense:
+      case LedgerType.expense:
         return 'expense';
-      case InvoiceIncludeType.pendings:
+      case LedgerType.pendings:
         return 'pendings';
-      case InvoiceIncludeType.security:
+      case LedgerType.security:
         return 'security';
+      case LedgerType.bookings:
+        return 'bookings';
+      case LedgerType.sales:
+        return 'sales';
     }
   }
 
-  static InvoiceIncludeType fromString(String? value) {
+  static LedgerType fromString(String? value) {
     switch (value?.toLowerCase()) {
       case 'payment':
-        return InvoiceIncludeType.payments;
+        return LedgerType.payments;
       case 'expense':
-        return InvoiceIncludeType.expense;
+        return LedgerType.expense;
       case 'pending':
-        return InvoiceIncludeType.pendings;
+        return LedgerType.pendings;
       case 'security':
-        return InvoiceIncludeType.security;
+        return LedgerType.security;
+      case 'booking':
+        return LedgerType.bookings;
+      case 'sale':
+        return LedgerType.sales;
       default:
-        return InvoiceIncludeType.all;
+        return LedgerType.all;
     }
   }
 
-  bool get isAll => this == InvoiceIncludeType.all;
-  bool get isPayments => this == InvoiceIncludeType.payments;
-  bool get isExpense => this == InvoiceIncludeType.expense;
-  bool get isPendings => this == InvoiceIncludeType.pendings;
-  bool get isSecurity => this == InvoiceIncludeType.security;
+  bool get isAll => this == LedgerType.all;
+  bool get isPayments => this == LedgerType.payments;
+  bool get isExpense => this == LedgerType.expense;
+  bool get isPendings => this == LedgerType.pendings;
+  bool get isSecurity => this == LedgerType.security;
+  bool get isBookings => this == LedgerType.bookings;
+  bool get isSales => this == LedgerType.sales;
 }

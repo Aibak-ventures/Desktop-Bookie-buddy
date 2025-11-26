@@ -9,38 +9,91 @@ part of 'user_model.dart';
 _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
     _$UserModelImpl(
       id: (json['id'] as num).toInt(),
-      userName: json['full_name'] as String,
+      firstName: json['full_name'] as String,
+      lastName: json['last_name'] as String? ?? '',
       phone: json['phone'] as String,
-      email: json['email'] as String?,
-      shopId: (json['shop_id'] as num?)?.toInt(),
-      shopName: json['shop_name'] as String? ?? 'Shop',
-      shopPhone: json['shop_phone'] as String? ?? '9999999999',
-      shopAddress: json['shop_address'] as String? ?? 'Address',
-      gstNo: json['gst_number'] as String?,
-      shopeImage: json['shop_image'] as String?,
-      termsAndConditions: (json['terms_and_conditions'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
+      shopRole: ShopRole.fromString(json['shop_role'] as String?),
       block: json['block'] as bool? ?? false,
       haveMultipleShops: json['multiple_shops'] as bool? ?? false,
-      role: json['role'] as String?,
+      isNotificationActive: json['has_active_notification'] as bool? ?? false,
+      subscription: json['subscription'] == null
+          ? null
+          : UserSubscriptionModel.fromJson(
+              json['subscription'] as Map<String, dynamic>),
+      passwordSettings:
+          _passwordSettingsFromJson(json['password_settings'] as Map),
+      shopSettings: ShopSettingsModel.fromJson(
+          json['shop_settings'] as Map<String, dynamic>),
+      shopDetails: UserShopModel.fromJson(json['shop'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'full_name': instance.userName,
+      'full_name': instance.firstName,
+      'last_name': instance.lastName,
       'phone': instance.phone,
-      'email': instance.email,
-      'shop_id': instance.shopId,
-      'shop_name': instance.shopName,
-      'shop_phone': instance.shopPhone,
-      'shop_address': instance.shopAddress,
-      'gst_number': instance.gstNo,
-      'shop_image': instance.shopeImage,
-      'terms_and_conditions': instance.termsAndConditions,
+      'shop_role': _$ShopRoleEnumMap[instance.shopRole],
       'block': instance.block,
       'multiple_shops': instance.haveMultipleShops,
-      'role': instance.role,
+      'has_active_notification': instance.isNotificationActive,
+      'subscription': instance.subscription,
+      'password_settings': instance.passwordSettings,
+      'shop_settings': instance.shopSettings,
+      'shop': instance.shopDetails,
     };
+
+const _$ShopRoleEnumMap = {
+  ShopRole.owner: 'owner',
+  ShopRole.manager: 'manager',
+  ShopRole.staff: 'staff',
+};
+
+_$UserSubscriptionModelImpl _$$UserSubscriptionModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$UserSubscriptionModelImpl(
+      plan: json['plan'] as String,
+      status: json['status'] as String,
+      features:
+          (json['features'] as List<dynamic>).map((e) => e as String).toList(),
+    );
+
+Map<String, dynamic> _$$UserSubscriptionModelImplToJson(
+        _$UserSubscriptionModelImpl instance) =>
+    <String, dynamic>{
+      'plan': instance.plan,
+      'status': instance.status,
+      'features': instance.features,
+    };
+
+_$UserPasswordSettingsModelImpl _$$UserPasswordSettingsModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$UserPasswordSettingsModelImpl(
+      location: $enumDecode(_$SecretPasswordLocationsEnumMap, json['location']),
+      role: $enumDecode(_$UserPasswordSettingRoleEnumMap, json['role']),
+    );
+
+Map<String, dynamic> _$$UserPasswordSettingsModelImplToJson(
+        _$UserPasswordSettingsModelImpl instance) =>
+    <String, dynamic>{
+      'location': _$SecretPasswordLocationsEnumMap[instance.location]!,
+      'role': _$UserPasswordSettingRoleEnumMap[instance.role]!,
+    };
+
+const _$SecretPasswordLocationsEnumMap = {
+  SecretPasswordLocations.ledgerView: 'ledgerView',
+  SecretPasswordLocations.bookingEdit: 'bookingEdit',
+  SecretPasswordLocations.bookingDelete: 'bookingDelete',
+  SecretPasswordLocations.bookingPayment: 'bookingPayment',
+  SecretPasswordLocations.transferProduct: 'transferProduct',
+  SecretPasswordLocations.monthlyGrossView: 'monthlyGrossView',
+  SecretPasswordLocations.productDeletion: 'productDeletion',
+  SecretPasswordLocations.productEdit: 'productEdit',
+};
+
+const _$UserPasswordSettingRoleEnumMap = {
+  UserPasswordSettingRole.all: 'all',
+  UserPasswordSettingRole.none: 'none',
+  UserPasswordSettingRole.staff: 'staff',
+  UserPasswordSettingRole.managerAndStaff: 'managerAndStaff',
+};

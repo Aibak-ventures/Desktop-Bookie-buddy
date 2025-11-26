@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/navigation/navigations.dart';
+import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
 import 'package:bookie_buddy_web/core/services/auth_service.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
+import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -16,49 +19,106 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+class _QueuedRequest {
+  final Completer<RequestOptions> completer;
+  final RequestOptions requestOptions;
+  _QueuedRequest(this.completer, this.requestOptions);
+}
+
 class AuthInterceptor extends Interceptor {
   static bool _isRefreshing = false;
-  static final List<Completer<RequestOptions>> _requestQueue = [];
+  static final List<_QueuedRequest> _requestQueue = [];
   static bool _isSessionExpiredDialogShowing = false;
   static Timer? _refreshTimer;
+  // Ensures we handle session expiry UX only once until reset
+  static bool _hasHandledSessionExpiry = false;
 
   @override
   void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    // handler.reject(DioException.badResponse(
+    //   statusCode: 503,
+    //   requestOptions: options.copyWith(
+    //     validateStatus: (status) {
+    //       if (status == null) return false;
+
+    //       if (status == 401) return false;
+    //       return true;
+    //     },
+    //   ),
+    //   response: Response(
+    //     requestOptions: RequestOptions(
+    //       validateStatus: (status) {
+    //         if (status == null) return false;
+
+    //         if (status == 401) return false;
+    //         return true;
+    //       },
+    //     ),
+    //   ),
+    // ));
+
     // Skip auth for specific endpoints
     if (_isAuthEndpoint(options.path)) {
-      return handler.next(options);
+      log('Skipping auth for ${options.path}');
+      handler.next(options);
+      return;
     }
-
     final token = TokenStorage.accessToken;
 
-    final shopId = SharedPreferenceHelper.getShopId;
+    final shopId = getIt.get<SharedPreferenceHelper>().getShopId;
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
-      // Only add X-Active-Shop-ID if shopId is not null
       if (shopId != null) {
         options.headers['X-Active-Shop-ID'] = shopId;
       }
     }
-    handler.next(options);
+
+    // Sanitize sensitive headers in logs
+    final sanitizedHeaders = Map.of(options.headers);
+    if (sanitizedHeaders['Authorization'] != null) {
+      sanitizedHeaders['Authorization'] = 'Bearer ***';
+    }
+    // log('Request: ${options.method} ${options.path}, Headers: $sanitizedHeaders');
+    // handler.next(options);
+    // log('validation status: ${options.validateStatus(401)}');
+    handler.next(
+      options.copyWith(
+        validateStatus: (status) {
+          if (status == null) return false;
+
+          if (status == 401 || status > 502) return false;
+          return true;
+        },
+      ),
+    );
   }
 
-  // Future<int?> _retryProfile() async {
-  //   int? shopId = SharedPreferenceHelper.getShopId;
-  // if (shopId == null) {
-  //   log('shopId is null, loading user data');
-  //   final response = await DioClient.newDio().get('/api/v3/auth/profile');
-  //   log('status code: ${response.statusCode}, data: ${response.data}');
-
-  //   shopId = SharedPreferenceHelper.getShopId;
-  //   log('user data loaded, shopId: $shopId');
-  // }
-  //   return shopId;
-  // }
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    if (response.statusCode == 401 &&
+        !_isAuthEndpoint(response.requestOptions.path)) {
+      handler.reject(
+        DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+          message: 'Unauthorized',
+        ),
+      );
+      return;
+    }
+    // handler.next(response);
+    super.onResponse(response, handler);
+  }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    log('HTTP Error - Status: ${err.response?.statusCode}, Type: ${err.type}, Message: ${err.message}');
+    log(
+      'HTTP Error - Status: ${err.response?.statusCode}, Type: ${err.type}, Message: ${err.message}',
+    );
 
     // Handle network connectivity issues
     await _handleNetworkErrors(err);
@@ -66,6 +126,33 @@ class AuthInterceptor extends Interceptor {
     // Handle 401 unauthorized errors
     if (err.response?.statusCode == 401 &&
         !_isAuthEndpoint(err.requestOptions.path)) {
+      // If there is no refresh token, the user isn't logged in yet (fresh install/logged out).
+      // Don't show session-expired UX or attempt refresh; let the caller route to login/onboarding.
+      final hasRefreshToken = TokenStorage.refreshToken?.isNotEmpty ?? false;
+      if (!hasRefreshToken) {
+        log(
+          '401 received without refresh token — likely first launch or logged-out state. Skipping session-expired handling.',
+        );
+        handler.next(err);
+        return;
+      }
+      // Short-circuit known unrecoverable cases
+      final data = err.response?.data;
+      final serverCode = data is Map ? data['code'] : null;
+      final detail = data is Map ? (data['detail'] ?? data['message']) : null;
+      if (serverCode == 'user_inactive' || detail == 'User is inactive') {
+        // If we've already handled expiry, don't show again
+        if (!_hasHandledSessionExpiry) {
+          await _handleSessionExpired();
+        }
+        handler.next(err);
+        return;
+      }
+      // If we've already handled expiry elsewhere, skip further handling
+      if (_hasHandledSessionExpiry) {
+        handler.next(err);
+        return;
+      }
       await _handle401Error(err, handler);
       return; // Important: return early to prevent calling handler.next()
     }
@@ -77,7 +164,12 @@ class AuthInterceptor extends Interceptor {
   }
 
   bool _isAuthEndpoint(String path) {
-    final authPaths = ['/login', '/register', '/refresh', '/forgot-password'];
+    final authPaths = [
+      '/login',
+      // '/register',
+      '/refresh',
+      '/forgot-password',
+    ];
     return authPaths.any((authPath) => path.contains(authPath));
   }
 
@@ -86,7 +178,8 @@ class AuthInterceptor extends Interceptor {
         err.type == DioExceptionType.sendTimeout ||
         err.type == DioExceptionType.receiveTimeout) {
       _showNetworkError(
-          "Request timeout. Please check your connection and try again.");
+        'Request timeout. Please check your connection and try again.',
+      );
       return;
     }
 
@@ -96,34 +189,36 @@ class AuthInterceptor extends Interceptor {
 
         if (connectivityResults.contains(ConnectivityResult.none)) {
           _showNetworkError(
-              "No internet connection. Please check your network settings.");
+            'No internet connection. Please check your network settings.',
+          );
         } else {
           _showNetworkError(
-              "Server connection failed. Please try again later.");
+            'Server connection failed. Please try again later.',
+          );
         }
       } catch (e) {
         log('Connectivity check failed: $e');
-        _showNetworkError("Network error occurred. Please try again.");
+        _showNetworkError('Network error occurred. Please try again.');
       }
     }
   }
 
   void _showNetworkError(String message) {
-    CustomSnackBar(
-      title: "Network Error",
-      message: message,
-    );
+    CustomSnackBar(title: 'Network Error', message: message);
   }
 
   Future<void> _handle401Error(
-      DioException err, ErrorInterceptorHandler handler) async {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     log('401 Unauthorized - Attempting token refresh');
 
     // If already refreshing, queue the request
     if (_isRefreshing) {
       log('Token refresh already in progress, queuing request');
       final completer = Completer<RequestOptions>();
-      _requestQueue.add(completer);
+      // Preserve original request options for retry after refresh
+      _requestQueue.add(_QueuedRequest(completer, err.requestOptions));
 
       try {
         // Wait for refresh to complete with timeout
@@ -177,21 +272,19 @@ class AuthInterceptor extends Interceptor {
     _isRefreshing = false;
 
     // Process queued requests
-    for (final completer in _requestQueue) {
-      if (!completer.isCompleted) {
+    for (final queued in _requestQueue) {
+      if (!queued.completer.isCompleted) {
         if (success) {
           // Update the request with new token
           final token = TokenStorage.accessToken;
           if (token != null && token.isNotEmpty) {
             // Complete with updated options
-            completer.complete(RequestOptions(
-              path: '', // This will be handled in retry logic
-            ));
+            queued.completer.complete(queued.requestOptions);
           } else {
-            completer.completeError('No valid token after refresh');
+            queued.completer.completeError('No valid token after refresh');
           }
         } else {
-          completer.completeError('Token refresh failed');
+          queued.completer.completeError('Token refresh failed');
         }
       }
     }
@@ -206,7 +299,7 @@ class AuthInterceptor extends Interceptor {
         return false;
       }
 
-      final isRefreshed = await AuthService.refreshToken();
+      final isRefreshed = await getIt<AuthRepository>().refreshToken();
       final newAccessToken = TokenStorage.accessToken;
 
       if (isRefreshed && newAccessToken != null && newAccessToken.isNotEmpty) {
@@ -223,7 +316,9 @@ class AuthInterceptor extends Interceptor {
   }
 
   Future<void> _retryOriginalRequest(
-      DioException err, ErrorInterceptorHandler handler) async {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     try {
       final newAccessToken = TokenStorage.accessToken;
       if (newAccessToken == null || newAccessToken.isEmpty) {
@@ -246,6 +341,7 @@ class AuthInterceptor extends Interceptor {
           contentType: err.requestOptions.contentType,
           receiveTimeout: err.requestOptions.receiveTimeout,
           sendTimeout: err.requestOptions.sendTimeout,
+          validateStatus: err.requestOptions.validateStatus,
         ),
         data: err.requestOptions.data,
         queryParameters: err.requestOptions.queryParameters,
@@ -268,7 +364,9 @@ class AuthInterceptor extends Interceptor {
   }
 
   Future<void> _retryWithNewToken(
-      RequestOptions options, ErrorInterceptorHandler handler) async {
+    RequestOptions options,
+    ErrorInterceptorHandler handler,
+  ) async {
     try {
       final newAccessToken = TokenStorage.accessToken;
       if (newAccessToken == null || newAccessToken.isEmpty) {
@@ -277,63 +375,70 @@ class AuthInterceptor extends Interceptor {
 
       final retryDio = _createRetryDio();
 
-      final response = await retryDio.request(
-        options.path,
-        options: Options(
-          method: options.method,
-          headers: {
-            ...options.headers,
-            'Authorization': 'Bearer $newAccessToken',
-          },
-          responseType: options.responseType,
-          contentType: options.contentType,
-          receiveTimeout: options.receiveTimeout,
-          sendTimeout: options.sendTimeout,
+      final response = await safeApiCall(
+        () => retryDio.request(
+          options.path,
+          options: Options(
+            method: options.method,
+            headers: {
+              ...options.headers,
+              'Authorization': 'Bearer $newAccessToken',
+            },
+            responseType: options.responseType,
+            contentType: options.contentType,
+            receiveTimeout: options.receiveTimeout,
+            sendTimeout: options.sendTimeout,
+            validateStatus: options.validateStatus,
+          ),
+          data: options.data,
+          queryParameters: options.queryParameters,
         ),
-        data: options.data,
-        queryParameters: options.queryParameters,
       );
 
       handler.resolve(response);
     } catch (e) {
       log('Queued request retry failed: $e');
-      handler.next(DioException(
-        requestOptions: options,
-        error: e,
-      ));
+      handler.next(DioException(requestOptions: options, error: e));
     }
   }
 
   Dio _createRetryDio() {
-    final retryDio = Dio(BaseOptions(
-      baseUrl: DioClient.dio.options.baseUrl,
-      connectTimeout: DioClient.dio.options.connectTimeout,
-      receiveTimeout: DioClient.dio.options.receiveTimeout,
-      headers: DioClient.dio.options.headers,
-    ));
+    final retryDio = Dio(
+      BaseOptions(
+        baseUrl: DioClient.dio.options.baseUrl,
+        connectTimeout: DioClient.dio.options.connectTimeout,
+        receiveTimeout: DioClient.dio.options.receiveTimeout,
+        headers: DioClient.dio.options.headers,
+        validateStatus: DioClient.dio.options.validateStatus,
+      ),
+    );
 
     if (kDebugMode) {
-      (retryDio.httpClientAdapter as IOHttpClientAdapter).createHttpClient =
-          () {
-        final client = HttpClient();
-        client.badCertificateCallback = (cert, host, port) => true;
-        return client;
-      };
+      final adapter = retryDio.httpClientAdapter;
+      if (adapter is IOHttpClientAdapter) {
+        adapter.createHttpClient = () {
+          final client = HttpClient()
+            ..badCertificateCallback = (cert, host, port) => true;
+
+          return client;
+        };
+      }
     }
 
     return retryDio;
   }
 
   Future<void> _handleSessionExpired() async {
-    // Prevent multiple simultaneous session expired dialogs
-    if (_isSessionExpiredDialogShowing) {
-      return;
-    }
+    // Prevent multiple triggers across concurrent 401s
+    if (_hasHandledSessionExpiry) return;
+    _hasHandledSessionExpiry = true;
+    // Prevent multiple simultaneous dialogs
+    if (_isSessionExpiredDialogShowing) return;
+    _isSessionExpiredDialogShowing = true;
 
     final context = navigatorKey.currentContext;
 
     if (context?.mounted == true) {
-      _isSessionExpiredDialogShowing = true;
       log('Showing session expired dialog');
 
       try {
@@ -399,8 +504,8 @@ class AuthInterceptor extends Interceptor {
 
   void _showSessionExpiredSnackbar() {
     CustomSnackBar(
-      title: "Session Expired",
-      message: "Your session has expired. Please log in again.",
+      title: 'Session Expired',
+      message: 'Your session has expired. Please log in again.',
     );
   }
 
@@ -408,7 +513,7 @@ class AuthInterceptor extends Interceptor {
     try {
       await AuthService.clearUserSession();
       if (context.mounted) {
-        context.pushAndRemoveUntil(LoginScreen());
+        await context.pushAndRemoveUntil(LoginScreen());
       }
     } catch (e) {
       log('Error clearing session or navigating: $e');
@@ -426,30 +531,38 @@ class AuthInterceptor extends Interceptor {
   void _handleOtherErrors(DioException err) {
     // Handle other HTTP status codes
     switch (err.response?.statusCode) {
+      case 401:
+        CustomSnackBar(
+          title: 'Unauthorized',
+          message: 'Unauthorized access. Please log in again.',
+        );
+        break;
       case 403:
         CustomSnackBar(
-          title: "Access Denied",
+          title: 'Access Denied',
           message: "You don't have permission to access this resource.",
         );
         break;
       case 422:
         CustomSnackBar(
-          title: "Validation Error",
-          message: "Please check your input and try again.",
+          title: 'Validation Error',
+          message: 'Please check your input and try again.',
         );
         break;
-      case 500 || 502 || 503:
+      case 500:
+      case 502:
+      case 503:
         CustomSnackBar(
-          title: "Server Error",
+          title: 'Server Error',
           message:
-              "Server is temporarily unavailable. Please try again later. Status code: ${err.response?.statusCode}",
+              'Server is temporarily unavailable. Please try again later. Status code: ${err.response?.statusCode}',
         );
         break;
       default:
         if (err.response?.statusCode != null) {
           CustomSnackBar(
-            title: "Error ${err.response!.statusCode}",
-            message: err.message ?? "An unexpected error occurred.",
+            title: 'Error ${err.response!.statusCode}',
+            message: err.message ?? 'An unexpected error occurred.',
           );
         }
     }
@@ -462,12 +575,13 @@ class AuthInterceptor extends Interceptor {
     _isRefreshing = false;
 
     // Complete any pending requests with error
-    for (final completer in _requestQueue) {
-      if (!completer.isCompleted) {
-        completer.completeError('Interceptor disposed');
+    for (final queued in _requestQueue) {
+      if (!queued.completer.isCompleted) {
+        queued.completer.completeError('Interceptor disposed');
       }
     }
     _requestQueue.clear();
     _isSessionExpiredDialogShowing = false;
+    _hasHandledSessionExpiry = false;
   }
 }

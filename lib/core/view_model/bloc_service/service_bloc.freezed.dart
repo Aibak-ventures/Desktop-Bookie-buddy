@@ -16,19 +16,20 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ServiceEvent {
+  bool get force => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() loadServices,
+    required TResult Function(bool force) loadServices,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loadServices,
+    TResult? Function(bool force)? loadServices,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loadServices,
+    TResult Function(bool force)? loadServices,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -48,6 +49,12 @@ mixin _$ServiceEvent {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  /// Create a copy of ServiceEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $ServiceEventCopyWith<ServiceEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -55,6 +62,8 @@ abstract class $ServiceEventCopyWith<$Res> {
   factory $ServiceEventCopyWith(
           ServiceEvent value, $Res Function(ServiceEvent) then) =
       _$ServiceEventCopyWithImpl<$Res, ServiceEvent>;
+  @useResult
+  $Res call({bool force});
 }
 
 /// @nodoc
@@ -69,13 +78,29 @@ class _$ServiceEventCopyWithImpl<$Res, $Val extends ServiceEvent>
 
   /// Create a copy of ServiceEvent
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? force = null,
+  }) {
+    return _then(_value.copyWith(
+      force: null == force
+          ? _value.force
+          : force // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$LoadServicesImplCopyWith<$Res> {
+abstract class _$$LoadServicesImplCopyWith<$Res>
+    implements $ServiceEventCopyWith<$Res> {
   factory _$$LoadServicesImplCopyWith(
           _$LoadServicesImpl value, $Res Function(_$LoadServicesImpl) then) =
       __$$LoadServicesImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool force});
 }
 
 /// @nodoc
@@ -88,57 +113,77 @@ class __$$LoadServicesImplCopyWithImpl<$Res>
 
   /// Create a copy of ServiceEvent
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? force = null,
+  }) {
+    return _then(_$LoadServicesImpl(
+      force: null == force
+          ? _value.force
+          : force // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
 /// @nodoc
 
-class _$LoadServicesImpl with DiagnosticableTreeMixin implements _LoadServices {
-  const _$LoadServicesImpl();
+class _$LoadServicesImpl implements _LoadServices {
+  const _$LoadServicesImpl({this.force = true});
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ServiceEvent.loadServices()';
-  }
+  @JsonKey()
+  final bool force;
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'ServiceEvent.loadServices'));
+  String toString() {
+    return 'ServiceEvent.loadServices(force: $force)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadServicesImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$LoadServicesImpl &&
+            (identical(other.force, force) || other.force == force));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, force);
+
+  /// Create a copy of ServiceEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadServicesImplCopyWith<_$LoadServicesImpl> get copyWith =>
+      __$$LoadServicesImplCopyWithImpl<_$LoadServicesImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() loadServices,
+    required TResult Function(bool force) loadServices,
   }) {
-    return loadServices();
+    return loadServices(force);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loadServices,
+    TResult? Function(bool force)? loadServices,
   }) {
-    return loadServices?.call();
+    return loadServices?.call(force);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loadServices,
+    TResult Function(bool force)? loadServices,
     required TResult orElse(),
   }) {
     if (loadServices != null) {
-      return loadServices();
+      return loadServices(force);
     }
     return orElse();
   }
@@ -173,7 +218,17 @@ class _$LoadServicesImpl with DiagnosticableTreeMixin implements _LoadServices {
 }
 
 abstract class _LoadServices implements ServiceEvent {
-  const factory _LoadServices() = _$LoadServicesImpl;
+  const factory _LoadServices({final bool force}) = _$LoadServicesImpl;
+
+  @override
+  bool get force;
+
+  /// Create a copy of ServiceEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadServicesImplCopyWith<_$LoadServicesImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -266,18 +321,12 @@ class __$$LoadingImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
+class _$LoadingImpl implements _Loading {
   const _$LoadingImpl();
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ServiceState.loading()';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'ServiceState.loading'));
   }
 
   @override
@@ -397,7 +446,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadedImpl with DiagnosticableTreeMixin implements _Loaded {
+class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl(final List<ServicesModel> services) : _services = services;
 
   final List<ServicesModel> _services;
@@ -409,16 +458,8 @@ class _$LoadedImpl with DiagnosticableTreeMixin implements _Loaded {
   }
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ServiceState.loaded(services: $services)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ServiceState.loaded'))
-      ..add(DiagnosticsProperty('services', services));
   }
 
   @override
@@ -557,23 +598,15 @@ class __$$ErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
+class _$ErrorImpl implements _Error {
   const _$ErrorImpl(this.error);
 
   @override
   final String error;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'ServiceState.error(error: $error)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ServiceState.error'))
-      ..add(DiagnosticsProperty('error', error));
   }
 
   @override

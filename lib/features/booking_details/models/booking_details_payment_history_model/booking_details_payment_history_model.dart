@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_payment_history_model.freezed.dart';

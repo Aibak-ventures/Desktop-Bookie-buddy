@@ -19,16 +19,17 @@ class ProductSelectedModel with _$ProductSelectedModel {
 }
 
 extension ProductSelectedModelToJsonExtension on ProductSelectedModel {
-  Map<String, dynamic> toCustomJson() {
+  Map<String, dynamic> toCustomJson({bool includeMeasurement = true}) {
     final measurementMap = <String, dynamic>{};
-    for (final m in measurements) {
-      measurementMap[m.name] = m.value;
-    }
+    if (includeMeasurement)
+      for (final m in measurements) {
+        measurementMap[m.name] = m.value;
+      }
 
     return {
       'id': variant.variantId,
       'amount': amount,
-      'measurements': measurementMap,
+      if (includeMeasurement) 'measurements': measurementMap,
       'quantity': quantity,
     };
   }

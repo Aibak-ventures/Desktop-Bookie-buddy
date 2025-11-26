@@ -19,7 +19,7 @@ _$BookingsModelImpl _$$BookingsModelImplFromJson(Map<String, dynamic> json) =>
           : DeliveryStatus.fromString(json['delivery_status'] as String),
       paymentStatus: json['payment_status'] == null
           ? PaymentStatus.pending
-          : PaymentStatus.fromBool(json['payment_status'] as bool),
+          : PaymentStatus.fromBool(json['payment_status'] as bool?),
       bookedItems: (json['booked_items'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??

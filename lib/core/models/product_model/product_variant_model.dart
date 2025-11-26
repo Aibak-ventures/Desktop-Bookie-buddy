@@ -25,7 +25,7 @@ class ProductVariantModel with _$ProductVariantModel {
 extension ProductVariantModelExtension on ProductVariantModel {
   /// Converts only attribute and stock fields of this ProductVariantModel to a JSON map.
   Map<String, dynamic> toJsonOnly() => {
-        "attribute": attribute,
-        "stock": stock,
+        'attribute': attribute,
+        'stock': stock,
       };
 }

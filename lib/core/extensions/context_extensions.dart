@@ -8,16 +8,16 @@ extension MediaQueryX on BuildContext {
 
   /// This method is a convenience wrapper around [MediaQuery.of] to get the
   /// screen size.
-  Size get screenSize => MediaQuery.of(this).size;
+  Size get screenSize => MediaQuery.sizeOf(this);
 
   /// Returns the screen current width
-  double get screenWidth => MediaQuery.of(this).size.width;
+  double get screenWidth => MediaQuery.widthOf(this);
 
   /// Returns the screen current height
-  double get screenHeight => MediaQuery.of(this).size.height;
+  double get screenHeight => MediaQuery.heightOf(this);
 
   /// Returns the screen current orientation
-  Orientation get orientation => MediaQuery.of(this).orientation;
+  Orientation get orientation => MediaQuery.orientationOf(this);
 
   /// Calculates a height based on a proportion of the screen height.
   ///
@@ -47,10 +47,8 @@ extension MediaQueryX on BuildContext {
   ///
   /// For example, if the design width is 375, and the screen width is 414,
   /// passing 200 as [inputWidth] will return 221.28 (200 / 375 * 414).
-  double getProportionateScreenWidth(double inputWidth) {
-    // 375 is the layout width that designer use
-    return (inputWidth / 375.0) * screenWidth;
-  }
+  double getProportionateScreenWidth(double inputWidth) =>
+      (inputWidth / 375.0) * screenWidth;
 
   /// Calculates a height based on a proportion of the screen height, given a
   /// design height of 812.
@@ -62,9 +60,8 @@ extension MediaQueryX on BuildContext {
   ///
   /// For example, if the design height is 812, and the screen height is 896,
   /// passing 200 as [inputHeight] will return 221.28 (200 / 812 * 896).
-  double getProportionateScreenHeight(double inputHeight) {
-    return (inputHeight / 812.0) * screenHeight;
-  }
+  double getProportionateScreenHeight(double inputHeight) =>
+      (inputHeight / 812.0) * screenHeight;
 
   bool get isMobile => screenWidth < 600;
   bool get isTablet => screenWidth >= 600;
@@ -134,9 +131,8 @@ extension NavigatorX<T> on BuildContext {
   /// the screen. By default, the transition type is [TransitionType.normal].
   /// If [TransitionType.fade] is used, the screen will fade in when it is
   /// pushed, and it will fade out when it is popped.
-  Future<T?> push<T>(Widget screen) async {
-    return Navigator.of(this).push<T>(_createRoute<T>(screen));
-  }
+  Future<T?> push<T>(Widget screen) async =>
+      Navigator.of(this).push<T>(_createRoute<T>(screen));
 
   /// Pops the top-most route off the navigator that most tightly encloses the
   /// given [BuildContext].
@@ -156,9 +152,8 @@ extension NavigatorX<T> on BuildContext {
   ///
   /// Returns a [Future] that completes to the [T] type once the push
   /// operation is complete.
-  Future<T?> pushReplacement<T>(Widget screen) async {
-    return Navigator.of(this).pushReplacement(_createRoute<T>(screen));
-  }
+  Future<T?> pushReplacement<T>(Widget screen) async =>
+      Navigator.of(this).pushReplacement(_createRoute<T>(screen));
 
   /// Pushes the given [screen] onto the navigator that most tightly encloses the
   /// given [BuildContext] and removes all the previous routes until the
@@ -177,10 +172,9 @@ extension NavigatorX<T> on BuildContext {
   ///
   /// Returns a [Future] that completes to the [T] type once the push
   /// operation is complete.
-  Future<T?> pushAndRemoveUntil<T>(Widget screen) async {
-    return Navigator.of(this)
-        .pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
-  }
+  Future<T?> pushAndRemoveUntil<T>(Widget screen) async => Navigator.of(
+        this,
+      ).pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
 
   /// Creates a route for navigation based on the specified [transitionType].
   ///
@@ -190,7 +184,6 @@ extension NavigatorX<T> on BuildContext {
   /// for a standard material page route transition.
   ///
   /// Returns a [Route] object configured with the appropriate transition.
-  Route<T> _createRoute<T>(Widget widget) {
-    return MaterialPageRoute<T>(builder: (context) => widget);
-  }
+  Route<T> _createRoute<T>(Widget widget) =>
+      MaterialPageRoute<T>(builder: (context) => widget);
 }

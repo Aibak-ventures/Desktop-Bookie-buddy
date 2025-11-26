@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/availability_status_enums.dart';
 
 class CheckAvailabilityModel {
   final CheckAvailabilityStatus status;
@@ -12,16 +12,15 @@ class CheckAvailabilityModel {
     required this.unavailableProducts,
   });
 
-  factory CheckAvailabilityModel.fromMap(Map<String, dynamic> map) {
-    return CheckAvailabilityModel(
-      status: CheckAvailabilityStatus.fromString(map['status']),
-      unavailableProducts: List<UnavailableProduct>.from(
-        (map['unavailable_products'] as List).map<UnavailableProduct>(
-          (x) => UnavailableProduct.fromMap(x as Map<String, dynamic>),
+  factory CheckAvailabilityModel.fromMap(Map<String, dynamic> map) =>
+      CheckAvailabilityModel(
+        status: CheckAvailabilityStatus.fromString(map['status']),
+        unavailableProducts: List<UnavailableProduct>.from(
+          (map['unavailable_products'] as List).map<UnavailableProduct>(
+            (x) => UnavailableProduct.fromMap(x as Map<String, dynamic>),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class UnavailableProduct {
@@ -37,20 +36,18 @@ class UnavailableProduct {
     required this.unavailableDates,
   });
 
-  factory UnavailableProduct.fromMap(Map<String, dynamic> map) {
-    return UnavailableProduct(
-      id: map['id'] as int,
-      name: map['name'] as String,
-      image: map['image'] as String,
-      unavailableDates: List<String>.from(map['unavailable_dates'] as List),
-    );
-  }
+  factory UnavailableProduct.fromMap(Map<String, dynamic> map) =>
+      UnavailableProduct(
+        id: map['id'] as int,
+        name: map['name'] as String,
+        image: map['image'] as String,
+        unavailableDates: List<String>.from(map['unavailable_dates'] as List),
+      );
 
   factory UnavailableProduct.fromJson(String source) =>
       UnavailableProduct.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() {
-    return 'UnavailableProduct(id: $id, name: $name, image: $image, unavailableDates: $unavailableDates)';
-  }
+  String toString() =>
+      'UnavailableProduct(id: $id, name: $name, image: $image, unavailableDates: $unavailableDates)';
 }

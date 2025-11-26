@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
@@ -23,10 +24,11 @@ Future<ClientModel?> showAddClientDialog({
   final _formKey = GlobalKey<FormState>();
   return showDialog<ClientModel>(
     context: context,
-    builder: (dialogContext) {
-      return AlertDialog(
-        title: const Text('Add Client'),
-        content: Form(
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Add Client'),
+      content: SizedBox(
+        width: context.isMobile ? null : 0.5.widthR,
+        child: Form(
           key: _formKey,
           child: Column(
             spacing: 15,
@@ -40,13 +42,13 @@ Future<ClientModel?> showAddClientDialog({
               CustomTextField(
                 controller: phone1Controller,
                 label: 'Phone Number 1',
-                maxLengths: 10,
+                maxLength: 10,
                 validator: AppInputValidators.phoneNumber,
               ),
               CustomTextField(
                 controller: phone2Controller,
                 label: 'Phone Number 2',
-                maxLengths: 10,
+                maxLength: 10,
                 validator: (value) => AppInputValidators.isEmpty(value)
                     ? null
                     : AppInputValidators.phoneNumber(value),
@@ -54,32 +56,32 @@ Future<ClientModel?> showAddClientDialog({
             ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => dialogContext.pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            child: Text(
-              client != null ? 'Edit' : 'Add',
-              style: const TextStyle(
-                color: AppColors.white,
-              ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => dialogContext.pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          child: Text(
+            client != null ? 'Save' : 'Add',
+            style: const TextStyle(
+              color: AppColors.white,
             ),
-            onPressed: () {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              onPressed(
-                dialogContext,
-                nameController.text.trim(),
-                phone1Controller.text.trim(),
-                phone2Controller.text.trim(),
-              );
-            },
           ),
-        ],
-      );
-    },
+          onPressed: () {
+            if (!_formKey.currentState!.validate()) {
+              return;
+            }
+            onPressed(
+              dialogContext,
+              nameController.text.trim(),
+              phone1Controller.text.trim(),
+              phone2Controller.text.trim(),
+            );
+          },
+        ),
+      ],
+    ),
   );
 }

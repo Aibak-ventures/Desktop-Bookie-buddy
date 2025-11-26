@@ -14,20 +14,21 @@ class ExpenseModel with _$ExpenseModel {
     @JsonKey(name: 'service_id') int? serviceId,
     @JsonKey(name: 'product_id') int? productId,
     @JsonKey(name: 'variant_id') int? variantId,
-    required String date,
-    @JsonKey(name: 'created_at') required String createdAt,
+    @JsonKey(name: 'created_at', defaultValue: '') required String date,
+    // @JsonKey(name: 'created_at') required String createdAt,
     @JsonKey(
       name: 'user',
       defaultValue: 'Unknown',
     )
     required String userName,
-    required int expense,
+    @JsonKey(name: 'expense', defaultValue: 0) required int expense,
     String? type,
     String? description,
     @JsonKey(
       name: 'is_deleted',
       defaultValue: false,
     )
+    @JsonKey(name: 'is_deleted')
     required bool? isDeleted,
   }) = _ExpenseModel;
 

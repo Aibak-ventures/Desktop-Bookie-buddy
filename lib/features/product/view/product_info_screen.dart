@@ -1,25 +1,16 @@
-import 'package:bookie_buddy_web/core/app_icons.dart';
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
-import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_variant_selection_dialog.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_responsive_builder.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
 import 'package:bookie_buddy_web/features/product/view/product_growth_screen.dart';
-import 'package:bookie_buddy_web/features/product/view/widgets/variant_size_type_text_field.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product_growth/product_growth_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product_info/product_info_bloc.dart';
@@ -32,12 +23,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// Modern Product Info Screen - Optimized for Web with elegant design
 class ProductInfoScreen extends StatelessWidget {
   final int serviceId;
   final int productId;
   final MainServiceType mainServiceType;
 
-  ProductInfoScreen({
+  const ProductInfoScreen({
     required this.serviceId,
     required this.productId,
     required this.mainServiceType,
@@ -46,1194 +38,814 @@ class ProductInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context
           .read<ProductInfoBloc>()
-          .add(ProductInfoEvent.loadProductInfo(productId)),
-    );
-    final showMoreOption =
-        context.read<UserCubit>().state?.haveMultipleShops ?? false;
+          .add(ProductInfoEvent.loadProductInfo(productId));
+    });
+
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Product overview'),
-        actions: [
-          if (showMoreOption)
-            BlocBuilder<ProductInfoBloc, ProductInfoState>(
-              builder: (context, state) {
-                final isVisible = state.maybeMap(
-                  orElse: () => false,
-                  loaded: (value) {
-                    if (value.productInfo.variants.every(
-                      (e) => e.stock != 0,
-                    )) return true;
-                    return false;
-                  },
-                );
-                return Visibility(
-                  visible: isVisible,
-                  child: PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
-                    onSelected: (value) async {
-                      if (value == 'transfer') {
-                        final product =
-                            context.read<ProductInfoBloc>().getProductInfo();
-                        if (product == null) {
-                          context.showSnackBar(
-                            'Product not found',
-                            isError: true,
-                          );
-                          return;
-                        }
-
-                        performSecureActionDialog(
-                          context,
-                          'transfer',
-                          onSuccess: () async {
-                            final selectedVariantId =
-                                product.variants.length == 1
-                                    ? product.variants.first.id
-                                    : await showVariantSelectionDialog(
-                                        context: context,
-                                        productId: productId,
-                                        variants: product.variants,
-                                        mainServiceType: mainServiceType,
-                                      );
-
-                            if (selectedVariantId == null) {
-                              return;
-                            }
-
-                            context
-                                .push(
-                              TransferProductScreen(
-                                serviceId: serviceId,
-                                product: product,
-                                variantId: selectedVariantId,
-                                mainServiceType: mainServiceType,
-                              ),
-                            )
-                                .then(
-                              (value) {
-                                if (value is bool && value)
-                                  context.read<ProductInfoBloc>().add(
-                                      ProductInfoEvent.loadProductInfo(
-                                          productId));
-                              },
-                            );
-                          },
-                        );
-                      }
-                    },
-                    itemBuilder: (context) {
-                      return [
-                        const PopupMenuItem(
-                          value: 'transfer',
-                          child: Row(
-                            spacing: 5,
-                            children: [
-                              Icon(
-                                Icons.swap_horiz,
-                                color: AppColors.purple,
-                              ),
-                              Text('Transfer products'),
-                            ],
-                          ),
-                        ),
-                      ];
-                    },
-                  ),
-                );
-              },
-            )
-        ],
+        title: const Text('Product Overview'),
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.black,
+        elevation: 0,
+        actions: _buildAppBarActions(context),
       ),
-      body: CustomResponsiveBuilder(
-        builder: (context, deviceType) => Padding(
-          padding: 16.padding,
-          child: BlocConsumer<ProductInfoBloc, ProductInfoState>(
-            listener: (context, state) {
-              state.maybeWhen(
-                orElse: () {},
-                error: (error) => context.showSnackBar(
-                  error,
-                  isError: true,
-                ),
-                failure: (message) => context.showSnackBar(
-                  message,
-                  isError: true,
-                ),
-                success: (message, needPop) {
-                  if (needPop) {
-                    context.pop();
-                    context
-                        .read<ProductBloc>()
-                        .add(ProductEvent.loadProducts(serviceId));
-                  } else {
-                    context
-                        .read<ProductInfoBloc>()
-                        .add(ProductInfoEvent.loadProductInfo(productId));
-                  }
-                  context.showSnackBar(
-                    message,
-                  );
-                },
-              );
-            },
-            buildWhen: (previous, current) {
-              return current.maybeWhen(
-                orElse: () => true,
-                failure: (_) => false,
-                success: (_, __) => false,
-              );
-            },
-            builder: (context, state) {
-              return state.maybeWhen(
-                orElse: () => const SizedBox.shrink(),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error) => CustomErrorWidget(
-                  errorText: error,
-                  onRetry: () {
-                    context
-                        .read<ProductInfoBloc>()
-                        .add(ProductInfoEvent.loadProductInfo(productId));
-                  },
-                ),
-                loaded: (product) {
-                  final isFreeSize = VariantSizeType.isFreeSize(
-                    product.variants.first.attribute,
-                  );
-                  return Column(
-                    children: [
-                      Expanded(
-                        // flex: context.isMobile ? 1 : 0,
-                        child: context.isMobile
-                            ? SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  spacing: 15,
-                                  children: [
-                                    // Product Image
-                                    _buildImage(product),
-
-                                    // Product basic info
-                                    _buildProductInfoSection(
-                                      product,
-                                      context,
-                                      isFreeSize,
-                                    ),
-
-                                    // more info buttons
-                                    _buildMoreInfoButtons(
-                                      context,
-                                      product,
-                                    ),
-
-                                    //
-                                    20.height,
-                                  ],
-                                ),
-                              )
-                            : Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    spacing: 10,
-                                    children: [
-                                      // Product Image
-                                      Expanded(child: _buildImage(product)),
-
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            _buildProductInfoSection(
-                                              product,
-                                              context,
-                                              isFreeSize,
-                                            ),
-
-                                            20.height,
-
-                                            // more info buttons
-                                            _buildMoreInfoButtons(
-                                              context,
-                                              product,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-
-                                      // Product basic info
-                                    ],
-                                  ),
-                                  10.height,
-                                  Expanded(
-                                    child: MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider(
-                                          create: (context) =>
-                                              ProductBookingUpcomingBloc()
-                                                ..add(
-                                                  ProductBookingUpcomingEvent
-                                                      .loadBookings(product.id),
-                                                ),
-                                        ),
-                                        BlocProvider(
-                                          create: (context) =>
-                                              ProductBookingCompletedBloc()
-                                                ..add(
-                                                  ProductBookingCompletedEvent
-                                                      .loadBookings(product.id),
-                                                ),
-                                        ),
-                                      ],
-                                      child: ProductAllBookingsTabView(
-                                        productId: productId,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                      ),
-
-                      // Action buttons
-                      _buildActionButtons(context, product),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-        ),
+      body: SingleChildScrollView(
+        child: _buildBody(context),
       ),
-      // bottomNavigationBar:
     );
   }
 
-  Row _buildActionButtons(BuildContext context, ProductModel product) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // Edit button
-        _iconBuilder(
-          context: context,
-          icon: Icon(
-            Icons.edit_outlined,
-            size: 27.sp,
-            color: AppColors.grey,
-          ),
-          onTap: () async {
-            final needRefresh = await context.push(
-              AddOrEditProductScreen(
-                serviceId: serviceId,
-                product: product,
-              ),
-            );
+  List<Widget> _buildAppBarActions(BuildContext context) {
+    final showMoreOption =
+        context.read<UserCubit>().state?.haveMultipleShops ?? false;
 
-            if (needRefresh is bool && needRefresh) {
-              context
-                  .read<ProductInfoBloc>()
-                  .add(ProductInfoEvent.loadProductInfo(productId));
+    if (!showMoreOption) return [];
+
+    return [
+      BlocBuilder<ProductInfoBloc, ProductInfoState>(
+        builder: (context, state) {
+          final isVisible = state.maybeMap(
+            orElse: () => false,
+            loaded: (value) =>
+                value.productInfo.variants.every((v) => v.stock != 0),
+          );
+
+          if (!isVisible) return const SizedBox.shrink();
+
+          return Padding(
+            padding: EdgeInsets.only(right: 16.w),
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                final product =
+                    context.read<ProductInfoBloc>().getProductInfo();
+                if (product == null) {
+                  context.showSnackBar('Product not found', isError: true);
+                  return;
+                }
+
+                await performSecureActionDialog(
+                  context,
+                  SecretPasswordLocations.transferProduct,
+                  onSuccess: () async {
+                    final selectedVariantId = product.variants.length == 1
+                        ? product.variants.first.id
+                        : await showVariantSelectionDialog(
+                            context: context,
+                            productId: productId,
+                            variants: product.variants,
+                            mainServiceType: mainServiceType,
+                          );
+
+                    if (selectedVariantId == null) return;
+
+                    final result = await context.push(
+                      TransferProductScreen(
+                        serviceId: serviceId,
+                        product: product,
+                        variantId: selectedVariantId,
+                        mainServiceType: mainServiceType,
+                      ),
+                    );
+
+                    if (result is bool && result) {
+                      context
+                          .read<ProductInfoBloc>()
+                          .add(ProductInfoEvent.loadProductInfo(productId));
+                    }
+                  },
+                );
+              },
+              icon: const Icon(Icons.swap_horiz, size: 18),
+              label: const Text('Transfer Product'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.purple,
+                foregroundColor: AppColors.white,
+                elevation: 0,
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return BlocConsumer<ProductInfoBloc, ProductInfoState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          orElse: () {},
+          error: (error) => context.showSnackBar(error, isError: true),
+          failure: (message) => context.showSnackBar(message, isError: true),
+          success: (message, needPop) {
+            if (needPop) {
+              context.pop();
               context
                   .read<ProductBloc>()
                   .add(ProductEvent.loadProducts(serviceId));
+            } else {
+              context
+                  .read<ProductInfoBloc>()
+                  .add(ProductInfoEvent.loadProductInfo(productId));
             }
+            context.showSnackBar(message);
           },
-        ),
-
-        // Add expense button
-        _iconBuilder(
-          context: context,
-          icon: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.attach_money_outlined,
-                color: AppColors.purple,
+        );
+      },
+      buildWhen: (previous, current) {
+        return current.maybeWhen(
+          orElse: () => true,
+          failure: (_) => false,
+          success: (_, __) => false,
+        );
+      },
+      builder: (context, state) {
+        return state.when(
+          loading: () => Container(
+            height: 600.h,
+            child: const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.purple),
               ),
+            ),
+          ),
+          error: (error) => _errorView(context, error),
+          failure: (message) => _errorView(context, message),
+          success: (message, needPop) => const SizedBox.shrink(),
+          loaded: (product) => _buildModernLayout(context, product),
+        );
+      },
+    );
+  }
+
+  Widget _errorView(BuildContext context, String msg) {
+    return Container(
+      height: 600.h,
+      padding: EdgeInsets.all(40.w),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64.w,
+              color: AppColors.red,
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Oops! Something went wrong',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.grey800,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              msg,
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppColors.grey600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            ElevatedButton.icon(
+              onPressed: () => context
+                  .read<ProductInfoBloc>()
+                  .add(ProductInfoEvent.loadProductInfo(productId)),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.purple,
+                foregroundColor: AppColors.white,
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModernLayout(BuildContext context, ProductModel product) {
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 1400.w),
+        margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+        child: Column(
+          children: [
+            // Hero Section with Product Image and Basic Info
+            _buildHeroSection(context, product),
+            SizedBox(height: 32.h),
+
+            // Main Content Grid
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 1200;
+
+                if (isWide) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          flex: 2, child: _buildLeftColumn(context, product)),
+                      SizedBox(width: 32.w),
+                      Expanded(
+                          flex: 1, child: _buildRightColumn(context, product)),
+                    ],
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      _buildLeftColumn(context, product),
+                      SizedBox(height: 32.h),
+                      _buildRightColumn(context, product),
+                    ],
+                  );
+                }
+              },
+            ),
+
+            SizedBox(height: 32.h),
+
+            // Action Buttons Section
+            _buildActionSection(context, product),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroSection(BuildContext context, ProductModel product) {
+    return Container(
+      padding: EdgeInsets.all(32.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.grey200),
+      ),
+      child: Row(
+        children: [
+          // Product Image
+          Container(
+            width: 200.w,
+            height: 200.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: AppColors.grey100,
+              border: Border.all(color: AppColors.grey200),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: product.image != null && product.image!.isNotEmpty
+                  ? CustomNetworkImage(
+                      imageUrl: product.image!,
+                      fit: BoxFit.cover,
+                    )
+                  : Center(
+                      child: Icon(
+                        Icons.inventory_2_outlined,
+                        size: 80.w,
+                        color: AppColors.grey400,
+                      ),
+                    ),
+            ),
+          ),
+
+          SizedBox(width: 32.w),
+
+          // Product Info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        product.name,
+                        style: TextStyle(
+                          fontSize: 32.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.black,
+                          height: 1.2,
+                        ),
+                      ),
+                    ),
+                    _buildStatusBadge(product),
+                  ],
+                ),
+
+                SizedBox(height: 8.h),
+
+                Text(
+                  'Product ID: #${product.id}',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: AppColors.grey600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+
+                SizedBox(height: 16.h),
+
+                if (product.description != null &&
+                    product.description!.isNotEmpty)
+                  Container(
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.grey100,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.grey200),
+                    ),
+                    child: Text(
+                      product.description!,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.grey700,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+
+                SizedBox(height: 24.h),
+
+                // Quick Stats Row
+                Row(
+                  children: [
+                    _buildQuickStat(
+                      'Price',
+                      '₹${product.price ?? 0}',
+                      Icons.attach_money,
+                      AppColors.green,
+                    ),
+                    SizedBox(width: 16.w),
+                    _buildQuickStat(
+                      'Total Stock',
+                      '${product.variants.fold<int>(0, (p, v) => p + v.stock)}',
+                      Icons.inventory,
+                      AppColors.purple,
+                    ),
+                    SizedBox(width: 16.w),
+                    _buildQuickStat(
+                      'Variants',
+                      '${product.variants.length}',
+                      Icons.tune,
+                      AppColors.gold,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(ProductModel product) {
+    final totalStock = product.variants.fold<int>(0, (p, v) => p + v.stock);
+    final isInStock = totalStock > 0;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: isInStock ? AppColors.green : AppColors.red,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isInStock ? Icons.check_circle : Icons.warning,
+            color: AppColors.white,
+            size: 16.w,
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            isInStock ? 'In Stock' : 'Out of Stock',
+            style: TextStyle(
+              color: AppColors.white,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickStat(
+      String label, String value, IconData icon, Color color) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.grey200),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Icon(icon, color: color, size: 20.w),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppColors.grey600,
+                    ),
+                  ),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeftColumn(BuildContext context, ProductModel product) {
+    return Column(
+      children: [
+        _buildModernCard(
+          'Product Details',
+          Icons.info_outline,
+          AppColors.purple,
+          Column(
+            children: [
+              _buildDetailRow('Name', product.name),
+              _buildDetailRow('Category', product.category ?? 'Uncategorized'),
+              _buildDetailRow('Model', product.model ?? 'N/A'),
+              _buildDetailRow('Color', product.color ?? 'N/A'),
+              if (product.purchaseAmount != null)
+                _buildDetailRow('Purchase Price', '₹${product.purchaseAmount}'),
+            ],
+          ),
+        ),
+        SizedBox(height: 24.h),
+        _buildModernCard(
+          'Variants & Stock',
+          Icons.inventory_2_outlined,
+          AppColors.green,
+          Column(
+            children: product.variants
+                .map((variant) => _buildVariantCard(variant))
+                .toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRightColumn(BuildContext context, ProductModel product) {
+    return Column(
+      children: [
+        _buildModernCard(
+          'Quick Actions',
+          Icons.bolt,
+          AppColors.yellow,
+          Column(
+            children: [
+              _buildActionButton(
+                'Edit Product',
+                Icons.edit,
+                AppColors.purple,
+                () => _showEditDialog(context, product),
+              ),
+              SizedBox(height: 12.h),
+              _buildActionButton(
+                'Add Expense',
+                Icons.add_circle_outline,
+                AppColors.green,
+                () => _showExpenseDialog(context),
+              ),
+              SizedBox(height: 12.h),
+              _buildActionButton(
+                'View Growth',
+                Icons.trending_up,
+                AppColors.purple,
+                () => _showGrowthScreen(context),
+              ),
+              SizedBox(height: 12.h),
+              _buildActionButton(
+                'View Bookings',
+                Icons.calendar_today,
+                AppColors.yellow,
+                () => _showBookingsScreen(context),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 24.h),
+        _buildModernCard(
+          'Danger Zone',
+          Icons.warning_outlined,
+          AppColors.red,
+          _buildActionButton(
+            'Delete Product',
+            Icons.delete_outline,
+            AppColors.red,
+            () => _showDeleteDialog(context, product),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionSection(BuildContext context, ProductModel product) {
+    return Container(
+      padding: EdgeInsets.all(24.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.grey200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Recent Activities',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: AppColors.grey100,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: AppColors.grey),
+                SizedBox(width: 12.w),
+                Text(
+                  'No recent activities to display',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernCard(
+      String title, IconData icon, Color accentColor, Widget child) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(24.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.grey200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  color: accentColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: accentColor, size: 20.w),
+              ),
+              SizedBox(width: 12.w),
               Text(
-                'Add expense',
+                title,
                 style: TextStyle(
-                  color: AppColors.purple,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
-                  fontSize: 16.sp,
+                  color: AppColors.black,
                 ),
               ),
             ],
           ),
-          shadowColor: AppColors.purpleLightShade,
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => BlocProvider(
-                create: (context) => AddExpenseCubit(),
-                child: ProductAddExpenseDialog(
-                  variantId: product.variants.first.id,
-                  mainServiceType: mainServiceType,
-                  variants: product.variants,
-                ),
-              ),
-            );
-          },
-        ),
-
-        // Delete button
-        _iconBuilder(
-          context: context,
-          icon: Icon(
-            Icons.delete_outlined,
-            color: AppColors.redTomato.lighten(0.2),
-            size: 27.sp,
-          ),
-          onTap: () {
-            showDeleteConfirmationDialog(
-              context: context,
-              productId: product.id,
-              variants: product.variants,
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  ClipRRect _buildImage(ProductModel product) {
-    return ClipRRect(
-      borderRadius: 20.radiusBorder,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: CustomNetworkImage(
-          imageUrl: product.image ??
-              'https://static.vecteezy.com/system/resources/thumbnails/054/519/001/small/e-commerce-product-box-illustration-for-sales-vector.jpg',
-          filterQuality: FilterQuality.high,
-          width: double.infinity,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) {
-            return Image.asset(
-              AppIcons.unknownProduct,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Row _buildMoreInfoButtons(BuildContext context, ProductModel product) {
-    final isMobile = context.isMobile;
-    return Row(
-      spacing: 10,
-      mainAxisAlignment:
-          isMobile ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.start,
-      children: [
-        // Growth check button
-        _moreInfoButtonBuilder(
-          text: 'Growth',
-          prefixText: 'Check',
-          icon: Icons.bar_chart_outlined,
-          onTap: () {
-            context.push(
-              BlocProvider(
-                create: (context) => ProductGrowthBloc()
-                  ..add(ProductGrowthEvent.loadProductGrowthData(
-                    product.id,
-                  )),
-                child: ProductGrowthScreen(
-                  productId: product.id,
-                ),
-              ),
-            );
-          },
-        ),
-        if (isMobile) ...[
-          SizedBox(
-            height: 80,
-            child: VerticalDivider(
-              color: AppColors.grey300,
-            ),
-          ),
-          _moreInfoButtonBuilder(
-            text: 'Bookings',
-            prefixText: 'All',
-            icon: Icons.my_library_books_outlined,
-            onTap: () {
-              context.push(
-                MultiBlocProvider(
-                  providers: [
-                    BlocProvider(
-                      create: (context) => ProductBookingUpcomingBloc()
-                        ..add(
-                          ProductBookingUpcomingEvent.loadBookings(product.id),
-                        ),
-                    ),
-                    BlocProvider(
-                      create: (context) => ProductBookingCompletedBloc()
-                        ..add(
-                          ProductBookingCompletedEvent.loadBookings(product.id),
-                        ),
-                    ),
-                  ],
-                  child: ProductAllBookingsScreen(
-                    productId: product.id,
-                  ),
-                ),
-              );
-            },
-          ),
-        ]
-      ],
-    );
-  }
-
-  Column _buildProductInfoSection(
-      ProductModel product, BuildContext context, bool isFreeSize) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                product.name,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                if (product.price != null)
-                  Text(
-                    product.price!.toCurrency(),
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                if (product.purchaseAmount != null)
-                  Text(
-                    'Purchase: ${product.purchaseAmount!.toCurrency()}',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppColors.grey,
-                    ),
-                  ),
-              ],
-            ),
-          ],
-        ),
-
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                product.category == null || product.category!.isEmpty
-                    ? 'Category: -'
-                    : product.category!, // Replace with actual category name
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  color: AppColors.grey,
-                  // fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            if (!mainServiceType.isDress)
-              Text(
-                'Stock: ${product.variants.first.stock}',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.grey,
-                ),
-              ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                product.color == null || product.color!.isEmpty
-                    ? 'Color: -'
-                    : product.color!, // Replace with actual color
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  color: AppColors.blackShade,
-                  // fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            if (mainServiceType.isDress)
-              TextButton.icon(
-                onPressed: () {
-                  showVariantEditDialog(
-                    context: context,
-                    variants: product.variants,
-                    productId: productId,
-                  );
-                },
-                label: const Text('Edit'),
-                icon: const Icon(Icons.edit),
-              ),
-          ],
-        ),
-
-        // Sizes
-        if (mainServiceType.isDress)
-          SizedBox(
-            height: 100.w,
-            width: double.infinity,
-            child: isFreeSize
-                ? Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      spacing: 3,
-                      children: [
-                        _freeSizeVariantWidget(),
-                        Text(
-                          '${product.variants.first.stock} stocks',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: product.variants.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < product.variants.length) {
-                        final variant = product.variants[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 12),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            spacing: 3,
-                            children: [
-                              Container(
-                                width: 55,
-                                height: 55,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.purpleLight,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    variant.attribute,
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                '${variant.stock} stocks',
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 3,
-                          children: [
-                            Container(
-                              width: 55,
-                              height: 55,
-                              decoration: const BoxDecoration(
-                                color: AppColors.redLight,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.add,
-                                ),
-                              ),
-                            ).onTap(
-                              () {
-                                showAddVariantDialog(
-                                  context: context,
-                                  productId: productId,
-                                  variants: product.variants,
-                                );
-                              },
-                            ),
-                            Text(
-                              'Add Variant',
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                              ),
-                            )
-                          ],
-                        );
-                      }
-                    },
-                  ),
-          ),
-
-        if (product.description != null &&
-            product.description!.trim().isNotEmpty)
-          SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                10.height,
-                Text('Description',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    )),
-                5.height,
-                Text(
-                  product.description!,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  Container _freeSizeVariantWidget() {
-    return Container(
-      width: 130.w,
-      padding: 10.padding,
-      decoration: BoxDecoration(
-        color: AppColors.purpleLight,
-        borderRadius: 5.radiusBorder,
-      ),
-      child: Center(
-        child: Text(
-          'Free Size',
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.black,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _iconBuilder({
-    required BuildContext context,
-    required Widget icon,
-    required VoidCallback? onTap,
-    Color? shadowColor,
-  }) {
-    return Container(
-      padding: context.isMobile ? 18.padding : 22.padding,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: 50.radiusBorder,
-        border: Border.all(color: AppColors.purpleLight),
-        boxShadow: [
-          BoxShadow(
-            color: shadowColor ?? AppColors.grey200,
-            blurRadius: 5,
-            spreadRadius: 3,
-          )
+          SizedBox(height: 20.h),
+          child,
         ],
       ),
-      child: icon,
-    ).onTap(onTap);
+    );
   }
 
-  Widget _moreInfoButtonBuilder({
-    required String text,
-    required String prefixText,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: 10.radiusBorder,
-        border: Border.all(
-          color: AppColors.purple,
-        ),
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 120.w,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.grey,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.black,
+              ),
+            ),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: 8.padding,
-        child: Row(
-          spacing: 20,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+    );
+  }
+
+  Widget _buildVariantCard(variant) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.grey100,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.grey200),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  spacing: 2,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      prefixText,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    Icon(
-                      icon,
-                      color: AppColors.purple,
-                    )
-                  ],
-                ),
                 Text(
-                  text,
+                  variant.attribute,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.black,
+                    color: AppColors.grey800,
                   ),
                 ),
-              ],
-            ),
-            Container(
-              padding: 6.padding,
-              decoration: BoxDecoration(
-                  color: AppColors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.grey300,
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 0),
-                    ),
-                  ]),
-              child: Icon(
-                Icons.arrow_outward_outlined,
-                size: 20.sp,
-              ),
-            )
-          ],
-        ),
-      ),
-    ).onTap(onTap);
-  }
-
-  void showDeleteConfirmationDialog({
-    required BuildContext context,
-    required int productId,
-    required List<ProductVariantModel> variants,
-  }) {
-    ProductVariantModel? selectedVariant;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        child: SizedBox(
-          width: context.isMobile ? null : 0.6.widthR,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment:
-                  !mainServiceType.isDress || variants.length == 1
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              spacing: 15,
-              children: [
-                if (!mainServiceType.isDress || variants.length == 1)
-                  Text(
-                    'Delete Product',
-                    style: TextStyle(
-                      fontSize: 19.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                SizedBox(height: 4.h),
+                Text(
+                  'Stock: ${variant.stock}',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.grey600,
                   ),
-                if (mainServiceType.isDress && variants.length > 1)
-                  StatefulBuilder(builder: (context, setState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Select Variant (Optional)',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 55,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: variants.length,
-                            itemBuilder: (context, index) {
-                              final variant = variants[index];
-                              final isSelected = selectedVariant == variant;
-
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedVariant = variant;
-                                  });
-                                },
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  margin: const EdgeInsets.only(right: 12),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? AppColors.purpleLight
-                                        : const Color(0xFFE8E4FF),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? const Color(0xFF6C5CE7)
-                                          : Colors.transparent,
-                                      width: isSelected ? 2 : 0,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      variant.attribute,
-                                      style: TextStyle(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: isSelected
-                                            ? const Color(0xFF6C5CE7)
-                                            : Colors.black87,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                const Text(
-                  'Are you sure you want to delete?',
-                  textAlign: TextAlign.center,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: 10,
-                  children: [
-                    TextButton(
-                      onPressed: () => ctx.pop(),
-                      child: const Text('Cancel'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        ctx.pop();
-                        context.read<ProductInfoBloc>().add(
-                              ProductInfoEvent.deleteProduct(
-                                productId: productId,
-                                variantId: selectedVariant?.id,
-                              ),
-                            );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                      ),
-                      child: const Text('Delete',
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
                 ),
               ],
             ),
           ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: variant.stock > 0 ? AppColors.green : AppColors.red,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              variant.stock > 0 ? 'Available' : 'Out of Stock',
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+      String label, IconData icon, Color color, VoidCallback onPressed) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 18.w),
+        label: Text(label),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: AppColors.white,
+          padding: EdgeInsets.symmetric(vertical: 16.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 0,
         ),
       ),
     );
   }
 
-  void showVariantEditDialog({
-    required BuildContext context,
-    required int productId,
-    required List<ProductVariantModel> variants,
-  }) {
-    ProductVariantModel? selectedVariant;
-    final TextEditingController attributeController = TextEditingController();
-    final TextEditingController stockController = TextEditingController();
-    final isFreeSize = VariantSizeType.isFreeSize(variants.first.attribute);
-    bool showAttributeField = true;
-    if (isFreeSize) {
-      selectedVariant = variants.first;
-      stockController.text = selectedVariant.stock.toString();
-      showAttributeField = false;
+  void _showEditDialog(BuildContext context, ProductModel product) async {
+    final result = await context.push(
+      AddOrEditProductScreen(
+        serviceId: serviceId,
+        product: product,
+      ),
+    );
+
+    if (result is bool && result) {
+      context
+          .read<ProductInfoBloc>()
+          .add(ProductInfoEvent.loadProductInfo(productId));
     }
+  }
 
-    showDialog(
+  void _showDeleteDialog(BuildContext context, ProductModel product) async {
+    await performSecureActionDialog(
+      context,
+      SecretPasswordLocations.productDeletion,
+      onSuccess: () {
+        context.read<ProductInfoBloc>().add(
+              ProductInfoEvent.deleteProduct(
+                productId: productId,
+                variantId: product.variants.length == 1
+                    ? null
+                    : product.variants.first.id,
+              ),
+            );
+      },
+    );
+  }
+
+  void _showExpenseDialog(BuildContext context) async {
+    final product = context.read<ProductInfoBloc>().getProductInfo();
+    if (product == null) return;
+
+    await showDialog(
       context: context,
-      builder: (ctx) => Dialog(
-        child: SizedBox(
-          width: context.isMobile ? null : 0.6.widthR,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: StatefulBuilder(
-              builder: (builderContext, setState) {
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 15,
-                    children: [
-                      const Text(
-                        'Select Variant to Edit',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 55,
-                        child: isFreeSize
-                            ? _freeSizeVariantWidget()
-                            : ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: variants.length,
-                                itemBuilder: (context, index) {
-                                  final variant = variants[index];
-                                  final isSelected = selectedVariant == variant;
-
-                                  return Container(
-                                    width: 50,
-                                    height: 50,
-                                    margin: const EdgeInsets.only(right: 12),
-                                    decoration: BoxDecoration(
-                                      color: isSelected
-                                          ? AppColors.purpleLight
-                                          : const Color(0xFFE8E4FF),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? const Color(0xFF6C5CE7)
-                                            : Colors.transparent,
-                                        width: isSelected ? 2 : 0,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        variant.attribute,
-                                        style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: isSelected
-                                              ? const Color(0xFF6C5CE7)
-                                              : Colors.black87,
-                                        ),
-                                      ),
-                                    ),
-                                  ).onTap(() {
-                                    setState(() {
-                                      selectedVariant = variant;
-                                      attributeController.text =
-                                          variant.attribute;
-                                      stockController.text =
-                                          variant.stock.toString();
-                                    });
-                                  });
-                                },
-                              ),
-                      ),
-                      if (selectedVariant != null) ...[
-                        if (showAttributeField)
-                          TextField(
-                            controller: attributeController,
-                            decoration: const InputDecoration(
-                              labelText: 'Variant Size',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        TextField(
-                          controller: stockController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Stock',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ],
-                      5.height,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        spacing: 10,
-                        children: [
-                          TextButton(
-                            onPressed: () => ctx.pop(),
-                            child: const Text('Cancel'),
-                          ),
-                          ElevatedButton(
-                            onPressed: selectedVariant == null
-                                ? null
-                                : () {
-                                    ctx.pop();
-                                    if (selectedVariant!.attribute ==
-                                            attributeController.text.trim() &&
-                                        selectedVariant!.stock.toString() ==
-                                            stockController.text.trim()) {
-                                      context.showSnackBar("No changes made");
-                                      return;
-                                    }
-                                    context.read<ProductInfoBloc>().add(
-                                          ProductInfoEvent.updateVariant(
-                                            productId: productId,
-                                            variantId: selectedVariant!.id,
-                                            updatedAttribute: isFreeSize
-                                                ? null
-                                                : attributeController.text
-                                                    .trim(),
-                                            updatedStock: stockController.text
-                                                    .trim()
-                                                    .toIntOrNull() ??
-                                                selectedVariant!.stock,
-                                          ),
-                                        );
-                                  },
-                            child: const Text(
-                              'Confirm',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+      builder: (context) => BlocProvider(
+        create: (_) => AddExpenseCubit(repository: getIt.get()),
+        child: ProductAddExpenseDialog(
+          variantId: product.variants.first.id,
+          mainServiceType: mainServiceType,
+          variants: product.variants,
         ),
       ),
     );
   }
 
-  void showAddVariantDialog({
-    required BuildContext context,
-    required int productId,
-    required List<ProductVariantModel> variants,
-  }) {
-    final TextEditingController attributeController = TextEditingController();
-    final TextEditingController stockController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-    final variantSizeTypeNotifier =
-        ValueNotifier<VariantSizeType>(VariantSizeType.letter);
-    final variantsNotifier = ValueNotifier<List<ProductVariantModel>>(variants);
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        child: SizedBox(
-          width: context.isMobile ? null : 0.6.widthR,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 15,
-                  children: [
-                    const Text(
-                      'Add New Variant',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                      ),
-                    ),
-                    ValueListenableBuilder(
-                        valueListenable: variantSizeTypeNotifier,
-                        builder: (context, sizeType, child) {
-                          final isFreeSize =
-                              sizeType == VariantSizeType.freeSize;
-                          return CustomTextField(
-                            controller: attributeController,
-                            label: 'Variant Size',
-                            hintText: sizeType.hintText,
-                            readOnly: isFreeSize,
-                            textCapitalization:
-                                sizeType == VariantSizeType.letter
-                                    ? TextCapitalization.characters
-                                    : TextCapitalization.none,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: sizeType.validate,
-                            suffixIcon: SizeTypeMenuButton(
-                              onSelected: (option) {
-                                variantSizeTypeNotifier.value = option;
-                              },
-                              variantsNotifier: variantsNotifier,
-                            ),
-                          );
-                        }),
-                    CustomTextField(
-                      controller: stockController,
-                      label: 'Stock',
-                      hintText: 'Eg: 8 or 12',
-                      keyboardType: TextInputType.number,
-                      validator: AppInputValidators.quantity,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      spacing: 10,
-                      children: [
-                        TextButton(
-                          onPressed: () => ctx.pop(),
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (!formKey.currentState!.validate()) {
-                              return;
-                            }
+  void _showGrowthScreen(BuildContext context) async {
+    await context.push(
+      BlocProvider(
+        create: (_) => ProductGrowthBloc(),
+        child: ProductGrowthScreen(
+          productId: productId,
+        ),
+      ),
+    );
+  }
 
-                            ctx.pop();
-                            context.read<ProductInfoBloc>().add(
-                                  ProductInfoEvent.addProductVariant(
-                                    productId: productId,
-                                    attribute: attributeController.text.trim(),
-                                    stock: int.tryParse(
-                                          stockController.text.trim(),
-                                        ) ??
-                                        0,
-                                  ),
-                                );
-                          },
-                          child: const Text(
-                            'Add',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+  void _showBookingsScreen(BuildContext context) async {
+    await context.push(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(
+              create: (_) =>
+                  ProductBookingUpcomingBloc(repository: getIt.get())),
+          BlocProvider(
+              create: (_) =>
+                  ProductBookingCompletedBloc(repository: getIt.get())),
+        ],
+        child: ProductAllBookingsScreen(
+          productId: productId,
         ),
       ),
     );

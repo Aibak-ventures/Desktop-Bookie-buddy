@@ -1,4 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,8 @@ import 'package:flutter/material.dart';
 /// image builder, fit, filter quality, height, and width.
 class CustomNetworkImage extends StatelessWidget {
   CustomNetworkImage({
-    required this.imageUrl, Key? key,
+    super.key,
+    required this.imageUrl,
     this.placeholder,
     this.errorWidget,
     this.imageBuilder,
@@ -19,9 +21,14 @@ class CustomNetworkImage extends StatelessWidget {
     this.height,
     this.width,
     this.progressIndicatorBuilder,
-  }) : super(key: key);
+    // this.enableRelativePathResolution = true,
+  });
 
   final String imageUrl;
+
+  // / If true (default) and [imageUrl] is a relative path (starts with '/')
+  // / the global [baseUrl] will be prefixed.
+  // final bool enableRelativePathResolution;
 
   final Widget Function(BuildContext context, String url)? placeholder;
 
@@ -45,17 +52,64 @@ class CustomNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sanitizedUrl = _sanitizeAndResolve(imageUrl);
+
+    if (sanitizedUrl == null) {
+      log('🔴 Invalid image URL: $imageUrl 🔴');
+      // Don't call CachedNetworkImage with an invalid/empty URL – return fallback immediately.
+      if (errorWidget != null) {
+        return errorWidget!(context, imageUrl, 'Invalid image URL');
+      }
+      // Basic neutral placeholder
+      return Container(
+        color: Colors.grey.shade200,
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.image_not_supported_outlined,
+          size: (height != null && height! < 40) ? height! * 0.6 : 24,
+          color: Colors.grey.shade400,
+        ),
+      );
+    }
+
     return CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: sanitizedUrl,
       placeholder: placeholder,
       errorWidget: errorWidget,
       imageBuilder: imageBuilder,
       fit: fit,
       filterQuality: filterQuality,
-      alignment: Alignment.center,
       height: height,
       width: width,
       progressIndicatorBuilder: progressIndicatorBuilder,
     );
+  }
+
+  /// Returns a valid absolute URL string or null if invalid/empty.
+  String? _sanitizeAndResolve(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty)
+      return null; // Prevent the Crashlytics: No host specified
+
+    // Already full http/https URL
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+
+    // If looks like protocol-relative (//host/path) add https:
+    if (trimmed.startsWith('//')) {
+      return 'https:$trimmed';
+    }
+
+    // // Relative path handling
+    // if (enableRelativePathResolution && trimmed.startsWith('/')) {
+    //   // Ensure no double slash after baseUrl
+    //   return baseUrl.endsWith('/')
+    //       ? '${baseUrl.substring(0, baseUrl.length - 1)}$trimmed'
+    //       : '$baseUrl$trimmed';
+    // }
+
+    // Any other case (e.g., 'image.png') – treat as invalid to avoid malformed URI.
+    return null;
   }
 }

@@ -2,13 +2,17 @@ enum PaymentMethod {
   gPay,
   cash;
 
+  static const GPAY = 'gpay';
+  static const CASH = 'cash';
+
   /// Converts [PaymentMethod] enum to a string label to display in the UI.
   String get name {
     switch (this) {
       case PaymentMethod.gPay:
-        return "Gpay";
+        // return 'Gpay';
+        return 'UPI';
       case PaymentMethod.cash:
-        return "Cash";
+        return 'Cash';
     }
   }
 
@@ -19,9 +23,9 @@ enum PaymentMethod {
   String toValue() {
     switch (this) {
       case PaymentMethod.gPay:
-        return "gpay";
+        return GPAY;
       case PaymentMethod.cash:
-        return "cash";
+        return CASH;
     }
   }
 
@@ -40,16 +44,25 @@ enum PaymentMethod {
   ///   The [PaymentMethod] enum that matches the given string.
   static PaymentMethod fromString(String status) {
     switch (status.toLowerCase()) {
-      case "gpay":
+      case GPAY:
         return PaymentMethod.gPay;
-      case "cash":
+      case CASH:
         return PaymentMethod.cash;
       default:
         return PaymentMethod.cash;
     }
   }
 
-  static String toJson(PaymentMethod status) => status.toValue();
+  static List<PaymentMethod> fromList(List<dynamic> list) =>
+      list.map((e) => fromString(e.toString())).toList();
+
+  static List<String> toList(List<PaymentMethod> list) =>
+      list.map((e) => e.toValue()).toList();
+
+  static String? toJson(PaymentMethod? status) => status?.toValue();
+
+  bool get isUpi => this == PaymentMethod.gPay;
+  bool get isCash => this == PaymentMethod.cash;
 }
 
 enum PaymentStatus {
@@ -60,9 +73,9 @@ enum PaymentStatus {
   String get name {
     switch (this) {
       case PaymentStatus.pending:
-        return "Pending";
+        return 'Pending';
       case PaymentStatus.completed:
-        return "Completed";
+        return 'Completed';
     }
   }
 
@@ -74,9 +87,9 @@ enum PaymentStatus {
   String toValue() {
     switch (this) {
       case PaymentStatus.pending:
-        return "pending";
+        return 'pending';
       case PaymentStatus.completed:
-        return "completed";
+        return 'completed';
     }
   }
 
@@ -90,17 +103,17 @@ enum PaymentStatus {
   /// Returns [PaymentStatus.pending] if the given string is not recognized.
   static PaymentStatus fromString(String status) {
     switch (status.toLowerCase()) {
-      case "pending":
+      case 'pending':
         return PaymentStatus.pending;
-      case "completed":
+      case 'completed':
         return PaymentStatus.completed;
       default:
         return PaymentStatus.pending;
     }
   }
 
-  static PaymentStatus fromBool(bool status) {
-    if (status) {
+  static PaymentStatus fromBool(bool? status) {
+    if (status == true) {
       return PaymentStatus.completed;
     } else {
       return PaymentStatus.pending;
@@ -118,9 +131,9 @@ enum PurchaseMode {
   String get name {
     switch (this) {
       case PurchaseMode.normal:
-        return "Normal";
+        return 'Normal';
       case PurchaseMode.package:
-        return "Package";
+        return 'Package';
     }
   }
 
@@ -132,9 +145,9 @@ enum PurchaseMode {
   String toValue() {
     switch (this) {
       case PurchaseMode.normal:
-        return "normal";
+        return 'normal';
       case PurchaseMode.package:
-        return "package";
+        return 'package';
     }
   }
 
@@ -148,9 +161,9 @@ enum PurchaseMode {
   /// Returns [PurchaseMode.normal] if the given string is not recognized.
   static PurchaseMode fromString(String status) {
     switch (status.toLowerCase()) {
-      case "normal":
+      case 'normal':
         return PurchaseMode.normal;
-      case "package":
+      case 'package':
         return PurchaseMode.package;
       default:
         return PurchaseMode.normal;

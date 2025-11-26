@@ -1,63 +1,51 @@
 import 'dart:developer';
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class ServiceApi {
-  static Future<List<ServicesModel>> fetchServices() async {
-    int retryCount = 0;
-    const maxRetries = 3;
-    
-    while (retryCount < maxRetries) {
-      try {
-        log('Attempting to fetch services using Dio client (attempt ${retryCount + 1}/$maxRetries)');
-        
-        final response = await DioClient.dio.get('/api/v3/service/selected');
-        
-        log('Successfully received response from Dio client: ${response.statusCode}');
-        
-        // Extract data from API response structure
-        final Map<String, dynamic> responseMap = response.data as Map<String, dynamic>;
-        final List<dynamic> responseData = responseMap['data'] as List<dynamic>;
-        log('Successfully received ${responseData.length} services from Dio client');
-        
-        final services = responseData.map((json) => ServicesModel.fromJson(json as Map<String, dynamic>)).toList();
-        log('Successfully parsed ${services.length} services');
-        return services;
-        
-      } catch (e, stackTrace) {
-        retryCount++;
-        
-        log('Failed to load services with Dio client (attempt $retryCount)', error: e, stackTrace: stackTrace);
-        
-        if (e is DioException) {
-          log('DioException type: ${e.type}');
-          log('DioException response: ${e.response?.data}');
-          
-          // For web development, provide helpful information
-          if (kIsWeb) {
-            log('');
-            log('🌐 WEB DEVELOPMENT NOTICE:');
-            log('Using Dio client for HTTP requests.');
-            log('If this error persists, it might be a backend CORS configuration issue.');
-            log('');
-          }
-        }
-        
-        // If this is the last retry, throw the error
-        if (retryCount >= maxRetries) {
-          if (e is DioException && e.response?.statusCode != null) {
-            throw 'Failed to load services: HTTP ${e.response!.statusCode} - ${e.message}';
-          }
-          throw 'Failed to load services after $maxRetries attempts: ${e.toString()}';
-        }
-        
-        // Wait before retrying (exponential backoff)
-        await Future.delayed(Duration(seconds: retryCount * 2));
+  /// Fetches services with improved error handling and retry logic
+  Future<CustomResponseModel> fetchServices() async {
+    return await safeApiCall<CustomResponseModel>(() async {
+      log('🔄 Fetching services from: ${ApiPaths.service.selected}');
+
+      final response = await DioClient.dio.get(
+        ApiPaths.service.selected,
+        options: Options(
+          // Add extra timeout for this specific request
+          receiveTimeout: const Duration(seconds: 30),
+          sendTimeout: const Duration(seconds: 15),
+          // Add retry logic
+          extra: {'retries': 3},
+        ),
+      );
+
+      if (kDebugMode) {
+        log('✅ Services fetched successfully. Status: ${response.statusCode}');
+        log('📦 Response data type: ${response.data.runtimeType}');
       }
+
+      return CustomResponseModel.fromJson(response.data);
+    });
+  }
+
+  /// Alternative method for testing network connectivity
+  Future<bool> checkApiConnectivity() async {
+    try {
+      final response = await DioClient.dio.get(
+        '/api/v3/health/', // Assuming there's a health check endpoint
+        options: Options(
+          receiveTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 5),
+        ),
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      log('❌ API connectivity check failed: $e');
+      return false;
     }
-    
-    throw 'Failed to load services after $maxRetries attempts';
   }
 }

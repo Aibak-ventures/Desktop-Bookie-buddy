@@ -39,70 +39,69 @@ Future<int?> showVariantSelectionDialog({
                   ),
                 ),
               if (mainServiceType.isDress && variants.length > 1)
-                StatefulBuilder(builder: (context, setState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Select Variant',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 55,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: variants.length,
-                          itemBuilder: (context, index) {
-                            final variant = variants[index];
-                            final isSelected = selectedVariant == variant;
-
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedVariant = variant;
-                                  log('current selected variant: $selectedVariant');
-                                });
-                              },
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                margin: const EdgeInsets.only(right: 12),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? AppColors.purpleLight
-                                      : const Color(0xFFE8E4FF),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? const Color(0xFF6C5CE7)
-                                        : Colors.transparent,
-                                    width: isSelected ? 2 : 0,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    variant.attribute,
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: isSelected
-                                          ? const Color(0xFF6C5CE7)
-                                          : Colors.black87,
-                                    ),
-                                  ),
-                                ),
+                StatefulBuilder(
+                    builder: (context, setState) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Select Variant',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                }),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 55,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: variants.length,
+                                itemBuilder: (context, index) {
+                                  final variant = variants[index];
+                                  final isSelected = selectedVariant == variant;
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedVariant = variant;
+                                        log('current selected variant: $selectedVariant');
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      margin: const EdgeInsets.only(right: 12),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? AppColors.purpleLight
+                                            : const Color(0xFFE8E4FF),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? const Color(0xFF6C5CE7)
+                                              : Colors.transparent,
+                                          width: isSelected ? 2 : 0,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          variant.attribute,
+                                          style: TextStyle(
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: isSelected
+                                                ? const Color(0xFF6C5CE7)
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        )),
               Text(
                 'Are you sure you want to select this ${isMultiVariant ? 'variant' : 'product'}?',
                 textAlign: !isMultiVariant ? TextAlign.start : TextAlign.center,

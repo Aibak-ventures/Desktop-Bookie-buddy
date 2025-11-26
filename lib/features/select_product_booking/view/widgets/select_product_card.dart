@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/app_icons.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
@@ -12,17 +12,19 @@ import 'package:shimmer/shimmer.dart';
 
 class SelectProductCard extends StatelessWidget {
   const SelectProductCard({
+    super.key,
     required this.isSelected,
     required this.product,
     required this.onTap,
     required this.mainServiceType,
-    super.key,
+    this.needAddButton = true,
   });
 
   final bool isSelected;
   final ProductModel product;
   final VoidCallback onTap;
   final MainServiceType mainServiceType;
+  final bool needAddButton;
 
   @override
   Widget build(BuildContext context) {
@@ -188,123 +190,119 @@ class SelectProductCard extends StatelessWidget {
 
 /// Shimmer for the [SelectProductCard]
 class SelectProductCardShimmer extends StatelessWidget {
-  const SelectProductCardShimmer({super.key});
-
+  const SelectProductCardShimmer({super.key, this.needAddButton = true});
+  final bool needAddButton;
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: 10.radiusBorder,
-        border: Border.all(
-          color: Colors.grey.shade300,
-          width: 1,
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: 10.radiusBorder,
+          border: Border.all(color: Colors.grey.shade300),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade300,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image Placeholder
-          AspectRatio(
-            aspectRatio: 1.0,
-            child: Padding(
-              padding: 6.padding,
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: 10.radiusBorder,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image Placeholder
+            AspectRatio(
+              aspectRatio: 1.0,
+              child: Padding(
+                padding: 6.padding,
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: 10.radiusBorder,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          // Text Placeholders
-          Padding(
-            padding: (8, 4).padding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product name shimmer
-                Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  child: Container(
-                    height: 15,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-
-                4.height,
-
-                // Specification shimmer
-                Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  child: Container(
-                    height: 12,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-
-                4.height,
-
-                // Price and Button Row shimmer
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Price shimmer
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        height: 16,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+            // Text Placeholders
+            Padding(
+              padding: (8, 4).padding,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product name shimmer
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      height: 15,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
+                  ),
 
-                    // Button shimmer
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        height: 32,
-                        width: 32,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: 6.radiusBorder,
-                        ),
+                  5.height,
+
+                  // Specification shimmer
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      height: 12,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+
+                  6.height,
+
+                  // Price and Button Row shimmer
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Price shimmer
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          height: 16,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+
+                      // Button shimmer
+                      if (needAddButton)
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            height: 32,
+                            width: 32,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: 6.radiusBorder,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 }

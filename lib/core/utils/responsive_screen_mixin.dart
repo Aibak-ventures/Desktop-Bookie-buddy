@@ -5,30 +5,28 @@ import 'package:flutter/material.dart';
 /// Mixin to easily make any screen responsive
 /// Usage: class MyScreen extends StatelessWidget with ResponsiveScreenMixin
 mixin ResponsiveScreenMixin on Widget {
-  
   /// Override this method to provide the screen title
   String get screenTitle => 'Screen';
-  
+
   /// Override this method to provide the screen icon
   IconData get screenIcon => Icons.dashboard_outlined;
-  
+
   /// Override this method to provide custom app bar actions
   List<Widget> getAppBarActions(BuildContext context) => [];
-  
+
   /// Override this method to provide the main content
   Widget buildContent(BuildContext context);
-  
+
   /// Override this method to control back button visibility
   bool get showBackButton => true;
-  
+
   /// Override this method to provide custom background color for desktop
   Color? get desktopBackgroundColor => const Color(0xFFF8F9FA);
 
   Widget buildResponsiveScreen(BuildContext context) {
     return Scaffold(
-      backgroundColor: ResponsiveHelper.isDesktop(context) 
-          ? desktopBackgroundColor 
-          : null,
+      backgroundColor:
+          ResponsiveHelper.isDesktop(context) ? desktopBackgroundColor : null,
       appBar: ResponsiveHelper.isMobile(context)
           ? AppBar(
               automaticallyImplyLeading: showBackButton,
@@ -119,7 +117,7 @@ mixin ResponsiveScreenMixin on Widget {
                 ],
               ),
             ),
-          
+
           // Content Section
           Expanded(
             child: Center(
@@ -144,7 +142,7 @@ mixin ResponsiveScreenMixin on Widget {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 60),
         ],
       ),
@@ -212,7 +210,7 @@ mixin ResponsiveScreenMixin on Widget {
                         ),
                       ),
                       Text(
-                        'Manage your ${screenTitle.toLowerCase()}',
+                        'Manage yours ${screenTitle.toLowerCase()}',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade600,
@@ -225,7 +223,7 @@ mixin ResponsiveScreenMixin on Widget {
               ],
             ),
           ),
-          
+
           // Content Section
           Expanded(
             child: Center(
@@ -250,7 +248,7 @@ mixin ResponsiveScreenMixin on Widget {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 80),
         ],
       ),

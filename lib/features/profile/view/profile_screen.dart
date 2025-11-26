@@ -1,15 +1,21 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
+import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/change_secret_password_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/reset_password_screen.dart';
@@ -17,12 +23,23 @@ import 'package:bookie_buddy_web/features/change_password/view_model/bloc_reset_
 import 'package:bookie_buddy_web/features/change_password/view_model/bloc_secret_password/secret_password_bloc.dart';
 import 'package:bookie_buddy_web/features/client/view/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
+import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
+import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_bookings/ledger_bookings_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_sales/ledger_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_security_amounts/ledger_security_amounts_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments/wallet_payments_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
 import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/about_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/check_availability_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
+
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/profile_shop_details_card.dart';
+import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,10 +49,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<UserCubit>().state;
+    final shopRole = user?.shopRole ?? ShopRole.staff;
+    debugPrint('Shop role in profile screen: $shopRole');
     return SafeArea(
       child: Scaffold(
-        backgroundColor: ResponsiveHelper.isDesktop(context) 
-            ? const Color(0xFFF8F9FA) 
+        backgroundColor: ResponsiveHelper.isDesktop(context)
+            ? const Color(0xFFF8F9FA)
             : null,
         extendBody: true,
         body: ResponsiveWidget(
@@ -63,7 +83,10 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Padding(
                 padding: 16.padding,
-                child: _buildProfileContent(context),
+                child: _buildProfileContent(
+                    context,
+                    context.read<UserCubit>().state?.shopRole ??
+                        ShopRole.staff),
               ),
             ),
           ],
@@ -103,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Content Section
               Center(
                 child: Container(
@@ -121,10 +144,13 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: _buildProfileContent(context),
+                  child: _buildProfileContent(
+                      context,
+                      context.read<UserCubit>().state?.shopRole ??
+                          ShopRole.staff),
                 ),
               ),
-              
+
               const SizedBox(height: 60),
             ],
           ),
@@ -164,7 +190,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Content Section
               Center(
                 child: Container(
@@ -182,10 +208,13 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: _buildProfileContent(context),
+                  child: _buildProfileContent(
+                      context,
+                      context.read<UserCubit>().state?.shopRole ??
+                          ShopRole.staff),
                 ),
               ),
-              
+
               const SizedBox(height: 80),
             ],
           ),
@@ -194,7 +223,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileContent(BuildContext context) {
+  Widget _buildProfileContent(BuildContext context, ShopRole shopRole) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -208,7 +237,23 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.access_time),
               text: 'Upcoming\nBookings',
               color: const Color(0xFF2673C6),
-              onTap: () => context.push(AllBookingScreen()),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) =>
+                            AllBookingBloc(repository: getIt.get()),
+                      ),
+                      BlocProvider(
+                        create: (context) =>
+                            AllBookingPastBloc(repository: getIt.get()),
+                      ),
+                    ],
+                    child: AllBookingScreen(),
+                  ),
+                ),
+              ),
             ),
 
             // completed booking
@@ -216,8 +261,7 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.done_all),
               text: 'Completed\nBookings',
               color: const Color(0xFF219A00),
-              onTap: () =>
-                  context.push(CompletedBookingsScreen()),
+              onTap: () => context.push(CompletedBookingsScreen()),
             ),
           ],
         ),
@@ -225,35 +269,105 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 5),
 
         // ledger
+        if (!shopRole.isStaff)
+          CustomProfileTile(
+            icon: Icons.menu_book_outlined,
+            title: 'Ledger',
+            onTap: () {
+              context.read<ServiceBloc>().add(
+                    const ServiceEvent.loadServices(force: false),
+                  );
+              performSecureActionDialog(
+                context,
+                SecretPasswordLocations.ledgerView,
+                onSuccess: () {
+                  context.push(
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (context) => ClientCubit(
+                            repository: getIt.get(),
+                          )..clearSelected(),
+                        ),
+                        BlocProvider(
+                          create: (context) => WalletExpenseBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => WalletPaymentsBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerSimpleSummaryCubit(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => WalletPendingBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerBookingsBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerSalesBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => LedgerSecurityAmountsBloc(
+                            repository: getIt.get(),
+                          ),
+                        ),
+                      ],
+                      child: const WalletScreen(),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+
+        const SizedBox(height: 5),
         CustomProfileTile(
-          icon: Icons.menu_book_outlined,
-          title: 'Ledger',
-          onTap: () =>
-              performSecureActionDialog(context, 'wallet'),
+          icon: Icons.business_center_outlined,
+          title: 'Staff',
+          onTap: () => context.push(const StaffListScreen()),
         ),
+        // stock
+        // CustomProfileTile(
+        //   icon: Icons.bar_chart,
+        //   title: 'Stock management',
+        //   onTap: () => context.push(
+        //     SelectServiceScreen(
+        //       onServiceSelected: (service, ctx) {
+        //         print('Selected service: ${service.name}');
+        //         ctx.push(
+        //           ProductGridScreen(
+        //             serviceId: service.id,
+        //             name: service.name,
+        //             mainServiceType:
+        //                 MainServiceType.fromString(
+        //                     service.mainServiceName),
+        //           ),
+        //         );
+        //       },
+        //     ),
+        //   ),
+        // ),
 
         const SizedBox(height: 5),
 
-        // stock
+        // Check Availability
         CustomProfileTile(
-          icon: Icons.bar_chart,
-          title: 'Stock management',
-          onTap: () => context.push(
-            SelectServiceScreen(
-              onServiceSelected: (service, ctx) {
-                print('Selected service: ${service.name}');
-                ctx.push(
-                  ProductGridScreen(
-                    serviceId: service.id,
-                    name: service.name,
-                    mainServiceType:
-                        MainServiceType.fromString(
-                            service.mainServiceName),
-                  ),
-                );
-              },
-            ),
-          ),
+          icon: Icons.search_outlined,
+          title: 'Check Availability',
+          onTap: () => context.push(const CheckAvailabilityScreen()),
         ),
 
         const SizedBox(height: 5),

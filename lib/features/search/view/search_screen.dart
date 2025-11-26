@@ -95,9 +95,13 @@ class _SearchScreenState extends State<SearchScreen> {
             valueListenable: dateFilterNotifier,
             builder: (context, value, child) => Container(
               decoration: BoxDecoration(
-                color: value.hasActiveFilter ? AppColors.purple.withValues(alpha: 0.1) : Colors.grey.shade100,
+                color: value.hasActiveFilter
+                    ? AppColors.purple.withValues(alpha: 0.1)
+                    : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(8),
-                border: value.hasActiveFilter ? Border.all(color: AppColors.purple) : null,
+                border: value.hasActiveFilter
+                    ? Border.all(color: AppColors.purple)
+                    : null,
               ),
               child: DateFilterButton(
                 hasActiveFilter: value.hasActiveFilter,
@@ -105,7 +109,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
-          SizedBox(width: ResponsiveHelper.getSpacing(context, mobile: 16, tablet: 20, desktop: 24, largeDesktop: 24)),
+          SizedBox(
+              width: ResponsiveHelper.getSpacing(context,
+                  mobile: 16, tablet: 20, desktop: 24, largeDesktop: 24)),
         ],
       ),
       body: ResponsiveWidget(
@@ -160,7 +166,8 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSearchContent(BuildContext context, {required double maxSearchWidth}) {
+  Widget _buildSearchContent(BuildContext context,
+      {required double maxSearchWidth}) {
     return Column(
       children: [
         // Hero Search Section
@@ -220,8 +227,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 color: AppColors.purple,
               ),
-              SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14)),
-              
+              SizedBox(
+                  height: ResponsiveHelper.getSpacing(context,
+                      mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14)),
+
               Text(
                 'Find Your Bookings',
                 style: TextStyle(
@@ -236,8 +245,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   color: const Color(0xFF1F2937),
                 ),
               ),
-              SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 6, tablet: 8, desktop: 10, largeDesktop: 12)),
-              
+              SizedBox(
+                  height: ResponsiveHelper.getSpacing(context,
+                      mobile: 6, tablet: 8, desktop: 10, largeDesktop: 12)),
+
               Text(
                 'Search by client name, staff name, or booking ID',
                 style: TextStyle(
@@ -252,7 +263,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 16, tablet: 18, desktop: 20, largeDesktop: 22)),
+              SizedBox(
+                  height: ResponsiveHelper.getSpacing(context,
+                      mobile: 16, tablet: 18, desktop: 20, largeDesktop: 22)),
 
               // Enhanced Search Field
               Container(
@@ -308,7 +321,9 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
 
-        SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 12, tablet: 14, desktop: 16, largeDesktop: 18)),
+        SizedBox(
+            height: ResponsiveHelper.getSpacing(context,
+                mobile: 12, tablet: 14, desktop: 16, largeDesktop: 18)),
 
         // Active Filter Indicator
         ValueListenableBuilder(
@@ -322,7 +337,8 @@ class _SearchScreenState extends State<SearchScreen> {
         Expanded(
           child: Container(
             margin: EdgeInsets.only(
-              top: ResponsiveHelper.getSpacing(context, mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14),
+              top: ResponsiveHelper.getSpacing(context,
+                  mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14),
             ),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -379,7 +395,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         if (bookings.isEmpty) {
                           return _buildEmptyState(context);
                         }
-                        return _buildBookingsList(context, bookings, nextPageUrl, isPaginating);
+                        return _buildBookingsList(
+                            context, bookings, nextPageUrl, isPaginating);
                       },
                     );
                   },
@@ -397,7 +414,9 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
           Container(
             padding: ResponsiveHelper.getPadding(
               context,
@@ -425,7 +444,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   color: Colors.grey.shade400,
                 ),
-                SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 12, tablet: 14, desktop: 16, largeDesktop: 18)),
+                SizedBox(
+                    height: ResponsiveHelper.getSpacing(context,
+                        mobile: 12, tablet: 14, desktop: 16, largeDesktop: 18)),
                 Text(
                   'Start typing to search',
                   style: TextStyle(
@@ -440,7 +461,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     color: Colors.grey.shade600,
                   ),
                 ),
-                SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 6, tablet: 8, desktop: 10, largeDesktop: 12)),
+                SizedBox(
+                    height: ResponsiveHelper.getSpacing(context,
+                        mobile: 6, tablet: 8, desktop: 10, largeDesktop: 12)),
                 Text(
                   'Use the search field above to find bookings by client name, staff name, or booking ID',
                   style: TextStyle(
@@ -456,9 +479,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   textAlign: TextAlign.center,
                 ),
                 if (dateFilterNotifier.value.hasActiveFilter) ...[
-                  SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 12, tablet: 14, desktop: 16, largeDesktop: 18)),
+                  SizedBox(
+                      height: ResponsiveHelper.getSpacing(context,
+                          mobile: 12,
+                          tablet: 14,
+                          desktop: 16,
+                          largeDesktop: 18)),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue.shade50,
                       borderRadius: BorderRadius.circular(12),
@@ -483,7 +512,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
         ],
       ),
     );
@@ -494,7 +525,9 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
           Icon(
             Icons.error_outline,
             size: ResponsiveHelper.getValue(
@@ -506,7 +539,9 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             color: Colors.red.shade400,
           ),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 12, tablet: 14, desktop: 16, largeDesktop: 18)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 12, tablet: 14, desktop: 16, largeDesktop: 18)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
@@ -524,27 +559,36 @@ class _SearchScreenState extends State<SearchScreen> {
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 16, tablet: 18, desktop: 20, largeDesktop: 22)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 16, tablet: 18, desktop: 20, largeDesktop: 22)),
           ElevatedButton(
             onPressed: _performSearch,
             style: ElevatedButton.styleFrom(
               padding: ResponsiveHelper.getPadding(
                 context,
-                mobile: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                tablet: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                desktop: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                largeDesktop: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                mobile:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                tablet:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                desktop:
+                    const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                largeDesktop:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
             ),
             child: const Text('Retry'),
           ),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 40, tablet: 50, desktop: 60, largeDesktop: 70)),
         ],
       ),
     );
   }
 
-  Widget _buildBookingsList(BuildContext context, List<BookingsModel> bookings, String? nextPageUrl, bool isPaginating) {
+  Widget _buildBookingsList(BuildContext context, List<BookingsModel> bookings,
+      String? nextPageUrl, bool isPaginating) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -570,7 +614,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 color: AppColors.purple,
               ),
-              SizedBox(width: ResponsiveHelper.getSpacing(context, mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14)),
+              SizedBox(
+                  width: ResponsiveHelper.getSpacing(context,
+                      mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14)),
               Text(
                 'Search Results (${bookings.length} found)',
                 style: TextStyle(
@@ -588,12 +634,13 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
         ),
-        
+
         // Results List
         Expanded(
           child: NotificationListener<ScrollNotification>(
             onNotification: (scrollInfo) {
-              if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 200 &&
+              if (scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent - 200 &&
                   !isPaginating &&
                   nextPageUrl != null) {
                 context.read<SearchBloc>().add(
@@ -659,7 +706,8 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildActiveFilterIndicator(BuildContext context, double maxSearchWidth) {
+  Widget _buildActiveFilterIndicator(
+      BuildContext context, double maxSearchWidth) {
     return Center(
       child: Container(
         constraints: BoxConstraints(maxWidth: maxSearchWidth),
@@ -675,7 +723,8 @@ class _SearchScreenState extends State<SearchScreen> {
           mobile: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           tablet: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           desktop: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          largeDesktop: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          largeDesktop:
+              const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         ),
         decoration: BoxDecoration(
           color: AppColors.purple.withValues(alpha: 0.1),
@@ -703,7 +752,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               color: AppColors.purple,
             ),
-            SizedBox(width: ResponsiveHelper.getSpacing(context, mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14)),
+            SizedBox(
+                width: ResponsiveHelper.getSpacing(context,
+                    mobile: 8, tablet: 10, desktop: 12, largeDesktop: 14)),
             Expanded(
               child: Text(
                 _getFilterDisplayText(),
@@ -761,7 +812,9 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 30, tablet: 40, desktop: 50, largeDesktop: 60)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 30, tablet: 40, desktop: 50, largeDesktop: 60)),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             padding: ResponsiveHelper.getPadding(
@@ -805,9 +858,13 @@ class _SearchScreenState extends State<SearchScreen> {
                     color: Colors.orange.shade400,
                   ),
                 ),
-                SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 16, tablet: 18, desktop: 20, largeDesktop: 22)),
+                SizedBox(
+                    height: ResponsiveHelper.getSpacing(context,
+                        mobile: 16, tablet: 18, desktop: 20, largeDesktop: 22)),
                 Text(
-                  hasTextQuery || hasDateFilter ? 'No Results Found' : 'No Bookings',
+                  hasTextQuery || hasDateFilter
+                      ? 'No Results Found'
+                      : 'No Bookings',
                   style: TextStyle(
                     fontSize: ResponsiveHelper.getFontSize(
                       context,
@@ -820,7 +877,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     color: const Color(0xFF1F2937),
                   ),
                 ),
-                SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 6, tablet: 8, desktop: 10, largeDesktop: 12)),
+                SizedBox(
+                    height: ResponsiveHelper.getSpacing(context,
+                        mobile: 6, tablet: 8, desktop: 10, largeDesktop: 12)),
                 Text(
                   _getEmptyStateMessage(hasTextQuery, hasDateFilter),
                   style: TextStyle(
@@ -836,7 +895,12 @@ class _SearchScreenState extends State<SearchScreen> {
                   textAlign: TextAlign.center,
                 ),
                 if (hasTextQuery || hasDateFilter) ...[
-                  SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 16, tablet: 18, desktop: 20, largeDesktop: 22)),
+                  SizedBox(
+                      height: ResponsiveHelper.getSpacing(context,
+                          mobile: 16,
+                          tablet: 18,
+                          desktop: 20,
+                          largeDesktop: 22)),
                   ElevatedButton.icon(
                     onPressed: () {
                       searchController.clear();
@@ -849,10 +913,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       foregroundColor: Colors.white,
                       padding: ResponsiveHelper.getPadding(
                         context,
-                        mobile: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        tablet: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        desktop: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                        largeDesktop: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        mobile: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        tablet: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        desktop: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 14),
+                        largeDesktop: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -863,7 +931,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          SizedBox(height: ResponsiveHelper.getSpacing(context, mobile: 30, tablet: 40, desktop: 50, largeDesktop: 60)),
+          SizedBox(
+              height: ResponsiveHelper.getSpacing(context,
+                  mobile: 30, tablet: 40, desktop: 50, largeDesktop: 60)),
         ],
       ),
     );

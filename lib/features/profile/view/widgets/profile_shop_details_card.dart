@@ -17,9 +17,9 @@ class ProfileShopDetailsCard extends StatelessWidget {
       height: 250,
       child: BlocBuilder<UserCubit, UserModel?>(
         builder: (context, user) {
-          final profile = user?.shopeImage;
-          final businessName = user?.shopName ?? 'Business name';
-          final address = user?.shopAddress ?? 'Address: Not Available';
+          final profile = user?.shopDetails.image;
+          final businessName = user?.shopDetails.name ?? 'Business name';
+          final address = user?.shopDetails.address ?? 'Address: Not Available';
           return Stack(
             children: [
               // Main container with clipped background circles

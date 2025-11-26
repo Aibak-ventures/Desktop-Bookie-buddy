@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/gender_type_enums.dart';
 import 'package:flutter/material.dart';
 
 class MeasurementFieldModel {
@@ -25,14 +25,13 @@ class MeasurementFieldModel {
     GenderType? gender,
     bool? isOptional,
     TextEditingController? controller,
-  }) {
-    return MeasurementFieldModel(
-      name: name ?? this.name,
-      key: key ?? this.key,
-      description: description ?? this.description,
-      gender: gender ?? this.gender,
-      isOptional: isOptional ?? this.isOptional,
-      controller: controller ?? this.controller,
-    );
-  }
+  }) =>
+      MeasurementFieldModel(
+        name: name ?? this.name,
+        key: key ?? this.key,
+        description: description ?? this.description,
+        gender: gender ?? this.gender,
+        isOptional: isOptional ?? this.isOptional,
+        controller: controller ?? this.controller,
+      );
 }

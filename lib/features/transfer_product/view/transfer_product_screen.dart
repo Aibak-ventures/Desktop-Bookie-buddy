@@ -1,4 +1,9 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
@@ -11,10 +16,6 @@ import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product
 import 'package:bookie_buddy_web/features/transfer_product/view/widgets/transfer_product_select_shop_section.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view_model/bloc_matching_product/matching_product_bloc.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view_model/cubit/transfer_product_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransferProductScreen extends StatefulWidget {
   final int serviceId;
@@ -95,9 +96,25 @@ class _TransferProductScreenState extends State<TransferProductScreen> {
                         const TransferProductTextTitle(text: 'Current Product'),
                         6.height,
                         ProductSimpleDetailsTile(
-                          serviceId: widget.serviceId,
-                          product: currentVariant,
-                          amount: currentVariant.amount,
+                          mainServiceType: currentVariant.mainServiceType,
+                          name: currentVariant.name,
+                          quantity: currentVariant.quantity,
+                          category: currentVariant.category,
+                          color: currentVariant.color,
+                          image: currentVariant.image,
+                          model: currentVariant.model,
+                          variantAttribute: currentVariant.variantAttribute,
+                          amount: currentVariant.amount == 0
+                              ? null
+                              : currentVariant.amount,
+                          trailing: Text(
+                            'No Price',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: AppColors.grey,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
                         ),
                       ],
                     ),

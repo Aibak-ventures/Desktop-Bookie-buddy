@@ -16,20 +16,20 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$AddOldBookingsEvent {
-  AddBookingModel get booking => throw _privateConstructorUsedError;
+  RequestBookingModel get booking => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) addBooking,
+    required TResult Function(RequestBookingModel booking) addBooking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? addBooking,
+    TResult? Function(RequestBookingModel booking)? addBooking,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? addBooking,
+    TResult Function(RequestBookingModel booking)? addBooking,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -63,9 +63,9 @@ abstract class $AddOldBookingsEventCopyWith<$Res> {
           AddOldBookingsEvent value, $Res Function(AddOldBookingsEvent) then) =
       _$AddOldBookingsEventCopyWithImpl<$Res, AddOldBookingsEvent>;
   @useResult
-  $Res call({AddBookingModel booking});
+  $Res call({RequestBookingModel booking});
 
-  $AddBookingModelCopyWith<$Res> get booking;
+  $RequestBookingModelCopyWith<$Res> get booking;
 }
 
 /// @nodoc
@@ -89,7 +89,7 @@ class _$AddOldBookingsEventCopyWithImpl<$Res, $Val extends AddOldBookingsEvent>
       booking: null == booking
           ? _value.booking
           : booking // ignore: cast_nullable_to_non_nullable
-              as AddBookingModel,
+              as RequestBookingModel,
     ) as $Val);
   }
 
@@ -97,8 +97,8 @@ class _$AddOldBookingsEventCopyWithImpl<$Res, $Val extends AddOldBookingsEvent>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $AddBookingModelCopyWith<$Res> get booking {
-    return $AddBookingModelCopyWith<$Res>(_value.booking, (value) {
+  $RequestBookingModelCopyWith<$Res> get booking {
+    return $RequestBookingModelCopyWith<$Res>(_value.booking, (value) {
       return _then(_value.copyWith(booking: value) as $Val);
     });
   }
@@ -112,10 +112,10 @@ abstract class _$$AddBookingImplCopyWith<$Res>
       __$$AddBookingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({AddBookingModel booking});
+  $Res call({RequestBookingModel booking});
 
   @override
-  $AddBookingModelCopyWith<$Res> get booking;
+  $RequestBookingModelCopyWith<$Res> get booking;
 }
 
 /// @nodoc
@@ -137,7 +137,7 @@ class __$$AddBookingImplCopyWithImpl<$Res>
       null == booking
           ? _value.booking
           : booking // ignore: cast_nullable_to_non_nullable
-              as AddBookingModel,
+              as RequestBookingModel,
     ));
   }
 }
@@ -148,7 +148,7 @@ class _$AddBookingImpl implements _AddBooking {
   const _$AddBookingImpl(this.booking);
 
   @override
-  final AddBookingModel booking;
+  final RequestBookingModel booking;
 
   @override
   String toString() {
@@ -177,7 +177,7 @@ class _$AddBookingImpl implements _AddBooking {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AddBookingModel booking) addBooking,
+    required TResult Function(RequestBookingModel booking) addBooking,
   }) {
     return addBooking(booking);
   }
@@ -185,7 +185,7 @@ class _$AddBookingImpl implements _AddBooking {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AddBookingModel booking)? addBooking,
+    TResult? Function(RequestBookingModel booking)? addBooking,
   }) {
     return addBooking?.call(booking);
   }
@@ -193,7 +193,7 @@ class _$AddBookingImpl implements _AddBooking {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AddBookingModel booking)? addBooking,
+    TResult Function(RequestBookingModel booking)? addBooking,
     required TResult orElse(),
   }) {
     if (addBooking != null) {
@@ -232,10 +232,11 @@ class _$AddBookingImpl implements _AddBooking {
 }
 
 abstract class _AddBooking implements AddOldBookingsEvent {
-  const factory _AddBooking(final AddBookingModel booking) = _$AddBookingImpl;
+  const factory _AddBooking(final RequestBookingModel booking) =
+      _$AddBookingImpl;
 
   @override
-  AddBookingModel get booking;
+  RequestBookingModel get booking;
 
   /// Create a copy of AddOldBookingsEvent
   /// with the given fields replaced by the non-null parameter values.

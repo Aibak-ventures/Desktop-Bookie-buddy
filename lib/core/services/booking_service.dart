@@ -1,310 +1,260 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/error/error_handler.dart';
-import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
+import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/add_booking_model/add_booking_model.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/utils/download_file.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class BookingService {
   final _dio = DioClient.dio;
-  final bookingManagementUrl = '/api/v2/bookings/bookings/';
+  final bookingManagementUrl = ApiPaths.bookings.bookingsV3;
 
-  Future<BookingDetailsModel> getBooking(int bookingId) async {
+  Future<CustomResponseModel> getBooking(int bookingId) async {
     try {
-      final response = await _dio.get('${bookingManagementUrl}$bookingId/');
-
-      if (response.statusCode == 200) {
-        return BookingDetailsModel.fromJson(response.data);
-      } else if (response.statusCode == 404) {
-        throw BookingNotFoundException('Booking not found');
-      } else {
-        log('status code: ${response.statusCode}, data: ${response.data}');
-        throw FailedBookingException('Failed to fetch booking');
-      }
-    } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
-      throw ErrorHandler.handle(e);
-    }
-  }
-
-  Future<void> AddBooking(AddBookingModel bookingData) async {
-    try {
-      final data = bookingData.toCustomJson();
-      // {
-      //   "client_id": bookingData.clientId,
-      //   "pickup_date": bookingData.pickupDate,
-      //   "return_date": bookingData.returnDate,
-      //   if (bookingData.advanceAmount != null)
-      //     "advance_amount": bookingData.advanceAmount,
-      //   "security_amount": bookingData.securityAmount,
-      //   "discount_amount": bookingData.discountAmount,
-      //   "purchase_mode": bookingData.purchaseMode,
-      //   "staff_name": bookingData.staffName,
-      //   "description": bookingData.description,
-      //   "payment_method": bookingData.paymentMethod,
-      //   "client_address": bookingData.address,
-      //   "delivery_status": bookingData.deliveryStatus,
-      //   "variants": bookingData.products?.map((e) => e.toCustomJson()).toList(),
-      //   "details": {
-      //     //Location for vehicle
-      //     if (bookingData.locationFrom != null &&
-      //         bookingData.locationFrom != '')
-      //       "location_from": bookingData.locationFrom,
-
-      //     if (bookingData.locationTo != null && bookingData.locationTo != '')
-      //       "location_to": bookingData.locationTo,
-
-      //     if (bookingData.locationStart != null &&
-      //         bookingData.locationStart != '')
-      //       "location_start": bookingData.locationStart
-      //   }
-      // };
-
-      log(data.toString());
-      final response = await _dio.post(
-        bookingManagementUrl,
-        data: data,
+      final response = await _dio.get(
+        '${ApiPaths.bookings.bookingsV5}$bookingId/',
       );
-
-      log('status code: ${response.statusCode}, data: ${response.data}');
-
-      if (response.statusCode == 201) {
-        return;
-      } else if (response.statusCode == 400) {
-        final error = response.data['error'];
-        if (error is Map && error.containsKey('message')) {
-          throw error['message'];
-        } else if (error is String) {
-          throw error;
-        } else {
-          throw 'Failed to create booking';
-        }
-      } else {
-        throw response.data['error'] ?? 'Failed to create booking';
-      }
-    } on DioException catch (e) {
-      throw 'Failed to create booking: ${e.message}';
+      // log('booking details response: ${response.realUri.toString()} , ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error fetching booking: $e', stackTrace: stack);
       rethrow;
     }
   }
 
-  Future<void> updatePayment({
+  Future<CustomResponseModel> addBooking(
+    RequestBookingModel bookingData,
+  ) async {
+    try {
+      final data = bookingData.toJson();
+
+      log(data.toString());
+      final response = await _dio.post(
+        ApiPaths.bookings.bookingsV5,
+        data: data,
+      );
+
+      log(
+        'add booking response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error adding booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> updatePayment({
     required int bookingId,
     required int amount,
     required String paymentMethod,
   }) async {
     try {
-      final response = await _dio.patch(
-        '${bookingManagementUrl}$bookingId/',
-        data: {
-          "amount": amount,
-          "payment_method": paymentMethod,
-        },
+      final response = await _dio.post(
+        '${ApiPaths.bookings.addPayment}$bookingId/',
+        data: {'amount': amount, 'payment_method': paymentMethod},
       );
 
-      log('status code: ${response.statusCode}, data: ${response.data}');
-
-      if (response.statusCode != 200) {
-        throw response.data['error'] ??
-            response.data['message'] ??
-            'Failed to update booking';
-      }
-    } on DioException catch (e) {
-      throw 'Failed to update booking: ${e.message}';
+      log(
+        'update payment response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error updating payment: $e', stackTrace: stack);
       throw e;
     }
   }
 
-  Future<void> updateBookingStatus({
+  Future<CustomResponseModel> updateBookingStatus({
     required int bookingId,
     required String bookingStatus,
   }) async {
     try {
       final response = await _dio.patch(
-        '${bookingManagementUrl}$bookingId/',
-        data: {
-          "booking_status": bookingStatus,
-        },
+        '${ApiPaths.bookings.updateBookingStatus}$bookingId/',
+        data: {'booking_status': bookingStatus},
       );
-
-      log('status code: ${response.statusCode}, data: ${response.data}');
-      if (response.statusCode == 400) {
-        throw response.data['error'] ?? 'Failed to update booking status';
-      }
-      if (response.statusCode != 200) {
-        throw 'Failed to update booking status';
-      }
-    } on DioException catch (e) {
-      throw 'Failed to update booking status: ${e.message}';
-    } catch (e) {
+      log(
+        'update booking status response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error updating booking status: $e', stackTrace: stack);
       throw 'Failed to update booking status: $e';
     }
   }
 
-  Future<void> updateDeliveryStatus({
+  Future<CustomResponseModel> updateDeliveryStatus({
     required int bookingId,
     required String deliveryStatus,
   }) async {
     try {
       final response = await _dio.patch(
-        '${bookingManagementUrl}$bookingId/',
-        data: {
-          "delivery_status": deliveryStatus,
-        },
+        '${ApiPaths.bookings.updateDeliveryStatus}$bookingId/',
+        data: {'delivery_status': deliveryStatus},
       );
 
-      log('status code: ${response.statusCode}, data: ${response.data}');
-      if (response.statusCode == 400) {
-        throw 'Delivery status can\'t be updated before pickup date';
-      }
-      if (response.statusCode != 200) {
-        throw 'Failed to update delivery status';
-      }
-    } on DioException catch (e) {
-      throw e.message.toString();
-    } catch (e) {
+      log(
+        'update delivery status response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error updating delivery status: $e', stackTrace: stack);
       rethrow;
     }
   }
 
-  Future<Map<String, dynamic>> updateBooking(
-      int bookingId, Map<String, dynamic> updatedData) async {
+  Future<CustomResponseModel> updateBooking(
+    int bookingId,
+    RequestBookingModel updatedBooking,
+  ) async {
     try {
       final response = await _dio.patch(
-        '${bookingManagementUrl}$bookingId/',
-        data: updatedData,
+        '${ApiPaths.bookings.updateDetails}$bookingId/',
+        data: updatedBooking.toJson(),
       );
 
-      log('status code: ${response.statusCode}, data: ${response.data}');
-      if (response.statusCode == 200 || response.statusCode == 400) {
-        return response.data;
-      }
-
-      throw 'Failed to update booking';
-    } on DioException catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
-      throw e.message.toString();
+      log(
+        'update booking response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
-      throw e;
-    }
-  }
-
-  Future<void> deleteBooking(int bookingId) async {
-    try {
-      final response = await _dio.delete('${bookingManagementUrl}$bookingId/');
-
-      log('status code: ${response.statusCode}, data: ${response.data}');
-      if (response.statusCode == 400) {
-        throw response.data['error'] ?? 'Failed to delete booking';
-      }
-      if (response.statusCode != 200 && response.statusCode != 204) {
-        throw 'Failed to delete booking';
-      }
-    } on DioException catch (e) {
-      throw e.message.toString();
-    } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error updating booking: $e', stackTrace: stack);
       rethrow;
     }
   }
 
-  Future<PaginationModel<BookingsModel>> fetchBookingsPagination({
-    required bool fetchCompleted,
+  Future<CustomResponseModel> deleteBooking(int bookingId) async {
+    try {
+      final response = await _dio.delete('${bookingManagementUrl}$bookingId/');
+      log(
+        'delete booking response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error deleting booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> fetchBookingsPagination({
+    required LoadBookingType status,
     required int page,
     String? startDate,
     String? endDate,
+    String? searchQuery,
   }) async {
     try {
       final response = await _dio.get(
         '${bookingManagementUrl}',
         queryParameters: {
           'page': page,
-          'status': fetchCompleted ? 'completed' : 'upcoming',
-          if (startDate != null) 'start_date': startDate.formatToUiDate(),
-          if (endDate != null)
-            'end_date': endDate.formatToUiDate(), //End date is optional
+          'status': status.value, // upcoming, completed, past, future, all
+          'search': searchQuery,
+          'start_date': startDate?.formatToUiDate(),
+          'end_date': endDate?.formatToUiDate(), //End date is optional
         },
       );
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final bookingsData = data['results']['bookings'] as List<dynamic>;
-
-        final list =
-            bookingsData.map((e) => BookingsModel.fromJson(e)).toList();
-        log('count: ${data['count']}, next: ${data['next']}');
-        return PaginationModel(
-          data: list,
-          totalData: data['count'],
-          nextPageUrl: data['next'],
-        );
-      } else {
-        print('start date: $startDate, end date: $endDate');
-        log('status code: ${response.statusCode}, data: ${response.data}');
-        throw Exception('Failed to load bookings');
-      }
-    } on DioException catch (e) {
-      throw e.message.toString();
+      log(response.realUri.toString());
+      // log('fetch bookings response: ${response.realUri.toString()}, data: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
+      log('Error fetching bookings: $e', stackTrace: stack);
       rethrow;
     }
   }
 
-  Future<List<BookingDetailsPaymentHistoryModel>> fetchPaymentHistory(
-      int bookingId) async {
+  Future<CustomResponseModel> fetchPaymentHistory(int bookingId) async {
     try {
-      final response =
-          await _dio.get('${bookingManagementUrl}payment-details/$bookingId/');
-      log(' status code: ${response.statusCode}, data: ${response.data}');
-      if (response.statusCode == 200) {
-        final data = response.data;
-        if (data['payments'] == null) return [];
-        final paymentHistoryData = data['payments'] as List<dynamic>;
-
-        return paymentHistoryData
-            .map((e) => BookingDetailsPaymentHistoryModel.fromJson(e))
-            .toList();
-      } else {
-        log('status code: ${response.statusCode}, data: ${response.data}');
-        throw 'Failed to fetch payment history';
-      }
+      final response = await _dio.get(
+        '${bookingManagementUrl}payment-details/$bookingId/',
+      );
+      log(
+        'fetch payment history response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
-      throw e;
+      log('Error fetching payment history: $e', stackTrace: stack);
+      rethrow;
     }
   }
 
-  Future<void> createOldBooking(AddBookingModel bookingData) async {
+  Future<CustomResponseModel> createOldBooking(
+    RequestBookingModel bookingData,
+  ) async {
     try {
-      final data = bookingData.toCustomJson();
+      final data = bookingData.toJson();
       log('request old booking data: $data');
       final response = await _dio.post(
-        '${bookingManagementUrl}/old-bookings/',
+        ApiPaths.bookings.oldBookings,
         data: data,
       );
 
-      log('status code: ${response.statusCode}, data: ${response.data}');
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        return;
+      log(
+        'add old bookings response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error creating old booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel?> downloadBookingInvoice({
+    required int bookingId,
+    required String filePath,
+  }) async {
+    try {
+      final url = ApiPaths.bookings.downloadBookingInvoice(bookingId);
+      log('Downloading booking invoice from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) => status! < 500,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (kIsWeb) {
+          // For web, trigger browser download
+          final fileName = filePath.split('/').last;
+          downloadFileWeb(response.data, fileName);
+          log('Invoice download triggered for web: $fileName');
+        } else {
+          // For mobile/desktop, save to file
+          final file = File(filePath);
+          await file.writeAsBytes(response.data);
+          log('Invoice downloaded successfully to: $filePath');
+        }
+        return null; // Success, no error
       } else {
-        throw response.data['error'] ??
-            response.data['message'] ??
-            'Failed to create booking';
+        log('Error downloading invoice: ${response.statusCode}');
+        return CustomResponseModel(
+          status: CustomResponseStatus.error,
+          message: 'Failed to download invoice',
+          devMessage: 'HTTP ${response.statusCode}',
+          meta: null,
+          data: null,
+        );
       }
     } catch (e, stack) {
-      log(e.toString(), stackTrace: stack);
-      rethrow;
+      log('Error downloading booking invoice: $e', stackTrace: stack);
+      return CustomResponseModel(
+        status: CustomResponseStatus.error,
+        message: 'Failed to download invoice',
+        devMessage: e.toString(),
+        meta: null,
+        data: null,
+      );
     }
   }
 }

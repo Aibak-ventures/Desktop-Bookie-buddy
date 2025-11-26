@@ -1,109 +1,101 @@
-// ignore_for_file: invalid_annotation_target
-
+import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/models/shop_settings_model/shop_settings_model.dart';
+import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
+List<UserPasswordSettingsModel> _passwordSettingsFromJson(
+  Map<dynamic, dynamic> json,
+) {
+  final List<UserPasswordSettingsModel> settings = [];
+  if (json.isEmpty) {
+    return settings;
+  }
+
+  json.forEach((key, value) {
+    final location = SecretPasswordLocations.fromString(key);
+    if (location == null) return; // Skip unknown locations
+    settings.add(
+      UserPasswordSettingsModel(
+        location: location,
+        role: UserPasswordSettingRole.fromString(value),
+      ),
+    );
+  });
+  return settings;
+}
+
 @freezed
 class UserModel with _$UserModel {
   const factory UserModel({
     required int id,
-
-    // user info
-    @JsonKey(name: 'full_name') required String userName,
+    @JsonKey(name: 'full_name') required String firstName,
+    @JsonKey(name: 'last_name', defaultValue: '') required String lastName,
     required String phone,
-    String? email,
-
-    // Shop Info
-    @JsonKey(name: 'shop_id') int? shopId,
-    @JsonKey(
-      name: 'shop_name',
-      defaultValue: 'Shop',
-    )
-    required String shopName,
-    @JsonKey(
-      name: 'shop_phone',
-      defaultValue: '9999999999',
-    )
-    required String shopPhone,
-    @JsonKey(
-      name: 'shop_address',
-      defaultValue: 'Address',
-    )
-    required String shopAddress,
-    @JsonKey(name: 'gst_number') String? gstNo,
-    @JsonKey(name: 'shop_image') String? shopeImage,
-    @JsonKey(name: 'terms_and_conditions')
-    @Default(const [])
-    List<String> termsAndConditions,
-
-    // Account Control
+    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+    ShopRole? shopRole,
     @JsonKey(defaultValue: false) required bool block,
-    @JsonKey(
-      name: 'multiple_shops',
-      defaultValue: false,
-    )
+    @JsonKey(name: 'multiple_shops', defaultValue: false)
     required bool haveMultipleShops,
-    String? role,
+    @JsonKey(name: 'has_active_notification', defaultValue: false)
+    required bool isNotificationActive,
+    @JsonKey(name: 'subscription') UserSubscriptionModel? subscription,
+    @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)
+    required List<UserPasswordSettingsModel> passwordSettings,
+    @JsonKey(name: 'shop_settings') required ShopSettingsModel shopSettings,
+    @JsonKey(name: 'shop') required UserShopModel shopDetails,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 }
 
-// class UserModel {
-//   final int id;
+extension UserModelX on UserModel {
+  String get userFullName => '$firstName $lastName'.trim();
+}
 
-//   // Personal
-//   final String ownerName;
-//   final String phone;
-//   final String email;
+@freezed
+class UserSubscriptionModel with _$UserSubscriptionModel {
+  const factory UserSubscriptionModel({
+    required String plan,
+    required String status,
+    required List<String> features,
+  }) = _UserSubscriptionModel;
 
-//   // Shop Info
-//   final String shopName;
-//   final String shopPhone;
-//   final String shopAddress;
-//   final String? gstNo;
-//   final String? shopeImage;
+  factory UserSubscriptionModel.fromJson(Map<String, dynamic> json) =>
+      _$UserSubscriptionModelFromJson(json);
+}
 
-//   // Account Control
-//   final bool block;
+@freezed
+class UserPasswordSettingsModel with _$UserPasswordSettingsModel {
+  const factory UserPasswordSettingsModel({
+    required SecretPasswordLocations location,
+    required UserPasswordSettingRole role,
+  }) = _UserPasswordSettingsModel;
 
-//   UserModel({
-//     required this.id,
-//     required this.phone,
-//     required this.ownerName,
-//     required this.email,
-//     required this.shopName,
-//     required this.shopPhone,
-//     required this.shopAddress,
-//     required this.block,
-//     this.shopeImage,
-//     this.gstNo,
-//   });
+  factory UserPasswordSettingsModel.fromJson(Map<String, dynamic> json) =>
+      _$UserPasswordSettingsModelFromJson(json);
+}
 
-//   factory UserModel.fromJson(Map<String, dynamic> json) {
-//     try {
-//       return UserModel(
-//         id: json['id'] as int,
-//         phone: json['phone']?.toString() ?? '', // Handle potential null/number
-//         ownerName: json['owner_name']?.toString() ?? '',
-//         shopeImage: json['img4']?.toString(),
-//         email: json['email']?.toString() ?? '',
-//         shopName: json['shop_name']?.toString() ?? '',
-//         shopPhone: json['shop_phone']?.toString() ?? '',
-//         shopAddress: json['shop_address']?.toString() ?? '',
-//         block: json['block'] as bool? ?? false,
-//         gstNo: json['gst_number'] ?? "Not added",
-//       );
-//     } catch (e) {
-//       rethrow;
-//     }
-//   }
-
-//   @override
-//   String toString() {
-//     return 'UserModel(id: $id, ownerName: $ownerName, phone: $phone, email: $email, shopName: $shopName, shopPhone: $shopPhone, shopAddress: $shopAddress, gstNo: $gstNo, img4: $shopeImage, block: $block)';
-//   }
-// }
+extension UserPasswordSettingsModelX on List<UserPasswordSettingsModel> {
+  /// Converts the list of UserPasswordSettingsModel to a custom JSON format.
+  ///
+  /// Example:
+  /// ```
+  /// {
+  ///    "LEDGER_VIEW": "ALL",
+  ///    "BOOKING_DELETE": "ALL",
+  ///    "BOOKING_EDIT": "NONE",
+  ///    "BOOKING_PAYMENT": "ALL",
+  ///    "TRANSFER_PRODUCT": "ALL"
+  /// }
+  /// ```
+  ///
+  Map<String, dynamic> toCustomJson() {
+    final Map<String, dynamic> data = {};
+    forEach((e) => data.addAll({e.location.value: e.role.value}));
+    return data;
+  }
+}

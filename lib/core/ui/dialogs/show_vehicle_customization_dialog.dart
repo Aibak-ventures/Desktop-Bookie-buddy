@@ -15,10 +15,11 @@ Future<MeasurementValueModel?> showVehicleCustomizationDialog(
       text: initialValue?.value.replaceAll('Km', '').trim());
   return showDialog<MeasurementValueModel>(
     context: context,
-    builder: (dialogCtx) {
-      return AlertDialog(
-        title: const Text('Add Details'),
-        content: Row(
+    builder: (dialogCtx) => AlertDialog(
+      title: const Text('Add Details'),
+      content: SizedBox(
+        width: context.isMobile ? null : 0.5.widthR,
+        child: Row(
           children: [
             Expanded(
               child: CustomTextField(
@@ -32,34 +33,34 @@ Future<MeasurementValueModel?> showVehicleCustomizationDialog(
             const Text('Km'),
           ],
         ),
-        actions: [
-          TextButton(
-            child: const Text(
-              'Cancel',
-            ),
-            onPressed: () {
-              dialogCtx.pop(); // Close the dialog
-            },
+      ),
+      actions: [
+        TextButton(
+          child: const Text(
+            'Cancel',
           ),
-          ElevatedButton(
-            child: const Text(
-              'Confirm',
-              style: TextStyle(color: AppColors.white),
-            ),
-            onPressed: () {
-              final km = controller.text.trim().toIntOrNull();
-              if (km != null) {
-                final result = MeasurementValueModel(
-                  name: 'Running Kilometers',
-                  key: 'km',
-                  value: '$km Km',
-                );
-                dialogCtx.pop(result); // Close the dialog
-              }
-            },
+          onPressed: () {
+            dialogCtx.pop(); // Close the dialog
+          },
+        ),
+        ElevatedButton(
+          child: const Text(
+            'Confirm',
+            style: TextStyle(color: AppColors.white),
           ),
-        ],
-      );
-    },
+          onPressed: () {
+            final km = controller.text.trim().toIntOrNull();
+            if (km != null) {
+              final result = MeasurementValueModel(
+                name: 'Running Kilometers',
+                key: 'km',
+                value: '$km Km',
+              );
+              dialogCtx.pop(result); // Close the dialog
+            }
+          },
+        ),
+      ],
+    ),
   );
 }

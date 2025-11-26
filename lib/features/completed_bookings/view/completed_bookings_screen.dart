@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -24,7 +24,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 class CompletedBookingsScreen extends StatelessWidget {
   CompletedBookingsScreen({super.key});
 
-  // Date filter state
   final dateFilterNotifier = ValueNotifier(const DateFilterModel());
   final searchController = TextEditingController();
   final isSearchingNotifier = ValueNotifier(false);
@@ -36,6 +35,7 @@ class CompletedBookingsScreen extends StatelessWidget {
           .read<CompletedBookingsBloc>()
           .add(const CompletedBookingsEvent.loadCompletedBookings());
     });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Completed Works'),
@@ -52,14 +52,11 @@ class CompletedBookingsScreen extends StatelessWidget {
                 isSearching ? Icons.close : LucideIcons.search500,
                 size: 20.sp,
               ),
-            ).onTap(
-              () {
-                isSearchingNotifier.value = !isSearchingNotifier.value;
-              },
-            ),
+            ).onTap(() {
+              isSearchingNotifier.value = !isSearchingNotifier.value;
+            }),
           ),
           8.width,
-          // Date Filter Button
           ValueListenableBuilder(
             valueListenable: dateFilterNotifier,
             builder: (context, value, child) {
@@ -70,14 +67,16 @@ class CompletedBookingsScreen extends StatelessWidget {
               );
             },
           ),
-
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
             onSelected: (value) async {
               if (value == 'old_bookings') {
                 await context.push(
                   BlocProvider(
-                    create: (context) => AddOldBookingsBloc(),
+                    create: (context) => AddOldBookingsBloc(
+                      bookingRepository: getIt.get(),
+                      clientRepository: getIt.get(),
+                    ),
                     child: const AddOldBookingScreen(),
                   ),
                 );
@@ -95,157 +94,156 @@ class CompletedBookingsScreen extends StatelessWidget {
                     title: 'Add old bookings',
                     icon: Icon(Icons.add),
                   ),
-                )
+                ),
               ];
             },
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Active Search filed
-          ValueListenableBuilder(
-            valueListenable: isSearchingNotifier,
-            builder: (context, isSearching, child) => isSearching
-                ? CustomSearchField(
-                    searchController: searchController,
-                    padding: (16, 8).padding,
-                    onChanged: (query) {
-                      _fetchCompletedWorksWithFilter(context);
-                    },
-                    hintText: 'Search by name or ID...',
-                    suffixFunction: () {
-                      searchController.clear();
-                      _fetchCompletedWorksWithFilter(context);
-                    },
-                  )
-                : const SizedBox.shrink(),
-          ),
-
-          // Active Filter Indicator
-          ValueListenableBuilder(
-            valueListenable: dateFilterNotifier,
-            builder: (context, value, child) => value.hasActiveFilter
-                ? _buildActiveFilterIndicator(context)
-                : const SizedBox.shrink(),
-          ),
-
-          // Main Content
-          Expanded(
-            child: RefreshIndicator.adaptive(
-              onRefresh: () async {
-                _fetchCompletedWorksWithFilter(context);
-              },
-              child: Padding(
-                padding: 16.padding,
-                child:
-                    BlocBuilder<CompletedBookingsBloc, CompletedBookingsState>(
-                  builder: (context, state) {
-                    return state.when(
-                      initial: () =>
-                          const Center(child: Text('No Completed Works')),
-                      error: (error) {
-                        return CustomErrorWidget(
-                          errorText: error,
-                          onRetry: () =>
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: Column(
+              children: [
+                // 🔍 Search field
+                ValueListenableBuilder(
+                  valueListenable: isSearchingNotifier,
+                  builder: (context, isSearching, child) => isSearching
+                      ? CustomSearchField(
+                          searchController: searchController,
+                          padding: (16, 8).padding,
+                          onChanged: (_) =>
                               _fetchCompletedWorksWithFilter(context),
-                        );
-                      },
-                      loading: () => const BookingListShimmer(
-                        itemCount: 10,
-                      ),
-                      loaded: (completedWorks, nextPageUrl, isPaginating) {
-                        if (completedWorks.isEmpty) {
-                          return _buildEmptyState(context);
-                        }
-                        return NotificationListener<ScrollNotification>(
-                          onNotification: (scrollInfo) {
-                            if (scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent - 200 &&
-                                nextPageUrl != null &&
-                                !isPaginating) {
-                              context.read<CompletedBookingsBloc>().add(
-                                    CompletedBookingsEvent
-                                        .loadNextPageCompletedBookings(
-                                      startDate: dateFilterNotifier
-                                          .value.startDate
-                                          ?.format(),
-                                      endDate: dateFilterNotifier.value.endDate
-                                          ?.format(),
-                                      searchQuery:
-                                          searchController.text.trim().isEmpty
-                                              ? null
-                                              : searchController.text.trim(),
-                                    ),
-                                  );
+                          hintText: 'Search by name or ID...',
+                          suffixFunction: () {
+                            searchController.clear();
+                            _fetchCompletedWorksWithFilter(context);
+                          },
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                // 📅 Active filter
+                ValueListenableBuilder(
+                  valueListenable: dateFilterNotifier,
+                  builder: (context, value, child) => value.hasActiveFilter
+                      ? _buildActiveFilterIndicator(context)
+                      : const SizedBox.shrink(),
+                ),
+                // 📋 Main content
+                Expanded(
+                  child: RefreshIndicator.adaptive(
+                    onRefresh: () async =>
+                        _fetchCompletedWorksWithFilter(context),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: BlocBuilder<CompletedBookingsBloc,
+                          CompletedBookingsState>(
+                        builder: (context, state) => state.when(
+                          initial: () => _buildEmptyState(context),
+                          error: (error) => CustomErrorWidget(
+                            errorText: error,
+                            onRetry: () =>
+                                _fetchCompletedWorksWithFilter(context),
+                          ),
+                          loading: () =>
+                              const BookingListShimmer(itemCount: 10),
+                          loaded: (completedWorks, nextPageUrl, isPaginating, _,
+                              __, ___) {
+                            if (completedWorks.isEmpty) {
+                              return _buildEmptyState(context);
                             }
 
-                            return false;
+                            return NotificationListener<ScrollNotification>(
+                              onNotification: (scrollInfo) {
+                                if (scrollInfo.metrics.pixels >=
+                                        scrollInfo.metrics.maxScrollExtent -
+                                            200 &&
+                                    nextPageUrl != null &&
+                                    !isPaginating) {
+                                  context.read<CompletedBookingsBloc>().add(
+                                        const CompletedBookingsEvent
+                                            .loadNextPageCompletedBookings(),
+                                      );
+                                }
+                                return false;
+                              },
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: ConstrainedBox(
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 1000),
+                                  child: ListView.builder(
+                                    key: const PageStorageKey(
+                                        'completed-work-list'),
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: completedWorks.length +
+                                        (isPaginating ? 1 : 0),
+                                    itemBuilder: (context, index) {
+                                      if (index < completedWorks.length) {
+                                        final booking = completedWorks[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: BookingCard(
+                                            booking: booking,
+                                            onTap: () async {
+                                              final bookingCubit = context
+                                                  .read<BookingSelectionCubit>()
+                                                ..selectBooking(booking);
+                                              final result = await context.push(
+                                                BookingDetailsScreen(
+                                                  bookingId: booking.id!,
+                                                ),
+                                              );
+                                              if (bookingCubit
+                                                  .state.isModified) {
+                                                final updated = bookingCubit
+                                                    .state.selectedBooking;
+                                                context
+                                                    .read<
+                                                        CompletedBookingsBloc>()
+                                                    .add(CompletedBookingsEvent
+                                                        .updateBooking(
+                                                      updated,
+                                                      shouldRefresh:
+                                                          bookingCubit.state
+                                                              .shouldRefresh,
+                                                      isDeleted: result == true,
+                                                    ));
+                                                log('update booking called');
+                                                bookingCubit.reset();
+                                              }
+                                            },
+                                          ),
+                                        );
+                                      } else {
+                                        return const BookingCardShimmer();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
                           },
-                          child: ListView.builder(
-                            key: const PageStorageKey('completed-work-list'),
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount:
-                                completedWorks.length + (isPaginating ? 1 : 0),
-                            itemBuilder: (context, index) {
-                              if (index < completedWorks.length) {
-                                final booking = completedWorks[index];
-
-                                return BookingCard(
-                                  booking: booking,
-                                  onTap: () async {
-                                    final bookingCubit =
-                                        context.read<BookingSelectionCubit>();
-                                    bookingCubit.selectBooking(booking);
-                                    final ctx = context;
-                                    final result = await context.push(
-                                      BookingDetailsScreen(
-                                        bookingId: booking.id!,
-                                      ),
-                                    );
-                                    if (result is bool && result) {
-                                      _fetchCompletedWorksWithFilter(ctx);
-                                    }
-                                    if (bookingCubit.state.isModified) {
-                                      final updated =
-                                          bookingCubit.state.selectedBooking;
-
-                                      // Update that specific booking in your list
-                                      context.read<CompletedBookingsBloc>().add(
-                                            CompletedBookingsEvent
-                                                .updateBooking(
-                                              updated,
-                                              shouldRefresh: bookingCubit
-                                                  .state.shouldRefresh,
-                                            ),
-                                          );
-                                      log('update booking called');
-
-                                      bookingCubit.reset();
-                                    }
-                                  },
-                                );
-                              } else {
-                                return const BookingCardShimmer();
-                              }
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  },
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildActiveFilterIndicator(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.purple.withValues(alpha: 0.1),
@@ -254,11 +252,7 @@ class CompletedBookingsScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.filter_list,
-            size: 16,
-            color: AppColors.purple,
-          ),
+          const Icon(Icons.filter_list, size: 16, color: AppColors.purple),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -278,11 +272,7 @@ class CompletedBookingsScreen extends StatelessWidget {
                 color: AppColors.purple.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.close,
-                size: 14,
-                color: AppColors.purple,
-              ),
+              child: const Icon(Icons.close, size: 14, color: AppColors.purple),
             ),
           ),
         ],
@@ -299,11 +289,8 @@ class CompletedBookingsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.task_alt_outlined,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
+            Icon(Icons.task_alt_outlined,
+                size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
             Text(
               dateFilterNotifier.value.hasActiveFilter
@@ -339,14 +326,12 @@ class CompletedBookingsScreen extends StatelessWidget {
           startDate: startDate,
           endDate: endDate,
         );
-
         _fetchCompletedWorksWithFilter(context);
       },
     );
   }
 
   void _fetchCompletedWorksWithFilter(BuildContext context) {
-    // You'll need to modify your CompletedBookingsEvent to accept date parameters
     context.read<CompletedBookingsBloc>().add(
           CompletedBookingsEvent.loadCompletedBookings(
             startDate:
@@ -361,7 +346,6 @@ class CompletedBookingsScreen extends StatelessWidget {
 
   void _clearDateFilter(BuildContext context) {
     dateFilterNotifier.value = const DateFilterModel();
-
     _fetchCompletedWorksWithFilter(context);
   }
 
@@ -386,11 +370,7 @@ class CompletedBookingsScreen extends StatelessWidget {
 class CustomPopupMenuItem extends StatelessWidget {
   final Icon? icon;
   final String title;
-  const CustomPopupMenuItem({
-    super.key,
-    this.icon,
-    required this.title,
-  });
+  const CustomPopupMenuItem({super.key, this.icon, required this.title});
 
   @override
   Widget build(BuildContext context) {

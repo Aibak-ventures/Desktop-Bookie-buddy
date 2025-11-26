@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
@@ -12,7 +12,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.da
 import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_customization_screen.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view/widgets/add_old_booking_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/edit_booking_product_list_tile.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/components/edit_booking_product_list_tile.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:flutter/material.dart';

@@ -18,19 +18,22 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AuthEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String phone, String password) loginRequested,
+    required TResult Function(String phone, String password, String? fcmToken)
+        loginRequested,
     required TResult Function() logoutRequested,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String phone, String password)? loginRequested,
+    TResult? Function(String phone, String password, String? fcmToken)?
+        loginRequested,
     TResult? Function()? logoutRequested,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String phone, String password)? loginRequested,
+    TResult Function(String phone, String password, String? fcmToken)?
+        loginRequested,
     TResult Function()? logoutRequested,
     required TResult orElse(),
   }) =>
@@ -82,7 +85,7 @@ abstract class _$$LoginRequestedImplCopyWith<$Res> {
           $Res Function(_$LoginRequestedImpl) then) =
       __$$LoginRequestedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String phone, String password});
+  $Res call({String phone, String password, String? fcmToken});
 }
 
 /// @nodoc
@@ -100,6 +103,7 @@ class __$$LoginRequestedImplCopyWithImpl<$Res>
   $Res call({
     Object? phone = null,
     Object? password = null,
+    Object? fcmToken = freezed,
   }) {
     return _then(_$LoginRequestedImpl(
       phone: null == phone
@@ -110,6 +114,10 @@ class __$$LoginRequestedImplCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      fcmToken: freezed == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -117,16 +125,19 @@ class __$$LoginRequestedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoginRequestedImpl implements _LoginRequested {
-  const _$LoginRequestedImpl({required this.phone, required this.password});
+  const _$LoginRequestedImpl(
+      {required this.phone, required this.password, this.fcmToken});
 
   @override
   final String phone;
   @override
   final String password;
+  @override
+  final String? fcmToken;
 
   @override
   String toString() {
-    return 'AuthEvent.loginRequested(phone: $phone, password: $password)';
+    return 'AuthEvent.loginRequested(phone: $phone, password: $password, fcmToken: $fcmToken)';
   }
 
   @override
@@ -136,11 +147,13 @@ class _$LoginRequestedImpl implements _LoginRequested {
             other is _$LoginRequestedImpl &&
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.password, password) ||
-                other.password == password));
+                other.password == password) &&
+            (identical(other.fcmToken, fcmToken) ||
+                other.fcmToken == fcmToken));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, phone, password);
+  int get hashCode => Object.hash(runtimeType, phone, password, fcmToken);
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -154,30 +167,33 @@ class _$LoginRequestedImpl implements _LoginRequested {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String phone, String password) loginRequested,
+    required TResult Function(String phone, String password, String? fcmToken)
+        loginRequested,
     required TResult Function() logoutRequested,
   }) {
-    return loginRequested(phone, password);
+    return loginRequested(phone, password, fcmToken);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String phone, String password)? loginRequested,
+    TResult? Function(String phone, String password, String? fcmToken)?
+        loginRequested,
     TResult? Function()? logoutRequested,
   }) {
-    return loginRequested?.call(phone, password);
+    return loginRequested?.call(phone, password, fcmToken);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String phone, String password)? loginRequested,
+    TResult Function(String phone, String password, String? fcmToken)?
+        loginRequested,
     TResult Function()? logoutRequested,
     required TResult orElse(),
   }) {
     if (loginRequested != null) {
-      return loginRequested(phone, password);
+      return loginRequested(phone, password, fcmToken);
     }
     return orElse();
   }
@@ -217,10 +233,12 @@ class _$LoginRequestedImpl implements _LoginRequested {
 abstract class _LoginRequested implements AuthEvent {
   const factory _LoginRequested(
       {required final String phone,
-      required final String password}) = _$LoginRequestedImpl;
+      required final String password,
+      final String? fcmToken}) = _$LoginRequestedImpl;
 
   String get phone;
   String get password;
+  String? get fcmToken;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -270,7 +288,8 @@ class _$LogoutRequestedImpl implements _LogoutRequested {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String phone, String password) loginRequested,
+    required TResult Function(String phone, String password, String? fcmToken)
+        loginRequested,
     required TResult Function() logoutRequested,
   }) {
     return logoutRequested();
@@ -279,7 +298,8 @@ class _$LogoutRequestedImpl implements _LogoutRequested {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String phone, String password)? loginRequested,
+    TResult? Function(String phone, String password, String? fcmToken)?
+        loginRequested,
     TResult? Function()? logoutRequested,
   }) {
     return logoutRequested?.call();
@@ -288,7 +308,8 @@ class _$LogoutRequestedImpl implements _LogoutRequested {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String phone, String password)? loginRequested,
+    TResult Function(String phone, String password, String? fcmToken)?
+        loginRequested,
     TResult Function()? logoutRequested,
     required TResult orElse(),
   }) {

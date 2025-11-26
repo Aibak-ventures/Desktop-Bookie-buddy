@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/core/app_icons.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
@@ -11,6 +12,7 @@ import 'package:shimmer/shimmer.dart';
 class ProductCard extends StatelessWidget {
   final ProductModel product;
   final VoidCallback? onTap;
+  final MainServiceType? mainServiceType;
   final void Function(String value)? onOptionSelected;
 
   const ProductCard({
@@ -18,28 +20,27 @@ class ProductCard extends StatelessWidget {
     required this.onTap,
     this.onOptionSelected,
     super.key,
+    this.mainServiceType,
   });
 
   @override
   Widget build(BuildContext context) {
+    final (title: title, type: type) = getProductSpecification();
     return Container(
       padding: 8.padding,
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: 10.radiusBorder,
-          border: Border.all(
+        color: Colors.white,
+        borderRadius: 10.radiusBorder,
+        border: Border.all(color: AppColors.grey300),
+        boxShadow: [
+          BoxShadow(
             color: AppColors.grey300,
-            width: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.grey300,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ]),
+        ],
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Product Image
           ClipRRect(
@@ -49,14 +50,11 @@ class ProductCard extends StatelessWidget {
               child: CustomNetworkImage(
                 imageUrl: product.image ??
                     'https://static.vecteezy.com/system/resources/thumbnails/054/519/001/small/e-commerce-product-box-illustration-for-sales-vector.jpg',
-                errorWidget: (context, url, error) {
-                  return Image.asset(
-                    AppIcons.unknownProduct,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  );
-                },
-                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Image.asset(
+                  AppAssets.unknownProduct,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
                 width: double.infinity,
               ),
             ),
@@ -89,10 +87,7 @@ class ProductCard extends StatelessWidget {
                     // Color Information
                     Expanded(
                       child: Text(
-                        product.color != null &&
-                                product.color!.trim().isNotEmpty
-                            ? product.color!
-                            : 'Color: -',
+                        type == '-' || type.trim().isEmpty ? '$title: -' : type,
                         style: TextStyle(
                           fontSize: 11.sp,
                           color: AppColors.blackShade,
@@ -121,112 +116,127 @@ class ProductCard extends StatelessWidget {
       ),
     ).onTap(onTap);
   }
+
+  ({String type, String title}) getProductSpecification() {
+    late String title;
+    late String type;
+
+    if (mainServiceType.isDress) {
+      title = 'Color';
+      type = product.color ?? '-';
+    } else if (mainServiceType.isVehicle) {
+      title = 'Model';
+      type = product.model ?? '-';
+    } else if (mainServiceType.isGadgets) {
+      title = 'Serial Number';
+      type = product.category ?? '-';
+    } else {
+      title = 'Category';
+      type = product.category ?? '-';
+    }
+
+    return (type: type, title: title);
+  }
 }
 
 class ProductCardShimmer extends StatelessWidget {
   const ProductCardShimmer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: 8.padding,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: 10.radiusBorder,
-        border: Border.all(
-          color: Colors.grey.shade300,
-          width: 1,
+  Widget build(BuildContext context) => Container(
+        padding: 8.padding,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: 10.radiusBorder,
+          border: Border.all(color: Colors.grey.shade300),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade300,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Image Placeholder
-          ClipRRect(
-            borderRadius: 10.radiusBorder,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: 10.radiusBorder,
+        child: Column(
+          children: [
+            // Image Placeholder
+            ClipRRect(
+              borderRadius: 10.radiusBorder,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: 10.radiusBorder,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          // Text Placeholders
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product name shimmer
-                Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  child: Container(
-                    height: 15,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(4),
+            // Text Placeholders
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product name shimmer
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      height: 15,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                   ),
-                ),
 
-                4.height,
+                  4.height,
 
-                // Color and Price Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // Color shimmer
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        height: 12,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(4),
+                  // Color and Price Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Color shimmer
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          height: 12,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                       ),
-                    ),
 
-                    // Price shimmer
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        height: 14,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(4),
+                      // Price shimmer
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          height: 14,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 }

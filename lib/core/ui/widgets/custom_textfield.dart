@@ -11,7 +11,7 @@ class CustomTextField extends StatelessWidget {
   final String? hintText;
   final TextInputType? keyboardType;
   final String? Function(String? value)? validator;
-  final String? Function(String? value)? submitFun;
+  final void Function(String? value)? onFieldSubmit;
   final List<TextInputFormatter>? textInputFormatter;
   final AutovalidateMode? autovalidateMode;
 
@@ -19,7 +19,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? prefix;
   final Widget? suffix;
-  final int? maxLengths;
+  final int? maxLength;
   final int? minLines;
   final int? maxLines;
   final bool? isEnabled;
@@ -35,12 +35,14 @@ class CustomTextField extends StatelessWidget {
   final bool? ignorePointers;
   final Color? fillColor;
   final bool autofocus;
+  final bool canRequestFocus;
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final bool readOnly;
 
   final TextAlign textAlign;
   final String? errorText;
+  final Iterable<String>? autofillHints;
 
   const CustomTextField({
     required this.controller,
@@ -54,9 +56,9 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.prefix,
-    this.maxLengths,
+    this.maxLength,
     this.minLines,
-    this.submitFun,
+    this.onFieldSubmit,
     this.isEnabled,
     this.obscureText = false,
     this.autovalidateMode,
@@ -72,6 +74,8 @@ class CustomTextField extends StatelessWidget {
     this.readOnly = false,
     this.textAlign = TextAlign.start,
     this.errorText,
+    this.canRequestFocus = true,
+    this.autofillHints,
   });
 
   @override
@@ -82,27 +86,20 @@ class CustomTextField extends StatelessWidget {
       enabled: isEnabled,
       textInputAction: textInputAction,
       focusNode: focusNode,
-      onFieldSubmitted: submitFun ??
-          (_) {
-            // final focus = FocusManager.instance.primaryFocus;
-            // if (focus == null) return;
-            // if (focus.traversalDescendants.isEmpty) return;
-            // focus.focusInDirection(TraversalDirection.down);
-          },
+      onFieldSubmitted: onFieldSubmit,
       ignorePointers: ignorePointers,
       textAlign: textAlign,
+      canRequestFocus: canRequestFocus,
+      autofillHints: autofillHints,
       inputFormatters: textInputFormatter,
       maxLines: obscureText ? 1 : maxLines ?? 1,
-      maxLength: maxLengths,
+      maxLength: maxLength,
       minLines: minLines,
       readOnly: readOnly,
       autofocus: autofocus,
       textCapitalization: textCapitalization,
       cursorColor: AppColors.grey600,
-      style: TextStyle(
-        color: AppColors.grey600,
-        fontWeight: FontWeight.w500,
-      ),
+      style: TextStyle(color: AppColors.grey600, fontWeight: FontWeight.w500),
       onTapOutside: (_) => onTapOutside ?? context.hideKeyboard(),
       autovalidateMode: autovalidateMode,
       controller: controller,
@@ -113,38 +110,25 @@ class CustomTextField extends StatelessWidget {
         errorText: errorText,
         border: OutlineInputBorder(
           borderRadius: borderRadius.radiusBorder,
-          borderSide: BorderSide(
-            color: AppColors.grey400,
-          ),
+          borderSide: BorderSide(color: AppColors.grey400),
         ),
         disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.grey400,
-          ),
+          borderSide: BorderSide(color: AppColors.grey400),
           borderRadius: borderRadius.radiusBorder,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.grey400,
-          ),
+          borderSide: BorderSide(color: AppColors.grey400),
           borderRadius: borderRadius.radiusBorder,
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: AppColors.black,
-          ),
           borderRadius: borderRadius.radiusBorder,
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: AppColors.redTomato,
-          ),
+          borderSide: const BorderSide(color: AppColors.redTomato),
           borderRadius: borderRadius.radiusBorder,
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: AppColors.redTomato,
-          ),
+          borderSide: const BorderSide(color: AppColors.redTomato),
           borderRadius: borderRadius.radiusBorder,
         ),
         counterText: '',

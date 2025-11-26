@@ -1,11 +1,9 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
@@ -21,12 +19,10 @@ class SizeAmountDialog extends StatefulWidget {
   final List<ProductVariantModel> availableVariants;
   final List<ProductSelectedModel> alreadySelectedVariants;
   final String? initialAmount;
-  final Function(
-    int variantId,
-    String? size,
-    String amount,
-    int quantity,
-  )? onConfirm;
+  final int? initialQuantity;
+  final bool isSales;
+  final Function(int variantId, String? size, String amount, int quantity)?
+      onConfirm;
 
   const SizeAmountDialog({
     required this.mainServiceType,
@@ -34,9 +30,11 @@ class SizeAmountDialog extends StatefulWidget {
     required this.availableVariants,
     this.alreadySelectedVariants = const [],
     this.initialAmount,
+    this.initialQuantity,
     this.onConfirm,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+    this.isSales = false,
+  });
 
   @override
   State<SizeAmountDialog> createState() => _SizeAmountDialogState();
@@ -44,7 +42,7 @@ class SizeAmountDialog extends StatefulWidget {
 
 class _SizeAmountDialogState extends State<SizeAmountDialog> {
   ProductVariantModel? selectedVariant;
-  final quantityController = TextEditingController(text: '1');
+  late final TextEditingController quantityController;
   final amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -52,16 +50,50 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
   @override
   void initState() {
     super.initState();
+
+    // Initialize quantity controller with either initial quantity or 1
+    final initialQty = widget.initialQuantity ?? 1;
+    quantityController = TextEditingController(text: initialQty.toString());
+
     log(widget.availableVariants.first.toString());
-    // if (VariantSizeType.isFreeSize(widget.availableVariants.first.attribute)) {
-    //   selectedVariant = widget.availableVariants.first;
-    // }
-    // if (widget.alreadySelectedVariants.isNotEmpty) {
-    //   //!TODO: Note here
-    //   // selectedVariant = widget.selectedVariant;
-    //   selectedVariant = widget.availableVariants.first;
-    // } else {}
     selectedVariant = widget.availableVariants.first;
+
+    // Check if there's already a selected variant for this product
+    if (widget.alreadySelectedVariants.isNotEmpty) {
+      for (final selected in widget.alreadySelectedVariants) {
+        final matchingVariant = widget.availableVariants.firstWhere(
+          (variant) => variant.id == selected.variant.variantId,
+          orElse: () => widget.availableVariants.first,
+        );
+        if (matchingVariant.id == selected.variant.variantId) {
+          selectedVariant = matchingVariant;
+          quantityController.text = selected.quantity.toString();
+          amountController.text = selected.amount.toString();
+          break;
+        }
+      }
+    }
+    // Auto-populate amount field if variant has a price (only if not already set)
+    if (amountController.text.isEmpty) {
+      _updateAmountFromSelectedVariant();
+    }
+
+    // Add listener to quantity controller to update amount when quantity changes
+    quantityController.addListener(_updateAmountFromSelectedVariant);
+  }
+
+  void _updateAmountFromSelectedVariant() {
+    if (selectedVariant?.price != null && selectedVariant!.price! > 0) {
+      final quantity = int.tryParse(quantityController.text) ?? 1;
+      final totalAmount = selectedVariant!.price! * quantity;
+      amountController.text = totalAmount.toString();
+    } else if (widget.initialAmount?.isNotEmpty == true) {
+      // Fallback to initial amount if provided
+      final quantity = int.tryParse(quantityController.text) ?? 1;
+      final baseAmount = widget.initialAmount?.toIntOrNull() ?? 0;
+      final totalAmount = baseAmount * quantity;
+      amountController.text = totalAmount.toString();
+    }
   }
 
   @override
@@ -77,335 +109,234 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.of(context).size.width > 800;
+
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isWide ? 0.2.widthR : 16, // Better responsive spacing
+        vertical: 40, // More vertical spacing
       ),
-      child: SingleChildScrollView(
-        child: Container(
-          width: context.isMobile ? null : 0.6.widthR,
-          padding: 24.padding,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: 20.radiusBorder,
-          ),
+      backgroundColor: Colors.white,
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: isWide ? 600 : 500, // Wider on larger screens
+          maxHeight: MediaQuery.of(context).size.height * 0.85, // Limit height
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Title
                 Text(
                   'Size & Amount',
                   style: TextStyle(
                     fontSize: 20.sp,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     color: Colors.black,
                   ),
                 ),
-
-                20.height,
+                const SizedBox(height: 16),
 
                 // Product Image
-                SizedBox(
-                  height: 200,
-                  child: ClipRRect(
-                    borderRadius: 10.radiusBorder,
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: CustomNetworkImage(
-                        imageUrl: widget.productImageUrl,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: 16.radiusBorder,
-                            ),
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.grey[400],
-                            ),
-                          );
-                        },
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: SizedBox(
+                    height: 150, // smaller for web
+                    width: double.infinity,
+                    child: CustomNetworkImage(
+                      imageUrl: widget.productImageUrl,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, error, stackTrace) => Container(
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.image_not_supported, size: 48),
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-                // Size Selection
+                // Size selector (only if multiple variants)
                 if (widget.availableVariants.isNotEmpty &&
                     widget.mainServiceType.isDress &&
                     !VariantSizeType.isFreeSize(
                         widget.availableVariants.first.attribute))
-                  SizedBox(
-                    height: 55,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.availableVariants.length,
-                      itemBuilder: (context, index) {
-                        final variant = widget.availableVariants[index];
-                        final isSelected = selectedVariant == variant;
-
-                        final isDisabled = widget.alreadySelectedVariants.any(
-                          (e) => e.variant.variantId == variant.id,
-                        );
-
-                        return Container(
-                          width: 50,
-                          height: 50,
-                          margin: const EdgeInsets.only(right: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: widget.availableVariants.map((variant) {
+                      final isSelected = selectedVariant == variant;
+                      final isDisabled = widget.alreadySelectedVariants.any(
+                        (e) => e.variant.variantId == variant.id,
+                      );
+                      return GestureDetector(
+                        onTap: isDisabled
+                            ? null
+                            : () {
+                                setState(() {
+                                  selectedVariant = variant;
+                                  _updateAmountFromSelectedVariant();
+                                });
+                              },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
                           decoration: BoxDecoration(
                             color: isDisabled
                                 ? Colors.grey.shade300
                                 : isSelected
                                     ? AppColors.purpleLight
                                     : const Color(0xFFE8E4FF),
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(25),
                             border: Border.all(
+                              color: isSelected
+                                  ? const Color(0xFF6C5CE7)
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                          child: Text(
+                            variant.attribute,
+                            style: TextStyle(
                               color: isDisabled
                                   ? Colors.grey
                                   : isSelected
                                       ? const Color(0xFF6C5CE7)
-                                      : Colors.transparent,
-                              width: isSelected ? 2 : 0,
+                                      : Colors.black87,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          child: Center(
-                            child: Text(
-                              variant.attribute,
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w600,
-                                color: isDisabled
-                                    ? Colors.grey.shade600
-                                    : isSelected
-                                        ? const Color(0xFF6C5CE7)
-                                        : Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ).onTap(
-                          () {
-                            if (!isDisabled)
-                              setState(() {
-                                selectedVariant = variant;
-                              });
-                          },
-                        );
-                      },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                if (widget.initialAmount?.isNotEmpty == true)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      'Standard price: Rs. ${widget.initialAmount?.toIntOrNull()?.toCurrency() ?? ''}',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
 
-                if (widget.initialAmount != null &&
-                    widget.initialAmount!.isNotEmpty &&
-                    widget.initialAmount?.toIntOrNull() != null &&
-                    widget.initialAmount?.toIntOrNull() != 0) ...[
-                  if (widget.mainServiceType.isDress)
-                    const SizedBox(height: 20),
-                  Text(
-                      'Standard price: Rs. ${widget.initialAmount?.toInt().toCurrency()}'),
-                ],
-
-                22.height,
+                const SizedBox(height: 20),
 
                 // Quantity
                 Row(
-                  spacing: 10,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton.filled(
-                      constraints:
-                          const BoxConstraints(minHeight: 55, minWidth: 55),
-                      onPressed: () {
-                        quantityErrorNotifier.value = '';
-                        final qty = quantityController.text.toIntOrNull();
-                        if (qty == null) {
-                          return;
-                        }
-
-                        if (qty <= 1) {
-                          quantityController.text = '1';
-                        } else {
-                          quantityController.text = (qty - 1).toString();
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.remove,
-                        color: AppColors.black,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.purpleLight,
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: 'Enter the amount',
+                    _qtyButton(Icons.remove, () {
+                      quantityErrorNotifier.value = '';
+                      final qty = quantityController.text.toIntOrNull() ?? 1;
+                      if (qty > 1) {
+                        quantityController.text = (qty - 1).toString();
+                        _updateAmountFromSelectedVariant();
+                      }
+                    }),
+                    SizedBox(
+                      width: 80,
+                      child: TextField(
                         controller: quantityController,
                         textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
-                        errorText: null,
-                        onChanged: (value) => quantityErrorNotifier.value = '',
-                        onTapOutside:
-                            () {}, // To avoid keyboard dismiss when scrolling
-                        validator: null,
-                        // validator: (value) => AppInputValidators.amount(
-                        //   value,
-                        //   fieldName: 'Quantity',
-                        //   maxValue: selectedVariant?.remainingStock ?? 1,
-                        // ),
-
-                        fillColor: AppColors.purpleLight,
+                        onChanged: (value) {
+                          // Clear error when user types
+                          quantityErrorNotifier.value = '';
+                          _updateAmountFromSelectedVariant();
+                        },
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: AppColors.purpleLight,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
                       ),
                     ),
-                    IconButton.filled(
-                      constraints:
-                          const BoxConstraints(minHeight: 55, minWidth: 55),
-                      onPressed: () {
-                        quantityErrorNotifier.value = '';
-                        final qty = quantityController.text.toIntOrNull();
-                        if (qty == null) {
-                          return;
-                        }
+                    _qtyButton(Icons.add, () {
+                      quantityErrorNotifier.value = '';
+                      final qty = quantityController.text.toIntOrNull() ?? 1;
+                      final maxStock = selectedVariant?.remainingStock;
 
+                      // Only add if within stock limits (if stock info is available)
+                      if (maxStock == null || maxStock <= 0 || qty < maxStock) {
                         quantityController.text = (qty + 1).toString();
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        color: AppColors.black,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.purpleLight,
-                      ),
-                    ),
+                        _updateAmountFromSelectedVariant();
+                      } else {
+                        // Show stock limit warning
+                        quantityErrorNotifier.value =
+                            'Maximum quantity available: $maxStock';
+                      }
+                    }),
                   ],
                 ),
 
-                // Quantity Error
                 ValueListenableBuilder(
                   valueListenable: quantityErrorNotifier,
-                  builder: (context, error, child) {
-                    return error.isEmpty
-                        ? const SizedBox.shrink()
-                        : Padding(
-                            padding: 2.paddingOnly(top: true),
-                            child: Text(
-                              error,
+                  builder: (context, error, _) => error.isEmpty
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(error,
                               style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 12.sp,
-                              ),
-                            ),
-                          );
-                  },
+                                  color: Colors.red, fontSize: 12.sp)),
+                        ),
                 ),
 
-                8.height,
-                // Amount Input
+                const SizedBox(height: 14),
+
+                // Amount
                 CustomTextField(
-                  hintText: 'Enter the amount',
+                  hintText: 'Enter amount',
                   controller: amountController,
-                  autofocus: true,
                   keyboardType: TextInputType.number,
-                  onTapOutside:
-                      () {}, // To avoid keyboard dismiss when scrolling
-                  validator: (value) => AppInputValidators.amount(
-                    value,
-                    allowZero: true,
-                    fieldName: 'Amount',
-                  ),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) => AppInputValidators.amount(v,
+                      allowZero: true, fieldName: 'Amount'),
+                  prefixIcon: const Icon(Icons.currency_rupee,
+                      color: AppColors.grey, size: 20),
                   fillColor: AppColors.purpleLight,
-                  prefixIcon: const Icon(
-                    Icons.currency_rupee,
-                    color: AppColors.grey,
-                  ),
                 ),
 
-                15.height,
+                const SizedBox(height: 24),
 
                 // Action Buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
                         'Cancel',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(color: Colors.grey),
                       ),
                     ),
-                    10.width,
-                    SizedBox(
-                      height: context.mediaQueryHeight(0.045),
-                      width: context.mediaQueryWidth(0.28),
-                      child: ElevatedButton(
-                        onPressed: widget.alreadySelectedVariants.any(
-                          (e) => e.variant.variantId == selectedVariant?.id,
-                        )
-                            ? null
-                            : () async {
-                                print(selectedVariant);
-
-                                // Quantity error handling
-                                final qtyText = quantityController.text.trim();
-                                final qty = qtyText.toIntOrNull();
-
-                                final maxStock =
-                                    selectedVariant?.remainingStock;
-
-                                if (qty == null ||
-                                    qty <= 0 ||
-                                    (maxStock != null && qty > maxStock)) {
-                                  quantityErrorNotifier.value =
-                                      'Quantity must be less than remaining stock ${maxStock}';
-                                  return;
-                                } else {
-                                  quantityErrorNotifier.value = '';
-                                }
-
-                                if (!_formKey.currentState!.validate()) {
-                                  return;
-                                }
-                                if (quantityController.text
-                                        .trim()
-                                        .toIntOrNull() ==
-                                    null) {
-                                  return;
-                                }
-                                if (amountController.text.isNotEmpty) {
-                                  await widget.onConfirm?.call(
-                                    selectedVariant?.id ??
-                                        widget.availableVariants.first.id,
-                                    selectedVariant?.attribute,
-                                    amountController.text,
-                                    quantityController.text.trim().toInt(),
-                                  );
-                                  context.pop();
-                                }
-                              },
-                        child: Text(
-                          'Confirm',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6C5CE7),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                      ),
+                      onPressed: _onConfirmPressed,
+                      child: const Text(
+                        'Confirm',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ],
@@ -417,6 +348,56 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
       ),
     );
   }
+
+  void _onConfirmPressed() async {
+    // Quantity validation
+    final qtyText = quantityController.text.trim();
+    final qty = qtyText.toIntOrNull();
+    final maxStock = selectedVariant?.remainingStock;
+
+    // Check if quantity is valid number and positive
+    if (qty == null || qty <= 0) {
+      quantityErrorNotifier.value = 'Quantity must be a positive number';
+      return;
+    }
+
+    // Check stock availability only if maxStock is available and valid
+    if (maxStock != null && maxStock > 0 && qty > maxStock) {
+      quantityErrorNotifier.value =
+          'Quantity must be less than or equal to remaining stock ($maxStock)';
+      return;
+    }
+
+    // Clear any previous error
+    quantityErrorNotifier.value = '';
+
+    // Form validation
+    if (!_formKey.currentState!.validate()) return;
+    if (amountController.text.trim().isEmpty) return;
+
+    // Confirm action callback
+    await widget.onConfirm?.call(
+      selectedVariant?.id ?? widget.availableVariants.first.id,
+      selectedVariant?.attribute,
+      amountController.text.trim(),
+      qty,
+    );
+
+    // Close modal after confirmation
+    if (context.mounted) Navigator.pop(context);
+  }
+
+  Widget _qtyButton(IconData icon, VoidCallback onPressed) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: IconButton(
+          onPressed: onPressed,
+          style: IconButton.styleFrom(
+            backgroundColor: AppColors.purpleLight,
+            minimumSize: const Size(45, 45),
+          ),
+          icon: Icon(icon, color: AppColors.black),
+        ),
+      );
 }
 
 // Helper function to show the dialog
@@ -427,24 +408,22 @@ void showSizeAmountDialog({
   List<ProductVariantModel> availableVariants = const [],
   List<ProductSelectedModel> alreadySelectedVariants = const [],
   String? initialAmount,
-  void Function(
-    int variantId,
-    String? size,
-    String amount,
-    int quantity,
-  )? onConfirm,
+  int? initialQuantity,
+  bool isSales = false,
+  void Function(int variantId, String? size, String amount, int quantity)?
+      onConfirm,
 }) {
   showDialog(
     context: context,
-    builder: (BuildContext context) {
-      return SizeAmountDialog(
-        mainServiceType: mainServiceType,
-        productImageUrl: productImageUrl,
-        availableVariants: availableVariants,
-        alreadySelectedVariants: alreadySelectedVariants,
-        initialAmount: initialAmount,
-        onConfirm: onConfirm,
-      );
-    },
+    builder: (BuildContext context) => SizeAmountDialog(
+      mainServiceType: mainServiceType,
+      productImageUrl: productImageUrl,
+      availableVariants: availableVariants,
+      alreadySelectedVariants: alreadySelectedVariants,
+      initialAmount: initialAmount,
+      initialQuantity: initialQuantity,
+      onConfirm: onConfirm,
+      isSales: isSales,
+    ),
   );
 }
