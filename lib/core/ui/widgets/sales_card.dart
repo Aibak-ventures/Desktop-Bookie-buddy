@@ -15,7 +15,7 @@ class SalesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = sale.saleDate.isEmpty ? null : sale.saleDate.formatToUiDate();
-    final productNames = sale.products.join(', ');
+    final productNames = sale.products; // Already a string from API
 
     final total = sale.totalAmount - sale.discountAmount; // total
 
@@ -49,7 +49,7 @@ class SalesCard extends StatelessWidget {
               child: Center(
                 child: Text(
                   (() {
-                    final name = sale.clientName.trim();
+                    final name = sale.clientName?.trim() ?? '';
                     if (name.isEmpty) return '--';
                     final parts =
                         name.split(RegExp(r'\s+')).where((e) => e.isNotEmpty);
@@ -79,7 +79,7 @@ class SalesCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          sale.clientName,
+                          sale.clientName ?? 'No Name',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

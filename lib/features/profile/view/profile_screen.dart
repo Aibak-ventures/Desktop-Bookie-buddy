@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
@@ -28,6 +29,10 @@ import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_bookings
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_sales/ledger_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_security_amounts/ledger_security_amounts_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
+import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments/wallet_payments_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
@@ -261,7 +266,7 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.done_all),
               text: 'Completed\nBookings',
               color: const Color(0xFF219A00),
-              onTap: () => context.push(CompletedBookingsScreen()),
+              onTap: () => NavigatorX(context).push(CompletedBookingsScreen()),
             ),
           ],
         ),
@@ -281,7 +286,7 @@ class ProfileScreen extends StatelessWidget {
                 context,
                 SecretPasswordLocations.ledgerView,
                 onSuccess: () {
-                  context.push(
+                  NavigatorX(context).push(
                     MultiBlocProvider(
                       providers: [
                         BlocProvider(
@@ -337,7 +342,22 @@ class ProfileScreen extends StatelessWidget {
         CustomProfileTile(
           icon: Icons.business_center_outlined,
           title: 'Staff',
-          onTap: () => context.push(const StaffListScreen()),
+          onTap: () => NavigatorX(context).push(BlocProvider(
+          create: (context) => SalesListBloc(repository: getIt.get()),
+          child: const SalesListScreen(),
+        )),
+        ),
+        const SizedBox(height: 5),
+        CustomProfileTile(
+          icon: LucideIcons.badgeDollarSign,
+          title: 'Sales',
+        onTap: () => NavigatorX(context).push(
+  BlocProvider(
+    create: (context) => SalesListBloc(repository: getIt.get()),
+    child: const SalesListScreen(),
+  ),
+),
+
         ),
         // stock
         // CustomProfileTile(
@@ -367,7 +387,8 @@ class ProfileScreen extends StatelessWidget {
         CustomProfileTile(
           icon: Icons.search_outlined,
           title: 'Check Availability',
-          onTap: () => context.push(const CheckAvailabilityScreen()),
+          onTap: () =>
+              NavigatorX(context).push(const CheckAvailabilityScreen()),
         ),
 
         const SizedBox(height: 5),
@@ -376,7 +397,7 @@ class ProfileScreen extends StatelessWidget {
         CustomProfileTile(
           icon: Icons.people_alt_outlined,
           title: 'Clients',
-          onTap: () => context.push(const ClientListScreen()),
+          onTap: () => NavigatorX(context).push(const ClientListScreen()),
         ),
 
         const SizedBox(height: 5),
@@ -391,7 +412,7 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.password),
               text: 'Account\nPassword',
               color: const Color(0xFFC68B26),
-              onTap: () => context.push(
+              onTap: () => NavigatorX(context).push(
                 BlocProvider(
                   create: (context) => ResetPasswordBloc(),
                   child: const ResetPasswordScreen(),
@@ -405,7 +426,7 @@ class ProfileScreen extends StatelessWidget {
               text: 'Secret\nPassword',
               color: const Color(0xFFFF8604),
               onTap: () {
-                context.push(BlocProvider(
+                NavigatorX(context).push(BlocProvider(
                   create: (context) => SecretPasswordBloc(),
                   child: const ChangeSecretPasswordScreen(),
                 ));
@@ -421,7 +442,7 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.support_agent_outlined,
           title: 'Contact & Support',
           onTap: () {
-            context.push(const ContactAndSupportScreen());
+            NavigatorX(context).push(const ContactAndSupportScreen());
           },
         ),
 
@@ -455,7 +476,7 @@ class ProfileScreen extends StatelessWidget {
         CustomProfileTile(
           icon: Icons.info_outline,
           title: 'About us',
-          onTap: () => context.push(const AboutScreen()),
+          onTap: () => NavigatorX(context).push(const AboutScreen()),
         ),
 
         const SizedBox(height: 20),
@@ -485,14 +506,14 @@ class ProfileScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                context.pop(); // Close the dialog
+                NavigatorX(context).pop(); // Close the dialog
               },
               child: const Text("Cancel"),
             ),
             ElevatedButton(
               onPressed: () async {
                 try {
-                  context.pop();
+                  NavigatorX(context).pop();
                   await context.read<UserCubit>().logOut();
                   if (context.mounted) {
                     context.pushAndRemoveUntil(LoginScreen());

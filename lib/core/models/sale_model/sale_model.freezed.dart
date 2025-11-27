@@ -23,7 +23,10 @@ mixin _$SaleModel {
   @JsonKey(name: 'id')
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'client_name')
-  String get clientName => throw _privateConstructorUsedError;
+  String? get clientName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'client_phone')
+  dynamic get clientPhone =>
+      throw _privateConstructorUsedError; // Can be String or int
   @JsonKey(name: 'total_amount')
   int get totalAmount => throw _privateConstructorUsedError;
   @JsonKey(name: 'paid_amount')
@@ -35,7 +38,10 @@ mixin _$SaleModel {
   @JsonKey(name: 'created_at')
   String get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'products')
-  List<String> get products => throw _privateConstructorUsedError;
+  String get products =>
+      throw _privateConstructorUsedError; // Changed from List<String> to String
+  @JsonKey(name: 'staff_color')
+  String? get staffColor => throw _privateConstructorUsedError;
 
   /// Serializes this SaleModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,13 +60,15 @@ abstract class $SaleModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int id,
-      @JsonKey(name: 'client_name') String clientName,
+      @JsonKey(name: 'client_name') String? clientName,
+      @JsonKey(name: 'client_phone') dynamic clientPhone,
       @JsonKey(name: 'total_amount') int totalAmount,
       @JsonKey(name: 'paid_amount') int paidAmount,
       @JsonKey(name: 'discount') int discountAmount,
       @JsonKey(name: 'sale_date') String saleDate,
       @JsonKey(name: 'created_at') String createdAt,
-      @JsonKey(name: 'products') List<String> products});
+      @JsonKey(name: 'products') String products,
+      @JsonKey(name: 'staff_color') String? staffColor});
 }
 
 /// @nodoc
@@ -79,23 +87,29 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
   @override
   $Res call({
     Object? id = null,
-    Object? clientName = null,
+    Object? clientName = freezed,
+    Object? clientPhone = freezed,
     Object? totalAmount = null,
     Object? paidAmount = null,
     Object? discountAmount = null,
     Object? saleDate = null,
     Object? createdAt = null,
     Object? products = null,
+    Object? staffColor = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      clientName: null == clientName
+      clientName: freezed == clientName
           ? _value.clientName
           : clientName // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      clientPhone: freezed == clientPhone
+          ? _value.clientPhone
+          : clientPhone // ignore: cast_nullable_to_non_nullable
+              as dynamic,
       totalAmount: null == totalAmount
           ? _value.totalAmount
           : totalAmount // ignore: cast_nullable_to_non_nullable
@@ -119,7 +133,11 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
       products: null == products
           ? _value.products
           : products // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as String,
+      staffColor: freezed == staffColor
+          ? _value.staffColor
+          : staffColor // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -134,13 +152,15 @@ abstract class _$$SaleModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int id,
-      @JsonKey(name: 'client_name') String clientName,
+      @JsonKey(name: 'client_name') String? clientName,
+      @JsonKey(name: 'client_phone') dynamic clientPhone,
       @JsonKey(name: 'total_amount') int totalAmount,
       @JsonKey(name: 'paid_amount') int paidAmount,
       @JsonKey(name: 'discount') int discountAmount,
       @JsonKey(name: 'sale_date') String saleDate,
       @JsonKey(name: 'created_at') String createdAt,
-      @JsonKey(name: 'products') List<String> products});
+      @JsonKey(name: 'products') String products,
+      @JsonKey(name: 'staff_color') String? staffColor});
 }
 
 /// @nodoc
@@ -157,23 +177,29 @@ class __$$SaleModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? clientName = null,
+    Object? clientName = freezed,
+    Object? clientPhone = freezed,
     Object? totalAmount = null,
     Object? paidAmount = null,
     Object? discountAmount = null,
     Object? saleDate = null,
     Object? createdAt = null,
     Object? products = null,
+    Object? staffColor = freezed,
   }) {
     return _then(_$SaleModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      clientName: null == clientName
+      clientName: freezed == clientName
           ? _value.clientName
           : clientName // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      clientPhone: freezed == clientPhone
+          ? _value.clientPhone
+          : clientPhone // ignore: cast_nullable_to_non_nullable
+              as dynamic,
       totalAmount: null == totalAmount
           ? _value.totalAmount
           : totalAmount // ignore: cast_nullable_to_non_nullable
@@ -195,9 +221,13 @@ class __$$SaleModelImplCopyWithImpl<$Res>
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
       products: null == products
-          ? _value._products
+          ? _value.products
           : products // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as String,
+      staffColor: freezed == staffColor
+          ? _value.staffColor
+          : staffColor // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -207,14 +237,15 @@ class __$$SaleModelImplCopyWithImpl<$Res>
 class _$SaleModelImpl implements _SaleModel {
   const _$SaleModelImpl(
       {@JsonKey(name: 'id') required this.id,
-      @JsonKey(name: 'client_name') required this.clientName,
+      @JsonKey(name: 'client_name') this.clientName,
+      @JsonKey(name: 'client_phone') this.clientPhone,
       @JsonKey(name: 'total_amount') required this.totalAmount,
       @JsonKey(name: 'paid_amount') required this.paidAmount,
       @JsonKey(name: 'discount') required this.discountAmount,
       @JsonKey(name: 'sale_date') required this.saleDate,
       @JsonKey(name: 'created_at') required this.createdAt,
-      @JsonKey(name: 'products') required final List<String> products})
-      : _products = products;
+      @JsonKey(name: 'products') required this.products,
+      @JsonKey(name: 'staff_color') this.staffColor});
 
   factory _$SaleModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SaleModelImplFromJson(json);
@@ -224,7 +255,11 @@ class _$SaleModelImpl implements _SaleModel {
   final int id;
   @override
   @JsonKey(name: 'client_name')
-  final String clientName;
+  final String? clientName;
+  @override
+  @JsonKey(name: 'client_phone')
+  final dynamic clientPhone;
+// Can be String or int
   @override
   @JsonKey(name: 'total_amount')
   final int totalAmount;
@@ -240,18 +275,17 @@ class _$SaleModelImpl implements _SaleModel {
   @override
   @JsonKey(name: 'created_at')
   final String createdAt;
-  final List<String> _products;
   @override
   @JsonKey(name: 'products')
-  List<String> get products {
-    if (_products is EqualUnmodifiableListView) return _products;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_products);
-  }
+  final String products;
+// Changed from List<String> to String
+  @override
+  @JsonKey(name: 'staff_color')
+  final String? staffColor;
 
   @override
   String toString() {
-    return 'SaleModel(id: $id, clientName: $clientName, totalAmount: $totalAmount, paidAmount: $paidAmount, discountAmount: $discountAmount, saleDate: $saleDate, createdAt: $createdAt, products: $products)';
+    return 'SaleModel(id: $id, clientName: $clientName, clientPhone: $clientPhone, totalAmount: $totalAmount, paidAmount: $paidAmount, discountAmount: $discountAmount, saleDate: $saleDate, createdAt: $createdAt, products: $products, staffColor: $staffColor)';
   }
 
   @override
@@ -262,6 +296,8 @@ class _$SaleModelImpl implements _SaleModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.clientName, clientName) ||
                 other.clientName == clientName) &&
+            const DeepCollectionEquality()
+                .equals(other.clientPhone, clientPhone) &&
             (identical(other.totalAmount, totalAmount) ||
                 other.totalAmount == totalAmount) &&
             (identical(other.paidAmount, paidAmount) ||
@@ -272,7 +308,10 @@ class _$SaleModelImpl implements _SaleModel {
                 other.saleDate == saleDate) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            const DeepCollectionEquality().equals(other._products, _products));
+            (identical(other.products, products) ||
+                other.products == products) &&
+            (identical(other.staffColor, staffColor) ||
+                other.staffColor == staffColor));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -281,12 +320,14 @@ class _$SaleModelImpl implements _SaleModel {
       runtimeType,
       id,
       clientName,
+      const DeepCollectionEquality().hash(clientPhone),
       totalAmount,
       paidAmount,
       discountAmount,
       saleDate,
       createdAt,
-      const DeepCollectionEquality().hash(_products));
+      products,
+      staffColor);
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -307,13 +348,15 @@ class _$SaleModelImpl implements _SaleModel {
 abstract class _SaleModel implements SaleModel {
   const factory _SaleModel(
           {@JsonKey(name: 'id') required final int id,
-          @JsonKey(name: 'client_name') required final String clientName,
+          @JsonKey(name: 'client_name') final String? clientName,
+          @JsonKey(name: 'client_phone') final dynamic clientPhone,
           @JsonKey(name: 'total_amount') required final int totalAmount,
           @JsonKey(name: 'paid_amount') required final int paidAmount,
           @JsonKey(name: 'discount') required final int discountAmount,
           @JsonKey(name: 'sale_date') required final String saleDate,
           @JsonKey(name: 'created_at') required final String createdAt,
-          @JsonKey(name: 'products') required final List<String> products}) =
+          @JsonKey(name: 'products') required final String products,
+          @JsonKey(name: 'staff_color') final String? staffColor}) =
       _$SaleModelImpl;
 
   factory _SaleModel.fromJson(Map<String, dynamic> json) =
@@ -324,7 +367,10 @@ abstract class _SaleModel implements SaleModel {
   int get id;
   @override
   @JsonKey(name: 'client_name')
-  String get clientName;
+  String? get clientName;
+  @override
+  @JsonKey(name: 'client_phone')
+  dynamic get clientPhone; // Can be String or int
   @override
   @JsonKey(name: 'total_amount')
   int get totalAmount;
@@ -342,7 +388,10 @@ abstract class _SaleModel implements SaleModel {
   String get createdAt;
   @override
   @JsonKey(name: 'products')
-  List<String> get products;
+  String get products; // Changed from List<String> to String
+  @override
+  @JsonKey(name: 'staff_color')
+  String? get staffColor;
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.

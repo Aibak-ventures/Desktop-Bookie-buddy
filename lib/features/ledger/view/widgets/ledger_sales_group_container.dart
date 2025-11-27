@@ -107,9 +107,9 @@ class LedgerSalesGroupContainer extends StatelessWidget {
               ),
               content: Column(
                 children: [
-                  Text(sale.clientName),
+                  Text(sale.clientName ?? 'No name'),
                   Text(
-                    'Items: ${sale.products.join(', ')}',
+                    'Items: ${sale.products}',
                     style: TextStyle(fontSize: 12.sp, color: AppColors.grey),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

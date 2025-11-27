@@ -16,20 +16,25 @@ class SalesService {
     String? toDate,
   }) async {
     try {
+      log('🔄 Fetching sales - Page: $page, Search: $search, From: $fromDate, To: $toDate');
+
       final response = await _dio.get(
         ApiPaths.sales.sales,
         queryParameters: {
           'page': page,
-          'search': search,
-          'from': fromDate,
-          'to': toDate,
+          if (search != null && search.isNotEmpty) 'search': search,
+          if (fromDate != null && fromDate.isNotEmpty) 'from': fromDate,
+          if (toDate != null && toDate.isNotEmpty) 'to': toDate,
         },
       );
-      log('sales pagination api: ${response.realUri.toString()}');
-      // log('Sales get pagination response: ${response.data}');
+
+      log('✅ Sales API Response: ${response.realUri}');
+      log('📊 Status Code: ${response.statusCode}');
+      log('📦 Data Count: ${(response.data['data'] as Map?)?['count'] ?? 0}');
+
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log('Error get pagination sale: $e', stackTrace: stack);
+      log('❌ Error fetching sales: $e', stackTrace: stack);
       rethrow;
     }
   }

@@ -11,8 +11,11 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
+import 'package:bookie_buddy_web/features/add_or_edit_sales/view_model/cubit_save_sales/save_sales_cubit.dart';
+import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/features/main/widgets/shop_switcher_bottom_sheet.dart';
 import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
@@ -125,8 +128,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 Expanded(
                   child: _buildDesktopNavigation(context),
                 ),
-                // Add Booking Button
-                _buildDesktopAddButton(context),
+                // Quick Action Buttons
+                _buildDesktopQuickActions(context),
                 const SizedBox(height: 20),
               ],
             ),
@@ -391,41 +394,94 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     );
   }
 
-  Widget _buildDesktopAddButton(BuildContext context) {
+  Widget _buildDesktopQuickActions(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: SizedBox(
-        width: double.infinity,
-        height: 48,
-        child: ElevatedButton(
-          onPressed: () {
-            context.push(
-              const AddBookingDateSelectingScreen(),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF667eea),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'Add Booking',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+      child: Column(
+        children: [
+          // Add Booking Button
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed: () {
+                context.push(
+                  const AddBookingDateSelectingScreen(),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF667eea),
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
-            ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.event_available, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Add Booking',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
+          const SizedBox(height: 12),
+          // Add Sales Button
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed: () {
+                context.push(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) =>
+                            SaveSalesCubit(repository: getIt.get()),
+                      ),
+                      BlocProvider(
+                        create: (context) =>
+                            StaffSearchCubit(repository: getIt.get())
+                              ..getAllStaffs(),
+                      ),
+                    ],
+                    child: const AddOrEditSalesScreen(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF10b981),
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.point_of_sale, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Add Sales',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

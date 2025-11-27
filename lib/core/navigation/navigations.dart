@@ -66,6 +66,9 @@ import 'package:bookie_buddy_web/features/profile/view/about_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/profile_screen.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
+import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
+import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
 import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.dart';
 import 'package:bookie_buddy_web/features/search/view/search_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
@@ -262,14 +265,21 @@ class Navigations {
       ),
 
       // Sales screen
-      // GoRoute(
-      //   path: AppRoutes.sales.path,
-      //   name: AppRoutes.sales.name,
-      //   builder: (context, state) => BlocProvider(
-      //     create: (context) => SalesListBloc(repository: getIt.get()),
-      //     child: const SalesListScreen(),
-      //   ),
-      // ),
+      GoRoute(
+        path: AppRoutes.sales.path,
+        name: AppRoutes.sales.name,
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => SalesListBloc(repository: getIt.get()),
+            ),
+            BlocProvider(
+              create: (context) => SaleDetailsBloc(repository: getIt.get()),
+            ),
+          ],
+          child: const SalesListScreen(),
+        ),
+      ),
 
       // Ledger screen
       GoRoute(

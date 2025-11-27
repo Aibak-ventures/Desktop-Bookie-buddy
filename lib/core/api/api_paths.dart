@@ -91,16 +91,15 @@ class _BookingsNamespace {
 
 class _SalesNamespace {
   const _SalesNamespace();
-  // v3 paths (legacy)
+  // v4 paths (all CRUD operations use v4)
   String get sales => SalesApiPaths.sales;
-  String get updateSale => SalesApiPaths.updateSale;
-
-  // v4 paths (new standard)
   String get salesV4 => SalesApiPaths.salesV4;
   String salesDetailV4(int id) => SalesApiPaths.salesDetailV4(id);
   String updateSaleV4(int id) => SalesApiPaths.updateSaleV4(id);
   String deleteSaleV4(int id) => SalesApiPaths.deleteSaleV4(id);
-  String downloadInvoice(int id) => SalesApiPaths.downloadInvoice(id); // Added
+  
+  // v3 paths (invoice only)
+  String downloadInvoice(int id) => SalesApiPaths.downloadInvoice(id);
 }
 
 class _ExpensesNamespace {

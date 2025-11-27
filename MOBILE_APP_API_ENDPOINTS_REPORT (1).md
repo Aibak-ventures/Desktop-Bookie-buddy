@@ -812,7 +812,7 @@ Future<CustomResponseModel> cancelBooking(int id) async {
 ### 9.2 API Path Class Template
 
 ```dart
-import 'package:booking_application/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/api/api_config.dart';
 
 class NewDomainApiPaths {
   const NewDomainApiPaths();

@@ -80,11 +80,14 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
             },
           ),
         ),
-        body: Form(
-          key: _formController.formKey,
-          child: ListView(
-            padding: context.isMobile ? 16.padding : (40, 16).padding,
-            children: [
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Form(
+              key: _formController.formKey,
+              child: ListView(
+                padding: context.isMobile ? 16.padding : (40, 24).padding,
+                children: [
               AddOrEditSalesSection(
                 title: 'Date',
                 child: Column(
@@ -279,7 +282,9 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                 ],
               ),
               20.height,
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),
