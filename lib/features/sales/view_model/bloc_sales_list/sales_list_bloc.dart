@@ -26,6 +26,7 @@ class SalesListBloc extends Bloc<SalesListEvent, SalesListState> {
   ) async {
     if (state is! _Loading) emit(const SalesListState.loading());
     try {
+      print('🔄 SalesListBloc: Fetching sales...');
       final result = await _repository.getSalesPagination(
         page: 1,
         fromDate: event.fromDate,
@@ -33,6 +34,9 @@ class SalesListBloc extends Bloc<SalesListEvent, SalesListState> {
         search: event.search,
       );
 
+      print('✅ SalesListBloc: Got ${result.data.length} sales');
+      print('📦 First sale: ${result.data.firstOrNull}');
+      
       emit(
         SalesListState.loaded(
           sales: result.data,
@@ -42,7 +46,11 @@ class SalesListBloc extends Bloc<SalesListEvent, SalesListState> {
           search: event.search,
         ),
       );
-    } catch (e) {
+      
+      print('✨ SalesListBloc: State emitted successfully');
+    } catch (e, stack) {
+      print('❌ SalesListBloc: Error - $e');
+      print('Stack: $stack');
       emit(SalesListState.error(e.toString()));
     }
   }

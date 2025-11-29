@@ -63,20 +63,23 @@ class AddOrEditSalesFormStateController {
 
     staffNameController.text = saleDetails.staffName ?? 'Staff Name';
 
-    nameController.text = saleDetails.client.name;
-    paymentMethodNotifier.value = saleDetails.paymentMethod;
-    phone1Controller.text = saleDetails.client.phone1.toString();
-    if (saleDetails.client.phone2 != null) {
-      phone2Controller.text = saleDetails.client.phone2.toString();
+    if (saleDetails.client != null) {
+      nameController.text = saleDetails.client!.name;
+      phone1Controller.text = saleDetails.client!.phone1.toString();
+      if (saleDetails.client!.phone2 != null) {
+        phone2Controller.text = saleDetails.client!.phone2.toString();
+      }
+      context.read<ClientCubit>().selectClient(saleDetails.client!);
+    } else if (saleDetails.clientPhone != null) {
+      phone1Controller.text = saleDetails.clientPhone.toString();
     }
+    paymentMethodNotifier.value = saleDetails.paymentMethod;
     if (saleDetails.address.isNotNullOrEmpty) {
       placeController.text = saleDetails.address;
     }
     descriptionController.text = saleDetails.description;
     if (saleDetails.discountAmount > 0)
       discountController.text = saleDetails.discountAmount.toString();
-
-    context.read<ClientCubit>().selectClient(saleDetails.client);
 
     isClientSearchEnabledNotifier.value = true;
 
@@ -183,14 +186,14 @@ class AddOrEditSalesFormStateController {
       // Compare client
       bool clientChanged = false;
       if (isExistingClient) {
-        clientChanged = selectedClient?.id != original.client.id;
+        clientChanged = selectedClient?.id != original.client?.id;
       } else {
-        clientChanged = nameController.text.trim() != original.client.name ||
-            phone1Controller.text.trim() != original.client.phone1.toString() ||
+        clientChanged = nameController.text.trim() != original.client?.name ||
+            phone1Controller.text.trim() != original.client?.phone1.toString() ||
             (phone2Controller.text.trim().isNotEmpty
                     ? phone2Controller.text.trim()
                     : null) !=
-                original.client.phone2?.toString();
+                original.client?.phone2?.toString();
       }
 
       final isStaffChanged = selectedStaff?.id != original.staffId;

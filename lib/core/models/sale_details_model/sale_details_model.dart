@@ -20,7 +20,8 @@ String _paymentMethodReadValue(Map json, String key) {
 class SaleDetailsModel with _$SaleDetailsModel {
   const factory SaleDetailsModel({
     required int id,
-    @JsonKey(name: 'client') required ClientModel client,
+    @JsonKey(name: 'client') ClientModel? client,
+    @JsonKey(name: 'client_phone') dynamic clientPhone,
     @JsonKey(name: 'address', defaultValue: '') required String address,
     @JsonKey(name: 'description') required String description,
     @JsonKey(name: 'sale_date') required String saleDate,

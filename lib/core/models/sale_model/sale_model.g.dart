@@ -6,8 +6,7 @@ part of 'sale_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SaleModelImpl _$$SaleModelImplFromJson(Map<String, dynamic> json) =>
-    _$SaleModelImpl(
+SaleModel _$SaleModelFromJson(Map<String, dynamic> json) => SaleModel(
       id: (json['id'] as num).toInt(),
       clientName: json['client_name'] as String?,
       clientPhone: json['client_phone'],
@@ -20,8 +19,7 @@ _$SaleModelImpl _$$SaleModelImplFromJson(Map<String, dynamic> json) =>
       staffColor: json['staff_color'] as String?,
     );
 
-Map<String, dynamic> _$$SaleModelImplToJson(_$SaleModelImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$SaleModelToJson(SaleModel instance) => <String, dynamic>{
       'id': instance.id,
       'client_name': instance.clientName,
       'client_phone': instance.clientPhone,

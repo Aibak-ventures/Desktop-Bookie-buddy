@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-SaleModel _$SaleModelFromJson(Map<String, dynamic> json) {
-  return _SaleModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$SaleModel {
   @JsonKey(name: 'id')
@@ -40,11 +36,8 @@ mixin _$SaleModel {
   @JsonKey(name: 'products')
   String get products =>
       throw _privateConstructorUsedError; // Changed from List<String> to String
-  @JsonKey(name: 'staff_color')
+  @JsonKey(name: 'staff_color', unknownEnumValue: null)
   String? get staffColor => throw _privateConstructorUsedError;
-
-  /// Serializes this SaleModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -68,7 +61,8 @@ abstract class $SaleModelCopyWith<$Res> {
       @JsonKey(name: 'sale_date') String saleDate,
       @JsonKey(name: 'created_at') String createdAt,
       @JsonKey(name: 'products') String products,
-      @JsonKey(name: 'staff_color') String? staffColor});
+      @JsonKey(name: 'staff_color', unknownEnumValue: null)
+      String? staffColor});
 }
 
 /// @nodoc
@@ -160,7 +154,8 @@ abstract class _$$SaleModelImplCopyWith<$Res>
       @JsonKey(name: 'sale_date') String saleDate,
       @JsonKey(name: 'created_at') String createdAt,
       @JsonKey(name: 'products') String products,
-      @JsonKey(name: 'staff_color') String? staffColor});
+      @JsonKey(name: 'staff_color', unknownEnumValue: null)
+      String? staffColor});
 }
 
 /// @nodoc
@@ -233,7 +228,7 @@ class __$$SaleModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$SaleModelImpl implements _SaleModel {
   const _$SaleModelImpl(
       {@JsonKey(name: 'id') required this.id,
@@ -245,10 +240,7 @@ class _$SaleModelImpl implements _SaleModel {
       @JsonKey(name: 'sale_date') required this.saleDate,
       @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'products') required this.products,
-      @JsonKey(name: 'staff_color') this.staffColor});
-
-  factory _$SaleModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SaleModelImplFromJson(json);
+      @JsonKey(name: 'staff_color', unknownEnumValue: null) this.staffColor});
 
   @override
   @JsonKey(name: 'id')
@@ -280,7 +272,7 @@ class _$SaleModelImpl implements _SaleModel {
   final String products;
 // Changed from List<String> to String
   @override
-  @JsonKey(name: 'staff_color')
+  @JsonKey(name: 'staff_color', unknownEnumValue: null)
   final String? staffColor;
 
   @override
@@ -314,7 +306,6 @@ class _$SaleModelImpl implements _SaleModel {
                 other.staffColor == staffColor));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -336,31 +327,21 @@ class _$SaleModelImpl implements _SaleModel {
   @pragma('vm:prefer-inline')
   _$$SaleModelImplCopyWith<_$SaleModelImpl> get copyWith =>
       __$$SaleModelImplCopyWithImpl<_$SaleModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SaleModelImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _SaleModel implements SaleModel {
   const factory _SaleModel(
-          {@JsonKey(name: 'id') required final int id,
-          @JsonKey(name: 'client_name') final String? clientName,
-          @JsonKey(name: 'client_phone') final dynamic clientPhone,
-          @JsonKey(name: 'total_amount') required final int totalAmount,
-          @JsonKey(name: 'paid_amount') required final int paidAmount,
-          @JsonKey(name: 'discount') required final int discountAmount,
-          @JsonKey(name: 'sale_date') required final String saleDate,
-          @JsonKey(name: 'created_at') required final String createdAt,
-          @JsonKey(name: 'products') required final String products,
-          @JsonKey(name: 'staff_color') final String? staffColor}) =
-      _$SaleModelImpl;
-
-  factory _SaleModel.fromJson(Map<String, dynamic> json) =
-      _$SaleModelImpl.fromJson;
+      {@JsonKey(name: 'id') required final int id,
+      @JsonKey(name: 'client_name') final String? clientName,
+      @JsonKey(name: 'client_phone') final dynamic clientPhone,
+      @JsonKey(name: 'total_amount') required final int totalAmount,
+      @JsonKey(name: 'paid_amount') required final int paidAmount,
+      @JsonKey(name: 'discount') required final int discountAmount,
+      @JsonKey(name: 'sale_date') required final String saleDate,
+      @JsonKey(name: 'created_at') required final String createdAt,
+      @JsonKey(name: 'products') required final String products,
+      @JsonKey(name: 'staff_color', unknownEnumValue: null)
+      final String? staffColor}) = _$SaleModelImpl;
 
   @override
   @JsonKey(name: 'id')
@@ -390,7 +371,7 @@ abstract class _SaleModel implements SaleModel {
   @JsonKey(name: 'products')
   String get products; // Changed from List<String> to String
   @override
-  @JsonKey(name: 'staff_color')
+  @JsonKey(name: 'staff_color', unknownEnumValue: null)
   String? get staffColor;
 
   /// Create a copy of SaleModel

@@ -275,8 +275,8 @@ class GenerateSaleDetailsPdf {
       children: [
         pw.Text('BILL TO', style: _sectionTitleStyle),
         pw.SizedBox(height: 4),
-        pw.Text(client.name, style: _boldStyle.copyWith(fontSize: 14)),
-        if (client.phone1 != 0) pw.Text(client.phone1.toString()),
+        pw.Text(client?.name ?? '', style: _boldStyle.copyWith(fontSize: 14)),
+        if (client?.phone1 != 0) pw.Text(client?.phone1.toString() ?? ''),
         if (clientAddress.isNotEmpty)
           ...clientAddress.splitByWords().map(
                 (line) =>

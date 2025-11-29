@@ -49,7 +49,7 @@ class SalesCard extends StatelessWidget {
               child: Center(
                 child: Text(
                   (() {
-                    final name = sale.clientName?.trim() ?? '';
+                    final name = sale.id.toString().trim();
                     if (name.isEmpty) return '--';
                     final parts =
                         name.split(RegExp(r'\s+')).where((e) => e.isNotEmpty);
@@ -79,7 +79,7 @@ class SalesCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          sale.clientName ?? 'No Name',
+                          sale.products,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

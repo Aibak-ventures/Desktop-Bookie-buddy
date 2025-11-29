@@ -10,7 +10,10 @@ _$SaleDetailsModelImpl _$$SaleDetailsModelImplFromJson(
         Map<String, dynamic> json) =>
     _$SaleDetailsModelImpl(
       id: (json['id'] as num).toInt(),
-      client: ClientModel.fromJson(json['client'] as Map<String, dynamic>),
+      client: json['client'] == null
+          ? null
+          : ClientModel.fromJson(json['client'] as Map<String, dynamic>),
+      clientPhone: json['client_phone'],
       address: json['address'] as String? ?? '',
       description: json['description'] as String,
       saleDate: json['sale_date'] as String,
@@ -36,6 +39,7 @@ Map<String, dynamic> _$$SaleDetailsModelImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'client': instance.client,
+      'client_phone': instance.clientPhone,
       'address': instance.address,
       'description': instance.description,
       'sale_date': instance.saleDate,

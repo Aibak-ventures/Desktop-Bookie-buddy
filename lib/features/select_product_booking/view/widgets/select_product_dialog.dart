@@ -270,17 +270,8 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                     _qtyButton(Icons.add, () {
                       quantityErrorNotifier.value = '';
                       final qty = quantityController.text.toIntOrNull() ?? 1;
-                      final maxStock = selectedVariant?.remainingStock;
-
-                      // Only add if within stock limits (if stock info is available)
-                      if (maxStock == null || maxStock <= 0 || qty < maxStock) {
-                        quantityController.text = (qty + 1).toString();
-                        _updateAmountFromSelectedVariant();
-                      } else {
-                        // Show stock limit warning
-                        quantityErrorNotifier.value =
-                            'Maximum quantity available: $maxStock';
-                      }
+                      quantityController.text = (qty + 1).toString();
+                      _updateAmountFromSelectedVariant();
                     }),
                   ],
                 ),
@@ -350,28 +341,35 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
   }
 
   void _onConfirmPressed() async {
-    // Quantity validation
+    debugPrint(selectedVariant.toString());
+
+    // Get quantity as number (int for normal, double for custom work)
     final qtyText = quantityController.text.trim();
     final qty = qtyText.toIntOrNull();
-    final maxStock = selectedVariant?.remainingStock;
+    
+    // Determine max stock based on product type
+    final maxStock = widget.isSales
+        ? (selectedVariant?.remainingStock ?? selectedVariant?.stock)
+        : selectedVariant?.remainingStock;
 
-    // Check if quantity is valid number and positive
+    // Validate quantity
     if (qty == null || qty <= 0) {
-      quantityErrorNotifier.value = 'Quantity must be a positive number';
+      quantityErrorNotifier.value = 'Quantity must be greater than 0';
       return;
     }
 
-    // Check stock availability only if maxStock is available and valid
+    // Check stock limits (skip if maxStock is null or 0)
     if (maxStock != null && maxStock > 0 && qty > maxStock) {
+      log('Max Stock: $maxStock, Entered Qty: $qty');
       quantityErrorNotifier.value =
           'Quantity must be less than or equal to remaining stock ($maxStock)';
       return;
     }
 
-    // Clear any previous error
+    // Clear error if validation passes
     quantityErrorNotifier.value = '';
 
-    // Form validation
+    // Validate form
     if (!_formKey.currentState!.validate()) return;
     if (amountController.text.trim().isEmpty) return;
 

@@ -4,6 +4,7 @@ part 'sale_model.freezed.dart';
 part 'sale_model.g.dart';
 
 @freezed
+@JsonSerializable(explicitToJson: true)
 class SaleModel with _$SaleModel {
   const factory SaleModel({
     @JsonKey(name: 'id') required int id,
@@ -15,9 +16,14 @@ class SaleModel with _$SaleModel {
     @JsonKey(name: 'sale_date') required String saleDate,
     @JsonKey(name: 'created_at') required String createdAt,
     @JsonKey(name: 'products') required String products, // Changed from List<String> to String
-    @JsonKey(name: 'staff_color') String? staffColor,
+    @JsonKey(name: 'staff_color', unknownEnumValue: null) String? staffColor, // Note: API sometimes returns "staff_col lor" with space - handled by fromJson
   }) = _SaleModel;
 
-  factory SaleModel.fromJson(Map<String, dynamic> json) =>
-      _$SaleModelFromJson(json);
+ factory SaleModel.fromJson(Map<String, dynamic> json) {
+  if (json.containsKey('staff_col lor')) {
+    json['staff_color'] = json['staff_col lor'];
+  }
+  return _$SaleModelFromJson(json);
+}
+
 }

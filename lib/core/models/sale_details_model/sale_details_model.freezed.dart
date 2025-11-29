@@ -22,7 +22,9 @@ SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) {
 mixin _$SaleDetailsModel {
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'client')
-  ClientModel get client => throw _privateConstructorUsedError;
+  ClientModel? get client => throw _privateConstructorUsedError;
+  @JsonKey(name: 'client_phone')
+  dynamic get clientPhone => throw _privateConstructorUsedError;
   @JsonKey(name: 'address', defaultValue: '')
   String get address => throw _privateConstructorUsedError;
   @JsonKey(name: 'description')
@@ -72,7 +74,8 @@ abstract class $SaleDetailsModelCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'client') ClientModel client,
+      @JsonKey(name: 'client') ClientModel? client,
+      @JsonKey(name: 'client_phone') dynamic clientPhone,
       @JsonKey(name: 'address', defaultValue: '') String address,
       @JsonKey(name: 'description') String description,
       @JsonKey(name: 'sale_date') String saleDate,
@@ -92,7 +95,7 @@ abstract class $SaleDetailsModelCopyWith<$Res> {
       @JsonKey(name: 'staff_id') int? staffId,
       @JsonKey(name: 'staff_name') String? staffName});
 
-  $ClientModelCopyWith<$Res> get client;
+  $ClientModelCopyWith<$Res>? get client;
 }
 
 /// @nodoc
@@ -111,7 +114,8 @@ class _$SaleDetailsModelCopyWithImpl<$Res, $Val extends SaleDetailsModel>
   @override
   $Res call({
     Object? id = null,
-    Object? client = null,
+    Object? client = freezed,
+    Object? clientPhone = freezed,
     Object? address = null,
     Object? description = null,
     Object? saleDate = null,
@@ -131,10 +135,14 @@ class _$SaleDetailsModelCopyWithImpl<$Res, $Val extends SaleDetailsModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      client: null == client
+      client: freezed == client
           ? _value.client
           : client // ignore: cast_nullable_to_non_nullable
-              as ClientModel,
+              as ClientModel?,
+      clientPhone: freezed == clientPhone
+          ? _value.clientPhone
+          : clientPhone // ignore: cast_nullable_to_non_nullable
+              as dynamic,
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -194,8 +202,12 @@ class _$SaleDetailsModelCopyWithImpl<$Res, $Val extends SaleDetailsModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ClientModelCopyWith<$Res> get client {
-    return $ClientModelCopyWith<$Res>(_value.client, (value) {
+  $ClientModelCopyWith<$Res>? get client {
+    if (_value.client == null) {
+      return null;
+    }
+
+    return $ClientModelCopyWith<$Res>(_value.client!, (value) {
       return _then(_value.copyWith(client: value) as $Val);
     });
   }
@@ -211,7 +223,8 @@ abstract class _$$SaleDetailsModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'client') ClientModel client,
+      @JsonKey(name: 'client') ClientModel? client,
+      @JsonKey(name: 'client_phone') dynamic clientPhone,
       @JsonKey(name: 'address', defaultValue: '') String address,
       @JsonKey(name: 'description') String description,
       @JsonKey(name: 'sale_date') String saleDate,
@@ -232,7 +245,7 @@ abstract class _$$SaleDetailsModelImplCopyWith<$Res>
       @JsonKey(name: 'staff_name') String? staffName});
 
   @override
-  $ClientModelCopyWith<$Res> get client;
+  $ClientModelCopyWith<$Res>? get client;
 }
 
 /// @nodoc
@@ -249,7 +262,8 @@ class __$$SaleDetailsModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? client = null,
+    Object? client = freezed,
+    Object? clientPhone = freezed,
     Object? address = null,
     Object? description = null,
     Object? saleDate = null,
@@ -269,10 +283,14 @@ class __$$SaleDetailsModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      client: null == client
+      client: freezed == client
           ? _value.client
           : client // ignore: cast_nullable_to_non_nullable
-              as ClientModel,
+              as ClientModel?,
+      clientPhone: freezed == clientPhone
+          ? _value.clientPhone
+          : clientPhone // ignore: cast_nullable_to_non_nullable
+              as dynamic,
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -334,7 +352,8 @@ class __$$SaleDetailsModelImplCopyWithImpl<$Res>
 class _$SaleDetailsModelImpl implements _SaleDetailsModel {
   const _$SaleDetailsModelImpl(
       {required this.id,
-      @JsonKey(name: 'client') required this.client,
+      @JsonKey(name: 'client') this.client,
+      @JsonKey(name: 'client_phone') this.clientPhone,
       @JsonKey(name: 'address', defaultValue: '') required this.address,
       @JsonKey(name: 'description') required this.description,
       @JsonKey(name: 'sale_date') required this.saleDate,
@@ -363,7 +382,10 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
   final int id;
   @override
   @JsonKey(name: 'client')
-  final ClientModel client;
+  final ClientModel? client;
+  @override
+  @JsonKey(name: 'client_phone')
+  final dynamic clientPhone;
   @override
   @JsonKey(name: 'address', defaultValue: '')
   final String address;
@@ -416,7 +438,7 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
 
   @override
   String toString() {
-    return 'SaleDetailsModel(id: $id, client: $client, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, paymentMethod: $paymentMethod, staffId: $staffId, staffName: $staffName)';
+    return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, paymentMethod: $paymentMethod, staffId: $staffId, staffName: $staffName)';
   }
 
   @override
@@ -426,6 +448,8 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
             other is _$SaleDetailsModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.client, client) || other.client == client) &&
+            const DeepCollectionEquality()
+                .equals(other.clientPhone, clientPhone) &&
             (identical(other.address, address) || other.address == address) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -457,6 +481,7 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
       runtimeType,
       id,
       client,
+      const DeepCollectionEquality().hash(clientPhone),
       address,
       description,
       saleDate,
@@ -491,7 +516,8 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
 abstract class _SaleDetailsModel implements SaleDetailsModel {
   const factory _SaleDetailsModel(
       {required final int id,
-      @JsonKey(name: 'client') required final ClientModel client,
+      @JsonKey(name: 'client') final ClientModel? client,
+      @JsonKey(name: 'client_phone') final dynamic clientPhone,
       @JsonKey(name: 'address', defaultValue: '') required final String address,
       @JsonKey(name: 'description') required final String description,
       @JsonKey(name: 'sale_date') required final String saleDate,
@@ -522,7 +548,10 @@ abstract class _SaleDetailsModel implements SaleDetailsModel {
   int get id;
   @override
   @JsonKey(name: 'client')
-  ClientModel get client;
+  ClientModel? get client;
+  @override
+  @JsonKey(name: 'client_phone')
+  dynamic get clientPhone;
   @override
   @JsonKey(name: 'address', defaultValue: '')
   String get address;

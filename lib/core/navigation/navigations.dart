@@ -279,6 +279,25 @@ class Navigations {
           ],
           child: const SalesListScreen(),
         ),
+        routes: [
+          // Sale details screen (child route)
+          GoRoute(
+            path: 'details/:id',
+            name: AppRoutes.saleDetails.name,
+            builder: (context, state) {
+              final saleId = state.pathParameters['id']?.toIntOrNull();
+              if (saleId == null) {
+                return Scaffold(
+                  appBar: AppBar(),
+                  body: const Center(
+                    child: Text('Invalid sale id. Please try again.'),
+                  ),
+                );
+              }
+              return SaleDetailsScreen(saleId: saleId);
+            },
+          ),
+        ],
       ),
 
       // Ledger screen
@@ -394,25 +413,6 @@ class Navigations {
           ),
           child: const AddOldBookingScreen(),
         ),
-      ),
-
-      // Sale details screen
-      GoRoute(
-        path: AppRoutes.saleDetails.path,
-        name: AppRoutes.saleDetails.name,
-        builder: (context, state) {
-          final saleId = state.pathParameters['id']?.toIntOrNull();
-          if (saleId == null) {
-            // Fallback: show an error UI or a lightweight placeholder to avoid crash
-            return Scaffold(
-              appBar: AppBar(),
-              body: const Center(
-                child: Text('Invalid sale id. Please try again.'),
-              ),
-            );
-          }
-          return SaleDetailsScreen(saleId: saleId);
-        },
       ),
 
       // Add or edit sales screen

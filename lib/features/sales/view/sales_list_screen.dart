@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -13,6 +14,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_search_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/date_filter_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/sales_card.dart';
+import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
 import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
 import 'package:flutter/material.dart';
@@ -329,16 +331,27 @@ class _SalesListScreenState extends State<SalesListScreen> {
     required SaleModel sale,
   }) async {
     try {
-      context.read<SaleDetailsBloc>().add(
-            SaleDetailsEvent.getSaleDetails(saleId: sale.id),
-          );
-      final result = await context.pushNamed(
-        AppRoutes.saleDetails.name,
-        pathParameters: {'id': sale.id.toString()},
-      );
-      if (result == true) {
-        _fetchData(context);
-      }
+      // final result = await context.pushNamed(
+      //   AppRoutes.saleDetails.name,
+      //   pathParameters: {'id': sale.id.toString()},
+      // );
+  final result = await Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => BlocProvider(
+      create: (_) => SaleDetailsBloc(repository: getIt.get())
+        ..add(SaleDetailsEvent.getSaleDetails(saleId:  sale.id)),
+      child: SaleDetailsScreen(saleId: sale.id),
+    ),
+  ),
+);
+
+
+
+if (result == true) {
+  _fetchData(context); // refresh data
+}
+
     } catch (e, stack) {
       log(
         'Error occurred while navigating to sale details: $e',

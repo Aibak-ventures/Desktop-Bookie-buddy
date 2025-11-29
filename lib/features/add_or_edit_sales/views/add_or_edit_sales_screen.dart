@@ -382,14 +382,14 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
         original.saleDate.formatToUiDate()) changed = true;
 
     // Client (existing vs new not strictly needed; treat by field diff)
-    if (_formController.nameController.text.trim() != original.client.name)
+    if (_formController.nameController.text.trim() != original.client?.name)
       changed = true;
     if (_formController.phone1Controller.text.trim() !=
-        original.client.phone1.toString()) changed = true;
+        original.client?.phone1.toString()) changed = true;
     if ((_formController.phone2Controller.text.trim().isNotEmpty
             ? _formController.phone2Controller.text.trim()
             : '') !=
-        (original.client.phone2?.toString() ?? '')) changed = true;
+        (original.client?.phone2?.toString() ?? '')) changed = true;
 
     // Address
     if (_formController.placeController.text.trim() != original.address.trim())
