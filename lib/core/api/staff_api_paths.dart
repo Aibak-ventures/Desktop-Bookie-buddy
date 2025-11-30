@@ -10,4 +10,8 @@ class StaffApiPaths {
   static String staffById(int id) => '${staff}$id/';
   static String staffAnalyticsReportById(int id) =>
       '${staffAnalyticsReport}$id/';
+
+  // Staff Management
+  static String restoreStaff(int id) => '${staff}$id/restore/';
+  static String deactivateStaff(int id) => '${staff}$id/deactivate/';
 }
