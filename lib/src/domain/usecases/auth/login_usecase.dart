@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import '../../../core/errors/failures.dart';
-import '../../../core/usecases/usecase.dart';
-import '../../entities/auth/user_entity.dart';
-import '../../repositories/auth_repository.dart';
+import 'package:bookie_buddy_web/src/core/errors/failures.dart';
+import 'package:bookie_buddy_web/src/core/usecases/usecase.dart';
+import 'package:bookie_buddy_web/src/domain/entities/auth/user_entity.dart';
+import 'package:bookie_buddy_web/src/domain/repositories/auth_repository.dart';
 
 /// Use case for user login
 /// 

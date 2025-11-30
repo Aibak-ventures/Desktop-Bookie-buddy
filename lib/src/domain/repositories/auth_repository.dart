@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import '../../../core/errors/failures.dart';
-import '../../entities/auth/user_entity.dart';
+import 'package:bookie_buddy_web/src/core/errors/failures.dart';
+import 'package:bookie_buddy_web/src/domain/entities/auth/user_entity.dart';
 
 /// Auth repository interface (contract)
 /// 
