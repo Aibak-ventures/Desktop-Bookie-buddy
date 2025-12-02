@@ -520,6 +520,10 @@ mixin _$UserSubscriptionModel {
   String get plan => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   List<String> get features => throw _privateConstructorUsedError;
+  @JsonKey(name: 'expiry_date')
+  String? get expiryDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'days_remaining')
+  int? get daysRemaining => throw _privateConstructorUsedError;
 
   /// Serializes this UserSubscriptionModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -537,7 +541,12 @@ abstract class $UserSubscriptionModelCopyWith<$Res> {
           $Res Function(UserSubscriptionModel) then) =
       _$UserSubscriptionModelCopyWithImpl<$Res, UserSubscriptionModel>;
   @useResult
-  $Res call({String plan, String status, List<String> features});
+  $Res call(
+      {String plan,
+      String status,
+      List<String> features,
+      @JsonKey(name: 'expiry_date') String? expiryDate,
+      @JsonKey(name: 'days_remaining') int? daysRemaining});
 }
 
 /// @nodoc
@@ -559,6 +568,8 @@ class _$UserSubscriptionModelCopyWithImpl<$Res,
     Object? plan = null,
     Object? status = null,
     Object? features = null,
+    Object? expiryDate = freezed,
+    Object? daysRemaining = freezed,
   }) {
     return _then(_value.copyWith(
       plan: null == plan
@@ -573,6 +584,14 @@ class _$UserSubscriptionModelCopyWithImpl<$Res,
           ? _value.features
           : features // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      expiryDate: freezed == expiryDate
+          ? _value.expiryDate
+          : expiryDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      daysRemaining: freezed == daysRemaining
+          ? _value.daysRemaining
+          : daysRemaining // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -586,7 +605,12 @@ abstract class _$$UserSubscriptionModelImplCopyWith<$Res>
       __$$UserSubscriptionModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String plan, String status, List<String> features});
+  $Res call(
+      {String plan,
+      String status,
+      List<String> features,
+      @JsonKey(name: 'expiry_date') String? expiryDate,
+      @JsonKey(name: 'days_remaining') int? daysRemaining});
 }
 
 /// @nodoc
@@ -606,6 +630,8 @@ class __$$UserSubscriptionModelImplCopyWithImpl<$Res>
     Object? plan = null,
     Object? status = null,
     Object? features = null,
+    Object? expiryDate = freezed,
+    Object? daysRemaining = freezed,
   }) {
     return _then(_$UserSubscriptionModelImpl(
       plan: null == plan
@@ -620,6 +646,14 @@ class __$$UserSubscriptionModelImplCopyWithImpl<$Res>
           ? _value._features
           : features // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      expiryDate: freezed == expiryDate
+          ? _value.expiryDate
+          : expiryDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      daysRemaining: freezed == daysRemaining
+          ? _value.daysRemaining
+          : daysRemaining // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -630,7 +664,9 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
   const _$UserSubscriptionModelImpl(
       {required this.plan,
       required this.status,
-      required final List<String> features})
+      required final List<String> features,
+      @JsonKey(name: 'expiry_date') this.expiryDate,
+      @JsonKey(name: 'days_remaining') this.daysRemaining})
       : _features = features;
 
   factory _$UserSubscriptionModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -649,8 +685,15 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
   }
 
   @override
+  @JsonKey(name: 'expiry_date')
+  final String? expiryDate;
+  @override
+  @JsonKey(name: 'days_remaining')
+  final int? daysRemaining;
+
+  @override
   String toString() {
-    return 'UserSubscriptionModel(plan: $plan, status: $status, features: $features)';
+    return 'UserSubscriptionModel(plan: $plan, status: $status, features: $features, expiryDate: $expiryDate, daysRemaining: $daysRemaining)';
   }
 
   @override
@@ -660,13 +703,22 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
             other is _$UserSubscriptionModelImpl &&
             (identical(other.plan, plan) || other.plan == plan) &&
             (identical(other.status, status) || other.status == status) &&
-            const DeepCollectionEquality().equals(other._features, _features));
+            const DeepCollectionEquality().equals(other._features, _features) &&
+            (identical(other.expiryDate, expiryDate) ||
+                other.expiryDate == expiryDate) &&
+            (identical(other.daysRemaining, daysRemaining) ||
+                other.daysRemaining == daysRemaining));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, plan, status,
-      const DeepCollectionEquality().hash(_features));
+  int get hashCode => Object.hash(
+      runtimeType,
+      plan,
+      status,
+      const DeepCollectionEquality().hash(_features),
+      expiryDate,
+      daysRemaining);
 
   /// Create a copy of UserSubscriptionModel
   /// with the given fields replaced by the non-null parameter values.
@@ -687,9 +739,12 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
 
 abstract class _UserSubscriptionModel implements UserSubscriptionModel {
   const factory _UserSubscriptionModel(
-      {required final String plan,
-      required final String status,
-      required final List<String> features}) = _$UserSubscriptionModelImpl;
+          {required final String plan,
+          required final String status,
+          required final List<String> features,
+          @JsonKey(name: 'expiry_date') final String? expiryDate,
+          @JsonKey(name: 'days_remaining') final int? daysRemaining}) =
+      _$UserSubscriptionModelImpl;
 
   factory _UserSubscriptionModel.fromJson(Map<String, dynamic> json) =
       _$UserSubscriptionModelImpl.fromJson;
@@ -700,6 +755,12 @@ abstract class _UserSubscriptionModel implements UserSubscriptionModel {
   String get status;
   @override
   List<String> get features;
+  @override
+  @JsonKey(name: 'expiry_date')
+  String? get expiryDate;
+  @override
+  @JsonKey(name: 'days_remaining')
+  int? get daysRemaining;
 
   /// Create a copy of UserSubscriptionModel
   /// with the given fields replaced by the non-null parameter values.

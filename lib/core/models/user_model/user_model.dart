@@ -62,6 +62,8 @@ class UserSubscriptionModel with _$UserSubscriptionModel {
     required String plan,
     required String status,
     required List<String> features,
+    @JsonKey(name: 'expiry_date') String? expiryDate,
+    @JsonKey(name: 'days_remaining') int? daysRemaining,
   }) = _UserSubscriptionModel;
 
   factory UserSubscriptionModel.fromJson(Map<String, dynamic> json) =>

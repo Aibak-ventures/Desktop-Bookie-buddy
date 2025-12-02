@@ -10,7 +10,22 @@ part 'booking_model.g.dart';
 dynamic _idCustomRead(Map json, String key) => json['id'] ?? json['booking_id'];
 
 dynamic _clientCustomRead(Map json, String key) =>
-    json[key] ?? json['client_name'];
+    json[key] ?? json['client_name'] ?? json['tailor_name'];
+
+dynamic _bookingStatusCustomRead(Map json, String key) =>
+    json['booking_status'] ?? json['status'];
+
+dynamic _bookedItemsCustomRead(Map json, String key) {
+  // Handle both array format and string format
+  if (json['booked_items'] != null) {
+    return json['booked_items'];
+  }
+  if (json['products'] != null) {
+    // Convert string to array
+    return [json['products']];
+  }
+  return const [];
+}
 
 @freezed
 class BookingsModel with _$BookingsModel {
@@ -26,6 +41,7 @@ class BookingsModel with _$BookingsModel {
       name: 'booking_status',
       fromJson: BookingStatus.fromString,
       toJson: BookingStatus.toJson,
+      readValue: _bookingStatusCustomRead,
     )
     required BookingStatus bookingStatus,
     @JsonKey(name: 'booking_date') String? bookedDate,
@@ -45,7 +61,10 @@ class BookingsModel with _$BookingsModel {
       toJson: PaymentStatus.toJson,
     )
     required PaymentStatus paymentStatus,
-    @JsonKey(name: 'booked_items') @Default(const []) List<String> bookedItems,
+    @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
+    @Default(const [])
+    List<String> bookedItems,
+    @JsonKey(name: 'type') String? type, // "booking" or "tailor_order"
   }) = _BookingsModel;
 
   factory BookingsModel.fromJson(Map<String, dynamic> json) =>

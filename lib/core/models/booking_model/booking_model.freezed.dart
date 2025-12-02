@@ -28,7 +28,8 @@ mixin _$BookingsModel {
   @JsonKey(
       name: 'booking_status',
       fromJson: BookingStatus.fromString,
-      toJson: BookingStatus.toJson)
+      toJson: BookingStatus.toJson,
+      readValue: _bookingStatusCustomRead)
   BookingStatus get bookingStatus => throw _privateConstructorUsedError;
   @JsonKey(name: 'booking_date')
   String? get bookedDate => throw _privateConstructorUsedError;
@@ -48,8 +49,10 @@ mixin _$BookingsModel {
       fromJson: PaymentStatus.fromBool,
       toJson: PaymentStatus.toJson)
   PaymentStatus get paymentStatus => throw _privateConstructorUsedError;
-  @JsonKey(name: 'booked_items')
+  @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
   List<String> get bookedItems => throw _privateConstructorUsedError;
+  @JsonKey(name: 'type')
+  String? get type => throw _privateConstructorUsedError;
 
   /// Serializes this BookingsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -75,7 +78,8 @@ abstract class $BookingsModelCopyWith<$Res> {
       @JsonKey(
           name: 'booking_status',
           fromJson: BookingStatus.fromString,
-          toJson: BookingStatus.toJson)
+          toJson: BookingStatus.toJson,
+          readValue: _bookingStatusCustomRead)
       BookingStatus bookingStatus,
       @JsonKey(name: 'booking_date') String? bookedDate,
       @JsonKey(name: 'pickup_date') String? pickupDate,
@@ -92,7 +96,9 @@ abstract class $BookingsModelCopyWith<$Res> {
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       PaymentStatus paymentStatus,
-      @JsonKey(name: 'booked_items') List<String> bookedItems});
+      @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
+      List<String> bookedItems,
+      @JsonKey(name: 'type') String? type});
 }
 
 /// @nodoc
@@ -119,6 +125,7 @@ class _$BookingsModelCopyWithImpl<$Res, $Val extends BookingsModel>
     Object? deliveryStatus = null,
     Object? paymentStatus = null,
     Object? bookedItems = null,
+    Object? type = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -157,6 +164,10 @@ class _$BookingsModelCopyWithImpl<$Res, $Val extends BookingsModel>
           ? _value.bookedItems
           : bookedItems // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      type: freezed == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -177,7 +188,8 @@ abstract class _$$BookingsModelImplCopyWith<$Res>
       @JsonKey(
           name: 'booking_status',
           fromJson: BookingStatus.fromString,
-          toJson: BookingStatus.toJson)
+          toJson: BookingStatus.toJson,
+          readValue: _bookingStatusCustomRead)
       BookingStatus bookingStatus,
       @JsonKey(name: 'booking_date') String? bookedDate,
       @JsonKey(name: 'pickup_date') String? pickupDate,
@@ -194,7 +206,9 @@ abstract class _$$BookingsModelImplCopyWith<$Res>
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       PaymentStatus paymentStatus,
-      @JsonKey(name: 'booked_items') List<String> bookedItems});
+      @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
+      List<String> bookedItems,
+      @JsonKey(name: 'type') String? type});
 }
 
 /// @nodoc
@@ -219,6 +233,7 @@ class __$$BookingsModelImplCopyWithImpl<$Res>
     Object? deliveryStatus = null,
     Object? paymentStatus = null,
     Object? bookedItems = null,
+    Object? type = freezed,
   }) {
     return _then(_$BookingsModelImpl(
       id: freezed == id
@@ -257,6 +272,10 @@ class __$$BookingsModelImplCopyWithImpl<$Res>
           ? _value._bookedItems
           : bookedItems // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      type: freezed == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -272,7 +291,8 @@ class _$BookingsModelImpl implements _BookingsModel {
       @JsonKey(
           name: 'booking_status',
           fromJson: BookingStatus.fromString,
-          toJson: BookingStatus.toJson)
+          toJson: BookingStatus.toJson,
+          readValue: _bookingStatusCustomRead)
       required this.bookingStatus,
       @JsonKey(name: 'booking_date') this.bookedDate,
       @JsonKey(name: 'pickup_date') this.pickupDate,
@@ -289,7 +309,9 @@ class _$BookingsModelImpl implements _BookingsModel {
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       required this.paymentStatus,
-      @JsonKey(name: 'booked_items') final List<String> bookedItems = const []})
+      @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
+      final List<String> bookedItems = const [],
+      @JsonKey(name: 'type') this.type})
       : _bookedItems = bookedItems;
 
   factory _$BookingsModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -306,7 +328,8 @@ class _$BookingsModelImpl implements _BookingsModel {
   @JsonKey(
       name: 'booking_status',
       fromJson: BookingStatus.fromString,
-      toJson: BookingStatus.toJson)
+      toJson: BookingStatus.toJson,
+      readValue: _bookingStatusCustomRead)
   final BookingStatus bookingStatus;
   @override
   @JsonKey(name: 'booking_date')
@@ -333,7 +356,7 @@ class _$BookingsModelImpl implements _BookingsModel {
   final PaymentStatus paymentStatus;
   final List<String> _bookedItems;
   @override
-  @JsonKey(name: 'booked_items')
+  @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
   List<String> get bookedItems {
     if (_bookedItems is EqualUnmodifiableListView) return _bookedItems;
     // ignore: implicit_dynamic_type
@@ -341,8 +364,12 @@ class _$BookingsModelImpl implements _BookingsModel {
   }
 
   @override
+  @JsonKey(name: 'type')
+  final String? type;
+
+  @override
   String toString() {
-    return 'BookingsModel(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, bookedItems: $bookedItems)';
+    return 'BookingsModel(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, bookedItems: $bookedItems, type: $type)';
   }
 
   @override
@@ -366,7 +393,8 @@ class _$BookingsModelImpl implements _BookingsModel {
             (identical(other.paymentStatus, paymentStatus) ||
                 other.paymentStatus == paymentStatus) &&
             const DeepCollectionEquality()
-                .equals(other._bookedItems, _bookedItems));
+                .equals(other._bookedItems, _bookedItems) &&
+            (identical(other.type, type) || other.type == type));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -381,7 +409,8 @@ class _$BookingsModelImpl implements _BookingsModel {
       returnDate,
       deliveryStatus,
       paymentStatus,
-      const DeepCollectionEquality().hash(_bookedItems));
+      const DeepCollectionEquality().hash(_bookedItems),
+      type);
 
   /// Create a copy of BookingsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -408,7 +437,8 @@ abstract class _BookingsModel implements BookingsModel {
       @JsonKey(
           name: 'booking_status',
           fromJson: BookingStatus.fromString,
-          toJson: BookingStatus.toJson)
+          toJson: BookingStatus.toJson,
+          readValue: _bookingStatusCustomRead)
       required final BookingStatus bookingStatus,
       @JsonKey(name: 'booking_date') final String? bookedDate,
       @JsonKey(name: 'pickup_date') final String? pickupDate,
@@ -425,8 +455,9 @@ abstract class _BookingsModel implements BookingsModel {
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       required final PaymentStatus paymentStatus,
-      @JsonKey(name: 'booked_items')
-      final List<String> bookedItems}) = _$BookingsModelImpl;
+      @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
+      final List<String> bookedItems,
+      @JsonKey(name: 'type') final String? type}) = _$BookingsModelImpl;
 
   factory _BookingsModel.fromJson(Map<String, dynamic> json) =
       _$BookingsModelImpl.fromJson;
@@ -442,7 +473,8 @@ abstract class _BookingsModel implements BookingsModel {
   @JsonKey(
       name: 'booking_status',
       fromJson: BookingStatus.fromString,
-      toJson: BookingStatus.toJson)
+      toJson: BookingStatus.toJson,
+      readValue: _bookingStatusCustomRead)
   BookingStatus get bookingStatus;
   @override
   @JsonKey(name: 'booking_date')
@@ -468,8 +500,11 @@ abstract class _BookingsModel implements BookingsModel {
       toJson: PaymentStatus.toJson)
   PaymentStatus get paymentStatus;
   @override
-  @JsonKey(name: 'booked_items')
+  @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
   List<String> get bookedItems;
+  @override
+  @JsonKey(name: 'type')
+  String? get type;
 
   /// Create a copy of BookingsModel
   /// with the given fields replaced by the non-null parameter values.
