@@ -13,7 +13,7 @@ class AppTheme {
         // app bar theme
         appBarTheme: AppBarTheme(
           actionsPadding: 20.paddingOnly(right: true),
-          color: AppColors.white,
+          backgroundColor: AppColors.white,
           centerTitle: false,
           surfaceTintColor: AppColors.white,
           systemOverlayStyle: const SystemUiOverlayStyle(

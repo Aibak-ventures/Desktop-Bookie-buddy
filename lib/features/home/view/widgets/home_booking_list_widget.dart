@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widge
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/home/models/booking_grouped_model/booking_grouped_model.dart';
+import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,45 +27,78 @@ class HomeBookingListWidget extends StatelessWidget {
         Theme.of(context).platform == TargetPlatform.macOS ||
         Theme.of(context).platform == TargetPlatform.linux;
 
-    return BlocBuilder<DashboardBloc, DashboardState>(
-      builder: (context, state) {
-        return state.when(
-          loading: () => const BookingListShimmer(
-            itemCount: 12,
-            alwaysScrollable: false,
+    return Column(
+      children: [
+        // Add TabBar for Upcoming and Returns
+        DefaultTabController(
+          length: 2,
+          child: TabBar(
+            tabs: const [
+              Tab(text: 'Upcoming'),
+              Tab(text: 'Returns'),
+            ],
+            onTap: (value) {
+              if (value == 0) {
+                bloc.add(const DashboardEvent.loadDashboardData());
+              } else {
+                bloc.add(
+                  const DashboardEvent.loadDashboardData(isOngoing: true),
+                );
+              }
+            },
           ),
-          error: (error) => SizedBox(
-            height: context.mediaQueryHeight(0.33),
-            child: CustomErrorWidget(
-              errorText: error.message,
-              onRetry: () => bloc.add(const DashboardEvent.loadDashboardData()),
-            ),
-          ),
-          loaded: (groupedBookings, _, nextPageUrl, isPaginating) {
-            final group = groupedBookings.entries
-                .where(
-                  (group) => group.value.isNotEmpty,
-                )
-                .map((e) => BookingGroupedModel(date: e.key, bookings: e.value))
-                .toList();
+        ),
+        const SizedBox(height: 8),
 
-            return group.isEmpty
-                ? const NoResultFoundAnimationWidget(
-                    isScrollable: false,
-                  )
-                : isDesktop
-                    ? _buildDesktopBookingList(
-                        context, group, isPaginating, bloc)
-                    : _buildMobileBookingList(
-                        context, group, isPaginating, bloc);
+        BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) {
+            return state.when(
+              loading: () => const BookingListShimmer(
+                itemCount: 12,
+                alwaysScrollable: false,
+              ),
+              error: (error) => SizedBox(
+                height: context.mediaQueryHeight(0.33),
+                child: CustomErrorWidget(
+                  errorText: error,
+                  onRetry: () =>
+                      bloc.add(const DashboardEvent.loadDashboardData()),
+                ),
+              ),
+              loaded: (dataGrouped, _, nextPageUrl, isPaginating, isOngoing) {
+                final group = dataGrouped.entries
+                    .where(
+                      (group) => group.value.isNotEmpty,
+                    )
+                    .map((e) => BookingGroupedModel(
+                        date: e.key,
+                        bookings:
+                            e.value.where((item) => item.isBooking).toList()))
+                    .toList();
+
+                return group.isEmpty
+                    ? const NoResultFoundAnimationWidget(
+                        isScrollable: false,
+                      )
+                    : isDesktop
+                        ? _buildDesktopBookingList(
+                            context, group, isPaginating, bloc, isOngoing)
+                        : _buildMobileBookingList(
+                            context, group, isPaginating, bloc, isOngoing);
+              },
+            );
           },
-        );
-      },
+        ),
+      ],
     );
   }
 
-  Widget _buildDesktopBookingList(BuildContext context,
-      List<BookingGroupedModel> group, bool isPaginating, DashboardBloc bloc) {
+  Widget _buildDesktopBookingList(
+      BuildContext context,
+      List<BookingGroupedModel> group,
+      bool isPaginating,
+      DashboardBloc bloc,
+      bool isOngoing) {
     return Column(
       children: [
         ListView.builder(
@@ -135,22 +169,26 @@ class HomeBookingListWidget extends StatelessWidget {
                   (booking) => Container(
                     margin: const EdgeInsets.only(bottom: 8),
                     child: BookingCard(
-                      booking: booking,
+                      booking: booking.booking!,
+                      useReturnDate: isOngoing,
                       onTap: () async {
                         final bookingCubit =
                             context.read<BookingSelectionCubit>();
-                        bookingCubit.selectBooking(booking);
+                        bookingCubit.selectBooking(booking.booking!);
 
                         await context.push(
-                          BookingDetailsScreen(bookingId: booking.id!),
+                          BookingDetailsScreen(bookingId: booking.booking!.id!),
                         );
 
                         if (bookingCubit.state.isModified) {
                           final updated = bookingCubit.state.selectedBooking;
 
                           context.read<DashboardBloc>().add(
-                                DashboardEvent.updateBooking(
-                                  updated,
+                                DashboardEvent.updateData(
+                                  DashboardListModel(
+                                    isBooking: true,
+                                    booking: updated,
+                                  ),
                                   shouldRefresh:
                                       bookingCubit.state.shouldRefresh,
                                 ),
@@ -173,8 +211,12 @@ class HomeBookingListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileBookingList(BuildContext context,
-      List<BookingGroupedModel> group, bool isPaginating, DashboardBloc bloc) {
+  Widget _buildMobileBookingList(
+      BuildContext context,
+      List<BookingGroupedModel> group,
+      bool isPaginating,
+      DashboardBloc bloc,
+      bool isOngoing) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -202,21 +244,25 @@ class HomeBookingListWidget extends StatelessWidget {
             // Booking List
             ...sub.bookings.map(
               (booking) => BookingCard(
-                booking: booking,
+               booking: booking.booking!,
+                              useReturnDate: isOngoing == true,
                 onTap: () async {
                   final bookingCubit = context.read<BookingSelectionCubit>();
-                  bookingCubit.selectBooking(booking);
+                  bookingCubit.selectBooking(booking.booking!);
 
                   await context.push(
-                    BookingDetailsScreen(bookingId: booking.id!),
+                    BookingDetailsScreen(bookingId: booking.booking!.id!),
                   );
 
                   if (bookingCubit.state.isModified) {
                     final updated = bookingCubit.state.selectedBooking;
 
                     context.read<DashboardBloc>().add(
-                          DashboardEvent.updateBooking(
-                            updated,
+                          DashboardEvent.updateData(
+                            DashboardListModel(
+                              isBooking: true,
+                              booking: updated,
+                            ),
                             shouldRefresh: bookingCubit.state.shouldRefresh,
                           ),
                         );

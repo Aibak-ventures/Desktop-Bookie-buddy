@@ -11,10 +11,7 @@ _$SalesRequestModelImpl _$$SalesRequestModelImplFromJson(
     _$SalesRequestModelImpl(
       id: (json['id'] as num?)?.toInt(),
       staffId: (json['staff_id'] as num?)?.toInt(),
-      clientId: (json['client_id'] as num?)?.toInt(),
-      clientName: json['client_name'] as String?,
-      clientPhone1: json['client_phone_1'] as String?,
-      clientPhone2: json['client_phone_2'] as String?,
+      clientPhone: json['client_phone'] as String?,
       address: json['client_address'] as String?,
       saleDate: json['sale_date'] as String?,
       products: (json['variants'] as List<dynamic>?)
@@ -33,10 +30,7 @@ Map<String, dynamic> _$$SalesRequestModelImplToJson(
         _$SalesRequestModelImpl instance) =>
     <String, dynamic>{
       if (instance.staffId case final value?) 'staff_id': value,
-      if (instance.clientId case final value?) 'client_id': value,
-      if (instance.clientName case final value?) 'client_name': value,
-      if (instance.clientPhone1 case final value?) 'client_phone_1': value,
-      if (instance.clientPhone2 case final value?) 'client_phone_2': value,
+      if (instance.clientPhone case final value?) 'client_phone': value,
       if (instance.address case final value?) 'client_address': value,
       if (instance.saleDate case final value?) 'sale_date': value,
       if (_variantsToJson(instance.products) case final value?)
@@ -48,6 +42,7 @@ Map<String, dynamic> _$$SalesRequestModelImplToJson(
       if (instance.paidAmount case final value?) 'paid_amount': value,
       if (_paymentMethodToJson(instance.paymentMethod) case final value?)
         'payment_method': value,
+      'send_invoice': instance.sendPdfToWhatsApp,
     };
 
 const _$PaymentMethodEnumMap = {

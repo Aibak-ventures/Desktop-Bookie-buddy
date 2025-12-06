@@ -71,13 +71,16 @@ class CompletedBookingsScreen extends StatelessWidget {
             icon: const Icon(Icons.more_vert),
             onSelected: (value) async {
               if (value == 'old_bookings') {
-                await context.push(
-                  BlocProvider(
-                    create: (context) => AddOldBookingsBloc(
-                      bookingRepository: getIt.get(),
-                      clientRepository: getIt.get(),
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => AddOldBookingsBloc(
+                        bookingRepository: getIt.get(),
+                        clientRepository: getIt.get(),
+                      ),
+                      child: const AddOldBookingScreen(),
                     ),
-                    child: const AddOldBookingScreen(),
                   ),
                 );
 
@@ -193,9 +196,12 @@ class CompletedBookingsScreen extends StatelessWidget {
                                               final bookingCubit = context
                                                   .read<BookingSelectionCubit>()
                                                 ..selectBooking(booking);
-                                              final result = await context.push(
-                                                BookingDetailsScreen(
-                                                  bookingId: booking.id!,
+                                              final result = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => BookingDetailsScreen(
+                                                    bookingId: booking.id!,
+                                                  ),
                                                 ),
                                               );
                                               if (bookingCubit

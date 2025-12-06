@@ -25,7 +25,7 @@ class ClientListScreen extends StatelessWidget {
 }
 
 class _ClientListView extends StatefulWidget {
-  const _ClientListView({super.key});
+  const _ClientListView();
 
   @override
   State<_ClientListView> createState() => _ClientListViewState();

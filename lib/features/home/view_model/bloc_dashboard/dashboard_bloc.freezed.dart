@@ -18,27 +18,32 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$DashboardEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() loadDashboardData,
+    required TResult Function(bool isOngoing, bool useOldState)
+        loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
-    required TResult Function(BookingsModel? booking, bool shouldRefresh)
-        updateBooking,
+    required TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+        updateData,
     required TResult Function() loadIfNot,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loadDashboardData,
+    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(BookingsModel? booking, bool shouldRefresh)?
-        updateBooking,
+    TResult? Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult? Function()? loadIfNot,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loadDashboardData,
+    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
-    TResult Function(BookingsModel? booking, bool shouldRefresh)? updateBooking,
+    TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
   }) =>
@@ -48,7 +53,7 @@ mixin _$DashboardEvent {
     required TResult Function(_LoadDashboardData value) loadDashboardData,
     required TResult Function(_LoadDashboardNextPageData value)
         loadDashboardNextPageData,
-    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateData value) updateData,
     required TResult Function(_LoadIfNot value) loadIfNot,
   }) =>
       throw _privateConstructorUsedError;
@@ -57,7 +62,7 @@ mixin _$DashboardEvent {
     TResult? Function(_LoadDashboardData value)? loadDashboardData,
     TResult? Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateData value)? updateData,
     TResult? Function(_LoadIfNot value)? loadIfNot,
   }) =>
       throw _privateConstructorUsedError;
@@ -66,7 +71,7 @@ mixin _$DashboardEvent {
     TResult Function(_LoadDashboardData value)? loadDashboardData,
     TResult Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateData value)? updateData,
     TResult Function(_LoadIfNot value)? loadIfNot,
     required TResult orElse(),
   }) =>
@@ -99,6 +104,8 @@ abstract class _$$LoadDashboardDataImplCopyWith<$Res> {
   factory _$$LoadDashboardDataImplCopyWith(_$LoadDashboardDataImpl value,
           $Res Function(_$LoadDashboardDataImpl) then) =
       __$$LoadDashboardDataImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool isOngoing, bool useOldState});
 }
 
 /// @nodoc
@@ -111,62 +118,106 @@ class __$$LoadDashboardDataImplCopyWithImpl<$Res>
 
   /// Create a copy of DashboardEvent
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isOngoing = null,
+    Object? useOldState = null,
+  }) {
+    return _then(_$LoadDashboardDataImpl(
+      isOngoing: null == isOngoing
+          ? _value.isOngoing
+          : isOngoing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      useOldState: null == useOldState
+          ? _value.useOldState
+          : useOldState // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$LoadDashboardDataImpl implements _LoadDashboardData {
-  const _$LoadDashboardDataImpl();
+  const _$LoadDashboardDataImpl(
+      {this.isOngoing = false, this.useOldState = false});
+
+  @override
+  @JsonKey()
+  final bool isOngoing;
+  @override
+  @JsonKey()
+  final bool useOldState;
 
   @override
   String toString() {
-    return 'DashboardEvent.loadDashboardData()';
+    return 'DashboardEvent.loadDashboardData(isOngoing: $isOngoing, useOldState: $useOldState)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadDashboardDataImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$LoadDashboardDataImpl &&
+            (identical(other.isOngoing, isOngoing) ||
+                other.isOngoing == isOngoing) &&
+            (identical(other.useOldState, useOldState) ||
+                other.useOldState == useOldState));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, isOngoing, useOldState);
+
+  /// Create a copy of DashboardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadDashboardDataImplCopyWith<_$LoadDashboardDataImpl> get copyWith =>
+      __$$LoadDashboardDataImplCopyWithImpl<_$LoadDashboardDataImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() loadDashboardData,
+    required TResult Function(bool isOngoing, bool useOldState)
+        loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
-    required TResult Function(BookingsModel? booking, bool shouldRefresh)
-        updateBooking,
+    required TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+        updateData,
     required TResult Function() loadIfNot,
   }) {
-    return loadDashboardData();
+    return loadDashboardData(isOngoing, useOldState);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loadDashboardData,
+    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(BookingsModel? booking, bool shouldRefresh)?
-        updateBooking,
+    TResult? Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult? Function()? loadIfNot,
   }) {
-    return loadDashboardData?.call();
+    return loadDashboardData?.call(isOngoing, useOldState);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loadDashboardData,
+    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
-    TResult Function(BookingsModel? booking, bool shouldRefresh)? updateBooking,
+    TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
   }) {
     if (loadDashboardData != null) {
-      return loadDashboardData();
+      return loadDashboardData(isOngoing, useOldState);
     }
     return orElse();
   }
@@ -177,7 +228,7 @@ class _$LoadDashboardDataImpl implements _LoadDashboardData {
     required TResult Function(_LoadDashboardData value) loadDashboardData,
     required TResult Function(_LoadDashboardNextPageData value)
         loadDashboardNextPageData,
-    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateData value) updateData,
     required TResult Function(_LoadIfNot value) loadIfNot,
   }) {
     return loadDashboardData(this);
@@ -189,7 +240,7 @@ class _$LoadDashboardDataImpl implements _LoadDashboardData {
     TResult? Function(_LoadDashboardData value)? loadDashboardData,
     TResult? Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateData value)? updateData,
     TResult? Function(_LoadIfNot value)? loadIfNot,
   }) {
     return loadDashboardData?.call(this);
@@ -201,7 +252,7 @@ class _$LoadDashboardDataImpl implements _LoadDashboardData {
     TResult Function(_LoadDashboardData value)? loadDashboardData,
     TResult Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateData value)? updateData,
     TResult Function(_LoadIfNot value)? loadIfNot,
     required TResult orElse(),
   }) {
@@ -213,7 +264,17 @@ class _$LoadDashboardDataImpl implements _LoadDashboardData {
 }
 
 abstract class _LoadDashboardData implements DashboardEvent {
-  const factory _LoadDashboardData() = _$LoadDashboardDataImpl;
+  const factory _LoadDashboardData(
+      {final bool isOngoing, final bool useOldState}) = _$LoadDashboardDataImpl;
+
+  bool get isOngoing;
+  bool get useOldState;
+
+  /// Create a copy of DashboardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadDashboardDataImplCopyWith<_$LoadDashboardDataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -260,10 +321,12 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() loadDashboardData,
+    required TResult Function(bool isOngoing, bool useOldState)
+        loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
-    required TResult Function(BookingsModel? booking, bool shouldRefresh)
-        updateBooking,
+    required TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+        updateData,
     required TResult Function() loadIfNot,
   }) {
     return loadDashboardNextPageData();
@@ -272,10 +335,11 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loadDashboardData,
+    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(BookingsModel? booking, bool shouldRefresh)?
-        updateBooking,
+    TResult? Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult? Function()? loadIfNot,
   }) {
     return loadDashboardNextPageData?.call();
@@ -284,9 +348,11 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loadDashboardData,
+    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
-    TResult Function(BookingsModel? booking, bool shouldRefresh)? updateBooking,
+    TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
   }) {
@@ -302,7 +368,7 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
     required TResult Function(_LoadDashboardData value) loadDashboardData,
     required TResult Function(_LoadDashboardNextPageData value)
         loadDashboardNextPageData,
-    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateData value) updateData,
     required TResult Function(_LoadIfNot value) loadIfNot,
   }) {
     return loadDashboardNextPageData(this);
@@ -314,7 +380,7 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
     TResult? Function(_LoadDashboardData value)? loadDashboardData,
     TResult? Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateData value)? updateData,
     TResult? Function(_LoadIfNot value)? loadIfNot,
   }) {
     return loadDashboardNextPageData?.call(this);
@@ -326,7 +392,7 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
     TResult Function(_LoadDashboardData value)? loadDashboardData,
     TResult Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateData value)? updateData,
     TResult Function(_LoadIfNot value)? loadIfNot,
     required TResult orElse(),
   }) {
@@ -342,22 +408,21 @@ abstract class _LoadDashboardNextPageData implements DashboardEvent {
 }
 
 /// @nodoc
-abstract class _$$UpdateBookingImplCopyWith<$Res> {
-  factory _$$UpdateBookingImplCopyWith(
-          _$UpdateBookingImpl value, $Res Function(_$UpdateBookingImpl) then) =
-      __$$UpdateBookingImplCopyWithImpl<$Res>;
+abstract class _$$UpdateDataImplCopyWith<$Res> {
+  factory _$$UpdateDataImplCopyWith(
+          _$UpdateDataImpl value, $Res Function(_$UpdateDataImpl) then) =
+      __$$UpdateDataImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({BookingsModel? booking, bool shouldRefresh});
-
-  $BookingsModelCopyWith<$Res>? get booking;
+  $Res call(
+      {DashboardListModel? updateData, bool shouldRefresh, bool isDeleted});
 }
 
 /// @nodoc
-class __$$UpdateBookingImplCopyWithImpl<$Res>
-    extends _$DashboardEventCopyWithImpl<$Res, _$UpdateBookingImpl>
-    implements _$$UpdateBookingImplCopyWith<$Res> {
-  __$$UpdateBookingImplCopyWithImpl(
-      _$UpdateBookingImpl _value, $Res Function(_$UpdateBookingImpl) _then)
+class __$$UpdateDataImplCopyWithImpl<$Res>
+    extends _$DashboardEventCopyWithImpl<$Res, _$UpdateDataImpl>
+    implements _$$UpdateDataImplCopyWith<$Res> {
+  __$$UpdateDataImplCopyWithImpl(
+      _$UpdateDataImpl _value, $Res Function(_$UpdateDataImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of DashboardEvent
@@ -365,108 +430,112 @@ class __$$UpdateBookingImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? booking = freezed,
+    Object? updateData = freezed,
     Object? shouldRefresh = null,
+    Object? isDeleted = null,
   }) {
-    return _then(_$UpdateBookingImpl(
-      freezed == booking
-          ? _value.booking
-          : booking // ignore: cast_nullable_to_non_nullable
-              as BookingsModel?,
+    return _then(_$UpdateDataImpl(
+      freezed == updateData
+          ? _value.updateData
+          : updateData // ignore: cast_nullable_to_non_nullable
+              as DashboardListModel?,
       shouldRefresh: null == shouldRefresh
           ? _value.shouldRefresh
           : shouldRefresh // ignore: cast_nullable_to_non_nullable
               as bool,
+      isDeleted: null == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
-  }
-
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $BookingsModelCopyWith<$Res>? get booking {
-    if (_value.booking == null) {
-      return null;
-    }
-
-    return $BookingsModelCopyWith<$Res>(_value.booking!, (value) {
-      return _then(_value.copyWith(booking: value));
-    });
   }
 }
 
 /// @nodoc
 
-class _$UpdateBookingImpl implements _UpdateBooking {
-  const _$UpdateBookingImpl(this.booking, {this.shouldRefresh = false});
+class _$UpdateDataImpl implements _UpdateData {
+  const _$UpdateDataImpl(this.updateData,
+      {this.shouldRefresh = false, this.isDeleted = false});
 
   @override
-  final BookingsModel? booking;
+  final DashboardListModel? updateData;
   @override
   @JsonKey()
   final bool shouldRefresh;
+  @override
+  @JsonKey()
+  final bool isDeleted;
 
   @override
   String toString() {
-    return 'DashboardEvent.updateBooking(booking: $booking, shouldRefresh: $shouldRefresh)';
+    return 'DashboardEvent.updateData(updateData: $updateData, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UpdateBookingImpl &&
-            (identical(other.booking, booking) || other.booking == booking) &&
+            other is _$UpdateDataImpl &&
+            (identical(other.updateData, updateData) ||
+                other.updateData == updateData) &&
             (identical(other.shouldRefresh, shouldRefresh) ||
-                other.shouldRefresh == shouldRefresh));
+                other.shouldRefresh == shouldRefresh) &&
+            (identical(other.isDeleted, isDeleted) ||
+                other.isDeleted == isDeleted));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, booking, shouldRefresh);
+  int get hashCode =>
+      Object.hash(runtimeType, updateData, shouldRefresh, isDeleted);
 
   /// Create a copy of DashboardEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$UpdateBookingImplCopyWith<_$UpdateBookingImpl> get copyWith =>
-      __$$UpdateBookingImplCopyWithImpl<_$UpdateBookingImpl>(this, _$identity);
+  _$$UpdateDataImplCopyWith<_$UpdateDataImpl> get copyWith =>
+      __$$UpdateDataImplCopyWithImpl<_$UpdateDataImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() loadDashboardData,
+    required TResult Function(bool isOngoing, bool useOldState)
+        loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
-    required TResult Function(BookingsModel? booking, bool shouldRefresh)
-        updateBooking,
+    required TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+        updateData,
     required TResult Function() loadIfNot,
   }) {
-    return updateBooking(booking, shouldRefresh);
+    return updateData(this.updateData, shouldRefresh, isDeleted);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loadDashboardData,
+    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(BookingsModel? booking, bool shouldRefresh)?
-        updateBooking,
+    TResult? Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult? Function()? loadIfNot,
   }) {
-    return updateBooking?.call(booking, shouldRefresh);
+    return updateData?.call(this.updateData, shouldRefresh, isDeleted);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loadDashboardData,
+    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
-    TResult Function(BookingsModel? booking, bool shouldRefresh)? updateBooking,
+    TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
   }) {
-    if (updateBooking != null) {
-      return updateBooking(booking, shouldRefresh);
+    if (updateData != null) {
+      return updateData(this.updateData, shouldRefresh, isDeleted);
     }
     return orElse();
   }
@@ -477,10 +546,10 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     required TResult Function(_LoadDashboardData value) loadDashboardData,
     required TResult Function(_LoadDashboardNextPageData value)
         loadDashboardNextPageData,
-    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateData value) updateData,
     required TResult Function(_LoadIfNot value) loadIfNot,
   }) {
-    return updateBooking(this);
+    return updateData(this);
   }
 
   @override
@@ -489,10 +558,10 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult? Function(_LoadDashboardData value)? loadDashboardData,
     TResult? Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateData value)? updateData,
     TResult? Function(_LoadIfNot value)? loadIfNot,
   }) {
-    return updateBooking?.call(this);
+    return updateData?.call(this);
   }
 
   @override
@@ -501,28 +570,29 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult Function(_LoadDashboardData value)? loadDashboardData,
     TResult Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateData value)? updateData,
     TResult Function(_LoadIfNot value)? loadIfNot,
     required TResult orElse(),
   }) {
-    if (updateBooking != null) {
-      return updateBooking(this);
+    if (updateData != null) {
+      return updateData(this);
     }
     return orElse();
   }
 }
 
-abstract class _UpdateBooking implements DashboardEvent {
-  const factory _UpdateBooking(final BookingsModel? booking,
-      {final bool shouldRefresh}) = _$UpdateBookingImpl;
+abstract class _UpdateData implements DashboardEvent {
+  const factory _UpdateData(final DashboardListModel? updateData,
+      {final bool shouldRefresh, final bool isDeleted}) = _$UpdateDataImpl;
 
-  BookingsModel? get booking;
+  DashboardListModel? get updateData;
   bool get shouldRefresh;
+  bool get isDeleted;
 
   /// Create a copy of DashboardEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateBookingImplCopyWith<_$UpdateBookingImpl> get copyWith =>
+  _$$UpdateDataImplCopyWith<_$UpdateDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -567,10 +637,12 @@ class _$LoadIfNotImpl implements _LoadIfNot {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() loadDashboardData,
+    required TResult Function(bool isOngoing, bool useOldState)
+        loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
-    required TResult Function(BookingsModel? booking, bool shouldRefresh)
-        updateBooking,
+    required TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+        updateData,
     required TResult Function() loadIfNot,
   }) {
     return loadIfNot();
@@ -579,10 +651,11 @@ class _$LoadIfNotImpl implements _LoadIfNot {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loadDashboardData,
+    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(BookingsModel? booking, bool shouldRefresh)?
-        updateBooking,
+    TResult? Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult? Function()? loadIfNot,
   }) {
     return loadIfNot?.call();
@@ -591,9 +664,11 @@ class _$LoadIfNotImpl implements _LoadIfNot {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loadDashboardData,
+    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
-    TResult Function(BookingsModel? booking, bool shouldRefresh)? updateBooking,
+    TResult Function(
+            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+        updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
   }) {
@@ -609,7 +684,7 @@ class _$LoadIfNotImpl implements _LoadIfNot {
     required TResult Function(_LoadDashboardData value) loadDashboardData,
     required TResult Function(_LoadDashboardNextPageData value)
         loadDashboardNextPageData,
-    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateData value) updateData,
     required TResult Function(_LoadIfNot value) loadIfNot,
   }) {
     return loadIfNot(this);
@@ -621,7 +696,7 @@ class _$LoadIfNotImpl implements _LoadIfNot {
     TResult? Function(_LoadDashboardData value)? loadDashboardData,
     TResult? Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateData value)? updateData,
     TResult? Function(_LoadIfNot value)? loadIfNot,
   }) {
     return loadIfNot?.call(this);
@@ -633,7 +708,7 @@ class _$LoadIfNotImpl implements _LoadIfNot {
     TResult Function(_LoadDashboardData value)? loadDashboardData,
     TResult Function(_LoadDashboardNextPageData value)?
         loadDashboardNextPageData,
-    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateData value)? updateData,
     TResult Function(_LoadIfNot value)? loadIfNot,
     required TResult orElse(),
   }) {
@@ -654,36 +729,39 @@ mixin _$DashboardState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)
+            bool isPaginating,
+            bool isOngoing)
         loaded,
-    required TResult Function(Failure error) error,
+    required TResult Function(String error) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult? Function(Failure error)? error,
+    TResult? Function(String error)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult Function(Failure error)? error,
+    TResult Function(String error)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -775,12 +853,13 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)
+            bool isPaginating,
+            bool isOngoing)
         loaded,
-    required TResult Function(Failure error) error,
+    required TResult Function(String error) error,
   }) {
     return loading();
   }
@@ -790,12 +869,13 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult? Function(Failure error)? error,
+    TResult? Function(String error)? error,
   }) {
     return loading?.call();
   }
@@ -805,12 +885,13 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult Function(Failure error)? error,
+    TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -865,10 +946,11 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {Map<String, List<BookingsModel>> bookingsGrouped,
+      {Map<String, List<DashboardListModel>> dataGrouped,
       CarouselDataModel carouselData,
       String? nextPageUrl,
-      bool isPaginating});
+      bool isPaginating,
+      bool isOngoing});
 
   $CarouselDataModelCopyWith<$Res> get carouselData;
 }
@@ -886,16 +968,17 @@ class __$$LoadedImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? bookingsGrouped = null,
+    Object? dataGrouped = null,
     Object? carouselData = null,
     Object? nextPageUrl = freezed,
     Object? isPaginating = null,
+    Object? isOngoing = null,
   }) {
     return _then(_$LoadedImpl(
-      bookingsGrouped: null == bookingsGrouped
-          ? _value._bookingsGrouped
-          : bookingsGrouped // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<BookingsModel>>,
+      dataGrouped: null == dataGrouped
+          ? _value._dataGrouped
+          : dataGrouped // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<DashboardListModel>>,
       carouselData: null == carouselData
           ? _value.carouselData
           : carouselData // ignore: cast_nullable_to_non_nullable
@@ -907,6 +990,10 @@ class __$$LoadedImplCopyWithImpl<$Res>
       isPaginating: null == isPaginating
           ? _value.isPaginating
           : isPaginating // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isOngoing: null == isOngoing
+          ? _value.isOngoing
+          : isOngoing // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -926,18 +1013,19 @@ class __$$LoadedImplCopyWithImpl<$Res>
 
 class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl(
-      {required final Map<String, List<BookingsModel>> bookingsGrouped,
+      {required final Map<String, List<DashboardListModel>> dataGrouped,
       required this.carouselData,
       required this.nextPageUrl,
-      this.isPaginating = false})
-      : _bookingsGrouped = bookingsGrouped;
+      this.isPaginating = false,
+      this.isOngoing = false})
+      : _dataGrouped = dataGrouped;
 
-  final Map<String, List<BookingsModel>> _bookingsGrouped;
+  final Map<String, List<DashboardListModel>> _dataGrouped;
   @override
-  Map<String, List<BookingsModel>> get bookingsGrouped {
-    if (_bookingsGrouped is EqualUnmodifiableMapView) return _bookingsGrouped;
+  Map<String, List<DashboardListModel>> get dataGrouped {
+    if (_dataGrouped is EqualUnmodifiableMapView) return _dataGrouped;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_bookingsGrouped);
+    return EqualUnmodifiableMapView(_dataGrouped);
   }
 
   @override
@@ -947,10 +1035,13 @@ class _$LoadedImpl implements _Loaded {
   @override
   @JsonKey()
   final bool isPaginating;
+  @override
+  @JsonKey()
+  final bool isOngoing;
 
   @override
   String toString() {
-    return 'DashboardState.loaded(bookingsGrouped: $bookingsGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating)';
+    return 'DashboardState.loaded(dataGrouped: $dataGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, isOngoing: $isOngoing)';
   }
 
   @override
@@ -959,22 +1050,25 @@ class _$LoadedImpl implements _Loaded {
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
             const DeepCollectionEquality()
-                .equals(other._bookingsGrouped, _bookingsGrouped) &&
+                .equals(other._dataGrouped, _dataGrouped) &&
             (identical(other.carouselData, carouselData) ||
                 other.carouselData == carouselData) &&
             (identical(other.nextPageUrl, nextPageUrl) ||
                 other.nextPageUrl == nextPageUrl) &&
             (identical(other.isPaginating, isPaginating) ||
-                other.isPaginating == isPaginating));
+                other.isPaginating == isPaginating) &&
+            (identical(other.isOngoing, isOngoing) ||
+                other.isOngoing == isOngoing));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_bookingsGrouped),
+      const DeepCollectionEquality().hash(_dataGrouped),
       carouselData,
       nextPageUrl,
-      isPaginating);
+      isPaginating,
+      isOngoing);
 
   /// Create a copy of DashboardState
   /// with the given fields replaced by the non-null parameter values.
@@ -989,14 +1083,16 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)
+            bool isPaginating,
+            bool isOngoing)
         loaded,
-    required TResult Function(Failure error) error,
+    required TResult Function(String error) error,
   }) {
-    return loaded(bookingsGrouped, carouselData, nextPageUrl, isPaginating);
+    return loaded(
+        dataGrouped, carouselData, nextPageUrl, isPaginating, isOngoing);
   }
 
   @override
@@ -1004,15 +1100,16 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult? Function(Failure error)? error,
+    TResult? Function(String error)? error,
   }) {
     return loaded?.call(
-        bookingsGrouped, carouselData, nextPageUrl, isPaginating);
+        dataGrouped, carouselData, nextPageUrl, isPaginating, isOngoing);
   }
 
   @override
@@ -1020,16 +1117,18 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult Function(Failure error)? error,
+    TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(bookingsGrouped, carouselData, nextPageUrl, isPaginating);
+      return loaded(
+          dataGrouped, carouselData, nextPageUrl, isPaginating, isOngoing);
     }
     return orElse();
   }
@@ -1071,15 +1170,17 @@ class _$LoadedImpl implements _Loaded {
 
 abstract class _Loaded implements DashboardState {
   const factory _Loaded(
-      {required final Map<String, List<BookingsModel>> bookingsGrouped,
+      {required final Map<String, List<DashboardListModel>> dataGrouped,
       required final CarouselDataModel carouselData,
       required final String? nextPageUrl,
-      final bool isPaginating}) = _$LoadedImpl;
+      final bool isPaginating,
+      final bool isOngoing}) = _$LoadedImpl;
 
-  Map<String, List<BookingsModel>> get bookingsGrouped;
+  Map<String, List<DashboardListModel>> get dataGrouped;
   CarouselDataModel get carouselData;
   String? get nextPageUrl;
   bool get isPaginating;
+  bool get isOngoing;
 
   /// Create a copy of DashboardState
   /// with the given fields replaced by the non-null parameter values.
@@ -1094,7 +1195,7 @@ abstract class _$$ErrorImplCopyWith<$Res> {
           _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
       __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Failure error});
+  $Res call({String error});
 }
 
 /// @nodoc
@@ -1116,7 +1217,7 @@ class __$$ErrorImplCopyWithImpl<$Res>
       null == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
-              as Failure,
+              as String,
     ));
   }
 }
@@ -1127,7 +1228,7 @@ class _$ErrorImpl implements _Error {
   const _$ErrorImpl(this.error);
 
   @override
-  final Failure error;
+  final String error;
 
   @override
   String toString() {
@@ -1158,12 +1259,13 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)
+            bool isPaginating,
+            bool isOngoing)
         loaded,
-    required TResult Function(Failure error) error,
+    required TResult Function(String error) error,
   }) {
     return error(this.error);
   }
@@ -1173,12 +1275,13 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult? Function(Failure error)? error,
+    TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
   }
@@ -1188,12 +1291,13 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<BookingsModel>> bookingsGrouped,
+            Map<String, List<DashboardListModel>> dataGrouped,
             CarouselDataModel carouselData,
             String? nextPageUrl,
-            bool isPaginating)?
+            bool isPaginating,
+            bool isOngoing)?
         loaded,
-    TResult Function(Failure error)? error,
+    TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1238,9 +1342,9 @@ class _$ErrorImpl implements _Error {
 }
 
 abstract class _Error implements DashboardState {
-  const factory _Error(final Failure error) = _$ErrorImpl;
+  const factory _Error(final String error) = _$ErrorImpl;
 
-  Failure get error;
+  String get error;
 
   /// Create a copy of DashboardState
   /// with the given fields replaced by the non-null parameter values.

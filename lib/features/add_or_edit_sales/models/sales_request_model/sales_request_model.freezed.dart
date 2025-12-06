@@ -23,15 +23,12 @@ mixin _$SalesRequestModel {
   @JsonKey(includeToJson: false)
   int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'staff_id')
-  int? get staffId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'client_id')
-  int? get clientId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'client_name')
-  String? get clientName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'client_phone_1')
-  String? get clientPhone1 => throw _privateConstructorUsedError;
-  @JsonKey(name: 'client_phone_2')
-  String? get clientPhone2 => throw _privateConstructorUsedError;
+  int? get staffId =>
+      throw _privateConstructorUsedError; // @JsonKey(name: 'client_id') int? clientId,
+// @JsonKey(name: 'client_name') String? clientName,
+  @JsonKey(name: 'client_phone')
+  String? get clientPhone =>
+      throw _privateConstructorUsedError; // @JsonKey(name: 'client_phone_2') String? clientPhone2,
   @JsonKey(name: 'client_address')
   String? get address => throw _privateConstructorUsedError;
   @JsonKey(name: 'sale_date')
@@ -49,6 +46,8 @@ mixin _$SalesRequestModel {
   int? get paidAmount => throw _privateConstructorUsedError;
   @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
   PaymentMethod? get paymentMethod => throw _privateConstructorUsedError;
+  @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+  bool get sendPdfToWhatsApp => throw _privateConstructorUsedError;
 
   /// Serializes this SalesRequestModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -69,10 +68,7 @@ abstract class $SalesRequestModelCopyWith<$Res> {
   $Res call(
       {@JsonKey(includeToJson: false) int? id,
       @JsonKey(name: 'staff_id') int? staffId,
-      @JsonKey(name: 'client_id') int? clientId,
-      @JsonKey(name: 'client_name') String? clientName,
-      @JsonKey(name: 'client_phone_1') String? clientPhone1,
-      @JsonKey(name: 'client_phone_2') String? clientPhone2,
+      @JsonKey(name: 'client_phone') String? clientPhone,
       @JsonKey(name: 'client_address') String? address,
       @JsonKey(name: 'sale_date') String? saleDate,
       @JsonKey(name: 'variants', toJson: _variantsToJson)
@@ -82,7 +78,10 @@ abstract class $SalesRequestModelCopyWith<$Res> {
       @JsonKey(name: 'discount') int? discountAmount,
       @JsonKey(name: 'paid_amount') int? paidAmount,
       @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-      PaymentMethod? paymentMethod});
+      PaymentMethod? paymentMethod,
+      @JsonKey(
+          name: 'send_invoice', includeToJson: true, includeFromJson: false)
+      bool sendPdfToWhatsApp});
 }
 
 /// @nodoc
@@ -102,10 +101,7 @@ class _$SalesRequestModelCopyWithImpl<$Res, $Val extends SalesRequestModel>
   $Res call({
     Object? id = freezed,
     Object? staffId = freezed,
-    Object? clientId = freezed,
-    Object? clientName = freezed,
-    Object? clientPhone1 = freezed,
-    Object? clientPhone2 = freezed,
+    Object? clientPhone = freezed,
     Object? address = freezed,
     Object? saleDate = freezed,
     Object? products = freezed,
@@ -114,6 +110,7 @@ class _$SalesRequestModelCopyWithImpl<$Res, $Val extends SalesRequestModel>
     Object? discountAmount = freezed,
     Object? paidAmount = freezed,
     Object? paymentMethod = freezed,
+    Object? sendPdfToWhatsApp = null,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -124,21 +121,9 @@ class _$SalesRequestModelCopyWithImpl<$Res, $Val extends SalesRequestModel>
           ? _value.staffId
           : staffId // ignore: cast_nullable_to_non_nullable
               as int?,
-      clientId: freezed == clientId
-          ? _value.clientId
-          : clientId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      clientName: freezed == clientName
-          ? _value.clientName
-          : clientName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      clientPhone1: freezed == clientPhone1
-          ? _value.clientPhone1
-          : clientPhone1 // ignore: cast_nullable_to_non_nullable
-              as String?,
-      clientPhone2: freezed == clientPhone2
-          ? _value.clientPhone2
-          : clientPhone2 // ignore: cast_nullable_to_non_nullable
+      clientPhone: freezed == clientPhone
+          ? _value.clientPhone
+          : clientPhone // ignore: cast_nullable_to_non_nullable
               as String?,
       address: freezed == address
           ? _value.address
@@ -172,6 +157,10 @@ class _$SalesRequestModelCopyWithImpl<$Res, $Val extends SalesRequestModel>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as PaymentMethod?,
+      sendPdfToWhatsApp: null == sendPdfToWhatsApp
+          ? _value.sendPdfToWhatsApp
+          : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -187,10 +176,7 @@ abstract class _$$SalesRequestModelImplCopyWith<$Res>
   $Res call(
       {@JsonKey(includeToJson: false) int? id,
       @JsonKey(name: 'staff_id') int? staffId,
-      @JsonKey(name: 'client_id') int? clientId,
-      @JsonKey(name: 'client_name') String? clientName,
-      @JsonKey(name: 'client_phone_1') String? clientPhone1,
-      @JsonKey(name: 'client_phone_2') String? clientPhone2,
+      @JsonKey(name: 'client_phone') String? clientPhone,
       @JsonKey(name: 'client_address') String? address,
       @JsonKey(name: 'sale_date') String? saleDate,
       @JsonKey(name: 'variants', toJson: _variantsToJson)
@@ -200,7 +186,10 @@ abstract class _$$SalesRequestModelImplCopyWith<$Res>
       @JsonKey(name: 'discount') int? discountAmount,
       @JsonKey(name: 'paid_amount') int? paidAmount,
       @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-      PaymentMethod? paymentMethod});
+      PaymentMethod? paymentMethod,
+      @JsonKey(
+          name: 'send_invoice', includeToJson: true, includeFromJson: false)
+      bool sendPdfToWhatsApp});
 }
 
 /// @nodoc
@@ -218,10 +207,7 @@ class __$$SalesRequestModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? staffId = freezed,
-    Object? clientId = freezed,
-    Object? clientName = freezed,
-    Object? clientPhone1 = freezed,
-    Object? clientPhone2 = freezed,
+    Object? clientPhone = freezed,
     Object? address = freezed,
     Object? saleDate = freezed,
     Object? products = freezed,
@@ -230,6 +216,7 @@ class __$$SalesRequestModelImplCopyWithImpl<$Res>
     Object? discountAmount = freezed,
     Object? paidAmount = freezed,
     Object? paymentMethod = freezed,
+    Object? sendPdfToWhatsApp = null,
   }) {
     return _then(_$SalesRequestModelImpl(
       id: freezed == id
@@ -240,21 +227,9 @@ class __$$SalesRequestModelImplCopyWithImpl<$Res>
           ? _value.staffId
           : staffId // ignore: cast_nullable_to_non_nullable
               as int?,
-      clientId: freezed == clientId
-          ? _value.clientId
-          : clientId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      clientName: freezed == clientName
-          ? _value.clientName
-          : clientName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      clientPhone1: freezed == clientPhone1
-          ? _value.clientPhone1
-          : clientPhone1 // ignore: cast_nullable_to_non_nullable
-              as String?,
-      clientPhone2: freezed == clientPhone2
-          ? _value.clientPhone2
-          : clientPhone2 // ignore: cast_nullable_to_non_nullable
+      clientPhone: freezed == clientPhone
+          ? _value.clientPhone
+          : clientPhone // ignore: cast_nullable_to_non_nullable
               as String?,
       address: freezed == address
           ? _value.address
@@ -288,6 +263,10 @@ class __$$SalesRequestModelImplCopyWithImpl<$Res>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as PaymentMethod?,
+      sendPdfToWhatsApp: null == sendPdfToWhatsApp
+          ? _value.sendPdfToWhatsApp
+          : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -299,10 +278,7 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
   const _$SalesRequestModelImpl(
       {@JsonKey(includeToJson: false) this.id,
       @JsonKey(name: 'staff_id') this.staffId,
-      @JsonKey(name: 'client_id') this.clientId,
-      @JsonKey(name: 'client_name') this.clientName,
-      @JsonKey(name: 'client_phone_1') this.clientPhone1,
-      @JsonKey(name: 'client_phone_2') this.clientPhone2,
+      @JsonKey(name: 'client_phone') this.clientPhone,
       @JsonKey(name: 'client_address') this.address,
       @JsonKey(name: 'sale_date') this.saleDate,
       @JsonKey(name: 'variants', toJson: _variantsToJson)
@@ -312,7 +288,10 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
       @JsonKey(name: 'discount') this.discountAmount,
       @JsonKey(name: 'paid_amount') this.paidAmount,
       @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-      this.paymentMethod = PaymentMethod.cash})
+      this.paymentMethod = PaymentMethod.cash,
+      @JsonKey(
+          name: 'send_invoice', includeToJson: true, includeFromJson: false)
+      this.sendPdfToWhatsApp = false})
       : _products = products;
 
   factory _$SalesRequestModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -324,18 +303,12 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
   @override
   @JsonKey(name: 'staff_id')
   final int? staffId;
+// @JsonKey(name: 'client_id') int? clientId,
+// @JsonKey(name: 'client_name') String? clientName,
   @override
-  @JsonKey(name: 'client_id')
-  final int? clientId;
-  @override
-  @JsonKey(name: 'client_name')
-  final String? clientName;
-  @override
-  @JsonKey(name: 'client_phone_1')
-  final String? clientPhone1;
-  @override
-  @JsonKey(name: 'client_phone_2')
-  final String? clientPhone2;
+  @JsonKey(name: 'client_phone')
+  final String? clientPhone;
+// @JsonKey(name: 'client_phone_2') String? clientPhone2,
   @override
   @JsonKey(name: 'client_address')
   final String? address;
@@ -368,10 +341,13 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
   @override
   @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
   final PaymentMethod? paymentMethod;
+  @override
+  @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+  final bool sendPdfToWhatsApp;
 
   @override
   String toString() {
-    return 'SalesRequestModel(id: $id, staffId: $staffId, clientId: $clientId, clientName: $clientName, clientPhone1: $clientPhone1, clientPhone2: $clientPhone2, address: $address, saleDate: $saleDate, products: $products, stockCountDecrease: $stockCountDecrease, description: $description, discountAmount: $discountAmount, paidAmount: $paidAmount, paymentMethod: $paymentMethod)';
+    return 'SalesRequestModel(id: $id, staffId: $staffId, clientPhone: $clientPhone, address: $address, saleDate: $saleDate, products: $products, stockCountDecrease: $stockCountDecrease, description: $description, discountAmount: $discountAmount, paidAmount: $paidAmount, paymentMethod: $paymentMethod, sendPdfToWhatsApp: $sendPdfToWhatsApp)';
   }
 
   @override
@@ -381,14 +357,8 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
             other is _$SalesRequestModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.staffId, staffId) || other.staffId == staffId) &&
-            (identical(other.clientId, clientId) ||
-                other.clientId == clientId) &&
-            (identical(other.clientName, clientName) ||
-                other.clientName == clientName) &&
-            (identical(other.clientPhone1, clientPhone1) ||
-                other.clientPhone1 == clientPhone1) &&
-            (identical(other.clientPhone2, clientPhone2) ||
-                other.clientPhone2 == clientPhone2) &&
+            (identical(other.clientPhone, clientPhone) ||
+                other.clientPhone == clientPhone) &&
             (identical(other.address, address) || other.address == address) &&
             (identical(other.saleDate, saleDate) ||
                 other.saleDate == saleDate) &&
@@ -402,7 +372,9 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
             (identical(other.paidAmount, paidAmount) ||
                 other.paidAmount == paidAmount) &&
             (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
+                other.paymentMethod == paymentMethod) &&
+            (identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) ||
+                other.sendPdfToWhatsApp == sendPdfToWhatsApp));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -411,10 +383,7 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
       runtimeType,
       id,
       staffId,
-      clientId,
-      clientName,
-      clientPhone1,
-      clientPhone2,
+      clientPhone,
       address,
       saleDate,
       const DeepCollectionEquality().hash(_products),
@@ -422,7 +391,8 @@ class _$SalesRequestModelImpl implements _SalesRequestModel {
       description,
       discountAmount,
       paidAmount,
-      paymentMethod);
+      paymentMethod,
+      sendPdfToWhatsApp);
 
   /// Create a copy of SalesRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -445,10 +415,7 @@ abstract class _SalesRequestModel implements SalesRequestModel {
   const factory _SalesRequestModel(
       {@JsonKey(includeToJson: false) final int? id,
       @JsonKey(name: 'staff_id') final int? staffId,
-      @JsonKey(name: 'client_id') final int? clientId,
-      @JsonKey(name: 'client_name') final String? clientName,
-      @JsonKey(name: 'client_phone_1') final String? clientPhone1,
-      @JsonKey(name: 'client_phone_2') final String? clientPhone2,
+      @JsonKey(name: 'client_phone') final String? clientPhone,
       @JsonKey(name: 'client_address') final String? address,
       @JsonKey(name: 'sale_date') final String? saleDate,
       @JsonKey(name: 'variants', toJson: _variantsToJson)
@@ -458,7 +425,10 @@ abstract class _SalesRequestModel implements SalesRequestModel {
       @JsonKey(name: 'discount') final int? discountAmount,
       @JsonKey(name: 'paid_amount') final int? paidAmount,
       @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-      final PaymentMethod? paymentMethod}) = _$SalesRequestModelImpl;
+      final PaymentMethod? paymentMethod,
+      @JsonKey(
+          name: 'send_invoice', includeToJson: true, includeFromJson: false)
+      final bool sendPdfToWhatsApp}) = _$SalesRequestModelImpl;
 
   factory _SalesRequestModel.fromJson(Map<String, dynamic> json) =
       _$SalesRequestModelImpl.fromJson;
@@ -468,19 +438,12 @@ abstract class _SalesRequestModel implements SalesRequestModel {
   int? get id;
   @override
   @JsonKey(name: 'staff_id')
-  int? get staffId;
+  int? get staffId; // @JsonKey(name: 'client_id') int? clientId,
+// @JsonKey(name: 'client_name') String? clientName,
   @override
-  @JsonKey(name: 'client_id')
-  int? get clientId;
-  @override
-  @JsonKey(name: 'client_name')
-  String? get clientName;
-  @override
-  @JsonKey(name: 'client_phone_1')
-  String? get clientPhone1;
-  @override
-  @JsonKey(name: 'client_phone_2')
-  String? get clientPhone2;
+  @JsonKey(name: 'client_phone')
+  String?
+      get clientPhone; // @JsonKey(name: 'client_phone_2') String? clientPhone2,
   @override
   @JsonKey(name: 'client_address')
   String? get address;
@@ -505,6 +468,9 @@ abstract class _SalesRequestModel implements SalesRequestModel {
   @override
   @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
   PaymentMethod? get paymentMethod;
+  @override
+  @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+  bool get sendPdfToWhatsApp;
 
   /// Create a copy of SalesRequestModel
   /// with the given fields replaced by the non-null parameter values.

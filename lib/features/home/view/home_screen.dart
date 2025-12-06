@@ -98,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                       final (nextPageUrl, isPaginating) = bloc.state.maybeWhen(
                         orElse: () => (null, false),
                         loaded: (bookings, carouselResponse, nextPageUrl,
-                                isPaginating) =>
+                                isPaginating, isOngoing) =>
                             (nextPageUrl, isPaginating),
                       );
                       if (scrollInfo.metrics.pixels >=
@@ -308,7 +308,8 @@ class HomeScreen extends StatelessWidget {
           onNotification: (scrollInfo) {
             final (nextPageUrl, isPaginating) = bloc.state.maybeWhen(
               orElse: () => (null, false),
-              loaded: (bookings, carouselResponse, nextPageUrl, isPaginating) =>
+              loaded: (bookings, carouselResponse, nextPageUrl, isPaginating,
+                      isOngoing) =>
                   (nextPageUrl, isPaginating),
             );
             if (scrollInfo.metrics.pixels >=

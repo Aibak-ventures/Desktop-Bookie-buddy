@@ -48,15 +48,10 @@ class SalesCard extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  (() {
-                    final name = sale.id.toString().trim();
-                    if (name.isEmpty) return '--';
-                    final parts =
-                        name.split(RegExp(r'\s+')).where((e) => e.isNotEmpty);
-                    final initials =
-                        parts.map((w) => w[0].toUpperCase()).take(2).join();
-                    return initials;
-                  })(),
+                 sale.saleDate.isEmpty
+    ? '--'
+    : sale.saleDate.split('-').last,
+
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w700,
@@ -171,8 +166,8 @@ class SalesCardShimmer extends StatelessWidget {
           border: Border.all(color: const Color(0xFFF0F0F0)),
         ),
         child: Shimmer.fromColors(
-          baseColor: AppColors.grey300!,
-          highlightColor: AppColors.grey100!,
+          baseColor: AppColors.grey300,
+          highlightColor: AppColors.grey100,
           child: Row(
             children: [
               // Date Section Shimmer

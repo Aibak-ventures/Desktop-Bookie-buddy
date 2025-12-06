@@ -1,16 +1,11 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/logger_config.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/error/failures.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-// import 'package:bookie_buddy_web/core/models/pagination_model.dart';
-import 'package:bookie_buddy_web/core/navigation/navigations.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
+import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
 import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.dart';
+// import 'package:booking_applica/features/home/repository/dashboard_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -19,33 +14,41 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final DashboardRepository _repository = getIt.get<DashboardRepository>();
-  DashboardBloc() : super(const _Loading()) {
+  final DashboardRepository _repository;
+  DashboardBloc({required DashboardRepository repository})
+    : _repository = repository,
+      super(const _Loading()) {
     on<_LoadDashboardData>(_onLoadDashboardData);
     on<_LoadDashboardNextPageData>(_onLoadDashboardNextPageData);
-    // on<_Search>(_onSearch);
-    on<_UpdateBooking>(_onUpdateBooking);
+    on<_UpdateData>(_onUpdateData);
     on<_LoadIfNot>(_loadIfNot);
   }
   CarouselDataModel? previousCarousel;
-  CarouselDataModel carouselResponse = CarouselDataModel(
-    upComingCount: 0,
-    completedCount: 0,
-    expiredCount: 0,
-  );
-  Map<String, List<BookingsModel>> _groupBookings(
-      List<BookingsModel> bookings) {
-    final todayList = <BookingsModel>[];
-    final tomorrowList = <BookingsModel>[];
-    final upcomingList = <BookingsModel>[];
+  CarouselDataModel carouselResponse = CarouselDataModel.initial();
 
-    for (var booking in bookings) {
-      if (booking.pickupDate!.isDateToday) {
-        todayList.add(booking);
-      } else if (booking.pickupDate!.isDateTomorrow) {
-        tomorrowList.add(booking);
+  // Groups bookings into 'today', 'tomorrow', and 'upcoming' based on their pickup or return dates.
+  Map<String, List<DashboardListModel>> _groupData(
+    List<DashboardListModel> dashboardData, {
+    bool isOngoing = false,
+  }) {
+    final todayList = <DashboardListModel>[];
+    final tomorrowList = <DashboardListModel>[];
+    final upcomingList = <DashboardListModel>[];
+
+    for (final data in dashboardData) {
+      // when using pickup date for grouping we need to check both booking and custom work
+      // and use the available one that means that data could be either booking or custom work
+      final pickupDate =
+          data.booking?.pickupDate ?? data.customWork?.pickupDate;
+      // Determine the relevant date based on whether it's ongoing or not
+      // For ongoing bookings, use the return date; otherwise, use the pickup date for bookings or custom work.
+      final date = isOngoing ? data.booking!.returnDate : pickupDate;
+      if (date!.isDateToday) {
+        todayList.add(data);
+      } else if (date.isDateTomorrow) {
+        tomorrowList.add(data);
       } else {
-        upcomingList.add(booking);
+        upcomingList.add(data);
       }
     }
 
@@ -65,29 +68,29 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ///
   /// If the loading fails, it will emit [DashboardState.error] with the error.
   Future<void> _onLoadDashboardData(
-      _LoadDashboardData event, Emitter<DashboardState> emit) async {
+    _LoadDashboardData event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final s = state is _Loaded && event.useOldState ? state as _Loaded : null;
     emit(const _Loading());
     previousCarousel = carouselResponse;
+
     try {
-      navigatorKey.currentContext?.read<UserCubit>().loadUserIfNot();
-      final result = await _repository.loadDashboardData(page: 1);
-      final bookings = result.$1.data;
-      final nextPage = result.$1.nextPageUrl;
-      carouselResponse = result.$2;
-      // final bookingGroupedList = _groupBookings(bookings);
+      final isOngoing = s?.isOngoing ?? event.isOngoing;
+      final result = await _repository.loadDashboardData(isOngoing: isOngoing);
+      final data = result.data;
+      final nextPage = data.nextPageUrl;
+      carouselResponse = result.carousel;
       emit(
         _Loaded(
-          bookingsGrouped: _groupBookings(bookings),
+          dataGrouped: _groupData(data.data, isOngoing: isOngoing),
           nextPageUrl: nextPage,
           carouselData: carouselResponse,
+          isOngoing: isOngoing,
         ),
       );
-
-      logIt.i(nextPage);
     } catch (e) {
-      emit(
-        _Error(e as Failure),
-      );
+      emit(_Error(e.toString()));
     }
   }
 
@@ -103,25 +106,28 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ///
   /// If the loading fails, it will emit [_Error] with the error.
   Future<void> _onLoadDashboardNextPageData(
-      _LoadDashboardNextPageData event, Emitter<DashboardState> emit) async {
+    _LoadDashboardNextPageData event,
+    Emitter<DashboardState> emit,
+  ) async {
     if (state is! _Loaded) return;
     final s = state as _Loaded;
 
     if (s.nextPageUrl == null || s.isPaginating) return;
 
-    emit(
-      s.copyWith(isPaginating: true),
-    );
+    emit(s.copyWith(isPaginating: true));
 
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
-      final result = await _repository.loadDashboardData(page: page);
-      final newBookings = result.$1.data;
-      final nextPage = result.$1.nextPageUrl;
-      final newGrouped = _groupBookings(newBookings);
+      final result = await _repository.loadDashboardData(
+        page: page,
+        isOngoing: s.isOngoing,
+      );
+      final newData = result.data;
+      final nextPage = newData.nextPageUrl;
+      final newGrouped = _groupData(newData.data, isOngoing: s.isOngoing);
 
       /// Merge the existing groups with the new groups
-      final mergedGrouped = {...s.bookingsGrouped};
+      final mergedGrouped = {...s.dataGrouped};
 
       newGrouped.forEach((key, value) {
         if (mergedGrouped.containsKey(key)) {
@@ -133,72 +139,61 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       emit(
         s.copyWith(
-          bookingsGrouped: mergedGrouped,
+          dataGrouped: mergedGrouped,
           nextPageUrl: nextPage,
-          carouselData: result.$2,
+          carouselData: result.carousel,
           isPaginating: false,
         ),
       );
-      logIt.i(nextPage);
     } catch (e) {
-      emit(
-        _Error(e as Failure),
-      );
+      emit(_Error(e.toString()));
     }
   }
 
-  // Future<void> _onSearch(_Search event, Emitter<DashboardState> emit) async {
-  //   emit(const _Loading());
-
-  //   try {
-  //     final bookings = await _repository.searchBookings(event.query);
-
-  //     /// You need to group the search result
-  //     final groupedBookings = _groupBookings(bookings);
-
-  //     emit(
-  //       _Loaded(
-  //         bookingsGrouped: groupedBookings,
-  //         carouselData: carouselResponse,
-  //         nextPageUrl: null,
-  //       ),
-  //     );
-  //   } catch (e) {
-  //     emit(
-  //       _Error(e as Failure),
-  //     );
-  //   }
-  // }
-
-  Future<void> _onUpdateBooking(
-      _UpdateBooking event, Emitter<DashboardState> emit) async {
-    if (event.shouldRefresh) {
+  Future<void> _onUpdateData(
+    _UpdateData event,
+    Emitter<DashboardState> emit,
+  ) async {
+    if (event.shouldRefresh && !event.isDeleted) {
       log('refreshing');
       add(const DashboardEvent.loadDashboardData());
       return;
     }
 
-    if (event.booking == null) {
+    if (event.updateData == null) {
       log('booking is null, cancelling update');
       return;
     }
 
     final s = state as _Loaded;
 
-    final updatedGrouped = {...s.bookingsGrouped};
+    final updatedGrouped = {
+      for (final entry in s.dataGrouped.entries)
+        entry.key: List<DashboardListModel>.from(entry.value),
+    };
+    final eventId =
+        event.updateData?.booking?.id ?? event.updateData?.customWork?.id;
 
-    updatedGrouped.forEach((key, bookingsList) {
-      final index = bookingsList.indexWhere((b) => b.id == event.booking!.id);
-      if (index != -1) {
-        bookingsList[index] = event.booking!;
-      }
-    });
+    if (event.isDeleted) {
+      updatedGrouped.forEach((key, dataList) {
+        dataList.removeWhere((b) {
+          final leftId = b.booking?.id ?? b.customWork?.id;
+          return leftId == eventId;
+        });
+      });
+    } else {
+      updatedGrouped.forEach((key, dataList) {
+        final index = dataList.indexWhere((b) {
+          final leftId = b.booking?.id ?? b.customWork?.id;
+          return leftId == eventId;
+        });
+        if (index != -1) {
+          dataList[index] = event.updateData!;
+        }
+      });
+    }
 
-    emit(
-      s.copyWith(
-        bookingsGrouped: updatedGrouped,
-      ),
-    );
+    emit(s.copyWith(dataGrouped: updatedGrouped));
   }
 
   void _loadIfNot(_LoadIfNot event, Emitter<DashboardState> emit) {
@@ -207,10 +202,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   void reset() {
     previousCarousel = null;
-    carouselResponse = CarouselDataModel(
-      upComingCount: 0,
-      completedCount: 0,
-      expiredCount: 0,
-    );
+    carouselResponse = CarouselDataModel.initial();
   }
 }

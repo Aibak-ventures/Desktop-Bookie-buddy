@@ -25,36 +25,15 @@ class CarouselDataModel with _$CarouselDataModel {
 
   factory CarouselDataModel.fromJson(Map<String, dynamic> json) =>
       _$CarouselDataModelFromJson(json);
+
+  factory CarouselDataModel.initial() => CarouselDataModel(
+        upComingCount: 0,
+        completedCount: 0,
+        expiredCount: 0,
+      );
 }
 
-// class CarouselDataModel {
-//   final int? upComingCount;
-//   final int? completedCount;
+// extension CarouselDataModelExtension on CarouselDataModel {
+  // int get total => upComingCount + completedCount + expiredCount;
 
-//   CarouselDataModel({
-//     required this.upComingCount,
-//     required this.completedCount,
-//   });
-
-//   factory CarouselDataModel.fromJson(Map<String, dynamic> json) {
-//     return CarouselDataModel(
-//       upComingCount: json['upcoming_count'],
-//       completedCount: json['completed_count'],
-//     );
-//   }
-
-//   @override
-//   bool operator ==(covariant CarouselDataModel other) {
-//     if (identical(this, other)) return true;
-
-//     return other.upComingCount == upComingCount &&
-//         other.completedCount == completedCount;
-//   }
-
-//   @override
-//   int get hashCode => upComingCount.hashCode ^ completedCount.hashCode;
-
-//   @override
-//   String toString() =>
-//       'CarouselResponseModel(upComingCount: $upComingCount, completedCount: $completedCount)';
 // }

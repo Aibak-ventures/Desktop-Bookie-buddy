@@ -11,7 +11,8 @@ import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_mod
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/screens/success_animation_screen.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/client_select_widget.dart';
+// 🔴 Removed client_select_widget import
+// import 'package:bookie_buddy_web/core/ui/widgets/client_select_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
@@ -38,6 +39,7 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
   // Use this controller to manage the form state and other controllers used in this screen
   final _formController = AddOrEditSalesFormStateController();
   late final Listenable _totalAmountListener;
+
   @override
   void initState() {
     super.initState();
@@ -88,200 +90,227 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
               child: ListView(
                 padding: context.isMobile ? 16.padding : (40, 24).padding,
                 children: [
-              AddOrEditSalesSection(
-                title: 'Date',
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      ignorePointers: true,
-                      controller: _formController.saleDateController,
-                      keyboardType: TextInputType.datetime,
-                      validator: (value) => null,
-                      hintText: 'Select Booked Date',
-                      label: 'Booked Date',
-                    ).onTap(() => selectBookedDate(context)),
-                  ],
-                ),
-              ),
-              15.height,
-              StaffSearchNameField(
-                nameController: _formController.staffNameController,
-              ),
-              15.height,
-              buildClientSection(),
-              15.height,
-              AddOrEditSalesProductsSection(
-                selectedProductsNotifier:
-                    _formController.selectedProductsNotifier,
-                stockCountDecreaseNotifier:
-                    _formController.stockCountDecreaseNotifier,
-                pickUpDateController: _formController.saleDateController,
-                returnDateController: _formController.saleDateController,
-                isEditMode: isEditMode,
-              ),
-              20.height,
-              Stack(
-                children: [
-                  CustomTextField(
-                    controller: _formController.descriptionController,
-                    hintText: 'Description (Optional)',
-                    prefixIcon: const SizedBox.shrink(),
-                    maxLines: 3,
-                    validator: (value) => AppInputValidators.isEmpty(value)
-                        ? null
-                        : AppInputValidators.description(value),
-                  ),
-                  Positioned(
-                    top: 16,
-                    left: 12,
-                    child: Icon(
-                      Icons.description,
-                      color: AppColors.purple.lighten(0.2),
+                  // ---- Date ----
+                  AddOrEditSalesSection(
+                    title: 'Date',
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          ignorePointers: true,
+                          controller: _formController.saleDateController,
+                          keyboardType: TextInputType.datetime,
+                          validator: (value) => null,
+                          hintText: 'Select Booked Date',
+                          label: 'Booked Date',
+                        ).onTap(() => selectBookedDate(context)),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              20.height,
-              AddOrEditSalesSection(
-                title: 'Payment Details',
-                child: Column(
-                  children: [
-                    ValueListenableBuilder(
-                      valueListenable: _formController.paymentMethodNotifier,
-                      builder: (context, paymentMethod, child) => RadioGroup(
-                        onChanged: (value) {
-                          if (value != null)
-                            _formController.paymentMethodNotifier.value = value;
-                        },
-                        groupValue: paymentMethod,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: RadioListTile(
-                                title: Text(PaymentMethod.gPay.name),
-                                value: PaymentMethod.gPay,
-                                activeColor: AppColors.purple,
-                              ),
-                            ),
-                            Expanded(
-                              child: RadioListTile(
-                                title: Text(PaymentMethod.cash.name),
-                                value: PaymentMethod.cash,
-                                activeColor: AppColors.purple,
-                              ),
-                            ),
-                          ],
+                  15.height,
+
+                  // ---- Staff (same as mobile) ----
+                  StaffSearchNameField(
+                    nameController: _formController.staffNameController,
+                  ),
+                  15.height,
+
+                  // ---- Client section (matched to mobile: phone + place, no client search) ----
+                  buildClientSection(),
+                  15.height,
+
+                  // ---- Products ----
+                  AddOrEditSalesProductsSection(
+                    selectedProductsNotifier:
+                        _formController.selectedProductsNotifier,
+                    stockCountDecreaseNotifier:
+                        _formController.stockCountDecreaseNotifier,
+                    pickUpDateController: _formController.saleDateController,
+                    returnDateController: _formController.saleDateController,
+                    isEditMode: isEditMode,
+                  ),
+
+                  20.height,
+
+                  // ---- Description ----
+                  Stack(
+                    children: [
+                      CustomTextField(
+                        controller: _formController.descriptionController,
+                        hintText: 'Description (Optional)',
+                        prefixIcon: const SizedBox.shrink(),
+                        maxLines: 3,
+                        validator: (value) => AppInputValidators.isEmpty(value)
+                            ? null
+                            : AppInputValidators.description(value),
+                      ),
+                      Positioned(
+                        top: 16,
+                        left: 12,
+                        child: Icon(
+                          Icons.description,
+                          color: AppColors.purple.lighten(0.2),
                         ),
                       ),
-                    ),
-                    15.height,
-                    CustomTextField(
-                      controller: _formController.discountController,
-                      hintText: 'Discount Amount (Optional)',
-                      label: 'Discount Amount (Optional)',
-                      prefixIcon: const Icon(Icons.currency_rupee),
-                      keyboardType: TextInputType.number,
-                      validator: (value) => AppInputValidators.isEmpty(value)
-                          ? null
-                          : AppInputValidators.amount(
-                              value,
-                              allowZero: true,
-                              fieldName: 'Discount',
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-              20.height,
-              Row(
-                children: [
-                  Expanded(
-                    child: ListenableBuilder(
-                      listenable: _totalAmountListener,
-                      builder: (context, child) {
-                        final products =
-                            _formController.selectedProductsNotifier.value;
-                        final discountText =
-                            _formController.discountController.text;
-                        final total = products.fold(
-                              0,
-                              (pv, e) => pv + (e.variant.quantity * e.amount),
-                            ) -
-                            (discountText.trim().isNotEmpty
-                                ? discountText.toIntOrNull() ?? 0
-                                : 0);
-                        return Center(
-                          child: Text(
-                            'Total: ${total.toCurrency()}',
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.black,
+                    ],
+                  ),
+
+                  20.height,
+
+                  // ---- Payment Details ----
+                  AddOrEditSalesSection(
+                    title: 'Payment Details',
+                    child: Column(
+                      children: [
+                        ValueListenableBuilder(
+                          valueListenable:
+                              _formController.paymentMethodNotifier,
+                          builder: (context, paymentMethod, child) =>
+                              RadioGroup(
+                            onChanged: (value) {
+                              if (value != null) {
+                                _formController.paymentMethodNotifier.value =
+                                    value;
+                              }
+                            },
+                            groupValue: paymentMethod,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: RadioListTile(
+                                    title: Text(PaymentMethod.gPay.name),
+                                    value: PaymentMethod.gPay,
+                                    activeColor: AppColors.purple,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile(
+                                    title: Text(PaymentMethod.cash.name),
+                                    value: PaymentMethod.cash,
+                                    activeColor: AppColors.purple,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: BlocConsumer<SaveSalesCubit, SaveSalesState>(
-                      listener: (context, state) {
-                        state.maybeWhen(
-                          orElse: () {},
-                          success: (message) {
-                            if (isEditMode) {
-                              if (widget.saleDetails?.id != null)
-                                context.pop(true);
-                              context.showSnackBar(
-                                message ?? 'Sales updated successfully',
-                              );
-                            } else {
-                              context.push(
-                                SuccessAnimationScreen(
-                                  text: 'Sales saved successfully',
-                                  afterSuccess: () {
-                                    context
-                                      ..pop()
-                                      ..pop();
-                                  },
+                        ),
+                        15.height,
+                        CustomTextField(
+                          controller: _formController.discountController,
+                          hintText: 'Discount Amount (Optional)',
+                          label: 'Discount Amount (Optional)',
+                          prefixIcon: const Icon(Icons.currency_rupee),
+                          keyboardType: TextInputType.number,
+                          validator: (value) => AppInputValidators.isEmpty(value)
+                              ? null
+                              : AppInputValidators.amount(
+                                  value,
+                                  allowZero: true,
+                                  fieldName: 'Discount',
                                 ),
-                              );
-                            }
-                          },
-                          failure: (failure) {
-                            context.showSnackBar(failure, isError: true);
-                          },
-                        );
-                      },
-                      builder: (context, state) {
-                        final isSaving = state.maybeMap(
-                          orElse: () => false,
-                          saving: (_) => true,
-                        );
-                        return CustomElevatedButton(
-                          text: 'Submit',
-                          isLoading: isSaving,
-                          width: double.infinity,
-                          onPressed: () {
-                            final req = _formController.buildRequest(
-                              saleDetails: widget.saleDetails,
-                              context: context,
-                            );
-                            log('Sales Request: $req');
-                            if (req == null) return;
-                            context.read<SaveSalesCubit>().saveSales(
-                                  salesRequest: req,
-                                  isEditMode: isEditMode,
-                                );
-                          },
-                        );
-                      },
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              20.height,
+
+                  20.height,
+
+                  // ---- Total + Submit ----
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ListenableBuilder(
+                          listenable: _totalAmountListener,
+                          builder: (context, child) {
+                            final products =
+                                _formController.selectedProductsNotifier.value;
+                            final discountText =
+                                _formController.discountController.text;
+                            final total =
+                                products.fold<int>(
+                                  0,
+                                  (pv, e) =>
+                                      pv + (e.variant.quantity * e.amount),
+                                ) -
+                                (discountText.trim().isNotEmpty
+                                    ? discountText.toIntOrNull() ?? 0
+                                    : 0);
+                            return Center(
+                              child: Text(
+                                'Total: ${total.toCurrency()}',
+                                style: TextStyle(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.black,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: BlocConsumer<SaveSalesCubit, SaveSalesState>(
+                          listener: (context, state) {
+                            state.maybeWhen(
+                              orElse: () {},
+                              success: (message) {
+                                if (isEditMode) {
+                                  if (widget.saleDetails?.id != null) {
+                                    context.pop(true);
+                                  }
+                                  context.showSnackBar(
+                                    message ?? 'Sales updated successfully',
+                                  );
+                                } else {
+                                  context.push(
+                                    SuccessAnimationScreen(
+                                      text: 'Sales saved successfully',
+                                      afterSuccess: () {
+                                        context
+                                          ..pop()
+                                          ..pop();
+                                      },
+                                    ),
+                                  );
+                                }
+                              },
+                              failure: (failure) {
+                                context.showSnackBar(
+                                  failure,
+                                  isError: true,
+                                );
+                              },
+                            );
+                          },
+                          builder: (context, state) {
+                            final isSaving = state.maybeMap(
+                              orElse: () => false,
+                              saving: (_) => true,
+                            );
+                            return CustomElevatedButton(
+                              text: 'Submit',
+                              isLoading: isSaving,
+                              width: double.infinity,
+                              onPressed: () {
+                                final req = _formController.buildRequest(
+                                  saleDetails: widget.saleDetails,
+                                  context: context,
+                                );
+                                log('Sales Request: $req');
+                                if (req == null) return;
+                                context.read<SaveSalesCubit>().saveSales(
+                                      salesRequest: req,
+                                      isEditMode: isEditMode,
+                                    );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  20.height,
                 ],
               ),
             ),
@@ -291,16 +320,17 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
     );
   }
 
+  // ---- Client section: same fields as mobile (phone + place), no search client ----
   Widget buildClientSection() => Column(
         children: [
-          ClientSelectWidget(
-            nameController: _formController.nameController,
-            phone1Controller: _formController.phone1Controller,
-            phone2Controller: _formController.phone2Controller,
-            textSize: 16,
-            spacing: 15,
-            isClientSearchEnabledNotifier:
-                _formController.isClientSearchEnabledNotifier,
+          CustomTextField(
+            controller: _formController.clientPhoneController,
+            hintText: 'Client Phone Number',
+            label: 'Client Phone Number',
+            keyboardType: TextInputType.phone,
+            prefixIcon: const Icon(Icons.phone),
+            validator: (value) =>
+                AppInputValidators.phoneNumber(value, isRequired: false),
           ),
           15.height,
           Stack(
@@ -311,7 +341,10 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                 hintText: 'Place',
                 prefixIcon: const SizedBox.shrink(),
                 maxLines: 3,
-                validator: AppInputValidators.address,
+                // Optional address – same pattern as description/discount
+                validator: (value) => AppInputValidators.isEmpty(value)
+                    ? null
+                    : AppInputValidators.address(value),
               ),
               Positioned(
                 top: 16,
@@ -342,7 +375,7 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
     }
   }
 
-  // -------- Discard Changes Helpers (explicit comparisons like EditBookingScreen) --------
+  // -------- Discard Changes Helpers --------
   void _handlePop(bool didPop, dynamic result) async {
     if (didPop) return;
     if (_hasUnsavedChanges()) {
@@ -364,13 +397,12 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
     // Creation mode: if no original, detect any user input
     if (original == null) {
       final anyClientInput =
-          _formController.nameController.text.trim().isNotEmpty ||
-              _formController.phone1Controller.text.trim().isNotEmpty ||
-              _formController.phone2Controller.text.trim().isNotEmpty;
-      final anyOther = _formController.placeController.text.trim().isNotEmpty ||
-          _formController.descriptionController.text.trim().isNotEmpty ||
-          discountText.isNotEmpty ||
-          products.isNotEmpty;
+          _formController.clientPhoneController.text.trim().isNotEmpty;
+      final anyOther =
+          _formController.placeController.text.trim().isNotEmpty ||
+              _formController.descriptionController.text.trim().isNotEmpty ||
+              discountText.isNotEmpty ||
+              products.isNotEmpty;
       // Sale date controller is always set (today) so ignore that.
       return anyClientInput || anyOther;
     }
@@ -379,34 +411,39 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
 
     // Sale date
     if (_formController.saleDateController.text.formatToUiDate() !=
-        original.saleDate.formatToUiDate()) changed = true;
-
-    // Client (existing vs new not strictly needed; treat by field diff)
-    if (_formController.nameController.text.trim() != original.client?.name)
+        original.saleDate.formatToUiDate()) {
       changed = true;
-    if (_formController.phone1Controller.text.trim() !=
-        original.client?.phone1.toString()) changed = true;
-    if ((_formController.phone2Controller.text.trim().isNotEmpty
-            ? _formController.phone2Controller.text.trim()
-            : '') !=
-        (original.client?.phone2?.toString() ?? '')) changed = true;
+    }
+
+    // Client phone
+    if (_formController.clientPhoneController.text.trim() !=
+        original.clientPhone.toString()) {
+      changed = true;
+    }
 
     // Address
-    if (_formController.placeController.text.trim() != original.address.trim())
+    if (_formController.placeController.text.trim() !=
+        original.address.trim()) {
       changed = true;
+    }
 
     // Description
     if (_formController.descriptionController.text.trim() !=
-        original.description.trim()) changed = true;
+        original.description.trim()) {
+      changed = true;
+    }
 
     // Discount
     final originalDiscount =
         original.discountAmount > 0 ? original.discountAmount.toString() : '';
-    if (discountText != originalDiscount) changed = true;
+    if (discountText != originalDiscount) {
+      changed = true;
+    }
 
     // Payment method
-    if (_formController.paymentMethodNotifier.value != original.paymentMethod)
+    if (_formController.paymentMethodNotifier.value != original.paymentMethod) {
       changed = true;
+    }
 
     // Products comparison (length + each id/variant/qty/amount)
     if (!changed) {

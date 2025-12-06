@@ -17,17 +17,30 @@ import 'package:shimmer/shimmer.dart';
 class BookingCard extends StatelessWidget {
   final BookingsModel booking;
   final VoidCallback onTap;
+  final bool useReturnDate;
 
-  const BookingCard({required this.booking, required this.onTap, super.key});
+  const BookingCard({
+    required this.booking,
+    required this.onTap,
+    this.useReturnDate = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final String clientName = booking.clientName;
     // final String paymentStatus = booking.paymentStatus.name;
     final deliveryStatus = booking.deliveryStatus;
-    final DateTime? pickupDate = booking.pickupDate != null
-        ? booking.pickupDate!.parseToDateTime()
-        : null;
+    
+    // Use return date if useReturnDate is true, otherwise use pickup date
+    final DateTime? displayDate = useReturnDate
+        ? (booking.returnDate != null
+            ? booking.returnDate!.parseToDateTime()
+            : null)
+        : (booking.pickupDate != null
+            ? booking.pickupDate!.parseToDateTime()
+            : null);
+    
     final isAfterReturnDate = booking.returnDate != null &&
         booking.bookingStatus != BookingStatus.completed &&
         DateTime.now().isAfter(
@@ -63,12 +76,12 @@ class BookingCard extends StatelessWidget {
                     : AppColors.purpleLight,
                 borderRadius: 9.radiusBorder,
               ),
-              child: pickupDate != null
+              child: displayDate != null
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          pickupDate.day.toString(),
+                          displayDate.day.toString(),
                           style: TextStyle(
                             fontSize: 24.sp,
                             fontWeight: FontWeight.w600,
@@ -78,7 +91,7 @@ class BookingCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          AppDateUtils.getMonthName(pickupDate.month),
+                          AppDateUtils.getMonthName(displayDate.month),
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors.grey,
@@ -202,15 +215,15 @@ class BookingCardShimmer extends StatelessWidget {
           border: Border.all(color: const Color(0xFFF0F0F0)),
         ),
         child: Shimmer.fromColors(
-          baseColor: AppColors.grey300!,
-          highlightColor: AppColors.grey100!,
+          baseColor: AppColors.grey300,
+          highlightColor: AppColors.grey100,
           child: Row(
             children: [
               // Date Section Shimmer
               Container(
-                width: 80,
+               width: 80,
                 height: 80,
-                decoration: BoxDecoration(
+               decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),

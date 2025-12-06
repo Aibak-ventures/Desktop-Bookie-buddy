@@ -225,7 +225,7 @@ class _ProductAddExpenseDialogState extends State<ProductAddExpenseDialog> {
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 ),
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 items: _categories.map((String category) {
                   return DropdownMenuItem<String>(
                     value: category,

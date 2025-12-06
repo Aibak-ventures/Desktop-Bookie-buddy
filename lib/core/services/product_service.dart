@@ -16,6 +16,7 @@ class ProductService {
     String? category,
     double? minPrice,
     double? maxPrice,
+     
   }) async {
     try {
       log('🔄 Fetching products - Page: $page, Search: $search');

@@ -10,7 +10,6 @@ import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_invoice_and_delivery_status_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_location_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_other_details_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_product_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_time_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';

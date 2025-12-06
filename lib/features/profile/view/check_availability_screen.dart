@@ -1,12 +1,16 @@
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/product_card.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/show_custom_bottom_sheet.dart';
 import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
-import 'package:bookie_buddy_web/features/product/view/product_info_screen.dart';
-import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
-import 'package:bookie_buddy_web/features/product/view_model/bloc_product_info/product_info_bloc.dart';
+import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,386 +23,274 @@ class CheckAvailabilityScreen extends StatefulWidget {
 }
 
 class _CheckAvailabilityScreenState extends State<CheckAvailabilityScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  final ProductBloc _productBloc = ProductBloc();
-  bool _hasSearched = false;
-
   @override
-  void dispose() {
-    _searchController.dispose();
-    _productBloc.close();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // Show the service and date selection dialog immediately
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showServiceDateSelectionDialog();
+    });
   }
 
-  void _performSearch() {
-    final query = _searchController.text.trim();
-    if (query.isEmpty) {
-      context.showSnackBar('Please enter a product name or code',
-          isError: true);
-      return;
+  Future<void> _showServiceDateSelectionDialog() async {
+    if (context.read<ServiceBloc>().getServices().isEmpty) {
+      context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
     }
 
-    setState(() {
-      _hasSearched = true;
-    });
-
-    // Search across all services (serviceId: 1 is default, but search will work across all)
-    _productBloc.add(
-      ProductEvent.searchProducts(
-        serviceId: 1,
-        query: query,
-        type: null,
-        startPrice: null,
-        endPrice: null,
-      ),
+    final dateController = TextEditingController(
+      text: DateTime.now().format(),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+    int? serviceId;
     final isDesktop = ResponsiveHelper.isDesktop(context);
 
-    return Scaffold(
-      backgroundColor: isDesktop ? const Color(0xFFF5F7FA) : null,
-      appBar: AppBar(
-        title: const Text('Check Availability'),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: isDesktop ? Colors.white : null,
-        foregroundColor: isDesktop ? Colors.black87 : null,
-      ),
-      body: BlocProvider.value(
-        value: _productBloc,
-        child: Center(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: isDesktop ? 1000 : double.infinity,
-            ),
-            padding: EdgeInsets.all(isDesktop ? 24 : 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Search Section
-                Container(
-                  padding: EdgeInsets.all(isDesktop ? 24 : 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(isDesktop ? 16 : 12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+    final result = await showCustomBottomSheet(
+      context,
+      isDraggable: false,
+      child: SizedBox(
+        width: isDesktop ? 500 : double.infinity,
+        child: Padding(
+          padding: EdgeInsets.all(isDesktop ? 24 : 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today,
+                    color: const Color(0xFF667eea),
+                    size: isDesktop ? 28 : 24,
                   ),
-                  child: Column(
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Check Availability',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: isDesktop ? 20 : 18,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Select service and date to check product availability',
+                style: TextStyle(
+                  fontSize: isDesktop ? 14 : 13,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Service Selection
+              BlocBuilder<ServiceBloc, ServiceState>(
+                builder: (context, state) {
+                  final services = state.maybeWhen(
+                    orElse: () => <ServicesModel>[],
+                    loaded: (services) => services,
+                  );
+
+                  // Filter out material services
+                  final availableServices = services
+                      .where((e) => !MainServiceType.fromString(
+                            e.mainServiceName,
+                          ).isMaterial)
+                      .toList();
+
+                  if (availableServices.isNotEmpty && serviceId == null) {
+                    serviceId = availableServices.first.id;
+                  }
+
+                  return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.search,
-                            color: const Color(0xFF667eea),
-                            size: isDesktop ? 28 : 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Search Product',
-                            style: TextStyle(
-                              fontSize: isDesktop ? 20 : 18,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1F2937),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
                       Text(
-                        'Enter product name, code, or category to check availability',
+                        'Service',
                         style: TextStyle(
-                          fontSize: isDesktop ? 14 : 13,
-                          color: Colors.grey[600],
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[700],
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomTextField(
-                              label: 'Product Name or Code',
-                              controller: _searchController,
-                              hintText: 'e.g., Shirt, ABC123, Blue Dress',
-                              validator: (value) => null,
+                      const SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: DropdownButtonFormField<int>(
+                          value: serviceId,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
                             ),
+                            border: InputBorder.none,
                           ),
-                          const SizedBox(width: 12),
-                          SizedBox(
-                            height: 56,
-                            child: ElevatedButton(
-                              onPressed: _performSearch,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF667eea),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                          hint: const Text('Select Service'),
+                          isExpanded: true,
+                          items: availableServices
+                              .map(
+                                (service) => DropdownMenuItem(
+                                  value: service.id,
+                                  child: Text(service.name),
                                 ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: isDesktop ? 32 : 24,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.search, size: 20),
-                                  if (isDesktop) ...[
-                                    const SizedBox(width: 8),
-                                    const Text(
-                                      'Search',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                serviceId = value;
+                              });
+                            }
+                          },
+                        ),
                       ),
                     ],
+                  );
+                },
+              ),
+
+              const SizedBox(height: 20),
+
+              // Date Selection
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Date',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 8),
+                  CustomTextField(
+                    controller: dateController,
+                    ignorePointers: true,
+                    hintText: 'Select availability date',
+                    validator: (value) => AppInputValidators.isEmpty(value)
+                        ? 'Please select date'
+                        : null,
+                    suffixIcon: const Icon(Icons.calendar_today, size: 20),
+                  ).onTap(() async {
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialDate: dateController.text.isNotNullOrEmpty
+                          ? dateController.text.parseToDateTime()
+                          : DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(
+                        const Duration(days: 365),
+                      ),
+                    );
 
-                const SizedBox(height: 24),
+                    if (picked != null) {
+                      dateController.text = picked.format();
+                    }
+                  }),
+                ],
+              ),
 
-                // Results Section
-                Expanded(
-                  child: BlocBuilder<ProductBloc, ProductState>(
-                    builder: (context, state) {
-                      return state.when(
-                        initial: () => _buildEmptyState(isDesktop),
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(),
+              const SizedBox(height: 28),
+
+              // Action Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        loaded: (products,
-                            nextPageUrl,
-                            isPaginating,
-                            isSearching,
-                            searchQuery,
-                            searchType,
-                            startPrice,
-                            endPrice) {
-                          if (!_hasSearched) {
-                            return _buildEmptyState(isDesktop);
-                          }
-
-                          if (products.isEmpty) {
-                            return _buildNoResultsState(isDesktop);
-                          }
-
-                          return _buildResultsList(
-                            context,
-                            products,
-                            isDesktop,
+                      ),
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: CustomElevatedButton(
+                      text: 'Check Availability',
+                      onPressed: () {
+                        if (serviceId == null) {
+                          context.showSnackBar(
+                            'Please select a service',
+                            isError: true,
                           );
-                        },
-                        error: (message) => Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.error_outline,
-                                size: 64,
-                                color: Colors.red,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Error: $message',
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: _performSearch,
-                                child: const Text('Retry'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                          return;
+                        }
+                        if (dateController.text.isNullOrEmpty) {
+                          context.showSnackBar(
+                            'Please select a date',
+                            isError: true,
+                          );
+                          return;
+                        }
+                        final selectedDate =
+                            dateController.text.parseToDateTime();
+                        if (selectedDate.isBefore(
+                          DateTime.now().subtract(const Duration(days: 1)),
+                        )) {
+                          context.showSnackBar(
+                            'Please select a valid date',
+                            isError: true,
+                          );
+                          return;
+                        }
+
+                        Navigator.of(context).pop({
+                          'serviceId': serviceId,
+                          'date': dateController.text,
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+            ],
           ),
         ),
       ),
     );
+
+    // Navigate to select products screen if service and date were selected
+    if (result != null && result is Map<String, dynamic>) {
+      final serviceId = result['serviceId'] as int;
+      final date = result['date'] as String;
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => SelectProductScreen(
+            serviceId: serviceId,
+            pickupDate: date,
+            returnDate: date,
+            useAvailableProductsApi: true,
+            availabilityCheckOnly: true,
+          ),
+        ),
+      );
+    } else {
+      // User cancelled, go back
+      Navigator.of(context).pop();
+    }
   }
 
-  Widget _buildEmptyState(bool isDesktop) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.inventory_2_outlined,
-            size: isDesktop ? 100 : 80,
-            color: Colors.grey[300],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Search for Products',
-            style: TextStyle(
-              fontSize: isDesktop ? 20 : 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[700],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Enter a product name or code to check availability',
-            style: TextStyle(
-              fontSize: isDesktop ? 14 : 13,
-              color: Colors.grey[500],
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNoResultsState(bool isDesktop) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.search_off,
-            size: isDesktop ? 100 : 80,
-            color: Colors.grey[300],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No Products Found',
-            style: TextStyle(
-              fontSize: isDesktop ? 20 : 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[700],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Try searching with a different name or code',
-            style: TextStyle(
-              fontSize: isDesktop ? 14 : 13,
-              color: Colors.grey[500],
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              _searchController.clear();
-              setState(() {
-                _hasSearched = false;
-              });
-            },
-            icon: const Icon(Icons.refresh),
-            label: const Text('Clear Search'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF667eea),
-              foregroundColor: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildResultsList(
-    BuildContext context,
-    List products,
-    bool isDesktop,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(isDesktop ? 16 : 12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(isDesktop ? 20 : 16),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.check_circle,
-                  color: const Color(0xFF10B981),
-                  size: isDesktop ? 24 : 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '${products.length} Product${products.length > 1 ? 's' : ''} Found',
-                  style: TextStyle(
-                    fontSize: isDesktop ? 18 : 16,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1F2937),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.all(isDesktop ? 20 : 16),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: isDesktop ? 3 : 2,
-                childAspectRatio: 0.85,
-                crossAxisSpacing: isDesktop ? 16 : 12,
-                mainAxisSpacing: isDesktop ? 16 : 12,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return ProductCard(
-                  product: product,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) =>
-                              ProductInfoBloc(repository: getIt.get())
-                                ..add(ProductInfoEvent.loadProductInfo(
-                                  product.id,
-                                )),
-                          child: ProductInfoScreen(
-                            serviceId: 1,
-                            productId: product.id,
-                            mainServiceType: MainServiceType.others,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    // Show loading while dialog appears
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

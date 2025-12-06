@@ -7,12 +7,9 @@ part 'sales_request_model.g.dart';
 
 List<Map<String, dynamic>>? _variantsToJson(
   List<ProductSelectedModel>? variants,
-) =>
-    variants == null || variants.isEmpty
-        ? null
-        : variants
-            .map((e) => e.toCustomJson(includeMeasurement: false))
-            .toList();
+) => variants == null || variants.isEmpty
+    ? null
+    : variants.map((e) => e.toCustomJson(includeMeasurement: false)).toList();
 
 // Map<String, dynamic>? _clientToJson(ClientRequestModel? client) {
 //   if (client == null) return null;
@@ -32,10 +29,10 @@ class SalesRequestModel with _$SalesRequestModel {
   const factory SalesRequestModel({
     @JsonKey(includeToJson: false) int? id,
     @JsonKey(name: 'staff_id') int? staffId,
-    @JsonKey(name: 'client_id') int? clientId,
-    @JsonKey(name: 'client_name') String? clientName,
-    @JsonKey(name: 'client_phone_1') String? clientPhone1,
-    @JsonKey(name: 'client_phone_2') String? clientPhone2,
+    // @JsonKey(name: 'client_id') int? clientId,
+    // @JsonKey(name: 'client_name') String? clientName,
+    @JsonKey(name: 'client_phone') String? clientPhone,
+    // @JsonKey(name: 'client_phone_2') String? clientPhone2,
     @JsonKey(name: 'client_address') String? address,
     @JsonKey(name: 'sale_date') String? saleDate,
     @JsonKey(name: 'variants', toJson: _variantsToJson)
@@ -47,6 +44,9 @@ class SalesRequestModel with _$SalesRequestModel {
     @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
     @Default(PaymentMethod.cash)
     PaymentMethod? paymentMethod,
+    @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
+    @Default(false)
+    bool sendPdfToWhatsApp,
   }) = _SalesRequestModel;
 
   factory SalesRequestModel.fromJson(Map<String, dynamic> json) =>

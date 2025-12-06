@@ -2,12 +2,9 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
-import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
@@ -31,12 +28,10 @@ import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_security
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
 import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments/wallet_payments_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
-import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/about_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/check_availability_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
@@ -44,7 +39,6 @@ import 'package:bookie_buddy_web/features/profile/view/contact_and_support_scree
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/profile_shop_details_card.dart';
-import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -105,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
       onRefresh: context.read<UserCubit>().loadUserData,
       child: SingleChildScrollView(
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -342,22 +336,30 @@ class ProfileScreen extends StatelessWidget {
         CustomProfileTile(
           icon: Icons.business_center_outlined,
           title: 'Staff',
-          onTap: () => NavigatorX(context).push(BlocProvider(
-          create: (context) => SalesListBloc(repository: getIt.get()),
-          child: const SalesListScreen(),
-        )),
+          onTap: () {
+            // TODO: Navigate to Staff management screen when implemented
+            context.showSnackBar('Staff management screen coming soon!');
+          },
         ),
         const SizedBox(height: 5),
         CustomProfileTile(
           icon: LucideIcons.badgeDollarSign,
           title: 'Sales',
-        onTap: () => NavigatorX(context).push(
-  BlocProvider(
-    create: (context) => SalesListBloc(repository: getIt.get()),
-    child: const SalesListScreen(),
-  ),
-),
-
+          onTap: () => NavigatorX(context).push(
+            BlocProvider(
+              create: (context) => SalesListBloc(repository: getIt.get()),
+              child: const SalesListScreen(),
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
+        CustomProfileTile(
+          icon: LucideIcons.settings,
+          title: 'Settings',
+          onTap: () {
+            // TODO: Navigate to Settings screen when implemented
+            context.showSnackBar('Settings screen coming soon!');
+          },
         ),
         // stock
         // CustomProfileTile(

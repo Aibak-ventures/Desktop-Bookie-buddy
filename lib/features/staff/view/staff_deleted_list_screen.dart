@@ -8,7 +8,6 @@ import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_deleted_li
 import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class StaffDeletedListScreen extends StatelessWidget {
   const StaffDeletedListScreen({super.key});

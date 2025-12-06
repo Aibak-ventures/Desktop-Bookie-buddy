@@ -17,13 +17,13 @@ class AddOrEditSalesFormStateController {
   // Form key
   final formKey = GlobalKey<FormState>();
 
+  final focusGuard = FocusNode(debugLabel: 'AddOrEditSalesFocusGuard');
+
   // Date
   final saleDateController = TextEditingController();
 
   // Client
-  final nameController = TextEditingController();
-  final phone1Controller = TextEditingController();
-  final phone2Controller = TextEditingController();
+  final clientPhoneController = TextEditingController();
 
   // Other
   final placeController = TextEditingController();
@@ -37,43 +37,42 @@ class AddOrEditSalesFormStateController {
   final selectedProductsNotifier = ValueNotifier<List<ProductSelectedModel>>(
     [],
   );
-  final isClientSearchEnabledNotifier = ValueNotifier<bool>(false);
 
   final stockCountDecreaseNotifier = ValueNotifier<bool>(true);
 
   final paymentMethodNotifier = ValueNotifier(PaymentMethod.gPay);
 
+  final isSharingPdfToWhatsAppNotifier = ValueNotifier<bool>(false);
+
   void dispose() {
     saleDateController.dispose();
-    nameController.dispose();
-    phone1Controller.dispose();
-    phone2Controller.dispose();
+    // nameController.dispose();
+    clientPhoneController.dispose();
+    // phone2Controller.dispose();
     placeController.dispose();
     discountController.dispose();
     descriptionController.dispose();
     staffNameController.dispose();
     selectedProductsNotifier.dispose();
-    isClientSearchEnabledNotifier.dispose();
+    // isClientSearchEnabledNotifier.dispose();
     stockCountDecreaseNotifier.dispose();
     paymentMethodNotifier.dispose();
+    isSharingPdfToWhatsAppNotifier.dispose();
+    focusGuard.dispose();
   }
 
   void setInitialValues(SaleDetailsModel saleDetails, BuildContext context) {
+    focusGuard.skipTraversal = true;
     saleDateController.text = saleDetails.saleDate.formatToUiDate();
 
     staffNameController.text = saleDetails.staffName ?? 'Staff Name';
 
-    if (saleDetails.client != null) {
-      nameController.text = saleDetails.client!.name;
-      phone1Controller.text = saleDetails.client!.phone1.toString();
-      if (saleDetails.client!.phone2 != null) {
-        phone2Controller.text = saleDetails.client!.phone2.toString();
-      }
-      context.read<ClientCubit>().selectClient(saleDetails.client!);
-    } else if (saleDetails.clientPhone != null) {
-      phone1Controller.text = saleDetails.clientPhone.toString();
-    }
+    // nameController.text = saleDetails.client.name;
     paymentMethodNotifier.value = saleDetails.paymentMethod;
+    clientPhoneController.text = saleDetails.clientPhone.toString();
+    // if (saleDetails.client.phone2 != null) {
+    //   phone2Controller.text = saleDetails.client.phone2.toString();
+    // }
     if (saleDetails.address.isNotNullOrEmpty) {
       placeController.text = saleDetails.address;
     }
@@ -81,13 +80,16 @@ class AddOrEditSalesFormStateController {
     if (saleDetails.discountAmount > 0)
       discountController.text = saleDetails.discountAmount.toString();
 
-    isClientSearchEnabledNotifier.value = true;
+    // context.read<ClientCubit>().selectClient(saleDetails.client);
+
+    // isClientSearchEnabledNotifier.value = true;
 
     selectedProductsNotifier.value = saleDetails.products
         .map(
           (e) => ProductSelectedModel(
             amount: e.price,
             quantity: e.quantity,
+            // fabricLength: e.fabricLength,
             variant: ProductInfoModel(
               id: e.id,
               productId: e.productId,
@@ -95,6 +97,7 @@ class AddOrEditSalesFormStateController {
               name: e.name,
               image: e.image,
               quantity: e.quantity,
+              // fabricLength: e.fabricLength,
               amount: e.price,
               category: e.category,
               color: e.color,
@@ -141,16 +144,6 @@ class AddOrEditSalesFormStateController {
       }
     }
 
-    final isExistingClient = isClientSearchEnabledNotifier.value;
-    final selectedClient = context.read<ClientCubit>().getSelectedClient();
-    if (selectedClient == null && isExistingClient) {
-      context.showSnackBar(
-        'Please select a client',
-        title: 'Client Required',
-        isError: true,
-      );
-      return null;
-    }
     if (selectedProductsNotifier.value.isEmpty) {
       context.showSnackBar(
         'Select at least one product',
@@ -184,17 +177,8 @@ class AddOrEditSalesFormStateController {
           currentSaleDate != original.saleDate.formatToUiDate();
 
       // Compare client
-      bool clientChanged = false;
-      if (isExistingClient) {
-        clientChanged = selectedClient?.id != original.client?.id;
-      } else {
-        clientChanged = nameController.text.trim() != original.client?.name ||
-            phone1Controller.text.trim() != original.client?.phone1.toString() ||
-            (phone2Controller.text.trim().isNotEmpty
-                    ? phone2Controller.text.trim()
-                    : null) !=
-                original.client?.phone2?.toString();
-      }
+      final isClientPhoneChanged =
+          clientPhoneController.text.trim() != original.clientPhone.toString();
 
       final isStaffChanged = selectedStaff?.id != original.staffId;
 
@@ -219,11 +203,6 @@ class AddOrEditSalesFormStateController {
         productsChanged = true;
       } else {
         for (final p in newProducts) {
-          // final match = original.products.firstWhere(
-          //   (op) =>
-          //       op.id == p.variant.id && op.variantId == p.variant.variantId,
-          //   orElse: () => const SaleProductModelPlaceholder(),
-          // );
           ProductSaleInfoModel? match;
           for (final op in original.products) {
             if (op.id == p.variant.id && op.variantId == p.variant.variantId) {
@@ -245,7 +224,7 @@ class AddOrEditSalesFormStateController {
 
       // If nothing changed -> pop with snackbar
       if (!(saleDateChanged ||
-          clientChanged ||
+          isClientPhoneChanged ||
           addressChanged ||
           descriptionChanged ||
           discountChanged ||
@@ -258,47 +237,32 @@ class AddOrEditSalesFormStateController {
         return null;
       }
 
-      final client = clientChanged && !isExistingClient
-          ? ClientRequestModel(
-              id: null,
-              name: nameController.text.trim(),
-              phone1: phone1Controller.text.trim().toInt(),
-              phone2: phone2Controller.text.trim().toIntOrNull(),
-            )
-          : null;
       return SalesRequestModel(
         id: original.id,
         saleDate: saleDateChanged ? currentSaleDate : null,
         staffId: isStaffChanged ? selectedStaff?.id : null,
-        clientId: clientChanged && isExistingClient ? selectedClient?.id : null,
-        clientName: client?.name,
-        clientPhone1: client?.phone1?.toString(),
-        clientPhone2: client?.phone2?.toString(),
+        clientPhone: isClientPhoneChanged
+            ? clientPhoneController.text.trim()
+            : null,
         address: addressChanged ? placeController.text.trim() : null,
-        products:
-            productsChanged && newProducts.isNotEmpty ? newProducts : null,
-        description:
-            descriptionChanged ? descriptionController.text.trim() : null,
+        products: productsChanged && newProducts.isNotEmpty
+            ? newProducts
+            : null,
+
+        description: descriptionChanged
+            ? descriptionController.text.trim()
+            : null,
         discountAmount: discountChanged ? discountAmount : null,
-        paymentMethod:
-            paymentMethodChanged ? paymentMethodNotifier.value : null,
+
+        paymentMethod: paymentMethodChanged
+            ? paymentMethodNotifier.value
+            : null,
       );
     }
-    final client = isExistingClient
-        ? null
-        : ClientRequestModel(
-            id: null,
-            name: nameController.text.trim(),
-            phone1: phone1Controller.text.trim().toInt(),
-            phone2: phone2Controller.text.trim().toIntOrNull(),
-          );
     return SalesRequestModel(
       saleDate: saleDateController.text.formatToUiDate(),
       staffId: selectedStaff?.id,
-      clientId: isExistingClient ? selectedClient?.id : null,
-      clientName: client?.name,
-      clientPhone1: client?.phone1?.toString(),
-      clientPhone2: client?.phone2?.toString(),
+      clientPhone: clientPhoneController.text.trim(),
       address: placeController.text.trim(),
       products: selectedProductsNotifier.value,
       stockCountDecrease: stockCountDecreaseNotifier.value,
@@ -306,6 +270,7 @@ class AddOrEditSalesFormStateController {
       discountAmount: discountAmount,
       paidAmount: totalAmount - discountAmount,
       paymentMethod: paymentMethodNotifier.value,
+      sendPdfToWhatsApp: isSharingPdfToWhatsAppNotifier.value,
     );
   }
 }

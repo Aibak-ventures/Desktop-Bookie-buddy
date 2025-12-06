@@ -6,43 +6,34 @@ import 'package:bookie_buddy_web/core/error/error_handler.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/network_exceptions.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 // import 'package:bookie_buddy_web/core/models/pagination_model.dart';
-import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
 import 'package:dio/dio.dart';
 
 class DashboardService {
-  Future<(PaginationModel<BookingsModel>, CarouselDataModel)>
-      fetchDashboardData(int page) async {
+  Future<CustomResponseModel> fetchDashboardData(
+    int page, {
+    bool isOngoing = false,
+  }) async {
     try {
       final response = await DioClient.dio.get(
         ApiPaths.bookings.dashboard,
-        queryParameters: {'page': page},
+        queryParameters: {
+          'page': page,
+          if (isOngoing) 'type': 'ongoing',
+        },
       );
 
       if (response.statusCode != 200) {
         log('status code: ${response.statusCode}, data: ${response.data}');
       }
 
-      _validateResponse(response); // throw exception if status code is not 200
+      // Keep your existing validation
+      _validateResponse(response);
 
-      final result = response.data as Map<String, dynamic>;
-      final dataWrapper = result['data'] as Map<String, dynamic>;
-      final innerData = dataWrapper['data'] as Map<String, dynamic>;
-
-      final data = (innerData['upcoming'] as List)
-          .map(
-            (e) => BookingsModel.fromJson(e),
-          )
-          .toList();
-      return (
-        PaginationModel<BookingsModel>(
-          data: data,
-          totalData: dataWrapper['count'],
-          nextPageUrl: dataWrapper['next'],
-        ),
-        CarouselDataModel.fromJson(innerData),
+      // Use your old model here
+      return CustomResponseModel.fromJson(
+        response.data as Map<String, dynamic>,
       );
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
@@ -52,7 +43,6 @@ class DashboardService {
 
   void _validateResponse(Response response) {
     final statusCode = response.statusCode;
-    // final statusCode = 404;
 
     if (statusCode == null) {
       return;
@@ -90,3 +80,5 @@ class DashboardService {
     }
   }
 }
+
+
