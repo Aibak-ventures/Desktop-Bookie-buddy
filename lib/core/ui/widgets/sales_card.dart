@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/enums/date_and_time_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
@@ -46,19 +47,29 @@ class SalesCard extends StatelessWidget {
                 color: AppColors.purpleLight,
                 borderRadius: 10.radiusBorder,
               ),
-              child: Center(
-                child: Text(
-                 sale.saleDate.isEmpty
-    ? '--'
-    : sale.saleDate.split('-').last,
-
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.purple,
-                    letterSpacing: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    sale.saleDate.isEmpty
+                        ? '--'
+                        : sale.saleDate.split('-').last,
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.purple,
+                    ),
                   ),
-                ),
+                  if (sale.saleDate.isNotEmpty)
+                    Text(
+                      _getMonthShortName(sale.saleDate),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.purple,
+                      ),
+                    ),
+                ],
               ),
             ),
 
@@ -143,6 +154,20 @@ class SalesCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getMonthShortName(String date) {
+    try {
+      // Date format is dd-MM-yyyy
+      final parts = date.split('-');
+      if (parts.length == 3) {
+        final month = int.parse(parts[1]);
+        return Month.shortNameFromInt(month);
+      }
+      return '';
+    } catch (e) {
+      return '';
+    }
   }
 }
 

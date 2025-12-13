@@ -28,6 +28,7 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -112,6 +113,7 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
                     .push(BookingDetailsScreen(bookingId: payment.bookingId));
               },
               icon: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   payment.paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
                   Text(

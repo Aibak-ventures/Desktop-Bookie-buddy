@@ -135,19 +135,20 @@ class SelectProductCard extends StatelessWidget {
                             ),
 
                       // Add/Remove Button
-                      Container(
-                        height: 32,
-                        width: 32,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF6132E4),
-                          borderRadius: 6.radiusBorder,
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: AppColors.white,
-                          size: 18,
-                        ),
-                      ).onTap(onTap),
+                      if (needAddButton)
+                        Container(
+                          height: 32,
+                          width: 32,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF6132E4),
+                            borderRadius: 6.radiusBorder,
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: AppColors.white,
+                            size: 18,
+                          ),
+                        ).onTap(onTap),
                     ],
                   ),
                 ],

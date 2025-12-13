@@ -27,6 +27,7 @@ class LedgerSalesGroupContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -96,6 +97,7 @@ class LedgerSalesGroupContainer extends StatelessWidget {
                 context.push(SaleDetailsScreen(saleId: sale.saleId));
               },
               icon: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   if (paymentMethod != null)
                     paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
@@ -106,8 +108,9 @@ class LedgerSalesGroupContainer extends StatelessWidget {
                 ],
               ),
               content: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(sale.clientName ?? 'No name'),
+                  Text(sale.clientName),
                   Text(
                     'Items: ${sale.products}',
                     style: TextStyle(fontSize: 12.sp, color: AppColors.grey),

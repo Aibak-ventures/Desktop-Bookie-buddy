@@ -91,7 +91,9 @@ class HomeScreen extends StatelessWidget {
               Expanded(
                 child: RefreshIndicator.adaptive(
                   onRefresh: () async {
-                    bloc.add(const DashboardEvent.loadDashboardData());
+                    bloc.add(const DashboardEvent.loadDashboardData(
+                      useOldState: true,
+                    ));
                   },
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (scrollInfo) {
@@ -198,7 +200,7 @@ class HomeScreen extends StatelessWidget {
         // Refresh Button
         IconButton(
           onPressed: () {
-            bloc.add(const DashboardEvent.loadDashboardData());
+            bloc.add(const DashboardEvent.loadDashboardData(useOldState: true));
           },
           icon: const Icon(Icons.refresh),
           style: IconButton.styleFrom(
@@ -302,7 +304,9 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: RefreshIndicator.adaptive(
         onRefresh: () async {
-          bloc.add(const DashboardEvent.loadDashboardData());
+          bloc.add(const DashboardEvent.loadDashboardData(
+            useOldState: true,
+          ));
         },
         child: NotificationListener<ScrollNotification>(
           onNotification: (scrollInfo) {

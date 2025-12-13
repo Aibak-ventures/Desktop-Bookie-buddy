@@ -18,6 +18,9 @@ import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/change_secret_password_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/reset_password_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view_model/bloc_reset_password/reset_password_bloc.dart';
+import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
+import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
+import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
 import 'package:bookie_buddy_web/features/change_password/view_model/bloc_secret_password/secret_password_bloc.dart';
 import 'package:bookie_buddy_web/features/client/view/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
@@ -337,8 +340,14 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.business_center_outlined,
           title: 'Staff',
           onTap: () {
-            // TODO: Navigate to Staff management screen when implemented
-            context.showSnackBar('Staff management screen coming soon!');
+            NavigatorX(context).push(
+              BlocProvider(
+                create: (context) => StaffListBloc(
+                  repository: getIt.get<StaffRepository>(),
+                )..add(const StaffListEvent.loadStaffs()),
+                child: const StaffListScreen(),
+              ),
+            );
           },
         ),
         const SizedBox(height: 5),

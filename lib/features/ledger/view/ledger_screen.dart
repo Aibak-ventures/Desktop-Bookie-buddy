@@ -488,11 +488,6 @@ class _WalletScreenState extends State<WalletScreen>
                       ),
                       labelColor: const Color(0xFF6132E4),
                       unselectedLabelColor: AppColors.grey600,
-                      onTap: (index) {
-                        setState(() {
-                          currentIndex = index;
-                        });
-                      },
                       tabs: const [
                         Tab(text: 'Bookings'),
                         Tab(text: 'Payments'),
@@ -683,14 +678,6 @@ class _WalletScreenState extends State<WalletScreen>
                   indicatorColor: const Color(0xFF6132E4),
                   indicatorWeight: 2.5,
                   unselectedLabelStyle: const TextStyle(),
-                  onTap: (index) {
-                    // Fetch data for the selected tab
-                    // _fetchDataForTab(index);
-                    setState(() {
-                      currentIndex = index;
-                    });
-                  },
-
                   indicatorSize: TabBarIndicatorSize.tab,
                   dividerColor: AppColors.white,
                   labelStyle: TextStyle(

@@ -67,6 +67,8 @@ class _PaymentsTabState extends State<PaymentsTab> {
     // Cache screen height and AppBar height
     _screenHeight ??= context.screenHeight.toDouble();
     _appBarHeight ??= _calculateAppBarHeight();
+    
+    log('🔍 Checking visible section. Keys count: ${_groupKeysWithTotal.length}');
 
     String? targetDate;
     double minPosition = double.infinity;
@@ -93,7 +95,10 @@ class _PaymentsTabState extends State<PaymentsTab> {
     }
 
     if (targetDate != null && targetDate != _currentlyShowingDate) {
+      log('🎯 Target date found: $targetDate (current: $_currentlyShowingDate)');
       debouncer.run(() async => _fetchAndSetSummary(targetDate!));
+    } else {
+      log('❌ No target date found or same as current');
     }
   }
 
@@ -106,10 +111,14 @@ class _PaymentsTabState extends State<PaymentsTab> {
   }
 
   Future<void> _fetchAndSetSummary(String date) async {
-    if (_currentlyShowingDate == date) return;
+    log('🔔 _fetchAndSetSummary called with date: $date');
+    if (_currentlyShowingDate == date) {
+      log('⚠️ Already showing this date, skipping');
+      return;
+    }
     _currentlyShowingDate = date;
     final summary = _groupKeysWithTotal[date]?.$2;
-    // ignore: unawaited_futures
+    log('✅ Fetching summary for date: $date, summary: ${summary?.toJson()}');
     context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
           date,
           clientId: null,
@@ -157,6 +166,14 @@ class _PaymentsTabState extends State<PaymentsTab> {
                 CustomErrorWidget(errorText: error, onRetry: _fetchPaymentData),
             loaded: (paymentList, nextPageUrl, isPaginating, clientId,
                 isFirstFetch) {
+              log('📊 Payment list loaded: ${paymentList.length} groups');
+              for (var group in paymentList) {
+                log('  📅 Date: ${group.date}, Payments count: ${group.payments.length}');
+                for (var payment in group.payments) {
+                  log('    💰 Payment: ${payment.clientName} - ${payment.paymentAmount}');
+                }
+              }
+              
               if (paymentList.isEmpty) {
                 return const EmptyDataWidget(
                   message: 'No payments',

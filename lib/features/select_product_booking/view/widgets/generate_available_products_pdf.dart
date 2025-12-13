@@ -266,6 +266,20 @@ class GenerateAvailableProductsPdf {
     pw.Font fontRegular,
     pw.Font fontSemiBold,
   ) {
+    // Parse the date - it comes in dd-MM-yyyy format
+    DateTime parsedDate;
+    try {
+      parsedDate = DateFormat('dd-MM-yyyy').parse(availabilityDate);
+    } catch (e) {
+      // If that fails, try ISO format
+      try {
+        parsedDate = DateTime.parse(availabilityDate);
+      } catch (e2) {
+        // If all parsing fails, use current date
+        parsedDate = DateTime.now();
+      }
+    }
+    
     return pw.Container(
       padding: const pw.EdgeInsets.all(16),
       decoration: pw.BoxDecoration(
@@ -285,7 +299,7 @@ class GenerateAvailableProductsPdf {
           ),
           pw.SizedBox(height: 8),
           pw.Text(
-            'Availability Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(availabilityDate))}',
+            'Availability Date: ${DateFormat('dd/MM/yyyy').format(parsedDate)}',
             style: pw.TextStyle(font: fontRegular, fontSize: 14),
           ),
           pw.Text(

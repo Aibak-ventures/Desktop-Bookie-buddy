@@ -145,8 +145,7 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
           width: context.isMobile ? null : 0.5.widthR,
           child: CustomTextField(
             controller: amountController,
-            validator: (value) =>
-                AppInputValidators.amount(value, allowZero: true),
+            validator: (value) => AppInputValidators.amount(value, allowZero: false),
             hintText: 'Enter Amount',
             keyboardType: TextInputType.number,
           ),

@@ -33,6 +33,7 @@ class LedgerSecurityAmountListTile extends StatelessWidget {
           size: 28.sp,
         ),
         content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               securityAmountModel.clientName,
@@ -67,11 +68,13 @@ class LedgerSecurityAmountListTileShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LedgerListTile(
         icon: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             CustomShimmerBox(width: 30.w, height: 30.sp),
           ],
         ),
         content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             CustomShimmerBox(width: 100.w, height: 14.sp),
             8.height,

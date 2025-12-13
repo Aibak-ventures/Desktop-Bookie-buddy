@@ -112,10 +112,19 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
           title: const Text('Select Products'),
           centerTitle: true,
           actions: [
-            _selectServiceButton(),
-            8.width,
-            _addProductButton(),
-            16.width,
+            if (!widget.availabilityCheckOnly) ...[
+              _selectServiceButton(),
+              8.width,
+              _addProductButton(),
+              16.width,
+            ],
+            if (widget.availabilityCheckOnly) ...[
+              _iconButton(
+                icon: Icons.print,
+                onTap: _handlePrint,
+              ),
+              16.width,
+            ],
           ],
         ),
         body: Center(
@@ -148,12 +157,14 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
                       },
                     ),
                     12.height,
-                    SelectedProductListViewWidget(
-                      screenHeight: constraints.maxHeight,
-                      gridPadding: 20,
-                      screenWidth: constraints.maxWidth,
-                    ),
-                    20.height,
+                    if (!widget.availabilityCheckOnly) ...[
+                      SelectedProductListViewWidget(
+                        screenHeight: constraints.maxHeight,
+                        gridPadding: 20,
+                        screenWidth: constraints.maxWidth,
+                      ),
+                      20.height,
+                    ],
                     SizedBox(
                       height: constraints.maxHeight * 0.6,
                       child: SelectProductGridViewWidget(
@@ -177,14 +188,16 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.purple.lighten(0.1),
-          onPressed: _handleBack,
-          child: Icon(
-            widget.availabilityCheckOnly ? Icons.print : Icons.arrow_forward,
-            color: AppColors.white,
-          ),
-        ),
+        floatingActionButton: widget.availabilityCheckOnly
+            ? null
+            : FloatingActionButton(
+                backgroundColor: AppColors.purple.lighten(0.1),
+                onPressed: _handleBack,
+                child: const Icon(
+                  Icons.arrow_forward,
+                  color: AppColors.white,
+                ),
+              ),
       );
     });
   }
@@ -260,6 +273,28 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> _handlePrint() async {
+    final products = context.read<SelectProductBloc>().state.maybeMap(
+          orElse: () => null,
+          loaded: (value) => value.products,
+        );
+    if (products == null || products.isEmpty) {
+      context.showSnackBar('No products to generate PDF');
+      return;
+    }
+    final shopDetails = context.read<UserCubit>().state?.shopDetails;
+    if (shopDetails == null) {
+      context.showSnackBar('Shop details not found');
+      return;
+    }
+    await GenerateAvailableProductsPdf.shareInvoice(
+      context: context,
+      products: products,
+      shopDetails: shopDetails,
+      availabilityDate: widget.pickupDate,
     );
   }
 

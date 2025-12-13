@@ -14,10 +14,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class HomeBookingListWidget extends StatelessWidget {
-  HomeBookingListWidget({super.key});
+class HomeBookingListWidget extends StatefulWidget {
+  const HomeBookingListWidget({super.key});
 
+  @override
+  State<HomeBookingListWidget> createState() => _HomeBookingListWidgetState();
+}
+
+class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
+    with SingleTickerProviderStateMixin {
   final searchTextController = TextEditingController();
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_onTabChanged);
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_onTabChanged);
+    _tabController.dispose();
+    searchTextController.dispose();
+    super.dispose();
+  }
+
+  void _onTabChanged() {
+    if (!_tabController.indexIsChanging) {
+      final bloc = context.read<DashboardBloc>();
+      if (_tabController.index == 0) {
+        bloc.add(const DashboardEvent.loadDashboardData());
+      } else {
+        bloc.add(const DashboardEvent.loadDashboardData(isOngoing: true));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +63,12 @@ class HomeBookingListWidget extends StatelessWidget {
     return Column(
       children: [
         // Add TabBar for Upcoming and Returns
-        DefaultTabController(
-          length: 2,
-          child: TabBar(
-            tabs: const [
-              Tab(text: 'Upcoming'),
-              Tab(text: 'Returns'),
-            ],
-            onTap: (value) {
-              if (value == 0) {
-                bloc.add(const DashboardEvent.loadDashboardData());
-              } else {
-                bloc.add(
-                  const DashboardEvent.loadDashboardData(isOngoing: true),
-                );
-              }
-            },
-          ),
+        TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Upcoming'),
+            Tab(text: 'Returns'),
+          ],
         ),
         const SizedBox(height: 8),
 
@@ -61,11 +83,24 @@ class HomeBookingListWidget extends StatelessWidget {
                 height: context.mediaQueryHeight(0.33),
                 child: CustomErrorWidget(
                   errorText: error,
-                  onRetry: () =>
-                      bloc.add(const DashboardEvent.loadDashboardData()),
+                  onRetry: () => bloc.add(
+                    DashboardEvent.loadDashboardData(
+                      isOngoing: _tabController.index == 1,
+                      useOldState: true,
+                    ),
+                  ),
                 ),
               ),
               loaded: (dataGrouped, _, nextPageUrl, isPaginating, isOngoing) {
+                // Sync tab controller with state
+                if (_tabController.index != (isOngoing ? 1 : 0)) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      _tabController.index = isOngoing ? 1 : 0;
+                    }
+                  });
+                }
+
                 final group = dataGrouped.entries
                     .where(
                       (group) => group.value.isNotEmpty,
@@ -244,8 +279,8 @@ class HomeBookingListWidget extends StatelessWidget {
             // Booking List
             ...sub.bookings.map(
               (booking) => BookingCard(
-               booking: booking.booking!,
-                              useReturnDate: isOngoing == true,
+                booking: booking.booking!,
+                useReturnDate: isOngoing == true,
                 onTap: () async {
                   final bookingCubit = context.read<BookingSelectionCubit>();
                   bookingCubit.selectBooking(booking.booking!);
