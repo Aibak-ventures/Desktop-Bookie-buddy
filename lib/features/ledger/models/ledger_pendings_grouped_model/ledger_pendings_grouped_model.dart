@@ -28,7 +28,7 @@ class LedgerPendingsGroupedModel with _$LedgerPendingsGroupedModel {
 
         final dayMap =
             Map<String, dynamic>.from(rawDayMap as Map<Object?, Object?>);
-        final rawPendings = dayMap['bookings'];
+        final rawPendings = dayMap['items'];
         final pendings = <LedgerPendingModel>[];
 
         if (rawPendings is List) {

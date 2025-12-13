@@ -134,7 +134,7 @@ class _SalesListScreenState extends State<SalesListScreen> {
                         focusNode: searchFocusNode,
                         onChanged: (query) => _fetchData(context),
                         decoration: InputDecoration(
-                          hintText: 'Search by sale ID...',
+                          hintText: 'Search by sale ID and Product name...',
                           prefixIcon: const Icon(LucideIcons.search),
                           suffixIcon: searchController.text.isNotEmpty
                               ? IconButton(

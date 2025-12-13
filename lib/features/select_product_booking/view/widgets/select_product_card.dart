@@ -18,6 +18,7 @@ class SelectProductCard extends StatelessWidget {
     required this.onTap,
     required this.mainServiceType,
     this.needAddButton = true,
+    this.isSales = false,
   });
 
   final bool isSelected;
@@ -25,6 +26,7 @@ class SelectProductCard extends StatelessWidget {
   final VoidCallback onTap;
   final MainServiceType mainServiceType;
   final bool needAddButton;
+  final bool isSales;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +142,9 @@ class SelectProductCard extends StatelessWidget {
                           height: 32,
                           width: 32,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6132E4),
+                            color: (isSales && !hasValidPrice)
+                                ? AppColors.grey400
+                                : const Color(0xFF6132E4),
                             borderRadius: 6.radiusBorder,
                           ),
                           child: const Icon(
@@ -148,7 +152,7 @@ class SelectProductCard extends StatelessWidget {
                             color: AppColors.white,
                             size: 18,
                           ),
-                        ).onTap(onTap),
+                        ).onTap((isSales && !hasValidPrice) ? () {} : onTap),
                     ],
                   ),
                 ],

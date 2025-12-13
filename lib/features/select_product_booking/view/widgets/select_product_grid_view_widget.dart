@@ -163,6 +163,7 @@ class SelectProductGridViewWidget extends StatelessWidget {
                                   isSelected: isSelected,
                                   mainServiceType: mainServiceType,
                                   needAddButton: !availabilityCheckOnly,
+                                  isSales: isSales,
                                   product: product,
                                   onTap: () async {
                                     // Find existing selected product to persist values

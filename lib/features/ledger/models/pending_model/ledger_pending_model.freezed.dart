@@ -20,7 +20,7 @@ LedgerPendingModel _$LedgerPendingModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LedgerPendingModel {
-  @JsonKey(name: 'booking_id')
+  @JsonKey(name: 'id')
   int get bookingId => throw _privateConstructorUsedError;
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
   String get clientName => throw _privateConstructorUsedError;
@@ -46,7 +46,7 @@ abstract class $LedgerPendingModelCopyWith<$Res> {
       _$LedgerPendingModelCopyWithImpl<$Res, LedgerPendingModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'booking_id') int bookingId,
+      {@JsonKey(name: 'id') int bookingId,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
       @JsonKey(name: 'remaining_amount') int remainingAmount,
       @JsonKey(name: 'return_date') String returnDate});
@@ -102,7 +102,7 @@ abstract class _$$LedgerPendingModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'booking_id') int bookingId,
+      {@JsonKey(name: 'id') int bookingId,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
       @JsonKey(name: 'remaining_amount') int remainingAmount,
       @JsonKey(name: 'return_date') String returnDate});
@@ -151,7 +151,7 @@ class __$$LedgerPendingModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LedgerPendingModelImpl implements _LedgerPendingModel {
   const _$LedgerPendingModelImpl(
-      {@JsonKey(name: 'booking_id') required this.bookingId,
+      {@JsonKey(name: 'id') required this.bookingId,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown')
       required this.clientName,
       @JsonKey(name: 'remaining_amount') required this.remainingAmount,
@@ -161,7 +161,7 @@ class _$LedgerPendingModelImpl implements _LedgerPendingModel {
       _$$LedgerPendingModelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'booking_id')
+  @JsonKey(name: 'id')
   final int bookingId;
   @override
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
@@ -217,7 +217,7 @@ class _$LedgerPendingModelImpl implements _LedgerPendingModel {
 
 abstract class _LedgerPendingModel implements LedgerPendingModel {
   const factory _LedgerPendingModel(
-          {@JsonKey(name: 'booking_id') required final int bookingId,
+          {@JsonKey(name: 'id') required final int bookingId,
           @JsonKey(name: 'client_name', defaultValue: 'Unknown')
           required final String clientName,
           @JsonKey(name: 'remaining_amount') required final int remainingAmount,
@@ -228,7 +228,7 @@ abstract class _LedgerPendingModel implements LedgerPendingModel {
       _$LedgerPendingModelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'booking_id')
+  @JsonKey(name: 'id')
   int get bookingId;
   @override
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
