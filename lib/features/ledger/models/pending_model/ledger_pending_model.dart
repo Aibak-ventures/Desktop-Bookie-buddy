@@ -6,7 +6,7 @@ part 'ledger_pending_model.g.dart';
 @freezed
 class LedgerPendingModel with _$LedgerPendingModel {
   const factory LedgerPendingModel({
-    @JsonKey(name: 'booking_id') required int bookingId,
+    @JsonKey(name: 'id') required int bookingId,
     @JsonKey(name: 'client_name', defaultValue: 'Unknown')
     required String clientName,
     @JsonKey(name: 'remaining_amount') required int remainingAmount,
