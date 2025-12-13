@@ -7,7 +7,7 @@ part 'payment_model.g.dart';
 @freezed
 class PaymentModel with _$PaymentModel {
   const factory PaymentModel({
-    @JsonKey(name: 'booking_id') required int bookingId,
+    @JsonKey(name: 'id') required int bookingId,
     @JsonKey(name: 'payment_amount') required int paymentAmount,
     @JsonKey(
       name: 'payment_method',

@@ -20,7 +20,7 @@ PaymentModel _$PaymentModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PaymentModel {
-  @JsonKey(name: 'booking_id')
+  @JsonKey(name: 'id')
   int get bookingId => throw _privateConstructorUsedError;
   @JsonKey(name: 'payment_amount')
   int get paymentAmount => throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ abstract class $PaymentModelCopyWith<$Res> {
       _$PaymentModelCopyWithImpl<$Res, PaymentModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'booking_id') int bookingId,
+      {@JsonKey(name: 'id') int bookingId,
       @JsonKey(name: 'payment_amount') int paymentAmount,
       @JsonKey(
           name: 'payment_method',
@@ -117,7 +117,7 @@ abstract class _$$PaymentModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'booking_id') int bookingId,
+      {@JsonKey(name: 'id') int bookingId,
       @JsonKey(name: 'payment_amount') int paymentAmount,
       @JsonKey(
           name: 'payment_method',
@@ -176,7 +176,7 @@ class __$$PaymentModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PaymentModelImpl implements _PaymentModel {
   const _$PaymentModelImpl(
-      {@JsonKey(name: 'booking_id') required this.bookingId,
+      {@JsonKey(name: 'id') required this.bookingId,
       @JsonKey(name: 'payment_amount') required this.paymentAmount,
       @JsonKey(
           name: 'payment_method',
@@ -191,7 +191,7 @@ class _$PaymentModelImpl implements _PaymentModel {
       _$$PaymentModelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'booking_id')
+  @JsonKey(name: 'id')
   final int bookingId;
   @override
   @JsonKey(name: 'payment_amount')
@@ -254,7 +254,7 @@ class _$PaymentModelImpl implements _PaymentModel {
 
 abstract class _PaymentModel implements PaymentModel {
   const factory _PaymentModel(
-          {@JsonKey(name: 'booking_id') required final int bookingId,
+          {@JsonKey(name: 'id') required final int bookingId,
           @JsonKey(name: 'payment_amount') required final int paymentAmount,
           @JsonKey(
               name: 'payment_method',
@@ -270,7 +270,7 @@ abstract class _PaymentModel implements PaymentModel {
       _$PaymentModelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'booking_id')
+  @JsonKey(name: 'id')
   int get bookingId;
   @override
   @JsonKey(name: 'payment_amount')

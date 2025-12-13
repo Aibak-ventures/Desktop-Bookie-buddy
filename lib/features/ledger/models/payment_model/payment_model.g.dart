@@ -8,7 +8,7 @@ part of 'payment_model.dart';
 
 _$PaymentModelImpl _$$PaymentModelImplFromJson(Map<String, dynamic> json) =>
     _$PaymentModelImpl(
-      bookingId: (json['booking_id'] as num).toInt(),
+      bookingId: (json['id'] as num).toInt(),
       paymentAmount: (json['payment_amount'] as num).toInt(),
       paymentMethod: PaymentMethod.fromString(json['payment_method'] as String),
       clientName: json['client_name'] as String? ?? 'Unknown',
@@ -17,7 +17,7 @@ _$PaymentModelImpl _$$PaymentModelImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$PaymentModelImplToJson(_$PaymentModelImpl instance) =>
     <String, dynamic>{
-      'booking_id': instance.bookingId,
+      'id': instance.bookingId,
       'payment_amount': instance.paymentAmount,
       'payment_method': PaymentMethod.toJson(instance.paymentMethod),
       'client_name': instance.clientName,
