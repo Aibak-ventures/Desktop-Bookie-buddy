@@ -188,7 +188,6 @@ LedgerSaleDailyModel _$LedgerSaleDailyModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$LedgerSaleDailyModel {
   String get date => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total', defaultValue: 0)
   int get total => throw _privateConstructorUsedError;
   List<LedgerSaleModel> get sales => throw _privateConstructorUsedError;
 
@@ -208,10 +207,7 @@ abstract class $LedgerSaleDailyModelCopyWith<$Res> {
           $Res Function(LedgerSaleDailyModel) then) =
       _$LedgerSaleDailyModelCopyWithImpl<$Res, LedgerSaleDailyModel>;
   @useResult
-  $Res call(
-      {String date,
-      @JsonKey(name: 'total', defaultValue: 0) int total,
-      List<LedgerSaleModel> sales});
+  $Res call({String date, int total, List<LedgerSaleModel> sales});
 }
 
 /// @nodoc
@@ -259,10 +255,7 @@ abstract class _$$LedgerSaleDailyModelImplCopyWith<$Res>
       __$$LedgerSaleDailyModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String date,
-      @JsonKey(name: 'total', defaultValue: 0) int total,
-      List<LedgerSaleModel> sales});
+  $Res call({String date, int total, List<LedgerSaleModel> sales});
 }
 
 /// @nodoc
@@ -304,8 +297,8 @@ class __$$LedgerSaleDailyModelImplCopyWithImpl<$Res>
 class _$LedgerSaleDailyModelImpl implements _LedgerSaleDailyModel {
   const _$LedgerSaleDailyModelImpl(
       {required this.date,
-      @JsonKey(name: 'total', defaultValue: 0) required this.total,
-      required final List<LedgerSaleModel> sales})
+      this.total = 0,
+      final List<LedgerSaleModel> sales = const <LedgerSaleModel>[]})
       : _sales = sales;
 
   factory _$LedgerSaleDailyModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -314,10 +307,11 @@ class _$LedgerSaleDailyModelImpl implements _LedgerSaleDailyModel {
   @override
   final String date;
   @override
-  @JsonKey(name: 'total', defaultValue: 0)
+  @JsonKey()
   final int total;
   final List<LedgerSaleModel> _sales;
   @override
+  @JsonKey()
   List<LedgerSaleModel> get sales {
     if (_sales is EqualUnmodifiableListView) return _sales;
     // ignore: implicit_dynamic_type
@@ -365,8 +359,8 @@ class _$LedgerSaleDailyModelImpl implements _LedgerSaleDailyModel {
 abstract class _LedgerSaleDailyModel implements LedgerSaleDailyModel {
   const factory _LedgerSaleDailyModel(
       {required final String date,
-      @JsonKey(name: 'total', defaultValue: 0) required final int total,
-      required final List<LedgerSaleModel> sales}) = _$LedgerSaleDailyModelImpl;
+      final int total,
+      final List<LedgerSaleModel> sales}) = _$LedgerSaleDailyModelImpl;
 
   factory _LedgerSaleDailyModel.fromJson(Map<String, dynamic> json) =
       _$LedgerSaleDailyModelImpl.fromJson;
@@ -374,7 +368,6 @@ abstract class _LedgerSaleDailyModel implements LedgerSaleDailyModel {
   @override
   String get date;
   @override
-  @JsonKey(name: 'total', defaultValue: 0)
   int get total;
   @override
   List<LedgerSaleModel> get sales;

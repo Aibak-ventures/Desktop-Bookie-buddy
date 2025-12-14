@@ -20,22 +20,22 @@ LedgerSaleModel _$LedgerSaleModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LedgerSaleModel {
+// ✅ API: "id"
   @JsonKey(name: 'id')
-  int get saleId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'sale_date')
-  String get date => throw _privateConstructorUsedError;
+  int get saleId =>
+      throw _privateConstructorUsedError; // ✅ API does NOT have sale_date → derive from created_at
   @JsonKey(name: 'created_at', defaultValue: '')
-  String get createdAt => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_amount')
-  int get totalAmount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'client_name')
-  String get clientName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'items')
-  List<String> get products => throw _privateConstructorUsedError;
-  @JsonKey(
-      name: 'payment_methods',
-      fromJson: PaymentMethod.fromList,
-      toJson: PaymentMethod.toList)
+  String get createdAt =>
+      throw _privateConstructorUsedError; // ✅ API: "total_amount"
+  @JsonKey(name: 'total_amount', defaultValue: 0)
+  int get totalAmount =>
+      throw _privateConstructorUsedError; // ✅ API does NOT send client_name in sales
+  String get clientName =>
+      throw _privateConstructorUsedError; // ✅ API: "items" is STRING, UI expects List
+  @JsonKey(name: 'items', fromJson: _itemsFromJson)
+  List<String> get products =>
+      throw _privateConstructorUsedError; // ✅ API: payment_methods is STRING → convert to List<PaymentMethod>
+  @JsonKey(name: 'payment_methods', fromJson: _paymentMethodsFromJson)
   List<PaymentMethod> get paymentMethods => throw _privateConstructorUsedError;
 
   /// Serializes this LedgerSaleModel to a JSON map.
@@ -56,15 +56,11 @@ abstract class $LedgerSaleModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int saleId,
-      @JsonKey(name: 'sale_date') String date,
       @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
-      @JsonKey(name: 'total_amount') int totalAmount,
-      @JsonKey(name: 'client_name') String clientName,
-      @JsonKey(name: 'items') List<String> products,
-      @JsonKey(
-          name: 'payment_methods',
-          fromJson: PaymentMethod.fromList,
-          toJson: PaymentMethod.toList)
+      @JsonKey(name: 'total_amount', defaultValue: 0) int totalAmount,
+      String clientName,
+      @JsonKey(name: 'items', fromJson: _itemsFromJson) List<String> products,
+      @JsonKey(name: 'payment_methods', fromJson: _paymentMethodsFromJson)
       List<PaymentMethod> paymentMethods});
 }
 
@@ -84,7 +80,6 @@ class _$LedgerSaleModelCopyWithImpl<$Res, $Val extends LedgerSaleModel>
   @override
   $Res call({
     Object? saleId = null,
-    Object? date = null,
     Object? createdAt = null,
     Object? totalAmount = null,
     Object? clientName = null,
@@ -96,10 +91,6 @@ class _$LedgerSaleModelCopyWithImpl<$Res, $Val extends LedgerSaleModel>
           ? _value.saleId
           : saleId // ignore: cast_nullable_to_non_nullable
               as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -134,15 +125,11 @@ abstract class _$$LedgerSaleModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int saleId,
-      @JsonKey(name: 'sale_date') String date,
       @JsonKey(name: 'created_at', defaultValue: '') String createdAt,
-      @JsonKey(name: 'total_amount') int totalAmount,
-      @JsonKey(name: 'client_name') String clientName,
-      @JsonKey(name: 'items') List<String> products,
-      @JsonKey(
-          name: 'payment_methods',
-          fromJson: PaymentMethod.fromList,
-          toJson: PaymentMethod.toList)
+      @JsonKey(name: 'total_amount', defaultValue: 0) int totalAmount,
+      String clientName,
+      @JsonKey(name: 'items', fromJson: _itemsFromJson) List<String> products,
+      @JsonKey(name: 'payment_methods', fromJson: _paymentMethodsFromJson)
       List<PaymentMethod> paymentMethods});
 }
 
@@ -160,7 +147,6 @@ class __$$LedgerSaleModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? saleId = null,
-    Object? date = null,
     Object? createdAt = null,
     Object? totalAmount = null,
     Object? clientName = null,
@@ -172,10 +158,6 @@ class __$$LedgerSaleModelImplCopyWithImpl<$Res>
           ? _value.saleId
           : saleId // ignore: cast_nullable_to_non_nullable
               as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -205,15 +187,12 @@ class __$$LedgerSaleModelImplCopyWithImpl<$Res>
 class _$LedgerSaleModelImpl implements _LedgerSaleModel {
   const _$LedgerSaleModelImpl(
       {@JsonKey(name: 'id') required this.saleId,
-      @JsonKey(name: 'sale_date') required this.date,
       @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt,
-      @JsonKey(name: 'total_amount') required this.totalAmount,
-      @JsonKey(name: 'client_name') required this.clientName,
-      @JsonKey(name: 'items') required final List<String> products,
-      @JsonKey(
-          name: 'payment_methods',
-          fromJson: PaymentMethod.fromList,
-          toJson: PaymentMethod.toList)
+      @JsonKey(name: 'total_amount', defaultValue: 0) required this.totalAmount,
+      this.clientName = '',
+      @JsonKey(name: 'items', fromJson: _itemsFromJson)
+      required final List<String> products,
+      @JsonKey(name: 'payment_methods', fromJson: _paymentMethodsFromJson)
       required final List<PaymentMethod> paymentMethods})
       : _products = products,
         _paymentMethods = paymentMethods;
@@ -221,36 +200,38 @@ class _$LedgerSaleModelImpl implements _LedgerSaleModel {
   factory _$LedgerSaleModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerSaleModelImplFromJson(json);
 
+// ✅ API: "id"
   @override
   @JsonKey(name: 'id')
   final int saleId;
-  @override
-  @JsonKey(name: 'sale_date')
-  final String date;
+// ✅ API does NOT have sale_date → derive from created_at
   @override
   @JsonKey(name: 'created_at', defaultValue: '')
   final String createdAt;
+// ✅ API: "total_amount"
   @override
-  @JsonKey(name: 'total_amount')
+  @JsonKey(name: 'total_amount', defaultValue: 0)
   final int totalAmount;
+// ✅ API does NOT send client_name in sales
   @override
-  @JsonKey(name: 'client_name')
+  @JsonKey()
   final String clientName;
+// ✅ API: "items" is STRING, UI expects List
   final List<String> _products;
+// ✅ API: "items" is STRING, UI expects List
   @override
-  @JsonKey(name: 'items')
+  @JsonKey(name: 'items', fromJson: _itemsFromJson)
   List<String> get products {
     if (_products is EqualUnmodifiableListView) return _products;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_products);
   }
 
+// ✅ API: payment_methods is STRING → convert to List<PaymentMethod>
   final List<PaymentMethod> _paymentMethods;
+// ✅ API: payment_methods is STRING → convert to List<PaymentMethod>
   @override
-  @JsonKey(
-      name: 'payment_methods',
-      fromJson: PaymentMethod.fromList,
-      toJson: PaymentMethod.toList)
+  @JsonKey(name: 'payment_methods', fromJson: _paymentMethodsFromJson)
   List<PaymentMethod> get paymentMethods {
     if (_paymentMethods is EqualUnmodifiableListView) return _paymentMethods;
     // ignore: implicit_dynamic_type
@@ -259,7 +240,7 @@ class _$LedgerSaleModelImpl implements _LedgerSaleModel {
 
   @override
   String toString() {
-    return 'LedgerSaleModel(saleId: $saleId, date: $date, createdAt: $createdAt, totalAmount: $totalAmount, clientName: $clientName, products: $products, paymentMethods: $paymentMethods)';
+    return 'LedgerSaleModel(saleId: $saleId, createdAt: $createdAt, totalAmount: $totalAmount, clientName: $clientName, products: $products, paymentMethods: $paymentMethods)';
   }
 
   @override
@@ -268,7 +249,6 @@ class _$LedgerSaleModelImpl implements _LedgerSaleModel {
         (other.runtimeType == runtimeType &&
             other is _$LedgerSaleModelImpl &&
             (identical(other.saleId, saleId) || other.saleId == saleId) &&
-            (identical(other.date, date) || other.date == date) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.totalAmount, totalAmount) ||
@@ -285,7 +265,6 @@ class _$LedgerSaleModelImpl implements _LedgerSaleModel {
   int get hashCode => Object.hash(
       runtimeType,
       saleId,
-      date,
       createdAt,
       totalAmount,
       clientName,
@@ -312,45 +291,38 @@ class _$LedgerSaleModelImpl implements _LedgerSaleModel {
 abstract class _LedgerSaleModel implements LedgerSaleModel {
   const factory _LedgerSaleModel(
           {@JsonKey(name: 'id') required final int saleId,
-          @JsonKey(name: 'sale_date') required final String date,
           @JsonKey(name: 'created_at', defaultValue: '')
           required final String createdAt,
-          @JsonKey(name: 'total_amount') required final int totalAmount,
-          @JsonKey(name: 'client_name') required final String clientName,
-          @JsonKey(name: 'items') required final List<String> products,
-          @JsonKey(
-              name: 'payment_methods',
-              fromJson: PaymentMethod.fromList,
-              toJson: PaymentMethod.toList)
+          @JsonKey(name: 'total_amount', defaultValue: 0)
+          required final int totalAmount,
+          final String clientName,
+          @JsonKey(name: 'items', fromJson: _itemsFromJson)
+          required final List<String> products,
+          @JsonKey(name: 'payment_methods', fromJson: _paymentMethodsFromJson)
           required final List<PaymentMethod> paymentMethods}) =
       _$LedgerSaleModelImpl;
 
   factory _LedgerSaleModel.fromJson(Map<String, dynamic> json) =
       _$LedgerSaleModelImpl.fromJson;
 
+// ✅ API: "id"
   @override
   @JsonKey(name: 'id')
-  int get saleId;
-  @override
-  @JsonKey(name: 'sale_date')
-  String get date;
+  int get saleId; // ✅ API does NOT have sale_date → derive from created_at
   @override
   @JsonKey(name: 'created_at', defaultValue: '')
-  String get createdAt;
+  String get createdAt; // ✅ API: "total_amount"
   @override
-  @JsonKey(name: 'total_amount')
-  int get totalAmount;
+  @JsonKey(name: 'total_amount', defaultValue: 0)
+  int get totalAmount; // ✅ API does NOT send client_name in sales
   @override
-  @JsonKey(name: 'client_name')
-  String get clientName;
+  String get clientName; // ✅ API: "items" is STRING, UI expects List
   @override
-  @JsonKey(name: 'items')
-  List<String> get products;
+  @JsonKey(name: 'items', fromJson: _itemsFromJson)
+  List<String>
+      get products; // ✅ API: payment_methods is STRING → convert to List<PaymentMethod>
   @override
-  @JsonKey(
-      name: 'payment_methods',
-      fromJson: PaymentMethod.fromList,
-      toJson: PaymentMethod.toList)
+  @JsonKey(name: 'payment_methods', fromJson: _paymentMethodsFromJson)
   List<PaymentMethod> get paymentMethods;
 
   /// Create a copy of LedgerSaleModel

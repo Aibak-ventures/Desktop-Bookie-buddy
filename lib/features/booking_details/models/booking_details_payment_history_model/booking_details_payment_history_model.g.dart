@@ -21,6 +21,11 @@ Map<String, dynamic> _$$BookingDetailsPaymentHistoryModelImplToJson(
         _$BookingDetailsPaymentHistoryModelImpl instance) =>
     <String, dynamic>{
       'amount': instance.amount,
-      'payment_method': PaymentMethod.toJson(instance.paymentMethod),
+      'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod]!,
       'datetime': instance.dateTime,
     };
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.gPay: 'gPay',
+  PaymentMethod.cash: 'cash',
+};

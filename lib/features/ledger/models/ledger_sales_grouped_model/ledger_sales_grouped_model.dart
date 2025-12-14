@@ -6,6 +6,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'ledger_sales_grouped_model.freezed.dart';
 part 'ledger_sales_grouped_model.g.dart';
 
+/// ❌ IMPORTANT CHANGE
+/// This model is NO LONGER used directly by UI.
+/// UI uses List<LedgerSaleDailyModel>
+/// This class is only a helper to parse nested API data.
 @freezed
 class LedgerSalesGroupedModel with _$LedgerSalesGroupedModel {
   const factory LedgerSalesGroupedModel({
@@ -15,50 +19,55 @@ class LedgerSalesGroupedModel with _$LedgerSalesGroupedModel {
   factory LedgerSalesGroupedModel.fromJson(Map<String, dynamic> json) =>
       _$LedgerSalesGroupedModelFromJson(json);
 
-  factory LedgerSalesGroupedModel.fromCustomJson(Map<String, dynamic> json) {
+  /// ✅ FIXED: Converts API response into FLAT daily list
+  static List<LedgerSaleDailyModel> fromCustomJson(
+    Map<String, dynamic> json,
+  ) {
     final daily = <LedgerSaleDailyModel>[];
 
-    // Expecting shape: { "July 2024": { "20-07-2024": { total: X, sales: [...] }, ... }, ... }
     for (final monthEntry in json.entries) {
       final monthMap = monthEntry.value;
-      if (monthMap is! Map) continue; // Skip malformed month level
+      if (monthMap is! Map) continue;
 
       for (final dayEntry in monthMap.entries) {
         final rawDayMap = dayEntry.value;
-        if (rawDayMap is! Map) continue; // Skip malformed day level
+        if (rawDayMap is! Map) continue;
 
-        final dayMap = Map<String, dynamic>.from(
-          rawDayMap as Map<Object?, Object?>,
-        );
+        final dayMap = Map<String, dynamic>.from(rawDayMap);
+
+        // ✅ FIX 1: map `items` → LedgerSaleModel
         final rawSales = dayMap['items'];
         final sales = <LedgerSaleModel>[];
 
         if (rawSales is List) {
-          for (final b in rawSales) {
-            if (b is Map<String, dynamic>) {
-              try {
-                sales.add(LedgerSaleModel.fromJson(b));
-              } catch (_) {
-                // Skip invalid sale silently (could log if needed)
-                log('Error ledger sale grouped model: Invalid sale data: $b');
-              }
+          for (final item in rawSales) {
+            try {
+              sales.add(
+                LedgerSaleModel.fromJson(
+                  Map<String, dynamic>.from(item),
+                ),
+              );
+            } catch (e) {
+              log('LedgerSale parse error: $e');
             }
           }
         }
 
-        final total = (dayMap['total_expense'] as num?)?.toInt() ?? 0;
-        final dateStr = dayEntry.key.toString();
+        // ✅ FIX 2: correct total key
+        final total =
+            (dayMap['total_expense'] as num?)?.toInt() ?? 0;
 
         daily.add(
-          LedgerSaleDailyModel(date: dateStr, total: total, sales: sales),
+          LedgerSaleDailyModel(
+            date: dayEntry.key.toString(), // "09-12-2025"
+            total: total,
+            sales: sales,
+          ),
         );
       }
     }
 
-    // Optional: sort by date string (assumes ISO-8601 date keys)
-    // daily.sort((a, b) => a.date.compareTo(b.date));
-
-    return LedgerSalesGroupedModel(dailySales: daily);
+    return daily;
   }
 }
 
@@ -66,8 +75,8 @@ class LedgerSalesGroupedModel with _$LedgerSalesGroupedModel {
 class LedgerSaleDailyModel with _$LedgerSaleDailyModel {
   const factory LedgerSaleDailyModel({
     required String date,
-    @JsonKey(name: 'total', defaultValue: 0) required int total,
-    required List<LedgerSaleModel> sales,
+    @Default(0) int total,
+    @Default(<LedgerSaleModel>[]) List<LedgerSaleModel> sales,
   }) = _LedgerSaleDailyModel;
 
   factory LedgerSaleDailyModel.fromJson(Map<String, dynamic> json) =>

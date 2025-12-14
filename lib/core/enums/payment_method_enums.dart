@@ -5,21 +5,17 @@ enum PaymentMethod {
   static const GPAY = 'gpay';
   static const CASH = 'cash';
 
-  /// Converts [PaymentMethod] enum to a string label to display in the UI.
+  /// UI label
   String get name {
     switch (this) {
       case PaymentMethod.gPay:
-        // return 'Gpay';
         return 'UPI';
       case PaymentMethod.cash:
         return 'Cash';
     }
   }
 
-  /// Converts [PaymentMethod] enum to a string value to use in API requests.
-  ///
-  /// Returns:
-  ///   The string value of the enum.
+  /// API value
   String toValue() {
     switch (this) {
       case PaymentMethod.gPay:
@@ -29,41 +25,51 @@ enum PaymentMethod {
     }
   }
 
-  /// Converts a string value to a [PaymentMethod] enum.
-  ///
-  /// This method takes a string value and returns the corresponding
-  /// [PaymentMethod] enum. If the string does not match any of the
-  /// known values, then [PaymentMethod.cash] is returned.
-  ///
-  /// The matching is case-insensitive.
-  ///
-  /// Parameters:
-  ///   [status]: The string value to convert.
-  ///
-  /// Returns:
-  ///   The [PaymentMethod] enum that matches the given string.
+  /// String → enum
   static PaymentMethod fromString(String status) {
-    switch (status.toLowerCase()) {
-      case GPAY:
-        return PaymentMethod.gPay;
-      case CASH:
-        return PaymentMethod.cash;
-      default:
-        return PaymentMethod.cash;
-    }
+    final v = status.toLowerCase().replaceAll(' ', '');
+    if (v.contains(GPAY)) return PaymentMethod.gPay;
+    if (v.contains(CASH)) return PaymentMethod.cash;
+    return PaymentMethod.cash;
   }
 
+  /// ✅ USED WHEN API SENDS **LIST**
   static List<PaymentMethod> fromList(List<dynamic> list) =>
       list.map((e) => fromString(e.toString())).toList();
 
   static List<String> toList(List<PaymentMethod> list) =>
       list.map((e) => e.toValue()).toList();
 
-  static String? toJson(PaymentMethod? status) => status?.toValue();
-
   bool get isUpi => this == PaymentMethod.gPay;
   bool get isCash => this == PaymentMethod.cash;
 }
+
+/// 🔥 THIS IS THE MISSING PART (IMPORTANT)
+/// API sends `"payment_methods": "GPay"`
+/// Model expects `List<PaymentMethod>`
+class PaymentMethodJsonConverter {
+  static List<PaymentMethod> fromJson(dynamic value) {
+    if (value == null) return [];
+
+    // API sends STRING
+    if (value is String) {
+      return [PaymentMethod.fromString(value)];
+    }
+
+    // API sends LIST (safety)
+    if (value is List) {
+      return PaymentMethod.fromList(value);
+    }
+
+    return [];
+  }
+
+  static dynamic toJson(List<PaymentMethod> methods) {
+    if (methods.isEmpty) return null;
+    return methods.first.toValue();
+  }
+}
+
 
 enum PaymentStatus {
   pending,

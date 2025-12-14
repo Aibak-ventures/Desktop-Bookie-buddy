@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bookie_buddy_web/core/enums/invoice_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
@@ -8,7 +6,6 @@ import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart'
 import 'package:bookie_buddy_web/features/ledger/view/widgets/ledger_sales_group_container.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_sales/ledger_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
-import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,9 +22,6 @@ class _SalesTabState extends State<SalesTab> {
   final _scrollController = ScrollController();
   //
   final Map<String, (GlobalKey globalKey, int total)> _groupKeysWithTotal = {};
-  final Debouncer debouncer = Debouncer(
-    delay: const Duration(milliseconds: 300),
-  );
   String _currentlyShowingDate = '';
 
   double? _screenHeight; // Cache screen height
@@ -48,9 +42,6 @@ class _SalesTabState extends State<SalesTab> {
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();
-
-    // debouncer
-    debouncer.cancel(); // Cancel any pending debounced calls
     super.dispose();
   }
 
@@ -110,20 +101,18 @@ class _SalesTabState extends State<SalesTab> {
     }
 
     if (targetDate != null && targetDate != _currentlyShowingDate) {
-      debouncer.run(() async => _fetchAndSetSummary(targetDate!));
+      _fetchAndSetSummary(targetDate);
     }
   }
 
-  Future<void> _fetchAndSetSummary(String date) async {
+  void _fetchAndSetSummary(String date) {
     if (_currentlyShowingDate == date) {
-      log('Summary for $date is already being shown, skipping fetch.');
       return;
     }
     _currentlyShowingDate = date;
 
     // final clientId = context.read<ClientBloc>().getSelectedClient()?.id;
     final total = _groupKeysWithTotal[date]!.$2;
-    log('Fetching summary for date: $date with total: $total');
     // ignore: unawaited_futures
     context.read<LedgerSimpleSummaryCubit>().getLedgerDaySummary(
           date,
@@ -217,7 +206,6 @@ class _SalesTabState extends State<SalesTab> {
                 final firstDate = ledgerSales.firstOrNull?.date;
                 if (firstDate != null && isFirstFetch) {
                   _fetchAndSetSummary(firstDate);
-                  log('✅✅ Fetched summary for first date: $firstDate ✅✅');
                 }
 
                 return RepaintBoundary(
@@ -313,7 +301,6 @@ class _SalesTabState extends State<SalesTab> {
               final firstDate = ledgerSales.firstOrNull?.date;
               if (firstDate != null && isFirstFetch) {
                 _fetchAndSetSummary(firstDate);
-                log('✅✅ Fetched summary for first date: $firstDate ✅✅');
               }
 
               return RepaintBoundary(

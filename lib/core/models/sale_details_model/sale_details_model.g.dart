@@ -50,10 +50,15 @@ Map<String, dynamic> _$$SaleDetailsModelImplToJson(
       'shop_sale_id': instance.invoiceId,
       'balance_due': instance.balanceDueAmount,
       'items': instance.products,
-      'method': PaymentMethod.toJson(instance.paymentMethod),
+      'method': _$PaymentMethodEnumMap[instance.paymentMethod]!,
       'staff_id': instance.staffId,
       'staff_name': instance.staffName,
     };
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.gPay: 'gPay',
+  PaymentMethod.cash: 'cash',
+};
 
 _$ProductSaleInfoModelImpl _$$ProductSaleInfoModelImplFromJson(
         Map<String, dynamic> json) =>

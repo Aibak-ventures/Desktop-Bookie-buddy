@@ -47,7 +47,6 @@ class PendingTab extends StatelessWidget {
               if (isFirstFetch && walletPending.isNotEmpty) {
                 final firstDate = walletPending.first.date;
                 _fetchSummary(context, clientId, firstDate);
-                log('✅✅ Fetched summary for first date: $firstDate ✅✅');
               }
 
               return NotificationListener<ScrollNotification>(

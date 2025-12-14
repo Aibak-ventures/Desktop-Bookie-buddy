@@ -169,7 +169,7 @@ class LedgerRepository {
           customJsonParser: (dataJson, itemFromJson) =>
               LedgerSalesGroupedModel.fromCustomJson(
             dataJson as Map<String, dynamic>,
-          ).dailySales,
+          ),
         );
       }
       log('Get ledger Sales Pagination Error: ${response.devMessage}');

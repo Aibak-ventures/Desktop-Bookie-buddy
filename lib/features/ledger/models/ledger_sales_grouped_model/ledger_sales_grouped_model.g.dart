@@ -25,9 +25,10 @@ _$LedgerSaleDailyModelImpl _$$LedgerSaleDailyModelImplFromJson(
     _$LedgerSaleDailyModelImpl(
       date: json['date'] as String,
       total: (json['total'] as num?)?.toInt() ?? 0,
-      sales: (json['sales'] as List<dynamic>)
-          .map((e) => LedgerSaleModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      sales: (json['sales'] as List<dynamic>?)
+              ?.map((e) => LedgerSaleModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <LedgerSaleModel>[],
     );
 
 Map<String, dynamic> _$$LedgerSaleDailyModelImplToJson(
