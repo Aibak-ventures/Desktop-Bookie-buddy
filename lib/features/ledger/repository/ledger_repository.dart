@@ -72,19 +72,19 @@ class LedgerRepository {
           clientId: clientId,
         ),
       );
-      if (response.status.isSuccess) {
-        return PaginationModel<LedgerPendingsDailyModel>.fromJson(
-          response.data,
-          (item) =>
-              LedgerPendingsDailyModel.fromJson(item as Map<String, dynamic>),
-          customJsonParser: (dataJson, itemFromJson) {
-            final data = LedgerPendingsGroupedModel.fromCustomJson(
-              dataJson as Map<String, dynamic>,
-            );
-            return data.dailyPendings;
-          },
-        );
-      }
+   if (response.status.isSuccess) {
+  return PaginationModel<LedgerPendingsDailyModel>.fromJson(
+    response.data,
+    (item) =>
+        LedgerPendingsDailyModel.fromJson(item as Map<String, dynamic>),
+    customJsonParser: (dataJson, itemFromJson) {
+      return LedgerPendingsGroupedModel.fromCustomJson(
+        dataJson as Map<String, dynamic>,
+      );
+    },
+  );
+}
+
       log('Get Pending Pagination Error: ${response.devMessage}');
       throw response.message;
     } catch (e, stack) {

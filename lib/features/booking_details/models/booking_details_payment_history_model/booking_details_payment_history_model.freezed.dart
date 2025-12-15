@@ -26,8 +26,7 @@ mixin _$BookingDetailsPaymentHistoryModel {
   @JsonKey(
       name: 'payment_method',
       defaultValue: PaymentMethod.cash,
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson)
+      fromJson: PaymentMethod.fromString)
   PaymentMethod get paymentMethod => throw _privateConstructorUsedError;
   @JsonKey(name: 'datetime')
   String get dateTime => throw _privateConstructorUsedError;
@@ -55,8 +54,7 @@ abstract class $BookingDetailsPaymentHistoryModelCopyWith<$Res> {
       @JsonKey(
           name: 'payment_method',
           defaultValue: PaymentMethod.cash,
-          fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson)
+          fromJson: PaymentMethod.fromString)
       PaymentMethod paymentMethod,
       @JsonKey(name: 'datetime') String dateTime});
 }
@@ -112,8 +110,7 @@ abstract class _$$BookingDetailsPaymentHistoryModelImplCopyWith<$Res>
       @JsonKey(
           name: 'payment_method',
           defaultValue: PaymentMethod.cash,
-          fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson)
+          fromJson: PaymentMethod.fromString)
       PaymentMethod paymentMethod,
       @JsonKey(name: 'datetime') String dateTime});
 }
@@ -163,8 +160,7 @@ class _$BookingDetailsPaymentHistoryModelImpl
       @JsonKey(
           name: 'payment_method',
           defaultValue: PaymentMethod.cash,
-          fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson)
+          fromJson: PaymentMethod.fromString)
       required this.paymentMethod,
       @JsonKey(name: 'datetime') required this.dateTime});
 
@@ -179,8 +175,7 @@ class _$BookingDetailsPaymentHistoryModelImpl
   @JsonKey(
       name: 'payment_method',
       defaultValue: PaymentMethod.cash,
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson)
+      fromJson: PaymentMethod.fromString)
   final PaymentMethod paymentMethod;
   @override
   @JsonKey(name: 'datetime')
@@ -232,8 +227,7 @@ abstract class _BookingDetailsPaymentHistoryModel
           @JsonKey(
               name: 'payment_method',
               defaultValue: PaymentMethod.cash,
-              fromJson: PaymentMethod.fromString,
-              toJson: PaymentMethod.toJson)
+              fromJson: PaymentMethod.fromString)
           required final PaymentMethod paymentMethod,
           @JsonKey(name: 'datetime') required final String dateTime}) =
       _$BookingDetailsPaymentHistoryModelImpl;
@@ -249,8 +243,7 @@ abstract class _BookingDetailsPaymentHistoryModel
   @JsonKey(
       name: 'payment_method',
       defaultValue: PaymentMethod.cash,
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson)
+      fromJson: PaymentMethod.fromString)
   PaymentMethod get paymentMethod;
   @override
   @JsonKey(name: 'datetime')

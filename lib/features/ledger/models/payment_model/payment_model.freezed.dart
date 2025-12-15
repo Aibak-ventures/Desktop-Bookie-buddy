@@ -24,10 +24,7 @@ mixin _$PaymentModel {
   int get bookingId => throw _privateConstructorUsedError;
   @JsonKey(name: 'payment_amount')
   int get paymentAmount => throw _privateConstructorUsedError;
-  @JsonKey(
-      name: 'payment_method',
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson)
+  @JsonKey(name: 'payment_method', fromJson: PaymentMethod.fromString)
   PaymentMethod get paymentMethod => throw _privateConstructorUsedError;
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
   String get clientName => throw _privateConstructorUsedError;
@@ -53,10 +50,7 @@ abstract class $PaymentModelCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'id') int bookingId,
       @JsonKey(name: 'payment_amount') int paymentAmount,
-      @JsonKey(
-          name: 'payment_method',
-          fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson)
+      @JsonKey(name: 'payment_method', fromJson: PaymentMethod.fromString)
       PaymentMethod paymentMethod,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
       @JsonKey(name: 'created_at') String createdAt});
@@ -119,10 +113,7 @@ abstract class _$$PaymentModelImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'id') int bookingId,
       @JsonKey(name: 'payment_amount') int paymentAmount,
-      @JsonKey(
-          name: 'payment_method',
-          fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson)
+      @JsonKey(name: 'payment_method', fromJson: PaymentMethod.fromString)
       PaymentMethod paymentMethod,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
       @JsonKey(name: 'created_at') String createdAt});
@@ -178,10 +169,7 @@ class _$PaymentModelImpl implements _PaymentModel {
   const _$PaymentModelImpl(
       {@JsonKey(name: 'id') required this.bookingId,
       @JsonKey(name: 'payment_amount') required this.paymentAmount,
-      @JsonKey(
-          name: 'payment_method',
-          fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson)
+      @JsonKey(name: 'payment_method', fromJson: PaymentMethod.fromString)
       required this.paymentMethod,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown')
       required this.clientName,
@@ -197,10 +185,7 @@ class _$PaymentModelImpl implements _PaymentModel {
   @JsonKey(name: 'payment_amount')
   final int paymentAmount;
   @override
-  @JsonKey(
-      name: 'payment_method',
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson)
+  @JsonKey(name: 'payment_method', fromJson: PaymentMethod.fromString)
   final PaymentMethod paymentMethod;
   @override
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
@@ -256,10 +241,7 @@ abstract class _PaymentModel implements PaymentModel {
   const factory _PaymentModel(
           {@JsonKey(name: 'id') required final int bookingId,
           @JsonKey(name: 'payment_amount') required final int paymentAmount,
-          @JsonKey(
-              name: 'payment_method',
-              fromJson: PaymentMethod.fromString,
-              toJson: PaymentMethod.toJson)
+          @JsonKey(name: 'payment_method', fromJson: PaymentMethod.fromString)
           required final PaymentMethod paymentMethod,
           @JsonKey(name: 'client_name', defaultValue: 'Unknown')
           required final String clientName,
@@ -276,10 +258,7 @@ abstract class _PaymentModel implements PaymentModel {
   @JsonKey(name: 'payment_amount')
   int get paymentAmount;
   @override
-  @JsonKey(
-      name: 'payment_method',
-      fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson)
+  @JsonKey(name: 'payment_method', fromJson: PaymentMethod.fromString)
   PaymentMethod get paymentMethod;
   @override
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')

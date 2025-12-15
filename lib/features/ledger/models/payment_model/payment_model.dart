@@ -12,7 +12,6 @@ class PaymentModel with _$PaymentModel {
     @JsonKey(
       name: 'payment_method',
       fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
     )
     required PaymentMethod paymentMethod,
     @JsonKey(name: 'client_name', defaultValue: 'Unknown')

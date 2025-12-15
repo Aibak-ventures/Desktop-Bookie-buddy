@@ -48,7 +48,6 @@ mixin _$SaleDetailsModel {
   @JsonKey(
       name: 'method',
       fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
       readValue: _paymentMethodReadValue)
   PaymentMethod get paymentMethod => throw _privateConstructorUsedError;
   @JsonKey(name: 'staff_id')
@@ -89,7 +88,6 @@ abstract class $SaleDetailsModelCopyWith<$Res> {
       @JsonKey(
           name: 'method',
           fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson,
           readValue: _paymentMethodReadValue)
       PaymentMethod paymentMethod,
       @JsonKey(name: 'staff_id') int? staffId,
@@ -238,7 +236,6 @@ abstract class _$$SaleDetailsModelImplCopyWith<$Res>
       @JsonKey(
           name: 'method',
           fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson,
           readValue: _paymentMethodReadValue)
       PaymentMethod paymentMethod,
       @JsonKey(name: 'staff_id') int? staffId,
@@ -368,7 +365,6 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
       @JsonKey(
           name: 'method',
           fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson,
           readValue: _paymentMethodReadValue)
       this.paymentMethod = PaymentMethod.cash,
       @JsonKey(name: 'staff_id') this.staffId,
@@ -426,7 +422,6 @@ class _$SaleDetailsModelImpl implements _SaleDetailsModel {
   @JsonKey(
       name: 'method',
       fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
       readValue: _paymentMethodReadValue)
   final PaymentMethod paymentMethod;
   @override
@@ -534,7 +529,6 @@ abstract class _SaleDetailsModel implements SaleDetailsModel {
       @JsonKey(
           name: 'method',
           fromJson: PaymentMethod.fromString,
-          toJson: PaymentMethod.toJson,
           readValue: _paymentMethodReadValue)
       final PaymentMethod paymentMethod,
       @JsonKey(name: 'staff_id') final int? staffId,
@@ -586,7 +580,6 @@ abstract class _SaleDetailsModel implements SaleDetailsModel {
   @JsonKey(
       name: 'method',
       fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
       readValue: _paymentMethodReadValue)
   PaymentMethod get paymentMethod;
   @override

@@ -46,7 +46,7 @@ mixin _$RequestBookingModel {
   String? get purchaseMode => throw _privateConstructorUsedError;
   @JsonKey(name: 'description')
   String? get description => throw _privateConstructorUsedError;
-  @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+  @JsonKey(name: 'payment_method')
   PaymentMethod? get paymentMethod => throw _privateConstructorUsedError;
   @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
   DeliveryStatus? get deliveryStatus => throw _privateConstructorUsedError;
@@ -101,8 +101,7 @@ abstract class $RequestBookingModelCopyWith<$Res> {
       @JsonKey(name: 'discount_amount') int? discountAmount,
       @JsonKey(name: 'purchase_mode') String? purchaseMode,
       @JsonKey(name: 'description') String? description,
-      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-      PaymentMethod? paymentMethod,
+      @JsonKey(name: 'payment_method') PaymentMethod? paymentMethod,
       @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
       DeliveryStatus? deliveryStatus,
       @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
@@ -316,8 +315,7 @@ abstract class _$$RequestBookingModelImplCopyWith<$Res>
       @JsonKey(name: 'discount_amount') int? discountAmount,
       @JsonKey(name: 'purchase_mode') String? purchaseMode,
       @JsonKey(name: 'description') String? description,
-      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-      PaymentMethod? paymentMethod,
+      @JsonKey(name: 'payment_method') PaymentMethod? paymentMethod,
       @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
       DeliveryStatus? deliveryStatus,
       @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
@@ -498,8 +496,7 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
       @JsonKey(name: 'discount_amount') this.discountAmount,
       @JsonKey(name: 'purchase_mode') this.purchaseMode,
       @JsonKey(name: 'description') this.description,
-      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-      this.paymentMethod,
+      @JsonKey(name: 'payment_method') this.paymentMethod,
       @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
       this.deliveryStatus,
       @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
@@ -566,7 +563,7 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
   @JsonKey(name: 'description')
   final String? description;
   @override
-  @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+  @JsonKey(name: 'payment_method')
   final PaymentMethod? paymentMethod;
   @override
   @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
@@ -729,8 +726,7 @@ abstract class _RequestBookingModel implements RequestBookingModel {
       @JsonKey(name: 'discount_amount') final int? discountAmount,
       @JsonKey(name: 'purchase_mode') final String? purchaseMode,
       @JsonKey(name: 'description') final String? description,
-      @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
-      final PaymentMethod? paymentMethod,
+      @JsonKey(name: 'payment_method') final PaymentMethod? paymentMethod,
       @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
       final DeliveryStatus? deliveryStatus,
       @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
@@ -795,7 +791,7 @@ abstract class _RequestBookingModel implements RequestBookingModel {
   @JsonKey(name: 'description')
   String? get description;
   @override
-  @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+  @JsonKey(name: 'payment_method')
   PaymentMethod? get paymentMethod;
   @override
   @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)

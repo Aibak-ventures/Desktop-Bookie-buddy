@@ -35,7 +35,6 @@ class SaleDetailsModel with _$SaleDetailsModel {
     @JsonKey(
       name: 'method',
       fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
       readValue: _paymentMethodReadValue,
     )
     @Default(PaymentMethod.cash)

@@ -36,7 +36,7 @@ class RequestBookingModel with _$RequestBookingModel {
     @JsonKey(name: 'discount_amount') int? discountAmount,
     @JsonKey(name: 'purchase_mode') String? purchaseMode,
     @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'payment_method', toJson: PaymentMethod.toJson)
+    @JsonKey(name: 'payment_method')
     PaymentMethod? paymentMethod,
     @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
     DeliveryStatus? deliveryStatus,

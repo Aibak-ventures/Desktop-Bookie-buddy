@@ -26,24 +26,25 @@ class AppInputValidators {
     return basicText(value, fieldName: 'Product name', minLength: 3);
   }
 
-  static String? phoneNumber(String? value, {bool isRequired = true}) {
-    // If not required and empty, return null
-    if (!isRequired && (value == null || value.trim().isEmpty)) {
-      return null;
-    }
-
-    if (value == null || value.trim().isEmpty) {
-      return 'Phone number is required';
-    }
-    // Allow optional leading '+' and digits only, any length
-    final phoneRegex = RegExp(r'^\+?\d+$');
-
-    if (!phoneRegex.hasMatch(value.trim())) {
-      return 'Enter a valid phone number';
-    }
-
+ static String? phoneNumber(String? value, {bool isRequired = true}) {
+  if (!isRequired && (value == null || value.trim().isEmpty)) {
     return null;
   }
+
+  if (value == null || value.trim().isEmpty) {
+    return 'Phone number is required';
+  }
+
+  // Allows international numbers (+, any length)
+  final phoneRegex = RegExp(r'^\+?\d+$');
+
+  if (!phoneRegex.hasMatch(value.trim())) {
+    return 'Enter a valid phone number';
+  }
+
+  return null;
+}
+
 
   static String? numberOnly(String? value) {
     if (value == null || value.trim().isEmpty) {

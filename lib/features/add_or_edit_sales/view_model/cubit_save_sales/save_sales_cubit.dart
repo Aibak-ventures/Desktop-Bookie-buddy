@@ -19,6 +19,43 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
     required SalesRequestModel salesRequest,
     bool isEditMode = false,
   }) async {
+    // ✅ VALIDATION FIRST
+    final products = salesRequest.products;
+
+    if (products!.isEmpty) {
+      emit(const SaveSalesState.failure('Please add at least one product'));
+      return;
+    }
+
+    for (final product in products) {
+      if (product.amount <= 0) {
+        emit(const SaveSalesState.failure(
+          'Product price cannot be zero',
+        ));
+        return;
+      }
+
+      if (product.quantity <= 0) {
+        emit(const SaveSalesState.failure(
+          'Product quantity cannot be zero',
+        ));
+        return;
+      }
+    }
+
+    final total = products.fold<int>(
+      0,
+      (sum, p) => sum + (p.amount * p.quantity),
+    );
+
+    if (total <= 0) {
+      emit(const SaveSalesState.failure(
+        'Total amount must be greater than zero',
+      ));
+      return;
+    }
+
+    // ✅ SAVE
     emit(const SaveSalesState.saving());
     try {
       isEditMode
@@ -36,3 +73,4 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
     }
   }
 }
+

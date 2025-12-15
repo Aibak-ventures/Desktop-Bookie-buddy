@@ -13,7 +13,6 @@ class BookingDetailsPaymentHistoryModel
       name: 'payment_method',
       defaultValue: PaymentMethod.cash,
       fromJson: PaymentMethod.fromString,
-      toJson: PaymentMethod.toJson,
     )
     required PaymentMethod paymentMethod,
     @JsonKey(name: 'datetime') required String dateTime,
