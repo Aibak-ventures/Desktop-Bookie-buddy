@@ -41,6 +41,9 @@ class UserRepository {
       await AuthService.clearUserSession();
       SecureActionAuthSessionManager.reset();
       await CachedNetworkImageProvider.defaultCacheManager.emptyCache();
+      // Clear all stored data from SharedPreferences
+      await TokenStorage.clearTokens();
+      await _prefs.clearAll();
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
     }

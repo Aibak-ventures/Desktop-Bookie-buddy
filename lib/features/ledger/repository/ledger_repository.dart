@@ -26,12 +26,12 @@ class LedgerRepository {
     required LedgerService ledgerService,
     required PendingService balanceService,
     required PaymentService paymentService,
-  })  : _ledgerService = ledgerService,
-        _balanceService = balanceService,
-        _paymentService = paymentService;
+  }) : _ledgerService = ledgerService,
+       _balanceService = balanceService,
+       _paymentService = paymentService;
 
   Future<PaginationModel<LedgerSecurityAmountDailyModel>>
-      getSecurityAmountsPagination({required int page, int? clientId}) async {
+  getSecurityAmountsPagination({required int page, int? clientId}) async {
     try {
       final response = await safeApiCall(
         () => _ledgerService.fetchSecurityAmountsPagination(
@@ -72,19 +72,19 @@ class LedgerRepository {
           clientId: clientId,
         ),
       );
-   if (response.status.isSuccess) {
-  return PaginationModel<LedgerPendingsDailyModel>.fromJson(
-    response.data,
-    (item) =>
-        LedgerPendingsDailyModel.fromJson(item as Map<String, dynamic>),
-    customJsonParser: (dataJson, itemFromJson) {
-      return LedgerPendingsGroupedModel.fromCustomJson(
-        dataJson as Map<String, dynamic>,
-      );
-    },
-  );
-}
-
+      if (response.status.isSuccess) {
+        return PaginationModel<LedgerPendingsDailyModel>.fromJson(
+          response.data,
+          (item) =>
+              LedgerPendingsDailyModel.fromJson(item as Map<String, dynamic>),
+          customJsonParser: (dataJson, itemFromJson) {
+            final data = LedgerPendingsGroupedModel.fromCustomJson(
+              dataJson as Map<String, dynamic>,
+            );
+            return data.dailyPendings;
+          },
+        );
+      }
       log('Get Pending Pagination Error: ${response.devMessage}');
       throw response.message;
     } catch (e, stack) {
@@ -141,8 +141,8 @@ class LedgerRepository {
               LedgerBookingDailyModel.fromJson(item as Map<String, dynamic>),
           customJsonParser: (dataJson, itemFromJson) =>
               LedgerBookingsGroupedModel.fromCustomJson(
-            dataJson as Map<String, dynamic>,
-          ).dailyBookings,
+                dataJson as Map<String, dynamic>,
+              ).dailyBookings,
         );
       }
       log('Get ledger Bookings Pagination Error: ${response.devMessage}');
@@ -168,8 +168,8 @@ class LedgerRepository {
           (item) => LedgerSaleDailyModel.fromJson(item as Map<String, dynamic>),
           customJsonParser: (dataJson, itemFromJson) =>
               LedgerSalesGroupedModel.fromCustomJson(
-            dataJson as Map<String, dynamic>,
-          ),
+                dataJson as Map<String, dynamic>,
+              ),
         );
       }
       log('Get ledger Sales Pagination Error: ${response.devMessage}');
@@ -242,42 +242,10 @@ class LedgerRepository {
     int? clientId,
   }) async {
     try {
-      final fileName =
-          '${ledgerType.isAll ? 'ledger' : ledgerType.value}_report_${fromDate}_to_${toDate}.xlsx';
-
-      // For web, we'll handle the file differently
-      if (kIsWeb) {
-        // Web implementation - we'll return a temp path that won't be used
-        final response = await safeApiCall(
-          () => _ledgerService.downloadLedgerInvoice(
-            fromDate: fromDate,
-            toDate: toDate,
-            type: type,
-            clientId: clientId,
-            filePath: fileName, // Just pass filename for web
-          ),
-        );
-        if (response != null) {
-          log('Download Ledger Invoice Error: ${response.devMessage}');
-          throw response.message;
-        }
-        return fileName; // Return filename for web
-      }
-
-      // Windows Desktop - use Downloads folder
-      String filePath;
-      if (Platform.isWindows) {
-        final downloadsDir =
-            Directory('${Platform.environment['USERPROFILE']}\\Downloads');
-        if (!downloadsDir.existsSync()) {
-          downloadsDir.createSync(recursive: true);
-        }
-        filePath = '${downloadsDir.path}\\$fileName';
-      } else {
-        // Mobile - use temp directory
-        final dir = await getTemporaryDirectory();
-        filePath = '${dir.path}/$fileName';
-      }
+      final dir =
+          await getTemporaryDirectory(); // You can also use getExternalStorageDirectory()
+      final filePath =
+          '${dir.path}/${ledgerType.isAll ? 'ledger' : ledgerType.value}_report_${fromDate}_to_${toDate}.xlsx';
       final response = await safeApiCall(
         () => _ledgerService.downloadLedgerInvoice(
           fromDate: fromDate,

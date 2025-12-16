@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/api/api_paths.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/utils/download_file_from_url.dart';
+
+
 
 class LedgerService {
   Future<CustomResponseModel> fetchDataForInvoicePdf({
@@ -36,30 +39,16 @@ class LedgerService {
     required String filePath,
     int? clientId,
     String type = 'all',
-  }) async {
-    try {
-      final response = await DioClient.dio.download(
-        ApiPaths.expenses.exportTransactionsExcel,
-        filePath,
-        queryParameters: {
-          'from_date': fromDate,
-          'to_date': toDate,
-          'type': type,
-          if (clientId != null) 'client_id': clientId,
-        },
-      );
-      log(
-        'Download Ledger Invoice excel Response: ${response.realUri.toString()} , status code: ${response.statusCode} ,${response.data}',
-      );
-      if (response.statusCode == 200) {
-        return null;
-      }
-      return CustomResponseModel.fromJson(response.data);
-    } catch (e, stack) {
-      log('❌ Error downloading file: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
+  }) async => downloadFileFromUrl(
+    url: ApiPaths.expenses.exportTransactionsExcel,
+    filePath: filePath,
+    queryParameters: {
+      'from_date': fromDate,
+      'to_date': toDate,
+      'type': type,
+      if (clientId != null) 'client_id': clientId,
+    },
+  );
 
   Future<CustomResponseModel> fetchSecurityAmountsPagination({
     required int page,
