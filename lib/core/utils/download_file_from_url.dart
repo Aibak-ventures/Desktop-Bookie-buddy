@@ -1,7 +1,7 @@
 
 import 'dart:developer';
-// import 'package:booking_application/config/dio_client/dio_config.dart';
-// import 'package:booking_application/core/models/custom_response_model/custom_response_model.dart';
+// import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
+// import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:dio/dio.dart';

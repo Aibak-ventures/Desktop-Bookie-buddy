@@ -12,7 +12,8 @@ _$ShopSettingsModelImpl _$$ShopSettingsModelImplFromJson(
       coolingPeriodDuration: (json['cooling_days'] as num?)?.toInt() ?? 0,
       addButtonDefaultAction: json['default_action'] == null
           ? AddButtonDefaultAction.booking
-          : AddButtonDefaultAction.fromString(json['default_action'] as String),
+          : AddButtonDefaultAction.fromString(
+              json['default_action'] as String?),
       searchClient: json['search_client'] as bool? ?? false,
     );
 

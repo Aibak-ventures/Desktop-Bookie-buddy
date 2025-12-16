@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:booking_application/core/enums/shop_based_enums.dart';
-import 'package:booking_application/core/models/user_model/user_model.dart';
-import 'package:booking_application/core/repositories/shop_repository.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

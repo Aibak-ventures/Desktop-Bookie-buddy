@@ -23,6 +23,7 @@ class StaffListBloc extends Bloc<StaffListEvent, StaffListState> {
     on<_AddStaff>(_onAddStaff);
     on<_EditStaff>(_onEditStaff);
     on<_DeleteStaff>(_onDeleteStaff);
+    on<_StaffUpdated>(_onStaffUpdated);
   }
 
   Future<void> _onLoadStaffs(
@@ -198,6 +199,30 @@ class StaffListBloc extends Bloc<StaffListEvent, StaffListState> {
         emit(StaffListState.error(e.toString()));
       }
     }
+  }
+
+  /// Updates an existing staff in the list without making an API call.
+  /// Use this after a successful edit operation from a dialog/form that already
+  /// made the API request and received the updated staff model.
+  FutureOr<void> _onStaffUpdated(
+    _StaffUpdated event,
+    Emitter<StaffListState> emit,
+  ) {
+    if (state is! _Loaded) return null;
+    final s = state as _Loaded;
+
+    // Find and replace the staff with the updated one (immutably)
+    final updatedStaffs = s.staffs.map((staff) {
+      return staff.id == event.staff.id ? event.staff : staff;
+    }).toList();
+
+    // Emit the updated state so the UI rebuilds instantly
+    emit(
+      s.copyWith(
+        staffs: updatedStaffs,
+        status: StaffListStatus.success,
+      ),
+    );
   }
 
   // FutureOr<void> _onLoadAllStaffs(

@@ -77,7 +77,7 @@ enum ShopRole {
     );
   }
 
-  static String? toJson(ShopRole? role) => role?.value;
+  String toJson() => value;
 
   bool get isStaff => this == ShopRole.staff;
   bool get isManager => this == ShopRole.manager;
@@ -172,7 +172,7 @@ enum AddButtonDefaultAction {
     );
   }
 
-  static String? toJson(AddButtonDefaultAction? action) => action?.value;
+  String toJson() => value;
 
   static List<AddButtonDefaultAction> without(AddButtonDefaultAction action) =>
       AddButtonDefaultAction.values.where((e) => e != action).toList();

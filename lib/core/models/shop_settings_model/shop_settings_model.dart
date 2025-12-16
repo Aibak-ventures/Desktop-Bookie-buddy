@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'shop_settings_model.g.dart';

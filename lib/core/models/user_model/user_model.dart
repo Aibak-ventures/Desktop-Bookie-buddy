@@ -1,4 +1,6 @@
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart'
+    show SecretPasswordLocations, UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
 import 'package:bookie_buddy_web/core/models/shop_settings_model/shop_settings_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -34,7 +36,7 @@ class UserModel with _$UserModel {
     @JsonKey(name: 'full_name') required String firstName,
     @JsonKey(name: 'last_name', defaultValue: '') required String lastName,
     required String phone,
-    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
     ShopRole? shopRole,
     @JsonKey(defaultValue: false) required bool block,
     @JsonKey(name: 'multiple_shops', defaultValue: false)
@@ -54,6 +56,12 @@ class UserModel with _$UserModel {
 
 extension UserModelX on UserModel {
   String get userFullName => '$firstName $lastName'.trim();
+
+  /// Check if user has a specific premium feature
+  bool hasFeature(AppPremiumFeatures feature) {
+    return subscription?.features.contains(feature.name.toUpperCase()) ??
+        false;
+  }
 }
 
 @freezed

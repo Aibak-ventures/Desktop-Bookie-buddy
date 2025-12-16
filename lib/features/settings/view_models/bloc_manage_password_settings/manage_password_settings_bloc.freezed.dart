@@ -12,8 +12,7 @@ part of 'manage_password_settings_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ManagePasswordSettingsEvent {
@@ -21,41 +20,46 @@ mixin _$ManagePasswordSettingsEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(List<UserPasswordSettingsModel> settings) load,
     required TResult Function(String newRole, UserPasswordSettingsModel target)
-    updateRole,
+        updateRole,
     required TResult Function() save,
     required TResult Function() resetChanges,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<UserPasswordSettingsModel> settings)? load,
     TResult? Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult? Function()? save,
     TResult? Function()? resetChanges,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<UserPasswordSettingsModel> settings)? load,
     TResult Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult Function()? save,
     TResult Function()? resetChanges,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Load value) load,
     required TResult Function(_UpdateRole value) updateRole,
     required TResult Function(_Save value) save,
     required TResult Function(_ResetChanges value) resetChanges,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Load value)? load,
     TResult? Function(_UpdateRole value)? updateRole,
     TResult? Function(_Save value)? save,
     TResult? Function(_ResetChanges value)? resetChanges,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Load value)? load,
@@ -63,26 +67,22 @@ mixin _$ManagePasswordSettingsEvent {
     TResult Function(_Save value)? save,
     TResult Function(_ResetChanges value)? resetChanges,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ManagePasswordSettingsEventCopyWith<$Res> {
   factory $ManagePasswordSettingsEventCopyWith(
-    ManagePasswordSettingsEvent value,
-    $Res Function(ManagePasswordSettingsEvent) then,
-  ) =
-      _$ManagePasswordSettingsEventCopyWithImpl<
-        $Res,
-        ManagePasswordSettingsEvent
-      >;
+          ManagePasswordSettingsEvent value,
+          $Res Function(ManagePasswordSettingsEvent) then) =
+      _$ManagePasswordSettingsEventCopyWithImpl<$Res,
+          ManagePasswordSettingsEvent>;
 }
 
 /// @nodoc
-class _$ManagePasswordSettingsEventCopyWithImpl<
-  $Res,
-  $Val extends ManagePasswordSettingsEvent
->
+class _$ManagePasswordSettingsEventCopyWithImpl<$Res,
+        $Val extends ManagePasswordSettingsEvent>
     implements $ManagePasswordSettingsEventCopyWith<$Res> {
   _$ManagePasswordSettingsEventCopyWithImpl(this._value, this._then);
 
@@ -98,9 +98,8 @@ class _$ManagePasswordSettingsEventCopyWithImpl<
 /// @nodoc
 abstract class _$$LoadImplCopyWith<$Res> {
   factory _$$LoadImplCopyWith(
-    _$LoadImpl value,
-    $Res Function(_$LoadImpl) then,
-  ) = __$$LoadImplCopyWithImpl<$Res>;
+          _$LoadImpl value, $Res Function(_$LoadImpl) then) =
+      __$$LoadImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<UserPasswordSettingsModel> settings});
 }
@@ -110,21 +109,21 @@ class __$$LoadImplCopyWithImpl<$Res>
     extends _$ManagePasswordSettingsEventCopyWithImpl<$Res, _$LoadImpl>
     implements _$$LoadImplCopyWith<$Res> {
   __$$LoadImplCopyWithImpl(_$LoadImpl _value, $Res Function(_$LoadImpl) _then)
-    : super(_value, _then);
+      : super(_value, _then);
 
   /// Create a copy of ManagePasswordSettingsEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? settings = null}) {
-    return _then(
-      _$LoadImpl(
-        null == settings
-            ? _value._settings
-            : settings // ignore: cast_nullable_to_non_nullable
-                  as List<UserPasswordSettingsModel>,
-      ),
-    );
+  $Res call({
+    Object? settings = null,
+  }) {
+    return _then(_$LoadImpl(
+      null == settings
+          ? _value._settings
+          : settings // ignore: cast_nullable_to_non_nullable
+              as List<UserPasswordSettingsModel>,
+    ));
   }
 }
 
@@ -132,7 +131,7 @@ class __$$LoadImplCopyWithImpl<$Res>
 
 class _$LoadImpl implements _Load {
   const _$LoadImpl(final List<UserPasswordSettingsModel> settings)
-    : _settings = settings;
+      : _settings = settings;
 
   final List<UserPasswordSettingsModel> _settings;
   @override
@@ -172,7 +171,7 @@ class _$LoadImpl implements _Load {
   TResult when<TResult extends Object?>({
     required TResult Function(List<UserPasswordSettingsModel> settings) load,
     required TResult Function(String newRole, UserPasswordSettingsModel target)
-    updateRole,
+        updateRole,
     required TResult Function() save,
     required TResult Function() resetChanges,
   }) {
@@ -184,7 +183,7 @@ class _$LoadImpl implements _Load {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<UserPasswordSettingsModel> settings)? load,
     TResult? Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult? Function()? save,
     TResult? Function()? resetChanges,
   }) {
@@ -196,7 +195,7 @@ class _$LoadImpl implements _Load {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<UserPasswordSettingsModel> settings)? load,
     TResult Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult Function()? save,
     TResult Function()? resetChanges,
     required TResult orElse(),
@@ -261,9 +260,8 @@ abstract class _Load implements ManagePasswordSettingsEvent {
 /// @nodoc
 abstract class _$$UpdateRoleImplCopyWith<$Res> {
   factory _$$UpdateRoleImplCopyWith(
-    _$UpdateRoleImpl value,
-    $Res Function(_$UpdateRoleImpl) then,
-  ) = __$$UpdateRoleImplCopyWithImpl<$Res>;
+          _$UpdateRoleImpl value, $Res Function(_$UpdateRoleImpl) then) =
+      __$$UpdateRoleImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String newRole, UserPasswordSettingsModel target});
 
@@ -275,27 +273,27 @@ class __$$UpdateRoleImplCopyWithImpl<$Res>
     extends _$ManagePasswordSettingsEventCopyWithImpl<$Res, _$UpdateRoleImpl>
     implements _$$UpdateRoleImplCopyWith<$Res> {
   __$$UpdateRoleImplCopyWithImpl(
-    _$UpdateRoleImpl _value,
-    $Res Function(_$UpdateRoleImpl) _then,
-  ) : super(_value, _then);
+      _$UpdateRoleImpl _value, $Res Function(_$UpdateRoleImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ManagePasswordSettingsEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? newRole = null, Object? target = null}) {
-    return _then(
-      _$UpdateRoleImpl(
-        newRole: null == newRole
-            ? _value.newRole
-            : newRole // ignore: cast_nullable_to_non_nullable
-                  as String,
-        target: null == target
-            ? _value.target
-            : target // ignore: cast_nullable_to_non_nullable
-                  as UserPasswordSettingsModel,
-      ),
-    );
+  $Res call({
+    Object? newRole = null,
+    Object? target = null,
+  }) {
+    return _then(_$UpdateRoleImpl(
+      newRole: null == newRole
+          ? _value.newRole
+          : newRole // ignore: cast_nullable_to_non_nullable
+              as String,
+      target: null == target
+          ? _value.target
+          : target // ignore: cast_nullable_to_non_nullable
+              as UserPasswordSettingsModel,
+    ));
   }
 
   /// Create a copy of ManagePasswordSettingsEvent
@@ -349,7 +347,7 @@ class _$UpdateRoleImpl implements _UpdateRole {
   TResult when<TResult extends Object?>({
     required TResult Function(List<UserPasswordSettingsModel> settings) load,
     required TResult Function(String newRole, UserPasswordSettingsModel target)
-    updateRole,
+        updateRole,
     required TResult Function() save,
     required TResult Function() resetChanges,
   }) {
@@ -361,7 +359,7 @@ class _$UpdateRoleImpl implements _UpdateRole {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<UserPasswordSettingsModel> settings)? load,
     TResult? Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult? Function()? save,
     TResult? Function()? resetChanges,
   }) {
@@ -373,7 +371,7 @@ class _$UpdateRoleImpl implements _UpdateRole {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<UserPasswordSettingsModel> settings)? load,
     TResult Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult Function()? save,
     TResult Function()? resetChanges,
     required TResult orElse(),
@@ -423,10 +421,9 @@ class _$UpdateRoleImpl implements _UpdateRole {
 }
 
 abstract class _UpdateRole implements ManagePasswordSettingsEvent {
-  const factory _UpdateRole({
-    required final String newRole,
-    required final UserPasswordSettingsModel target,
-  }) = _$UpdateRoleImpl;
+  const factory _UpdateRole(
+      {required final String newRole,
+      required final UserPasswordSettingsModel target}) = _$UpdateRoleImpl;
 
   String get newRole;
   UserPasswordSettingsModel get target;
@@ -441,9 +438,8 @@ abstract class _UpdateRole implements ManagePasswordSettingsEvent {
 /// @nodoc
 abstract class _$$SaveImplCopyWith<$Res> {
   factory _$$SaveImplCopyWith(
-    _$SaveImpl value,
-    $Res Function(_$SaveImpl) then,
-  ) = __$$SaveImplCopyWithImpl<$Res>;
+          _$SaveImpl value, $Res Function(_$SaveImpl) then) =
+      __$$SaveImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -451,7 +447,7 @@ class __$$SaveImplCopyWithImpl<$Res>
     extends _$ManagePasswordSettingsEventCopyWithImpl<$Res, _$SaveImpl>
     implements _$$SaveImplCopyWith<$Res> {
   __$$SaveImplCopyWithImpl(_$SaveImpl _value, $Res Function(_$SaveImpl) _then)
-    : super(_value, _then);
+      : super(_value, _then);
 
   /// Create a copy of ManagePasswordSettingsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -481,7 +477,7 @@ class _$SaveImpl implements _Save {
   TResult when<TResult extends Object?>({
     required TResult Function(List<UserPasswordSettingsModel> settings) load,
     required TResult Function(String newRole, UserPasswordSettingsModel target)
-    updateRole,
+        updateRole,
     required TResult Function() save,
     required TResult Function() resetChanges,
   }) {
@@ -493,7 +489,7 @@ class _$SaveImpl implements _Save {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<UserPasswordSettingsModel> settings)? load,
     TResult? Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult? Function()? save,
     TResult? Function()? resetChanges,
   }) {
@@ -505,7 +501,7 @@ class _$SaveImpl implements _Save {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<UserPasswordSettingsModel> settings)? load,
     TResult Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult Function()? save,
     TResult Function()? resetChanges,
     required TResult orElse(),
@@ -561,9 +557,8 @@ abstract class _Save implements ManagePasswordSettingsEvent {
 /// @nodoc
 abstract class _$$ResetChangesImplCopyWith<$Res> {
   factory _$$ResetChangesImplCopyWith(
-    _$ResetChangesImpl value,
-    $Res Function(_$ResetChangesImpl) then,
-  ) = __$$ResetChangesImplCopyWithImpl<$Res>;
+          _$ResetChangesImpl value, $Res Function(_$ResetChangesImpl) then) =
+      __$$ResetChangesImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
@@ -571,9 +566,8 @@ class __$$ResetChangesImplCopyWithImpl<$Res>
     extends _$ManagePasswordSettingsEventCopyWithImpl<$Res, _$ResetChangesImpl>
     implements _$$ResetChangesImplCopyWith<$Res> {
   __$$ResetChangesImplCopyWithImpl(
-    _$ResetChangesImpl _value,
-    $Res Function(_$ResetChangesImpl) _then,
-  ) : super(_value, _then);
+      _$ResetChangesImpl _value, $Res Function(_$ResetChangesImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ManagePasswordSettingsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -603,7 +597,7 @@ class _$ResetChangesImpl implements _ResetChanges {
   TResult when<TResult extends Object?>({
     required TResult Function(List<UserPasswordSettingsModel> settings) load,
     required TResult Function(String newRole, UserPasswordSettingsModel target)
-    updateRole,
+        updateRole,
     required TResult Function() save,
     required TResult Function() resetChanges,
   }) {
@@ -615,7 +609,7 @@ class _$ResetChangesImpl implements _ResetChanges {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(List<UserPasswordSettingsModel> settings)? load,
     TResult? Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult? Function()? save,
     TResult? Function()? resetChanges,
   }) {
@@ -627,7 +621,7 @@ class _$ResetChangesImpl implements _ResetChanges {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(List<UserPasswordSettingsModel> settings)? load,
     TResult Function(String newRole, UserPasswordSettingsModel target)?
-    updateRole,
+        updateRole,
     TResult Function()? save,
     TResult Function()? resetChanges,
     required TResult orElse(),
@@ -693,87 +687,84 @@ mixin _$ManagePasswordSettingsState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      ManagePwdSettingsStatus status,
-      List<UserPasswordSettingsModel> settings,
-      List<UserPasswordSettingsModel> original,
-      String? error,
-      String? message,
-      DateTime? lastSavedAt,
-    )
-    loaded,
-  }) => throw _privateConstructorUsedError;
+            ManagePwdSettingsStatus status,
+            List<UserPasswordSettingsModel> settings,
+            List<UserPasswordSettingsModel> original,
+            String? error,
+            String? message,
+            DateTime? lastSavedAt)
+        loaded,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-      ManagePwdSettingsStatus status,
-      List<UserPasswordSettingsModel> settings,
-      List<UserPasswordSettingsModel> original,
-      String? error,
-      String? message,
-      DateTime? lastSavedAt,
-    )?
-    loaded,
-  }) => throw _privateConstructorUsedError;
+            ManagePwdSettingsStatus status,
+            List<UserPasswordSettingsModel> settings,
+            List<UserPasswordSettingsModel> original,
+            String? error,
+            String? message,
+            DateTime? lastSavedAt)?
+        loaded,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-      ManagePwdSettingsStatus status,
-      List<UserPasswordSettingsModel> settings,
-      List<UserPasswordSettingsModel> original,
-      String? error,
-      String? message,
-      DateTime? lastSavedAt,
-    )?
-    loaded,
+            ManagePwdSettingsStatus status,
+            List<UserPasswordSettingsModel> settings,
+            List<UserPasswordSettingsModel> original,
+            String? error,
+            String? message,
+            DateTime? lastSavedAt)?
+        loaded,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Loaded value) loaded,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Loaded value)? loaded,
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Loaded value)? loaded,
     required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ManagePasswordSettingsState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $ManagePasswordSettingsStateCopyWith<ManagePasswordSettingsState>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ManagePasswordSettingsStateCopyWith<$Res> {
   factory $ManagePasswordSettingsStateCopyWith(
-    ManagePasswordSettingsState value,
-    $Res Function(ManagePasswordSettingsState) then,
-  ) =
-      _$ManagePasswordSettingsStateCopyWithImpl<
-        $Res,
-        ManagePasswordSettingsState
-      >;
+          ManagePasswordSettingsState value,
+          $Res Function(ManagePasswordSettingsState) then) =
+      _$ManagePasswordSettingsStateCopyWithImpl<$Res,
+          ManagePasswordSettingsState>;
   @useResult
-  $Res call({
-    ManagePwdSettingsStatus status,
-    List<UserPasswordSettingsModel> settings,
-    List<UserPasswordSettingsModel> original,
-    String? error,
-    String? message,
-    DateTime? lastSavedAt,
-  });
+  $Res call(
+      {ManagePwdSettingsStatus status,
+      List<UserPasswordSettingsModel> settings,
+      List<UserPasswordSettingsModel> original,
+      String? error,
+      String? message,
+      DateTime? lastSavedAt});
 }
 
 /// @nodoc
-class _$ManagePasswordSettingsStateCopyWithImpl<
-  $Res,
-  $Val extends ManagePasswordSettingsState
->
+class _$ManagePasswordSettingsStateCopyWithImpl<$Res,
+        $Val extends ManagePasswordSettingsState>
     implements $ManagePasswordSettingsStateCopyWith<$Res> {
   _$ManagePasswordSettingsStateCopyWithImpl(this._value, this._then);
 
@@ -794,35 +785,32 @@ class _$ManagePasswordSettingsStateCopyWithImpl<
     Object? message = freezed,
     Object? lastSavedAt = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as ManagePwdSettingsStatus,
-            settings: null == settings
-                ? _value.settings
-                : settings // ignore: cast_nullable_to_non_nullable
-                      as List<UserPasswordSettingsModel>,
-            original: null == original
-                ? _value.original
-                : original // ignore: cast_nullable_to_non_nullable
-                      as List<UserPasswordSettingsModel>,
-            error: freezed == error
-                ? _value.error
-                : error // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            message: freezed == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            lastSavedAt: freezed == lastSavedAt
-                ? _value.lastSavedAt
-                : lastSavedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ManagePwdSettingsStatus,
+      settings: null == settings
+          ? _value.settings
+          : settings // ignore: cast_nullable_to_non_nullable
+              as List<UserPasswordSettingsModel>,
+      original: null == original
+          ? _value.original
+          : original // ignore: cast_nullable_to_non_nullable
+              as List<UserPasswordSettingsModel>,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastSavedAt: freezed == lastSavedAt
+          ? _value.lastSavedAt
+          : lastSavedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
@@ -830,19 +818,17 @@ class _$ManagePasswordSettingsStateCopyWithImpl<
 abstract class _$$LoadedImplCopyWith<$Res>
     implements $ManagePasswordSettingsStateCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
-    _$LoadedImpl value,
-    $Res Function(_$LoadedImpl) then,
-  ) = __$$LoadedImplCopyWithImpl<$Res>;
+          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+      __$$LoadedImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    ManagePwdSettingsStatus status,
-    List<UserPasswordSettingsModel> settings,
-    List<UserPasswordSettingsModel> original,
-    String? error,
-    String? message,
-    DateTime? lastSavedAt,
-  });
+  $Res call(
+      {ManagePwdSettingsStatus status,
+      List<UserPasswordSettingsModel> settings,
+      List<UserPasswordSettingsModel> original,
+      String? error,
+      String? message,
+      DateTime? lastSavedAt});
 }
 
 /// @nodoc
@@ -850,9 +836,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     extends _$ManagePasswordSettingsStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
   __$$LoadedImplCopyWithImpl(
-    _$LoadedImpl _value,
-    $Res Function(_$LoadedImpl) _then,
-  ) : super(_value, _then);
+      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ManagePasswordSettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -866,51 +851,49 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? message = freezed,
     Object? lastSavedAt = freezed,
   }) {
-    return _then(
-      _$LoadedImpl(
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as ManagePwdSettingsStatus,
-        settings: null == settings
-            ? _value._settings
-            : settings // ignore: cast_nullable_to_non_nullable
-                  as List<UserPasswordSettingsModel>,
-        original: null == original
-            ? _value._original
-            : original // ignore: cast_nullable_to_non_nullable
-                  as List<UserPasswordSettingsModel>,
-        error: freezed == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        message: freezed == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        lastSavedAt: freezed == lastSavedAt
-            ? _value.lastSavedAt
-            : lastSavedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$LoadedImpl(
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ManagePwdSettingsStatus,
+      settings: null == settings
+          ? _value._settings
+          : settings // ignore: cast_nullable_to_non_nullable
+              as List<UserPasswordSettingsModel>,
+      original: null == original
+          ? _value._original
+          : original // ignore: cast_nullable_to_non_nullable
+              as List<UserPasswordSettingsModel>,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastSavedAt: freezed == lastSavedAt
+          ? _value.lastSavedAt
+          : lastSavedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({
-    this.status = ManagePwdSettingsStatus.initial,
-    final List<UserPasswordSettingsModel> settings =
-        const <UserPasswordSettingsModel>[],
-    final List<UserPasswordSettingsModel> original =
-        const <UserPasswordSettingsModel>[],
-    this.error,
-    this.message,
-    this.lastSavedAt,
-  }) : _settings = settings,
-       _original = original;
+  const _$LoadedImpl(
+      {this.status = ManagePwdSettingsStatus.initial,
+      final List<UserPasswordSettingsModel> settings =
+          const <UserPasswordSettingsModel>[],
+      final List<UserPasswordSettingsModel> original =
+          const <UserPasswordSettingsModel>[],
+      this.error,
+      this.message,
+      this.lastSavedAt})
+      : _settings = settings,
+        _original = original;
 
   @override
   @JsonKey()
@@ -961,14 +944,13 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    status,
-    const DeepCollectionEquality().hash(_settings),
-    const DeepCollectionEquality().hash(_original),
-    error,
-    message,
-    lastSavedAt,
-  );
+      runtimeType,
+      status,
+      const DeepCollectionEquality().hash(_settings),
+      const DeepCollectionEquality().hash(_original),
+      error,
+      message,
+      lastSavedAt);
 
   /// Create a copy of ManagePasswordSettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -982,14 +964,13 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-      ManagePwdSettingsStatus status,
-      List<UserPasswordSettingsModel> settings,
-      List<UserPasswordSettingsModel> original,
-      String? error,
-      String? message,
-      DateTime? lastSavedAt,
-    )
-    loaded,
+            ManagePwdSettingsStatus status,
+            List<UserPasswordSettingsModel> settings,
+            List<UserPasswordSettingsModel> original,
+            String? error,
+            String? message,
+            DateTime? lastSavedAt)
+        loaded,
   }) {
     return loaded(status, settings, original, error, message, lastSavedAt);
   }
@@ -998,37 +979,29 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-      ManagePwdSettingsStatus status,
-      List<UserPasswordSettingsModel> settings,
-      List<UserPasswordSettingsModel> original,
-      String? error,
-      String? message,
-      DateTime? lastSavedAt,
-    )?
-    loaded,
+            ManagePwdSettingsStatus status,
+            List<UserPasswordSettingsModel> settings,
+            List<UserPasswordSettingsModel> original,
+            String? error,
+            String? message,
+            DateTime? lastSavedAt)?
+        loaded,
   }) {
     return loaded?.call(
-      status,
-      settings,
-      original,
-      error,
-      message,
-      lastSavedAt,
-    );
+        status, settings, original, error, message, lastSavedAt);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-      ManagePwdSettingsStatus status,
-      List<UserPasswordSettingsModel> settings,
-      List<UserPasswordSettingsModel> original,
-      String? error,
-      String? message,
-      DateTime? lastSavedAt,
-    )?
-    loaded,
+            ManagePwdSettingsStatus status,
+            List<UserPasswordSettingsModel> settings,
+            List<UserPasswordSettingsModel> original,
+            String? error,
+            String? message,
+            DateTime? lastSavedAt)?
+        loaded,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -1067,14 +1040,13 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements ManagePasswordSettingsState {
-  const factory _Loaded({
-    final ManagePwdSettingsStatus status,
-    final List<UserPasswordSettingsModel> settings,
-    final List<UserPasswordSettingsModel> original,
-    final String? error,
-    final String? message,
-    final DateTime? lastSavedAt,
-  }) = _$LoadedImpl;
+  const factory _Loaded(
+      {final ManagePwdSettingsStatus status,
+      final List<UserPasswordSettingsModel> settings,
+      final List<UserPasswordSettingsModel> original,
+      final String? error,
+      final String? message,
+      final DateTime? lastSavedAt}) = _$LoadedImpl;
 
   @override
   ManagePwdSettingsStatus get status;

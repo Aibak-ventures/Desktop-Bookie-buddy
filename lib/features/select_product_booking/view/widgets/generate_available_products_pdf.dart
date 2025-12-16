@@ -2,12 +2,17 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
+import 'package:bookie_buddy_web/core/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/utils/download_file.dart';
 import 'package:bookie_buddy_web/utils/get_pdf_image_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -123,42 +128,79 @@ class GenerateAvailableProductsPdf {
     }
   }
 
+  // Cached unknown product image (lazy)
+  static pw.ImageProvider? _cachedUnknownImage;
+  static pw.ImageProvider get _unknownProductImage => _cachedUnknownImage ??=
+      pw.MemoryImage(File(AppAssets.unknownProduct).readAsBytesSync());
+
+  static const double _letterSpacing = 0.5;
+  static final _pdfGreyColor = PdfColor.fromHex('D9D9D9');
+  static final _customColor = const PdfColor.fromInt(0xFF6C5CE7);
+
   static Future<Uint8List> generateAvailableProductsPdf(
     List<ProductModel> products,
     UserShopModel shopDetails,
     String availabilityDate,
   ) async {
-    final pdf = pw.Document();
-
-    // Load fonts
+    // Font loading logic
     final fontRegular = await rootBundle.load(AppAssets.interRegularFont);
     final fontSemiBold = await rootBundle.load(AppAssets.interSemiBoldFont);
+    final fontExtraBold = await rootBundle.load(AppAssets.interExtraBoldFont);
+    final fontMalayalam = await rootBundle.load(
+      AppAssets.notoSansMalayalamFont,
+    );
     final ttfRegular = pw.Font.ttf(fontRegular);
-    final ttfSemiBold = pw.Font.ttf(fontSemiBold);
+    final ttfMedium = pw.Font.ttf(fontSemiBold);
+    final ttfExtraBold = pw.Font.ttf(fontExtraBold);
+    final ttfMalayalam = pw.Font.ttf(fontMalayalam);
 
-    // Load the SVG header graphic for availability
+    // Load the SVG header graphic
     final headerSvg = await rootBundle.loadString(
-      AppAssets.availabilityPdfLayoutHeaderSvg,
+      AppAssets.bookingPdfLayoutHeaderSvg,
     );
     final footerSvg = await rootBundle.loadString(
       AppAssets.bookingPdfLayoutFooterSvg,
     );
 
-    // Load logo
-    pw.ImageProvider? logoProvider;
-    try {
-      if (shopDetails.image != null && shopDetails.image!.isNotEmpty) {
-        logoProvider = await getPdfImageProvider(
-          imagePath: shopDetails.image!,
-          isAsset: false,
-        );
-      }
-    } catch (e) {
-      log('Failed to load logo: $e');
+    final pdf = pw.Document(
+      creator: 'Bookie Buddy',
+      author: 'AFNAN P',
+      theme: pw.ThemeData.withFont(
+        base: ttfRegular,
+        bold: ttfMedium,
+        fontFallback: [ttfMalayalam],
+      ),
+    );
+
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 30),
+        validateStatus: (status) => status != null && status < 400,
+      ),
+    );
+
+    final businessImage = await getPdfImageProvider(
+      imagePath: shopDetails.image,
+      isAsset: false,
+      dio: dio,
+    );
+    final productImages = <pw.ImageProvider>[];
+    // download image from network
+    for (var i = 0; i < products.length; i++) {
+      final product = products[i];
+      final productImage = await getPdfImageProvider(
+        imagePath: product.image,
+        isAsset: product.image == null,
+        dio: dio,
+      );
+
+      productImages.add(productImage);
     }
 
     pdf.addPage(
       pw.MultiPage(
+        // Page theme with background SVG used as header background
         pageTheme: pw.PageTheme(
           margin: const pw.EdgeInsets.fromLTRB(24, 60, 24, 40),
           buildBackground: (context) {
@@ -190,14 +232,19 @@ class GenerateAvailableProductsPdf {
             );
           },
         ),
-        build: (pw.Context context) => [
-          _buildHeader(shopDetails, logoProvider, ttfRegular, ttfSemiBold),
-          pw.SizedBox(height: 20),
-          _buildAvailabilityInfo(availabilityDate, ttfRegular, ttfSemiBold),
-          pw.SizedBox(height: 20),
-          _buildProductsTable(products, ttfRegular, ttfSemiBold),
+        build: (context) => [
+          _buildShopDetails(
+            businessImage,
+            shopDetails.name,
+            shopDetails.phone,
+            shopDetails.phone2,
+            shopDetails.fullAddress,
+            ttfExtraBold,
+          ),
           pw.SizedBox(height: 30),
-          _buildFooter(ttfRegular),
+          _buildInvoiceDetails(availabilityDate),
+          pw.SizedBox(height: 20),
+          _buildItemsTable(products, productImages),
         ],
       ),
     );
@@ -205,205 +252,215 @@ class GenerateAvailableProductsPdf {
     return pdf.save();
   }
 
-  static pw.Widget _buildHeader(
-    UserShopModel shopDetails,
-    pw.ImageProvider? logoProvider,
-    pw.Font fontRegular,
-    pw.Font fontSemiBold,
-  ) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Expanded(
-          child: pw.Column(
+  // Shop details
+  static pw.Row _buildShopDetails(
+    pw.ImageProvider shopImage,
+    String shopName,
+    String shopPhone,
+    String? shopPhone2,
+    String shopAddress,
+    pw.Font fontBold,
+  ) =>
+      pw.Row(
+        children: [
+          pw.Image(shopImage, width: 60, height: 60),
+          pw.SizedBox(width: 12),
+          pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                shopDetails.name,
+                shopName,
                 style: pw.TextStyle(
-                  font: fontSemiBold,
-                  fontSize: 24,
                   fontWeight: pw.FontWeight.bold,
+                  color: _customColor,
+                  fontSize: 16,
+                  fontBold: fontBold,
                 ),
               ),
-              if (shopDetails.address.isNotEmpty) ...[
-                pw.SizedBox(height: 8),
-                pw.Text(
-                  shopDetails.address,
-                  style: pw.TextStyle(font: fontRegular, fontSize: 12),
-                ),
-              ],
-              if (shopDetails.phone.isNotEmpty) ...[
-                pw.SizedBox(height: 4),
-                pw.Text(
-                  'Phone: ${shopDetails.phone}',
-                  style: pw.TextStyle(font: fontRegular, fontSize: 12),
-                ),
-              ],
-              if (shopDetails.email?.isNotEmpty == true) ...[
-                pw.SizedBox(height: 4),
-                pw.Text(
-                  'Email: ${shopDetails.email}',
-                  style: pw.TextStyle(font: fontRegular, fontSize: 12),
-                ),
-              ],
+              pw.Text(shopPhone),
+              if (shopPhone2?.isNotEmpty == true) pw.Text(shopPhone2!),
+              ...shopAddress.splitByWords(4).map(pw.Text.new),
             ],
           ),
-        ),
-        if (logoProvider != null)
-          pw.Container(
-            width: 80,
-            height: 80,
-            child: pw.Image(logoProvider),
+        ],
+      );
+
+  // Invoice details
+  static pw.Widget _buildInvoiceDetails(String availabilityDate) {
+    pw.RichText text(String text, String secondText) => pw.RichText(
+          text: pw.TextSpan(
+            text: text,
+            children: [
+              pw.TextSpan(
+                text: secondText,
+                style: const pw.TextStyle(color: PdfColors.grey500),
+              ),
+            ],
+            style: pw.TextStyle(
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.grey800,
+              letterSpacing: _letterSpacing,
+            ),
           ),
+        );
+
+    return pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      children: [
+        text('AVAILABLE DATE: ', availabilityDate),
       ],
     );
   }
 
-  static pw.Widget _buildAvailabilityInfo(
-    String availabilityDate,
-    pw.Font fontRegular,
-    pw.Font fontSemiBold,
+  // Product items table
+  static pw.Widget _buildItemsTable(
+    List<ProductModel> products,
+    List<pw.ImageProvider> productImages,
   ) {
-    // Parse the date - it comes in dd-MM-yyyy format
-    DateTime parsedDate;
-    try {
-      parsedDate = DateFormat('dd-MM-yyyy').parse(availabilityDate);
-    } catch (e) {
-      // If that fails, try ISO format
-      try {
-        parsedDate = DateTime.parse(availabilityDate);
-      } catch (e2) {
-        // If all parsing fails, use current date
-        parsedDate = DateTime.now();
-      }
-    }
-    
+    pw.Text tableHeadingText(
+      String text, {
+      pw.TextAlign textAlign = pw.TextAlign.left,
+    }) =>
+        pw.Text(
+          text,
+          style: pw.TextStyle(
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.black,
+            letterSpacing: _letterSpacing,
+          ),
+          textAlign: textAlign,
+        );
+
     return pw.Container(
-      padding: const pw.EdgeInsets.all(16),
-      decoration: pw.BoxDecoration(
-        border: pw.Border.all(color: PdfColors.grey300),
-        borderRadius: pw.BorderRadius.circular(8),
-      ),
+      decoration: pw.BoxDecoration(border: pw.Border.all(color: _pdfGreyColor)),
       child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.center,
         children: [
-          pw.Text(
-            'Available Products Report',
-            style: pw.TextStyle(
-              font: fontSemiBold,
-              fontSize: 18,
-              fontWeight: pw.FontWeight.bold,
+          // Table header
+          pw.Container(
+            padding: const pw.EdgeInsets.all(12),
+            decoration: pw.BoxDecoration(color: _pdfGreyColor),
+            child: pw.Row(
+              children: [
+                pw.Expanded(child: tableHeadingText('NO')),
+                pw.Expanded(flex: 5, child: tableHeadingText('ITEM NAME')),
+                pw.Expanded(
+                  child: tableHeadingText(
+                    'QTY',
+                    textAlign: pw.TextAlign.center,
+                  ),
+                ),
+                pw.Expanded(
+                  flex: 2,
+                  child: tableHeadingText(
+                    'AMOUNT',
+                    textAlign: pw.TextAlign.right,
+                  ),
+                ),
+              ],
             ),
           ),
-          pw.SizedBox(height: 8),
-          pw.Text(
-            'Availability Date: ${DateFormat('dd/MM/yyyy').format(parsedDate)}',
-            style: pw.TextStyle(font: fontRegular, fontSize: 14),
-          ),
-          pw.Text(
-            'Generated on: ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}',
-            style: pw.TextStyle(
-                font: fontRegular, fontSize: 12, color: PdfColors.grey600),
-          ),
+          // products rows
+          if (products.isNotEmpty)
+            ...List.generate(products.length, (index) {
+              final product = products[index];
+              final productImage = index < productImages.length
+                  ? productImages[index]
+                  : _unknownProductImage;
+              return pw.Container(
+                padding: const pw.EdgeInsets.all(12),
+                decoration: pw.BoxDecoration(
+                  color: index % 2 == 0 ? PdfColors.white : PdfColors.grey50,
+                ),
+                child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  children: [
+                    pw.Expanded(child: pw.Text((index + 1).toString())),
+                    pw.Expanded(
+                      flex: 5,
+                      child: _itemBuilder(productImage, product),
+                    ),
+                    pw.Expanded(
+                      child: pw.Text(
+                        product.variants
+                            .fold<int>(
+                              0,
+                              (qty, variant) =>
+                                  qty + (variant.remainingStock ?? 0),
+                            )
+                            .toString(),
+                        textAlign: pw.TextAlign.center,
+                      ),
+                    ),
+                    pw.Expanded(
+                      flex: 2,
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.end,
+                        crossAxisAlignment: pw.CrossAxisAlignment.end,
+                        children: [
+                          pw.Center(
+                            child: pw.Text(
+                              (product.price != null && product.price! > 0)
+                                  ? product.price!.toCurrency()
+                                  : '-----',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                              textAlign: pw.TextAlign.right,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
         ],
       ),
     );
   }
 
-  static pw.Widget _buildProductsTable(
-    List<ProductModel> products,
-    pw.Font fontRegular,
-    pw.Font fontSemiBold,
+  static pw.Row _itemBuilder(
+    pw.ImageProvider productImage,
+    ProductModel product,
   ) {
-    return pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
+    final mainServiceType = product.mainServiceType;
+    const textStyle = const pw.TextStyle(
+      fontSize: 12,
+      color: PdfColors.grey600,
+    );
+    return pw.Row(
       children: [
-        pw.Text(
-          'Available Products (${products.length})',
-          style: pw.TextStyle(
-            font: fontSemiBold,
-            fontSize: 16,
-            fontWeight: pw.FontWeight.bold,
+        pw.ClipRRect(
+          horizontalRadius: 5,
+          verticalRadius: 5,
+          child: pw.Image(
+            productImage,
+            width: 50,
+            height: 50,
+            fit: pw.BoxFit.cover,
           ),
         ),
-        pw.SizedBox(height: 12),
-        pw.Table(
-          border: pw.TableBorder.all(color: PdfColors.grey400),
-          columnWidths: {
-            0: const pw.FlexColumnWidth(1),
-            1: const pw.FlexColumnWidth(3),
-            2: const pw.FlexColumnWidth(2),
-            3: const pw.FlexColumnWidth(1.5),
-          },
+        pw.SizedBox(width: 10),
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            // Header row
-            pw.TableRow(
-              decoration: const pw.BoxDecoration(color: PdfColors.grey200),
-              children: [
-                _buildTableCell('S.No', fontRegular, fontSemiBold,
-                    isHeader: true),
-                _buildTableCell('Product Name', fontRegular, fontSemiBold,
-                    isHeader: true),
-                _buildTableCell('Category', fontRegular, fontSemiBold,
-                    isHeader: true),
-                _buildTableCell('Price', fontRegular, fontSemiBold,
-                    isHeader: true),
-              ],
+            pw.Text(
+              product.name,
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
             ),
-            // Data rows
-            ...products.asMap().entries.map((entry) {
-              final index = entry.key;
-              final product = entry.value;
-              return pw.TableRow(
-                children: [
-                  _buildTableCell('${index + 1}', fontRegular, fontSemiBold),
-                  _buildTableCell(product.name, fontRegular, fontSemiBold),
-                  _buildTableCell(
-                      product.category ?? 'N/A', fontRegular, fontSemiBold),
-                  _buildTableCell(
-                      '₹${product.price?.toStringAsFixed(2) ?? 'N/A'}',
-                      fontRegular,
-                      fontSemiBold),
-                ],
-              );
-            }).toList(),
+            if (mainServiceType.isDress || mainServiceType.isOthers)
+              pw.Text('Color: ${product.color ?? '-'}', style: textStyle),
+            if (mainServiceType.isVehicle)
+              pw.Text('Model: ${product.model ?? '-'}', style: textStyle),
+            if (mainServiceType.isVehicle ||
+                mainServiceType.isOthers ||
+                mainServiceType.isEquipment)
+              pw.Text(
+                '${mainServiceType.isVehicle ? 'Brand' : 'Category'} : ${product.category ?? '-'}',
+                style: textStyle,
+              ),
           ],
-        ),
-      ],
-    );
-  }
-
-  static pw.Widget _buildTableCell(
-      String text, pw.Font fontRegular, pw.Font fontSemiBold,
-      {bool isHeader = false}) {
-    return pw.Container(
-      padding: const pw.EdgeInsets.all(8),
-      child: pw.Text(
-        text,
-        style: pw.TextStyle(
-          font: isHeader ? fontSemiBold : fontRegular,
-          fontSize: isHeader ? 12 : 10,
-          fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
-        ),
-      ),
-    );
-  }
-
-  static pw.Widget _buildFooter(pw.Font font) {
-    return pw.Column(
-      children: [
-        pw.Divider(color: PdfColors.grey400),
-        pw.SizedBox(height: 10),
-        pw.Text(
-          'This is a system-generated report',
-          style: pw.TextStyle(
-            font: font,
-            fontSize: 10,
-            color: PdfColors.grey600,
-            fontStyle: pw.FontStyle.italic,
-          ),
         ),
       ],
     );

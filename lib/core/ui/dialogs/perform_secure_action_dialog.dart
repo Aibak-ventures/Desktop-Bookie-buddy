@@ -3,7 +3,12 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+// import 'package:bookie_buddy_web/core/enums/enums.dart' show SecretPasswordLocations;
+import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/enums/enums.dart' hide ShopRole;
+    // show SecretPasswordLocations;
+
+// import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -20,25 +25,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 bool _roleCheck(UserPasswordSettingsModel? settings, ShopRole shopRole) {
-  // Return true => password required, false => action allowed without password
-  if (settings == null) {
-    log('No password settings found, defaulting to password required');
-    return true;
-  }
+  if (settings == null) return true;
 
-  final actionRole = settings.role;
-
-  switch (actionRole) {
+  switch (settings.role) {
     case UserPasswordSettingRole.none:
-      return false; // No one needs a password
+      return false;
+
     case UserPasswordSettingRole.all:
-      return true; // Everyone must authenticate
+      return true;
+
     case UserPasswordSettingRole.managerAndStaff:
       return shopRole == ShopRole.manager || shopRole == ShopRole.staff;
+
     case UserPasswordSettingRole.staff:
       return shopRole == ShopRole.staff;
+
+    default:
+      return true;
   }
 }
+
 
 // Main function to handle any action that requires authentication
 Future<void> performSecureActionDialog(
@@ -54,7 +60,7 @@ Future<void> performSecureActionDialog(
       debugPrint('No password setting found for location: $location');
       return UserPasswordSettingsModel(
         location: location,
-        role: UserPasswordSettingRole.all,
+        role: UserPasswordSettingRole.none,
       );
     },
   );

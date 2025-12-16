@@ -1,9 +1,9 @@
-import 'package:booking_application/core/extensions/context_extensions.dart';
-import 'package:booking_application/core/theme/app_colors.dart';
-import 'package:booking_application/core/ui/dialogs/show_custom_alert_dialog.dart';
-import 'package:booking_application/core/ui/widgets/global_loading_overlay.dart';
-import 'package:booking_application/core/view_model/user_cubit.dart';
-import 'package:booking_application/features/settings/view_models/cubit_product_reserve_days/product_reserve_days_cubit.dart';
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/show_custom_alert_dialog.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/settings/view_models/cubit_product_reserve_days/product_reserve_days_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

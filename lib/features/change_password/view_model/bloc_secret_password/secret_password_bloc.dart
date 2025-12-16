@@ -12,7 +12,7 @@ class SecretPasswordBloc
   final ChangePasswordRepository _repository =
       getIt<ChangePasswordRepository>();
 
-  SecretPasswordBloc() : super(const _Initial()) {
+  SecretPasswordBloc({required Object repository}) : super(const _Initial()) {
     on<SecretPasswordEvent>((event, emit) async {
       emit(const _Loading());
 

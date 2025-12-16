@@ -43,7 +43,7 @@ class UserRepository {
       await CachedNetworkImageProvider.defaultCacheManager.emptyCache();
       // Clear all stored data from SharedPreferences
       await TokenStorage.clearTokens();
-      await _prefs.clearAll();
+      await SharedPreferenceHelper.clearAll();
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
     }

@@ -12,7 +12,7 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
       firstName: json['full_name'] as String,
       lastName: json['last_name'] as String? ?? '',
       phone: json['phone'] as String,
-      shopRole: ShopRole.fromString(json['shop_role'] as String?),
+      shopRole: ShopRole.fromJson(json['shop_role'] as String?),
       block: json['block'] as bool? ?? false,
       haveMultipleShops: json['multiple_shops'] as bool? ?? false,
       isNotificationActive: json['has_active_notification'] as bool? ?? false,
@@ -33,7 +33,7 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'full_name': instance.firstName,
       'last_name': instance.lastName,
       'phone': instance.phone,
-      'shop_role': _$ShopRoleEnumMap[instance.shopRole],
+      'shop_role': instance.shopRole,
       'block': instance.block,
       'multiple_shops': instance.haveMultipleShops,
       'has_active_notification': instance.isNotificationActive,
@@ -42,12 +42,6 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'shop_settings': instance.shopSettings,
       'shop': instance.shopDetails,
     };
-
-const _$ShopRoleEnumMap = {
-  ShopRole.owner: 'owner',
-  ShopRole.manager: 'manager',
-  ShopRole.staff: 'staff',
-};
 
 _$UserSubscriptionModelImpl _$$UserSubscriptionModelImplFromJson(
         Map<String, dynamic> json) =>

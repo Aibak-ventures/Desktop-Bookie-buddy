@@ -12,8 +12,7 @@ part of 'product_reserve_days_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ProductReserveDaysState {
@@ -31,24 +30,20 @@ mixin _$ProductReserveDaysState {
 
 /// @nodoc
 abstract class $ProductReserveDaysStateCopyWith<$Res> {
-  factory $ProductReserveDaysStateCopyWith(
-    ProductReserveDaysState value,
-    $Res Function(ProductReserveDaysState) then,
-  ) = _$ProductReserveDaysStateCopyWithImpl<$Res, ProductReserveDaysState>;
+  factory $ProductReserveDaysStateCopyWith(ProductReserveDaysState value,
+          $Res Function(ProductReserveDaysState) then) =
+      _$ProductReserveDaysStateCopyWithImpl<$Res, ProductReserveDaysState>;
   @useResult
-  $Res call({
-    int selectedDays,
-    ProductReserveDaysStatus status,
-    String? error,
-    DateTime? lastSavedAt,
-  });
+  $Res call(
+      {int selectedDays,
+      ProductReserveDaysStatus status,
+      String? error,
+      DateTime? lastSavedAt});
 }
 
 /// @nodoc
-class _$ProductReserveDaysStateCopyWithImpl<
-  $Res,
-  $Val extends ProductReserveDaysState
->
+class _$ProductReserveDaysStateCopyWithImpl<$Res,
+        $Val extends ProductReserveDaysState>
     implements $ProductReserveDaysStateCopyWith<$Res> {
   _$ProductReserveDaysStateCopyWithImpl(this._value, this._then);
 
@@ -67,27 +62,24 @@ class _$ProductReserveDaysStateCopyWithImpl<
     Object? error = freezed,
     Object? lastSavedAt = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            selectedDays: null == selectedDays
-                ? _value.selectedDays
-                : selectedDays // ignore: cast_nullable_to_non_nullable
-                      as int,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as ProductReserveDaysStatus,
-            error: freezed == error
-                ? _value.error
-                : error // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            lastSavedAt: freezed == lastSavedAt
-                ? _value.lastSavedAt
-                : lastSavedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      selectedDays: null == selectedDays
+          ? _value.selectedDays
+          : selectedDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ProductReserveDaysStatus,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastSavedAt: freezed == lastSavedAt
+          ? _value.lastSavedAt
+          : lastSavedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
@@ -95,31 +87,27 @@ class _$ProductReserveDaysStateCopyWithImpl<
 abstract class _$$ProductReserveDaysStateImplCopyWith<$Res>
     implements $ProductReserveDaysStateCopyWith<$Res> {
   factory _$$ProductReserveDaysStateImplCopyWith(
-    _$ProductReserveDaysStateImpl value,
-    $Res Function(_$ProductReserveDaysStateImpl) then,
-  ) = __$$ProductReserveDaysStateImplCopyWithImpl<$Res>;
+          _$ProductReserveDaysStateImpl value,
+          $Res Function(_$ProductReserveDaysStateImpl) then) =
+      __$$ProductReserveDaysStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int selectedDays,
-    ProductReserveDaysStatus status,
-    String? error,
-    DateTime? lastSavedAt,
-  });
+  $Res call(
+      {int selectedDays,
+      ProductReserveDaysStatus status,
+      String? error,
+      DateTime? lastSavedAt});
 }
 
 /// @nodoc
 class __$$ProductReserveDaysStateImplCopyWithImpl<$Res>
-    extends
-        _$ProductReserveDaysStateCopyWithImpl<
-          $Res,
-          _$ProductReserveDaysStateImpl
-        >
+    extends _$ProductReserveDaysStateCopyWithImpl<$Res,
+        _$ProductReserveDaysStateImpl>
     implements _$$ProductReserveDaysStateImplCopyWith<$Res> {
   __$$ProductReserveDaysStateImplCopyWithImpl(
-    _$ProductReserveDaysStateImpl _value,
-    $Res Function(_$ProductReserveDaysStateImpl) _then,
-  ) : super(_value, _then);
+      _$ProductReserveDaysStateImpl _value,
+      $Res Function(_$ProductReserveDaysStateImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ProductReserveDaysState
   /// with the given fields replaced by the non-null parameter values.
@@ -131,38 +119,35 @@ class __$$ProductReserveDaysStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? lastSavedAt = freezed,
   }) {
-    return _then(
-      _$ProductReserveDaysStateImpl(
-        selectedDays: null == selectedDays
-            ? _value.selectedDays
-            : selectedDays // ignore: cast_nullable_to_non_nullable
-                  as int,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as ProductReserveDaysStatus,
-        error: freezed == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        lastSavedAt: freezed == lastSavedAt
-            ? _value.lastSavedAt
-            : lastSavedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$ProductReserveDaysStateImpl(
+      selectedDays: null == selectedDays
+          ? _value.selectedDays
+          : selectedDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ProductReserveDaysStatus,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastSavedAt: freezed == lastSavedAt
+          ? _value.lastSavedAt
+          : lastSavedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 
 class _$ProductReserveDaysStateImpl implements _ProductReserveDaysState {
-  const _$ProductReserveDaysStateImpl({
-    required this.selectedDays,
-    required this.status,
-    this.error,
-    this.lastSavedAt,
-  });
+  const _$ProductReserveDaysStateImpl(
+      {required this.selectedDays,
+      required this.status,
+      this.error,
+      this.lastSavedAt});
 
   @override
   final int selectedDays;
@@ -201,19 +186,16 @@ class _$ProductReserveDaysStateImpl implements _ProductReserveDaysState {
   @override
   @pragma('vm:prefer-inline')
   _$$ProductReserveDaysStateImplCopyWith<_$ProductReserveDaysStateImpl>
-  get copyWith =>
-      __$$ProductReserveDaysStateImplCopyWithImpl<
-        _$ProductReserveDaysStateImpl
-      >(this, _$identity);
+      get copyWith => __$$ProductReserveDaysStateImplCopyWithImpl<
+          _$ProductReserveDaysStateImpl>(this, _$identity);
 }
 
 abstract class _ProductReserveDaysState implements ProductReserveDaysState {
-  const factory _ProductReserveDaysState({
-    required final int selectedDays,
-    required final ProductReserveDaysStatus status,
-    final String? error,
-    final DateTime? lastSavedAt,
-  }) = _$ProductReserveDaysStateImpl;
+  const factory _ProductReserveDaysState(
+      {required final int selectedDays,
+      required final ProductReserveDaysStatus status,
+      final String? error,
+      final DateTime? lastSavedAt}) = _$ProductReserveDaysStateImpl;
 
   @override
   int get selectedDays;
@@ -229,5 +211,5 @@ abstract class _ProductReserveDaysState implements ProductReserveDaysState {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProductReserveDaysStateImplCopyWith<_$ProductReserveDaysStateImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

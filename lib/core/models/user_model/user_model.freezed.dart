@@ -26,7 +26,7 @@ mixin _$UserModel {
   @JsonKey(name: 'last_name', defaultValue: '')
   String get lastName => throw _privateConstructorUsedError;
   String get phone => throw _privateConstructorUsedError;
-  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
   ShopRole? get shopRole => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: false)
   bool get block => throw _privateConstructorUsedError;
@@ -64,7 +64,7 @@ abstract class $UserModelCopyWith<$Res> {
       @JsonKey(name: 'full_name') String firstName,
       @JsonKey(name: 'last_name', defaultValue: '') String lastName,
       String phone,
-      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
       ShopRole? shopRole,
       @JsonKey(defaultValue: false) bool block,
       @JsonKey(name: 'multiple_shops', defaultValue: false)
@@ -210,7 +210,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
       @JsonKey(name: 'full_name') String firstName,
       @JsonKey(name: 'last_name', defaultValue: '') String lastName,
       String phone,
-      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
       ShopRole? shopRole,
       @JsonKey(defaultValue: false) bool block,
       @JsonKey(name: 'multiple_shops', defaultValue: false)
@@ -318,7 +318,7 @@ class _$UserModelImpl implements _UserModel {
       @JsonKey(name: 'full_name') required this.firstName,
       @JsonKey(name: 'last_name', defaultValue: '') required this.lastName,
       required this.phone,
-      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString) this.shopRole,
+      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) this.shopRole,
       @JsonKey(defaultValue: false) required this.block,
       @JsonKey(name: 'multiple_shops', defaultValue: false)
       required this.haveMultipleShops,
@@ -345,7 +345,7 @@ class _$UserModelImpl implements _UserModel {
   @override
   final String phone;
   @override
-  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
   final ShopRole? shopRole;
   @override
   @JsonKey(defaultValue: false)
@@ -449,7 +449,7 @@ abstract class _UserModel implements UserModel {
       @JsonKey(name: 'last_name', defaultValue: '')
       required final String lastName,
       required final String phone,
-      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+      @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
       final ShopRole? shopRole,
       @JsonKey(defaultValue: false) required final bool block,
       @JsonKey(name: 'multiple_shops', defaultValue: false)
@@ -478,7 +478,7 @@ abstract class _UserModel implements UserModel {
   @override
   String get phone;
   @override
-  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromString)
+  @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
   ShopRole? get shopRole;
   @override
   @JsonKey(defaultValue: false)

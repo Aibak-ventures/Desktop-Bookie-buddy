@@ -12,8 +12,7 @@ part of 'add_button_default_action_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AddButtonDefaultActionState {
@@ -26,33 +25,27 @@ mixin _$AddButtonDefaultActionState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $AddButtonDefaultActionStateCopyWith<AddButtonDefaultActionState>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AddButtonDefaultActionStateCopyWith<$Res> {
   factory $AddButtonDefaultActionStateCopyWith(
-    AddButtonDefaultActionState value,
-    $Res Function(AddButtonDefaultActionState) then,
-  ) =
-      _$AddButtonDefaultActionStateCopyWithImpl<
-        $Res,
-        AddButtonDefaultActionState
-      >;
+          AddButtonDefaultActionState value,
+          $Res Function(AddButtonDefaultActionState) then) =
+      _$AddButtonDefaultActionStateCopyWithImpl<$Res,
+          AddButtonDefaultActionState>;
   @useResult
-  $Res call({
-    AddButtonDefaultAction action,
-    AddButtonDefaultActionStatus status,
-    String? error,
-    DateTime? lastSavedAt,
-  });
+  $Res call(
+      {AddButtonDefaultAction action,
+      AddButtonDefaultActionStatus status,
+      String? error,
+      DateTime? lastSavedAt});
 }
 
 /// @nodoc
-class _$AddButtonDefaultActionStateCopyWithImpl<
-  $Res,
-  $Val extends AddButtonDefaultActionState
->
+class _$AddButtonDefaultActionStateCopyWithImpl<$Res,
+        $Val extends AddButtonDefaultActionState>
     implements $AddButtonDefaultActionStateCopyWith<$Res> {
   _$AddButtonDefaultActionStateCopyWithImpl(this._value, this._then);
 
@@ -71,27 +64,24 @@ class _$AddButtonDefaultActionStateCopyWithImpl<
     Object? error = freezed,
     Object? lastSavedAt = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            action: null == action
-                ? _value.action
-                : action // ignore: cast_nullable_to_non_nullable
-                      as AddButtonDefaultAction,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as AddButtonDefaultActionStatus,
-            error: freezed == error
-                ? _value.error
-                : error // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            lastSavedAt: freezed == lastSavedAt
-                ? _value.lastSavedAt
-                : lastSavedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      action: null == action
+          ? _value.action
+          : action // ignore: cast_nullable_to_non_nullable
+              as AddButtonDefaultAction,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as AddButtonDefaultActionStatus,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastSavedAt: freezed == lastSavedAt
+          ? _value.lastSavedAt
+          : lastSavedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
@@ -99,31 +89,27 @@ class _$AddButtonDefaultActionStateCopyWithImpl<
 abstract class _$$AddButtonDefaultActionStateImplCopyWith<$Res>
     implements $AddButtonDefaultActionStateCopyWith<$Res> {
   factory _$$AddButtonDefaultActionStateImplCopyWith(
-    _$AddButtonDefaultActionStateImpl value,
-    $Res Function(_$AddButtonDefaultActionStateImpl) then,
-  ) = __$$AddButtonDefaultActionStateImplCopyWithImpl<$Res>;
+          _$AddButtonDefaultActionStateImpl value,
+          $Res Function(_$AddButtonDefaultActionStateImpl) then) =
+      __$$AddButtonDefaultActionStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    AddButtonDefaultAction action,
-    AddButtonDefaultActionStatus status,
-    String? error,
-    DateTime? lastSavedAt,
-  });
+  $Res call(
+      {AddButtonDefaultAction action,
+      AddButtonDefaultActionStatus status,
+      String? error,
+      DateTime? lastSavedAt});
 }
 
 /// @nodoc
 class __$$AddButtonDefaultActionStateImplCopyWithImpl<$Res>
-    extends
-        _$AddButtonDefaultActionStateCopyWithImpl<
-          $Res,
-          _$AddButtonDefaultActionStateImpl
-        >
+    extends _$AddButtonDefaultActionStateCopyWithImpl<$Res,
+        _$AddButtonDefaultActionStateImpl>
     implements _$$AddButtonDefaultActionStateImplCopyWith<$Res> {
   __$$AddButtonDefaultActionStateImplCopyWithImpl(
-    _$AddButtonDefaultActionStateImpl _value,
-    $Res Function(_$AddButtonDefaultActionStateImpl) _then,
-  ) : super(_value, _then);
+      _$AddButtonDefaultActionStateImpl _value,
+      $Res Function(_$AddButtonDefaultActionStateImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of AddButtonDefaultActionState
   /// with the given fields replaced by the non-null parameter values.
@@ -135,26 +121,24 @@ class __$$AddButtonDefaultActionStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? lastSavedAt = freezed,
   }) {
-    return _then(
-      _$AddButtonDefaultActionStateImpl(
-        action: null == action
-            ? _value.action
-            : action // ignore: cast_nullable_to_non_nullable
-                  as AddButtonDefaultAction,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as AddButtonDefaultActionStatus,
-        error: freezed == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        lastSavedAt: freezed == lastSavedAt
-            ? _value.lastSavedAt
-            : lastSavedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$AddButtonDefaultActionStateImpl(
+      action: null == action
+          ? _value.action
+          : action // ignore: cast_nullable_to_non_nullable
+              as AddButtonDefaultAction,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as AddButtonDefaultActionStatus,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastSavedAt: freezed == lastSavedAt
+          ? _value.lastSavedAt
+          : lastSavedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
@@ -162,12 +146,11 @@ class __$$AddButtonDefaultActionStateImplCopyWithImpl<$Res>
 
 class _$AddButtonDefaultActionStateImpl
     implements _AddButtonDefaultActionState {
-  const _$AddButtonDefaultActionStateImpl({
-    required this.action,
-    required this.status,
-    this.error,
-    this.lastSavedAt,
-  });
+  const _$AddButtonDefaultActionStateImpl(
+      {required this.action,
+      required this.status,
+      this.error,
+      this.lastSavedAt});
 
   @override
   final AddButtonDefaultAction action;
@@ -205,20 +188,17 @@ class _$AddButtonDefaultActionStateImpl
   @override
   @pragma('vm:prefer-inline')
   _$$AddButtonDefaultActionStateImplCopyWith<_$AddButtonDefaultActionStateImpl>
-  get copyWith =>
-      __$$AddButtonDefaultActionStateImplCopyWithImpl<
-        _$AddButtonDefaultActionStateImpl
-      >(this, _$identity);
+      get copyWith => __$$AddButtonDefaultActionStateImplCopyWithImpl<
+          _$AddButtonDefaultActionStateImpl>(this, _$identity);
 }
 
 abstract class _AddButtonDefaultActionState
     implements AddButtonDefaultActionState {
-  const factory _AddButtonDefaultActionState({
-    required final AddButtonDefaultAction action,
-    required final AddButtonDefaultActionStatus status,
-    final String? error,
-    final DateTime? lastSavedAt,
-  }) = _$AddButtonDefaultActionStateImpl;
+  const factory _AddButtonDefaultActionState(
+      {required final AddButtonDefaultAction action,
+      required final AddButtonDefaultActionStatus status,
+      final String? error,
+      final DateTime? lastSavedAt}) = _$AddButtonDefaultActionStateImpl;
 
   @override
   AddButtonDefaultAction get action;
@@ -234,5 +214,5 @@ abstract class _AddButtonDefaultActionState
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddButtonDefaultActionStateImplCopyWith<_$AddButtonDefaultActionStateImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

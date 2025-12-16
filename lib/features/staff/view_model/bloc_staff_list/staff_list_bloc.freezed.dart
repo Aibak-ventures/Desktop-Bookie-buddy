@@ -23,6 +23,7 @@ mixin _$StaffListEvent {
     required TResult Function(int staffId) deleteStaff,
     required TResult Function(StaffRequestModel staff) editStaff,
     required TResult Function(StaffRequestModel staff) addStaff,
+    required TResult Function(StaffModel staff) staffUpdated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -32,6 +33,7 @@ mixin _$StaffListEvent {
     TResult? Function(int staffId)? deleteStaff,
     TResult? Function(StaffRequestModel staff)? editStaff,
     TResult? Function(StaffRequestModel staff)? addStaff,
+    TResult? Function(StaffModel staff)? staffUpdated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -41,6 +43,7 @@ mixin _$StaffListEvent {
     TResult Function(int staffId)? deleteStaff,
     TResult Function(StaffRequestModel staff)? editStaff,
     TResult Function(StaffRequestModel staff)? addStaff,
+    TResult Function(StaffModel staff)? staffUpdated,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -51,6 +54,7 @@ mixin _$StaffListEvent {
     required TResult Function(_DeleteStaff value) deleteStaff,
     required TResult Function(_EditStaff value) editStaff,
     required TResult Function(_AddStaff value) addStaff,
+    required TResult Function(_StaffUpdated value) staffUpdated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -60,6 +64,7 @@ mixin _$StaffListEvent {
     TResult? Function(_DeleteStaff value)? deleteStaff,
     TResult? Function(_EditStaff value)? editStaff,
     TResult? Function(_AddStaff value)? addStaff,
+    TResult? Function(_StaffUpdated value)? staffUpdated,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -69,6 +74,7 @@ mixin _$StaffListEvent {
     TResult Function(_DeleteStaff value)? deleteStaff,
     TResult Function(_EditStaff value)? editStaff,
     TResult Function(_AddStaff value)? addStaff,
+    TResult Function(_StaffUpdated value)? staffUpdated,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -141,6 +147,7 @@ class _$LoadStaffsImpl implements _LoadStaffs {
     required TResult Function(int staffId) deleteStaff,
     required TResult Function(StaffRequestModel staff) editStaff,
     required TResult Function(StaffRequestModel staff) addStaff,
+    required TResult Function(StaffModel staff) staffUpdated,
   }) {
     return loadStaffs();
   }
@@ -153,6 +160,7 @@ class _$LoadStaffsImpl implements _LoadStaffs {
     TResult? Function(int staffId)? deleteStaff,
     TResult? Function(StaffRequestModel staff)? editStaff,
     TResult? Function(StaffRequestModel staff)? addStaff,
+    TResult? Function(StaffModel staff)? staffUpdated,
   }) {
     return loadStaffs?.call();
   }
@@ -165,6 +173,7 @@ class _$LoadStaffsImpl implements _LoadStaffs {
     TResult Function(int staffId)? deleteStaff,
     TResult Function(StaffRequestModel staff)? editStaff,
     TResult Function(StaffRequestModel staff)? addStaff,
+    TResult Function(StaffModel staff)? staffUpdated,
     required TResult orElse(),
   }) {
     if (loadStaffs != null) {
@@ -181,6 +190,7 @@ class _$LoadStaffsImpl implements _LoadStaffs {
     required TResult Function(_DeleteStaff value) deleteStaff,
     required TResult Function(_EditStaff value) editStaff,
     required TResult Function(_AddStaff value) addStaff,
+    required TResult Function(_StaffUpdated value) staffUpdated,
   }) {
     return loadStaffs(this);
   }
@@ -193,6 +203,7 @@ class _$LoadStaffsImpl implements _LoadStaffs {
     TResult? Function(_DeleteStaff value)? deleteStaff,
     TResult? Function(_EditStaff value)? editStaff,
     TResult? Function(_AddStaff value)? addStaff,
+    TResult? Function(_StaffUpdated value)? staffUpdated,
   }) {
     return loadStaffs?.call(this);
   }
@@ -205,6 +216,7 @@ class _$LoadStaffsImpl implements _LoadStaffs {
     TResult Function(_DeleteStaff value)? deleteStaff,
     TResult Function(_EditStaff value)? editStaff,
     TResult Function(_AddStaff value)? addStaff,
+    TResult Function(_StaffUpdated value)? staffUpdated,
     required TResult orElse(),
   }) {
     if (loadStaffs != null) {
@@ -264,6 +276,7 @@ class _$LoadNextPageStaffsImpl implements _LoadNextPageStaffs {
     required TResult Function(int staffId) deleteStaff,
     required TResult Function(StaffRequestModel staff) editStaff,
     required TResult Function(StaffRequestModel staff) addStaff,
+    required TResult Function(StaffModel staff) staffUpdated,
   }) {
     return loadNextPageStaffs();
   }
@@ -276,6 +289,7 @@ class _$LoadNextPageStaffsImpl implements _LoadNextPageStaffs {
     TResult? Function(int staffId)? deleteStaff,
     TResult? Function(StaffRequestModel staff)? editStaff,
     TResult? Function(StaffRequestModel staff)? addStaff,
+    TResult? Function(StaffModel staff)? staffUpdated,
   }) {
     return loadNextPageStaffs?.call();
   }
@@ -288,6 +302,7 @@ class _$LoadNextPageStaffsImpl implements _LoadNextPageStaffs {
     TResult Function(int staffId)? deleteStaff,
     TResult Function(StaffRequestModel staff)? editStaff,
     TResult Function(StaffRequestModel staff)? addStaff,
+    TResult Function(StaffModel staff)? staffUpdated,
     required TResult orElse(),
   }) {
     if (loadNextPageStaffs != null) {
@@ -304,6 +319,7 @@ class _$LoadNextPageStaffsImpl implements _LoadNextPageStaffs {
     required TResult Function(_DeleteStaff value) deleteStaff,
     required TResult Function(_EditStaff value) editStaff,
     required TResult Function(_AddStaff value) addStaff,
+    required TResult Function(_StaffUpdated value) staffUpdated,
   }) {
     return loadNextPageStaffs(this);
   }
@@ -316,6 +332,7 @@ class _$LoadNextPageStaffsImpl implements _LoadNextPageStaffs {
     TResult? Function(_DeleteStaff value)? deleteStaff,
     TResult? Function(_EditStaff value)? editStaff,
     TResult? Function(_AddStaff value)? addStaff,
+    TResult? Function(_StaffUpdated value)? staffUpdated,
   }) {
     return loadNextPageStaffs?.call(this);
   }
@@ -328,6 +345,7 @@ class _$LoadNextPageStaffsImpl implements _LoadNextPageStaffs {
     TResult Function(_DeleteStaff value)? deleteStaff,
     TResult Function(_EditStaff value)? editStaff,
     TResult Function(_AddStaff value)? addStaff,
+    TResult Function(_StaffUpdated value)? staffUpdated,
     required TResult orElse(),
   }) {
     if (loadNextPageStaffs != null) {
@@ -414,6 +432,7 @@ class _$DeleteStaffImpl implements _DeleteStaff {
     required TResult Function(int staffId) deleteStaff,
     required TResult Function(StaffRequestModel staff) editStaff,
     required TResult Function(StaffRequestModel staff) addStaff,
+    required TResult Function(StaffModel staff) staffUpdated,
   }) {
     return deleteStaff(staffId);
   }
@@ -426,6 +445,7 @@ class _$DeleteStaffImpl implements _DeleteStaff {
     TResult? Function(int staffId)? deleteStaff,
     TResult? Function(StaffRequestModel staff)? editStaff,
     TResult? Function(StaffRequestModel staff)? addStaff,
+    TResult? Function(StaffModel staff)? staffUpdated,
   }) {
     return deleteStaff?.call(staffId);
   }
@@ -438,6 +458,7 @@ class _$DeleteStaffImpl implements _DeleteStaff {
     TResult Function(int staffId)? deleteStaff,
     TResult Function(StaffRequestModel staff)? editStaff,
     TResult Function(StaffRequestModel staff)? addStaff,
+    TResult Function(StaffModel staff)? staffUpdated,
     required TResult orElse(),
   }) {
     if (deleteStaff != null) {
@@ -454,6 +475,7 @@ class _$DeleteStaffImpl implements _DeleteStaff {
     required TResult Function(_DeleteStaff value) deleteStaff,
     required TResult Function(_EditStaff value) editStaff,
     required TResult Function(_AddStaff value) addStaff,
+    required TResult Function(_StaffUpdated value) staffUpdated,
   }) {
     return deleteStaff(this);
   }
@@ -466,6 +488,7 @@ class _$DeleteStaffImpl implements _DeleteStaff {
     TResult? Function(_DeleteStaff value)? deleteStaff,
     TResult? Function(_EditStaff value)? editStaff,
     TResult? Function(_AddStaff value)? addStaff,
+    TResult? Function(_StaffUpdated value)? staffUpdated,
   }) {
     return deleteStaff?.call(this);
   }
@@ -478,6 +501,7 @@ class _$DeleteStaffImpl implements _DeleteStaff {
     TResult Function(_DeleteStaff value)? deleteStaff,
     TResult Function(_EditStaff value)? editStaff,
     TResult Function(_AddStaff value)? addStaff,
+    TResult Function(_StaffUpdated value)? staffUpdated,
     required TResult orElse(),
   }) {
     if (deleteStaff != null) {
@@ -584,6 +608,7 @@ class _$EditStaffImpl implements _EditStaff {
     required TResult Function(int staffId) deleteStaff,
     required TResult Function(StaffRequestModel staff) editStaff,
     required TResult Function(StaffRequestModel staff) addStaff,
+    required TResult Function(StaffModel staff) staffUpdated,
   }) {
     return editStaff(staff);
   }
@@ -596,6 +621,7 @@ class _$EditStaffImpl implements _EditStaff {
     TResult? Function(int staffId)? deleteStaff,
     TResult? Function(StaffRequestModel staff)? editStaff,
     TResult? Function(StaffRequestModel staff)? addStaff,
+    TResult? Function(StaffModel staff)? staffUpdated,
   }) {
     return editStaff?.call(staff);
   }
@@ -608,6 +634,7 @@ class _$EditStaffImpl implements _EditStaff {
     TResult Function(int staffId)? deleteStaff,
     TResult Function(StaffRequestModel staff)? editStaff,
     TResult Function(StaffRequestModel staff)? addStaff,
+    TResult Function(StaffModel staff)? staffUpdated,
     required TResult orElse(),
   }) {
     if (editStaff != null) {
@@ -624,6 +651,7 @@ class _$EditStaffImpl implements _EditStaff {
     required TResult Function(_DeleteStaff value) deleteStaff,
     required TResult Function(_EditStaff value) editStaff,
     required TResult Function(_AddStaff value) addStaff,
+    required TResult Function(_StaffUpdated value) staffUpdated,
   }) {
     return editStaff(this);
   }
@@ -636,6 +664,7 @@ class _$EditStaffImpl implements _EditStaff {
     TResult? Function(_DeleteStaff value)? deleteStaff,
     TResult? Function(_EditStaff value)? editStaff,
     TResult? Function(_AddStaff value)? addStaff,
+    TResult? Function(_StaffUpdated value)? staffUpdated,
   }) {
     return editStaff?.call(this);
   }
@@ -648,6 +677,7 @@ class _$EditStaffImpl implements _EditStaff {
     TResult Function(_DeleteStaff value)? deleteStaff,
     TResult Function(_EditStaff value)? editStaff,
     TResult Function(_AddStaff value)? addStaff,
+    TResult Function(_StaffUpdated value)? staffUpdated,
     required TResult orElse(),
   }) {
     if (editStaff != null) {
@@ -754,6 +784,7 @@ class _$AddStaffImpl implements _AddStaff {
     required TResult Function(int staffId) deleteStaff,
     required TResult Function(StaffRequestModel staff) editStaff,
     required TResult Function(StaffRequestModel staff) addStaff,
+    required TResult Function(StaffModel staff) staffUpdated,
   }) {
     return addStaff(staff);
   }
@@ -766,6 +797,7 @@ class _$AddStaffImpl implements _AddStaff {
     TResult? Function(int staffId)? deleteStaff,
     TResult? Function(StaffRequestModel staff)? editStaff,
     TResult? Function(StaffRequestModel staff)? addStaff,
+    TResult? Function(StaffModel staff)? staffUpdated,
   }) {
     return addStaff?.call(staff);
   }
@@ -778,6 +810,7 @@ class _$AddStaffImpl implements _AddStaff {
     TResult Function(int staffId)? deleteStaff,
     TResult Function(StaffRequestModel staff)? editStaff,
     TResult Function(StaffRequestModel staff)? addStaff,
+    TResult Function(StaffModel staff)? staffUpdated,
     required TResult orElse(),
   }) {
     if (addStaff != null) {
@@ -794,6 +827,7 @@ class _$AddStaffImpl implements _AddStaff {
     required TResult Function(_DeleteStaff value) deleteStaff,
     required TResult Function(_EditStaff value) editStaff,
     required TResult Function(_AddStaff value) addStaff,
+    required TResult Function(_StaffUpdated value) staffUpdated,
   }) {
     return addStaff(this);
   }
@@ -806,6 +840,7 @@ class _$AddStaffImpl implements _AddStaff {
     TResult? Function(_DeleteStaff value)? deleteStaff,
     TResult? Function(_EditStaff value)? editStaff,
     TResult? Function(_AddStaff value)? addStaff,
+    TResult? Function(_StaffUpdated value)? staffUpdated,
   }) {
     return addStaff?.call(this);
   }
@@ -818,6 +853,7 @@ class _$AddStaffImpl implements _AddStaff {
     TResult Function(_DeleteStaff value)? deleteStaff,
     TResult Function(_EditStaff value)? editStaff,
     TResult Function(_AddStaff value)? addStaff,
+    TResult Function(_StaffUpdated value)? staffUpdated,
     required TResult orElse(),
   }) {
     if (addStaff != null) {
@@ -836,6 +872,182 @@ abstract class _AddStaff implements StaffListEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddStaffImplCopyWith<_$AddStaffImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$StaffUpdatedImplCopyWith<$Res> {
+  factory _$$StaffUpdatedImplCopyWith(
+          _$StaffUpdatedImpl value, $Res Function(_$StaffUpdatedImpl) then) =
+      __$$StaffUpdatedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({StaffModel staff});
+
+  $StaffModelCopyWith<$Res> get staff;
+}
+
+/// @nodoc
+class __$$StaffUpdatedImplCopyWithImpl<$Res>
+    extends _$StaffListEventCopyWithImpl<$Res, _$StaffUpdatedImpl>
+    implements _$$StaffUpdatedImplCopyWith<$Res> {
+  __$$StaffUpdatedImplCopyWithImpl(
+      _$StaffUpdatedImpl _value, $Res Function(_$StaffUpdatedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of StaffListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? staff = null,
+  }) {
+    return _then(_$StaffUpdatedImpl(
+      null == staff
+          ? _value.staff
+          : staff // ignore: cast_nullable_to_non_nullable
+              as StaffModel,
+    ));
+  }
+
+  /// Create a copy of StaffListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StaffModelCopyWith<$Res> get staff {
+    return $StaffModelCopyWith<$Res>(_value.staff, (value) {
+      return _then(_value.copyWith(staff: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$StaffUpdatedImpl implements _StaffUpdated {
+  const _$StaffUpdatedImpl(this.staff);
+
+  @override
+  final StaffModel staff;
+
+  @override
+  String toString() {
+    return 'StaffListEvent.staffUpdated(staff: $staff)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StaffUpdatedImpl &&
+            (identical(other.staff, staff) || other.staff == staff));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, staff);
+
+  /// Create a copy of StaffListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StaffUpdatedImplCopyWith<_$StaffUpdatedImpl> get copyWith =>
+      __$$StaffUpdatedImplCopyWithImpl<_$StaffUpdatedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadStaffs,
+    required TResult Function() loadNextPageStaffs,
+    required TResult Function(int staffId) deleteStaff,
+    required TResult Function(StaffRequestModel staff) editStaff,
+    required TResult Function(StaffRequestModel staff) addStaff,
+    required TResult Function(StaffModel staff) staffUpdated,
+  }) {
+    return staffUpdated(staff);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadStaffs,
+    TResult? Function()? loadNextPageStaffs,
+    TResult? Function(int staffId)? deleteStaff,
+    TResult? Function(StaffRequestModel staff)? editStaff,
+    TResult? Function(StaffRequestModel staff)? addStaff,
+    TResult? Function(StaffModel staff)? staffUpdated,
+  }) {
+    return staffUpdated?.call(staff);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loadStaffs,
+    TResult Function()? loadNextPageStaffs,
+    TResult Function(int staffId)? deleteStaff,
+    TResult Function(StaffRequestModel staff)? editStaff,
+    TResult Function(StaffRequestModel staff)? addStaff,
+    TResult Function(StaffModel staff)? staffUpdated,
+    required TResult orElse(),
+  }) {
+    if (staffUpdated != null) {
+      return staffUpdated(staff);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadStaffs value) loadStaffs,
+    required TResult Function(_LoadNextPageStaffs value) loadNextPageStaffs,
+    required TResult Function(_DeleteStaff value) deleteStaff,
+    required TResult Function(_EditStaff value) editStaff,
+    required TResult Function(_AddStaff value) addStaff,
+    required TResult Function(_StaffUpdated value) staffUpdated,
+  }) {
+    return staffUpdated(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadStaffs value)? loadStaffs,
+    TResult? Function(_LoadNextPageStaffs value)? loadNextPageStaffs,
+    TResult? Function(_DeleteStaff value)? deleteStaff,
+    TResult? Function(_EditStaff value)? editStaff,
+    TResult? Function(_AddStaff value)? addStaff,
+    TResult? Function(_StaffUpdated value)? staffUpdated,
+  }) {
+    return staffUpdated?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadStaffs value)? loadStaffs,
+    TResult Function(_LoadNextPageStaffs value)? loadNextPageStaffs,
+    TResult Function(_DeleteStaff value)? deleteStaff,
+    TResult Function(_EditStaff value)? editStaff,
+    TResult Function(_AddStaff value)? addStaff,
+    TResult Function(_StaffUpdated value)? staffUpdated,
+    required TResult orElse(),
+  }) {
+    if (staffUpdated != null) {
+      return staffUpdated(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _StaffUpdated implements StaffListEvent {
+  const factory _StaffUpdated(final StaffModel staff) = _$StaffUpdatedImpl;
+
+  StaffModel get staff;
+
+  /// Create a copy of StaffListEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$StaffUpdatedImplCopyWith<_$StaffUpdatedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

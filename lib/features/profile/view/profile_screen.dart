@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart'
+    show SecretPasswordLocations;
+import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
@@ -18,6 +20,7 @@ import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/change_secret_password_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view/reset_password_screen.dart';
 import 'package:bookie_buddy_web/features/change_password/view_model/bloc_reset_password/reset_password_bloc.dart';
+import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
 import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
 import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
 import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
@@ -148,8 +151,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: _buildProfileContent(
                       context,
-                      context.read<UserCubit>().state?.shopRole ??
-                          ShopRole.staff),
+                       context.read<UserCubit>().state?.shopRole ??
+                        ShopRole.staff),
                 ),
               ),
 
@@ -212,8 +215,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: _buildProfileContent(
                       context,
-                      context.read<UserCubit>().state?.shopRole ??
-                          ShopRole.staff),
+                        context.read<UserCubit>().state?.shopRole ??
+                        ShopRole.staff),
                 ),
               ),
 
@@ -366,8 +369,15 @@ class ProfileScreen extends StatelessWidget {
           icon: LucideIcons.settings,
           title: 'Settings',
           onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => ServiceBloc(repository: getIt.get())
+                  ..add(const ServiceEvent.loadServices()),
+                child: const SettingsScreen(),
+              ),
+            ));
             // TODO: Navigate to Settings screen when implemented
-            context.showSnackBar('Settings screen coming soon!');
+            // context.showSnackBar('Settings screen coming soon!');
           },
         ),
         // stock
@@ -414,37 +424,37 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 5),
 
         // change password expansion tile
-        CustomProfileExpansionTile(
-          icon: Icons.key_outlined,
-          title: 'Change password',
-          cards: [
-            // account password
-            CustomProfileExpandedCard(
-              icon: const Icon(Icons.password),
-              text: 'Account\nPassword',
-              color: const Color(0xFFC68B26),
-              onTap: () => NavigatorX(context).push(
-                BlocProvider(
-                  create: (context) => ResetPasswordBloc(),
-                  child: const ResetPasswordScreen(),
-                ),
-              ),
-            ),
+        // CustomProfileExpansionTile(
+        //   icon: Icons.key_outlined,
+        //   title: 'Change password',
+        //   cards: [
+        //     // account password
+        //     CustomProfileExpandedCard(
+        //       icon: const Icon(Icons.password),
+        //       text: 'Account\nPassword',
+        //       color: const Color(0xFFC68B26),
+        //       onTap: () => NavigatorX(context).push(
+        //         BlocProvider(
+        //           create: (context) => ResetPasswordBloc(),
+        //           child: const ResetPasswordScreen(),
+        //         ),
+        //       ),
+        //     ),
 
-            // secret password
-            CustomProfileExpandedCard(
-              icon: const Icon(Icons.lock_person_outlined),
-              text: 'Secret\nPassword',
-              color: const Color(0xFFFF8604),
-              onTap: () {
-                NavigatorX(context).push(BlocProvider(
-                  create: (context) => SecretPasswordBloc(),
-                  child: const ChangeSecretPasswordScreen(),
-                ));
-              },
-            )
-          ],
-        ),
+        //     // secret password
+        //     CustomProfileExpandedCard(
+        //       icon: const Icon(Icons.lock_person_outlined),
+        //       text: 'Secret\nPassword',
+        //       color: const Color(0xFFFF8604),
+        //       onTap: () {
+        //         NavigatorX(context).push(BlocProvider(
+        //           create: (context) => SecretPasswordBloc(),
+        //           child: const ChangeSecretPasswordScreen(),
+        //         ));
+        //       },
+        //     )
+        //   ],
+        // ),
 
         const SizedBox(height: 5),
 

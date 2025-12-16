@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:booking_application/core/enums/secret_password_locations_enum.dart';
-import 'package:booking_application/core/extensions/context_extensions.dart';
-import 'package:booking_application/core/extensions/number_extensions.dart';
-import 'package:booking_application/core/theme/app_colors.dart';
-import 'package:booking_application/core/ui/widgets/custom_button.dart';
-import 'package:booking_application/core/view_model/user_cubit.dart';
-import 'package:booking_application/features/settings/view_models/bloc_manage_password_settings/manage_password_settings_bloc.dart';
-import 'package:booking_application/features/settings/views/widgets/manage_password_settings_tile.dart';
+import 'package:bookie_buddy_web/core/enums/secret_password_locations_enum.dart';
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/settings/view_models/bloc_manage_password_settings/manage_password_settings_bloc.dart';
+import 'package:bookie_buddy_web/features/settings/views/widgets/manage_password_settings_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,9 +33,9 @@ class ManagePasswordScreen extends StatelessWidget {
           } else if (state.status == ManagePwdSettingsStatus.success) {
             context.read<UserCubit>().loadUserData();
             log('Manage Password Settings Success: ${state.message}');
-            context
-              ..pop()
-              ..pop();
+            NavigatorX(context)
+              
+              .pop();
             if (state.message != null) {
               context.showSnackBar(state.message!);
             }
