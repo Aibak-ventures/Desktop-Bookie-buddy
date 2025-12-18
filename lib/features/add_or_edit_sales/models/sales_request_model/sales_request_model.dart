@@ -21,7 +21,7 @@ List<Map<String, dynamic>>? _variantsToJson(
 // }
 
 String? _paymentMethodToJson(PaymentMethod? method) =>
-    method?.toValue();
+    method?.value;
 
 @freezed
 class SalesRequestModel with _$SalesRequestModel {

@@ -82,7 +82,7 @@ class LedgerSecurityAmountsGroupedContainer extends StatelessWidget {
             ),
           ),
           ...securityAmounts.map((securityAmount) {
-            final date = securityAmount.bookingDate.parseToDateTime();
+            final date = securityAmount.date.parseToDateTime();
             return LedgerSecurityAmountListTile(
               securityAmountModel: securityAmount,
               date: date,

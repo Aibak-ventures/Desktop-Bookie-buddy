@@ -89,8 +89,8 @@ class _AddOrEditStaffDialogState extends State<AddOrEditStaffDialog> {
                   controller: phoneController,
                   decoration: const InputDecoration(labelText: 'Phone Number'),
                   keyboardType: TextInputType.phone,
-                  validator: AppInputValidators.phoneNumber,
-                  maxLength: 10,
+                  // validator: AppInputValidators.phoneNumber,
+                  // maxLength: 10,
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (value) {
                     _submit();

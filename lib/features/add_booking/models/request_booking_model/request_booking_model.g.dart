@@ -60,8 +60,7 @@ Map<String, dynamic> _$$RequestBookingModelImplToJson(
       if (instance.discountAmount case final value?) 'discount_amount': value,
       if (instance.purchaseMode case final value?) 'purchase_mode': value,
       if (instance.description case final value?) 'description': value,
-      if (_$PaymentMethodEnumMap[instance.paymentMethod] case final value?)
-        'payment_method': value,
+      if (instance.paymentMethod case final value?) 'payment_method': value,
       if (DeliveryStatus.toJson(instance.deliveryStatus) case final value?)
         'delivery_status': value,
       if (BookingStatus.toJson(instance.bookingStatus) case final value?)

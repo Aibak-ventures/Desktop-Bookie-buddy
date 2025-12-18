@@ -39,9 +39,8 @@ class _AddBookingDateSelectingScreenState
   final returnDateController =
       TextEditingController(text: DateTime.now().add(1.days()).format());
   final pickupDateNotifier = ValueNotifier<DateTime>(DateTime.now());
-  final coolingPeriodDateController =
-      TextEditingController(); // Initially empty
-
+  late final TextEditingController coolingPeriodDateController; // Initially empty
+late final DateTime pickupInitiallySelectedDate;
   bool coolingPeriodManuallySelected =
       false; // Track if user manually selected cooling period
 
@@ -57,7 +56,16 @@ class _AddBookingDateSelectingScreenState
     coolingPeriodDuration =
         context.read<UserCubit>().state?.shopSettings.coolingPeriodDuration ??
             0;
+               final coolingPeriod = returnDateController.text
+        .parseToDateTime()
+        .add(coolingPeriodDuration.days())
+        .format();
+coolingPeriodDateController = TextEditingController(text: coolingPeriod);
     // Don't auto-populate cooling period - let user select manually if needed
+     pickupInitiallySelectedDate =
+        pickupDateNotifier.value.isAfter(DateTime.now())
+        ? DateTime.now()
+        : pickupDateNotifier.value;
   }
 
   @override
@@ -222,21 +230,22 @@ class _AddBookingDateSelectingScreenState
                       ),
                     ),
                     const SizedBox(height: 16),
-                    CalenderWidget(
-                      onDateSelected: (selectedDate) {
-                        pickupDateNotifier.value = selectedDate;
-                        // Automatically set return date to pickup date + 1 day
-                        final newReturnDate = selectedDate.add(1.days());
-                        returnDateController.text = newReturnDate.format();
-                        // Only update cooling period if user has manually selected it
-                        if (coolingPeriodManuallySelected) {
-                          coolingPeriodDateController.text = newReturnDate
-                              .add(coolingPeriodDuration.days())
-                              .format();
-                        }
-                      },
-                      initialSelectedDate: pickupDateNotifier.value,
-                    ),
+                   CalenderWidget(
+                            firstDate: pickupInitiallySelectedDate,
+                            selectedDate: pickupDateNotifier.value,
+                            onDateSelected: (selectedDate) {
+                              pickupDateNotifier.value = selectedDate;
+                              validateTimeOnSameDay();
+                              final returnDate = returnDateController.text
+                                  .parseToDateTime();
+                              if (returnDate.isBefore(selectedDate)) {
+                                selectReturnDate(
+                                  context,
+                                  selectedDate.add(1.days()),
+                                );
+                              }
+                            },
+                          ),
                   ],
                 ),
               ),
@@ -983,62 +992,88 @@ class _AddBookingDateSelectingScreenState
         );
       }
     }
+    
   }
+    void validateTimeOnSameDay() {
+    if (pickupTime != null &&
+        pickupDateNotifier.value.isSameDay(DateTime.now())) {
+      // If pickup date is today, ensure pickup time is after current time
+      if (pickupTime!.isBefore(TimeOfDay.now())) {
+        context.showSnackBar(
+          'Pickup time must be after current time',
+          title: 'Time Error',
+          isError: true,
+        );
+        // Clear pickup time to force user to fix
+        pickupTime = null;
+        pickupTimeController.clear();
+      }
+    }
+
+    if (pickupTime != null && returnTime != null && isReturnAndPickupSameDay) {
+      if (pickupTime!.hour > returnTime!.hour ||
+          (pickupTime!.hour == returnTime!.hour &&
+              pickupTime!.minute >= returnTime!.minute)) {
+        // Invalid time combination
+        context.showSnackBar(
+          'On the same day, return time must be after pickup time.',
+          title: 'Time Error',
+          isError: true,
+        );
+
+        // Clear return time to force user to fix
+        returnTime = null;
+        returnTimeController.clear();
+      }
+    }
+    if (returnTime != null &&
+        returnTime!.isBefore(TimeOfDay.now()) &&
+        returnDateController.text.parseToDateTime().isSameDay(DateTime.now())) {
+      context.showSnackBar(
+        'Return time must be after current time',
+        title: 'Time Error',
+        isError: true,
+      );
+      // Clear return time to force user to fix
+      returnTime = null;
+      returnTimeController.clear();
+    }
+  }
+
 
   Future<void> selectCoolingPeriodDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: coolingPeriodDateController.text.isNotEmpty
-          ? coolingPeriodDateController.text.parseToDateTime()
-          : returnDateController.text
-              .parseToDateTime()
-              .add(coolingPeriodDuration.days()),
+      initialDate: coolingPeriodDateController.text.parseToDateTime(),
       firstDate: returnDateController.text.parseToDateTime(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
     if (picked != null) {
       coolingPeriodDateController.text = picked.format();
-      coolingPeriodManuallySelected = true; // Mark as manually selected
     }
   }
 
-  Future<void> selectReturnDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: returnDateController.text.parseToDateTime(),
-      firstDate: pickupDateNotifier.value,
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
+  Future<void> selectReturnDate(
+    BuildContext context, [
+    DateTime? pickedDate,
+  ]) async {
+    final DateTime? picked =
+        pickedDate ??
+        await showDatePicker(
+          context: context,
+          initialDate: returnDateController.text.parseToDateTime(),
+          firstDate: pickupDateNotifier.value,
+          lastDate: DateTime.now().add(const Duration(days: 365)),
+        );
 
     if (picked != null) {
       returnDateController.text = picked.format();
+      validateTimeOnSameDay();
 
-      // Auto-populate cooling period date when return date changes
-      // Add cooling period duration to return date
-      final coolingPeriodDate = picked.add(coolingPeriodDuration.days());
-      coolingPeriodDateController.text = coolingPeriodDate.format();
-
-      // Show snackbar to inform user about auto-populated cooling period
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Cooling period date automatically set to ${coolingPeriodDate.format()}',
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.green.shade600,
-            duration: const Duration(seconds: 3),
-            action: SnackBarAction(
-              label: 'Dismiss',
-              textColor: Colors.white,
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-            ),
-          ),
-        );
-      }
+      coolingPeriodDateController.text = picked
+          .add(coolingPeriodDuration.days())
+          .format();
     }
   }
 
@@ -1073,4 +1108,5 @@ extension StringTimeExtensions on String {
       return null;
     }
   }
+  
 }

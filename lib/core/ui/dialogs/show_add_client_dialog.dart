@@ -40,18 +40,18 @@ Future<ClientModel?> showAddClientDialog({
                 validator: AppInputValidators.name,
               ),
               CustomTextField(
+                validator: (value) => AppInputValidators.isEmpty(value)
+                    ? 'Please enter a phone number'
+                    : null,
                 controller: phone1Controller,
                 label: 'Phone Number 1',
-                maxLength: 10,
-                validator: AppInputValidators.phoneNumber,
               ),
               CustomTextField(
-                controller: phone2Controller,
-                label: 'Phone Number 2',
-                maxLength: 10,
                 validator: (value) => AppInputValidators.isEmpty(value)
                     ? null
-                    : AppInputValidators.phoneNumber(value),
+                    : null,
+                controller: phone2Controller,
+                label: 'Phone Number 2',
               )
             ],
           ),

@@ -79,7 +79,7 @@ class BookingRepository {
         () => _bookingService.updatePayment(
           bookingId: bookingId,
           amount: amount,
-          paymentMethod: paymentMethod.toValue(),
+          paymentMethod: paymentMethod.value,
         ),
       );
       if (response.status.isSuccess) {

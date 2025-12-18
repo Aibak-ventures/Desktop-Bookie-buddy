@@ -536,6 +536,10 @@ class ProfileScreen extends StatelessWidget {
                 try {
                   NavigatorX(context).pop();
                   await context.read<UserCubit>().logOut();
+
+  // clear other global states
+  context.read<ClientCubit>().clearSelected();
+  
                   if (context.mounted) {
                     context.pushAndRemoveUntil(LoginScreen());
                   }

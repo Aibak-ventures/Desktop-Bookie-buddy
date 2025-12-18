@@ -1,121 +1,95 @@
+import 'package:bookie_buddy_web/core/extensions/list_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+
 enum PaymentMethod {
-  gPay,
-  cash;
+  gPay('gpay', 'UPI', 'upi'),
+  cash('cash', 'Cash', 'cash');
 
-  static const GPAY = 'gpay';
-  static const CASH = 'cash';
+  const PaymentMethod(this.value, this.name, this.upiValue);
 
-  /// UI label
-  String get name {
-    switch (this) {
-      case PaymentMethod.gPay:
-        return 'UPI';
-      case PaymentMethod.cash:
-        return 'Cash';
+  final String value;
+  final String name;
+  final String upiValue;
+
+  /// Convert from string to PaymentMethod enum
+  // static PaymentMethod fromString(String? status) {
+  //   if (status == null) {
+  //     return PaymentMethod.cash;
+  //   }
+  //   return PaymentMethod.values.firstWhere(
+  //     (e) =>
+  //         e.value == status.toLowerCase() || e.upiValue == status.toLowerCase(),
+  //     orElse: () => PaymentMethod.cash,
+  //   );
+  // }
+
+  static PaymentMethod? tryFromJson(String? value) {
+    if (value == null) {
+      return null;
     }
+    return PaymentMethod.values.firstWhereOrNull((e) => e.value == value);
   }
 
-  /// API value
-  String toValue() {
-    switch (this) {
-      case PaymentMethod.gPay:
-        return GPAY;
-      case PaymentMethod.cash:
-        return CASH;
+  static PaymentMethod fromJson(String? value) {
+    if (value == null) {
+      return PaymentMethod.cash;
     }
+    return PaymentMethod.values.firstWhere(
+      (e) =>
+          e.value == value.toLowerCase() || e.upiValue == value.toLowerCase(),
+      orElse: () => PaymentMethod.cash,
+    );
   }
 
-  /// String → enum
-  static PaymentMethod fromString(String status) {
-    final v = status.toLowerCase().replaceAll(' ', '');
-    if (v.contains(GPAY)) return PaymentMethod.gPay;
-    if (v.contains(CASH)) return PaymentMethod.cash;
-    return PaymentMethod.cash;
-  }
-
-  /// ✅ USED WHEN API SENDS **LIST**
   static List<PaymentMethod> fromList(List<dynamic> list) =>
-      list.map((e) => fromString(e.toString())).toList();
+      list.map((e) => fromJson(e.toString())).toList();
 
   static List<String> toList(List<PaymentMethod> list) =>
-      list.map((e) => e.toValue()).toList();
+      list.map((e) => e.value).toList();
+
+  // static String? toJson(PaymentMethod? method) => method?.value;
+  String toJson() => value;
+  static String? toUpiJson(PaymentMethod? method) => method?.upiValue;
 
   bool get isUpi => this == PaymentMethod.gPay;
   bool get isCash => this == PaymentMethod.cash;
 }
 
-/// 🔥 THIS IS THE MISSING PART (IMPORTANT)
-/// API sends `"payment_methods": "GPay"`
-/// Model expects `List<PaymentMethod>`
-class PaymentMethodJsonConverter {
-  static List<PaymentMethod> fromJson(dynamic value) {
-    if (value == null) return [];
-
-    // API sends STRING
-    if (value is String) {
-      return [PaymentMethod.fromString(value)];
-    }
-
-    // API sends LIST (safety)
-    if (value is List) {
-      return PaymentMethod.fromList(value);
-    }
-
-    return [];
-  }
-
-  static dynamic toJson(List<PaymentMethod> methods) {
-    if (methods.isEmpty) return null;
-    return methods.first.toValue();
-  }
-}
-
+/// Extension methods for nullable PaymentMethod enum
+// extension PaymentMethodX on PaymentMethod? {
+//   bool get isUpi => this == PaymentMethod.gPay;
+//   bool get isCash => this == PaymentMethod.cash;
+// }
 
 enum PaymentStatus {
-  pending,
-  completed;
+  pending('pending'),
+  completed('completed');
 
-  /// Converts [PaymentStatus] enum to a string label to display in the UI.
-  String get name {
-    switch (this) {
-      case PaymentStatus.pending:
-        return 'Pending';
-      case PaymentStatus.completed:
-        return 'Completed';
+  const PaymentStatus(this.value);
+
+  final String value;
+
+  String get name => value.capitalizeFirstLetter();
+
+  /// Convert from string to PaymentStatus enum
+  static PaymentStatus fromString(String? status) {
+    if (status == null) {
+      return PaymentStatus.pending;
     }
+    return PaymentStatus.values.firstWhere(
+      (e) => e.value == status.toLowerCase(),
+      orElse: () => PaymentStatus.pending,
+    );
   }
 
-  /// Converts the [PaymentStatus] enum to its corresponding string value
-  /// for use in API requests or data storage.
-  ///
-  /// Returns:
-  ///   The string value associated with the enum.
-  String toValue() {
-    switch (this) {
-      case PaymentStatus.pending:
-        return 'pending';
-      case PaymentStatus.completed:
-        return 'completed';
+  static PaymentStatus fromJson(String? value) {
+    if (value == null) {
+      return PaymentStatus.pending;
     }
-  }
-
-  /// Converts a string representation of a payment status to its corresponding enum value.
-  ///
-  /// Supported string representations:
-  ///
-  /// - "pending"
-  /// - "completed"
-  ///
-  /// Returns [PaymentStatus.pending] if the given string is not recognized.
-  static PaymentStatus fromString(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return PaymentStatus.pending;
-      case 'completed':
-        return PaymentStatus.completed;
-      default:
-        return PaymentStatus.pending;
-    }
+    return PaymentStatus.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => PaymentStatus.pending,
+    );
   }
 
   static PaymentStatus fromBool(bool? status) {
@@ -126,53 +100,57 @@ enum PaymentStatus {
     }
   }
 
-  static String toJson(PaymentStatus status) => status.toValue();
+  static String? toJson(PaymentStatus? status) => status?.value;
+
+  bool get isPending => this == PaymentStatus.pending;
+  bool get isCompleted => this == PaymentStatus.completed;
 }
+
+/// Extension methods for nullable PaymentStatus enum
+// extension PaymentStatusX on PaymentStatus? {
+//   bool get isPending => this == PaymentStatus.pending;
+//   bool get isCompleted => this == PaymentStatus.completed;
+// }
 
 enum PurchaseMode {
-  normal,
-  package;
+  normal('normal'),
+  package('package');
 
-  /// Converts [PurchaseMode] enum to a string label to display in the UI.
-  String get name {
-    switch (this) {
-      case PurchaseMode.normal:
-        return 'Normal';
-      case PurchaseMode.package:
-        return 'Package';
+  const PurchaseMode(this.value);
+
+  final String value;
+
+  String get name => value.capitalizeFirstLetter();
+
+  /// Convert from string to PurchaseMode enum
+  static PurchaseMode fromString(String? status) {
+    if (status == null) {
+      return PurchaseMode.normal;
     }
+    return PurchaseMode.values.firstWhere(
+      (e) => e.value == status.toLowerCase(),
+      orElse: () => PurchaseMode.normal,
+    );
   }
 
-  /// Converts the [PurchaseMode] enum to its corresponding string value
-  /// for use in API requests or data storage.
-  ///
-  /// Returns:
-  ///   The string value associated with the enum.
-  String toValue() {
-    switch (this) {
-      case PurchaseMode.normal:
-        return 'normal';
-      case PurchaseMode.package:
-        return 'package';
+  static PurchaseMode fromJson(String? value) {
+    if (value == null) {
+      return PurchaseMode.normal;
     }
+    return PurchaseMode.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => PurchaseMode.normal,
+    );
   }
 
-  /// Converts a string representation of a purchase mode to its corresponding enum value.
-  ///
-  /// Supported string representations:
-  ///
-  /// - "normal"
-  /// - "package"
-  ///
-  /// Returns [PurchaseMode.normal] if the given string is not recognized.
-  static PurchaseMode fromString(String status) {
-    switch (status.toLowerCase()) {
-      case 'normal':
-        return PurchaseMode.normal;
-      case 'package':
-        return PurchaseMode.package;
-      default:
-        return PurchaseMode.normal;
-    }
-  }
+  static String? toJson;
+
+  bool get isNormal => this == PurchaseMode.normal;
+  bool get isPackage => this == PurchaseMode.package;
 }
+
+/// Extension methods for nullable PurchaseMode enum
+// extension PurchaseModeX on PurchaseMode? {
+//   bool get isNormal => this == PurchaseMode.normal;
+//   bool get isPackage => this == PurchaseMode.package;
+// }

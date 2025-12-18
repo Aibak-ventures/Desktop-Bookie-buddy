@@ -216,36 +216,22 @@ class SaleDetailsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 10.h,
-                    children: [
-                      if (saleDetails.client != null)...[
-                        SaleDetailsDetailsColumn(
-                          label: 'Name',
-                          value: saleDetails.client!.name,
-                        ),
-                        SaleDetailsDetailsColumn(
-                          label: 'Phone 1',
-                          value: saleDetails.client!.phone1.toString(),
-                        ),
-                        if (saleDetails.client!.phone2 != null)
-                          SaleDetailsDetailsColumn(
-                            label: 'Phone 2',
-                            value: saleDetails.client!.phone2.toString(),
-                          ),
-                      ] else if (saleDetails.clientPhone != null) 
-                        SaleDetailsDetailsColumn(
-                          label: 'Phone',
-                          value: saleDetails.clientPhone.toString(),
-                        ),
-                      if (saleDetails.address.isNotNullOrEmpty)
-                        SaleDetailsDetailsColumn(
-                          label: 'Place',
-                          value: saleDetails.address,
-                        ),
-                    ],
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10.h,
+                children: [
+                  SaleDetailsDetailsColumn(
+                    label: 'Phone number',
+                    value: saleDetails.clientPhone??'N/A',
                   ),
+
+                  // if (saleDetails.address.isNotNullOrEmpty)
+                  SaleDetailsDetailsColumn(
+                    label: 'Place',
+                    value: saleDetails?.address?? 'N/A',
+                  ),
+                ],
+              ),
                 ),
                 15.height,
                 SaleDetailsSection(

@@ -22,13 +22,18 @@ LedgerSecurityAmountModel _$LedgerSecurityAmountModelFromJson(
 /// @nodoc
 mixin _$LedgerSecurityAmountModel {
   @JsonKey(name: 'id')
-  int get bookingId => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
   String get clientName => throw _privateConstructorUsedError;
   @JsonKey(name: 'security_amount')
   int get securityAmount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'booking_date')
-  String get bookingDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'date')
+  String get date => throw _privateConstructorUsedError;
+  @JsonKey(
+      name: 'type',
+      fromJson: LedgerListType.fromJson,
+      toJson: LedgerListType.toJson)
+  LedgerListType get type => throw _privateConstructorUsedError;
 
   /// Serializes this LedgerSecurityAmountModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,10 +52,15 @@ abstract class $LedgerSecurityAmountModelCopyWith<$Res> {
       _$LedgerSecurityAmountModelCopyWithImpl<$Res, LedgerSecurityAmountModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') int bookingId,
+      {@JsonKey(name: 'id') int id,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
       @JsonKey(name: 'security_amount') int securityAmount,
-      @JsonKey(name: 'booking_date') String bookingDate});
+      @JsonKey(name: 'date') String date,
+      @JsonKey(
+          name: 'type',
+          fromJson: LedgerListType.fromJson,
+          toJson: LedgerListType.toJson)
+      LedgerListType type});
 }
 
 /// @nodoc
@@ -69,15 +79,16 @@ class _$LedgerSecurityAmountModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? bookingId = null,
+    Object? id = null,
     Object? clientName = null,
     Object? securityAmount = null,
-    Object? bookingDate = null,
+    Object? date = null,
+    Object? type = null,
   }) {
     return _then(_value.copyWith(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as int,
       clientName: null == clientName
           ? _value.clientName
@@ -87,10 +98,14 @@ class _$LedgerSecurityAmountModelCopyWithImpl<$Res,
           ? _value.securityAmount
           : securityAmount // ignore: cast_nullable_to_non_nullable
               as int,
-      bookingDate: null == bookingDate
-          ? _value.bookingDate
-          : bookingDate // ignore: cast_nullable_to_non_nullable
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
               as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as LedgerListType,
     ) as $Val);
   }
 }
@@ -105,10 +120,15 @@ abstract class _$$LedgerSecurityAmountModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') int bookingId,
+      {@JsonKey(name: 'id') int id,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown') String clientName,
       @JsonKey(name: 'security_amount') int securityAmount,
-      @JsonKey(name: 'booking_date') String bookingDate});
+      @JsonKey(name: 'date') String date,
+      @JsonKey(
+          name: 'type',
+          fromJson: LedgerListType.fromJson,
+          toJson: LedgerListType.toJson)
+      LedgerListType type});
 }
 
 /// @nodoc
@@ -126,15 +146,16 @@ class __$$LedgerSecurityAmountModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? bookingId = null,
+    Object? id = null,
     Object? clientName = null,
     Object? securityAmount = null,
-    Object? bookingDate = null,
+    Object? date = null,
+    Object? type = null,
   }) {
     return _then(_$LedgerSecurityAmountModelImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as int,
       clientName: null == clientName
           ? _value.clientName
@@ -144,10 +165,14 @@ class __$$LedgerSecurityAmountModelImplCopyWithImpl<$Res>
           ? _value.securityAmount
           : securityAmount // ignore: cast_nullable_to_non_nullable
               as int,
-      bookingDate: null == bookingDate
-          ? _value.bookingDate
-          : bookingDate // ignore: cast_nullable_to_non_nullable
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
               as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as LedgerListType,
     ));
   }
 }
@@ -156,18 +181,23 @@ class __$$LedgerSecurityAmountModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LedgerSecurityAmountModelImpl implements _LedgerSecurityAmountModel {
   const _$LedgerSecurityAmountModelImpl(
-      {@JsonKey(name: 'id') required this.bookingId,
+      {@JsonKey(name: 'id') required this.id,
       @JsonKey(name: 'client_name', defaultValue: 'Unknown')
       required this.clientName,
       @JsonKey(name: 'security_amount') required this.securityAmount,
-      @JsonKey(name: 'booking_date') required this.bookingDate});
+      @JsonKey(name: 'date') required this.date,
+      @JsonKey(
+          name: 'type',
+          fromJson: LedgerListType.fromJson,
+          toJson: LedgerListType.toJson)
+      required this.type});
 
   factory _$LedgerSecurityAmountModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$LedgerSecurityAmountModelImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
-  final int bookingId;
+  final int id;
   @override
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
   final String clientName;
@@ -175,12 +205,18 @@ class _$LedgerSecurityAmountModelImpl implements _LedgerSecurityAmountModel {
   @JsonKey(name: 'security_amount')
   final int securityAmount;
   @override
-  @JsonKey(name: 'booking_date')
-  final String bookingDate;
+  @JsonKey(name: 'date')
+  final String date;
+  @override
+  @JsonKey(
+      name: 'type',
+      fromJson: LedgerListType.fromJson,
+      toJson: LedgerListType.toJson)
+  final LedgerListType type;
 
   @override
   String toString() {
-    return 'LedgerSecurityAmountModel(bookingId: $bookingId, clientName: $clientName, securityAmount: $securityAmount, bookingDate: $bookingDate)';
+    return 'LedgerSecurityAmountModel(id: $id, clientName: $clientName, securityAmount: $securityAmount, date: $date, type: $type)';
   }
 
   @override
@@ -188,20 +224,19 @@ class _$LedgerSecurityAmountModelImpl implements _LedgerSecurityAmountModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LedgerSecurityAmountModelImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.clientName, clientName) ||
                 other.clientName == clientName) &&
             (identical(other.securityAmount, securityAmount) ||
                 other.securityAmount == securityAmount) &&
-            (identical(other.bookingDate, bookingDate) ||
-                other.bookingDate == bookingDate));
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.type, type) || other.type == type));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, bookingId, clientName, securityAmount, bookingDate);
+  int get hashCode =>
+      Object.hash(runtimeType, id, clientName, securityAmount, date, type);
 
   /// Create a copy of LedgerSecurityAmountModel
   /// with the given fields replaced by the non-null parameter values.
@@ -222,19 +257,23 @@ class _$LedgerSecurityAmountModelImpl implements _LedgerSecurityAmountModel {
 
 abstract class _LedgerSecurityAmountModel implements LedgerSecurityAmountModel {
   const factory _LedgerSecurityAmountModel(
-          {@JsonKey(name: 'id') required final int bookingId,
-          @JsonKey(name: 'client_name', defaultValue: 'Unknown')
-          required final String clientName,
-          @JsonKey(name: 'security_amount') required final int securityAmount,
-          @JsonKey(name: 'booking_date') required final String bookingDate}) =
-      _$LedgerSecurityAmountModelImpl;
+      {@JsonKey(name: 'id') required final int id,
+      @JsonKey(name: 'client_name', defaultValue: 'Unknown')
+      required final String clientName,
+      @JsonKey(name: 'security_amount') required final int securityAmount,
+      @JsonKey(name: 'date') required final String date,
+      @JsonKey(
+          name: 'type',
+          fromJson: LedgerListType.fromJson,
+          toJson: LedgerListType.toJson)
+      required final LedgerListType type}) = _$LedgerSecurityAmountModelImpl;
 
   factory _LedgerSecurityAmountModel.fromJson(Map<String, dynamic> json) =
       _$LedgerSecurityAmountModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
-  int get bookingId;
+  int get id;
   @override
   @JsonKey(name: 'client_name', defaultValue: 'Unknown')
   String get clientName;
@@ -242,8 +281,14 @@ abstract class _LedgerSecurityAmountModel implements LedgerSecurityAmountModel {
   @JsonKey(name: 'security_amount')
   int get securityAmount;
   @override
-  @JsonKey(name: 'booking_date')
-  String get bookingDate;
+  @JsonKey(name: 'date')
+  String get date;
+  @override
+  @JsonKey(
+      name: 'type',
+      fromJson: LedgerListType.fromJson,
+      toJson: LedgerListType.toJson)
+  LedgerListType get type;
 
   /// Create a copy of LedgerSecurityAmountModel
   /// with the given fields replaced by the non-null parameter values.

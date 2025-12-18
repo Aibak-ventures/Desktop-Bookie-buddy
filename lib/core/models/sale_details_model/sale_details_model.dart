@@ -34,7 +34,7 @@ class SaleDetailsModel with _$SaleDetailsModel {
     @JsonKey(name: 'items') required List<ProductSaleInfoModel> products,
     @JsonKey(
       name: 'method',
-      fromJson: PaymentMethod.fromString,
+      fromJson: PaymentMethod.fromJson,
       readValue: _paymentMethodReadValue,
     )
     @Default(PaymentMethod.cash)

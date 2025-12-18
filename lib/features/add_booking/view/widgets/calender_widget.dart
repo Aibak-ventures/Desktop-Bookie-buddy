@@ -1,4 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +8,14 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CalenderWidget extends StatefulWidget {
   final Function(DateTime selectedDate) onDateSelected;
-  final DateTime? initialSelectedDate; // Single initial selected date
+  final DateTime? firstDate; // Single initial selected date
+  final DateTime? selectedDate;
 
   const CalenderWidget({
-    required this.onDateSelected,
     super.key,
-    this.initialSelectedDate,
+    required this.onDateSelected,
+    this.firstDate,
+    this.selectedDate,
   });
 
   @override
@@ -32,8 +36,8 @@ class _CalenderWidgetState extends State<CalenderWidget> {
       currentDate.day,
     );
 
-    if (widget.initialSelectedDate != null) {
-      selectedDate = widget.initialSelectedDate;
+    if (widget.firstDate != null) {
+      selectedDate = widget.selectedDate ?? widget.firstDate;
       focusedDay = selectedDate;
     } else {
       selectedDate = firstAvailableDay;
@@ -43,11 +47,11 @@ class _CalenderWidgetState extends State<CalenderWidget> {
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     final DateTime today = DateTime.now();
-    final DateTime todayDateOnly = DateTime(today.year, today.month, today.day);
     debugPrint('selected: ' + selectedDay.toString());
-
-    // Allow today and future dates only
-    if (selectedDay.isBefore(todayDateOnly)) {
+    if (selectedDay.isBefore(
+      widget.firstDate?.dateOnly ??
+          DateTime(today.year, today.month, today.day),
+    )) {
       CustomSnackBar(message: 'You cannot select a past date');
       return; // Don't allow past dates
     }
@@ -68,7 +72,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
   Widget build(BuildContext context) {
     final DateTime currentDate = DateTime.now();
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: AppColors.purple, width: 2),
@@ -76,8 +80,8 @@ class _CalenderWidgetState extends State<CalenderWidget> {
       ),
       child: TableCalendar(
         availableGestures: AvailableGestures.none,
-        rowHeight: 45,
-        firstDay: DateTime.now(),
+        rowHeight: context.mediaQueryHeight(0.065),
+        firstDay: widget.firstDate ?? DateTime.now(),
         lastDay: DateTime.utc(currentDate.year + 200, 12, 31),
         focusedDay: focusedDay ?? currentDate,
         calendarStyle: const CalendarStyle(

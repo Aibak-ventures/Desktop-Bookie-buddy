@@ -28,8 +28,8 @@ _$SaleDetailsModelImpl _$$SaleDetailsModelImplFromJson(
           .toList(),
       paymentMethod: _paymentMethodReadValue(json, 'method') == null
           ? PaymentMethod.cash
-          : PaymentMethod.fromString(
-              _paymentMethodReadValue(json, 'method') as String),
+          : PaymentMethod.fromJson(
+              _paymentMethodReadValue(json, 'method') as String?),
       staffId: (json['staff_id'] as num?)?.toInt(),
       staffName: json['staff_name'] as String?,
     );
@@ -50,15 +50,10 @@ Map<String, dynamic> _$$SaleDetailsModelImplToJson(
       'shop_sale_id': instance.invoiceId,
       'balance_due': instance.balanceDueAmount,
       'items': instance.products,
-      'method': _$PaymentMethodEnumMap[instance.paymentMethod]!,
+      'method': instance.paymentMethod,
       'staff_id': instance.staffId,
       'staff_name': instance.staffName,
     };
-
-const _$PaymentMethodEnumMap = {
-  PaymentMethod.gPay: 'gPay',
-  PaymentMethod.cash: 'cash',
-};
 
 _$ProductSaleInfoModelImpl _$$ProductSaleInfoModelImplFromJson(
         Map<String, dynamic> json) =>

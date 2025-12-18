@@ -1,14 +1,19 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/models/payment_model/payment_model.dart';
+import 'package:bookie_buddy_web/features/ledger/utils/ledger_enums.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/generate_payment_pdf.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/ledger_list_tile.dart';
+import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
+import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -108,12 +113,35 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
           ),
           ...payments.map(
             (payment) => LedgerListTile(
-              onTap: () {
-                context
-                    .push(BookingDetailsScreen(bookingId: payment.bookingId));
-              },
+            onTap: () {
+  if (payment.type == LedgerListType.booking) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BookingDetailsScreen(
+          bookingId: payment.id,
+        ),
+      ),
+    );
+  } else if (payment.type == LedgerListType.sales) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => SaleDetailsBloc(repository: getIt.get<SalesRepository>())
+            ..add(
+              SaleDetailsEvent.getSaleDetails(
+                saleId: payment.id,
+              ),
+            ),
+          child: SaleDetailsScreen(
+            saleId: payment.id,
+          ),
+        ),
+      ),
+    );
+  }
+},
+
               icon: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   payment.paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
                   Text(
@@ -123,13 +151,13 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
                 ],
               ),
               content: Text(
-                payment.clientName,
+                payment.clientName ?? payment.invoiceId,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
               ),
               amount: payment.paymentAmount,
             ),
-          ),
+          )
         ],
       );
 }

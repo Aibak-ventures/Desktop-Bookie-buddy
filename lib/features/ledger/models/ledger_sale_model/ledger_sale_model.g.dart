@@ -25,12 +25,5 @@ Map<String, dynamic> _$$LedgerSaleModelImplToJson(
       'total_amount': instance.totalAmount,
       'clientName': instance.clientName,
       'items': instance.products,
-      'payment_methods': instance.paymentMethods
-          .map((e) => _$PaymentMethodEnumMap[e]!)
-          .toList(),
+      'payment_methods': instance.paymentMethods,
     };
-
-const _$PaymentMethodEnumMap = {
-  PaymentMethod.gPay: 'gPay',
-  PaymentMethod.cash: 'cash',
-};

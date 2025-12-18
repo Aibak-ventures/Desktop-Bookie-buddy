@@ -20,7 +20,7 @@ _$BookingDetailsModelImpl _$$BookingDetailsModelImplFromJson(
       securityAmount: (json['security_amount'] as num?)?.toInt(),
       purchaseMode: json['purchase_mode'] == null
           ? PurchaseMode.normal
-          : PurchaseMode.fromString(json['purchase_mode'] as String),
+          : PurchaseMode.fromString(json['purchase_mode'] as String?),
       bookingStatus: json['booking_status'] == null
           ? BookingStatus.upcoming
           : BookingStatus.fromString(json['booking_status'] as String),

@@ -25,7 +25,7 @@ class LedgerSecurityAmountListTile extends StatelessWidget {
   Widget build(BuildContext context) => LedgerListTile(
         onTap: () {
           context.push(BookingDetailsScreen(
-            bookingId: securityAmountModel.bookingId,
+            bookingId: securityAmountModel.id,
           ));
         },
         icon: Icon(

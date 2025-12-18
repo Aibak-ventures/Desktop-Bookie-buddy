@@ -45,7 +45,7 @@ List<String> _itemsFromJson(dynamic value) {
 List<PaymentMethod> _paymentMethodsFromJson(dynamic value) {
   if (value == null) return [];
   if (value is List) {
-    return value.map((e) => PaymentMethod.fromString(e.toString())).toList();
+    return value.map((e) => PaymentMethod.fromJson(e.toString())).toList();
   }
-  return [PaymentMethod.fromString(value.toString())];
+  return [PaymentMethod.fromJson(value.toString())];
 }
