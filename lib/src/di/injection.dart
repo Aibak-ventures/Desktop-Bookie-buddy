@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'modules/network_module.dart';
 import 'modules/storage_module.dart';
 import 'modules/auth_module.dart';
+import 'modules/search_module.dart';
 
 /// Global service locator instance
 final getIt = GetIt.instance;
@@ -27,6 +28,7 @@ class DependencyInjection {
     await StorageModule.init(getIt);
     await NetworkModule.init(getIt);
     await AuthModule.init(getIt);
+    await SearchModule.init(getIt);
     // Add more modules here as they are created
   }
 

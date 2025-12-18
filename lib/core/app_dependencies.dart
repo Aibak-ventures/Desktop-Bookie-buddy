@@ -27,6 +27,8 @@ import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.da
 import 'package:bookie_buddy_web/features/ledger/services/ledger_service.dart';
 import 'package:bookie_buddy_web/features/ledger/services/payment_service.dart';
 import 'package:bookie_buddy_web/features/ledger/services/pending_service.dart';
+import 'package:bookie_buddy_web/features/search/repositories/search_repository.dart';
+import 'package:bookie_buddy_web/features/search/services/search_service.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -52,6 +54,7 @@ class AppDependencies {
     _registerLazy(ServiceApi.new);
     _registerLazy(SalesService.new);
     _registerLazy(StaffService.new);
+    _registerLazy(() => const SearchService());
   }
 
   static void setupRepositories() {
@@ -80,6 +83,8 @@ class AppDependencies {
 
     _registerLazy(() => SalesRepository(service: _get<SalesService>()));
     _registerLazy(() => StaffRepository(_get<StaffService>()));
+
+    _registerLazy(() => SearchRepository(_get<SearchService>()));
 
     _registerLazy(
       () => ProductRepository(
