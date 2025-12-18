@@ -5,7 +5,7 @@ class SearchState with _$SearchState {
   const factory SearchState.initial() = _Initial;
   const factory SearchState.loading() = _Loading;
   const factory SearchState.loaded({
-    required List<BookingsModel> bookings,
+    required List<GlobalSearchModel> searchData,
     required String? nextPageUrl,
     @Default(false) bool isPaginating,
   }) = _Loaded;

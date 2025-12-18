@@ -1,9 +1,8 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/search/models/global_search_model.dart';
+import 'package:bookie_buddy_web/features/search/repositories/search_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,10 +11,10 @@ part 'search_event.dart';
 part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  final BookingRepository _repository;
-  SearchBloc({required BookingRepository repository})
-      : _repository = repository,
-        super(const _Initial()) {
+  final SearchRepository _repository;
+  SearchBloc({required SearchRepository repository})
+    : _repository = repository,
+      super(const _Initial()) {
     on<_Search>(_onSearch);
     on<_LoadNextSearchResults>(_onLoadNextSearchResult);
     on<_Reset>(_onReset);
@@ -24,14 +23,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> _onSearch(_Search event, Emitter<SearchState> emit) async {
     emit(const _Loading());
     try {
-      final result = await _repository.loadBookingsPagination(
-        status: LoadBookingType.all,
+      final result = await _repository.getGlobalSearch(
         searchQuery: event.query,
         startDate: event.startDate,
         endDate: event.endDate,
       );
 
-      emit(_Loaded(bookings: result.data, nextPageUrl: result.nextPageUrl));
+      emit(_Loaded(searchData: result.data, nextPageUrl: result.nextPageUrl));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       emit(_Error(e.toString()));
@@ -49,17 +47,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(s.copyWith(isPaginating: true));
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
-      final result = await _repository.loadBookingsPagination(
-        status: LoadBookingType.all,
-        searchQuery: event.query,
+      final result = await _repository.getGlobalSearch(
         page: page,
+        searchQuery: event.query,
         startDate: event.startDate,
         endDate: event.endDate,
       );
 
       emit(
         s.copyWith(
-          bookings: [...s.bookings, ...result.data],
+          searchData: [...s.searchData, ...result.data],
           nextPageUrl: result.nextPageUrl,
           isPaginating: false,
         ),

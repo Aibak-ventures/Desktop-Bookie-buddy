@@ -555,8 +555,8 @@ mixin _$SearchState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
+    required TResult Function(List<GlobalSearchModel> searchData,
+            String? nextPageUrl, bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) =>
@@ -565,7 +565,7 @@ mixin _$SearchState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult? Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
@@ -575,7 +575,7 @@ mixin _$SearchState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
@@ -673,8 +673,8 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
+    required TResult Function(List<GlobalSearchModel> searchData,
+            String? nextPageUrl, bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -686,7 +686,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult? Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
@@ -699,7 +699,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
@@ -796,8 +796,8 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
+    required TResult Function(List<GlobalSearchModel> searchData,
+            String? nextPageUrl, bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -809,7 +809,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult? Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
@@ -822,7 +822,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
@@ -883,7 +883,9 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {List<BookingsModel> bookings, String? nextPageUrl, bool isPaginating});
+      {List<GlobalSearchModel> searchData,
+      String? nextPageUrl,
+      bool isPaginating});
 }
 
 /// @nodoc
@@ -899,15 +901,15 @@ class __$$LoadedImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? bookings = null,
+    Object? searchData = null,
     Object? nextPageUrl = freezed,
     Object? isPaginating = null,
   }) {
     return _then(_$LoadedImpl(
-      bookings: null == bookings
-          ? _value._bookings
-          : bookings // ignore: cast_nullable_to_non_nullable
-              as List<BookingsModel>,
+      searchData: null == searchData
+          ? _value._searchData
+          : searchData // ignore: cast_nullable_to_non_nullable
+              as List<GlobalSearchModel>,
       nextPageUrl: freezed == nextPageUrl
           ? _value.nextPageUrl
           : nextPageUrl // ignore: cast_nullable_to_non_nullable
@@ -924,17 +926,17 @@ class __$$LoadedImplCopyWithImpl<$Res>
 
 class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl(
-      {required final List<BookingsModel> bookings,
+      {required final List<GlobalSearchModel> searchData,
       required this.nextPageUrl,
       this.isPaginating = false})
-      : _bookings = bookings;
+      : _searchData = searchData;
 
-  final List<BookingsModel> _bookings;
+  final List<GlobalSearchModel> _searchData;
   @override
-  List<BookingsModel> get bookings {
-    if (_bookings is EqualUnmodifiableListView) return _bookings;
+  List<GlobalSearchModel> get searchData {
+    if (_searchData is EqualUnmodifiableListView) return _searchData;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_bookings);
+    return EqualUnmodifiableListView(_searchData);
   }
 
   @override
@@ -945,7 +947,7 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   String toString() {
-    return 'SearchState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating)';
+    return 'SearchState.loaded(searchData: $searchData, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating)';
   }
 
   @override
@@ -953,7 +955,8 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(other._bookings, _bookings) &&
+            const DeepCollectionEquality()
+                .equals(other._searchData, _searchData) &&
             (identical(other.nextPageUrl, nextPageUrl) ||
                 other.nextPageUrl == nextPageUrl) &&
             (identical(other.isPaginating, isPaginating) ||
@@ -963,7 +966,7 @@ class _$LoadedImpl implements _Loaded {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_bookings),
+      const DeepCollectionEquality().hash(_searchData),
       nextPageUrl,
       isPaginating);
 
@@ -980,12 +983,12 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
+    required TResult Function(List<GlobalSearchModel> searchData,
+            String? nextPageUrl, bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) {
-    return loaded(bookings, nextPageUrl, isPaginating);
+    return loaded(searchData, nextPageUrl, isPaginating);
   }
 
   @override
@@ -993,12 +996,12 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult? Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
   }) {
-    return loaded?.call(bookings, nextPageUrl, isPaginating);
+    return loaded?.call(searchData, nextPageUrl, isPaginating);
   }
 
   @override
@@ -1006,14 +1009,14 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(bookings, nextPageUrl, isPaginating);
+      return loaded(searchData, nextPageUrl, isPaginating);
     }
     return orElse();
   }
@@ -1058,11 +1061,11 @@ class _$LoadedImpl implements _Loaded {
 
 abstract class _Loaded implements SearchState {
   const factory _Loaded(
-      {required final List<BookingsModel> bookings,
+      {required final List<GlobalSearchModel> searchData,
       required final String? nextPageUrl,
       final bool isPaginating}) = _$LoadedImpl;
 
-  List<BookingsModel> get bookings;
+  List<GlobalSearchModel> get searchData;
   String? get nextPageUrl;
   bool get isPaginating;
 
@@ -1143,8 +1146,8 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
-            bool isPaginating)
+    required TResult Function(List<GlobalSearchModel> searchData,
+            String? nextPageUrl, bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -1156,7 +1159,7 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult? Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
@@ -1169,7 +1172,7 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<BookingsModel> bookings, String? nextPageUrl,
+    TResult Function(List<GlobalSearchModel> searchData, String? nextPageUrl,
             bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
