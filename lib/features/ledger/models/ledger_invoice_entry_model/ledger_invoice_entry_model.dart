@@ -10,7 +10,7 @@ class LedgerInvoiceEntryModel with _$LedgerInvoiceEntryModel {
     @JsonKey(name: 'type', fromJson: LedgerType.fromString)
     required LedgerType type,
     required String date,
-    @JsonKey(name: 'user', defaultValue: 'Unknown') required String user,
+    @JsonKey(name: 'name', defaultValue: '') required String name,
     required String description,
     required int amount,
     @JsonKey(name: 'items', defaultValue: const <String>[])

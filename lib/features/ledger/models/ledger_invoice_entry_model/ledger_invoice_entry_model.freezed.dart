@@ -24,8 +24,8 @@ mixin _$LedgerInvoiceEntryModel {
   @JsonKey(name: 'type', fromJson: LedgerType.fromString)
   LedgerType get type => throw _privateConstructorUsedError;
   String get date => throw _privateConstructorUsedError;
-  @JsonKey(name: 'user', defaultValue: 'Unknown')
-  String get user => throw _privateConstructorUsedError;
+  @JsonKey(name: 'name', defaultValue: '')
+  String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   int get amount => throw _privateConstructorUsedError;
   @JsonKey(name: 'items', defaultValue: const <String>[])
@@ -50,7 +50,7 @@ abstract class $LedgerInvoiceEntryModelCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'type', fromJson: LedgerType.fromString) LedgerType type,
       String date,
-      @JsonKey(name: 'user', defaultValue: 'Unknown') String user,
+      @JsonKey(name: 'name', defaultValue: '') String name,
       String description,
       int amount,
       @JsonKey(name: 'items', defaultValue: const <String>[])
@@ -75,7 +75,7 @@ class _$LedgerInvoiceEntryModelCopyWithImpl<$Res,
   $Res call({
     Object? type = null,
     Object? date = null,
-    Object? user = null,
+    Object? name = null,
     Object? description = null,
     Object? amount = null,
     Object? products = null,
@@ -89,9 +89,9 @@ class _$LedgerInvoiceEntryModelCopyWithImpl<$Res,
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as String,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       description: null == description
           ? _value.description
@@ -121,7 +121,7 @@ abstract class _$$LedgerInvoiceEntryModelImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'type', fromJson: LedgerType.fromString) LedgerType type,
       String date,
-      @JsonKey(name: 'user', defaultValue: 'Unknown') String user,
+      @JsonKey(name: 'name', defaultValue: '') String name,
       String description,
       int amount,
       @JsonKey(name: 'items', defaultValue: const <String>[])
@@ -145,7 +145,7 @@ class __$$LedgerInvoiceEntryModelImplCopyWithImpl<$Res>
   $Res call({
     Object? type = null,
     Object? date = null,
-    Object? user = null,
+    Object? name = null,
     Object? description = null,
     Object? amount = null,
     Object? products = null,
@@ -159,9 +159,9 @@ class __$$LedgerInvoiceEntryModelImplCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as String,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       description: null == description
           ? _value.description
@@ -186,7 +186,7 @@ class _$LedgerInvoiceEntryModelImpl implements _LedgerInvoiceEntryModel {
       {@JsonKey(name: 'type', fromJson: LedgerType.fromString)
       required this.type,
       required this.date,
-      @JsonKey(name: 'user', defaultValue: 'Unknown') required this.user,
+      @JsonKey(name: 'name', defaultValue: '') required this.name,
       required this.description,
       required this.amount,
       @JsonKey(name: 'items', defaultValue: const <String>[])
@@ -202,8 +202,8 @@ class _$LedgerInvoiceEntryModelImpl implements _LedgerInvoiceEntryModel {
   @override
   final String date;
   @override
-  @JsonKey(name: 'user', defaultValue: 'Unknown')
-  final String user;
+  @JsonKey(name: 'name', defaultValue: '')
+  final String name;
   @override
   final String description;
   @override
@@ -219,7 +219,7 @@ class _$LedgerInvoiceEntryModelImpl implements _LedgerInvoiceEntryModel {
 
   @override
   String toString() {
-    return 'LedgerInvoiceEntryModel(type: $type, date: $date, user: $user, description: $description, amount: $amount, products: $products)';
+    return 'LedgerInvoiceEntryModel(type: $type, date: $date, name: $name, description: $description, amount: $amount, products: $products)';
   }
 
   @override
@@ -229,7 +229,7 @@ class _$LedgerInvoiceEntryModelImpl implements _LedgerInvoiceEntryModel {
             other is _$LedgerInvoiceEntryModelImpl &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.user, user) || other.user == user) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.amount, amount) || other.amount == amount) &&
@@ -238,7 +238,7 @@ class _$LedgerInvoiceEntryModelImpl implements _LedgerInvoiceEntryModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, date, user, description,
+  int get hashCode => Object.hash(runtimeType, type, date, name, description,
       amount, const DeepCollectionEquality().hash(_products));
 
   /// Create a copy of LedgerInvoiceEntryModel
@@ -263,8 +263,7 @@ abstract class _LedgerInvoiceEntryModel implements LedgerInvoiceEntryModel {
       {@JsonKey(name: 'type', fromJson: LedgerType.fromString)
       required final LedgerType type,
       required final String date,
-      @JsonKey(name: 'user', defaultValue: 'Unknown')
-      required final String user,
+      @JsonKey(name: 'name', defaultValue: '') required final String name,
       required final String description,
       required final int amount,
       @JsonKey(name: 'items', defaultValue: const <String>[])
@@ -279,8 +278,8 @@ abstract class _LedgerInvoiceEntryModel implements LedgerInvoiceEntryModel {
   @override
   String get date;
   @override
-  @JsonKey(name: 'user', defaultValue: 'Unknown')
-  String get user;
+  @JsonKey(name: 'name', defaultValue: '')
+  String get name;
   @override
   String get description;
   @override

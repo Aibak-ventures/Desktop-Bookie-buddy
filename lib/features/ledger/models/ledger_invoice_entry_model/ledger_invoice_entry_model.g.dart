@@ -11,7 +11,7 @@ _$LedgerInvoiceEntryModelImpl _$$LedgerInvoiceEntryModelImplFromJson(
     _$LedgerInvoiceEntryModelImpl(
       type: LedgerType.fromString(json['type'] as String?),
       date: json['date'] as String,
-      user: json['user'] as String? ?? 'Unknown',
+      name: json['name'] as String? ?? '',
       description: json['description'] as String,
       amount: (json['amount'] as num).toInt(),
       products:
@@ -24,7 +24,7 @@ Map<String, dynamic> _$$LedgerInvoiceEntryModelImplToJson(
     <String, dynamic>{
       'type': _$LedgerTypeEnumMap[instance.type]!,
       'date': instance.date,
-      'user': instance.user,
+      'name': instance.name,
       'description': instance.description,
       'amount': instance.amount,
       'items': instance.products,

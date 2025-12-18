@@ -804,7 +804,7 @@ class LedgerPDFGenerator {
                   ),
                 pw.Expanded(
                   flex: isBookings ? 4 : 2,
-                  child: pw.Text(ledgerEntry.user, style: _getBodyStyle()),
+                  child: pw.Text(ledgerEntry.name, style: _getBodyStyle()),
                 ),
                 if (!isBookings)
                   pw.Expanded(

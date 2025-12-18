@@ -118,13 +118,13 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
               _addProductButton(),
               16.width,
             ],
-            if (widget.availabilityCheckOnly) ...[
-              _iconButton(
-                icon: Icons.print,
-                onTap: _handlePrint,
-              ),
-              16.width,
-            ],
+            // if (widget.availabilityCheckOnly) ...[
+            //   _iconButton(
+            //     icon: Icons.print,
+            //     onTap: _handlePrint,
+            //   ),
+            //   16.width,
+            // ],
           ],
         ),
         body: Center(
