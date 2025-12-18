@@ -19,6 +19,7 @@ import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sa
 import 'package:bookie_buddy_web/features/main/widgets/shop_switcher_bottom_sheet.dart';
 import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
+import 'package:bookie_buddy_web/features/search/view/global_search_screen.dart';
 import 'package:bookie_buddy_web/features/search/view_model/bloc_search/search_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../home/view/home_screen.dart';
 import '../../profile/view/profile_screen.dart';
 import '../../save_expense/view/add_expense_screen.dart';
-import '../../search/view/search_screen.dart';
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({super.key});
@@ -44,31 +44,28 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   late PageController pageController;
 
   // List of screens
-  final List<Widget> screens = [
-    const HomeScreen(),
-    BlocProvider(
-      create: (context) => SearchBloc(repository: getIt.get()),
-      child: const SearchScreen(),
-    ),
-    const AddExpenseScreen(),
-    const ProfileScreen(),
-    BlocProvider(
-      create: (context) => ProductBloc(),
-      child: SelectServiceScreen(
-        onServiceSelected: (service, ctx) {
-          print('Selected service: ${service.name}');
-          ctx.push(
-            ProductGridScreen(
-              serviceId: service.id,
-              name: service.name,
-              mainServiceType:
-                  MainServiceType.fromString(service.mainServiceName),
-            ),
-          );
-        },
-      ),
-    ),
-  ];
+  // final List<Widget> screens = [
+  //   const HomeScreen(),
+  //   const GlobalSearchScreen(),
+  //   const AddExpenseScreen(),
+  //   const ProfileScreen(),
+  //   BlocProvider(
+  //     create: (context) => ProductBloc(),
+  //     child: SelectServiceScreen(
+  //       onServiceSelected: (service, ctx) {
+  //         print('Selected service: ${service.name}');
+  //         ctx.push(
+  //           ProductGridScreen(
+  //             serviceId: service.id,
+  //             name: service.name,
+  //             mainServiceType:
+  //                 MainServiceType.fromString(service.mainServiceName),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   ),
+  // ];
 
   @override
   void initState() {
@@ -82,27 +79,55 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isDesktop = kIsWeb ||
-        Theme.of(context).platform == TargetPlatform.windows ||
-        Theme.of(context).platform == TargetPlatform.macOS ||
-        Theme.of(context).platform == TargetPlatform.linux;
+ @override
+Widget build(BuildContext context) {
+  final isDesktop = kIsWeb ||
+      Theme.of(context).platform == TargetPlatform.windows ||
+      Theme.of(context).platform == TargetPlatform.macOS ||
+      Theme.of(context).platform == TargetPlatform.linux;
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        print('on pop invoked worked');
-        if (!didPop) await _onWillPop(context);
-        print('on pop invoke after dialog function');
+  return BlocProvider(
+    create: (context) => SearchBloc(repository: getIt.get()),
+    child: Builder(
+      builder: (context) {
+        final screens = [
+          const HomeScreen(),
+          const GlobalSearchScreen(), // ✅ NOW under SearchBloc
+          const AddExpenseScreen(),
+          const ProfileScreen(),
+          BlocProvider(
+            create: (context) => ProductBloc(),
+            child: SelectServiceScreen(
+              onServiceSelected: (service, ctx) {
+                ctx.push(
+                  ProductGridScreen(
+                    serviceId: service.id,
+                    name: service.name,
+                    mainServiceType:
+                        MainServiceType.fromString(service.mainServiceName),
+                  ),
+                );
+              },
+            ),
+          ),
+        ];
+
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            if (!didPop) await _onWillPop(context);
+          },
+          child: isDesktop
+              ? _buildDesktopLayout(context, screens)
+              : _buildMobileLayout(context, screens),
+        );
       },
-      child: isDesktop
-          ? _buildDesktopLayout(context)
-          : _buildMobileLayout(context),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildDesktopLayout(BuildContext context) {
+
+  Widget _buildDesktopLayout(BuildContext context,List<Widget> screens) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: Row(
@@ -486,7 +511,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context) {
+  Widget _buildMobileLayout(BuildContext context, List<Widget> screens) {
     return Scaffold(
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
