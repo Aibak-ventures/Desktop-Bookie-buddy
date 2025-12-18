@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/core/api/ledger_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/notifications_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/product_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/sales_api_paths.dart';
+import 'package:bookie_buddy_web/core/api/search_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/service_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/shop_api_paths.dart';
 import 'package:bookie_buddy_web/core/api/staff_api_paths.dart';
@@ -34,6 +35,7 @@ class ApiPaths {
   static const tailor = _TailorNamespace();
   static const customizationWork = _CustomizationWorkNamespace();
   static const products = _ProductsNamespace();
+  static const search = SearchApiPaths();
 }
 
 class _ApiConfigNamespace {

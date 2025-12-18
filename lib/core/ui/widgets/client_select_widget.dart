@@ -194,7 +194,7 @@ Widget phoneDisplay({
       prefixIcon: Icon(icon),
       suffixIcon:
           !isEnabled ? Icon(Icons.lock, size: 16.sp, color: Colors.grey) : null,
-      maxLength: 10,
+      // maxLength: 10,
       ignorePointers: !isEnabled,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.next,

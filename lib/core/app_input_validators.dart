@@ -26,7 +26,7 @@ class AppInputValidators {
     return basicText(value, fieldName: 'Product name', minLength: 3);
   }
 
- static String? phoneNumber(String? value, {bool isRequired = true}) {
+static String? phoneNumber(String? value, {bool isRequired = true}) {
   if (!isRequired && (value == null || value.trim().isEmpty)) {
     return null;
   }
@@ -35,15 +35,9 @@ class AppInputValidators {
     return 'Phone number is required';
   }
 
-  // Allows international numbers (+, any length)
-  final phoneRegex = RegExp(r'^\+?\d+$');
-
-  if (!phoneRegex.hasMatch(value.trim())) {
-    return 'Enter a valid phone number';
-  }
-
-  return null;
+  return null; // no validation at all
 }
+
 
 
   static String? numberOnly(String? value) {

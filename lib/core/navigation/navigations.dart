@@ -63,7 +63,7 @@ import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_deta
 import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
 import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
 import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.dart';
-import 'package:bookie_buddy_web/features/search/view/search_screen.dart';
+import 'package:bookie_buddy_web/features/search_old/view/search_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/splash/view/splash_screen.dart';
@@ -150,16 +150,16 @@ class Navigations {
               ),
             ],
           ),
-          StatefulShellBranch(
-            routes: [
-              // Search screen
-              GoRoute(
-                path: AppRoutes.searchGlobal.path,
-                name: AppRoutes.searchGlobal.name,
-                builder: (context, state) => const SearchScreen(),
-              ),
-            ],
-          ),
+          // StatefulShellBranch(
+          //   routes: [
+          //     // Search screen
+          //     GoRoute(
+          //       path: AppRoutes.searchGlobal.path,
+          //       name: AppRoutes.searchGlobal.name,
+          //       builder: (context, state) => const Glob(),
+          //     ),
+          //   ],
+          // ),
           StatefulShellBranch(
             routes: [
               // Add expense screen
