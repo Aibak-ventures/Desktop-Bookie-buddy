@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/components/booking_payment_history_tile.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/show_booking_details_add_payment_dialog.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/painters/custom_payment_details_rectangle_painter.dart';
@@ -88,8 +89,37 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditBookingScreen(
+                                                  booking: booking),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.edit_outlined,
+                                      size: 16.sp,
+                                      color: AppColors.purple,
+                                    ),
+                                    label: Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: AppColors.purple,
+                                      ),
+                                    ),
+                                  ),
+                                  const Icon(Icons.keyboard_arrow_down),
+                                ],
+                              ),
                               shape: const Border(),
-                              // Use default trailing arrow so it animates with expansion state
                               tilePadding: EdgeInsets.zero,
                               children: booking.additionalCharges
                                   .map(
