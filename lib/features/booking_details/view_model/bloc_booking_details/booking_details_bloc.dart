@@ -23,6 +23,7 @@ class BookingDetailsBloc
     on<_UpdateDeliveryStatus>(_onUpdateDeliveryStatus);
     on<_UpdateBookingStatus>(_onUpdateBookingStatus);
     on<_UpdatePayment>(_onUpdatePayment);
+    on<_CancelBooking>(_onCancelBooking);
     on<_DeleteBooking>(_onDeleteBooking);
   }
 
@@ -92,6 +93,33 @@ class BookingDetailsBloc
         paymentMethod: event.paymentMethod,
       );
       emit(const _Success('Payment updated successfully'));
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      final oldState = state;
+      emit(BookingDetailsState.failed(e.toString()));
+      if (oldState is _Loaded) {
+        emit(oldState);
+      }
+    }
+  }
+
+  Future<void> _onCancelBooking(
+    _CancelBooking event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    try {
+      await _repository.cancelBooking(
+        bookingId: event.bookingId,
+        refundAmount: event.refundAmount,
+        paymentMethod: event.paymentMethod,
+        refundReason: event.refundReason,
+      );
+      emit(
+        const _Success(
+          'Booking cancelled and refund processed successfully',
+          needRefresh: true,
+        ),
+      );
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       final oldState = state;

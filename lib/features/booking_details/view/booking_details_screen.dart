@@ -10,6 +10,7 @@ import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart'
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/booking_details_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
@@ -440,6 +441,27 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
         const SizedBox(height: 12),
 
+        // Cancel Booking button (only if not completed)
+        if (!isBookingCompleted) ...[
+          ElevatedButton.icon(
+            onPressed: () => _handleCancelBooking(context, booking),
+            icon: const Icon(Icons.cancel, color: Colors.white),
+            label: const Text(
+              'Cancel Booking',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange.shade600,
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              elevation: 2,
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+
         // ✅ Keep Delete Booking active (if you want to always allow deleting)
         ElevatedButton.icon(
           onPressed: () => _handleDeleteBooking(context, booking),
@@ -504,6 +526,39 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             ),
           );
     }
+  }
+
+  void _handleCancelBooking(BuildContext context, dynamic booking) {
+    // Calculate refundable amount (total paid - already refunded if any)
+    final maxRefundAmount = booking.paidAmount ?? 0;
+
+    if (maxRefundAmount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No refundable amount available for this booking.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => CancelBookingDialog(
+        maxRefundAmount: maxRefundAmount,
+        onCancel: () => Navigator.of(context).pop(),
+        onConfirm: (refundAmount, paymentMethod, reason) {
+          context.read<BookingDetailsBloc>().add(
+                BookingDetailsEvent.cancelBooking(
+                  bookingId: booking.id,
+                  refundAmount: refundAmount,
+                  paymentMethod: paymentMethod,
+                  refundReason: reason,
+                ),
+              );
+        },
+      ),
+    );
   }
 
   void _handleDeleteBooking(BuildContext context, dynamic booking) {

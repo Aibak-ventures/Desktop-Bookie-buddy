@@ -8,5 +8,6 @@ class StaffListEvent with _$StaffListEvent {
   const factory StaffListEvent.editStaff(StaffRequestModel staff) = _EditStaff;
   const factory StaffListEvent.addStaff(StaffRequestModel staff) = _AddStaff;
   const factory StaffListEvent.staffUpdated(StaffModel staff) = _StaffUpdated;
+
   // const factory StaffListEvent.loadAllStaffs() = _LoadAllStaffs;
 }

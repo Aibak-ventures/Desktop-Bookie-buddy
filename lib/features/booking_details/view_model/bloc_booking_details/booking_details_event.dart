@@ -21,6 +21,13 @@ class BookingDetailsEvent with _$BookingDetailsEvent {
     required PaymentMethod paymentMethod,
   }) = _UpdatePayment;
 
+  const factory BookingDetailsEvent.cancelBooking({
+    required int bookingId,
+    required int refundAmount,
+    required PaymentMethod paymentMethod,
+    required String refundReason,
+  }) = _CancelBooking;
+
   const factory BookingDetailsEvent.deleteBooking(int bookingId) =
       _DeleteBooking;
 }

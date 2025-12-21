@@ -130,6 +130,33 @@ class BookingRepository {
     }
   }
 
+  // Cancel booking and process refund
+  Future<void> cancelBooking({
+    required int bookingId,
+    required int refundAmount,
+    required PaymentMethod paymentMethod,
+    required String refundReason,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _bookingService.cancelBooking(
+          bookingId: bookingId,
+          refundAmount: refundAmount,
+          paymentMethod: paymentMethod.value,
+          refundReason: refundReason,
+        ),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error cancelling booking: ${response.devMessage}');
+      throw response.message;
+    } catch (e, stack) {
+      log('Error cancelling booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   // Update payment status
   Future<void> updateBookingStatus(
     int bookingId,

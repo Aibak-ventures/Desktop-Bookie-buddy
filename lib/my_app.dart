@@ -110,6 +110,22 @@ class MyApp extends StatelessWidget {
         supportedLocales: const [
           Locale('en', 'US'), // English (12-hour format)
         ],
+        builder: (context, child) {
+          // Force minimum size at Material App level
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              size: Size(
+                MediaQuery.of(context).size.width < 1280 
+                    ? 1280 
+                    : MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.height < 720 
+                    ? 720 
+                    : MediaQuery.of(context).size.height,
+              ),
+            ),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         home: const SplashScreen(),
       ),
     );

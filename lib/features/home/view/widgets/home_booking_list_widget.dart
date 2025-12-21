@@ -101,14 +101,20 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
                   });
                 }
 
+                // Filter: Only show bookings (not custom work) and only non-empty groups
                 final group = dataGrouped.entries
-                    .where(
-                      (group) => group.value.isNotEmpty,
-                    )
-                    .map((e) => BookingGroupedModel(
+                    .map((e) {
+                      // Filter out custom work - only keep bookings
+                      final bookingsOnly = e.value
+                          .where((item) => item.isBooking && item.booking != null)
+                          .toList();
+                      
+                      return BookingGroupedModel(
                         date: e.key,
-                        bookings:
-                            e.value.where((item) => item.isBooking).toList()))
+                        bookings: bookingsOnly,
+                      );
+                    })
+                    .where((group) => group.bookings.isNotEmpty) // Hide empty groups
                     .toList();
 
                 return group.isEmpty

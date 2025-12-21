@@ -19,6 +19,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -31,8 +32,83 @@
 
   <title>bookie_buddy_web</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 1280px !important;
+      min-height: 720px !important;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-width: 1280px !important;
+      min-height: 720px !important;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Flutter container with fixed minimum size */
+    #root, flt-glass-pane {
+      min-width: 1280px !important;
+      min-height: 720px !important;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Show warning on too small screens */
+    @media (max-width: 1279px), (max-height: 719px) {
+      body::before {
+        content: "⚠️ Screen too small! Minimum resolution: 1280x720";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #ff6b6b;
+        color: white;
+        padding: 12px;
+        text-align: center;
+        z-index: 999999;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+
+    /* Loading indicator */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      min-height: 720px;
+      background-color: #f5f5f5;
+    }
+
+    .loading::after {
+      content: "Loading Bookie Buddy...";
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 18px;
+      color: #6b46c1;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
 </head>
 <body>
+  <div class="loading"></div>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

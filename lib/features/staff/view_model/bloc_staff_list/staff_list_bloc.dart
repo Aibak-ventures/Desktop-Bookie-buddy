@@ -30,11 +30,10 @@ class StaffListBloc extends Bloc<StaffListEvent, StaffListState> {
     _LoadStaffs event,
     Emitter<StaffListState> emit,
   ) async {
-    if (state is! _Loading) emit(const StaffListState.loading());
+    emit(const StaffListState.loading());
 
     try {
       final result = await _repository.getStaffs();
-
       emit(
         StaffListState.loaded(
           staffs: result.data,
@@ -42,23 +41,24 @@ class StaffListBloc extends Bloc<StaffListEvent, StaffListState> {
         ),
       );
     } catch (e, stack) {
-      log('Error loading staffs: $e', stackTrace: stack);
+      log('Load staffs error: $e', stackTrace: stack);
       emit(StaffListState.error(e.toString()));
     }
   }
 
-  FutureOr<void> _onLoadNextPageStaffs(
+  Future<void> _onLoadNextPageStaffs(
     _LoadNextPageStaffs event,
     Emitter<StaffListState> emit,
   ) async {
+    if (state is! _Loaded) return;
+    final s = state as _Loaded;
+    if (s.nextPageUrl == null || s.isPaginating) return;
+
+    emit(s.copyWith(isPaginating: true));
+
     try {
-      if (state is! _Loaded) return;
-      final s = state as _Loaded;
-      if (s.nextPageUrl == null || s.isPaginating) return;
-
-      emit(s.copyWith(isPaginating: true));
-      final nextPage = PaginationModel.getPageFromUrl(s.nextPageUrl);
-
+      final nextPage =
+          PaginationModel.getPageFromUrl(s.nextPageUrl);
       final result = await _repository.getStaffs(page: nextPage);
 
       emit(
@@ -68,185 +68,111 @@ class StaffListBloc extends Bloc<StaffListEvent, StaffListState> {
           isPaginating: false,
         ),
       );
-    } catch (e, stack) {
-      log('Error loading next page of staffs: $e', stackTrace: stack);
-      if (state is _Loaded) {
-        final s = state as _Loaded;
-        emit(s.copyWith(isPaginating: false));
-      } else {
-        emit(StaffListState.error(e.toString()));
-      }
+    } catch (e) {
+      emit(s.copyWith(isPaginating: false));
     }
   }
 
-  FutureOr<void> _onAddStaff(
+  Future<void> _onAddStaff(
     _AddStaff event,
     Emitter<StaffListState> emit,
   ) async {
+    if (state is! _Loaded) return;
+    final s = state as _Loaded;
+
+    emit(s.copyWith(status: StaffListStatus.updating));
+
     try {
-      if (state is! _Loaded) return;
-      final s = state as _Loaded;
-
-      emit(s.copyWith(status: StaffListStatus.updating));
-
-      final newStaff = await _repository.addStaff(event.staff);
-
-      final updatedStaffs = [newStaff, ...s.staffs];
+      final staff = await _repository.addStaff(event.staff);
 
       emit(
         s.copyWith(
-          staffs: updatedStaffs,
-          isPaginating: false,
+          staffs: [staff, ...s.staffs],
           status: StaffListStatus.success,
           message: 'Staff added successfully',
         ),
       );
-    } catch (e, stack) {
-      log('Error adding staff: $e', stackTrace: stack);
-      if (state is _Loaded) {
-        final s = state as _Loaded;
-        emit(
-          s.copyWith(
-            isPaginating: false,
-            status: StaffListStatus.failure,
-            message: e.toString(),
-          ),
-        );
-      } else {
-        emit(StaffListState.error(e.toString()));
-      }
+    } catch (e) {
+      emit(
+        s.copyWith(
+          status: StaffListStatus.failure,
+          message: e.toString(),
+        ),
+      );
     }
   }
 
-  FutureOr<void> _onEditStaff(
+  Future<void> _onEditStaff(
     _EditStaff event,
     Emitter<StaffListState> emit,
   ) async {
+    if (state is! _Loaded) return;
+    final s = state as _Loaded;
+
+    emit(s.copyWith(status: StaffListStatus.updating));
+
     try {
-      if (state is! _Loaded) return;
-      final s = state as _Loaded;
+      final updated = await _repository.editStaff(event.staff);
 
-      emit(s.copyWith(status: StaffListStatus.updating));
-
-      final newStaff = await _repository.editStaff(event.staff);
-      final updatedStaffs = s.staffs.map((staff) {
-        if (staff.id == newStaff.id) {
-          return newStaff;
-        }
-        return staff;
-      }).toList();
-
+      add(StaffListEvent.staffUpdated(updated));
+    } catch (e) {
       emit(
         s.copyWith(
-          staffs: updatedStaffs,
-          isPaginating: false,
-          status: StaffListStatus.success,
-          message: 'Staff updated successfully',
+          status: StaffListStatus.failure,
+          message: e.toString(),
         ),
       );
-    } catch (e, stack) {
-      log('Error updating staff: $e', stackTrace: stack);
-      if (state is _Loaded) {
-        final s = state as _Loaded;
-        emit(
-          s.copyWith(
-            isPaginating: false,
-            status: StaffListStatus.failure,
-            message: e.toString(),
-          ),
-        );
-      } else {
-        emit(StaffListState.error(e.toString()));
-      }
     }
   }
 
-  FutureOr<void> _onDeleteStaff(
+  Future<void> _onDeleteStaff(
     _DeleteStaff event,
     Emitter<StaffListState> emit,
   ) async {
+    if (state is! _Loaded) return;
+    final s = state as _Loaded;
+
+    emit(s.copyWith(status: StaffListStatus.updating));
+
     try {
-      if (state is! _Loaded) return;
-      final s = state as _Loaded;
-
-      emit(s.copyWith(status: StaffListStatus.updating));
-
       await _repository.deleteStaff(event.staffId);
-
-      final updatedStaffs =
-          s.staffs.where((staff) => staff.id != event.staffId).toList();
 
       emit(
         s.copyWith(
-          staffs: updatedStaffs,
-          isPaginating: false,
+          staffs:
+              s.staffs.where((e) => e.id != event.staffId).toList(),
           status: StaffListStatus.success,
           message: 'Staff deleted successfully',
         ),
       );
-    } catch (e, stack) {
-      log('Error deleting staff: $e', stackTrace: stack);
-      if (state is _Loaded) {
-        final s = state as _Loaded;
-        emit(
-          s.copyWith(
-            isPaginating: false,
-            status: StaffListStatus.failure,
-            message: e.toString(),
-          ),
-        );
-      } else {
-        emit(StaffListState.error(e.toString()));
-      }
+    } catch (e) {
+      emit(
+        s.copyWith(
+          status: StaffListStatus.failure,
+          message: e.toString(),
+        ),
+      );
     }
   }
 
-  /// Updates an existing staff in the list without making an API call.
-  /// Use this after a successful edit operation from a dialog/form that already
-  /// made the API request and received the updated staff model.
-  FutureOr<void> _onStaffUpdated(
+  /// 🔥 INSTANT UI UPDATE — NO API CALL
+  void _onStaffUpdated(
     _StaffUpdated event,
     Emitter<StaffListState> emit,
   ) {
-    if (state is! _Loaded) return null;
+    if (state is! _Loaded) return;
     final s = state as _Loaded;
 
-    // Find and replace the staff with the updated one (immutably)
-    final updatedStaffs = s.staffs.map((staff) {
-      return staff.id == event.staff.id ? event.staff : staff;
-    }).toList();
+    final updatedStaffs = s.staffs
+        .map((e) => e.id == event.staff.id ? event.staff : e)
+        .toList();
 
-    // Emit the updated state so the UI rebuilds instantly
     emit(
       s.copyWith(
         staffs: updatedStaffs,
         status: StaffListStatus.success,
+        message: 'Staff updated successfully',
       ),
     );
   }
-
-  // FutureOr<void> _onLoadAllStaffs(
-  //   _LoadAllStaffs event,
-  //   Emitter<StaffListState> emit,
-  // ) async {
-  //   if (state is! _Loading) emit(const StaffListState.loading());
-
-  //   try {
-  //     int page = 1;
-  //     final List<StaffModel> allStaffs = [];
-  //     String? nextPageUrl;
-
-  //     do {
-  //       final result = await _repository.getStaffs(page: page);
-  //       allStaffs.addAll(result.data);
-  //       nextPageUrl = result.nextPageUrl;
-  //       page++;
-  //     } while (nextPageUrl != null);
-
-  //     emit(StaffListState.loaded(staffs: allStaffs));
-  //   } catch (e, stack) {
-  //     log('Error loading staffs: $e', stackTrace: stack);
-  //     emit(StaffListState.error(e.toString()));
-  //   }
-  // }
 }

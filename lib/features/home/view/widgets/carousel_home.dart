@@ -1,111 +1,67 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CarouselHome extends StatelessWidget {
   final CarouselDataModel data;
-  const CarouselHome({required this.data, super.key});
+
+  const CarouselHome({
+    required this.data,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = kIsWeb ||
-        Theme.of(context).platform == TargetPlatform.windows ||
-        Theme.of(context).platform == TargetPlatform.macOS ||
-        Theme.of(context).platform == TargetPlatform.linux;
-
-    return isDesktop
-        ? _buildDesktopCarousel(context)
-        : _buildMobileCarousel(context);
-  }
-
-  Widget _buildDesktopCarousel(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 160,
       child: Row(
         children: [
           Expanded(
-            child: _buildDesktopCard(
+            child: _buildCard(
               context,
               title: 'Upcoming',
               value: data.upComingCount.toString(),
-              gradient: [
-                const Color(0xFF4C0FFF).withValues(alpha: 0.9),
-                const Color(0xFF8A63FE).withValues(alpha: 0.9),
+              gradient: const [
+                Color(0xFF4C0FFF),
+                Color(0xFF8A63FE),
               ],
               icon: Icons.schedule,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (context) =>
-                            AllBookingBloc(repository: getIt.get()),
-                      ),
-                      BlocProvider(
-                        create: (context) =>
-                            AllBookingPastBloc(repository: getIt.get()),
-                      ),
-                    ],
-                    child: AllBookingScreen(),
-                  ),
-                ),
-              ),
+              onTap: () => _openAllBookings(context),
             ),
           ),
           const SizedBox(width: 20),
           Expanded(
-            child: _buildDesktopCard(
+            child: _buildCard(
               context,
               title: 'Completed',
               value: data.completedCount.toString(),
-              gradient: [
-                const Color(0xFF015DFF).withValues(alpha: 0.9),
-                const Color(0xFF05ADFF).withValues(alpha: 0.9),
+              gradient: const [
+                Color(0xFF015DFF),
+                Color(0xFF05ADFF),
               ],
               icon: Icons.check_circle,
-              onTap: () => context.push(CompletedBookingsScreen()),
+              onTap: () => context.push( CompletedBookingsScreen()),
             ),
           ),
           const SizedBox(width: 20),
           Expanded(
-            child: _buildDesktopCard(
+            child: _buildCard(
               context,
               title: 'Expired',
               value: data.expiredCount.toString(),
-              gradient: [
-                const Color(0xFFFF4757).withValues(alpha: 0.9),
-                const Color(0xFFFF6B7A).withValues(alpha: 0.9),
+              gradient: const [
+                Color(0xFFFF4757),
+                Color(0xFFFF6B7A),
               ],
               icon: Icons.event_busy,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (context) =>
-                            AllBookingBloc(repository: getIt.get()),
-                      ),
-                      BlocProvider(
-                        create: (context) =>
-                            AllBookingPastBloc(repository: getIt.get()),
-                      ),
-                    ],
-                    child: AllBookingScreen(index: 1),
-                  ),
-                ),
-              ),
+              onTap: () => _openExpiredBookings(context),
             ),
           ),
         ],
@@ -113,7 +69,7 @@ class CarouselHome extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopCard(
+  Widget _buildCard(
     BuildContext context, {
     required String title,
     required String value,
@@ -144,18 +100,14 @@ class CarouselHome extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                icon,
-                color: Colors.white,
-                size: 32,
-              ),
+              Icon(icon, color: Colors.white, size: 32),
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_outward,
                   color: Colors.white,
                   size: 20,
@@ -186,165 +138,39 @@ class CarouselHome extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileCarousel(BuildContext context) {
-    return SizedBox(
-      height: context.mediaQueryHeight(0.24),
-      width: context.mediaQueryWidth(1),
-      child: CarouselSlider(
-        options: CarouselOptions(
-          autoPlay: true,
-          autoPlayInterval: const Duration(seconds: 10),
-          viewportFraction: context.isMobile ? 0.75 : 0.5,
-          padEnds: false,
+  void _openAllBookings(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => AllBookingBloc(repository: getIt.get()),
+            ),
+            BlocProvider(
+              create: (_) => AllBookingPastBloc(repository: getIt.get()),
+            ),
+          ],
+          child:  AllBookingScreen(),
         ),
-        items: [
-          CarouselCard(
-            title: 'Upcoming',
-            value: data.upComingCount.toString(),
-            gradient: [
-              const Color(0xFF4C0FFF).withValues(alpha: 0.9),
-              const Color(0xFF8A63FE).withValues(alpha: 0.9),
-            ],
-            onTap: () => context.push(AllBookingScreen()),
-          ),
-          CarouselCard(
-            title: 'Completed',
-            value: data.completedCount.toString(),
-            gradient: [
-              const Color(0xFF015DFF).withValues(alpha: 0.9),
-              const Color(0xFF05ADFF).withValues(alpha: 0.9),
-            ],
-            onTap: () => context.push(CompletedBookingsScreen()),
-          ),
-        ],
       ),
     );
   }
-}
 
-class CarouselCard extends StatelessWidget {
-  const CarouselCard({
-    required this.title,
-    required this.value,
-    required this.onTap,
-    required this.gradient,
-    super.key,
-  });
-  final String title;
-  final String value;
-  final List<Color> gradient;
-  final VoidCallback onTap;
-
-  final double firstHeight = 200.0;
-  final double secondHeight = 240.0;
-  @override
-  Widget build(BuildContext context) {
-    final width = context.mediaQueryWidth(0.8);
-    const circleColor = Color.fromARGB(255, 166, 166, 166);
-    return Stack(
-      children: [
-        // Main container with clipped background circles
-        Container(
-          width: width,
-          margin: 10.paddingOnly(right: true),
-          child: ClipRRect(
-            borderRadius: 20.radiusBorder,
-            child: Stack(
-              children: [
-                // Bottom circle
-                Positioned(
-                  left: -65,
-                  bottom: -140,
-                  child: Container(
-                    height: firstHeight,
-                    width: firstHeight,
-                    decoration: const BoxDecoration(
-                      color: circleColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-
-                // Top circle
-                Positioned(
-                  right: -120,
-                  top: -100,
-                  child: Container(
-                    height: secondHeight,
-                    width: secondHeight,
-                    decoration: const BoxDecoration(
-                      color: circleColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-                // Main content container
-                Container(
-                  width: width,
-                  padding: 20.padding,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: gradient,
-                      stops: const [0.0, 1.0],
-                    ),
-                    borderRadius: 20.radiusBorder,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // "My profile" label
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 26.sp,
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      16.height,
-                      // Business/User Name
-                      Text(
-                        value,
-                        style: TextStyle(
-                          fontSize: 32.sp,
-                          color: AppColors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Positioned(
-                  bottom: 20,
-                  right: 20,
-                  child: Container(
-                    padding: 18.padding,
-                    decoration: BoxDecoration(
-                      color: AppColors.purpleLight.withValues(alpha: 0.15),
-                      borderRadius: 15.radiusBorder,
-                    ),
-                    child: Icon(
-                      Icons.arrow_outward_outlined,
-                      color: AppColors.white,
-                      size: 24.sp,
-                    ),
-                  ).onTap(onTap),
-                ),
-              ],
+  void _openExpiredBookings(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => AllBookingBloc(repository: getIt.get()),
             ),
-          ),
+            BlocProvider(
+              create: (_) => AllBookingPastBloc(repository: getIt.get()),
+            ),
+          ],
+          child:  AllBookingScreen(index: 1),
         ),
-      ],
+      ),
     );
   }
 }

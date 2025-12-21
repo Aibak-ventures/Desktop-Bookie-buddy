@@ -160,17 +160,28 @@ class _ClientListViewState extends State<_ClientListView> {
               // 📋 Client list
               Expanded(
                 child: BlocConsumer<ClientListBloc, ClientListState>(
-                  listener: (context, state) {
-                    state.maybeMap(
-                      error: (value) =>
-                          context.showSnackBar(value.error, isError: true),
-                      success: (value) {
-                        context.showSnackBar(value.message);
-                        if (value.needRefresh) _fetchData(context);
-                      },
-                      orElse: () {},
-                    );
-                  },
+         listener: (context, state) {
+  state.maybeMap(
+    success: (value) {
+      context.showSnackBar(
+        value.message,
+        isError: false,
+      );
+      if (value.needRefresh) {
+        _fetchData(context);
+      }
+    },
+    error: (value) {
+      context.showSnackBar(
+        value.error,
+        isError: true,
+      );
+    },
+    orElse: () {},
+  );
+},
+
+
                   builder: (context, state) {
                     return state.maybeWhen(
                       loading: () => const Center(

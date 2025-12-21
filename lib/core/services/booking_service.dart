@@ -143,6 +143,31 @@ class BookingService {
     }
   }
 
+  Future<CustomResponseModel> cancelBooking({
+    required int bookingId,
+    required int refundAmount,
+    required String paymentMethod,
+    required String refundReason,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${ApiPaths.bookings.cancelBooking}$bookingId/',
+        data: {
+          'refund_amount': refundAmount,
+          'payment_method': paymentMethod,
+          'refund_reason': refundReason,
+        },
+      );
+      log(
+        'cancel booking response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error cancelling booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   Future<CustomResponseModel> fetchBookingsPagination({
     required LoadBookingType status,
     required int page,

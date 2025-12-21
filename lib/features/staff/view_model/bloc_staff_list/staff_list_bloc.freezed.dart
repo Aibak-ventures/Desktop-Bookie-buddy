@@ -1308,7 +1308,7 @@ class _$LoadedImpl implements _Loaded {
       {required final List<StaffModel> staffs,
       this.nextPageUrl,
       this.isPaginating = false,
-      this.status = StaffListStatus.loaded,
+      this.status = StaffListStatus.success,
       this.message})
       : _staffs = staffs;
 
