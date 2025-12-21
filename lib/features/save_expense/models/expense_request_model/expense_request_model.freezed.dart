@@ -32,6 +32,8 @@ mixin _$ExpenseRequestModel {
   String? get type => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   String? get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'payment_method', includeIfNull: false)
+  String? get paymentMethod => throw _privateConstructorUsedError;
 
   /// Serializes this ExpenseRequestModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +57,9 @@ abstract class $ExpenseRequestModelCopyWith<$Res> {
       @JsonKey(includeIfNull: false) String? date,
       @JsonKey(name: 'expense', includeIfNull: false) int? amount,
       @JsonKey(includeIfNull: false) String? type,
-      @JsonKey(includeIfNull: false) String? description});
+      @JsonKey(includeIfNull: false) String? description,
+      @JsonKey(name: 'payment_method', includeIfNull: false)
+      String? paymentMethod});
 }
 
 /// @nodoc
@@ -79,6 +83,7 @@ class _$ExpenseRequestModelCopyWithImpl<$Res, $Val extends ExpenseRequestModel>
     Object? amount = freezed,
     Object? type = freezed,
     Object? description = freezed,
+    Object? paymentMethod = freezed,
   }) {
     return _then(_value.copyWith(
       expenseId: freezed == expenseId
@@ -105,6 +110,10 @@ class _$ExpenseRequestModelCopyWithImpl<$Res, $Val extends ExpenseRequestModel>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -123,7 +132,9 @@ abstract class _$$ExpenseRequestModelImplCopyWith<$Res>
       @JsonKey(includeIfNull: false) String? date,
       @JsonKey(name: 'expense', includeIfNull: false) int? amount,
       @JsonKey(includeIfNull: false) String? type,
-      @JsonKey(includeIfNull: false) String? description});
+      @JsonKey(includeIfNull: false) String? description,
+      @JsonKey(name: 'payment_method', includeIfNull: false)
+      String? paymentMethod});
 }
 
 /// @nodoc
@@ -145,6 +156,7 @@ class __$$ExpenseRequestModelImplCopyWithImpl<$Res>
     Object? amount = freezed,
     Object? type = freezed,
     Object? description = freezed,
+    Object? paymentMethod = freezed,
   }) {
     return _then(_$ExpenseRequestModelImpl(
       expenseId: freezed == expenseId
@@ -171,6 +183,10 @@ class __$$ExpenseRequestModelImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -184,7 +200,9 @@ class _$ExpenseRequestModelImpl implements _ExpenseRequestModel {
       @JsonKey(includeIfNull: false) this.date,
       @JsonKey(name: 'expense', includeIfNull: false) this.amount,
       @JsonKey(includeIfNull: false) this.type,
-      @JsonKey(includeIfNull: false) this.description});
+      @JsonKey(includeIfNull: false) this.description,
+      @JsonKey(name: 'payment_method', includeIfNull: false)
+      this.paymentMethod});
 
   factory _$ExpenseRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExpenseRequestModelImplFromJson(json);
@@ -207,10 +225,13 @@ class _$ExpenseRequestModelImpl implements _ExpenseRequestModel {
   @override
   @JsonKey(includeIfNull: false)
   final String? description;
+  @override
+  @JsonKey(name: 'payment_method', includeIfNull: false)
+  final String? paymentMethod;
 
   @override
   String toString() {
-    return 'ExpenseRequestModel(expenseId: $expenseId, variantId: $variantId, date: $date, amount: $amount, type: $type, description: $description)';
+    return 'ExpenseRequestModel(expenseId: $expenseId, variantId: $variantId, date: $date, amount: $amount, type: $type, description: $description, paymentMethod: $paymentMethod)';
   }
 
   @override
@@ -226,13 +247,15 @@ class _$ExpenseRequestModelImpl implements _ExpenseRequestModel {
             (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            (identical(other.paymentMethod, paymentMethod) ||
+                other.paymentMethod == paymentMethod));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, expenseId, variantId, date, amount, type, description);
+  int get hashCode => Object.hash(runtimeType, expenseId, variantId, date,
+      amount, type, description, paymentMethod);
 
   /// Create a copy of ExpenseRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -259,8 +282,9 @@ abstract class _ExpenseRequestModel implements ExpenseRequestModel {
       @JsonKey(includeIfNull: false) final String? date,
       @JsonKey(name: 'expense', includeIfNull: false) final int? amount,
       @JsonKey(includeIfNull: false) final String? type,
-      @JsonKey(includeIfNull: false)
-      final String? description}) = _$ExpenseRequestModelImpl;
+      @JsonKey(includeIfNull: false) final String? description,
+      @JsonKey(name: 'payment_method', includeIfNull: false)
+      final String? paymentMethod}) = _$ExpenseRequestModelImpl;
 
   factory _ExpenseRequestModel.fromJson(Map<String, dynamic> json) =
       _$ExpenseRequestModelImpl.fromJson;
@@ -283,6 +307,9 @@ abstract class _ExpenseRequestModel implements ExpenseRequestModel {
   @override
   @JsonKey(includeIfNull: false)
   String? get description;
+  @override
+  @JsonKey(name: 'payment_method', includeIfNull: false)
+  String? get paymentMethod;
 
   /// Create a copy of ExpenseRequestModel
   /// with the given fields replaced by the non-null parameter values.
