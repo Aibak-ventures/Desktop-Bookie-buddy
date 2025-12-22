@@ -151,7 +151,7 @@ class BookingService {
   }) async {
     try {
       final response = await _dio.post(
-        '${ApiPaths.bookings.cancelBooking}$bookingId/',
+        '${ApiPaths.bookings.addPayment}$bookingId/',
         data: {
           'refund_amount': refundAmount,
           'payment_method': paymentMethod,
