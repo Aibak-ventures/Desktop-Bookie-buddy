@@ -2,6 +2,7 @@ import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
+import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
@@ -10,6 +11,7 @@ import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/s
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/painters/custom_payment_details_rectangle_painter.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -97,9 +99,15 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditBookingScreen(
-                                                  booking: booking),
+                                          builder: (context) => BlocProvider(
+                                            create: (context) =>
+                                                UpdateBookingCubit(
+                                              repository: context
+                                                  .read<BookingRepository>(),
+                                            ),
+                                            child: EditBookingScreen(
+                                                booking: booking),
+                                          ),
                                         ),
                                       );
                                     },
