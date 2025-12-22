@@ -19,7 +19,7 @@ void main() async {
 
     const windowOptions = WindowOptions(
       size: Size(1280, 720),           // Initial window size
-      minimumSize: Size(1280, 720),    // Minimum window size (cannot resize smaller)
+      minimumSize: Size(800, 600),     // Minimum window size (cannot resize smaller) - prevents UI breaking
       center: true,                     // Center window on screen
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
