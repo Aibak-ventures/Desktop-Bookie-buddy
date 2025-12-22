@@ -41,10 +41,15 @@ import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summar
 import 'package:bookie_buddy_web/features/profile/view/about_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/check_availability_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/help_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/report_history_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/report_problem_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/shop_performance_screen.dart';
 
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/profile_shop_details_card.dart';
+import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expanded_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -151,8 +156,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: _buildProfileContent(
                       context,
-                       context.read<UserCubit>().state?.shopRole ??
-                        ShopRole.staff),
+                      context.read<UserCubit>().state?.shopRole ??
+                          ShopRole.staff),
                 ),
               ),
 
@@ -215,8 +220,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: _buildProfileContent(
                       context,
-                        context.read<UserCubit>().state?.shopRole ??
-                        ShopRole.staff),
+                      context.read<UserCubit>().state?.shopRole ??
+                          ShopRole.staff),
                 ),
               ),
 
@@ -423,6 +428,87 @@ class ProfileScreen extends StatelessWidget {
 
         const SizedBox(height: 5),
 
+        // Report & History
+        CustomProfileTile(
+          icon: Icons.history_outlined,
+          title: 'Report & History',
+          onTap: () => NavigatorX(context).push(const ReportHistoryScreen()),
+        ),
+
+        const SizedBox(height: 5),
+
+        // Shop Performance (Premium)
+        if (!shopRole.isStaff)
+          CustomProfileTile(
+            icon: Icons.analytics_outlined,
+            title: 'Shop Performance',
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Text(
+                'PREMIUM',
+                style: TextStyle(
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            onTap: () =>
+                NavigatorX(context).push(const ShopPerformanceScreen()),
+          ),
+
+        const SizedBox(height: 5),
+
+        // More Options
+        CustomProfileExpansionTile(
+          icon: Icons.more_horiz_outlined,
+          title: 'More',
+          cards: [
+            CustomProfileExpandedCard(
+              icon: const Icon(Icons.report_problem_outlined),
+              text: 'Report\nProblem',
+              color: Colors.orange,
+              onTap: () =>
+                  NavigatorX(context).push(const ReportProblemScreen()),
+            ),
+            CustomProfileExpandedCard(
+              icon: const Icon(Icons.help_outline),
+              text: 'Help &\nFAQ',
+              color: Colors.blue,
+              onTap: () => NavigatorX(context).push(const HelpScreen()),
+            ),
+            CustomProfileExpandedCard(
+              icon: const Icon(Icons.description_outlined),
+              text: 'Terms of\nService',
+              color: Colors.purple,
+              onTap: () async {
+                try {
+                  final Uri url = Uri.parse(
+                      'https://www.termsfeed.com/live/e9045109-cea9-4b40-a8b3-8c300091002e');
+                  if (!await launchUrl(url)) {
+                    throw Exception('Could not launch $url');
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    context.showSnackBar(
+                      'Could not open terms of service.',
+                      isError: true,
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 5),
+
         // change password expansion tile
         // CustomProfileExpansionTile(
         //   icon: Icons.key_outlined,
@@ -537,9 +623,9 @@ class ProfileScreen extends StatelessWidget {
                   NavigatorX(context).pop();
                   await context.read<UserCubit>().logOut();
 
-  // clear other global states
-  context.read<ClientCubit>().clearSelected();
-  
+                  // clear other global states
+                  context.read<ClientCubit>().clearSelected();
+
                   if (context.mounted) {
                     context.pushAndRemoveUntil(LoginScreen());
                   }
