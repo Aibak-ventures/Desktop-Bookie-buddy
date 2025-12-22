@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/expense_categories.dart';
+import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -54,6 +55,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final dateController = TextEditingController();
   final customCategoryController = TextEditingController();
   bool _showCustomCategoryField = false;
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
 
   final variantSelectedNotifier = ValueNotifier<int?>(null);
 
@@ -122,6 +124,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               oldExpense.description != descriptionController.text.trim()
                   ? descriptionController.text.trim()
                   : null,
+          paymentMethod: _selectedPaymentMethod.value,
         );
         // expense = {
         //   if (oldExpense.date.formatToUiDate() != dateController.text)
@@ -141,6 +144,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           amount: expenseController.text.trim().toInt(),
           type: category,
           description: descriptionController.text,
+          paymentMethod: _selectedPaymentMethod.value,
         );
         // expense = {
         //   "product_variant": variantSelectedNotifier.value,
@@ -524,6 +528,48 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             validator: AppInputValidators.amount,
           ),
 
+          // Payment Method Selector
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: Text(
+                  'Payment Method',
+                  style: TextStyle(
+                    fontSize: ResponsiveHelper.getValue(
+                      context,
+                      mobile: 14.sp,
+                      tablet: 15.sp,
+                      desktop: 16.sp,
+                    ),
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildPaymentMethodOption(
+                      PaymentMethod.cash,
+                      Icons.money,
+                      'Cash',
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: _buildPaymentMethodOption(
+                      PaymentMethod.gPay,
+                      Icons.account_balance_wallet,
+                      'UPI',
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
           // category dropdown
           CustomDropDownField<String>(
             hintText: "Select Category",
@@ -642,6 +688,66 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildPaymentMethodOption(
+    PaymentMethod method,
+    IconData icon,
+    String label,
+  ) {
+    final isSelected = _selectedPaymentMethod == method;
+    return InkWell(
+      onTap: () => setState(() => _selectedPaymentMethod = method),
+      borderRadius: BorderRadius.circular(12.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: ResponsiveHelper.getValue(
+            context,
+            mobile: 16.h,
+            tablet: 18.h,
+            desktop: 20.h,
+          ),
+          horizontal: 16.w,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.purple.withOpacity(0.1) : Colors.white,
+          border: Border.all(
+            color: isSelected ? AppColors.purple : Colors.grey.shade300,
+            width: isSelected ? 2 : 1,
+          ),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? AppColors.purple : Colors.grey.shade600,
+              size: ResponsiveHelper.getValue(
+                context,
+                mobile: 24.sp,
+                tablet: 26.sp,
+                desktop: 28.sp,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: ResponsiveHelper.getValue(
+                  context,
+                  mobile: 14.sp,
+                  tablet: 15.sp,
+                  desktop: 16.sp,
+                ),
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? AppColors.purple : Colors.grey.shade700,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

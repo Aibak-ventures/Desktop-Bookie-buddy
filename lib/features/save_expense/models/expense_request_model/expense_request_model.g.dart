@@ -15,6 +15,7 @@ _$ExpenseRequestModelImpl _$$ExpenseRequestModelImplFromJson(
       amount: (json['expense'] as num?)?.toInt(),
       type: json['type'] as String?,
       description: json['description'] as String?,
+      paymentMethod: json['payment_method'] as String?,
     );
 
 Map<String, dynamic> _$$ExpenseRequestModelImplToJson(
@@ -26,4 +27,5 @@ Map<String, dynamic> _$$ExpenseRequestModelImplToJson(
       if (instance.amount case final value?) 'expense': value,
       if (instance.type case final value?) 'type': value,
       if (instance.description case final value?) 'description': value,
+      if (instance.paymentMethod case final value?) 'payment_method': value,
     };

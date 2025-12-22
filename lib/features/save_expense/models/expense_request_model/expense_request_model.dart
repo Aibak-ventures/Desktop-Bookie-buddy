@@ -33,6 +33,11 @@ class ExpenseRequestModel with _$ExpenseRequestModel {
       includeIfNull: false,
     )
     String? description,
+    @JsonKey(
+      name: 'payment_method',
+      includeIfNull: false,
+    )
+    String? paymentMethod,
   }) = _ExpenseRequestModel;
 
   factory ExpenseRequestModel.fromJson(Map<String, dynamic> json) =>
