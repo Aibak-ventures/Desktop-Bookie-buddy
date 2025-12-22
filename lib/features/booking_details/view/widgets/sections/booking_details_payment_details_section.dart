@@ -102,8 +102,11 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                           builder: (context) => BlocProvider(
                                             create: (context) =>
                                                 UpdateBookingCubit(
-                                              repository: context
-                                                  .read<BookingRepository>(),
+                                                  
+                                              //     clientRepository: context
+                                              //         .read<ClientRepository>(),
+                                              // bookingRepository: context
+                                              //     .read<BookingRepository>(),
                                             ),
                                             child: EditBookingScreen(
                                                 booking: booking),
