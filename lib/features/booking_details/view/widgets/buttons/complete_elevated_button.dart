@@ -33,18 +33,65 @@ class CompleteElevatedButton extends StatelessWidget {
     final balanceAmount = (booking?.totalAmount ?? 0) -
         (booking?.paidAmount ?? 0) -
         (booking?.discountAmount ?? 0);
+    
+    // Check if delivery status is cancelled
+    final isCancelled = booking?.deliveryStatus == DeliveryStatus.cancelled;
 
     return !isBookingCompleted
         ? CustomSwipeButton(
-            text: 'Swipe to Complete',
+            text: isCancelled ? 'Swipe to Cancel Booking' : 'Swipe to Complete',
             height: 55.h,
             isFailure: isFailure,
             isLoading: isLoading,
             isSuccess: isSuccess,
             controller: swipeButtonController,
+            backgroundColor: isCancelled ? Colors.red : null,
             onSwipe: () async {
               if (booking == null) return;
               swipeButtonController?.setLoading();
+              
+              // If delivery status is cancelled, handle booking cancellation
+              if (booking.deliveryStatus == DeliveryStatus.cancelled) {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Cancel Booking'),
+                    content: const Text(
+                      'Are you sure you want to cancel this booking? This action cannot be undone.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(false),
+                        child: const Text('No'),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: () => Navigator.of(ctx).pop(true),
+                        child: const Text(
+                          'Yes, Cancel',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirm == true) {
+                  context.read<BookingDetailsBloc>().add(
+                    BookingDetailsEvent.deleteBooking( booking.id),
+                  );
+                  context.read<BookingSelectionCubit>().markModified(
+                    shouldRefresh: true,
+                  );
+                } else {
+                  swipeButtonController?.reset();
+                }
+                return;
+              }
+              
+              // Normal completion flow
               if (balanceAmount > 0) {
                 context.showSnackBar(
                   'Collect ₹$balanceAmount before completing.',

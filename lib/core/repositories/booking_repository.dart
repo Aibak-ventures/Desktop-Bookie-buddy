@@ -135,7 +135,6 @@ class BookingRepository {
     required int bookingId,
     required int refundAmount,
     required PaymentMethod paymentMethod,
-    required String refundReason,
   }) async {
     try {
       final response = await safeApiCall(
@@ -143,7 +142,6 @@ class BookingRepository {
           bookingId: bookingId,
           refundAmount: refundAmount,
           paymentMethod: paymentMethod.value,
-          refundReason: refundReason,
         ),
       );
       if (response.status.isSuccess) {

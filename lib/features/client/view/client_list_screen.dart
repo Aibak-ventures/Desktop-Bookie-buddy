@@ -171,6 +171,14 @@ class _ClientListViewState extends State<_ClientListView> {
         _fetchData(context);
       }
     },
+    failure: (value) {
+      // Close dialog and show error for duplicate client
+      Navigator.of(context, rootNavigator: true).pop();
+      context.showSnackBar(
+        value.message,
+        isError: true,
+      );
+    },
     error: (value) {
       context.showSnackBar(
         value.error,

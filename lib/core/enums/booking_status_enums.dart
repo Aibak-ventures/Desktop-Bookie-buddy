@@ -5,7 +5,8 @@ enum DeliveryStatus {
   booked,
   readyToDeliver,
   delivered,
-  returned;
+  returned,
+  cancelled;
 
   /// Converts [DeliveryStatus] enum to a string label to display in the UI.
   String get name {
@@ -18,6 +19,8 @@ enum DeliveryStatus {
         return 'Delivered';
       case DeliveryStatus.returned:
         return 'Returned';
+      case DeliveryStatus.cancelled:
+        return 'Cancelled';
     }
   }
 
@@ -31,6 +34,8 @@ enum DeliveryStatus {
         return const Color.fromARGB(255, 0, 149, 255);
       case DeliveryStatus.returned:
         return AppColors.purple;
+      case DeliveryStatus.cancelled:
+        return Colors.red;
     }
   }
 
@@ -53,6 +58,8 @@ enum DeliveryStatus {
         return DeliveryStatus.delivered;
       case 'returned':
         return DeliveryStatus.returned;
+      case 'cancelled':
+        return DeliveryStatus.cancelled;
       default:
         return DeliveryStatus.booked;
     }
@@ -76,6 +83,8 @@ enum DeliveryStatus {
         return 'delivered';
       case DeliveryStatus.returned:
         return 'returned';
+      case DeliveryStatus.cancelled:
+        return 'cancelled';
     }
   }
 }

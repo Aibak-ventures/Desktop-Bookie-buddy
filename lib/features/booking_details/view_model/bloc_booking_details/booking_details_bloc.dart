@@ -112,7 +112,6 @@ class BookingDetailsBloc
         bookingId: event.bookingId,
         refundAmount: event.refundAmount,
         paymentMethod: event.paymentMethod,
-        refundReason: event.refundReason,
       );
       emit(
         const _Success(

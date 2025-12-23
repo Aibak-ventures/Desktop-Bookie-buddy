@@ -147,7 +147,6 @@ class BookingService {
     required int bookingId,
     required int refundAmount,
     required String paymentMethod,
-    required String refundReason,
   }) async {
     try {
       final response = await _dio.post(
@@ -155,7 +154,6 @@ class BookingService {
         data: {
           'refund_amount': refundAmount,
           'payment_method': paymentMethod,
-          'refund_reason': refundReason,
         },
       );
       log(

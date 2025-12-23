@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 class CancelBookingDialog extends StatefulWidget {
   final int maxRefundAmount;
   final VoidCallback onCancel;
-  final Function(int refundAmount, PaymentMethod paymentMethod, String reason)
+  final Function(int refundAmount, PaymentMethod paymentMethod)
       onConfirm;
 
   const CancelBookingDialog({
@@ -25,16 +25,6 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
   final _formKey = GlobalKey<FormState>();
   final _refundAmountController = TextEditingController();
   PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
-  String _selectedReason = 'Customer Request';
-
-  final List<String> _refundReasons = [
-    'Customer Request',
-    'Product Unavailable',
-    'Quality Issues',
-    'Delivery Delay',
-    'Wrong Product',
-    'Other',
-  ];
 
   @override
   void initState() {
@@ -52,7 +42,7 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
   void _handleConfirm() {
     if (_formKey.currentState!.validate()) {
       final refundAmount = int.tryParse(_refundAmountController.text) ?? 0;
-      widget.onConfirm(refundAmount, _selectedPaymentMethod, _selectedReason);
+      widget.onConfirm(refundAmount, _selectedPaymentMethod);
       Navigator.of(context).pop();
     }
   }
@@ -190,40 +180,6 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                     ),
                   ),
                 ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Refund Reason
-              Text(
-                'Cancellation Reason',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _selectedReason,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey.shade50,
-                ),
-                items: _refundReasons.map((reason) {
-                  return DropdownMenuItem(
-                    value: reason,
-                    child: Text(reason),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedReason = value);
-                  }
-                },
               ),
 
               const SizedBox(height: 24),

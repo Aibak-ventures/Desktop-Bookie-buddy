@@ -88,13 +88,13 @@ class LedgerSalesGroupContainer extends StatelessWidget {
             ),
           ),
           ...sales.map((sale) {
-            final paymentMethod = sale.paymentMethods.firstOrNull;
+            final paymentMethod = sale.paymentMethods;
             return LedgerListTile(
               onTap: () {
                 context.read<SaleDetailsBloc>().add(
-                      SaleDetailsEvent.getSaleDetails(saleId: sale.saleId),
+                      SaleDetailsEvent.getSaleDetails(saleId: sale.id),
                     );
-                context.push(SaleDetailsScreen(saleId: sale.saleId));
+                context.push(SaleDetailsScreen(saleId: sale.id));
               },
               icon: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -102,7 +102,7 @@ class LedgerSalesGroupContainer extends StatelessWidget {
                   if (paymentMethod != null)
                     paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,
                   Text(
-                    sale.createdAt.formatToUiTime(),
+                    sale.date.formatToUiTime(),
                     style: TextStyle(fontSize: 12.sp, color: AppColors.grey600),
                   ),
                 ],
@@ -110,7 +110,12 @@ class LedgerSalesGroupContainer extends StatelessWidget {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(sale.clientName),
+                  Text(sale.invoiceId.toString(),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w600,
+                      )),
                   Text(
                     'Items: ${sale.products}',
                     style: TextStyle(fontSize: 12.sp, color: AppColors.grey),

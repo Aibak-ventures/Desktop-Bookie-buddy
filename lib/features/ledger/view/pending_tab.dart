@@ -10,50 +10,50 @@ import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/
 import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 class PendingTab extends StatelessWidget {
   const PendingTab({super.key});
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator.adaptive(
-        onRefresh: () async {
-          context.read<LedgerSimpleSummaryCubit>().reset();
-          _fetchData(context);
-        },
-        child: BlocBuilder<WalletPendingBloc, WalletPendingState>(
-          builder: (context, state) => state.when(
-            loading: () => ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: 15,
-              // Use shimmer for loading
-              itemBuilder: (context, index) =>
-                  const LedgerPendingsListTileShimmer(),
-            ),
-            error: (error) => Center(
-              child: CustomErrorWidget(
-                errorText: error,
-                onRetry: () => _fetchData(context),
-              ),
-            ),
-            loaded: (walletPending, nextPageUrl, isPaginating, clientId,
-                isFirstFetch) {
-              if (walletPending.isEmpty) {
-                return const EmptyDataWidget(
-                  message: 'No pendings',
-                  isShowIcon: false,
-                  isScrollable: true,
-                );
-              }
+  Widget build(BuildContext context) {
+    return BlocBuilder<WalletPendingBloc, WalletPendingState>(
+      builder: (context, state) {
+        return state.when(
+          loading: () => ListView.builder(
+            itemCount: 10,
+            itemBuilder: (_, __) => const LedgerPendingsListTileShimmer(),
+          ),
 
-              if (isFirstFetch && walletPending.isNotEmpty) {
-                final firstDate = walletPending.first.date;
-                _fetchSummary(context, clientId, firstDate);
-              }
+          error: (error) => Center(
+            child: CustomErrorWidget(
+              errorText: error,
+              onRetry: () => _fetchData(context),
+            ),
+          ),
 
-              return NotificationListener<ScrollNotification>(
+          loaded: (
+            walletPending,
+            nextPageUrl,
+            isPaginating,
+            clientId,
+            isFirstFetch,
+          ) {
+            if (walletPending.isEmpty) {
+              return const EmptyDataWidget(
+                message: 'No pendings',
+                isShowIcon: false,
+              );
+            }
+
+            if (isFirstFetch && walletPending.isNotEmpty) {
+              _fetchSummary(context, clientId, walletPending.first.date);
+            }
+
+            return Scrollbar(
+              thumbVisibility: true,
+              child: NotificationListener<ScrollNotification>(
                 onNotification: (scrollInfo) {
                   if (scrollInfo.metrics.pixels >=
-                          scrollInfo.metrics.maxScrollExtent - 200 &&
+                          scrollInfo.metrics.maxScrollExtent - 300 &&
                       nextPageUrl != null &&
                       !isPaginating) {
                     context.read<WalletPendingBloc>().add(
@@ -62,61 +62,48 @@ class PendingTab extends StatelessWidget {
                   }
                   return false;
                 },
-                child: RepaintBoundary(
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(bottom: 80),
-                    itemCount: walletPending.length + (isPaginating ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index == walletPending.length) {
-                        return const LedgerPendingsListTileShimmer();
-                      }
-                      final groupedData = walletPending[index];
-
-                     return Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        groupedData.date.getDateHeading(),
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    ),
-
-    ListTile(
-      leading: const Icon(Icons.access_time),
-      title: const Text('Pending Customers'),
-      subtitle: Text('Return date: ${groupedData.date}'),
-      trailing: Text(
-        groupedData.total.toString(),
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ],
-);
-
-                    },
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
                   ),
+                  itemCount: walletPending.length + (isPaginating ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == walletPending.length) {
+                      return const LedgerPendingsListTileShimmer();
+                    }
+
+                    final groupedData = walletPending[index];
+
+                    /// 🔴 IMPORTANT FIX
+                    /// If API gives only date-level data
+                    if (groupedData.pendings.isEmpty) {
+                      return _DateOnlyPendingTile(
+                        date: groupedData.date,
+                        total: groupedData.total,
+                      );
+                    }
+
+                    /// Normal detailed view
+                    return LedgerPendingsGroupedContainer(
+                      groupedDate: groupedData.date,
+                      pendings: groupedData.pendings,
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
-      );
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   void _fetchData(BuildContext context) {
     final clientId = context.read<ClientCubit>().getSelectedClient()?.id;
     context.read<WalletPendingBloc>().add(
           WalletPendingEvent.loadPending(clientId: clientId),
         );
-    // _fetchSummary(context, clientId);
   }
 
   void _fetchSummary(BuildContext context, int? clientId, String? date) {
@@ -125,5 +112,37 @@ class PendingTab extends StatelessWidget {
           clientId: clientId,
           force: true,
         );
+  }
+}
+class _DateOnlyPendingTile extends StatelessWidget {
+  final String date;
+  final num total;
+
+  const _DateOnlyPendingTile({
+    required this.date,
+    required this.total,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 1,
+      child: ListTile(
+        leading: const Icon(Icons.calendar_today),
+        title: Text(
+          date.getDateHeading(),
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: const Text('Pending total for the day'),
+        trailing: Text(
+          total.toString(),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -27,8 +27,8 @@ mixin _$BookingDetailsEvent {
     required TResult Function(
             int bookingId, int amount, PaymentMethod paymentMethod)
         updatePayment,
-    required TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)
+    required TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)
         cancelBooking,
     required TResult Function(int bookingId) deleteBooking,
   }) =>
@@ -42,8 +42,8 @@ mixin _$BookingDetailsEvent {
         updateBookingStatus,
     TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult? Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult? Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult? Function(int bookingId)? deleteBooking,
   }) =>
@@ -57,8 +57,8 @@ mixin _$BookingDetailsEvent {
         updateBookingStatus,
     TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult Function(int bookingId)? deleteBooking,
     required TResult orElse(),
@@ -218,8 +218,8 @@ class _$FetchBookingDetailsImpl implements _FetchBookingDetails {
     required TResult Function(
             int bookingId, int amount, PaymentMethod paymentMethod)
         updatePayment,
-    required TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)
+    required TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)
         cancelBooking,
     required TResult Function(int bookingId) deleteBooking,
   }) {
@@ -236,8 +236,8 @@ class _$FetchBookingDetailsImpl implements _FetchBookingDetails {
         updateBookingStatus,
     TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult? Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult? Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult? Function(int bookingId)? deleteBooking,
   }) {
@@ -254,8 +254,8 @@ class _$FetchBookingDetailsImpl implements _FetchBookingDetails {
         updateBookingStatus,
     TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult Function(int bookingId)? deleteBooking,
     required TResult orElse(),
@@ -416,8 +416,8 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
     required TResult Function(
             int bookingId, int amount, PaymentMethod paymentMethod)
         updatePayment,
-    required TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)
+    required TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)
         cancelBooking,
     required TResult Function(int bookingId) deleteBooking,
   }) {
@@ -434,8 +434,8 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
         updateBookingStatus,
     TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult? Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult? Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult? Function(int bookingId)? deleteBooking,
   }) {
@@ -452,8 +452,8 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
         updateBookingStatus,
     TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult Function(int bookingId)? deleteBooking,
     required TResult orElse(),
@@ -616,8 +616,8 @@ class _$UpdateBookingStatusImpl implements _UpdateBookingStatus {
     required TResult Function(
             int bookingId, int amount, PaymentMethod paymentMethod)
         updatePayment,
-    required TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)
+    required TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)
         cancelBooking,
     required TResult Function(int bookingId) deleteBooking,
   }) {
@@ -634,8 +634,8 @@ class _$UpdateBookingStatusImpl implements _UpdateBookingStatus {
         updateBookingStatus,
     TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult? Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult? Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult? Function(int bookingId)? deleteBooking,
   }) {
@@ -652,8 +652,8 @@ class _$UpdateBookingStatusImpl implements _UpdateBookingStatus {
         updateBookingStatus,
     TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult Function(int bookingId)? deleteBooking,
     required TResult orElse(),
@@ -825,8 +825,8 @@ class _$UpdatePaymentImpl implements _UpdatePayment {
     required TResult Function(
             int bookingId, int amount, PaymentMethod paymentMethod)
         updatePayment,
-    required TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)
+    required TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)
         cancelBooking,
     required TResult Function(int bookingId) deleteBooking,
   }) {
@@ -843,8 +843,8 @@ class _$UpdatePaymentImpl implements _UpdatePayment {
         updateBookingStatus,
     TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult? Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult? Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult? Function(int bookingId)? deleteBooking,
   }) {
@@ -861,8 +861,8 @@ class _$UpdatePaymentImpl implements _UpdatePayment {
         updateBookingStatus,
     TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult Function(int bookingId)? deleteBooking,
     required TResult orElse(),
@@ -944,11 +944,7 @@ abstract class _$$CancelBookingImplCopyWith<$Res>
       __$$CancelBookingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int bookingId,
-      int refundAmount,
-      PaymentMethod paymentMethod,
-      String refundReason});
+  $Res call({int bookingId, int refundAmount, PaymentMethod paymentMethod});
 }
 
 /// @nodoc
@@ -967,7 +963,6 @@ class __$$CancelBookingImplCopyWithImpl<$Res>
     Object? bookingId = null,
     Object? refundAmount = null,
     Object? paymentMethod = null,
-    Object? refundReason = null,
   }) {
     return _then(_$CancelBookingImpl(
       bookingId: null == bookingId
@@ -982,10 +977,6 @@ class __$$CancelBookingImplCopyWithImpl<$Res>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as PaymentMethod,
-      refundReason: null == refundReason
-          ? _value.refundReason
-          : refundReason // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -996,8 +987,7 @@ class _$CancelBookingImpl implements _CancelBooking {
   const _$CancelBookingImpl(
       {required this.bookingId,
       required this.refundAmount,
-      required this.paymentMethod,
-      required this.refundReason});
+      required this.paymentMethod});
 
   @override
   final int bookingId;
@@ -1005,12 +995,10 @@ class _$CancelBookingImpl implements _CancelBooking {
   final int refundAmount;
   @override
   final PaymentMethod paymentMethod;
-  @override
-  final String refundReason;
 
   @override
   String toString() {
-    return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, paymentMethod: $paymentMethod, refundReason: $refundReason)';
+    return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, paymentMethod: $paymentMethod)';
   }
 
   @override
@@ -1023,14 +1011,12 @@ class _$CancelBookingImpl implements _CancelBooking {
             (identical(other.refundAmount, refundAmount) ||
                 other.refundAmount == refundAmount) &&
             (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod) &&
-            (identical(other.refundReason, refundReason) ||
-                other.refundReason == refundReason));
+                other.paymentMethod == paymentMethod));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, bookingId, refundAmount, paymentMethod, refundReason);
+  int get hashCode =>
+      Object.hash(runtimeType, bookingId, refundAmount, paymentMethod);
 
   /// Create a copy of BookingDetailsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1051,12 +1037,12 @@ class _$CancelBookingImpl implements _CancelBooking {
     required TResult Function(
             int bookingId, int amount, PaymentMethod paymentMethod)
         updatePayment,
-    required TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)
+    required TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)
         cancelBooking,
     required TResult Function(int bookingId) deleteBooking,
   }) {
-    return cancelBooking(bookingId, refundAmount, paymentMethod, refundReason);
+    return cancelBooking(bookingId, refundAmount, paymentMethod);
   }
 
   @override
@@ -1069,13 +1055,12 @@ class _$CancelBookingImpl implements _CancelBooking {
         updateBookingStatus,
     TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult? Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult? Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult? Function(int bookingId)? deleteBooking,
   }) {
-    return cancelBooking?.call(
-        bookingId, refundAmount, paymentMethod, refundReason);
+    return cancelBooking?.call(bookingId, refundAmount, paymentMethod);
   }
 
   @override
@@ -1088,15 +1073,14 @@ class _$CancelBookingImpl implements _CancelBooking {
         updateBookingStatus,
     TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult Function(int bookingId)? deleteBooking,
     required TResult orElse(),
   }) {
     if (cancelBooking != null) {
-      return cancelBooking(
-          bookingId, refundAmount, paymentMethod, refundReason);
+      return cancelBooking(bookingId, refundAmount, paymentMethod);
     }
     return orElse();
   }
@@ -1149,14 +1133,12 @@ abstract class _CancelBooking implements BookingDetailsEvent {
   const factory _CancelBooking(
       {required final int bookingId,
       required final int refundAmount,
-      required final PaymentMethod paymentMethod,
-      required final String refundReason}) = _$CancelBookingImpl;
+      required final PaymentMethod paymentMethod}) = _$CancelBookingImpl;
 
   @override
   int get bookingId;
   int get refundAmount;
   PaymentMethod get paymentMethod;
-  String get refundReason;
 
   /// Create a copy of BookingDetailsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1245,8 +1227,8 @@ class _$DeleteBookingImpl implements _DeleteBooking {
     required TResult Function(
             int bookingId, int amount, PaymentMethod paymentMethod)
         updatePayment,
-    required TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)
+    required TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)
         cancelBooking,
     required TResult Function(int bookingId) deleteBooking,
   }) {
@@ -1263,8 +1245,8 @@ class _$DeleteBookingImpl implements _DeleteBooking {
         updateBookingStatus,
     TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult? Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult? Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult? Function(int bookingId)? deleteBooking,
   }) {
@@ -1281,8 +1263,8 @@ class _$DeleteBookingImpl implements _DeleteBooking {
         updateBookingStatus,
     TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
         updatePayment,
-    TResult Function(int bookingId, int refundAmount,
-            PaymentMethod paymentMethod, String refundReason)?
+    TResult Function(
+            int bookingId, int refundAmount, PaymentMethod paymentMethod)?
         cancelBooking,
     TResult Function(int bookingId)? deleteBooking,
     required TResult orElse(),

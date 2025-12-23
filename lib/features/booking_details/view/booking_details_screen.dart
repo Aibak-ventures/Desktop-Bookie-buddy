@@ -441,27 +441,6 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
         const SizedBox(height: 12),
 
-        // Cancel Booking button (only if not completed)
-        if (!isBookingCompleted) ...[
-          ElevatedButton.icon(
-            onPressed: () => _handleCancelBooking(context, booking),
-            icon: const Icon(Icons.cancel, color: Colors.white),
-            label: const Text(
-              'Cancel Booking',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange.shade600,
-              minimumSize: const Size(double.infinity, 48),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              elevation: 2,
-            ),
-          ),
-          const SizedBox(height: 12),
-        ],
-
         // ✅ Keep Delete Booking active (if you want to always allow deleting)
         ElevatedButton.icon(
           onPressed: () => _handleDeleteBooking(context, booking),
@@ -528,32 +507,53 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     }
   }
 
-  void _handleCancelBooking(BuildContext context, dynamic booking) {
+  void _handleCancelBooking(BuildContext context, dynamic booking) async {
     // Calculate refundable amount (total paid - already refunded if any)
     final maxRefundAmount = booking.paidAmount ?? 0;
 
+    // If no refund amount, delete the booking instead of trying to update status
     if (maxRefundAmount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No refundable amount available for this booking.'),
-          backgroundColor: Colors.orange,
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Cancel Booking'),
+          content: const Text(
+            'Are you sure you want to cancel this booking? The booking will be deleted as no payment was made.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('No'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Yes, Cancel'),
+            ),
+          ],
         ),
       );
+
+      if (confirm == true) {
+        context.read<BookingDetailsBloc>().add(
+              BookingDetailsEvent.deleteBooking(booking.id),
+            );
+      }
       return;
     }
 
+    // Show refund dialog if there's a refundable amount
     showDialog(
       context: context,
       builder: (context) => CancelBookingDialog(
         maxRefundAmount: maxRefundAmount,
         onCancel: () => Navigator.of(context).pop(),
-        onConfirm: (refundAmount, paymentMethod, reason) {
+        onConfirm: (refundAmount, paymentMethod) {
           context.read<BookingDetailsBloc>().add(
                 BookingDetailsEvent.cancelBooking(
                   bookingId: booking.id,
                   refundAmount: refundAmount,
                   paymentMethod: paymentMethod,
-                  refundReason: reason,
                 ),
               );
         },

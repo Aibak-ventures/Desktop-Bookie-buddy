@@ -425,47 +425,47 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 5),
 
         // Reports & History expansion tile
-        CustomProfileExpansionTile(
-          icon: Icons.assessment_outlined,
-          title: 'Reports & History',
-          cards: [
-            // Shop Performance - Owner only
-            if (shopRole.isOwner)
-              CustomProfileExpandedCard(
-                icon: const Icon(Icons.show_chart),
-                text: 'Shop\nPerformance',
-                color: const Color(0xFF4CAF50),
-                onTap: () => context.pushNamed(AppRoutes.allShopSummary.name),
-              ),
+        // CustomProfileExpansionTile(
+        //   icon: Icons.assessment_outlined,
+        //   title: 'Reports & History',
+        //   cards: [
+        //     // Shop Performance - Owner only
+        //     if (shopRole.isOwner)
+        //       CustomProfileExpandedCard(
+        //         icon: const Icon(Icons.show_chart),
+        //         text: 'Shop\nPerformance',
+        //         color: const Color(0xFF4CAF50),
+        //         onTap: () => context.pushNamed(AppRoutes.allShopSummary.name),
+        //       ),
 
-            // Shop Activities - Non-Staff only
-            if (!shopRole.isStaff)
-              CustomProfileExpandedCard(
-                icon: const Icon(Icons.history_rounded),
-                text: 'Shop\nActivities',
-                color: const Color(0xFF607D8B),
-                onTap: () => context.pushNamed(AppRoutes.shopActivities.name),
-              ),
+        //     // Shop Activities - Non-Staff only
+        //     if (!shopRole.isStaff)
+        //       CustomProfileExpandedCard(
+        //         icon: const Icon(Icons.history_rounded),
+        //         text: 'Shop\nActivities',
+        //         color: const Color(0xFF607D8B),
+        //         onTap: () => context.pushNamed(AppRoutes.shopActivities.name),
+        //       ),
 
-            // Report History (placeholder for now)
-            CustomProfileExpandedCard(
-              icon: const Icon(Icons.history_outlined),
-              text: 'Report\nHistory',
-              color: const Color(0xFF9C27B0),
-              onTap: () =>
-                  NavigatorX(context).push(const ReportHistoryScreen()),
-            ),
-          ],
-        ),
+        //     // Report History (placeholder for now)
+        //     // CustomProfileExpandedCard(
+        //     //   icon: const Icon(Icons.history_outlined),
+        //     //   text: 'Report\nHistory',
+        //     //   color: const Color(0xFF9C27B0),
+        //     //   onTap: () =>
+        //     //       NavigatorX(context).push(const ReportHistoryScreen()),
+        //     // ),
+        //   ],
+        // ),
 
         const SizedBox(height: 5),
 
         // Report Problem - Standalone tile
-        CustomProfileTile(
-          icon: Icons.report_problem_outlined,
-          title: 'Report a Problem',
-          onTap: () => context.pushNamed(AppRoutes.reportProblem.name),
-        ),
+        // CustomProfileTile(
+        //   icon: Icons.report_problem_outlined,
+        //   title: 'Report a Problem',
+        //   onTap: () => context.pushNamed(AppRoutes.reportProblem.name),
+        // ),
 
         const SizedBox(height: 5),
 

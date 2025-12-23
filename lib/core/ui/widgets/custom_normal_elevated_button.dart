@@ -19,8 +19,8 @@ class CustomNormalElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          foregroundColor: Colors.white,
+          // backgroundColor: color,
+          // foregroundColor: Colors.white,
         ),
         onPressed: isLoading ? () {} : onPressed,
         child: isLoading
