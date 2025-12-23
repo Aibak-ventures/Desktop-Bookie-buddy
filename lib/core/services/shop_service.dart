@@ -62,4 +62,27 @@ class ShopService {
       rethrow;
     }
   }
+
+  Future<CustomResponseModel> getAllShopSummary({
+    required int year,
+    required int month,
+    int? shopId,
+  }) async {
+    try {
+      final response = await DioClient.dio.get(
+        ApiPaths.shop.allShopSummary(
+          year: year,
+          month: month,
+          shopId: shopId,
+        ),
+      );
+      log(
+        'Get All Shop Summary Response: ${response.realUri.toString()} ,${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Get All Shop Summary Error: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
 }

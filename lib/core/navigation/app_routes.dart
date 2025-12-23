@@ -111,7 +111,11 @@ enum AppRoutes {
   // ----------------------
   aboutUs,
   contactAndSupport,
-  successAnimation;
+  successAnimation,
+  shopActivities,
+  allShopSummary,
+  shopSummary,
+  reportProblem;
 
   // ----------------------
   // Base paths
@@ -195,6 +199,10 @@ enum AppRoutes {
         aboutUs => '/about-us',
         contactAndSupport => '/contact-and-support',
         successAnimation => '/success',
+        shopActivities => '/shop-activities',
+        allShopSummary => '/all-shop-summary',
+        shopSummary => '/shop-summary/:id',
+        reportProblem => '/report-problem',
       };
 
   // ----------------------

@@ -78,6 +78,7 @@ dependencies:
   msix: ^3.16.0
   open_file: ^3.3.2
   window_manager: ^0.4.3
+  feedback: ^3.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

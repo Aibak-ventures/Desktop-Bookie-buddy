@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/my_app.dart';
+import 'package:feedback/feedback.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,7 +56,23 @@ void main() async {
   TokenManager.startProactiveRefresh();
   FilePicker.platform;
   
-  runApp(const _MyEntryPoint());
+  runApp(
+    BetterFeedback(
+      theme: FeedbackThemeData(
+        background: Colors.grey.shade900,
+        feedbackSheetColor: Colors.grey.shade800,
+        drawColors: [
+          Colors.red,
+          Colors.orange,
+          Colors.yellow,
+          Colors.green,
+          Colors.blue,
+          Colors.purple,
+        ],
+      ),
+      child: const _MyEntryPoint(),
+    ),
+  );
 }
 
 class _MyEntryPoint extends StatelessWidget {

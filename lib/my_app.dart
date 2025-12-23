@@ -24,6 +24,8 @@ import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.d
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
+import 'package:bookie_buddy_web/features/profile/repository/bug_report_repository.dart';
+import 'package:bookie_buddy_web/features/profile/view_model/cubit_bug_report/bug_report_cubit.dart';
 import 'package:bookie_buddy_web/features/save_expense/view_model/cubit_save_expense/save_expense_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
@@ -93,6 +95,8 @@ class MyApp extends StatelessWidget {
             create: (context) => ClientSaveBloc(repository: getIt.get())),
         BlocProvider(
             create: (context) => ProductSearchCubit(repository: getIt.get())),
+        BlocProvider(
+            create: (context) => BugReportCubit(BugReportRepository())),
       ],
       child: MaterialApp(
         title: 'BookieBuddy',

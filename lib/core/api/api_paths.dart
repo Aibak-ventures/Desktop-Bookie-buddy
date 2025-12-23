@@ -61,6 +61,18 @@ class _ShopNamespace {
   String get privacySettings => ShopApiPaths.privacySettings;
   String get updateSettings => ShopApiPaths.updateSettings;
 
+  // Shop Summary
+  String allShopSummary({
+    required int year,
+    required int month,
+    int? shopId,
+  }) =>
+      ShopApiPaths.allShopSummary(
+        year: year,
+        month: month,
+        shopId: shopId,
+      );
+
   // Activity Logs
   String get activityLogs => ShopApiPaths.activityLogs;
   String get recentActivities => ShopApiPaths.recentActivities;

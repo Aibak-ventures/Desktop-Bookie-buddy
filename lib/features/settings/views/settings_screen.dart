@@ -84,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
               ),
               5.height,
-              // if (shopRole.isOwner)
+//               if (shopRole.isOwner)
 //                 CustomProfileTile(
 //                   icon: Icons.lock_person_outlined,
 //                   title: 'Change Secret Password',

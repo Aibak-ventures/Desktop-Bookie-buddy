@@ -11,4 +11,10 @@ extension ColorX on Color {
   /// and white.
   Color lighten([double amount = 0.7]) =>
       Color.lerp(this, Colors.white, amount)!;
+
+  /// Changes the opacity of the color.
+  ///
+  /// The [opacity] should be a value between 0 and 1, where
+  /// `0.0` = fully transparent, `1.0` = fully opaque
+  Color changeOpacity(double opacity) => withOpacity(opacity);
 }

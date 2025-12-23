@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/enums/enums.dart'
 import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
@@ -17,14 +18,10 @@ import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.da
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
-import 'package:bookie_buddy_web/features/change_password/view/change_secret_password_screen.dart';
-import 'package:bookie_buddy_web/features/change_password/view/reset_password_screen.dart';
-import 'package:bookie_buddy_web/features/change_password/view_model/bloc_reset_password/reset_password_bloc.dart';
 import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
 import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
 import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
 import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
-import 'package:bookie_buddy_web/features/change_password/view_model/bloc_secret_password/secret_password_bloc.dart';
 import 'package:bookie_buddy_web/features/client/view/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
@@ -45,13 +42,12 @@ import 'package:bookie_buddy_web/features/profile/view/help_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/report_history_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/report_problem_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/shop_performance_screen.dart';
-
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/profile_shop_details_card.dart';
-import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expanded_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -428,40 +424,48 @@ class ProfileScreen extends StatelessWidget {
 
         const SizedBox(height: 5),
 
-        // Report & History
-        CustomProfileTile(
-          icon: Icons.history_outlined,
-          title: 'Report & History',
-          onTap: () => NavigatorX(context).push(const ReportHistoryScreen()),
+        // Reports & History expansion tile
+        CustomProfileExpansionTile(
+          icon: Icons.assessment_outlined,
+          title: 'Reports & History',
+          cards: [
+            // Shop Performance - Owner only
+            if (shopRole.isOwner)
+              CustomProfileExpandedCard(
+                icon: const Icon(Icons.show_chart),
+                text: 'Shop\nPerformance',
+                color: const Color(0xFF4CAF50),
+                onTap: () => context.pushNamed(AppRoutes.allShopSummary.name),
+              ),
+
+            // Shop Activities - Non-Staff only
+            if (!shopRole.isStaff)
+              CustomProfileExpandedCard(
+                icon: const Icon(Icons.history_rounded),
+                text: 'Shop\nActivities',
+                color: const Color(0xFF607D8B),
+                onTap: () => context.pushNamed(AppRoutes.shopActivities.name),
+              ),
+
+            // Report History (placeholder for now)
+            CustomProfileExpandedCard(
+              icon: const Icon(Icons.history_outlined),
+              text: 'Report\nHistory',
+              color: const Color(0xFF9C27B0),
+              onTap: () =>
+                  NavigatorX(context).push(const ReportHistoryScreen()),
+            ),
+          ],
         ),
 
         const SizedBox(height: 5),
 
-        // Shop Performance (Premium)
-        if (!shopRole.isStaff)
-          CustomProfileTile(
-            icon: Icons.analytics_outlined,
-            title: 'Shop Performance',
-            trailing: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Text(
-                'PREMIUM',
-                style: TextStyle(
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            onTap: () =>
-                NavigatorX(context).push(const ShopPerformanceScreen()),
-          ),
+        // Report Problem - Standalone tile
+        CustomProfileTile(
+          icon: Icons.report_problem_outlined,
+          title: 'Report a Problem',
+          onTap: () => context.pushNamed(AppRoutes.reportProblem.name),
+        ),
 
         const SizedBox(height: 5),
 
@@ -470,13 +474,6 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.more_horiz_outlined,
           title: 'More',
           cards: [
-            CustomProfileExpandedCard(
-              icon: const Icon(Icons.report_problem_outlined),
-              text: 'Report\nProblem',
-              color: Colors.orange,
-              onTap: () =>
-                  NavigatorX(context).push(const ReportProblemScreen()),
-            ),
             CustomProfileExpandedCard(
               icon: const Icon(Icons.help_outline),
               text: 'Help &\nFAQ',

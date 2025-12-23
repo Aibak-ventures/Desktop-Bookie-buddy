@@ -29,6 +29,7 @@ import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.da
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
+import 'package:bookie_buddy_web/features/all_shop_summary/view/all_shop_summary_shop_details_screen.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/view/onboarding_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
@@ -55,9 +56,15 @@ import 'package:bookie_buddy_web/features/product/view_model/bloc_product_info/p
 import 'package:bookie_buddy_web/features/product_all_booking/view/product_all_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_completed/product_booking_completed_bloc.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_upcoming/product_booking_upcoming_bloc.dart';
+import 'package:bookie_buddy_web/features/all_shop_summary/view/all_shop_summary_screen.dart';
+import 'package:bookie_buddy_web/features/all_shop_summary/view_models/cubit_all_shop_summary/all_shop_summary_cubit.dart';
+import 'package:bookie_buddy_web/features/profile/repository/shop_activity_repository.dart';
 import 'package:bookie_buddy_web/features/profile/view/about_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/profile_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/report_problem_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view/shop_activity_log_screen.dart';
+import 'package:bookie_buddy_web/features/profile/view_model/cubit_shop_activity_log/shop_activity_log_cubit.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
 import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
@@ -66,6 +73,7 @@ import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.d
 import 'package:bookie_buddy_web/features/search_old/view/search_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
+import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
 import 'package:bookie_buddy_web/features/splash/view/splash_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_select_and_transfer_product_screen.dart';
@@ -557,12 +565,12 @@ class Navigations {
       //   ),
       // ),
 
-      // // Settings screen
-      // GoRoute(
-      //   path: AppRoutes.settings.path,
-      //   name: AppRoutes.settings.name,
-      //   builder: (context, state) => const SettingsScreen(),
-      // ),
+      // Settings screen
+      GoRoute(
+        path: AppRoutes.settings.path,
+        name: AppRoutes.settings.name,
+        builder: (context, state) => const SettingsScreen(),
+      ),
 
       // More options screen
       // GoRoute(
@@ -583,6 +591,38 @@ class Navigations {
         path: AppRoutes.aboutUs.path,
         name: AppRoutes.aboutUs.name,
         builder: (context, state) => const AboutScreen(),
+      ),
+
+      // Report Problem screen
+      GoRoute(
+        path: AppRoutes.reportProblem.path,
+        name: AppRoutes.reportProblem.name,
+        builder: (context, state) => const ReportProblemScreen(),
+      ),
+
+      // Shop Activities screen
+      GoRoute(
+        path: AppRoutes.shopActivities.path,
+        name: AppRoutes.shopActivities.name,
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              ShopActivityLogCubit(ShopActivityRepository())..loadShopActivities(),
+          child: const ShopActivityLogScreen(),
+        ),
+      ),
+
+      // All Shop Summary screen
+      GoRoute(
+        path: AppRoutes.allShopSummary.path,
+        name: AppRoutes.allShopSummary.name,
+        builder: (context, state) => BlocProvider(
+          create: (context) => AllShopSummaryCubit(getIt.get())
+            ..fetchAllShopSummary(
+              year: DateTime.now().year,
+              month: DateTime.now().month,
+            ),
+          child:  AllShopSummaryScreen(),
+        ),
       ),
 
       // Manage secret password screen
