@@ -163,6 +163,8 @@ class _ClientListViewState extends State<_ClientListView> {
          listener: (context, state) {
   state.maybeMap(
     success: (value) {
+      // Close the dialog first
+      Navigator.of(context, rootNavigator: true).pop();
       context.showSnackBar(
         value.message,
         isError: false,

@@ -20,6 +20,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       category: json['category'] as String?,
       purchaseAmount: (json['purchase_price'] as num?)?.toInt(),
       price: (json['price'] as num?)?.toInt(),
+      salePrice: _salePriceFromJson(json['sale_price']),
       variants: (json['variants'] as List<dynamic>)
           .map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -38,6 +39,7 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'category': instance.category,
       'purchase_price': instance.purchaseAmount,
       'price': instance.price,
+      'sale_price': instance.salePrice,
       'variants': instance.variants,
     };
 

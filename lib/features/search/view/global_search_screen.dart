@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
@@ -1115,21 +1116,20 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
     GlobalSearchType type,
   ) {
     if (type.isSale) {
-      context.read<SaleDetailsBloc>().add(
-            SaleDetailsEvent.getSaleDetails(saleId: id),
-          );
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (_) => SaleDetailsBloc(repository: getIt.get())
+              ..add(SaleDetailsEvent.getSaleDetails(saleId: id)),
+            child: SaleDetailsScreen(saleId: id),
+          ),
+        ),
+      );
     }
     if (type.isBooking) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => BookingDetailsScreen(bookingId: id),
-        ),
-      );
-    }
-    if (type.isSale) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SaleDetailsScreen(saleId: id),
         ),
       );
     }

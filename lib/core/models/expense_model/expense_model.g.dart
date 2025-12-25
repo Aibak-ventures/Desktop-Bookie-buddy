@@ -18,6 +18,7 @@ _$ExpenseModelImpl _$$ExpenseModelImplFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String?,
       description: json['description'] as String?,
       isDeleted: json['is_deleted'] as bool? ?? false,
+      paymentMethod: json['payment_method'] as String?,
     );
 
 Map<String, dynamic> _$$ExpenseModelImplToJson(_$ExpenseModelImpl instance) =>
@@ -31,4 +32,5 @@ Map<String, dynamic> _$$ExpenseModelImplToJson(_$ExpenseModelImpl instance) =>
       'type': instance.type,
       'description': instance.description,
       'is_deleted': instance.isDeleted,
+      'payment_method': instance.paymentMethod,
     };

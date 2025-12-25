@@ -61,23 +61,35 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   final productScrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-    productScrollController.addListener(_onScrollProductNames);
-    if (widget.expense != null) {
-      dateController.text = widget.expense!.date.formatToUiDate();
-      expenseController.text = widget.expense!.expense.toString();
-      descriptionController.text = widget.expense!.description ?? '';
-      if (_categories.contains(widget.expense!.type)) {
-        _selectedCategory = widget.expense!.type;
-      } else {
-        _selectedCategory = "Other";
-        customCategoryController.text = widget.expense!.type ?? '';
-        _showCustomCategoryField = true;
-      }
+@override
+void initState() {
+  super.initState();
+  productScrollController.addListener(_onScrollProductNames);
+
+  if (widget.expense != null) {
+    final e = widget.expense!;
+
+    dateController.text = e.date.formatToUiDate();
+    expenseController.text = e.expense.toString();
+    descriptionController.text = e.description ?? '';
+
+    // CATEGORY
+    if (_categories.contains(e.type)) {
+      _selectedCategory = e.type;
+    } else {
+      _selectedCategory = "Other";
+      customCategoryController.text = e.type ?? '';
+      _showCustomCategoryField = true;
+    }
+
+    // 🔥 PAYMENT METHOD FIX
+    if (e.paymentMethod != null) {
+      _selectedPaymentMethod =
+          e.paymentMethod == 'upi' ? PaymentMethod.gPay : PaymentMethod.cash;
     }
   }
+}
+
 
   void _onScrollProductNames() {
     if (productScrollController.hasClients &&
@@ -124,7 +136,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               oldExpense.description != descriptionController.text.trim()
                   ? descriptionController.text.trim()
                   : null,
-          paymentMethod: _selectedPaymentMethod.value,
+          paymentMethod: oldExpense.type != (_selectedPaymentMethod.isUpi 
+              ? _selectedPaymentMethod.upiValue 
+              : _selectedPaymentMethod.value)
+              ? (_selectedPaymentMethod.isUpi 
+                  ? _selectedPaymentMethod.upiValue 
+                  : _selectedPaymentMethod.value)
+              : null,
         );
         // expense = {
         //   if (oldExpense.date.formatToUiDate() != dateController.text)
@@ -144,7 +162,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           amount: expenseController.text.trim().toInt(),
           type: category,
           description: descriptionController.text,
-          paymentMethod: _selectedPaymentMethod.value,
+          paymentMethod: _selectedPaymentMethod.isUpi 
+              ? _selectedPaymentMethod.upiValue 
+              : _selectedPaymentMethod.value,
         );
         // expense = {
         //   "product_variant": variantSelectedNotifier.value,

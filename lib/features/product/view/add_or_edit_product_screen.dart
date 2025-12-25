@@ -42,6 +42,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
   final _categoryController = TextEditingController();
   final _purchaseAmountController = TextEditingController();
   final _priceController = TextEditingController();
+  final _rentalPriceController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageNotifier = ValueNotifier<File?>(null);
   final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
@@ -66,6 +67,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
       _categoryController.text = product.category ?? '';
       _colorController.text = product.color ?? '';
       _priceController.text = product.price?.toString() ?? '';
+      _rentalPriceController.text = product.salePrice?.toString() ?? '';
       _purchaseAmountController.text = product.purchaseAmount?.toString() ?? '';
       _descriptionController.text = product.description ?? '';
     }
@@ -172,6 +174,28 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
                 child: CustomTextField(
                   label: 'Selling Price (Optional)',
                   controller: _priceController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) => AppInputValidators.isEmpty(value)
+                      ? null
+                      : AppInputValidators.amount(value, allowZero: true),
+                ),
+              ),
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label: 'Selling Price (Optional)',
+                  controller: _priceController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) => AppInputValidators.isEmpty(value)
+                      ? null
+                      : AppInputValidators.amount(value, allowZero: true),
+                ),
+              ),
+              SizedBox(
+                width: 420,
+                child: CustomTextField(
+                  label: 'Rental Price (Optional)',
+                  controller: _rentalPriceController,
                   keyboardType: TextInputType.number,
                   validator: (value) => AppInputValidators.isEmpty(value)
                       ? null
@@ -374,6 +398,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           color: _colorController.text.trim(),
           purchasePrice: _purchaseAmountController.text.trim().toIntOrNull(),
           price: _priceController.text.trim().toIntOrNull(),
+          salePrice: _rentalPriceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
           variants: variantList.isEmpty ? null : variantList,
@@ -388,6 +413,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           color: _colorController.text.trim(),
           purchasePrice: _purchaseAmountController.text.trim().toIntOrNull(),
           price: _priceController.text.trim().toIntOrNull(),
+          salePrice: _rentalPriceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
           variants: variantList.isEmpty ? null : variantList,
@@ -447,6 +473,9 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           product.price
               .toString()
               .hasNumberChangedComparedTo(_priceController.text) ||
+          product.salePrice
+              .toString()
+              .hasNumberChangedComparedTo(_rentalPriceController.text) ||
           product.purchaseAmount
               .toString()
               .hasNumberChangedComparedTo(_purchaseAmountController.text) ||
@@ -506,6 +535,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
     _categoryController.dispose();
     _purchaseAmountController.dispose();
     _priceController.dispose();
+    _rentalPriceController.dispose();
     _descriptionController.dispose();
     variantsNotifier.dispose();
     _imageNotifier.dispose();

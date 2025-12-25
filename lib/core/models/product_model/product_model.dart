@@ -5,6 +5,18 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'product_model.freezed.dart';
 part 'product_model.g.dart';
 
+// Custom converter to handle sale_price as String or num from API
+int? _salePriceFromJson(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is double) return value.toInt();
+  if (value is String) {
+    final parsed = double.tryParse(value);
+    return parsed?.toInt();
+  }
+  return null;
+}
+
 @freezed
 class ProductModel with _$ProductModel {
   const factory ProductModel({
@@ -20,6 +32,7 @@ class ProductModel with _$ProductModel {
     String? category,
     @JsonKey(name: 'purchase_price') int? purchaseAmount,
     @JsonKey(name: 'price') int? price,
+    @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) int? salePrice,
     @JsonKey(name: 'variants') required List<ProductVariantModel> variants,
   }) = _ProductModel;
 

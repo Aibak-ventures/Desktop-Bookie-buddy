@@ -35,6 +35,8 @@ mixin _$ProductModel {
   int? get purchaseAmount => throw _privateConstructorUsedError;
   @JsonKey(name: 'price')
   int? get price => throw _privateConstructorUsedError;
+  @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+  int? get salePrice => throw _privateConstructorUsedError;
   @JsonKey(name: 'variants')
   List<ProductVariantModel> get variants => throw _privateConstructorUsedError;
 
@@ -67,6 +69,7 @@ abstract class $ProductModelCopyWith<$Res> {
       String? category,
       @JsonKey(name: 'purchase_price') int? purchaseAmount,
       @JsonKey(name: 'price') int? price,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) int? salePrice,
       @JsonKey(name: 'variants') List<ProductVariantModel> variants});
 }
 
@@ -96,6 +99,7 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? category = freezed,
     Object? purchaseAmount = freezed,
     Object? price = freezed,
+    Object? salePrice = freezed,
     Object? variants = null,
   }) {
     return _then(_value.copyWith(
@@ -143,6 +147,10 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      salePrice: freezed == salePrice
+          ? _value.salePrice
+          : salePrice // ignore: cast_nullable_to_non_nullable
+              as int?,
       variants: null == variants
           ? _value.variants
           : variants // ignore: cast_nullable_to_non_nullable
@@ -172,6 +180,7 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       String? category,
       @JsonKey(name: 'purchase_price') int? purchaseAmount,
       @JsonKey(name: 'price') int? price,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) int? salePrice,
       @JsonKey(name: 'variants') List<ProductVariantModel> variants});
 }
 
@@ -199,6 +208,7 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? category = freezed,
     Object? purchaseAmount = freezed,
     Object? price = freezed,
+    Object? salePrice = freezed,
     Object? variants = null,
   }) {
     return _then(_$ProductModelImpl(
@@ -246,6 +256,10 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      salePrice: freezed == salePrice
+          ? _value.salePrice
+          : salePrice // ignore: cast_nullable_to_non_nullable
+              as int?,
       variants: null == variants
           ? _value._variants
           : variants // ignore: cast_nullable_to_non_nullable
@@ -270,6 +284,7 @@ class _$ProductModelImpl implements _ProductModel {
       this.category,
       @JsonKey(name: 'purchase_price') this.purchaseAmount,
       @JsonKey(name: 'price') this.price,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) this.salePrice,
       @JsonKey(name: 'variants')
       required final List<ProductVariantModel> variants})
       : _variants = variants;
@@ -303,6 +318,9 @@ class _$ProductModelImpl implements _ProductModel {
   @override
   @JsonKey(name: 'price')
   final int? price;
+  @override
+  @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+  final int? salePrice;
   final List<ProductVariantModel> _variants;
   @override
   @JsonKey(name: 'variants')
@@ -314,7 +332,7 @@ class _$ProductModelImpl implements _ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, variants: $variants)';
+    return 'ProductModel(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, variants: $variants)';
   }
 
   @override
@@ -338,6 +356,8 @@ class _$ProductModelImpl implements _ProductModel {
             (identical(other.purchaseAmount, purchaseAmount) ||
                 other.purchaseAmount == purchaseAmount) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.salePrice, salePrice) ||
+                other.salePrice == salePrice) &&
             const DeepCollectionEquality().equals(other._variants, _variants));
   }
 
@@ -356,6 +376,7 @@ class _$ProductModelImpl implements _ProductModel {
       category,
       purchaseAmount,
       price,
+      salePrice,
       const DeepCollectionEquality().hash(_variants));
 
   /// Create a copy of ProductModel
@@ -388,6 +409,8 @@ abstract class _ProductModel implements ProductModel {
       final String? category,
       @JsonKey(name: 'purchase_price') final int? purchaseAmount,
       @JsonKey(name: 'price') final int? price,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+      final int? salePrice,
       @JsonKey(name: 'variants')
       required final List<ProductVariantModel> variants}) = _$ProductModelImpl;
 
@@ -420,6 +443,9 @@ abstract class _ProductModel implements ProductModel {
   @override
   @JsonKey(name: 'price')
   int? get price;
+  @override
+  @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+  int? get salePrice;
   @override
   @JsonKey(name: 'variants')
   List<ProductVariantModel> get variants;

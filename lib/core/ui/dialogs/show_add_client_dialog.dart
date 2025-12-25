@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Future<ClientModel?> showAddClientDialog({
   required BuildContext context,
@@ -42,16 +43,24 @@ Future<ClientModel?> showAddClientDialog({
               CustomTextField(
                 validator: (value) => AppInputValidators.isEmpty(value)
                     ? 'Please enter a phone number'
-                    : null,
+                    : AppInputValidators.phoneNumber(value, isRequired: true),
                 controller: phone1Controller,
                 label: 'Phone Number 1',
+                keyboardType: TextInputType.phone,
+                textInputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
+                ],
               ),
               CustomTextField(
                 validator: (value) => AppInputValidators.isEmpty(value)
                     ? null
-                    : null,
+                    : AppInputValidators.phoneNumber(value, isRequired: false),
                 controller: phone2Controller,
                 label: 'Phone Number 2',
+                keyboardType: TextInputType.phone,
+                textInputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
+                ],
               )
             ],
           ),

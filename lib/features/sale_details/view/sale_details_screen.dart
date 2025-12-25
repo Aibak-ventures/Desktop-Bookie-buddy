@@ -222,7 +222,7 @@ class SaleDetailsScreen extends StatelessWidget {
                 children: [
                   SaleDetailsDetailsColumn(
                     label: 'Phone number',
-                    value: saleDetails.clientPhone??'N/A',
+                    value: saleDetails.clientPhone?.toString() ?? 'N/A',
                   ),
 
                   // if (saleDetails.address.isNotNullOrEmpty)

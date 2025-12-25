@@ -51,7 +51,7 @@ class AddBookingSelectStatusWidget extends StatelessWidget {
               items: DeliveryStatus.values
                   .where(
                     // Don't show returned status when creating a booking
-                    (e) => e != DeliveryStatus.returned,
+                    (e) => e != DeliveryStatus.returned&& e != DeliveryStatus.cancelled,
                   )
                   .map((e) => e.name)
                   .toList(),

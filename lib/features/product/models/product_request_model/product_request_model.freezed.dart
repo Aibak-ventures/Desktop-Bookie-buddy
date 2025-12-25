@@ -34,6 +34,8 @@ mixin _$ProductRequestModel {
   int? get purchasePrice => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   int? get price => throw _privateConstructorUsedError;
+  @JsonKey(name: 'sale_price', includeIfNull: false)
+  int? get salePrice => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   String? get category => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
@@ -68,6 +70,7 @@ abstract class $ProductRequestModelCopyWith<$Res> {
       @JsonKey(includeIfNull: false) String? color,
       @JsonKey(name: 'purchase_price', includeIfNull: false) int? purchasePrice,
       @JsonKey(includeIfNull: false) int? price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
       @JsonKey(includeIfNull: false) String? category,
       @JsonKey(includeIfNull: false) String? model,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
@@ -97,6 +100,7 @@ class _$ProductRequestModelCopyWithImpl<$Res, $Val extends ProductRequestModel>
     Object? color = freezed,
     Object? purchasePrice = freezed,
     Object? price = freezed,
+    Object? salePrice = freezed,
     Object? category = freezed,
     Object? model = freezed,
     Object? variants = freezed,
@@ -130,6 +134,10 @@ class _$ProductRequestModelCopyWithImpl<$Res, $Val extends ProductRequestModel>
       price: freezed == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
+              as int?,
+      salePrice: freezed == salePrice
+          ? _value.salePrice
+          : salePrice // ignore: cast_nullable_to_non_nullable
               as int?,
       category: freezed == category
           ? _value.category
@@ -167,6 +175,7 @@ abstract class _$$ProductRequestModelImplCopyWith<$Res>
       @JsonKey(includeIfNull: false) String? color,
       @JsonKey(name: 'purchase_price', includeIfNull: false) int? purchasePrice,
       @JsonKey(includeIfNull: false) int? price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
       @JsonKey(includeIfNull: false) String? category,
       @JsonKey(includeIfNull: false) String? model,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
@@ -194,6 +203,7 @@ class __$$ProductRequestModelImplCopyWithImpl<$Res>
     Object? color = freezed,
     Object? purchasePrice = freezed,
     Object? price = freezed,
+    Object? salePrice = freezed,
     Object? category = freezed,
     Object? model = freezed,
     Object? variants = freezed,
@@ -228,6 +238,10 @@ class __$$ProductRequestModelImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      salePrice: freezed == salePrice
+          ? _value.salePrice
+          : salePrice // ignore: cast_nullable_to_non_nullable
+              as int?,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -259,6 +273,7 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
       @JsonKey(includeIfNull: false) this.color,
       @JsonKey(name: 'purchase_price', includeIfNull: false) this.purchasePrice,
       @JsonKey(includeIfNull: false) this.price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) this.salePrice,
       @JsonKey(includeIfNull: false) this.category,
       @JsonKey(includeIfNull: false) this.model,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
@@ -291,6 +306,9 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
   @JsonKey(includeIfNull: false)
   final int? price;
   @override
+  @JsonKey(name: 'sale_price', includeIfNull: false)
+  final int? salePrice;
+  @override
   @JsonKey(includeIfNull: false)
   final String? category;
   @override
@@ -314,7 +332,7 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
 
   @override
   String toString() {
-    return 'ProductRequestModel(productId: $productId, serviceId: $serviceId, name: $name, description: $description, color: $color, purchasePrice: $purchasePrice, price: $price, category: $category, model: $model, variants: $variants, image: $image)';
+    return 'ProductRequestModel(productId: $productId, serviceId: $serviceId, name: $name, description: $description, color: $color, purchasePrice: $purchasePrice, price: $price, salePrice: $salePrice, category: $category, model: $model, variants: $variants, image: $image)';
   }
 
   @override
@@ -333,6 +351,8 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
             (identical(other.purchasePrice, purchasePrice) ||
                 other.purchasePrice == purchasePrice) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.salePrice, salePrice) ||
+                other.salePrice == salePrice) &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.model, model) || other.model == model) &&
@@ -351,6 +371,7 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
       color,
       purchasePrice,
       price,
+      salePrice,
       category,
       model,
       const DeepCollectionEquality().hash(_variants),
@@ -384,6 +405,7 @@ abstract class _ProductRequestModel implements ProductRequestModel {
       @JsonKey(name: 'purchase_price', includeIfNull: false)
       final int? purchasePrice,
       @JsonKey(includeIfNull: false) final int? price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) final int? salePrice,
       @JsonKey(includeIfNull: false) final String? category,
       @JsonKey(includeIfNull: false) final String? model,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
@@ -415,6 +437,9 @@ abstract class _ProductRequestModel implements ProductRequestModel {
   @override
   @JsonKey(includeIfNull: false)
   int? get price;
+  @override
+  @JsonKey(name: 'sale_price', includeIfNull: false)
+  int? get salePrice;
   @override
   @JsonKey(includeIfNull: false)
   String? get category;

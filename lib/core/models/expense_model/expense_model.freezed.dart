@@ -29,8 +29,7 @@ mixin _$ExpenseModel {
   @JsonKey(name: 'variant_id')
   int? get variantId => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at', defaultValue: '')
-  String get date =>
-      throw _privateConstructorUsedError; // @JsonKey(name: 'created_at') required String createdAt,
+  String get date => throw _privateConstructorUsedError;
   @JsonKey(name: 'user', defaultValue: 'Unknown')
   String get userName => throw _privateConstructorUsedError;
   @JsonKey(name: 'expense', defaultValue: 0)
@@ -38,8 +37,10 @@ mixin _$ExpenseModel {
   String? get type => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_deleted', defaultValue: false)
-  @JsonKey(name: 'is_deleted')
-  bool? get isDeleted => throw _privateConstructorUsedError;
+  bool? get isDeleted =>
+      throw _privateConstructorUsedError; // 🔥 ADD THIS FIELD
+  @JsonKey(name: 'payment_method')
+  String? get paymentMethod => throw _privateConstructorUsedError;
 
   /// Serializes this ExpenseModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -67,9 +68,8 @@ abstract class $ExpenseModelCopyWith<$Res> {
       @JsonKey(name: 'expense', defaultValue: 0) int expense,
       String? type,
       String? description,
-      @JsonKey(name: 'is_deleted', defaultValue: false)
-      @JsonKey(name: 'is_deleted')
-      bool? isDeleted});
+      @JsonKey(name: 'is_deleted', defaultValue: false) bool? isDeleted,
+      @JsonKey(name: 'payment_method') String? paymentMethod});
 }
 
 /// @nodoc
@@ -97,6 +97,7 @@ class _$ExpenseModelCopyWithImpl<$Res, $Val extends ExpenseModel>
     Object? type = freezed,
     Object? description = freezed,
     Object? isDeleted = freezed,
+    Object? paymentMethod = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -139,6 +140,10 @@ class _$ExpenseModelCopyWithImpl<$Res, $Val extends ExpenseModel>
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -161,9 +166,8 @@ abstract class _$$ExpenseModelImplCopyWith<$Res>
       @JsonKey(name: 'expense', defaultValue: 0) int expense,
       String? type,
       String? description,
-      @JsonKey(name: 'is_deleted', defaultValue: false)
-      @JsonKey(name: 'is_deleted')
-      bool? isDeleted});
+      @JsonKey(name: 'is_deleted', defaultValue: false) bool? isDeleted,
+      @JsonKey(name: 'payment_method') String? paymentMethod});
 }
 
 /// @nodoc
@@ -189,6 +193,7 @@ class __$$ExpenseModelImplCopyWithImpl<$Res>
     Object? type = freezed,
     Object? description = freezed,
     Object? isDeleted = freezed,
+    Object? paymentMethod = freezed,
   }) {
     return _then(_$ExpenseModelImpl(
       id: null == id
@@ -231,6 +236,10 @@ class __$$ExpenseModelImplCopyWithImpl<$Res>
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool?,
+      paymentMethod: freezed == paymentMethod
+          ? _value.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -248,9 +257,8 @@ class _$ExpenseModelImpl implements _ExpenseModel {
       @JsonKey(name: 'expense', defaultValue: 0) required this.expense,
       this.type,
       this.description,
-      @JsonKey(name: 'is_deleted', defaultValue: false)
-      @JsonKey(name: 'is_deleted')
-      required this.isDeleted});
+      @JsonKey(name: 'is_deleted', defaultValue: false) required this.isDeleted,
+      @JsonKey(name: 'payment_method') this.paymentMethod});
 
   factory _$ExpenseModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExpenseModelImplFromJson(json);
@@ -270,7 +278,6 @@ class _$ExpenseModelImpl implements _ExpenseModel {
   @override
   @JsonKey(name: 'created_at', defaultValue: '')
   final String date;
-// @JsonKey(name: 'created_at') required String createdAt,
   @override
   @JsonKey(name: 'user', defaultValue: 'Unknown')
   final String userName;
@@ -283,12 +290,15 @@ class _$ExpenseModelImpl implements _ExpenseModel {
   final String? description;
   @override
   @JsonKey(name: 'is_deleted', defaultValue: false)
-  @JsonKey(name: 'is_deleted')
   final bool? isDeleted;
+// 🔥 ADD THIS FIELD
+  @override
+  @JsonKey(name: 'payment_method')
+  final String? paymentMethod;
 
   @override
   String toString() {
-    return 'ExpenseModel(id: $id, serviceId: $serviceId, productId: $productId, variantId: $variantId, date: $date, userName: $userName, expense: $expense, type: $type, description: $description, isDeleted: $isDeleted)';
+    return 'ExpenseModel(id: $id, serviceId: $serviceId, productId: $productId, variantId: $variantId, date: $date, userName: $userName, expense: $expense, type: $type, description: $description, isDeleted: $isDeleted, paymentMethod: $paymentMethod)';
   }
 
   @override
@@ -311,13 +321,26 @@ class _$ExpenseModelImpl implements _ExpenseModel {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.isDeleted, isDeleted) ||
-                other.isDeleted == isDeleted));
+                other.isDeleted == isDeleted) &&
+            (identical(other.paymentMethod, paymentMethod) ||
+                other.paymentMethod == paymentMethod));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, serviceId, productId,
-      variantId, date, userName, expense, type, description, isDeleted);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      serviceId,
+      productId,
+      variantId,
+      date,
+      userName,
+      expense,
+      type,
+      description,
+      isDeleted,
+      paymentMethod);
 
   /// Create a copy of ExpenseModel
   /// with the given fields replaced by the non-null parameter values.
@@ -348,8 +371,9 @@ abstract class _ExpenseModel implements ExpenseModel {
       final String? type,
       final String? description,
       @JsonKey(name: 'is_deleted', defaultValue: false)
-      @JsonKey(name: 'is_deleted')
-      required final bool? isDeleted}) = _$ExpenseModelImpl;
+      required final bool? isDeleted,
+      @JsonKey(name: 'payment_method')
+      final String? paymentMethod}) = _$ExpenseModelImpl;
 
   factory _ExpenseModel.fromJson(Map<String, dynamic> json) =
       _$ExpenseModelImpl.fromJson;
@@ -368,7 +392,7 @@ abstract class _ExpenseModel implements ExpenseModel {
   int? get variantId;
   @override
   @JsonKey(name: 'created_at', defaultValue: '')
-  String get date; // @JsonKey(name: 'created_at') required String createdAt,
+  String get date;
   @override
   @JsonKey(name: 'user', defaultValue: 'Unknown')
   String get userName;
@@ -381,8 +405,10 @@ abstract class _ExpenseModel implements ExpenseModel {
   String? get description;
   @override
   @JsonKey(name: 'is_deleted', defaultValue: false)
-  @JsonKey(name: 'is_deleted')
-  bool? get isDeleted;
+  bool? get isDeleted; // 🔥 ADD THIS FIELD
+  @override
+  @JsonKey(name: 'payment_method')
+  String? get paymentMethod;
 
   /// Create a copy of ExpenseModel
   /// with the given fields replaced by the non-null parameter values.

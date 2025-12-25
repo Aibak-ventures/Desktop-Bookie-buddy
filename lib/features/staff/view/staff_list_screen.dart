@@ -129,11 +129,15 @@ class _StaffListScreenState extends State<StaffListScreen> {
   }
 
   void _openAddEditDialog([StaffModel? staff]) {
+    final bloc = context.read<StaffListBloc>();
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(staff == null ? 'Add Staff' : 'Edit Staff'),
-        content: _AddEditStaffForm(staff: staff),
+      builder: (_) => BlocProvider.value(
+        value: bloc,
+        child: AlertDialog(
+          title: Text(staff == null ? 'Add Staff' : 'Edit Staff'),
+          content: _AddEditStaffForm(staff: staff),
+        ),
       ),
     );
   }
@@ -214,22 +218,57 @@ class _AddEditStaffFormState extends State<_AddEditStaffForm> {
                 child: const Text('Cancel'),
               ),
               const SizedBox(width: 12),
-     ElevatedButton(
-  onPressed: () {
-    final request = StaffRequestModel(
-      id: widget.staff!.id, // ✅ REQUIRED
-      name: _nameController.text.trim(),
-      phoneNumber: _phoneController.text.trim(),
-    );
+              ElevatedButton(
+                onPressed: () {
+                  final name = _nameController.text.trim();
+                  final phone = _phoneController.text.trim();
+                  
+                  if (name.isEmpty || phone.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please fill all fields'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
 
-    context
-        .read<StaffListBloc>()
-        .add(StaffListEvent.editStaff(request));
+                  if (widget.staff == null) {
+                    // Adding new staff
+                    final request = StaffRequestModel(
+                      name: name,
+                      phoneNumber: phone,
+                    );
+                    context
+                        .read<StaffListBloc>()
+                        .add(StaffListEvent.addStaff(request));
+                  } else {
+                    // Editing existing staff
+                    final isNameChanged = name != widget.staff?.name;
+                    final isPhoneChanged = phone != widget.staff?.phoneNumber;
+                    
+                    if (!isNameChanged && !isPhoneChanged) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('No changes made')),
+                      );
+                      return;
+                    }
 
-    Navigator.pop(context);
-  },
-  child: const Text('Save'),
-),
+                    final request = StaffRequestModel(
+                      id: widget.staff!.id,
+                      name: isNameChanged ? name : null,
+                      phoneNumber: isPhoneChanged ? phone : null,
+                    );
+                    context
+                        .read<StaffListBloc>()
+                        .add(StaffListEvent.editStaff(request));
+                  }
+
+                  Navigator.pop(context);
+                },
+                child: Text(widget.staff == null ? 'Add' : 'Save'),
+              ),
 
 
             ],

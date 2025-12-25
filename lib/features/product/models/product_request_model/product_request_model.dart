@@ -25,6 +25,7 @@ class ProductRequestModel with _$ProductRequestModel {
     @JsonKey(includeIfNull: false) String? color,
     @JsonKey(name: 'purchase_price', includeIfNull: false) int? purchasePrice,
     @JsonKey(includeIfNull: false) int? price,
+    @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
     @JsonKey(includeIfNull: false) String? category,
     @JsonKey(includeIfNull: false) String? model,
     @JsonKey(toJson: _variantsToJson, includeIfNull: false)

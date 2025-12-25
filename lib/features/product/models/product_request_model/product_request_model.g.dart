@@ -16,6 +16,7 @@ _$ProductRequestModelImpl _$$ProductRequestModelImplFromJson(
       color: json['color'] as String?,
       purchasePrice: (json['purchase_price'] as num?)?.toInt(),
       price: (json['price'] as num?)?.toInt(),
+      salePrice: (json['sale_price'] as num?)?.toInt(),
       category: json['category'] as String?,
       model: json['model'] as String?,
       variants: (json['variants'] as List<dynamic>?)
@@ -33,6 +34,7 @@ Map<String, dynamic> _$$ProductRequestModelImplToJson(
       if (instance.color case final value?) 'color': value,
       if (instance.purchasePrice case final value?) 'purchase_price': value,
       if (instance.price case final value?) 'price': value,
+      if (instance.salePrice case final value?) 'sale_price': value,
       if (instance.category case final value?) 'category': value,
       if (instance.model case final value?) 'model': value,
       if (_variantsToJson(instance.variants) case final value?)
