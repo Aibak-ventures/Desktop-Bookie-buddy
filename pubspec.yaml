@@ -76,9 +76,10 @@ dependencies:
   go_router: ^16.2.4
   file_picker: ^8.0.0
   msix: ^3.16.0
-  open_file: ^3.3.2
+  open_file: ^3.3.2 
   window_manager: ^0.4.3
   feedback: ^3.1.0
+  vector_graphics: ^1.1.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -130,6 +131,9 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/animations/
+    - assets/assets/images/
+    - assets/assets/icons/
+    - assets/assets/animations/
     - assets/fonts/MaterialIcons-Regular.ttf
     - assets/fonts/NotoSansMalayalam.ttf
     - assets/fonts/Inter.ttf
