@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,8 +18,9 @@ class BottomBarScreen extends StatefulWidget {
 }
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
-  int currentIndex = 0;
+  int currentIndex = 1; // Start with Dashboard (index 1, since 0 is New Order)
   late PageController pageController;
+bool newOrderActive = false;
 
   final screens = const [
     HomeScreen(),
@@ -62,50 +64,49 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     );
   }
 
-Widget _glassSidebar() {
-  return Container(
-    width: 250,
-    margin: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      // color: const Color(0xFFF3EEFF), // soft purple like design
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(24),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.08),
-          blurRadius: 18,
-          offset: const Offset(0, 8),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        const SizedBox(height: 24),
-        _profileHeader(),
-        // const SizedBox(height: 24),
-        // _newOrderButton(),
-        const SizedBox(height: 24),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              children: [
-                _navItem(0, Icons.add, "New Order"),
-                _navItem(1, Icons.dashboard_rounded, "Dashboard"),
-                _navItem(2, Icons.shopping_cart_rounded, "Orders"),
-                _navItem(3, Icons.menu_book_rounded, "Ledger book"),
-                _navItem(4, Icons.inventory_2_rounded, "Stocks"),
-              ],
+  Widget _glassSidebar() {
+    return Container(
+      width: 250,
+      margin: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        // color: const Color(0xFFF3EEFF), // soft purple like design
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 24),
+          _profileHeader(),
+          // const SizedBox(height: 24),
+          // _newOrderButton(),
+          const SizedBox(height: 24),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                children: [
+                  _navItem(0, Icons.add, "New Order"),
+                  _navItem(1, Icons.dashboard_rounded, "Dashboard"),
+                  _navItem(2, Icons.shopping_cart_rounded, "Orders"),
+                  _navItem(3, Icons.menu_book_rounded, "Ledger book"),
+                  _navItem(4, Icons.inventory_2_rounded, "Stocks"),
+                ],
+              ),
             ),
           ),
-        ),
-        _logoutButton(),
-        const SizedBox(height: 20),
-      ],
-    ),
-  );
-}
-
+          _logoutButton(),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
 
   Widget _profileHeader() {
     return BlocBuilder<UserCubit, UserModel?>(
@@ -262,66 +263,93 @@ Widget _glassSidebar() {
     );
   }
 
- Widget _navItem(int index, IconData icon, String label) {
-  final isActive = currentIndex == index;
+  Widget _navItem(int index, IconData icon, String label) {
+    final isActive = currentIndex == index;
+    final isNewOrder = index == 0; // New Order is at index 0
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6),
-    child: InkWell(
-      borderRadius: BorderRadius.circular(14),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
       onTap: () {
-        setState(() => currentIndex = index);
-        pageController.jumpToPage(index);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        decoration: BoxDecoration(
-          gradient: isActive
-              ? const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFF6C5CE7),
-                    Color(0xFF8B7CF7),
-                  ],
-                )
-              : null,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: isActive
-              ? [
-                  BoxShadow(
-                    color: const Color(0xFF6C5CE7).withOpacity(0.35),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+  if (isNewOrder) {
+    setState(() {
+      newOrderActive = true;
+      currentIndex = -1; // no sidebar item selected
+    });
+    context.push(const NewBookingScreen()).then((_) {
+      setState(() => newOrderActive = false);
+    });
+  } else {
+    setState(() {
+      newOrderActive = false;
+      currentIndex = index;
+    });
+    pageController.jumpToPage(index - 1);
+  }
+},
+
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            gradient: isNewOrder
+                ? const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF6C5CE7),
+                      Color(0xFF8B7CF7),
+                    ],
                   )
-                ]
-              : [],
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: isActive ? Colors.white : Colors.grey.shade600,
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: isActive ? Colors.white : const Color(0xFF636E72),
+                : isActive
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF6C5CE7),
+                          Color(0xFF8B7CF7),
+                        ],
+                      )
+                    : null,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: (isActive || isNewOrder)
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFF6C5CE7).withOpacity(0.35),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    )
+                  ]
+                : [],
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: (isActive || isNewOrder)
+                    ? Colors.white
+                    : Colors.grey.shade600,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: (isActive || isNewOrder)
+                        ? Colors.white
+                        : const Color(0xFF636E72),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _logoutButton() {
     return Padding(
