@@ -41,7 +41,6 @@ class _BookingClientDetailsSectionState
   @override
   void initState() {
     super.initState();
-    // Initialize staff search
     context.read<StaffSearchCubit>()
       ..clearSelectedStaff()
       ..getAllStaffs();
@@ -51,111 +50,47 @@ class _BookingClientDetailsSectionState
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Staff details section
         _buildStaffDetailsCard(),
-        const SizedBox(height: 16),
-        // Client details section
+        const SizedBox(height: 10),
         _buildClientDetailsCard(),
       ],
     );
   }
 
   Widget _buildStaffDetailsCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Staff details',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Listen to staff cubit for selected staff
-          BlocListener<StaffSearchCubit, StaffSearchState>(
-            listener: (context, state) {
-              widget.onStaffSelected(state.selectedStaff?.id);
-            },
-            child: StaffSearchNameField(
-              nameController: widget.staffNameController,
-            ),
-          ),
-        ],
+    return _card(
+      title: 'Staff details',
+      child: BlocListener<StaffSearchCubit, StaffSearchState>(
+        listener: (context, state) =>
+            widget.onStaffSelected(state.selectedStaff?.id),
+        child: StaffSearchNameField(
+          nameController: widget.staffNameController,
+        ),
       ),
     );
   }
 
   Widget _buildClientDetailsCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return _card(
+      title: 'Client details',
+      trailing: Row(
         children: [
-          // Header with toggle
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Client details',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Search client',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Switch(
-                    value: widget.isSearchClientEnabled,
-                    onChanged: widget.onSearchClientToggle,
-                    activeColor: AppColors.purple,
-                  ),
-                ],
-              ),
-            ],
+          Text('Search client',
+              style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+          const SizedBox(width: 6),
+          Transform.scale(
+            scale: .8,
+            child: Switch(
+              value: widget.isSearchClientEnabled,
+              onChanged: widget.onSearchClientToggle,
+              activeColor: AppColors.purple,
+            ),
           ),
-          const SizedBox(height: 16),
-          // Client fields
-          if (widget.isSearchClientEnabled)
-            _buildClientSearchField()
-          else
-            _buildClientManualFields(),
         ],
       ),
+      child: widget.isSearchClientEnabled
+          ? _buildClientSearchField()
+          : _buildClientManualFields(),
     );
   }
 
@@ -164,42 +99,51 @@ class _BookingClientDetailsSectionState
       builder: (context, state) {
         return Column(
           children: [
-            CustomTextField(validator: null,
-
-              controller: widget.clientNameController,
-              hintText: 'Search client by name or phone',
-              prefixIcon: const Icon(Icons.search),
-              onChanged: (value) {
-                if (value.length >= 3) {
-                  context.read<ClientCubit>().searchClient(value);
-                } 
-              },
+            SizedBox(
+              height: 34,
+              child: CustomTextField(
+                validator: (value) {
+                  
+                },
+                controller: widget.clientNameController,
+                hintText: 'Search client',
+                prefixIcon: const Icon(Icons.search, size: 16),
+                // style: const TextStyle(fontSize: 12),
+                onChanged: (v) {
+                  if (v.length >= 3) {
+                    context.read<ClientCubit>().searchClient(v);
+                  }
+                },
+              ),
             ),
             if (state.suggestions.isNotEmpty) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Container(
-                constraints: const BoxConstraints(maxHeight: 150),
+                height: 120,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ListView.builder(
-                  shrinkWrap: true,
                   itemCount: state.suggestions.length,
-                  itemBuilder: (context, index) {
-                    final client = state.suggestions[index];
+                  itemBuilder: (_, i) {
+                    final c = state.suggestions[i];
                     return ListTile(
                       dense: true,
-                      title: Text(client.name),
-                      subtitle: Text(client.phone1.toString()),
+                      visualDensity: const VisualDensity(vertical: -3),
+                      title:
+                          Text(c.name, style: const TextStyle(fontSize: 11)),
+                      subtitle: Text(c.phone1.toString(),
+                          style: TextStyle(
+                              fontSize: 10, color: Colors.grey.shade600)),
                       onTap: () {
-                        widget.clientNameController.text = client.name;
+                        widget.clientNameController.text = c.name;
                         widget.clientPhone1Controller.text =
-                            client.phone1.toString();
+                            c.phone1.toString();
                         widget.clientPhone2Controller.text =
-                            client.phone2?.toString() ?? '';
-                        widget.onClientSelected(client.id);
-                        context.read<ClientCubit>().selectClient(client);
+                            c.phone2?.toString() ?? '';
+                        widget.onClientSelected(c.id);
+                        context.read<ClientCubit>().selectClient(c);
                       },
                     );
                   },
@@ -215,70 +159,62 @@ class _BookingClientDetailsSectionState
   Widget _buildClientManualFields() {
     return Column(
       children: [
-        // Name field
-        _buildTextField(
-          controller: widget.clientNameController,
-          hintText: 'name',
-          icon: Icons.person_outline,
-        ),
-        const SizedBox(height: 12),
-        // Phone 1
-        _buildTextField(
-          controller: widget.clientPhone1Controller,
-          hintText: 'Phone or Whatsapp',
-          icon: Icons.phone_outlined,
-          keyboardType: TextInputType.phone,
-          validator: (value) =>
-              AppInputValidators.phoneNumber(value, isRequired: false),
-        ),
-        const SizedBox(height: 12),
-        // Phone 2
-        _buildTextField(
-          controller: widget.clientPhone2Controller,
-          hintText: 'phone 2',
-          icon: Icons.phone_outlined,
-          keyboardType: TextInputType.phone,
-          validator: (value) =>
-              AppInputValidators.phoneNumber(value, isRequired: false),
-        ),
-        const SizedBox(height: 12),
-        // Place/Address
-        _buildTextField(
-          controller: widget.clientAddressController,
-          hintText: 'Place',
-          icon: Icons.location_on_outlined,
-        ),
+        _compactField(widget.clientNameController, 'Name', Icons.person_outline),
+        const SizedBox(height: 8),
+        _compactField(widget.clientPhone1Controller, 'Phone',
+            Icons.phone_outlined, TextInputType.phone),
+        const SizedBox(height: 8),
+        _compactField(widget.clientPhone2Controller, 'Phone 2',
+            Icons.phone_outlined, TextInputType.phone),
+        const SizedBox(height: 8),
+        _compactField(
+            widget.clientAddressController, 'Place', Icons.location_on_outlined),
       ],
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    required IconData icon,
-    TextInputType keyboardType = TextInputType.text,
-    String? Function(String?)? validator,
-  }) {
+  Widget _compactField(TextEditingController c, String hint, IconData icon,
+      [TextInputType type = TextInputType.text]) {
+    return SizedBox(
+      height: 34,
+      child: TextField(
+        controller: c,
+        keyboardType: type,
+        style: const TextStyle(fontSize: 12),
+        decoration: InputDecoration(
+          hintText: hint,
+          prefixIcon: Icon(icon, size: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      ),
+    );
+  }
+
+  Widget _card({required String title, Widget? trailing, required Widget child}) {
     return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            color: Colors.grey.shade500,
-            fontSize: 14,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w600)),
+              const Spacer(),
+              if (trailing != null) trailing,
+            ],
           ),
-          prefixIcon: Icon(icon, color: Colors.grey.shade500, size: 20),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
+          const SizedBox(height: 8),
+          child,
+        ],
       ),
     );
   }

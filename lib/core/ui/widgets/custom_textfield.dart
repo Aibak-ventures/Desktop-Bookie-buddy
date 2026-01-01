@@ -141,6 +141,7 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         suffix: suffix,
         fillColor: fillColor,
+        
         filled: fillColor != null,
         hintStyle: const TextStyle(
           color: AppColors.grey,

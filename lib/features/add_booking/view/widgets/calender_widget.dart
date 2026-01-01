@@ -1,21 +1,17 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderWidget extends StatefulWidget {
-  final Function(DateTime selectedDate) onDateSelected;
-  final DateTime? firstDate; // Single initial selected date
-  final DateTime? selectedDate;
+  final Function(DateTime startDate, DateTime endDate) onDateRangeSelected;
+  final DateTime? firstDate;
 
   const CalenderWidget({
     super.key,
-    required this.onDateSelected,
+    required this.onDateRangeSelected,
     this.firstDate,
-    this.selectedDate,
   });
 
   @override
@@ -23,88 +19,64 @@ class CalenderWidget extends StatefulWidget {
 }
 
 class _CalenderWidgetState extends State<CalenderWidget> {
-  DateTime? selectedDate;
-  DateTime? focusedDay;
+  DateTime? rangeStart;
+  DateTime? rangeEnd;
+  DateTime focusedDay = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    final DateTime currentDate = DateTime.now();
-    final DateTime firstAvailableDay = DateTime(
-      currentDate.year,
-      currentDate.month,
-      currentDate.day,
-    );
-
-    if (widget.firstDate != null) {
-      selectedDate = widget.selectedDate ?? widget.firstDate;
-      focusedDay = selectedDate;
-    } else {
-      selectedDate = firstAvailableDay;
-      focusedDay = firstAvailableDay;
-    }
-  }
-
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    final DateTime today = DateTime.now();
-    debugPrint('selected: ' + selectedDay.toString());
-    if (selectedDay.isBefore(
-      widget.firstDate?.dateOnly ??
-          DateTime(today.year, today.month, today.day),
-    )) {
-      CustomSnackBar(message: 'You cannot select a past date');
-      return; // Don't allow past dates
-    }
-
-    setState(() {
-      selectedDate = DateTime(
-        selectedDay.year,
-        selectedDay.month,
-        selectedDay.day,
-      );
-      this.focusedDay = focusedDay;
-    });
-
-    widget.onDateSelected(selectedDate!);
+    rangeStart = widget.firstDate ?? DateTime.now();
+    focusedDay = rangeStart!;
   }
 
   @override
   Widget build(BuildContext context) {
-    final DateTime currentDate = DateTime.now();
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: AppColors.purple, width: 2),
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: TableCalendar(
-        availableGestures: AvailableGestures.none,
-        rowHeight: context.mediaQueryHeight(0.065),
-        firstDay: widget.firstDate ?? DateTime.now(),
-        lastDay: DateTime.utc(currentDate.year + 200, 12, 31),
-        focusedDay: focusedDay ?? currentDate,
-        calendarStyle: const CalendarStyle(
-          todayTextStyle: TextStyle(color: AppColors.green),
-          todayDecoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.fromBorderSide(
-              BorderSide(color: AppColors.green),
-            ),
+      child: SizedBox(
+        width: context.mediaQueryWidth(0.23),
+        height: context.mediaQueryHeight(0.32),
+        child: TableCalendar(
+          rangeSelectionMode: RangeSelectionMode.enforced,
+          rangeStartDay: rangeStart,
+          rangeEndDay: rangeEnd,
+          availableGestures: AvailableGestures.none,
+          rowHeight: context.mediaQueryHeight(0.045),
+          firstDay: widget.firstDate ?? DateTime.now(),
+          lastDay: DateTime.utc(DateTime.now().year + 5, 12, 31),
+          focusedDay: focusedDay,
+          onRangeSelected: (start, end, focused) {
+            if (start != null && end != null) {
+              setState(() {
+                rangeStart = start;
+                rangeEnd = end;
+                focusedDay = focused;
+              });
+              widget.onDateRangeSelected(start, end);
+            }
+          },
+          calendarStyle: const CalendarStyle(
+            outsideDaysVisible: false,
+            todayTextStyle: TextStyle(color: AppColors.green, fontSize: 11),
+            rangeStartDecoration: BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+            rangeEndDecoration: BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+            withinRangeDecoration: BoxDecoration(color: AppColors.purpleLight, shape: BoxShape.circle),
           ),
-          selectedDecoration: BoxDecoration(
-            color: AppColors.purple, // Wine color for selected date
-            shape: BoxShape.circle,
+          headerStyle: const HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+            titleTextStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
-          outsideDaysVisible: false,
+          daysOfWeekStyle: const DaysOfWeekStyle(
+            weekdayStyle: TextStyle(fontSize: 10),
+            weekendStyle: TextStyle(fontSize: 10),
+          ),
         ),
-        selectedDayPredicate: (day) =>
-            selectedDate != null &&
-            selectedDate!.year == day.year &&
-            selectedDate!.month == day.month &&
-            selectedDate!.day == day.day,
-        onDaySelected: _onDaySelected,
-        headerStyle: const HeaderStyle(formatButtonVisible: false),
       ),
     );
   }

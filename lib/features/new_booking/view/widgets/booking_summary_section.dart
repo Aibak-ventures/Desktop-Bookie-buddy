@@ -11,6 +11,7 @@ class BookingSummarySection extends StatelessWidget {
   final TextEditingController advanceAmountController;
   final TextEditingController discountAmountController;
   final VoidCallback onConfirmBooking;
+  final Color? confirmButtonColor;
 
   const BookingSummarySection({
     super.key,
@@ -19,6 +20,7 @@ class BookingSummarySection extends StatelessWidget {
     required this.advanceAmountController,
     required this.discountAmountController,
     required this.onConfirmBooking,
+    this.confirmButtonColor,
   });
 
   @override
@@ -57,7 +59,7 @@ class BookingSummarySection extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onConfirmBooking,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.green,
+                backgroundColor: confirmButtonColor ?? AppColors.green,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(

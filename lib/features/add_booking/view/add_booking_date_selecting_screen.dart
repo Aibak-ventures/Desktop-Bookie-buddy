@@ -230,22 +230,22 @@ coolingPeriodDateController = TextEditingController(text: coolingPeriod);
                       ),
                     ),
                     const SizedBox(height: 16),
-                   CalenderWidget(
-                            firstDate: pickupInitiallySelectedDate,
-                            selectedDate: pickupDateNotifier.value,
-                            onDateSelected: (selectedDate) {
-                              pickupDateNotifier.value = selectedDate;
-                              validateTimeOnSameDay();
-                              final returnDate = returnDateController.text
-                                  .parseToDateTime();
-                              if (returnDate.isBefore(selectedDate)) {
-                                selectReturnDate(
-                                  context,
-                                  selectedDate.add(1.days()),
-                                );
-                              }
-                            },
-                          ),
+                  //  CalenderWidget(
+                  //           firstDate: pickupInitiallySelectedDate,
+                  //           selectedDate: pickupDateNotifier.value,
+                  //           onDateSelected: (selectedDate) {
+                  //             pickupDateNotifier.value = selectedDate;
+                  //             validateTimeOnSameDay();
+                  //             final returnDate = returnDateController.text
+                  //                 .parseToDateTime();
+                  //             if (returnDate.isBefore(selectedDate)) {
+                  //               selectReturnDate(
+                  //                 context,
+                  //                 selectedDate.add(1.days()),
+                  //               );
+                  //             }
+                  //           },
+                  //         ),
                   ],
                 ),
               ),

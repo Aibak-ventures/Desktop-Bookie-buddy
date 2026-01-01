@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen_v2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +21,8 @@ class BottomBarScreen extends StatefulWidget {
 class _BottomBarScreenState extends State<BottomBarScreen> {
   int currentIndex = 1; // Start with Dashboard (index 1, since 0 is New Order)
   late PageController pageController;
-bool newOrderActive = false;
+  bool newOrderActive = false;
+  bool showNewBookingInContent = false;
 
   final screens = const [
     HomeScreen(),
@@ -51,11 +53,20 @@ bool newOrderActive = false;
             children: [
               _glassSidebar(),
               Expanded(
-                child: PageView(
-                  controller: pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: screens,
-                ),
+                child: showNewBookingInContent
+                    ? NewBookingScreen(
+                        onClose: () {
+                          setState(() {
+                            showNewBookingInContent = false;
+                            newOrderActive = false;
+                          });
+                        },
+                      )
+                    : PageView(
+                        controller: pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: screens,
+                      ),
               ),
             ],
           ),
@@ -271,24 +282,22 @@ bool newOrderActive = false;
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-      onTap: () {
-  if (isNewOrder) {
-    setState(() {
-      newOrderActive = true;
-      currentIndex = -1; // no sidebar item selected
-    });
-    context.push(const NewBookingScreen()).then((_) {
-      setState(() => newOrderActive = false);
-    });
-  } else {
-    setState(() {
-      newOrderActive = false;
-      currentIndex = index;
-    });
-    pageController.jumpToPage(index - 1);
-  }
-},
-
+        onTap: () {
+          if (isNewOrder) {
+            setState(() {
+              newOrderActive = true;
+              showNewBookingInContent = true;
+              currentIndex = -1; // no sidebar item selected
+            });
+          } else {
+            setState(() {
+              newOrderActive = false;
+              showNewBookingInContent = false;
+              currentIndex = index;
+            });
+            pageController.jumpToPage(index - 1);
+          }
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(

@@ -32,15 +32,15 @@ class BookingPaymentDetailsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -50,40 +50,54 @@ class BookingPaymentDetailsSection extends StatelessWidget {
           const Text(
             'Payment details',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 16),
-          // Payment method radio buttons
-          _buildPaymentMethodSection(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           // Only show additional fields if not in sales mode
           if (!isSalesMode) ...[
-            // Advance amount
+            // 1. Advance amount
             _buildAmountField(
               controller: advanceAmountController,
               hint: 'Advance amount (optional)',
             ),
-            const SizedBox(height: 12),
-            // Security amount
+            const SizedBox(height: 10),
+            // 2. Security amount
             _buildAmountField(
               controller: securityAmountController,
-              hint: 'security amount (optional)',
+              hint: 'Security amount (optional)',
             ),
-            const SizedBox(height: 12),
-            // Discount amount
+            const SizedBox(height: 10),
+            // 3. Discount amount
             _buildAmountField(
               controller: discountAmountController,
               hint: 'Discount amount (optional)',
             ),
-            const SizedBox(height: 20),
-            // Additional charges
+            const SizedBox(height: 14),
+            // 4. Additional charges
             _buildAdditionalChargesSection(context),
-            const SizedBox(height: 20),
-            // Delivery status
+            const SizedBox(height: 14),
+            // 5. Payment method
+            _buildPaymentMethodSection(),
+            const SizedBox(height: 14),
+            // 6. Delivery status
             _buildDeliveryStatusSection(),
+          ],
+          // Sales mode - simplified
+          if (isSalesMode) ...[
+            _buildAmountField(
+              controller: advanceAmountController,
+              hint: 'Amount received',
+            ),
+            const SizedBox(height: 10),
+            _buildAmountField(
+              controller: discountAmountController,
+              hint: 'Discount (optional)',
+            ),
+            const SizedBox(height: 14),
+            _buildPaymentMethodSection(),
           ],
         ],
       ),

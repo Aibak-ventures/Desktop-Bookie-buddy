@@ -75,10 +75,10 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
           // Calendar
-          _buildCalendar(),
-          const SizedBox(height: 20),
+          // _buildCalendar(),
+          // const SizedBox(height: 20),
           // Pickup date and time
           _buildDateTimeRow(
             label: 'Pickup date',
@@ -106,101 +106,89 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     );
   }
 
-  Widget _buildCalendar() {
-    return Container(
-      decoration: BoxDecoration(
-        border:
-            Border.all(color: AppColors.purple.withOpacity(0.3), width: 1.5),
-        borderRadius: BorderRadius.circular(12),
+Widget _buildCalendar() {
+  return Container(
+    height: 240,
+    decoration: BoxDecoration(
+      border: Border.all(color: AppColors.purple.withOpacity(0.25), width: 1),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: TableCalendar(
+      firstDay: DateTime.now(),
+      lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
+      focusedDay: focusedDay,
+
+      selectedDayPredicate: (day) =>
+          isSameDay(day, widget.pickupDate) ||
+          isSameDay(day, widget.returnDate),
+
+      rangeStartDay: widget.pickupDate,
+      rangeEndDay: widget.returnDate,
+      rangeSelectionMode: RangeSelectionMode.disabled,
+
+      calendarFormat: CalendarFormat.month,
+
+      headerStyle: HeaderStyle(
+        formatButtonVisible: false,
+        titleCentered: true,
+        leftChevronIcon:
+            Icon(Icons.chevron_left, size: 10, color: Colors.grey.shade600),
+        rightChevronIcon:
+            Icon(Icons.chevron_right, size: 10, color: Colors.grey.shade600),
+        titleTextStyle:
+            const TextStyle(fontSize: 9, fontWeight: FontWeight.w600),
+        headerPadding: const EdgeInsets.symmetric(vertical: 4),
       ),
-      child: TableCalendar(
-        firstDay: DateTime.now(),
-        lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
-        focusedDay: focusedDay,
-        selectedDayPredicate: (day) {
-          // Highlight both pickup and return dates
-          return isSameDay(day, widget.pickupDate) ||
-              isSameDay(day, widget.returnDate);
-        },
-        rangeStartDay: widget.pickupDate,
-        rangeEndDay: widget.returnDate,
-        rangeSelectionMode: RangeSelectionMode.disabled,
-        calendarFormat: CalendarFormat.month,
-        headerStyle: HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: false,
-          leftChevronIcon:
-              Icon(Icons.chevron_left, color: Colors.grey.shade600, size: 20),
-          rightChevronIcon:
-              Icon(Icons.chevron_right, color: Colors.grey.shade600, size: 20),
-          titleTextStyle: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+
+      calendarStyle: CalendarStyle(
+        todayDecoration: BoxDecoration(
+          color: AppColors.green.withOpacity(.25),
+          shape: BoxShape.circle,
         ),
-        calendarStyle: CalendarStyle(
-          todayDecoration: BoxDecoration(
-            color: AppColors.green.withOpacity(0.3),
-            shape: BoxShape.circle,
-          ),
-          todayTextStyle: const TextStyle(color: Colors.black87),
-          selectedDecoration: const BoxDecoration(
-            color: AppColors.purple,
-            shape: BoxShape.circle,
-          ),
-          rangeStartDecoration: const BoxDecoration(
-            color: AppColors.purple,
-            shape: BoxShape.circle,
-          ),
-          rangeEndDecoration: const BoxDecoration(
-            color: AppColors.purple,
-            shape: BoxShape.circle,
-          ),
-          rangeHighlightColor: AppColors.purple.withOpacity(0.2),
-          outsideDaysVisible: false,
-          cellMargin: const EdgeInsets.all(4),
-          defaultTextStyle: const TextStyle(fontSize: 13),
-          weekendTextStyle: const TextStyle(fontSize: 13),
-        ),
-        daysOfWeekStyle: DaysOfWeekStyle(
-          weekdayStyle: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontWeight: FontWeight.w500,
-          ),
-          weekendStyle: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        onDaySelected: (selectedDay, focusedDay) {
-          setState(() {
-            this.focusedDay = focusedDay;
-            this.selectedDay = selectedDay;
-          });
-          if (isSelectingPickup) {
-            widget.onPickupDateChanged(selectedDay);
-            // Auto-set return date if it's before pickup
-            if (widget.returnDate.isBefore(selectedDay)) {
-              widget.onReturnDateChanged(
-                  selectedDay.add(const Duration(days: 1)));
-            }
-          } else {
-            if (selectedDay.isAfter(widget.pickupDate) ||
-                isSameDay(selectedDay, widget.pickupDate)) {
-              widget.onReturnDateChanged(selectedDay);
-            }
+        selectedDecoration:
+            const BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+        rangeStartDecoration:
+            const BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+        rangeEndDecoration:
+            const BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+        rangeHighlightColor: AppColors.purple.withOpacity(.15),
+        outsideDaysVisible: false,
+        cellMargin: const EdgeInsets.all(2),
+        defaultTextStyle: const TextStyle(fontSize: 11),
+        weekendTextStyle: const TextStyle(fontSize: 11),
+      ),
+
+      daysOfWeekStyle: DaysOfWeekStyle(
+        weekdayStyle:
+            TextStyle(fontSize: 10, color: Colors.grey.shade600),
+        weekendStyle:
+            TextStyle(fontSize: 10, color: Colors.grey.shade600),
+      ),
+
+      onDaySelected: (day, fDay) {
+        setState(() {
+          focusedDay = fDay;
+          selectedDay = day;
+        });
+
+        if (isSelectingPickup) {
+          widget.onPickupDateChanged(day);
+          if (widget.returnDate.isBefore(day)) {
+            widget.onReturnDateChanged(day.add(const Duration(days: 1)));
           }
-        },
-        onPageChanged: (focusedDay) {
-          setState(() {
-            this.focusedDay = focusedDay;
-          });
-        },
-      ),
-    );
-  }
+        } else {
+          if (day.isAfter(widget.pickupDate) ||
+              isSameDay(day, widget.pickupDate)) {
+            widget.onReturnDateChanged(day);
+          }
+        }
+      },
+
+      onPageChanged: (fDay) => setState(() => focusedDay = fDay),
+    ),
+  );
+}
+
 
   Widget _buildDateTimeRow({
     required String label,
