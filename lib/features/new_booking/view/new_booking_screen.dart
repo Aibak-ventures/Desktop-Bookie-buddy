@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:bookie_buddy_web/features/select_product_booking/models/product_
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -1088,98 +1090,69 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  void _showVariantSelectionDialog(dynamic product) {
-    final variants = product.variants ?? [];
-    if (variants.isEmpty) {
-      context.showSnackBar('No variants available', isError: true);
-      return;
-    }
+void _showVariantSelectionDialog(dynamic product) {
+  final variants = product.variants ?? [];
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Select Variant - ${product.name}',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        content: SizedBox(
-          width: 400,
-          child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: variants.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final variant = variants[index];
-              final variantName = variant.name ?? 'Variant ${index + 1}';
-              final variantPrice = variant.rentPrice ?? variant.sellPrice ?? 0;
-              final variantImage = variant.image ?? product.image;
-
-              return ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: variantImage != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Image.network(
-                            variantImage,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Icon(
-                              Icons.image,
-                              size: 20,
-                              color: Colors.grey.shade400,
-                            ),
-                          ),
-                        )
-                      : Icon(Icons.image,
-                          size: 20, color: Colors.grey.shade400),
-                ),
-                title: Text(
-                  variantName,
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.w500),
-                ),
-                subtitle: Text(
-                  variantPrice.toCurrency(),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: const Color(0xFF6132E4),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                trailing: IconButton(
-                  onPressed: () {
-                    _addProductVariant(product, variant);
-                    Navigator.pop(context);
-                  },
-                  icon: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6132E4),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(Icons.add, size: 16, color: Colors.white),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
-    );
+  if (variants.isEmpty) {
+    context.showSnackBar('No variants available', isError: true);
+    return;
   }
+
+  final selectedVariants = selectedProductsNotifier.value;
+
+  showSizeAmountDialog(
+    context: context,
+    isSales: selectedBookingType == BookingType.sales,
+    alreadySelectedVariants: selectedVariants,
+    mainServiceType: product.mainServiceType,
+    productImageUrl: product.image!,
+    availableVariants: variants,
+    initialAmount: null,
+    initialQuantity: null,
+    onConfirm: (id, size, amount, quantity) {
+      final attribute = size == null || size.isEmpty
+          ? (variants.first.attribute.isEmpty
+              ? product.model
+              : variants.first.attribute)
+          : size;
+
+      final products =
+          List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+
+      final existingIndex =
+          products.indexWhere((p) => p.variant.variantId == id);
+
+      if (existingIndex != -1) {
+        final existing = products[existingIndex];
+        products[existingIndex] =
+            existing.copyWith(quantity: existing.quantity + quantity);
+      } else {
+        products.add(ProductSelectedModel(
+          variant: ProductInfoModel(
+            id: id,
+            variantId: id,
+            productId: product.id,
+            name: product.name,
+            image: product.image,
+            amount: amount.toInt(),
+            category: product.category,
+            color: product.color,
+            model: product.model,
+            mainServiceType: product.mainServiceType,
+            variantAttribute: attribute,
+            measurements: [],
+            quantity: quantity,
+          ),
+          quantity: quantity,
+          amount: amount.toInt(),
+        ));
+      }
+
+      selectedProductsNotifier.value = products;
+    },
+  );
+}
+
 
   void _addProductVariant(dynamic product, dynamic variant) {
     final products =
