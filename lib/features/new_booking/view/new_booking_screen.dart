@@ -7,8 +7,11 @@ import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
+    show ServicesModel;
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
@@ -65,7 +68,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   final staffNameController = TextEditingController();
   int? selectedStaffId;
   int? selectedClientId;
- bool isSearchClientEnabled = false;
+  bool isSearchClientEnabled = false;
   // Payment controllers
   final advanceAmountController = TextEditingController();
   final securityAmountController = TextEditingController();
@@ -109,9 +112,6 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
     });
-
-    // Setup search listener
-    serviceSearchController.addListener(_onSearchChanged);
   }
 
   @override
@@ -128,7 +128,6 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     selectedProductsNotifier.dispose();
     additionalChargesNotifier.dispose();
     documentsNotifier.dispose();
-    serviceSearchController.removeListener(_onSearchChanged);
     serviceSearchController.dispose();
     _selectProductBloc.close();
     super.dispose();
@@ -336,17 +335,16 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           child: Column(
             children: [
               // Top row: Date/Time and Client details
-          SizedBox(
-  // height: 210, // controls top row height
-  child: Row(
-    children: [
-      // Expanded(child: _buildCompactDateTimeSection()),
-      // const SizedBox(width: 12),
-      Expanded(child: _buildLeftTopSection()),
-    ],
-  ),
-),
-
+              SizedBox(
+                // height: 210, // controls top row height
+                child: Row(
+                  children: [
+                    // Expanded(child: _buildCompactDateTimeSection()),
+                    // const SizedBox(width: 12),
+                    Expanded(child: _buildLeftTopSection()),
+                  ],
+                ),
+              ),
 
               const SizedBox(height: 10),
               // Service selection section - scrollable
@@ -664,150 +662,60 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       ),
     );
   }
-Widget _buildLeftTopSection() {
-  return SizedBox(
-    // height: 510,
-    child: Column(
-      children: [
-        // Calendar + date time (already compact)
-        SizedBox(
-          height: 510,
-          child: BookingCalendarWidget(
-                 staffNameController: staffNameController,
-            clientNameController: clientNameController,
-            clientPhone1Controller: clientPhone1Controller,
-            clientPhone2Controller: clientPhone2Controller,
-            clientAddressController: clientAddressController,
-            isSearchClientEnabled: isSearchClientEnabled,
-            onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
-            onStaffSelected: (id) => setState(() => selectedStaffId = id),
-            onClientSelected: (id) => setState(() => selectedClientId = id),
-            pickupDate: pickupDate,
-            returnDate: returnDate,
-            coolingPeriodDate: coolingPeriodDate,
-            pickupTime: pickupTime,
-            returnTime: returnTime,
-            coolingPeriodTime: null,
-            onPickupDateChanged: (d) => setState(() => pickupDate = d),
-            onReturnDateChanged: (d) => setState(() => returnDate = d),
-            onCoolingPeriodDateChanged: (d) =>
-                setState(() => coolingPeriodDate = d),
-            onPickupTimeChanged: (t) => setState(() => pickupTime = t),
-            onReturnTimeChanged: (t) => setState(() => returnTime = t),
-            onCoolingPeriodTimeChanged: (_) {},
-          ),
-        ),
 
-        const SizedBox(height: 10),
-
-        // Client + Staff compact block
-        // Expanded(
-          // child: BookingClientDetailsCompact(
-            // staffNameController: staffNameController,
-            // clientNameController: clientNameController,
-            // clientPhone1Controller: clientPhone1Controller,
-            // clientPhone2Controller: clientPhone2Controller,
-            // clientAddressController: clientAddressController,
-            // isSearchClientEnabled: isSearchClientEnabled,
-            // onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
-            // onStaffSelected: (id) => setState(() => selectedStaffId = id),
-            // onClientSelected: (id) => setState(() => selectedClientId = id),
-        //   ),
-        // ),
-      ],
-    ),
-  );
-}
-
-
-
-  // Widget _buildLeftTopSection() {
-  //   return SizedBox(
-  //     height: 240,
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         // Calendar section
-  //         Expanded(
-  //           child: BookingCalendarWidget(
-  //             pickupDate: pickupDate,
-  //             returnDate: returnDate,
-  //             coolingPeriodDate: coolingPeriodDate,
-  //             pickupTime: pickupTime,
-  //             returnTime: returnTime,
-  //             coolingPeriodTime: null,
-  //             onPickupDateChanged: (date) => setState(() => pickupDate = date),
-  //             onReturnDateChanged: (date) => setState(() => returnDate = date),
-  //             onCoolingPeriodDateChanged: (date) =>
-  //                 setState(() => coolingPeriodDate = date),
-  //             onPickupTimeChanged: (time) => setState(() => pickupTime = time),
-  //             onReturnTimeChanged: (time) => setState(() => returnTime = time),
-  //             onCoolingPeriodTimeChanged: (time) {}
-  //                 // setState(() => coolingPeriodTime = time),
-  //           ),
-  //         ),
-  //         const SizedBox(width: 20),
-  //         // Staff and Client details
-          // Expanded(
-          //   child: BookingClientDetailsSection(
-          //     staffNameController: staffNameController,
-          //     clientNameController: clientNameController,
-          //     clientPhone1Controller: clientPhone1Controller,
-          //     clientPhone2Controller: clientPhone2Controller,
-          //     clientAddressController: clientAddressController,
-          //     isSearchClientEnabled: isSearchClientEnabled,
-          //     onSearchClientToggle: (value) {
-          //       setState(() => isSearchClientEnabled = value);
-          //     },
-          //     onStaffSelected: (staffId) {
-          //       setState(() => selectedStaffId = staffId);
-          //     },
-          //     onClientSelected: (clientId) {
-          //       setState(() => selectedClientId = clientId);
-          //     },
-          //   ),
-          // ),
-  //       ],
-  //     ),
-  //   );
-  // }
-  Widget _buildCompactTextField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-        ),
-        const SizedBox(height: 4),
-        Container(
-          height: 34,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300, width: 1),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: TextField(
-            controller: controller,
-            keyboardType: keyboardType,
-            style: const TextStyle(fontSize: 12),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 12),
-              prefixIcon: Icon(icon, size: 16, color: Colors.grey.shade500),
-              prefixIconConstraints: const BoxConstraints(minWidth: 32),
-              border: InputBorder.none,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+  Widget _buildLeftTopSection() {
+    return SizedBox(
+      // height: 510,
+      child: Column(
+        children: [
+          // Calendar + date time (already compact)
+          SizedBox(
+            height: 496,
+            child: BookingCalendarWidget(
+              staffNameController: staffNameController,
+              clientNameController: clientNameController,
+              clientPhone1Controller: clientPhone1Controller,
+              clientPhone2Controller: clientPhone2Controller,
+              clientAddressController: clientAddressController,
+              isSearchClientEnabled: isSearchClientEnabled,
+              onSearchClientToggle: (v) =>
+                  setState(() => isSearchClientEnabled = v),
+              onStaffSelected: (id) => setState(() => selectedStaffId = id),
+              onClientSelected: (id) => setState(() => selectedClientId = id),
+              pickupDate: pickupDate,
+              returnDate: returnDate,
+              coolingPeriodDate: coolingPeriodDate,
+              pickupTime: pickupTime,
+              returnTime: returnTime,
+              coolingPeriodTime: null,
+              onPickupDateChanged: (d) => setState(() => pickupDate = d),
+              onReturnDateChanged: (d) => setState(() => returnDate = d),
+              onCoolingPeriodDateChanged: (d) =>
+                  setState(() => coolingPeriodDate = d),
+              onPickupTimeChanged: (t) => setState(() => pickupTime = t),
+              onReturnTimeChanged: (t) => setState(() => returnTime = t),
+              onCoolingPeriodTimeChanged: (_) {},
             ),
           ),
-        ),
-      ],
+
+          // const SizedBox(height: 10),
+
+          // Client + Staff compact block
+          // Expanded(
+          // child: BookingClientDetailsCompact(
+          // staffNameController: staffNameController,
+          // clientNameController: clientNameController,
+          // clientPhone1Controller: clientPhone1Controller,
+          // clientPhone2Controller: clientPhone2Controller,
+          // clientAddressController: clientAddressController,
+          // isSearchClientEnabled: isSearchClientEnabled,
+          // onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
+          // onStaffSelected: (id) => setState(() => selectedStaffId = id),
+          // onClientSelected: (id) => setState(() => selectedClientId = id),
+          //   ),
+          // ),
+        ],
+      ),
     );
   }
 
@@ -818,226 +726,159 @@ Widget _buildLeftTopSection() {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: Row(
+      child: Column(
         children: [
-          // Left panel - Available products grid
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with service tabs and search
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Select Products',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Service category tabs
-                      Expanded(child: _buildServiceTabs()),
-                    ],
-                  ),
-                ),
-                // Search bar
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                  child: SizedBox(
-                    height: 32,
-                    child: TextField(
-                      controller: serviceSearchController,
-                      style: const TextStyle(fontSize: 12),
-                      decoration: InputDecoration(
-                        hintText: 'Search products...',
-                        hintStyle: TextStyle(
-                            color: Colors.grey.shade400, fontSize: 12),
-                        prefixIcon: Icon(Icons.search,
-                            size: 16, color: Colors.grey.shade400),
-                        prefixIconConstraints:
-                            const BoxConstraints(minWidth: 36),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(6),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(6),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(6),
-                          borderSide:
-                              const BorderSide(color: Color(0xFF6132E4)),
-                        ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 8),
-                      ),
-                    ),
-                  ),
-                ),
-                const Divider(height: 1),
-                // Product grid - scrollable
-                Expanded(
-                  child: _buildProductGrid(),
-                ),
-              ],
-            ),
-          ),
-          // Vertical divider
-          Container(
-            width: 1,
-            color: Colors.grey.shade200,
-          ),
-          // Right panel - Selected products list
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Selected Items',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const Spacer(),
-                      ValueListenableBuilder<List<ProductSelectedModel>>(
-                        valueListenable: selectedProductsNotifier,
-                        builder: (context, products, _) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF6132E4).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              '${products.length} items',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF6132E4),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 1),
-                // Selected products header
-                _buildProductListHeader(),
-                // Selected products list - scrollable
-                Expanded(
-                  child: _buildSelectedProductsList(),
-                ),
-              ],
-            ),
-          ),
+          _buildProductSearchBar(),
+          const SizedBox(height: 6),
+          Expanded(child: _buildSelectedProductsTable()),
         ],
       ),
     );
   }
 
-  Widget _buildProductGrid() {
-    return BlocBuilder<SelectProductBloc, SelectProductState>(
-      bloc: _selectProductBloc,
-      builder: (context, state) {
-        return state.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Color(0xFF6132E4),
-            ),
-          ),
-          error: (error) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildSelectedProductsTable() {
+    return Column(
+      children: [
+        _buildProductListHeader(),
+        Expanded(child: _buildSelectedProductsList()),
+      ],
+    );
+  }
+
+  Widget _buildProductSearchBar() {
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      builder: (context, serviceState) {
+        return BlocBuilder<SelectProductBloc, SelectProductState>(
+          bloc: _selectProductBloc,
+          builder: (context, state) {
+            return Stack(
+              clipBehavior: Clip.none,
               children: [
-                Icon(Icons.error_outline, size: 32, color: Colors.red.shade300),
-                const SizedBox(height: 8),
-                Text(
-                  error,
-                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                TextButton(
-                  onPressed: () {
-                    if (selectedServiceId != null) {
-                      _loadProductsForService(selectedServiceId!);
-                    }
-                  },
-                  child: const Text('Retry', style: TextStyle(fontSize: 12)),
-                ),
-              ],
-            ),
-          ),
-          loaded: (
-            products,
-            nextPageUrl,
-            unused1,
-            pickupDate,
-            returnDate,
-            isPaginating,
-            isSearching,
-            searchQuery,
-            searchType,
-            startPrice,
-            endPrice,
-            pickupTime,
-            returnTime,
-            unused2,
-            unused3,
-          ) {
-            if (products.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Row(
                   children: [
-                    Icon(Icons.inventory_2_outlined,
-                        size: 40, color: Colors.grey.shade300),
-                    const SizedBox(height: 8),
-                    Text(
-                      isSearching
-                          ? 'No products found'
-                          : 'No products available',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade500,
+                    // Service Category Dropdown
+                    serviceState.maybeWhen(
+                      loaded: (services) {
+                        return Container(
+                          height: 34,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<int>(
+                              value: selectedServiceId,
+                              hint: const Text(
+                                'Select Service',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 18,
+                                color: Colors.grey.shade600,
+                              ),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black87,
+                              ),
+                              items: services.map((service) {
+                                return DropdownMenuItem<int>(
+                                  value: service.id,
+                                  child: Text(
+                                    service.name,
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (id) {
+                                if (id != null) {
+                                  setState(() => selectedServiceId = id);
+                                  _loadProductsForService(id);
+                                  serviceSearchController.clear();
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      orElse: () => const SizedBox(
+                        width: 100,
+                        height: 34,
+                        child: Center(
+                          child: SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Search TextField
+                    Expanded(
+                      child: SizedBox(
+                        height: 34,
+                        child: CustomTextField(
+                          validator: (value) => null,
+                          controller: serviceSearchController,
+                          hintText: 'Search product name',
+                          prefixIcon: const Icon(Icons.search, size: 16),
+                          onChanged: (value) {
+                            // Trigger search on text change
+                            _onSearchChanged();
+                          },
+                        ),
                       ),
                     ),
                   ],
                 ),
-              );
-            }
+                state.maybeWhen(
+                  loaded: (products, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,
+                      p11, p12, p13, p14) {
+                    if (products.isEmpty ||
+                        serviceSearchController.text.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
 
-            return GridView.builder(
-              padding: const EdgeInsets.all(8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return _buildProductCard(product);
-              },
+                    return Positioned(
+                      top: 36,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 160,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.black12, blurRadius: 6)
+                          ],
+                        ),
+                        child: ListView.builder(
+                          itemCount: products.length,
+                          itemBuilder: (_, i) {
+                            final p = products[i];
+                            return ListTile(
+                              dense: true,
+                              title: Text(p.name,
+                                  style: const TextStyle(fontSize: 11)),
+                              subtitle: Text("${p.variants.length} variants",
+                                  style: const TextStyle(fontSize: 10)),
+                              onTap: () {
+                                serviceSearchController.clear();
+                                _showVariantSelectionDialog(p);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  orElse: () => const SizedBox.shrink(),
+                ),
+              ],
             );
           },
         );
@@ -1045,173 +886,176 @@ Widget _buildLeftTopSection() {
     );
   }
 
-  Widget _buildProductCard(dynamic product) {
-    // product is ProductModel from the BLoC
-    final name = product.name ?? 'Unknown';
-    final image = product.image;
-    final variants = product.variants ?? [];
-
-    return InkWell(
-      onTap: () => _showVariantSelectionDialog(product),
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 4,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(8),
-                  ),
-                ),
-                child: image != null
-                    ? ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(8),
-                        ),
-                        child: Image.network(
-                          image,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Center(
-                            child: Icon(Icons.image,
-                                size: 24, color: Colors.grey.shade400),
-                          ),
-                        ),
-                      )
-                    : Center(
-                        child: Icon(Icons.image,
-                            size: 24, color: Colors.grey.shade400),
-                      ),
-              ),
-            ),
-            // Name and Add button
-            Padding(
-              padding: const EdgeInsets.all(6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${variants.length} variants',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF6132E4),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+  Widget _buildProductTableHeader() {
+    return Container(
+      height: 32,
+      color: Colors.grey.shade100,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: const [
+          Expanded(
+              flex: 4, child: Text("Item", style: TextStyle(fontSize: 11))),
+          Expanded(child: Text("Variants", style: TextStyle(fontSize: 11))),
+          Expanded(child: Text("Price", style: TextStyle(fontSize: 11))),
+          SizedBox(width: 60),
+        ],
       ),
     );
   }
 
-void _showVariantSelectionDialog(dynamic product) {
-  final variants = product.variants ?? [];
-
-  if (variants.isEmpty) {
-    context.showSnackBar('No variants available', isError: true);
-    return;
+  Widget _buildProductTableRow(dynamic product) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey.shade200))),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.network(product.image,
+                      width: 32, height: 32, fit: BoxFit.cover),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: Text(product.name,
+                        style: const TextStyle(fontSize: 12))),
+              ],
+            ),
+          ),
+          Expanded(
+              child: Text("${product.variants.length}",
+                  style: const TextStyle(fontSize: 12))),
+          Expanded(
+              child: Text(product.rentPrice.toCurrency(),
+                  style: const TextStyle(fontSize: 12))),
+          SizedBox(
+            width: 60,
+            child: ElevatedButton(
+              onPressed: () => _showVariantSelectionDialog(product),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6132E4),
+                minimumSize: const Size(50, 26),
+                padding: EdgeInsets.zero,
+              ),
+              child: const Text("Add", style: TextStyle(fontSize: 11)),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  final selectedVariants = selectedProductsNotifier.value;
+  Widget _buildProductListTable() {
+    return BlocBuilder<SelectProductBloc, SelectProductState>(
+      bloc: _selectProductBloc,
+      builder: (context, state) {
+        return state.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e) => Center(child: Text(e)),
+          loaded: (
+            products,
+            _,
+            __,
+            ___,
+            ____,
+            _____,
+            isSearching,
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+          ) {
+            if (products.isEmpty) {
+              return const Center(child: Text("No products"));
+            }
 
-  showSizeAmountDialog(
-    context: context,
-    isSales: selectedBookingType == BookingType.sales,
-    alreadySelectedVariants: selectedVariants,
-    mainServiceType: product.mainServiceType,
-    productImageUrl: product.image!,
-    availableVariants: variants,
-    initialAmount: null,
-    initialQuantity: null,
-    onConfirm: (id, size, amount, quantity) {
-      final attribute = size == null || size.isEmpty
-          ? (variants.first.attribute.isEmpty
-              ? product.model
-              : variants.first.attribute)
-          : size;
+            return Column(
+              children: [
+                _buildProductTableHeader(),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder: (_, i) => _buildProductTableRow(products[i]),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
-      final products =
-          List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+  void _showVariantSelectionDialog(dynamic product) {
+    final variants = product.variants ?? [];
 
-      final existingIndex =
-          products.indexWhere((p) => p.variant.variantId == id);
+    if (variants.isEmpty) {
+      context.showSnackBar('No variants available', isError: true);
+      return;
+    }
 
-      if (existingIndex != -1) {
-        final existing = products[existingIndex];
-        products[existingIndex] =
-            existing.copyWith(quantity: existing.quantity + quantity);
-      } else {
-        products.add(ProductSelectedModel(
-          variant: ProductInfoModel(
-            id: id,
-            variantId: id,
-            productId: product.id,
-            name: product.name,
-            image: product.image,
-            amount: amount.toInt(),
-            category: product.category,
-            color: product.color,
-            model: product.model,
-            mainServiceType: product.mainServiceType,
-            variantAttribute: attribute,
-            measurements: [],
+    final selectedVariants = selectedProductsNotifier.value;
+
+    showSizeAmountDialog(
+      context: context,
+      isSales: selectedBookingType == BookingType.sales,
+      alreadySelectedVariants: selectedVariants,
+      mainServiceType: product.mainServiceType,
+      productImageUrl: product.image!,
+      availableVariants: variants,
+      initialAmount: null,
+      initialQuantity: null,
+      onConfirm: (id, size, amount, quantity) {
+        final attribute = size == null || size.isEmpty
+            ? (variants.first.attribute.isEmpty
+                ? product.model
+                : variants.first.attribute)
+            : size;
+
+        final products =
+            List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+
+        final existingIndex =
+            products.indexWhere((p) => p.variant.variantId == id);
+
+        if (existingIndex != -1) {
+          final existing = products[existingIndex];
+          products[existingIndex] =
+              existing.copyWith(quantity: existing.quantity + quantity);
+        } else {
+          products.add(ProductSelectedModel(
+            variant: ProductInfoModel(
+              id: id,
+              variantId: id,
+              productId: product.id,
+              name: product.name,
+              image: product.image,
+              amount: amount.toInt(),
+              category: product.category,
+              color: product.color,
+              model: product.model,
+              mainServiceType: product.mainServiceType,
+              variantAttribute: attribute,
+              measurements: [],
+              quantity: quantity,
+            ),
             quantity: quantity,
-          ),
-          quantity: quantity,
-          amount: amount.toInt(),
-        ));
-      }
+            amount: amount.toInt(),
+          ));
+        }
 
-      selectedProductsNotifier.value = products;
-    },
-  );
-}
-
+        selectedProductsNotifier.value = products;
+      },
+    );
+  }
 
   void _addProductVariant(dynamic product, dynamic variant) {
     final products =
@@ -1375,6 +1219,36 @@ void _showVariantSelectionDialog(dynamic product) {
           ),
           const SizedBox(width: 30),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryDropdown(List<ServicesModel> services) {
+    return Container(
+      height: 30,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<int>(
+          value: selectedServiceId,
+          isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+          style: const TextStyle(fontSize: 12, color: Colors.black),
+          items: services
+              .map((s) => DropdownMenuItem(
+                    value: s.id,
+                    child: Text(s.name, style: const TextStyle(fontSize: 12)),
+                  ))
+              .toList(),
+          onChanged: (id) {
+            if (id == null) return;
+            setState(() => selectedServiceId = id);
+            _loadProductsForService(id); // <<< CRITICAL
+          },
+        ),
       ),
     );
   }
@@ -1577,15 +1451,15 @@ void _showVariantSelectionDialog(dynamic product) {
                   const SizedBox(height: 10),
                   // Delivery status
                   if (!isSalesMode) _buildDeliveryStatusSection(),
-                   const SizedBox(height: 10),
-                   _buildPaymentMethodSection(),
-                    const SizedBox(height: 10),
-                    if (!isSalesMode) ...[
-          BookingDocumentUploadSection(
-            documentsNotifier: documentsNotifier,
-          ),
-          const SizedBox(height: 20),
-        ],
+                  const SizedBox(height: 10),
+                  _buildPaymentMethodSection(),
+                  const SizedBox(height: 10),
+                  if (!isSalesMode) ...[
+                    BookingDocumentUploadSection(
+                      documentsNotifier: documentsNotifier,
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ],
               ),
             ),

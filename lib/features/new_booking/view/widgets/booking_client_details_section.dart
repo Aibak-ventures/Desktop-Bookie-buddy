@@ -173,24 +173,37 @@ class _BookingClientDetailsSectionState
     );
   }
 
-  Widget _compactField(TextEditingController c, String hint, IconData icon,
-      [TextInputType type = TextInputType.text]) {
-    return SizedBox(
-      height: 34,
-      child: TextField(
-        controller: c,
-        keyboardType: type,
-        style: const TextStyle(fontSize: 12),
-        decoration: InputDecoration(
-          hintText: hint,
-          prefixIcon: Icon(icon, size: 16),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+Widget _compactField(
+  TextEditingController c,
+  String hint,
+  IconData icon, [
+  TextInputType type = TextInputType.text,
+]) {
+  return SizedBox(
+    height: 39,
+    child: TextField(
+      controller: c,
+      keyboardType: type,
+      style: const TextStyle(fontSize: 12),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 6),
+          child: Icon(icon, size: 16, color: Colors.grey.shade600),
         ),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 34,
+          minHeight: 34,
+        ),
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _card({required String title, Widget? trailing, required Widget child}) {
     return Container(

@@ -71,6 +71,9 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     super.initState();
     focusedDay = widget.pickupDate;
     selectedDay = widget.pickupDate;
+       context.read<StaffSearchCubit>()
+      ..clearSelectedStaff()
+      ..getAllStaffs();
   }
 
   @override
@@ -143,10 +146,14 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                       const SizedBox(height: 12),
                       // Cooling period
                       _buildCoolingPeriodRow(),
-                        const SizedBox(height: 12),
-                       _buildStaffDetailsCard(),
-                            const SizedBox(height: 12),
-                       _compactField(widget.clientAddressController, 'Place', Icons.location_on_outlined),
+                        const SizedBox(height: 72),
+                      
+                         
+                       SizedBox(width: 360,
+                        
+                        child: _compactField(widget.clientAddressController, 'Place', Icons.location_on_outlined)),
+   const SizedBox(height: 12),
+                        _buildStaffDetailsCard(),
                     ],
                   ),
                 ),
@@ -171,7 +178,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
               style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
           const SizedBox(width: 6),
           Transform.scale(
-            scale: .8,
+            scale: .6,
             child: Switch(
               value: widget.isSearchClientEnabled,
               onChanged: widget.onSearchClientToggle,
@@ -284,7 +291,7 @@ Widget _buildClientManualFields() {
   TextInputType type = TextInputType.text,
 ]) {
   return SizedBox(
-    height: 34,
+    height: 38,
     child: InkWell(
       borderRadius: BorderRadius.circular(8),
       child: Container(
@@ -302,10 +309,10 @@ Widget _buildClientManualFields() {
                 controller: c,
                 keyboardType: type,
                 style: const TextStyle(fontSize: 12),
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   border: InputBorder.none,
                   isCollapsed: true,
-                  hintText: '',
+                  hintText: hint,
                 ),
               ),
             ),
