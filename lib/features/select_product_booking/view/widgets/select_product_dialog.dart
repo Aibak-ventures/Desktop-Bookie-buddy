@@ -112,17 +112,17 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
     final isWide = MediaQuery.of(context).size.width > 800;
 
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: isWide ? 0.2.widthR : 16, // Better responsive spacing
-        vertical: 40, // More vertical spacing
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 24,
       ),
       backgroundColor: Colors.white,
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: isWide ? 600 : 500, // Wider on larger screens
-          maxHeight: MediaQuery.of(context).size.height * 0.85, // Limit height
+        constraints: const BoxConstraints(
+          maxWidth: 420, // Standard web dialog width
+          maxHeight: 600, // Reasonable max height
         ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -346,7 +346,7 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
     // Get quantity as number (int for normal, double for custom work)
     final qtyText = quantityController.text.trim();
     final qty = qtyText.toIntOrNull();
-    
+
     // Determine max stock based on product type
     final maxStock = widget.isSales
         ? (selectedVariant?.remainingStock ?? selectedVariant?.stock)
