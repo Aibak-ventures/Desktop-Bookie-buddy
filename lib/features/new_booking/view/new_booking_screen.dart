@@ -391,7 +391,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         const SizedBox(width: 12),
         // Right section
         Expanded(
-          flex: 2,
+          flex: 1,
           child: _buildRightSection(),
         ),
       ],
@@ -664,54 +664,113 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       ),
     );
   }
-
-  Widget _buildLeftTopSection() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+Widget _buildLeftTopSection() {
+  return SizedBox(
+    // height: 510,
+    child: Column(
       children: [
-        // Calendar section
-        Expanded(
+        // Calendar + date time (already compact)
+        SizedBox(
+          height: 510,
           child: BookingCalendarWidget(
+                 staffNameController: staffNameController,
+            clientNameController: clientNameController,
+            clientPhone1Controller: clientPhone1Controller,
+            clientPhone2Controller: clientPhone2Controller,
+            clientAddressController: clientAddressController,
+            isSearchClientEnabled: isSearchClientEnabled,
+            onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
+            onStaffSelected: (id) => setState(() => selectedStaffId = id),
+            onClientSelected: (id) => setState(() => selectedClientId = id),
             pickupDate: pickupDate,
             returnDate: returnDate,
             coolingPeriodDate: coolingPeriodDate,
             pickupTime: pickupTime,
             returnTime: returnTime,
             coolingPeriodTime: null,
-            onPickupDateChanged: (date) => setState(() => pickupDate = date),
-            onReturnDateChanged: (date) => setState(() => returnDate = date),
-            onCoolingPeriodDateChanged: (date) =>
-                setState(() => coolingPeriodDate = date),
-            onPickupTimeChanged: (time) => setState(() => pickupTime = time),
-            onReturnTimeChanged: (time) => setState(() => returnTime = time),
-            onCoolingPeriodTimeChanged: (time) {}
-                // setState(() => coolingPeriodTime = time),
+            onPickupDateChanged: (d) => setState(() => pickupDate = d),
+            onReturnDateChanged: (d) => setState(() => returnDate = d),
+            onCoolingPeriodDateChanged: (d) =>
+                setState(() => coolingPeriodDate = d),
+            onPickupTimeChanged: (t) => setState(() => pickupTime = t),
+            onReturnTimeChanged: (t) => setState(() => returnTime = t),
+            onCoolingPeriodTimeChanged: (_) {},
           ),
         ),
-        const SizedBox(width: 20),
-        // Staff and Client details
-        Expanded(
-          child: BookingClientDetailsSection(
-            staffNameController: staffNameController,
-            clientNameController: clientNameController,
-            clientPhone1Controller: clientPhone1Controller,
-            clientPhone2Controller: clientPhone2Controller,
-            clientAddressController: clientAddressController,
-            isSearchClientEnabled: isSearchClientEnabled,
-            onSearchClientToggle: (value) {
-              setState(() => isSearchClientEnabled = value);
-            },
-            onStaffSelected: (staffId) {
-              setState(() => selectedStaffId = staffId);
-            },
-            onClientSelected: (clientId) {
-              setState(() => selectedClientId = clientId);
-            },
-          ),
-        ),
+
+        const SizedBox(height: 10),
+
+        // Client + Staff compact block
+        // Expanded(
+          // child: BookingClientDetailsCompact(
+            // staffNameController: staffNameController,
+            // clientNameController: clientNameController,
+            // clientPhone1Controller: clientPhone1Controller,
+            // clientPhone2Controller: clientPhone2Controller,
+            // clientAddressController: clientAddressController,
+            // isSearchClientEnabled: isSearchClientEnabled,
+            // onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
+            // onStaffSelected: (id) => setState(() => selectedStaffId = id),
+            // onClientSelected: (id) => setState(() => selectedClientId = id),
+        //   ),
+        // ),
       ],
-    );
-  }
+    ),
+  );
+}
+
+
+
+  // Widget _buildLeftTopSection() {
+  //   return SizedBox(
+  //     height: 240,
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         // Calendar section
+  //         Expanded(
+  //           child: BookingCalendarWidget(
+  //             pickupDate: pickupDate,
+  //             returnDate: returnDate,
+  //             coolingPeriodDate: coolingPeriodDate,
+  //             pickupTime: pickupTime,
+  //             returnTime: returnTime,
+  //             coolingPeriodTime: null,
+  //             onPickupDateChanged: (date) => setState(() => pickupDate = date),
+  //             onReturnDateChanged: (date) => setState(() => returnDate = date),
+  //             onCoolingPeriodDateChanged: (date) =>
+  //                 setState(() => coolingPeriodDate = date),
+  //             onPickupTimeChanged: (time) => setState(() => pickupTime = time),
+  //             onReturnTimeChanged: (time) => setState(() => returnTime = time),
+  //             onCoolingPeriodTimeChanged: (time) {}
+  //                 // setState(() => coolingPeriodTime = time),
+  //           ),
+  //         ),
+  //         const SizedBox(width: 20),
+  //         // Staff and Client details
+          // Expanded(
+          //   child: BookingClientDetailsSection(
+          //     staffNameController: staffNameController,
+          //     clientNameController: clientNameController,
+          //     clientPhone1Controller: clientPhone1Controller,
+          //     clientPhone2Controller: clientPhone2Controller,
+          //     clientAddressController: clientAddressController,
+          //     isSearchClientEnabled: isSearchClientEnabled,
+          //     onSearchClientToggle: (value) {
+          //       setState(() => isSearchClientEnabled = value);
+          //     },
+          //     onStaffSelected: (staffId) {
+          //       setState(() => selectedStaffId = staffId);
+          //     },
+          //     onClientSelected: (clientId) {
+          //       setState(() => selectedClientId = clientId);
+          //     },
+          //   ),
+          // ),
+  //       ],
+  //     ),
+  //   );
+  // }
   Widget _buildCompactTextField({
     required TextEditingController controller,
     required String label,

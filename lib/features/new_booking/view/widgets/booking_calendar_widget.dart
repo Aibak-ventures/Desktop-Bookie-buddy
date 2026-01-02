@@ -1,6 +1,11 @@
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookingCalendarWidget extends StatefulWidget {
@@ -16,6 +21,16 @@ class BookingCalendarWidget extends StatefulWidget {
   final ValueChanged<TimeOfDay?> onPickupTimeChanged;
   final ValueChanged<TimeOfDay?> onReturnTimeChanged;
   final ValueChanged<TimeOfDay?> onCoolingPeriodTimeChanged;
+  final bool isSearchClientEnabled;
+  final ValueChanged<bool> onSearchClientToggle;
+    final TextEditingController staffNameController;
+  final TextEditingController clientNameController;
+  final TextEditingController clientPhone1Controller;
+  final TextEditingController clientPhone2Controller;
+  final TextEditingController clientAddressController;
+
+  final ValueChanged<int?> onStaffSelected;
+  final ValueChanged<int?> onClientSelected;
 
   const BookingCalendarWidget({
     super.key,
@@ -30,6 +45,15 @@ class BookingCalendarWidget extends StatefulWidget {
     required this.onCoolingPeriodDateChanged,
     required this.onPickupTimeChanged,
     required this.onReturnTimeChanged,
+      required this.staffNameController,
+    required this.clientNameController,
+    required this.clientPhone1Controller,
+    required this.clientPhone2Controller,
+    required this.clientAddressController,
+    required this.isSearchClientEnabled,
+    required this.onSearchClientToggle,
+    required this.onStaffSelected,
+    required this.onClientSelected,
     required this.onCoolingPeriodTimeChanged,
   });
 
@@ -77,38 +101,249 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           ),
           // const SizedBox(height: 16),
           // Calendar
-          // _buildCalendar(),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      _buildCalendar(),
+                      // _buildCalendar(),
+    _buildClientDetailsCard(), 
+
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDateTimeRow(
+                        label: 'Pickup date',
+                        date: widget.pickupDate,
+                        time: widget.pickupTime,
+                        onDateTap: () => _selectDate(true),
+                        onTimeTap: () => _selectTime(true),
+                        iconData: Icons.calendar_today_outlined,
+                      ),
+                      const SizedBox(height: 12),
+                      // Return date and time
+                      _buildDateTimeRow(
+                        label: 'Return date',
+                        date: widget.returnDate,
+                        time: widget.returnTime,
+                        onDateTap: () => _selectDate(false),
+                        onTimeTap: () => _selectTime(false),
+                        iconData: Icons.calendar_today_outlined,
+                      ),
+                      const SizedBox(height: 12),
+                      // Cooling period
+                      _buildCoolingPeriodRow(),
+                        const SizedBox(height: 12),
+                       _buildStaffDetailsCard(),
+                            const SizedBox(height: 12),
+                       _compactField(widget.clientAddressController, 'Place', Icons.location_on_outlined),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           // const SizedBox(height: 20),
           // Pickup date and time
-          _buildDateTimeRow(
-            label: 'Pickup date',
-            date: widget.pickupDate,
-            time: widget.pickupTime,
-            onDateTap: () => _selectDate(true),
-            onTimeTap: () => _selectTime(true),
-            iconData: Icons.calendar_today_outlined,
-          ),
-          const SizedBox(height: 12),
-          // Return date and time
-          _buildDateTimeRow(
-            label: 'Return date',
-            date: widget.returnDate,
-            time: widget.returnTime,
-            onDateTap: () => _selectDate(false),
-            onTimeTap: () => _selectTime(false),
-            iconData: Icons.calendar_today_outlined,
-          ),
-          const SizedBox(height: 12),
-          // Cooling period
-          _buildCoolingPeriodRow(),
+         
+        
+       
         ],
       ),
     );
   }
+                      _buildClientDetailsCard() {
+    return _card(
+      title: 'Client details',
+      trailing: Row(
+        children: [
+          Text('Search client',
+              style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+          const SizedBox(width: 6),
+          Transform.scale(
+            scale: .8,
+            child: Switch(
+              value: widget.isSearchClientEnabled,
+              onChanged: widget.onSearchClientToggle,
+              activeColor: AppColors.purple,
+            ),
+          ),
+        ],
+      ),
+      child: widget.isSearchClientEnabled
+          ? _buildClientSearchField()
+          : _buildClientManualFields(),
+    );
+  }
+    Widget _buildClientSearchField() {
+    return BlocBuilder<ClientCubit, ClientState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            SizedBox(
+              height: 34,
+              child: CustomTextField(
+                validator: (value) {
+                  
+                },
+                controller: widget.clientNameController,
+                hintText: 'Search client',
+                prefixIcon: const Icon(Icons.search, size: 16),
+                // style: const TextStyle(fontSize: 12),
+                onChanged: (v) {
+                  if (v.length >= 3) {
+                    context.read<ClientCubit>().searchClient(v);
+                  }
+                },
+              ),
+            ),
+            if (state.suggestions.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ListView.builder(
+                  itemCount: state.suggestions.length,
+                  itemBuilder: (_, i) {
+                    final c = state.suggestions[i];
+                    return ListTile(
+                      dense: true,
+                      visualDensity: const VisualDensity(vertical: -3),
+                      title:
+                          Text(c.name, style: const TextStyle(fontSize: 11)),
+                      subtitle: Text(c.phone1.toString(),
+                          style: TextStyle(
+                              fontSize: 10, color: Colors.grey.shade600)),
+                      onTap: () {
+                        widget.clientNameController.text = c.name;
+                        widget.clientPhone1Controller.text =
+                            c.phone1.toString();
+                        widget.clientPhone2Controller.text =
+                            c.phone2?.toString() ?? '';
+                        widget.onClientSelected(c.id);
+                        context.read<ClientCubit>().selectClient(c);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ],
+        );
+      },
+    );
+  }
 
+Widget _buildClientManualFields() {
+  return Column(
+    children: [
+      Column(
+        children: [
+          _compactField(widget.clientNameController, 'Name', Icons.person_outline),
+          const SizedBox(height: 8),
+          _compactField(widget.clientPhone1Controller, 'Phone', Icons.phone_outlined, TextInputType.phone),
+          const SizedBox(height: 8),
+          _compactField(widget.clientPhone2Controller, 'Phone 2', Icons.phone_outlined, TextInputType.phone),
+        ],
+      ),
+      const SizedBox(width: 8),
+  
+    ],
+  );
+}
+
+  Widget _buildStaffDetailsCard() {
+    return _card(
+      title: 'Staff details',
+      child: BlocListener<StaffSearchCubit, StaffSearchState>(
+        listener: (context, state) =>
+            widget.onStaffSelected(state.selectedStaff?.id),
+        child: StaffSearchNameField(
+          nameController: widget.staffNameController,
+        ),
+      ),
+    );
+  }
+  Widget _compactField(
+  TextEditingController c,
+  String hint,
+  IconData icon, [
+  TextInputType type = TextInputType.text,
+]) {
+  return SizedBox(
+    height: 34,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: Colors.grey.shade600),
+            const SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                controller: c,
+                keyboardType: type,
+                style: const TextStyle(fontSize: 12),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  isCollapsed: true,
+                  hintText: '',
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+ Widget _card({required String title, Widget? trailing, required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        // borderRadius: BorderRadius.circular(10),
+        // border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w600)),
+              const Spacer(),
+              if (trailing != null) trailing,
+            ],
+          ),
+          const SizedBox(height: 8),
+          child,
+        ],
+      ),
+    );
+  }
 Widget _buildCalendar() {
   return Container(
-    height: 240,
     decoration: BoxDecoration(
       border: Border.all(color: AppColors.purple.withOpacity(0.25), width: 1),
       borderRadius: BorderRadius.circular(10),
@@ -117,29 +352,24 @@ Widget _buildCalendar() {
       firstDay: DateTime.now(),
       lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
       focusedDay: focusedDay,
-
       selectedDayPredicate: (day) =>
           isSameDay(day, widget.pickupDate) ||
           isSameDay(day, widget.returnDate),
-
       rangeStartDay: widget.pickupDate,
       rangeEndDay: widget.returnDate,
       rangeSelectionMode: RangeSelectionMode.disabled,
-
       calendarFormat: CalendarFormat.month,
-
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
         leftChevronIcon:
-            Icon(Icons.chevron_left, size: 10, color: Colors.grey.shade600),
+            Icon(Icons.chevron_left, size: 16, color: Colors.grey.shade600),
         rightChevronIcon:
-            Icon(Icons.chevron_right, size: 10, color: Colors.grey.shade600),
+            Icon(Icons.chevron_right, size: 16, color: Colors.grey.shade600),
         titleTextStyle:
-            const TextStyle(fontSize: 9, fontWeight: FontWeight.w600),
+            const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         headerPadding: const EdgeInsets.symmetric(vertical: 4),
       ),
-
       calendarStyle: CalendarStyle(
         todayDecoration: BoxDecoration(
           color: AppColors.green.withOpacity(.25),
@@ -157,20 +387,19 @@ Widget _buildCalendar() {
         defaultTextStyle: const TextStyle(fontSize: 11),
         weekendTextStyle: const TextStyle(fontSize: 11),
       ),
-
       daysOfWeekStyle: DaysOfWeekStyle(
         weekdayStyle:
             TextStyle(fontSize: 10, color: Colors.grey.shade600),
         weekendStyle:
             TextStyle(fontSize: 10, color: Colors.grey.shade600),
       ),
-
+      rowHeight: 32,
+      daysOfWeekHeight: 20,
       onDaySelected: (day, fDay) {
         setState(() {
           focusedDay = fDay;
           selectedDay = day;
         });
-
         if (isSelectingPickup) {
           widget.onPickupDateChanged(day);
           if (widget.returnDate.isBefore(day)) {
@@ -183,11 +412,12 @@ Widget _buildCalendar() {
           }
         }
       },
-
       onPageChanged: (fDay) => setState(() => focusedDay = fDay),
     ),
   );
 }
+
+
 
 
   Widget _buildDateTimeRow({
