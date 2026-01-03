@@ -16,7 +16,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -78,7 +78,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
     return InkWell(
       onTap: () => _pickDocuments(context),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.grey.shade50,
           borderRadius: BorderRadius.circular(12),
@@ -100,7 +100,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
               'Click to upload documents',
               style: TextStyle(
                 color: Colors.grey.shade500,
-                fontSize: 13,
+                fontSize: 12,
               ),
             ),
           ],

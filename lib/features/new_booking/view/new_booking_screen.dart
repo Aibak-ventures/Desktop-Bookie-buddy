@@ -335,42 +335,40 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     return _buildBookingContent();
   }
 
-  Widget _buildBookingContent() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Left section - Date/Time & Client details
-        Expanded(
-          flex: 2,
-          child: Column(
-            children: [
-              // Top row: Date/Time and Client details
-              SizedBox(
-                // height: 210, // controls top row height
-                child: Row(
-                  children: [
-                    // Expanded(child: _buildCompactDateTimeSection()),
-                    // const SizedBox(width: 12),
-                    Expanded(child: _buildLeftTopSection()),
-                  ],
-                ),
+// BOOKING
+Widget _buildBookingContent() {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Main area
+      Expanded(
+        flex: 5, // ⬅️ more space to main content
+        child: Column(
+          children: [
+            SizedBox(
+              child: Row(
+                children: [
+                  Expanded(child: _buildLeftTopSection()),
+                ],
               ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(child: _buildServiceSelectionSection()),
+          ],
+        ),
+      ),
 
-              const SizedBox(height: 10),
-              // Service selection section - scrollable
-              Expanded(child: _buildServiceSelectionSection()),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
-        // Right section - Payment & Summary
-        Expanded(
-          flex: 1,
-          child: _buildRightSection(),
-        ),
-      ],
-    );
-  }
+      const SizedBox(width: 10),
+
+      // Right panel (Slim)
+      SizedBox(
+        width: 300, // ⬅️ fixed slim width
+        child: _buildRightSection(),
+      ),
+    ],
+  );
+}
+
 
   Widget _buildSalesContent() {
     return Row(
@@ -738,6 +736,20 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       ),
       child: Column(
         children: [
+          SizedBox(height: 10),
+          Row(
+            children: [
+              SizedBox(
+                width: 10,
+                height: 20,
+              ),
+              Text('  Selected Products',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade800)),
+            ],
+          ),
           _buildProductSearchBar(),
           const SizedBox(height: 6),
           Expanded(child: _buildSelectedProductsTable()),
@@ -1988,19 +2000,19 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
                   _buildCompactAmountField(
                     controller: advanceAmountController,
-                    label: 'Advance',
+                    label: 'Advance Amount (optional)',
                   ),
                   const SizedBox(height: 8),
                   if (!isSalesMode) ...[
                     _buildCompactAmountField(
                       controller: securityAmountController,
-                      label: 'Security',
+                      label: 'Security Amount (optional)',
                     ),
                     const SizedBox(height: 8),
                   ],
                   _buildCompactAmountField(
                     controller: discountAmountController,
-                    label: 'Discount',
+                    label: 'Discount Amount (optional)',
                   ),
                   const SizedBox(height: 10),
                   // Additional charges
@@ -2027,6 +2039,14 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         ),
         const SizedBox(height: 8),
         // Summary section
+        Row(
+          children: [
+            const Text(
+              'Summary',
+              style: TextStyle(fontSize: 18, color: Color(0xFF3E3E3E)),
+            ),
+          ],
+        ),
         _buildSummarySection(),
       ],
     );
@@ -2038,28 +2058,22 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   }) {
     return Row(
       children: [
-        SizedBox(
-          width: 70,
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
-          ),
-        ),
         Expanded(
           child: Container(
-            height: 30,
+            height: 37,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300, width: 1),
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 12),
               decoration: InputDecoration(
+                hintText: label,
                 prefixText: '₹ ',
                 prefixStyle:
-                    TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    TextStyle(fontSize: 14, color: Colors.grey.shade600),
                 border: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -2281,7 +2295,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromARGB(255, 245, 242, 254),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade200),
       ),
@@ -2317,9 +2331,9 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
               return Column(
                 children: [
-                  _buildSummaryRow('Subtotal', productTotal),
+                  _buildSummaryRow('Product total', productTotal),
                   if (additionalTotal > 0)
-                    _buildSummaryRow('+ Additional', additionalTotal),
+                    _buildSummaryRow('Additional charges', additionalTotal),
                   if (discountAmount > 0)
                     _buildSummaryRow('- Discount', discountAmount,
                         isNegative: true),
@@ -2327,7 +2341,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   _buildSummaryRow('Paid', advanceAmount,
                       valueColor: AppColors.green),
                   _buildSummaryRow(
-                    'Balance',
+                    'Total payable',
                     remainingAmount > 0 ? remainingAmount : 0,
                     valueColor: const Color(0xFF6132E4),
                     isBold: true,

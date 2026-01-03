@@ -23,7 +23,7 @@ class BookingCalendarWidget extends StatefulWidget {
   final ValueChanged<TimeOfDay?> onCoolingPeriodTimeChanged;
   final bool isSearchClientEnabled;
   final ValueChanged<bool> onSearchClientToggle;
-    final TextEditingController staffNameController;
+  final TextEditingController staffNameController;
   final TextEditingController clientNameController;
   final TextEditingController clientPhone1Controller;
   final TextEditingController clientPhone2Controller;
@@ -45,7 +45,7 @@ class BookingCalendarWidget extends StatefulWidget {
     required this.onCoolingPeriodDateChanged,
     required this.onPickupTimeChanged,
     required this.onReturnTimeChanged,
-      required this.staffNameController,
+    required this.staffNameController,
     required this.clientNameController,
     required this.clientPhone1Controller,
     required this.clientPhone2Controller,
@@ -71,7 +71,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     super.initState();
     focusedDay = widget.pickupDate;
     selectedDay = widget.pickupDate;
-       context.read<StaffSearchCubit>()
+    context.read<StaffSearchCubit>()
       ..clearSelectedStaff()
       ..getAllStaffs();
   }
@@ -114,8 +114,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                     children: [
                       _buildCalendar(),
                       // _buildCalendar(),
-    _buildClientDetailsCard(), 
-
+                      _buildClientDetailsCard(),
                     ],
                   ),
                 ),
@@ -146,14 +145,14 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                       const SizedBox(height: 12),
                       // Cooling period
                       _buildCoolingPeriodRow(),
-                        const SizedBox(height: 72),
-                      
-                         
-                       SizedBox(width: 360,
-                        
-                        child: _compactField(widget.clientAddressController, 'Place', Icons.location_on_outlined)),
-   const SizedBox(height: 12),
-                        _buildStaffDetailsCard(),
+                      const SizedBox(height: 72),
+
+                      SizedBox(
+                          width: 360,
+                          child: _compactField(widget.clientAddressController,
+                              'Place', Icons.location_on_outlined)),
+                      const SizedBox(height: 12),
+                      _buildStaffDetailsCard(),
                     ],
                   ),
                 ),
@@ -162,14 +161,12 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           ),
           // const SizedBox(height: 20),
           // Pickup date and time
-         
-        
-       
         ],
       ),
     );
   }
-                      _buildClientDetailsCard() {
+
+  _buildClientDetailsCard() {
     return _card(
       title: 'Client details',
       trailing: Row(
@@ -192,7 +189,8 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           : _buildClientManualFields(),
     );
   }
-    Widget _buildClientSearchField() {
+
+  Widget _buildClientSearchField() {
     return BlocBuilder<ClientCubit, ClientState>(
       builder: (context, state) {
         return Column(
@@ -200,9 +198,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             SizedBox(
               height: 34,
               child: CustomTextField(
-                validator: (value) {
-                  
-                },
+                validator: (value) {},
                 controller: widget.clientNameController,
                 hintText: 'Search client',
                 prefixIcon: const Icon(Icons.search, size: 16),
@@ -229,8 +225,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                     return ListTile(
                       dense: true,
                       visualDensity: const VisualDensity(vertical: -3),
-                      title:
-                          Text(c.name, style: const TextStyle(fontSize: 11)),
+                      title: Text(c.name, style: const TextStyle(fontSize: 11)),
                       subtitle: Text(c.phone1.toString(),
                           style: TextStyle(
                               fontSize: 10, color: Colors.grey.shade600)),
@@ -254,23 +249,25 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     );
   }
 
-Widget _buildClientManualFields() {
-  return Column(
-    children: [
-      Column(
-        children: [
-          _compactField(widget.clientNameController, 'Name', Icons.person_outline),
-          const SizedBox(height: 8),
-          _compactField(widget.clientPhone1Controller, 'Phone', Icons.phone_outlined, TextInputType.phone),
-          const SizedBox(height: 8),
-          _compactField(widget.clientPhone2Controller, 'Phone 2', Icons.phone_outlined, TextInputType.phone),
-        ],
-      ),
-      const SizedBox(width: 8),
-  
-    ],
-  );
-}
+  Widget _buildClientManualFields() {
+    return Column(
+      children: [
+        Column(
+          children: [
+            _compactField(
+                widget.clientNameController, 'Name', Icons.person_outline),
+            const SizedBox(height: 8),
+            _compactField(widget.clientPhone1Controller, 'Phone',
+                Icons.phone_outlined, TextInputType.phone),
+            const SizedBox(height: 8),
+            _compactField(widget.clientPhone2Controller, 'Phone 2',
+                Icons.phone_outlined, TextInputType.phone),
+          ],
+        ),
+        const SizedBox(width: 8),
+      ],
+    );
+  }
 
   Widget _buildStaffDetailsCard() {
     return _card(
@@ -284,46 +281,48 @@ Widget _buildClientManualFields() {
       ),
     );
   }
+
   Widget _compactField(
-  TextEditingController c,
-  String hint,
-  IconData icon, [
-  TextInputType type = TextInputType.text,
-]) {
-  return SizedBox(
-    height: 38,
-    child: InkWell(
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 16, color: Colors.grey.shade600),
-            const SizedBox(width: 8),
-            Expanded(
-              child: TextField(
-                controller: c,
-                keyboardType: type,
-                style: const TextStyle(fontSize: 12),
-                decoration:  InputDecoration(
-                  border: InputBorder.none,
-                  isCollapsed: true,
-                  hintText: hint,
+    TextEditingController c,
+    String hint,
+    IconData icon, [
+    TextInputType type = TextInputType.text,
+  ]) {
+    return SizedBox(
+      height: 38,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 16, color: Colors.grey.shade600),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextField(
+                  controller: c,
+                  keyboardType: type,
+                  style: const TextStyle(fontSize: 12),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    isCollapsed: true,
+                    hintText: hint,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
- Widget _card({required String title, Widget? trailing, required Widget child}) {
+  Widget _card(
+      {required String title, Widget? trailing, required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -349,83 +348,80 @@ Widget _buildClientManualFields() {
       ),
     );
   }
-Widget _buildCalendar() {
-  return Container(
-    decoration: BoxDecoration(
-      border: Border.all(color: AppColors.purple.withOpacity(0.25), width: 1),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: TableCalendar(
-      firstDay: DateTime.now(),
-      lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
-      focusedDay: focusedDay,
-      selectedDayPredicate: (day) =>
-          isSameDay(day, widget.pickupDate) ||
-          isSameDay(day, widget.returnDate),
-      rangeStartDay: widget.pickupDate,
-      rangeEndDay: widget.returnDate,
-      rangeSelectionMode: RangeSelectionMode.disabled,
-      calendarFormat: CalendarFormat.month,
-      headerStyle: HeaderStyle(
-        formatButtonVisible: false,
-        titleCentered: true,
-        leftChevronIcon:
-            Icon(Icons.chevron_left, size: 16, color: Colors.grey.shade600),
-        rightChevronIcon:
-            Icon(Icons.chevron_right, size: 16, color: Colors.grey.shade600),
-        titleTextStyle:
-            const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-        headerPadding: const EdgeInsets.symmetric(vertical: 4),
+
+  Widget _buildCalendar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.purple.withOpacity(0.05),
+        border: Border.all(color: AppColors.purple.withOpacity(0.25), width: 1),
+        borderRadius: BorderRadius.circular(10),
       ),
-      calendarStyle: CalendarStyle(
-        todayDecoration: BoxDecoration(
-          color: AppColors.green.withOpacity(.25),
-          shape: BoxShape.circle,
+      child: TableCalendar(
+        firstDay: DateTime.now(),
+        lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
+        focusedDay: focusedDay,
+        selectedDayPredicate: (day) =>
+            isSameDay(day, widget.pickupDate) ||
+            isSameDay(day, widget.returnDate),
+        rangeStartDay: widget.pickupDate,
+        rangeEndDay: widget.returnDate,
+        rangeSelectionMode: RangeSelectionMode.disabled,
+        calendarFormat: CalendarFormat.month,
+        headerStyle: HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+          leftChevronIcon:
+              Icon(Icons.chevron_left, size: 16, color: Colors.grey.shade600),
+          rightChevronIcon:
+              Icon(Icons.chevron_right, size: 16, color: Colors.grey.shade600),
+          titleTextStyle:
+              const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          headerPadding: const EdgeInsets.symmetric(vertical: 4),
         ),
-        selectedDecoration:
-            const BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
-        rangeStartDecoration:
-            const BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
-        rangeEndDecoration:
-            const BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
-        rangeHighlightColor: AppColors.purple.withOpacity(.15),
-        outsideDaysVisible: false,
-        cellMargin: const EdgeInsets.all(2),
-        defaultTextStyle: const TextStyle(fontSize: 11),
-        weekendTextStyle: const TextStyle(fontSize: 11),
-      ),
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekdayStyle:
-            TextStyle(fontSize: 10, color: Colors.grey.shade600),
-        weekendStyle:
-            TextStyle(fontSize: 10, color: Colors.grey.shade600),
-      ),
-      rowHeight: 32,
-      daysOfWeekHeight: 20,
-      onDaySelected: (day, fDay) {
-        setState(() {
-          focusedDay = fDay;
-          selectedDay = day;
-        });
-        if (isSelectingPickup) {
-          widget.onPickupDateChanged(day);
-          if (widget.returnDate.isBefore(day)) {
-            widget.onReturnDateChanged(day.add(const Duration(days: 1)));
+        calendarStyle: CalendarStyle(
+          todayDecoration: BoxDecoration(
+            color: AppColors.green.withOpacity(.25),
+            shape: BoxShape.circle,
+          ),
+          selectedDecoration: const BoxDecoration(
+              color: AppColors.purple, shape: BoxShape.circle),
+          rangeStartDecoration: const BoxDecoration(
+              color: AppColors.purple, shape: BoxShape.circle),
+          rangeEndDecoration: const BoxDecoration(
+              color: AppColors.purple, shape: BoxShape.circle),
+          rangeHighlightColor: AppColors.purple.withOpacity(.15),
+          outsideDaysVisible: false,
+          cellMargin: const EdgeInsets.all(2),
+          defaultTextStyle: const TextStyle(fontSize: 11),
+          weekendTextStyle: const TextStyle(fontSize: 11),
+        ),
+        daysOfWeekStyle: DaysOfWeekStyle(
+          weekdayStyle: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+          weekendStyle: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+        ),
+        rowHeight: 32,
+        daysOfWeekHeight: 20,
+        onDaySelected: (day, fDay) {
+          setState(() {
+            focusedDay = fDay;
+            selectedDay = day;
+          });
+          if (isSelectingPickup) {
+            widget.onPickupDateChanged(day);
+            if (widget.returnDate.isBefore(day)) {
+              widget.onReturnDateChanged(day.add(const Duration(days: 1)));
+            }
+          } else {
+            if (day.isAfter(widget.pickupDate) ||
+                isSameDay(day, widget.pickupDate)) {
+              widget.onReturnDateChanged(day);
+            }
           }
-        } else {
-          if (day.isAfter(widget.pickupDate) ||
-              isSameDay(day, widget.pickupDate)) {
-            widget.onReturnDateChanged(day);
-          }
-        }
-      },
-      onPageChanged: (fDay) => setState(() => focusedDay = fDay),
-    ),
-  );
-}
-
-
-
+        },
+        onPageChanged: (fDay) => setState(() => focusedDay = fDay),
+      ),
+    );
+  }
 
   Widget _buildDateTimeRow({
     required String label,
@@ -482,6 +478,7 @@ Widget _buildCalendar() {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
+              color: AppColors.purple.withOpacity(0.05),
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
             ),
@@ -530,6 +527,7 @@ Widget _buildCalendar() {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
+              color: AppColors.purple.withOpacity(0.05),
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
             ),
@@ -578,6 +576,7 @@ Widget _buildCalendar() {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
+                    color: AppColors.purple.withOpacity(0.05),
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -613,6 +612,7 @@ Widget _buildCalendar() {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
+                    color: AppColors.purple.withOpacity(0.05),
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
                   ),

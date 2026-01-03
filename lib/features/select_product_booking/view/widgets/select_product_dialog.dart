@@ -109,8 +109,6 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final isWide = MediaQuery.of(context).size.width > 800;
-
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(
         horizontal: 24,
