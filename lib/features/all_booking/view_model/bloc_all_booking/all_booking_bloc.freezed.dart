@@ -25,6 +25,8 @@ mixin _$AllBookingEvent {
     required TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)
         updateBooking,
+    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
+        updateDeliveryStatus,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,8 @@ mixin _$AllBookingEvent {
     TResult? Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -45,6 +49,8 @@ mixin _$AllBookingEvent {
     TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -53,6 +59,7 @@ mixin _$AllBookingEvent {
     required TResult Function(_LoadBookings value) loadBookings,
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -60,6 +67,7 @@ mixin _$AllBookingEvent {
     TResult? Function(_LoadBookings value)? loadBookings,
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -67,6 +75,7 @@ mixin _$AllBookingEvent {
     TResult Function(_LoadBookings value)? loadBookings,
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -186,6 +195,8 @@ class _$LoadBookingsImpl implements _LoadBookings {
     required TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)
         updateBooking,
+    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
+        updateDeliveryStatus,
   }) {
     return loadBookings(startDate, endDate, searchQuery);
   }
@@ -199,6 +210,8 @@ class _$LoadBookingsImpl implements _LoadBookings {
     TResult? Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
   }) {
     return loadBookings?.call(startDate, endDate, searchQuery);
   }
@@ -212,6 +225,8 @@ class _$LoadBookingsImpl implements _LoadBookings {
     TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
     required TResult orElse(),
   }) {
     if (loadBookings != null) {
@@ -226,6 +241,7 @@ class _$LoadBookingsImpl implements _LoadBookings {
     required TResult Function(_LoadBookings value) loadBookings,
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
   }) {
     return loadBookings(this);
   }
@@ -236,6 +252,7 @@ class _$LoadBookingsImpl implements _LoadBookings {
     TResult? Function(_LoadBookings value)? loadBookings,
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
   }) {
     return loadBookings?.call(this);
   }
@@ -246,6 +263,7 @@ class _$LoadBookingsImpl implements _LoadBookings {
     TResult Function(_LoadBookings value)? loadBookings,
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
     required TResult orElse(),
   }) {
     if (loadBookings != null) {
@@ -321,6 +339,8 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     required TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)
         updateBooking,
+    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
+        updateDeliveryStatus,
   }) {
     return loadNextPageBookings();
   }
@@ -334,6 +354,8 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     TResult? Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
   }) {
     return loadNextPageBookings?.call();
   }
@@ -347,6 +369,8 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
     required TResult orElse(),
   }) {
     if (loadNextPageBookings != null) {
@@ -361,6 +385,7 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     required TResult Function(_LoadBookings value) loadBookings,
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
   }) {
     return loadNextPageBookings(this);
   }
@@ -371,6 +396,7 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     TResult? Function(_LoadBookings value)? loadBookings,
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
   }) {
     return loadNextPageBookings?.call(this);
   }
@@ -381,6 +407,7 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     TResult Function(_LoadBookings value)? loadBookings,
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
     required TResult orElse(),
   }) {
     if (loadNextPageBookings != null) {
@@ -507,6 +534,8 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     required TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)
         updateBooking,
+    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
+        updateDeliveryStatus,
   }) {
     return updateBooking(booking, shouldRefresh, isDeleted);
   }
@@ -520,6 +549,8 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult? Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
   }) {
     return updateBooking?.call(booking, shouldRefresh, isDeleted);
   }
@@ -533,6 +564,8 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult Function(
             BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
         updateBooking,
+    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
     required TResult orElse(),
   }) {
     if (updateBooking != null) {
@@ -547,6 +580,7 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     required TResult Function(_LoadBookings value) loadBookings,
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
   }) {
     return updateBooking(this);
   }
@@ -557,6 +591,7 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult? Function(_LoadBookings value)? loadBookings,
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
   }) {
     return updateBooking?.call(this);
   }
@@ -567,6 +602,7 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult Function(_LoadBookings value)? loadBookings,
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
     required TResult orElse(),
   }) {
     if (updateBooking != null) {
@@ -589,6 +625,188 @@ abstract class _UpdateBooking implements AllBookingEvent {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UpdateBookingImplCopyWith<_$UpdateBookingImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateDeliveryStatusImplCopyWith<$Res> {
+  factory _$$UpdateDeliveryStatusImplCopyWith(_$UpdateDeliveryStatusImpl value,
+          $Res Function(_$UpdateDeliveryStatusImpl) then) =
+      __$$UpdateDeliveryStatusImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int bookingId, DeliveryStatus deliveryStatus});
+}
+
+/// @nodoc
+class __$$UpdateDeliveryStatusImplCopyWithImpl<$Res>
+    extends _$AllBookingEventCopyWithImpl<$Res, _$UpdateDeliveryStatusImpl>
+    implements _$$UpdateDeliveryStatusImplCopyWith<$Res> {
+  __$$UpdateDeliveryStatusImplCopyWithImpl(_$UpdateDeliveryStatusImpl _value,
+      $Res Function(_$UpdateDeliveryStatusImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? bookingId = null,
+    Object? deliveryStatus = null,
+  }) {
+    return _then(_$UpdateDeliveryStatusImpl(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      deliveryStatus: null == deliveryStatus
+          ? _value.deliveryStatus
+          : deliveryStatus // ignore: cast_nullable_to_non_nullable
+              as DeliveryStatus,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
+  const _$UpdateDeliveryStatusImpl(
+      {required this.bookingId, required this.deliveryStatus});
+
+  @override
+  final int bookingId;
+  @override
+  final DeliveryStatus deliveryStatus;
+
+  @override
+  String toString() {
+    return 'AllBookingEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateDeliveryStatusImpl &&
+            (identical(other.bookingId, bookingId) ||
+                other.bookingId == bookingId) &&
+            (identical(other.deliveryStatus, deliveryStatus) ||
+                other.deliveryStatus == deliveryStatus));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, bookingId, deliveryStatus);
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateDeliveryStatusImplCopyWith<_$UpdateDeliveryStatusImpl>
+      get copyWith =>
+          __$$UpdateDeliveryStatusImplCopyWithImpl<_$UpdateDeliveryStatusImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String? startDate, String? endDate, String? searchQuery)
+        loadBookings,
+    required TResult Function() loadNextPageBookings,
+    required TResult Function(
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)
+        updateBooking,
+    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
+        updateDeliveryStatus,
+  }) {
+    return updateDeliveryStatus(bookingId, deliveryStatus);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? startDate, String? endDate, String? searchQuery)?
+        loadBookings,
+    TResult? Function()? loadNextPageBookings,
+    TResult? Function(
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
+    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
+  }) {
+    return updateDeliveryStatus?.call(bookingId, deliveryStatus);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? startDate, String? endDate, String? searchQuery)?
+        loadBookings,
+    TResult Function()? loadNextPageBookings,
+    TResult Function(
+            BookingsModel? booking, bool shouldRefresh, bool isDeleted)?
+        updateBooking,
+    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
+    required TResult orElse(),
+  }) {
+    if (updateDeliveryStatus != null) {
+      return updateDeliveryStatus(bookingId, deliveryStatus);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadBookings value) loadBookings,
+    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
+    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+  }) {
+    return updateDeliveryStatus(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadBookings value)? loadBookings,
+    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
+    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+  }) {
+    return updateDeliveryStatus?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadBookings value)? loadBookings,
+    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
+    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    required TResult orElse(),
+  }) {
+    if (updateDeliveryStatus != null) {
+      return updateDeliveryStatus(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateDeliveryStatus implements AllBookingEvent {
+  const factory _UpdateDeliveryStatus(
+          {required final int bookingId,
+          required final DeliveryStatus deliveryStatus}) =
+      _$UpdateDeliveryStatusImpl;
+
+  int get bookingId;
+  DeliveryStatus get deliveryStatus;
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateDeliveryStatusImplCopyWith<_$UpdateDeliveryStatusImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc

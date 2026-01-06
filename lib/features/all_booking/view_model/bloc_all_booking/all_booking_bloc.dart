@@ -27,6 +27,26 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     );
 
     on<_UpdateBooking>(_onUpdateBooking);
+
+    on<_UpdateDeliveryStatus>(_onUpdateDeliveryStatus);
+  }
+
+  Future<void> _onUpdateDeliveryStatus(
+    _UpdateDeliveryStatus event,
+    Emitter<AllBookingState> emit,
+  ) async {
+    try {
+      await _repository.updateDeliveryStatus(
+        event.bookingId,
+        event.deliveryStatus,
+      );
+      // After successful API update, we can either reload or update local state
+      // For now, let's reload to ensure data consistency
+      add(const AllBookingEvent.loadBookings());
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      emit(_Error(e.toString()));
+    }
   }
 
   Future<void> _onFetchBookings(

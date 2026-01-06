@@ -20,4 +20,9 @@ class AllBookingEvent with _$AllBookingEvent {
     @Default(false) bool shouldRefresh,
     @Default(false) bool isDeleted,
   }) = _UpdateBooking;
+
+  const factory AllBookingEvent.updateDeliveryStatus({
+    required int bookingId,
+    required DeliveryStatus deliveryStatus,
+  }) = _UpdateDeliveryStatus;
 }

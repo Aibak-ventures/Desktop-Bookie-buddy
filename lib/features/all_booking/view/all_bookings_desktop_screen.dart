@@ -1,6 +1,9 @@
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,18 +42,25 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTopHeader(),
-            const SizedBox(height: 24),
-            _buildFilterRow(),
-            const SizedBox(height: 16),
-            Expanded(child: _buildMainContent()),
-          ],
-        ),
+      body: Stack(
+        children: [
+          // Main content
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTopHeader(),
+                const SizedBox(height: 24),
+                _buildFilterRow(),
+                const SizedBox(height: 16),
+                Expanded(child: _buildMainContent()),
+              ],
+            ),
+          ),
+          // Drawer overlay
+          const BookingDetailsDrawer(),
+        ],
       ),
     );
   }
@@ -91,6 +101,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFFE7E4FF).withOpacity(0.5),
+        //  color: ,
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(4),
@@ -281,15 +292,17 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       ),
       child: Row(
         children: const [
-          SizedBox(width: 4),
+          SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
           Expanded(flex: 2, child: _HeaderText('Booking ID')),
           Expanded(flex: 2, child: _HeaderText('Pickup')),
           Expanded(flex: 2, child: _HeaderText('Customer')),
+          Expanded(flex: 1, child: _HeaderText('Staff')),
           Expanded(flex: 2, child: _HeaderText('Delivery status')),
-          Expanded(flex: 3, child: _HeaderText('items')),
-          Expanded(flex: 1, child: _HeaderText('paid')),
+          Expanded(flex: 2, child: _HeaderText('Items')),
+          Expanded(flex: 1, child: _HeaderText('Paid')),
           Expanded(flex: 1, child: _HeaderText('Balance')),
-          Expanded(flex: 2, child: _HeaderText('Payment status')),
+          Expanded(flex: 1, child: _HeaderText('Payment status')),
+          // SizedBox(width: 20), // Match chevron icon width + spacing
         ],
       ),
     );
@@ -306,97 +319,159 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     ];
     final barColor = barColors[booking.id! % barColors.length];
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-      ),
-      child: Row(
-        children: [
-          Container(
-              width: 3,
-              height: 20,
-              decoration: BoxDecoration(
-                  color: barColor, borderRadius: BorderRadius.circular(2))),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 2,
-            child: Text(
-              booking.shopBookingId ?? '#${booking.id}',
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+    return GestureDetector(
+      onTap: () {
+        if (booking.id != null) {
+          // Open drawer
+          context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id!);
+          // Fetch booking details
+          context.read<BookingDetailsBloc>().add(
+                BookingDetailsEvent.fetchBookingDetails(booking.id!),
+              );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+        ),
+        child: Row(
+          children: [
+            Container(
+                width: 3,
+                height: 20,
+                decoration: BoxDecoration(
+                    color: barColor, borderRadius: BorderRadius.circular(2))),
+            const SizedBox(width: 8),
+            Expanded(
+              flex: 2,
+              child: Text(
+                booking.shopBookingId ?? '#${booking.id}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              booking.pickupDate ?? 'N/A',
-              style: const TextStyle(fontSize: 13),
+            Expanded(
+              flex: 2,
+              child: Text(
+                booking.pickupDate ?? 'N/A',
+                style: const TextStyle(fontSize: 13),
+              ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              booking.clientName,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            Expanded(
+              flex: 2,
+              child: Text(
+                booking.clientName,
+                style:
+                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child:
-                SizedBox(child: _buildDeliveryStatus(booking.deliveryStatus)),
-          ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              booking.bookedItems.join(', '),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            Expanded(
+              flex: 1,
+              child: Text(
+                booking.staffName ?? '-',
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
+              ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text('₹3,400',
-                style: const TextStyle(
-                    fontSize: 13)), // Placeholder as per screenshot
-          ),
-          Expanded(
-            flex: 1,
-            child: Text('₹1,400',
-                style: const TextStyle(
-                    fontSize: 13)), // Placeholder as per screenshot
-          ),
-          Expanded(
-            flex: 2,
-            child: _buildPaymentStatus(booking.paymentStatus.isCompleted),
-          ),
-          const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
-        ],
+            Expanded(
+              flex: 2,
+              child: SizedBox(child: _buildDeliveryStatus(booking)),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                booking.bookedItems.join(', '),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text('₹3,400',
+                  style: const TextStyle(
+                      fontSize: 13)), // Placeholder as per screenshot
+            ),
+            Expanded(
+              flex: 1,
+              child: Text('₹1,400',
+                  style: const TextStyle(
+                      fontSize: 13)), // Placeholder as per screenshot
+            ),
+            Expanded(
+              flex: 1,
+              child: _buildPaymentStatus(booking.paymentStatus.isCompleted),
+            ),
+            const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDeliveryStatus(DeliveryStatus status) {
-    return Container(
-      width: 100,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-      decoration: BoxDecoration(
-        color: const Color(0xFF20D400).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Ready to deliver',
-            style: const TextStyle(
-                fontSize: 11,
-                color: Color(0xFF20D400),
-                fontWeight: FontWeight.w600),
+  Widget _buildDeliveryStatus(BookingsModel booking) {
+    final status = booking.deliveryStatus;
+    return PopupMenuButton<DeliveryStatus>(
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      onSelected: (DeliveryStatus newStatus) {
+        if (booking.id != null) {
+          context.read<AllBookingBloc>().add(
+                AllBookingEvent.updateDeliveryStatus(
+                  bookingId: booking.id!,
+                  deliveryStatus: newStatus,
+                ),
+              );
+        }
+      },
+      itemBuilder: (context) => DeliveryStatus.values.map((s) {
+        return PopupMenuItem<DeliveryStatus>(
+          value: s,
+          child: Row(
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: s.color,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                s.name,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: s.color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
-          const Icon(Icons.keyboard_arrow_down,
-              size: 14, color: Color(0xFF20D400)),
-        ],
+        );
+      }).toList(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: status.color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: status.color.withOpacity(0.2)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              status.name,
+              style: TextStyle(
+                fontSize: 11,
+                color: status.color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Icon(Icons.keyboard_arrow_down, size: 14, color: status.color),
+          ],
+        ),
       ),
     );
   }
