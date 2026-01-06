@@ -21,6 +21,9 @@ _$BookingsModelImpl _$$BookingsModelImplFromJson(Map<String, dynamic> json) =>
       paymentStatus: json['payment_status'] == null
           ? PaymentStatus.pending
           : PaymentStatus.fromBool(json['payment_status'] as bool?),
+      shopBookingId: json['shop_booking_id'] as String?,
+      staffName: json['staff_name'] as String?,
+      createdAt: json['created_at'] as String?,
       bookedItems:
           (_bookedItemsCustomRead(json, 'booked_items') as List<dynamic>?)
                   ?.map((e) => e as String)
@@ -39,6 +42,9 @@ Map<String, dynamic> _$$BookingsModelImplToJson(_$BookingsModelImpl instance) =>
       'return_date': instance.returnDate,
       'delivery_status': DeliveryStatus.toJson(instance.deliveryStatus),
       'payment_status': PaymentStatus.toJson(instance.paymentStatus),
+      'shop_booking_id': instance.shopBookingId,
+      'staff_name': instance.staffName,
+      'created_at': instance.createdAt,
       'booked_items': instance.bookedItems,
       'type': instance.type,
     };

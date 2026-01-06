@@ -8,6 +8,7 @@ import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_sele
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen_v2.dart';
+import 'package:bookie_buddy_web/features/all_booking/view/all_bookings_desktop_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,11 +25,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   bool newOrderActive = false;
   bool showNewBookingInContent = false;
 
-  final screens = const [
-    HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
+  final List<Widget> screens = [
+    const HomeScreen(),
+    const AllBookingsDesktopScreen(),
+    const HomeScreen(),
+    const HomeScreen(),
   ];
 
   @override
@@ -59,6 +60,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                           setState(() {
                             showNewBookingInContent = false;
                             newOrderActive = false;
+                            currentIndex = 1; // Back to Dashboard
                           });
                         },
                       )
@@ -295,7 +297,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               showNewBookingInContent = false;
               currentIndex = index;
             });
-            pageController.jumpToPage(index - 1);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (pageController.hasClients) {
+                pageController.jumpToPage(index - 1);
+              }
+            });
           }
         },
         child: Container(

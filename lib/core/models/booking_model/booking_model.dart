@@ -61,6 +61,9 @@ class BookingsModel with _$BookingsModel {
       toJson: PaymentStatus.toJson,
     )
     required PaymentStatus paymentStatus,
+    @JsonKey(name: 'shop_booking_id') String? shopBookingId,
+    @JsonKey(name: 'staff_name') String? staffName,
+    @JsonKey(name: 'created_at') String? createdAt,
     @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
     @Default(const [])
     List<String> bookedItems,

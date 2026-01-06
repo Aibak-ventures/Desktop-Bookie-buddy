@@ -49,6 +49,12 @@ mixin _$BookingsModel {
       fromJson: PaymentStatus.fromBool,
       toJson: PaymentStatus.toJson)
   PaymentStatus get paymentStatus => throw _privateConstructorUsedError;
+  @JsonKey(name: 'shop_booking_id')
+  String? get shopBookingId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'staff_name')
+  String? get staffName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at')
+  String? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
   List<String> get bookedItems => throw _privateConstructorUsedError;
   @JsonKey(name: 'type')
@@ -96,6 +102,9 @@ abstract class $BookingsModelCopyWith<$Res> {
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       PaymentStatus paymentStatus,
+      @JsonKey(name: 'shop_booking_id') String? shopBookingId,
+      @JsonKey(name: 'staff_name') String? staffName,
+      @JsonKey(name: 'created_at') String? createdAt,
       @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
       List<String> bookedItems,
       @JsonKey(name: 'type') String? type});
@@ -124,6 +133,9 @@ class _$BookingsModelCopyWithImpl<$Res, $Val extends BookingsModel>
     Object? returnDate = freezed,
     Object? deliveryStatus = null,
     Object? paymentStatus = null,
+    Object? shopBookingId = freezed,
+    Object? staffName = freezed,
+    Object? createdAt = freezed,
     Object? bookedItems = null,
     Object? type = freezed,
   }) {
@@ -160,6 +172,18 @@ class _$BookingsModelCopyWithImpl<$Res, $Val extends BookingsModel>
           ? _value.paymentStatus
           : paymentStatus // ignore: cast_nullable_to_non_nullable
               as PaymentStatus,
+      shopBookingId: freezed == shopBookingId
+          ? _value.shopBookingId
+          : shopBookingId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String?,
       bookedItems: null == bookedItems
           ? _value.bookedItems
           : bookedItems // ignore: cast_nullable_to_non_nullable
@@ -206,6 +230,9 @@ abstract class _$$BookingsModelImplCopyWith<$Res>
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       PaymentStatus paymentStatus,
+      @JsonKey(name: 'shop_booking_id') String? shopBookingId,
+      @JsonKey(name: 'staff_name') String? staffName,
+      @JsonKey(name: 'created_at') String? createdAt,
       @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
       List<String> bookedItems,
       @JsonKey(name: 'type') String? type});
@@ -232,6 +259,9 @@ class __$$BookingsModelImplCopyWithImpl<$Res>
     Object? returnDate = freezed,
     Object? deliveryStatus = null,
     Object? paymentStatus = null,
+    Object? shopBookingId = freezed,
+    Object? staffName = freezed,
+    Object? createdAt = freezed,
     Object? bookedItems = null,
     Object? type = freezed,
   }) {
@@ -268,6 +298,18 @@ class __$$BookingsModelImplCopyWithImpl<$Res>
           ? _value.paymentStatus
           : paymentStatus // ignore: cast_nullable_to_non_nullable
               as PaymentStatus,
+      shopBookingId: freezed == shopBookingId
+          ? _value.shopBookingId
+          : shopBookingId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String?,
       bookedItems: null == bookedItems
           ? _value._bookedItems
           : bookedItems // ignore: cast_nullable_to_non_nullable
@@ -309,6 +351,9 @@ class _$BookingsModelImpl implements _BookingsModel {
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       required this.paymentStatus,
+      @JsonKey(name: 'shop_booking_id') this.shopBookingId,
+      @JsonKey(name: 'staff_name') this.staffName,
+      @JsonKey(name: 'created_at') this.createdAt,
       @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
       final List<String> bookedItems = const [],
       @JsonKey(name: 'type') this.type})
@@ -354,6 +399,15 @@ class _$BookingsModelImpl implements _BookingsModel {
       fromJson: PaymentStatus.fromBool,
       toJson: PaymentStatus.toJson)
   final PaymentStatus paymentStatus;
+  @override
+  @JsonKey(name: 'shop_booking_id')
+  final String? shopBookingId;
+  @override
+  @JsonKey(name: 'staff_name')
+  final String? staffName;
+  @override
+  @JsonKey(name: 'created_at')
+  final String? createdAt;
   final List<String> _bookedItems;
   @override
   @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
@@ -369,7 +423,7 @@ class _$BookingsModelImpl implements _BookingsModel {
 
   @override
   String toString() {
-    return 'BookingsModel(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, bookedItems: $bookedItems, type: $type)';
+    return 'BookingsModel(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, shopBookingId: $shopBookingId, staffName: $staffName, createdAt: $createdAt, bookedItems: $bookedItems, type: $type)';
   }
 
   @override
@@ -392,6 +446,12 @@ class _$BookingsModelImpl implements _BookingsModel {
                 other.deliveryStatus == deliveryStatus) &&
             (identical(other.paymentStatus, paymentStatus) ||
                 other.paymentStatus == paymentStatus) &&
+            (identical(other.shopBookingId, shopBookingId) ||
+                other.shopBookingId == shopBookingId) &&
+            (identical(other.staffName, staffName) ||
+                other.staffName == staffName) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             const DeepCollectionEquality()
                 .equals(other._bookedItems, _bookedItems) &&
             (identical(other.type, type) || other.type == type));
@@ -409,6 +469,9 @@ class _$BookingsModelImpl implements _BookingsModel {
       returnDate,
       deliveryStatus,
       paymentStatus,
+      shopBookingId,
+      staffName,
+      createdAt,
       const DeepCollectionEquality().hash(_bookedItems),
       type);
 
@@ -455,6 +518,9 @@ abstract class _BookingsModel implements BookingsModel {
           fromJson: PaymentStatus.fromBool,
           toJson: PaymentStatus.toJson)
       required final PaymentStatus paymentStatus,
+      @JsonKey(name: 'shop_booking_id') final String? shopBookingId,
+      @JsonKey(name: 'staff_name') final String? staffName,
+      @JsonKey(name: 'created_at') final String? createdAt,
       @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
       final List<String> bookedItems,
       @JsonKey(name: 'type') final String? type}) = _$BookingsModelImpl;
@@ -499,6 +565,15 @@ abstract class _BookingsModel implements BookingsModel {
       fromJson: PaymentStatus.fromBool,
       toJson: PaymentStatus.toJson)
   PaymentStatus get paymentStatus;
+  @override
+  @JsonKey(name: 'shop_booking_id')
+  String? get shopBookingId;
+  @override
+  @JsonKey(name: 'staff_name')
+  String? get staffName;
+  @override
+  @JsonKey(name: 'created_at')
+  String? get createdAt;
   @override
   @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)
   List<String> get bookedItems;
