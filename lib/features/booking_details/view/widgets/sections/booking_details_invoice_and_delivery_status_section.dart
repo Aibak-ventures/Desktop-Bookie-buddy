@@ -23,63 +23,90 @@ class BookingDetailsInvoiceAndDeliveryStatusSection extends StatelessWidget {
         title: '',
         child: null,
         leading: Flexible(
-          child: Container(
-            padding: 8.padding,
-            decoration: BoxDecoration(
-              color: AppColors.purpleLightShade,
-              borderRadius: 5.radiusBorder,
-            ),
-            child: Text(
-              'ID: ${booking.invoiceId}',
-              style: TextStyle(
-                color: AppColors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 14.sp,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Booking Id',
+                style: TextStyle(
+                  color: Color(0xFF707070),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.sp,
+                ),
               ),
-            ),
+              SizedBox(height: 8.h),
+              Container(
+                padding: 8.padding,
+                decoration: BoxDecoration(
+                  color: AppColors.purpleLightShade,
+                  borderRadius: 5.radiusBorder,
+                ),
+                child: Text(
+                  'ID: ${booking.invoiceId}',
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
 
         // Delivery status
-        trailing: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 6.w),
-          decoration: BoxDecoration(
-            color: booking.deliveryStatus.color.lighten(0.9),
-            borderRadius: 50.radiusBorder,
-          ),
-          child: RepaintBoundary(
-            child: DropdownButton<DeliveryStatus>(
-              alignment: Alignment.center,
-              value: booking.deliveryStatus,
-              underline: const SizedBox(),
-              dropdownColor: AppColors.white,
-              isDense: true,
-              borderRadius: 10.radiusBorder,
-              onChanged: booking.bookingStatus == BookingStatus.completed
-                  ? null
-                  : (newValue) {
-                      if (newValue != null &&
-                          newValue != booking.deliveryStatus) {
-                        _confirmStatusChange(context, newValue);
-                      }
-                    },
-              items: DeliveryStatus.values
-                  .map(
-                    (status) => DropdownMenuItem<DeliveryStatus>(
-                      alignment: Alignment.center,
-                      value: status,
-                      child: Text(
-                        status.name,
-                        style: TextStyle(
-                          color: status.color,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
+        trailing: Column(
+          children: [
+            Text(
+              'Delivery Status',
+              style: TextStyle(
+                color: Color(0xFF707070),
+                fontWeight: FontWeight.w400,
+                fontSize: 14.sp,
+              ),
             ),
-          ),
+            SizedBox(height: 8.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 7.w),
+              decoration: BoxDecoration(
+                color: booking.deliveryStatus.color.lighten(0.9),
+                borderRadius: 40.radiusBorder,
+              ),
+              child: RepaintBoundary(
+                child: DropdownButton<DeliveryStatus>(
+                  alignment: Alignment.center,
+                  value: booking.deliveryStatus,
+                  underline: const SizedBox(),
+                  dropdownColor: AppColors.white,
+                  isDense: true,
+                  borderRadius: 10.radiusBorder,
+                  onChanged: booking.bookingStatus == BookingStatus.completed
+                      ? null
+                      : (newValue) {
+                          if (newValue != null &&
+                              newValue != booking.deliveryStatus) {
+                            _confirmStatusChange(context, newValue);
+                          }
+                        },
+                  items: DeliveryStatus.values
+                      .map(
+                        (status) => DropdownMenuItem<DeliveryStatus>(
+                          alignment: Alignment.center,
+                          value: status,
+                          child: Text(
+                            status.name,
+                            style: TextStyle(
+                              color: status.color,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
+          ],
         ),
       );
 

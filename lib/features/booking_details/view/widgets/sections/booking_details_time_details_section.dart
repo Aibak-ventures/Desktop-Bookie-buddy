@@ -20,14 +20,15 @@ class BookingDetailsTimeDetailsSection extends StatelessWidget {
           spacing: 15.w,
           runSpacing: 15.w,
           children: [
-            BookingDetailsDetailsColumn(
-              label: 'Pickup Time',
-              value: booking.pickupDate?.formatToUiTime() ?? 'N/A',
+            Text(
+              'Pickup Time',
+              style: TextStyle(
+                color: Color(0xFF707070),
+                fontWeight: FontWeight.w400,
+                fontSize: 14.sp,
+              ),
             ),
-            BookingDetailsDetailsColumn(
-              label: 'Return Time',
-              value: booking.returnDate.formatToUiTime(),
-            ),
+         
           ],
         ),
       );

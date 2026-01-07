@@ -23,7 +23,7 @@ class BookingDetailsDrawer extends StatelessWidget {
           right: drawerState.isOpen ? 0 : -650,
           top: 0,
           bottom: 0,
-          width: 650,
+          width: 470,
           child: Material(
             elevation: 16,
             shadowColor: Colors.black.withOpacity(0.3),
@@ -40,7 +40,6 @@ class BookingDetailsDrawer extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildHeader(context, drawerState),
                   Expanded(
                     child: _buildContent(context, drawerState),
                   ),
@@ -50,50 +49,6 @@ class BookingDetailsDrawer extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildHeader(
-      BuildContext context, BookingDetailsDrawerState drawerState) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF8A63FE),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.receipt_long,
-            color: Colors.white,
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Booking Details',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              context.read<BookingDetailsDrawerCubit>().closeDrawer();
-            },
-            icon: const Icon(Icons.close, color: Colors.white),
-            tooltip: 'Close',
-          ),
-        ],
-      ),
     );
   }
 
@@ -137,7 +92,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade200),
                   ),
@@ -150,38 +105,41 @@ class BookingDetailsDrawer extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // Payment details section
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: BookingDetailsPaymentDetailsSection(
-                    paymentButtonKey: GlobalKey(),
-                    booking: booking,
-                    productTotalAmount: booking.bookedItems.fold<int>(
-                      0,
-                      (int previousValue, dynamic element) =>
-                          previousValue + ((element.amount as int?) ?? 0),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.shade200),
                     ),
-                    additionalChargesTotal: booking.additionalCharges
-                            ?.fold<int>(
-                          0,
-                          (int previousValue, dynamic element) =>
-                              previousValue + ((element.amount as int?) ?? 0),
-                        ) ??
+                    child: BookingDetailsPaymentDetailsSection(
+                      paymentButtonKey: GlobalKey(),
+                      booking: booking,
+                      productTotalAmount: booking.bookedItems.fold<int>(
                         0,
-                    paymentHistoryCubit:
-                        context.read<BookingDetailsPaymentHistoryCubit>(),
-                    isPaymentCompleted: booking.paidAmount >=
-                        (booking.totalAmount - (booking.discountAmount ?? 0)),
+                        (int previousValue, dynamic element) =>
+                            previousValue + ((element.amount as int?) ?? 0),
+                      ),
+                      additionalChargesTotal: booking.additionalCharges
+                              ?.fold<int>(
+                            0,
+                            (int previousValue, dynamic element) =>
+                                previousValue + ((element.amount as int?) ?? 0),
+                          ) ??
+                          0,
+                      paymentHistoryCubit:
+                          context.read<BookingDetailsPaymentHistoryCubit>(),
+                      isPaymentCompleted: booking.paidAmount >=
+                          (booking.totalAmount - (booking.discountAmount ?? 0)),
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 24),
 
                 // Action buttons
-                _buildActionButtons(context, booking),
+                // _buildActionButtons(context, booking),
               ],
             ),
           ),

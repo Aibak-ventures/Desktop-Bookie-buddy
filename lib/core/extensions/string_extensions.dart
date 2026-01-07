@@ -179,6 +179,32 @@ extension StringXDateFormat on String {
       return DateFormat.yMMMMd().format(given); // eg: April 21, 2025
     }
   }
+
+  /// Formats date/time with relative day labels like "Today, 8am" or "Tomorrow, 10pm"
+  /// Falls back to date format for dates beyond tomorrow
+  String formatToRelativeDateTime({bool is24Hour = false}) {
+    try {
+      final dateTime = parseToDateTime();
+      final today = DateTime.now();
+      final timeFormat = is24Hour ? 'HH:mm' : 'h:mma';
+      final formattedTime =
+          DateFormat(timeFormat).format(dateTime).toLowerCase();
+
+      if (DateUtils.isSameDay(dateTime, today)) {
+        return 'Today, $formattedTime';
+      } else if (DateUtils.isSameDay(dateTime, today.add(1.days()))) {
+        return 'Tomorrow, $formattedTime';
+      } else if (DateUtils.isSameDay(dateTime, today.subtract(1.days()))) {
+        return 'Yesterday, $formattedTime';
+      } else {
+        // For dates beyond tomorrow, show date + time
+        return '${DateFormat('dd MMM').format(dateTime)}, $formattedTime';
+      }
+    } catch (e) {
+      log('Failed to format relative date/time: $this, error: $e');
+      return this;
+    }
+  }
 }
 
 /// Extension methods for String to parse numbers and handle nullability.
