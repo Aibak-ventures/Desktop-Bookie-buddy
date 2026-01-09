@@ -106,7 +106,7 @@ class BookingDetailsDrawer extends StatelessWidget {
 
                 // Payment details section
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(0.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,

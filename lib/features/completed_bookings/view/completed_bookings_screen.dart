@@ -196,7 +196,7 @@ class CompletedBookingsScreen extends StatelessWidget {
                                               final bookingCubit = context
                                                   .read<BookingSelectionCubit>()
                                                 ..selectBooking(booking);
-                                              final result = await Navigator.push(
+                                               final result = await Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) => BookingDetailsScreen(

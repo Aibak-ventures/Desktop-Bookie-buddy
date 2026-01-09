@@ -31,7 +31,7 @@ class BookingCard extends StatelessWidget {
     final String clientName = booking.clientName;
     // final String paymentStatus = booking.paymentStatus.name;
     final deliveryStatus = booking.deliveryStatus;
-    
+
     // Use return date if useReturnDate is true, otherwise use pickup date
     final DateTime? displayDate = useReturnDate
         ? (booking.returnDate != null
@@ -40,7 +40,7 @@ class BookingCard extends StatelessWidget {
         : (booking.pickupDate != null
             ? booking.pickupDate!.parseToDateTime()
             : null);
-    
+
     final isAfterReturnDate = booking.returnDate != null &&
         booking.bookingStatus != BookingStatus.completed &&
         DateTime.now().isAfter(
@@ -221,9 +221,9 @@ class BookingCardShimmer extends StatelessWidget {
             children: [
               // Date Section Shimmer
               Container(
-               width: 80,
+                width: 80,
                 height: 80,
-               decoration: BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),

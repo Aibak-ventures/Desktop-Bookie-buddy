@@ -66,43 +66,47 @@ class BookingDetailsInvoiceAndDeliveryStatusSection extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 7.w),
-              decoration: BoxDecoration(
-                color: booking.deliveryStatus.color.lighten(0.9),
-                borderRadius: 40.radiusBorder,
-              ),
-              child: RepaintBoundary(
-                child: DropdownButton<DeliveryStatus>(
-                  alignment: Alignment.center,
-                  value: booking.deliveryStatus,
-                  underline: const SizedBox(),
-                  dropdownColor: AppColors.white,
-                  isDense: true,
-                  borderRadius: 10.radiusBorder,
-                  onChanged: booking.bookingStatus == BookingStatus.completed
-                      ? null
-                      : (newValue) {
-                          if (newValue != null &&
-                              newValue != booking.deliveryStatus) {
-                            _confirmStatusChange(context, newValue);
-                          }
-                        },
-                  items: DeliveryStatus.values
-                      .map(
-                        (status) => DropdownMenuItem<DeliveryStatus>(
-                          alignment: Alignment.center,
-                          value: status,
-                          child: Text(
-                            status.name,
-                            style: TextStyle(
-                              color: status.color,
-                              fontWeight: FontWeight.w500,
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 180),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 7.w),
+                decoration: BoxDecoration(
+                  color: booking.deliveryStatus.color.lighten(0.9),
+                  borderRadius: 40.radiusBorder,
+                ),
+                child: RepaintBoundary(
+                  child: DropdownButton<DeliveryStatus>(
+                    alignment: Alignment.center,
+                    value: booking.deliveryStatus,
+                    underline: const SizedBox(),
+                    dropdownColor: AppColors.white,
+                    isDense: true,
+                    borderRadius: 10.radiusBorder,
+                    onChanged: booking.bookingStatus == BookingStatus.completed
+                        ? null
+                        : (newValue) {
+                            if (newValue != null &&
+                                newValue != booking.deliveryStatus) {
+                              _confirmStatusChange(context, newValue);
+                            }
+                          },
+                    items: DeliveryStatus.values
+                        .map(
+                          (status) => DropdownMenuItem<DeliveryStatus>(
+                            alignment: Alignment.center,
+                            value: status,
+                            child: Text(
+                              status.name,
+                              style: TextStyle(
+                                color: status.color,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13.sp,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
             ),

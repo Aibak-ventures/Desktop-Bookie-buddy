@@ -99,6 +99,7 @@ class _BookingsNamespace {
   String get bookingsV3 => BookingsApiPaths.bookingsV3;
   String get bookingsV4 => BookingsApiPaths.bookingsV4;
   String get bookingsV5 => BookingsApiPaths.bookingsV5;
+  String get desktopList => BookingsApiPaths.desktopList;
   String get addPayment => BookingsApiPaths.addPayment;
   String get updateDetails => BookingsApiPaths.updateDetails;
   String get updateDeliveryStatus => BookingsApiPaths.updateDeliveryStatus;

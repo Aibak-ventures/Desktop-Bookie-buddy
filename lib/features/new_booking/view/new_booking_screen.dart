@@ -336,39 +336,38 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   }
 
 // BOOKING
-Widget _buildBookingContent() {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Main area
-      Expanded(
-        flex: 5, // ⬅️ more space to main content
-        child: Column(
-          children: [
-            SizedBox(
-              child: Row(
-                children: [
-                  Expanded(child: _buildLeftTopSection()),
-                ],
+  Widget _buildBookingContent() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Main area
+        Expanded(
+          flex: 5, // ⬅️ more space to main content
+          child: Column(
+            children: [
+              SizedBox(
+                child: Row(
+                  children: [
+                    Expanded(child: _buildLeftTopSection()),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(child: _buildServiceSelectionSection()),
-          ],
+              const SizedBox(height: 10),
+              Expanded(child: _buildServiceSelectionSection()),
+            ],
+          ),
         ),
-      ),
 
-      const SizedBox(width: 10),
+        const SizedBox(width: 10),
 
-      // Right panel (Slim)
-      SizedBox(
-        width: 300, // ⬅️ fixed slim width
-        child: _buildRightSection(),
-      ),
-    ],
-  );
-}
-
+        // Right panel (Slim)
+        SizedBox(
+          width: 300, // ⬅️ fixed slim width
+          child: _buildRightSection(),
+        ),
+      ],
+    );
+  }
 
   Widget _buildSalesContent() {
     return Row(
@@ -1015,7 +1014,7 @@ Widget _buildBookingContent() {
                   Text(
                     product.name,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w600),
+                        fontSize: 14, fontWeight: FontWeight.w600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -2060,7 +2059,7 @@ Widget _buildBookingContent() {
       children: [
         Expanded(
           child: Container(
-            height: 37,
+            height: 43,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300, width: 1),
               borderRadius: BorderRadius.circular(8),
@@ -2073,7 +2072,7 @@ Widget _buildBookingContent() {
                 hintText: label,
                 prefixText: '₹ ',
                 prefixStyle:
-                    TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                    TextStyle(fontSize: 16, color: Colors.grey.shade600),
                 border: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

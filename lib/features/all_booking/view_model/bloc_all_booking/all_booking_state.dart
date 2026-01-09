@@ -5,12 +5,13 @@ class AllBookingState with _$AllBookingState {
   const factory AllBookingState.initial() = _Initial;
   const factory AllBookingState.loading() = _Loading;
   const factory AllBookingState.loaded({
-    required List<BookingsModel> bookings,
+    required List<DesktopBookingItemModel> bookings,
     String? nextPageUrl,
     @Default(false) bool isPaginating,
     String? startDate,
     String? endDate,
     String? searchQuery,
+    StatusCountsModel? statusCounts,
   }) = _Loaded;
   const factory AllBookingState.error(String error) = _Error;
 }

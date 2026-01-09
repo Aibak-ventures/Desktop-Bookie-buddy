@@ -195,6 +195,35 @@ class BookingService {
     }
   }
 
+  Future<CustomResponseModel> fetchDesktopBookingsPagination({
+    required String status,
+    String? searchQuery,
+    String? startDate,
+    String? endDate,
+    int page = 1,
+  }) async {
+    try {
+      final response = await _dio.get(
+        ApiPaths.bookings.desktopList,
+        queryParameters: {
+          'status':
+              status, // pending, upcoming, returns, not_returned, completed
+          if (searchQuery != null && searchQuery.isNotEmpty)
+            'search': searchQuery,
+          if (startDate != null && startDate.isNotEmpty)
+            'start_date': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'end_date': endDate,
+          'page': page,
+        },
+      );
+      log('Desktop bookings API: ${response.realUri.toString()}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error fetching desktop bookings: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   Future<CustomResponseModel> fetchPaymentHistory(int bookingId) async {
     try {
       final response = await _dio.get(

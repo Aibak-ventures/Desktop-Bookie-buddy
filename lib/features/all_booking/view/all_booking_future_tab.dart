@@ -4,10 +4,11 @@ import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
+
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/all_booking_empty_widget.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
+import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model_extensions.dart';
 import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -47,8 +48,8 @@ class AllBookingFutureTab extends StatelessWidget {
                   itemBuilder: (context, index) => const BookingCardShimmer(),
                 )
               : const BookingListShimmer(itemCount: 10),
-          loaded:
-              (bookings, nextPageUrl, isPaginating, unused1, unused2, unused3) {
+          loaded: (bookings, nextPageUrl, isPaginating, startDate, endDate,
+              searchQuery, statusCounts) {
             if (bookings.isEmpty) {
               return AllBookingEmptyWidget(
                 dateFilterNotifier: dateFilterNotifier,
@@ -83,31 +84,16 @@ class AllBookingFutureTab extends StatelessWidget {
                           final booking = bookings[index];
 
                           return BookingCard(
-                            booking: booking,
+                            booking: booking.toBookingsModel(),
                             onTap: () async {
-                              final bookingCubit = context
-                                  .read<BookingSelectionCubit>()
-                                ..selectBooking(booking);
-
                               final result = await context.push(
                                 BookingDetailsScreen(bookingId: booking.id!),
                               );
-                              if (bookingCubit.state.isModified) {
-                                final updated =
-                                    bookingCubit.state.selectedBooking;
-
-                                // Update that specific booking in your list
-                                bloc.add(
-                                  AllBookingEvent.updateBooking(
-                                    updated,
-                                    shouldRefresh:
-                                        bookingCubit.state.shouldRefresh,
-                                    isDeleted: result == true,
-                                  ),
-                                );
-                                log('update booking called');
-
-                                bookingCubit.reset();
+                              // If deleted or modified, refresh the entire list
+                              if (result == true) {
+                                log('Booking deleted, removing from list');
+                                // Reload bookings to reflect changes
+                                _fetchBookingsWithFilter(context);
                               }
                             },
                           );
@@ -125,31 +111,16 @@ class AllBookingFutureTab extends StatelessWidget {
                           final booking = bookings[index];
 
                           return BookingCard(
-                            booking: booking,
+                            booking: booking.toBookingsModel(),
                             onTap: () async {
-                              final bookingCubit = context
-                                  .read<BookingSelectionCubit>()
-                                ..selectBooking(booking);
-
                               final result = await context.push(
                                 BookingDetailsScreen(bookingId: booking.id!),
                               );
-                              if (bookingCubit.state.isModified) {
-                                final updated =
-                                    bookingCubit.state.selectedBooking;
-
-                                // Update that specific booking in your list
-                                bloc.add(
-                                  AllBookingEvent.updateBooking(
-                                    updated,
-                                    shouldRefresh:
-                                        bookingCubit.state.shouldRefresh,
-                                    isDeleted: result == true,
-                                  ),
-                                );
-                                log('update booking called');
-
-                                bookingCubit.reset();
+                              // If deleted or modified, refresh the entire list
+                              if (result == true) {
+                                log('Booking deleted, removing from list');
+                                // Reload bookings to reflect changes
+                                _fetchBookingsWithFilter(context);
                               }
                             },
                           );

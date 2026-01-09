@@ -8,6 +8,7 @@ class BookingsApiPaths {
   static const bookingsV3 = '${_rootV3}bookings/';
   static const bookingsV4 = '${_rootV4}bookings/';
   static const bookingsV5 = '${_rootV5}bookings/';
+  static const desktopList = '${_rootV5}bookings/desktop-list/';
   static const addPayment = '${bookingsV5}add-payment/';
   static const updateDetails = '${bookingsV5}update-details/';
   static const updateDeliveryStatus = '${bookingsV5}update-delivery-status/';

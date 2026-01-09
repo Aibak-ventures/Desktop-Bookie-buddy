@@ -3,6 +3,7 @@ part of 'all_booking_bloc.dart';
 @freezed
 class AllBookingEvent with _$AllBookingEvent {
   const factory AllBookingEvent.loadBookings({
+    String? status,
     String? startDate,
     String? endDate,
     String? searchQuery,
@@ -16,7 +17,7 @@ class AllBookingEvent with _$AllBookingEvent {
   /// is provided, it updates that booking in the list. Emits an updated
   /// state with the modified bookings list.
   const factory AllBookingEvent.updateBooking(
-    BookingsModel? booking, {
+    DesktopBookingItemModel? booking, {
     @Default(false) bool shouldRefresh,
     @Default(false) bool isDeleted,
   }) = _UpdateBooking;

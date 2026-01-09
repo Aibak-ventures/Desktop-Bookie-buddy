@@ -3,7 +3,8 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
+import 'package:bookie_buddy_web/core/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
@@ -55,10 +56,8 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
   ) async {
     if (state != _Loading) emit(const _Loading());
     try {
-      final PaginationModel<BookingsModel> result;
-
-      result = await _repository.loadBookingsPagination(
-        status: LoadBookingType.future,
+      final result = await _repository.loadDesktopBookingsPagination(
+        status: event.status ?? 'pending',
         startDate: event.startDate,
         endDate: event.endDate,
         searchQuery:
@@ -67,11 +66,12 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
 
       emit(
         _Loaded(
-          bookings: result.data,
-          nextPageUrl: result.nextPageUrl,
+          bookings: result.pagination.data,
+          nextPageUrl: result.pagination.nextPageUrl,
           endDate: event.endDate,
           startDate: event.startDate,
           searchQuery: event.searchQuery,
+          statusCounts: result.statusCounts,
         ),
       );
     } catch (e, stack) {
@@ -92,10 +92,9 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
 
     try {
       final nextPage = PaginationModel.getPageFromUrl(s.nextPageUrl);
-      final PaginationModel<BookingsModel> result;
 
-      result = await _repository.loadBookingsPagination(
-        status: LoadBookingType.future,
+      final result = await _repository.loadDesktopBookingsPagination(
+        status: 'pending', // Default status for pagination
         startDate: s.startDate,
         endDate: s.endDate,
         page: nextPage,
@@ -104,12 +103,13 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
 
       emit(
         s.copyWith(
-          bookings: [...s.bookings, ...result.data],
-          nextPageUrl: result.nextPageUrl,
+          bookings: [...s.bookings, ...result.pagination.data],
+          nextPageUrl: result.pagination.nextPageUrl,
           isPaginating: false,
           endDate: s.endDate,
           startDate: s.startDate,
           searchQuery: s.searchQuery,
+          statusCounts: result.statusCounts ?? s.statusCounts,
         ),
       );
     } catch (e, stack) {

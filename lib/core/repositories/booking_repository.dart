@@ -5,6 +5,8 @@ import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
+import 'package:bookie_buddy_web/core/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/services/booking_service.dart';
 import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
@@ -237,6 +239,60 @@ class BookingRepository {
       throw response.message;
     } catch (e, stack) {
       log('Error fetching bookings pagination: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  /// Fetch desktop bookings list with pagination support and status counts
+  Future<
+      ({
+        PaginationModel<DesktopBookingItemModel> pagination,
+        StatusCountsModel? statusCounts,
+      })> loadDesktopBookingsPagination({
+    required String status,
+    String? startDate,
+    String? endDate,
+    String? searchQuery,
+    int page = 1,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _bookingService.fetchDesktopBookingsPagination(
+          status: status,
+          page: page,
+          startDate: startDate,
+          endDate: endDate,
+          searchQuery: searchQuery,
+        ),
+      );
+      if (response.status.isSuccess) {
+        final pagination = PaginationModel.fromJson(
+          response.data,
+          (json) =>
+              DesktopBookingItemModel.fromJson(json as Map<String, dynamic>),
+          customJsonParser: (dataJson, itemFromJson) {
+            // dataJson is already the List of bookings from json['data']
+            final dataList = dataJson as List<dynamic>?;
+            return dataList
+                    ?.map((item) => itemFromJson(item))
+                    .toList()
+                    .cast<DesktopBookingItemModel>() ??
+                <DesktopBookingItemModel>[];
+          },
+        );
+
+        final statusCountsJson = response.data['status_counts'];
+        final statusCounts = statusCountsJson != null
+            ? StatusCountsModel.fromJson(
+                statusCountsJson as Map<String, dynamic>)
+            : null;
+
+        return (pagination: pagination, statusCounts: statusCounts);
+      }
+      log('Error fetching desktop bookings pagination: ${response.devMessage}');
+      throw response.message;
+    } catch (e, stack) {
+      log('Error fetching desktop bookings pagination: $e', stackTrace: stack);
       rethrow;
     }
   }
