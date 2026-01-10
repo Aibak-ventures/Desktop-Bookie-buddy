@@ -33,7 +33,6 @@ class HomeScreen extends StatelessWidget {
             children: [
               _buildHeader(context, bloc),
               const SizedBox(height: 32),
-
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
@@ -45,8 +44,7 @@ class HomeScreen extends StatelessWidget {
                   },
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (scrollInfo) {
-                      final (nextPageUrl, isPaginating) =
-                          bloc.state.maybeWhen(
+                      final (nextPageUrl, isPaginating) = bloc.state.maybeWhen(
                         orElse: () => (null, false),
                         loaded: (_, __, nextPageUrl, isPaginating, ___) =>
                             (nextPageUrl, isPaginating),
@@ -69,8 +67,7 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           _buildCard(
                             title: 'Overview',
-                            child:
-                                CarouselHome(data: bloc.carouselResponse),
+                            child: CarouselHome(data: bloc.carouselResponse),
                           ),
                           const SizedBox(height: 24),
                           _buildCard(

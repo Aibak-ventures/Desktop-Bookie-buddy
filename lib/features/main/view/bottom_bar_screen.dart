@@ -63,36 +63,26 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      backgroundColor: Colors.white,
+      body: Row(
         children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/assets/images/bottom_bar_background.png',
-              fit: BoxFit.fill,
-            ),
-          ),
-          Row(
-            children: [
-              _glassSidebar(),
-              Expanded(
-                child: showNewBookingInContent
-                    ? NewBookingScreen(
-                        onClose: () {
-                          setState(() {
-                            showNewBookingInContent = false;
-                            newOrderActive = false;
-                            currentIndex = 1; // Back to Dashboard
-                          });
-                        },
-                      )
-                    : PageView(
-                        controller: pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: screens,
-                      ),
-              ),
-            ],
+          _glassSidebar(),
+          Expanded(
+            child: showNewBookingInContent
+                ? NewBookingScreen(
+                    onClose: () {
+                      setState(() {
+                        showNewBookingInContent = false;
+                        newOrderActive = false;
+                        currentIndex = 1; // Back to Dashboard
+                      });
+                    },
+                  )
+                : PageView(
+                    controller: pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: screens,
+                  ),
           ),
         ],
       ),
@@ -101,12 +91,17 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   Widget _glassSidebar() {
     return Container(
-      width: 250,
-      margin: const EdgeInsets.all(16),
+      width: 260,
+      // margin: const EdgeInsets.only(right: 16), // Only margin on right side
       decoration: BoxDecoration(
-        // color: const Color(0xFFF3EEFF), // soft purple like design
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(24),
+        image: DecorationImage(
+          image: AssetImage('assets/assets/images/bottom_bar_background.png'),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadius.only(
+            // topRight: Radius.circular(24),
+            // bottomRight: Radius.circular(24),
+            ), // Only round right side
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -122,16 +117,23 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           // const SizedBox(height: 24),
           // _newOrderButton(),
           const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22),
+            child: Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+          ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
-                  _navItem(0, Icons.add, "New Order"),
-                  _navItem(1, Icons.dashboard_rounded, "Dashboard"),
-                  _navItem(2, Icons.shopping_cart_rounded, "Orders"),
+                  _navItem(0, Icons.add_box_outlined, "New Order"),
+                  _navItem(1, Icons.dashboard_outlined, "Dashboard"),
+                  _navItem(2, Icons.list_alt, "Orders"),
                   _navItem(3, Icons.menu_book_rounded, "Ledger book"),
-                  _navItem(4, Icons.inventory_2_rounded, "Stocks"),
+                  _navItem(4, Icons.bar_chart_outlined, "Stocks"),
                 ],
               ),
             ),
@@ -301,6 +303,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget _navItem(int index, IconData icon, String label) {
     final isActive = currentIndex == index;
     final isNewOrder = index == 0; // New Order is at index 0
+    // Check if New Order is actually active
+    final isNewOrderActive = isNewOrder && newOrderActive;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -329,7 +333,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
-            gradient: isNewOrder
+            gradient: (isActive || isNewOrderActive)
                 ? const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -338,18 +342,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                       Color(0xFF8B7CF7),
                     ],
                   )
-                : isActive
-                    ? const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF6C5CE7),
-                          Color(0xFF8B7CF7),
-                        ],
-                      )
-                    : null,
+                : null,
             borderRadius: BorderRadius.circular(14),
-            boxShadow: (isActive || isNewOrder)
+            boxShadow: (isActive || isNewOrderActive)
                 ? [
                     BoxShadow(
                       color: const Color(0xFF6C5CE7).withOpacity(0.35),
@@ -364,7 +359,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               Icon(
                 icon,
                 size: 20,
-                color: (isActive || isNewOrder)
+                color: (isActive || isNewOrderActive)
                     ? Colors.white
                     : Colors.grey.shade600,
               ),
@@ -375,7 +370,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: (isActive || isNewOrder)
+                    color: (isActive || isNewOrderActive)
                         ? Colors.white
                         : const Color(0xFF636E72),
                   ),
