@@ -167,7 +167,7 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                           // Paid amount
                           _PaymentDetailsRow(
                             title: 'Paid',
-                            amount: booking.paidAmount,
+                            amount: booking.actualPaidAmount,
                             isPaid: true,
                           ),
 
@@ -175,7 +175,7 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                           _PaymentDetailsRow(
                             title: 'Balance',
                             amount: booking.totalAmount -
-                                booking.paidAmount -
+                                booking.actualPaidAmount -
                                 (booking.discountAmount ?? 0),
                           ),
                           Row(
@@ -236,7 +236,7 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                               SecretPasswordLocations.bookingPayment,
                               onSuccess: () {
                                 final int balance = booking.totalAmount -
-                                    booking.paidAmount -
+                                    booking.actualPaidAmount -
                                     (booking.discountAmount ?? 0);
                                 showBookingDetailsAddPaymentDialog(
                                   context: context,

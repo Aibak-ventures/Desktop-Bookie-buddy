@@ -9,13 +9,13 @@ class BookingDetailsPaymentHistoryModel
     with _$BookingDetailsPaymentHistoryModel {
   const factory BookingDetailsPaymentHistoryModel({
     @JsonKey(name: 'amount') required int amount,
-    @JsonKey( 
+    @JsonKey(
       name: 'payment_method',
       defaultValue: PaymentMethod.cash,
       fromJson: PaymentMethod.fromJson,
     )
     required PaymentMethod paymentMethod,
-    @JsonKey(name: 'datetime') required String dateTime,
+    @JsonKey(name: 'created_at') required String dateTime,
   }) = _BookingDetailsPaymentHistoryModel;
 
   factory BookingDetailsPaymentHistoryModel.fromJson(

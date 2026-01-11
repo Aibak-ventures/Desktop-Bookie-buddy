@@ -264,7 +264,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                                   0,
                           paymentHistoryCubit:
                               context.read<BookingDetailsPaymentHistoryCubit>(),
-                          isPaymentCompleted: booking.paidAmount >=
+                          isPaymentCompleted: booking.actualPaidAmount >=
                               (booking.totalAmount -
                                   (booking.discountAmount ?? 0)),
                         ),
@@ -342,7 +342,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               context,
               booking,
               (booking.totalAmount ?? 0) -
-                  (booking.paidAmount ?? 0) -
+                  (booking.actualPaidAmount) -
                   (booking.discountAmount ?? 0)),
       icon: state.isLoading
           ? const SizedBox(
@@ -371,7 +371,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
       BuildContext context, BookingDetailsState state, dynamic booking) {
     final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
     final balanceAmount = (booking.totalAmount ?? 0) -
-        (booking.paidAmount ?? 0) -
+        (booking.actualPaidAmount) -
         (booking.discountAmount ?? 0);
 
     return Column(
@@ -530,7 +530,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   void _handleCancelBooking(BuildContext context, dynamic booking) {
     // Calculate refundable amount (total paid - already refunded if any)
-    final maxRefundAmount = booking.paidAmount ?? 0;
+    final maxRefundAmount = booking.actualPaidAmount;
 
     if (maxRefundAmount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -644,7 +644,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 📅 Pickup: ${booking.pickupDate ?? 'N/A'}
 📅 Return: ${booking.returnDate ?? 'N/A'}
 💰 Total Amount: ₹${booking.totalAmount}
-💳 Paid Amount: ₹${booking.paidAmount}
+💳 Paid Amount: ₹${booking.actualPaidAmount}
 📊 Status: ${booking.deliveryStatus.name.toUpperCase()}
 
 🛍️ Items:

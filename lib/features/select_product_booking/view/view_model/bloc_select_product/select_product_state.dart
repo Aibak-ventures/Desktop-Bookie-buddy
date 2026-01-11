@@ -6,7 +6,7 @@ class SelectProductState with _$SelectProductState {
   const factory SelectProductState.loaded({
     required List<ProductModel> products,
     required String? nextPageUrl,
-    required int serviceId,
+    int? serviceId,
     required String pickupDate,
     required String returnDate,
     @Default(false) bool isPaginating,

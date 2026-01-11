@@ -144,15 +144,19 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   void _onSearchChanged() {
-    if (selectedServiceId == null) return;
-
+    // Allow search even if selectedServiceId is null (All Services)
     final query = serviceSearchController.text.trim();
     final isSales = selectedBookingType == BookingType.sales;
+    // If "All Services" is selected, serviceId will be -1, so we pass null to API
+    final serviceIdToUse =
+        (selectedServiceId == null || selectedServiceId == -1)
+            ? null
+            : selectedServiceId;
 
     if (query.isEmpty) {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
-          serviceId: selectedServiceId!,
+          serviceId: serviceIdToUse,
           pickupDate: pickupDate.format(),
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
@@ -164,7 +168,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     } else {
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
-          serviceId: selectedServiceId!,
+          serviceId: serviceIdToUse,
           query: query,
           type: 'name',
           pickupDate: pickupDate.format(),
@@ -178,11 +182,15 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  void _loadProductsForService(int serviceId) {
+  void _loadProductsForService(int? serviceId) {
     final isSales = selectedBookingType == BookingType.sales;
+    // If "All Services" is selected (-1), pass null to API
+    final serviceIdToUse =
+        (serviceId == null || serviceId == -1) ? null : serviceId;
+
     _selectProductBloc.add(
       SelectProductEvent.loadProducts(
-        serviceId: serviceId,
+        serviceId: serviceIdToUse,
         pickupDate: pickupDate.format(),
         returnDate: returnDate.format(),
         pickupTime: pickupTime,
@@ -819,15 +827,37 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                               fontSize: 12,
                               color: Colors.black87,
                             ),
-                            items: services.map((service) {
-                              return DropdownMenuItem<int>(
-                                value: service.id,
-                                child: Text(
-                                  service.name,
-                                  style: const TextStyle(fontSize: 12),
+                            items: [
+                              // "All Services" option
+                              DropdownMenuItem<int>(
+                                value: -1,
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.apps,
+                                        size: 14, color: Color(0xFF6132E4)),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      'All Services',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF6132E4),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            }).toList(),
+                              ),
+                              // Regular service options
+                              ...services.map((service) {
+                                return DropdownMenuItem<int>(
+                                  value: service.id,
+                                  child: Text(
+                                    service.name,
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                );
+                              }).toList(),
+                            ],
                             onChanged: (id) {
                               if (id != null) {
                                 setState(() => selectedServiceId = id);
@@ -885,12 +915,11 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
     _searchOverlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        width: MediaQuery.of(context).size.width * 0.40 -
-            24, // Match left section width minus padding
+        width: MediaQuery.of(context).size.width * 0.60 - 24,
         child: CompositedTransformFollower(
           link: _searchLayerLink,
           showWhenUnlinked: false,
-          offset: const Offset(0, 44), // Below the search bar
+          offset: const Offset(0, 44),
           child: Material(
             elevation: 8,
             borderRadius: BorderRadius.circular(10),
@@ -969,78 +998,106 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildOverlaySearchItem(ProductModel product) {
     final price = product.price ?? 0;
     final variants = product.variants;
-    final variantText = variants.isNotEmpty
-        ? variants.map((v) => v.attribute).where((a) => a.isNotEmpty).join(', ')
-        : 'No variants';
+    final variantAttributes =
+        variants.map((v) => v.attribute).where((a) => a.isNotEmpty).toList();
 
     return InkWell(
       onTap: () {
         log('Overlay item tapped: ${product.name}');
         _removeSearchOverlay();
         serviceSearchController.clear();
-        _showVariantSelectionDialog(product);
+        // Directly add the product instead of showing dialog
+        _addProductFromSearch(product);
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Row(
-          children: [
-            // Product Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: Container(
-                width: 40,
-                height: 40,
-                color: Colors.grey.shade100,
-                child: product.image != null && product.image!.isNotEmpty
-                    ? Image.network(
-                        product.image!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Icon(
-                          Icons.image_outlined,
-                          size: 20,
-                          color: Colors.grey.shade400,
-                        ),
-                      )
-                    : Icon(Icons.image_outlined,
-                        size: 20, color: Colors.grey.shade400),
+      child: Center(
+        child: Container(
+          // width: 950, // 👈 fixed width
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              // Product Image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  color: Colors.grey.shade100,
+                  child: product.image != null && product.image!.isNotEmpty
+                      ? Image.network(
+                          product.image!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Icon(
+                            Icons.image_outlined,
+                            size: 20,
+                            color: Colors.grey.shade400,
+                          ),
+                        )
+                      : Icon(Icons.image_outlined,
+                          size: 20, color: Colors.grey.shade400),
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            // Product Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    variantText,
-                    style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+              const SizedBox(width: 10),
+              // Product Info
+              Expanded(
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        product.name,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    if (variantAttributes.isNotEmpty)
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: variantAttributes.map((variant) {
+                          return _variantChip(variant);
+                        }).toList(),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            // Price
-            Text(
-              '₹$price',
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF6132E4),
+
+              const SizedBox(width: 8),
+              Text(
+                '₹$price',
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF6132E4),
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            // Add arrow
-            Icon(Icons.add_circle, size: 20, color: const Color(0xFF6132E4)),
-          ],
+              const SizedBox(width: 8),
+              Container(
+                width: 80,
+                height: 25,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6132E4),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.add, size: 18, color: Colors.white),
+                    SizedBox(width: 4),
+                    Text(
+                      'Add',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1744,7 +1801,9 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.name,
                         style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -2415,6 +2474,9 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
+    // If "All Services" is selected (-1), pass null to the screen
+    final serviceIdToUse = selectedServiceId == -1 ? null : selectedServiceId;
+
     final result = await Navigator.push<List<ProductSelectedModel>>(
       context,
       MaterialPageRoute(
@@ -2428,7 +2490,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             BlocProvider(create: (_) => SelectedProductsCubit()),
           ],
           child: SelectProductScreen(
-            serviceId: selectedServiceId!,
+            serviceId: serviceIdToUse,
             pickupDate: pickupDate.format(),
             returnDate: returnDate.format(),
             pickupTime: pickupTime,
@@ -2574,4 +2636,23 @@ class DocumentFile {
     required this.path,
     this.bytes,
   });
+}
+
+Widget _variantChip(String text) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade50,
+      borderRadius: BorderRadius.circular(50),
+      border: Border.all(color: Colors.grey.shade200, width: 0.5),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontSize: 10,
+        fontWeight: FontWeight.w500,
+        color: Colors.grey.shade700,
+      ),
+    ),
+  );
 }

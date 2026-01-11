@@ -42,7 +42,7 @@ class ProductQueryService {
   }
 
   Future<CustomResponseModel> searchAndFilterProducts({
-    required int serviceId,
+    int? serviceId,
     required String? query,
     required String? type,
     required int page,
@@ -56,7 +56,7 @@ class ProductQueryService {
         queryParameters: {
           'page': page,
           if (query != null && query.isNotEmpty) 'search': query,
-          'shop_service_id': serviceId,
+          if (serviceId != null) 'shop_service_id': serviceId,
           if (query != null && query.isNotEmpty)
             'search_by': type, // "name","color","size","category","model"
           if (startPrice != null && endPrice != null) 'min_price': startPrice,
@@ -130,8 +130,8 @@ class ProductQueryService {
   //   }
   // }
 
-  Future<CustomResponseModel> fetchProductsPaginated(
-    int serviceId, {
+  Future<CustomResponseModel> fetchProductsPaginated({
+    int? serviceId,
     required int page,
     required bool includeInStockOnly,
   }) async {
@@ -140,7 +140,7 @@ class ProductQueryService {
         ApiPaths.service.productsRoot,
         queryParameters: {
           'page': page,
-          'shop_service_id': serviceId,
+          if (serviceId != null) 'shop_service_id': serviceId,
           'in_stock_only': includeInStockOnly,
         },
       );
@@ -153,7 +153,7 @@ class ProductQueryService {
   }
 
   Future<CustomResponseModel> fetchAvailableProductsPaginated({
-    required int serviceId,
+    int? serviceId,
     required int page,
     required String pickupDate,
     required String returnDate,
@@ -171,7 +171,7 @@ class ProductQueryService {
         queryParameters: nextPageUrl != null
             ? null
             : {
-                'service_id': serviceId,
+                if (serviceId != null) 'service_id': serviceId,
                 'page': page,
                 'event_date': pickupDate.parseToDateTime().format(
                       reverse: true,

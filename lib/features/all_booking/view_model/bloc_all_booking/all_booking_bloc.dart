@@ -41,9 +41,19 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
         event.bookingId,
         event.deliveryStatus,
       );
-      // After successful API update, we can either reload or update local state
-      // For now, let's reload to ensure data consistency
-      add(const AllBookingEvent.loadBookings());
+
+      // Update the local state instead of reloading
+      if (state is _Loaded) {
+        final s = state as _Loaded;
+        final updatedBookings = s.bookings.map((booking) {
+          if (booking.id == event.bookingId) {
+            return booking.copyWith(deliveryStatus: event.deliveryStatus);
+          }
+          return booking;
+        }).toList();
+
+        emit(s.copyWith(bookings: updatedBookings));
+      }
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       emit(_Error(e.toString()));
@@ -54,7 +64,16 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     _LoadBookings event,
     Emitter<AllBookingState> emit,
   ) async {
-    if (state != _Loading) emit(const _Loading());
+    // Only show loading if we don't have data for this status yet
+    // This prevents the counts from showing zero during tab switches
+    final currentState = state;
+    final shouldShowLoading = currentState is! _Loaded ||
+        (currentState is _Loaded && currentState.status != event.status);
+
+    if (shouldShowLoading) {
+      emit(const _Loading());
+    }
+
     try {
       final result = await _repository.loadDesktopBookingsPagination(
         status: event.status ?? 'pending',
@@ -71,6 +90,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
           endDate: event.endDate,
           startDate: event.startDate,
           searchQuery: event.searchQuery,
+          status: event.status ?? 'pending',
           statusCounts: result.statusCounts,
         ),
       );

@@ -49,6 +49,11 @@ _$BookingDetailsModelImpl _$$BookingDetailsModelImplFromJson(
                   AdditionalChargesModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      payments: (json['payments'] as List<dynamic>?)
+              ?.map((e) => BookingDetailsPaymentHistoryModel.fromJson(
+                  e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$BookingDetailsModelImplToJson(
@@ -77,6 +82,7 @@ Map<String, dynamic> _$$BookingDetailsModelImplToJson(
       'description': instance.description,
       'booked_items': instance.bookedItems,
       'additional_charges': instance.additionalCharges,
+      'payments': instance.payments,
     };
 
 const _$PurchaseModeEnumMap = {

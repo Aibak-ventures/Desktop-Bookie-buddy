@@ -15,7 +15,7 @@ class BookingsApiPaths {
   static const updateBookingStatus = '${bookingsV5}update-booking-status/';
   static const oldBookings = '${bookingsV3}old-bookings/';
   static const clients = '${_rootV3}clients/';
-  static const availableProducts = '${bookingsV3}available-products/';
+  static const availableProducts = '${bookingsV3}desktop-available-products/';
   static const dashboard = '${_rootV4}dashboard/';
   static const cancelBooking = '${bookingsV5}cancel-booking/';
   static const addRefund = '${bookingsV5}add-refund/';

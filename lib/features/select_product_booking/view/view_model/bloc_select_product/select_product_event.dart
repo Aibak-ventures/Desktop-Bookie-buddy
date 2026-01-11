@@ -3,7 +3,7 @@ part of 'select_product_bloc.dart';
 @freezed
 class SelectProductEvent with _$SelectProductEvent {
   const factory SelectProductEvent.loadProducts({
-    required int serviceId,
+    int? serviceId,
     required String pickupDate,
     required String returnDate,
     TimeOfDay? pickupTime,
@@ -15,7 +15,7 @@ class SelectProductEvent with _$SelectProductEvent {
       _LoadNextPageProducts;
 
   const factory SelectProductEvent.searchProducts({
-    required int serviceId,
+    int? serviceId,
     required String pickupDate,
     required String returnDate,
     String? query,

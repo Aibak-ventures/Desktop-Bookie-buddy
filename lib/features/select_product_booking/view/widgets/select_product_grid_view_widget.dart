@@ -28,7 +28,7 @@ class SelectProductGridViewWidget extends StatelessWidget {
     required this.availabilityCheckOnly,
   });
 
-  final ValueNotifier<int> serviceIdNotifier;
+  final ValueNotifier<int?> serviceIdNotifier;
   final String pickupDate;
   final String returnDate;
   final TimeOfDay? pickupTime;

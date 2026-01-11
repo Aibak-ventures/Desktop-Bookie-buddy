@@ -20,7 +20,7 @@ import '../../../core/ui/widgets/custom_button.dart';
 import '../../../core/ui/widgets/custom_textfield.dart';
 
 class AddOrEditProductScreen extends StatefulWidget {
-  final int serviceId;
+  final int? serviceId;
   final ProductModel? product;
 
   const AddOrEditProductScreen({

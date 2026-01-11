@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_model.freezed.dart';
@@ -58,6 +59,9 @@ class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'additional_charges')
     @Default([])
     List<AdditionalChargesModel> additionalCharges,
+    @JsonKey(name: 'payments')
+    @Default([])
+    List<BookingDetailsPaymentHistoryModel> payments,
   }) = _BookingDetailsModel;
 
   factory BookingDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -108,4 +112,13 @@ class BookingDetailsModel with _$BookingDetailsModel {
   //   if (value is double) return value.toInt();
   //   return 0;
   // }
+}
+
+extension BookingDetailsModelX on BookingDetailsModel {
+  /// Calculate the actual paid amount from the payments array
+  /// This is more accurate than the paidAmount field which is the old advance_amount
+  int get actualPaidAmount {
+    if (payments.isEmpty) return paidAmount;
+    return payments.fold<int>(0, (sum, payment) => sum + payment.amount);
+  }
 }

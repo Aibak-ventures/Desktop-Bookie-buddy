@@ -147,10 +147,8 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                       _buildCoolingPeriodRow(),
                       const SizedBox(height: 72),
 
-                      SizedBox(
-                          width: 360,
-                          child: _compactField(widget.clientAddressController,
-                              'Place', Icons.location_on_outlined)),
+                      _compactField(widget.clientAddressController, 'Place',
+                          Icons.location_on_outlined),
                       const SizedBox(height: 12),
                       _buildStaffDetailsCard(),
                     ],
@@ -250,22 +248,20 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
   }
 
   Widget _buildClientManualFields() {
-    return Column(
-      children: [
-        Column(
-          children: [
-            _compactField(
-                widget.clientNameController, 'Name', Icons.person_outline),
-            const SizedBox(height: 8),
-            _compactField(widget.clientPhone1Controller, 'Phone',
-                Icons.phone_outlined, TextInputType.phone),
-            const SizedBox(height: 8),
-            _compactField(widget.clientPhone2Controller, 'Phone 2',
-                Icons.phone_outlined, TextInputType.phone),
-          ],
-        ),
-        const SizedBox(width: 8),
-      ],
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 400),
+      child: Column(
+        children: [
+          _compactField(
+              widget.clientNameController, 'Name', Icons.person_outline),
+          const SizedBox(height: 8),
+          _compactField(widget.clientPhone1Controller, 'Phone',
+              Icons.phone_outlined, TextInputType.phone),
+          const SizedBox(height: 8),
+          _compactField(widget.clientPhone2Controller, 'Phone 2',
+              Icons.phone_outlined, TextInputType.phone),
+        ],
+      ),
     );
   }
 

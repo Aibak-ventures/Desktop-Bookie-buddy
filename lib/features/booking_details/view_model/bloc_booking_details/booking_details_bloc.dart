@@ -51,7 +51,10 @@ class BookingDetailsBloc
         event.bookingId,
         event.deliveryStatus,
       );
-      emit(const _Success('Delivery status updated successfully'));
+
+      // Refetch booking details to get updated delivery status
+      final booking = await _repository.getBooking(event.bookingId);
+      emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       final oldState = state;
@@ -71,7 +74,10 @@ class BookingDetailsBloc
         event.bookingId,
         event.bookingStatus,
       );
-      emit(const _Success('Booking status updated successfully'));
+
+      // Refetch booking details to get updated booking status
+      final booking = await _repository.getBooking(event.bookingId);
+      emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       final previous = state;
@@ -87,12 +93,18 @@ class BookingDetailsBloc
     Emitter<BookingDetailsState> emit,
   ) async {
     try {
+      log('📤 Updating payment: ${event.amount} for booking ${event.bookingId}');
       await _repository.updatePayment(
         bookingId: event.bookingId,
         amount: event.amount,
         paymentMethod: event.paymentMethod,
       );
-      emit(const _Success('Payment updated successfully'));
+
+      log('✅ Payment updated, refetching booking details...');
+      // Refetch booking details to get updated payment information
+      final booking = await _repository.getBooking(event.bookingId);
+      log('📥 Fetched booking with ${booking.payments.length} payments, total: ${booking.actualPaidAmount}');
+      emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       final oldState = state;

@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
@@ -84,6 +85,7 @@ class BookingDetailsDrawer extends StatelessWidget {
             ),
           ),
           loaded: (booking) => SingleChildScrollView(
+            key: ValueKey('booking_${booking.id}_${booking.actualPaidAmount}'),
             padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +132,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                           0,
                       paymentHistoryCubit:
                           context.read<BookingDetailsPaymentHistoryCubit>(),
-                      isPaymentCompleted: booking.paidAmount >=
+                      isPaymentCompleted: booking.actualPaidAmount >=
                           (booking.totalAmount - (booking.discountAmount ?? 0)),
                     ),
                   ),

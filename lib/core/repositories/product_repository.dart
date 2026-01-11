@@ -169,7 +169,7 @@ class ProductRepository {
 
   // Search products
   Future<PaginationModel<ProductModel>> searchAndFilterProducts({
-    required int serviceId,
+    int? serviceId,
     required String? query,
     required String? type,
     required int? startPrice,
@@ -243,14 +243,14 @@ class ProductRepository {
 
   // 📦 Fetch paginated products
   Future<PaginationModel<ProductModel>> getProductsPaginated({
-    required int serviceId,
+    int? serviceId,
     required int page,
     bool includeInStockOnly = false,
   }) async {
     try {
       final response = await safeApiCall(
         () => _queryService.fetchProductsPaginated(
-          serviceId,
+          serviceId: serviceId,
           page: page,
           includeInStockOnly: includeInStockOnly,
         ),
@@ -271,7 +271,7 @@ class ProductRepository {
   }
 
   Future<PaginationModel<ProductModel>> getAvailableProductsPaginated({
-    required int serviceId,
+    int? serviceId,
     required int page,
     required String pickupDate,
     required String returnDate,

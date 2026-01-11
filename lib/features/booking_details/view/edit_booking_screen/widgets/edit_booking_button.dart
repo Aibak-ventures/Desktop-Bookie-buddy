@@ -153,16 +153,16 @@ class EditBookingButton extends StatelessWidget {
                 return;
               }
 
-              if (newTotalAmount < booking.paidAmount) {
+              if (newTotalAmount < booking.actualPaidAmount) {
                 context.showSnackBar(
-                  'Total amount cannot be less than paid amount ${booking.paidAmount}',
+                  'Total amount cannot be less than paid amount ${booking.actualPaidAmount}',
                   isError: true,
                   title: 'Invalid Amount',
                 );
                 return;
               }
 
-              final rawMaxValue = newTotalAmount - booking.paidAmount;
+              final rawMaxValue = newTotalAmount - booking.actualPaidAmount;
               final maxValue = rawMaxValue >= 0 ? rawMaxValue : 0;
               if ((formController.discountAmountController.text.toIntOrNull() ??
                       0) >

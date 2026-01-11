@@ -849,6 +849,7 @@ mixin _$AllBookingState {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)
         loaded,
     required TResult Function(String error) error,
@@ -865,6 +866,7 @@ mixin _$AllBookingState {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult? Function(String error)? error,
@@ -881,6 +883,7 @@ mixin _$AllBookingState {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult Function(String error)? error,
@@ -985,6 +988,7 @@ class _$InitialImpl implements _Initial {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)
         loaded,
     required TResult Function(String error) error,
@@ -1004,6 +1008,7 @@ class _$InitialImpl implements _Initial {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult? Function(String error)? error,
@@ -1023,6 +1028,7 @@ class _$InitialImpl implements _Initial {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult Function(String error)? error,
@@ -1126,6 +1132,7 @@ class _$LoadingImpl implements _Loading {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)
         loaded,
     required TResult Function(String error) error,
@@ -1145,6 +1152,7 @@ class _$LoadingImpl implements _Loading {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult? Function(String error)? error,
@@ -1164,6 +1172,7 @@ class _$LoadingImpl implements _Loading {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult Function(String error)? error,
@@ -1230,6 +1239,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       String? startDate,
       String? endDate,
       String? searchQuery,
+      String? status,
       StatusCountsModel? statusCounts});
 
   $StatusCountsModelCopyWith<$Res>? get statusCounts;
@@ -1254,6 +1264,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? startDate = freezed,
     Object? endDate = freezed,
     Object? searchQuery = freezed,
+    Object? status = freezed,
     Object? statusCounts = freezed,
   }) {
     return _then(_$LoadedImpl(
@@ -1280,6 +1291,10 @@ class __$$LoadedImplCopyWithImpl<$Res>
       searchQuery: freezed == searchQuery
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
               as String?,
       statusCounts: freezed == statusCounts
           ? _value.statusCounts
@@ -1313,6 +1328,7 @@ class _$LoadedImpl implements _Loaded {
       this.startDate,
       this.endDate,
       this.searchQuery,
+      this.status,
       this.statusCounts})
       : _bookings = bookings;
 
@@ -1336,11 +1352,13 @@ class _$LoadedImpl implements _Loaded {
   @override
   final String? searchQuery;
   @override
+  final String? status;
+  @override
   final StatusCountsModel? statusCounts;
 
   @override
   String toString() {
-    return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, statusCounts: $statusCounts)';
+    return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, status: $status, statusCounts: $statusCounts)';
   }
 
   @override
@@ -1358,6 +1376,7 @@ class _$LoadedImpl implements _Loaded {
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.statusCounts, statusCounts) ||
                 other.statusCounts == statusCounts));
   }
@@ -1371,6 +1390,7 @@ class _$LoadedImpl implements _Loaded {
       startDate,
       endDate,
       searchQuery,
+      status,
       statusCounts);
 
   /// Create a copy of AllBookingState
@@ -1393,12 +1413,13 @@ class _$LoadedImpl implements _Loaded {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)
         loaded,
     required TResult Function(String error) error,
   }) {
     return loaded(bookings, nextPageUrl, isPaginating, startDate, endDate,
-        searchQuery, statusCounts);
+        searchQuery, status, statusCounts);
   }
 
   @override
@@ -1413,12 +1434,13 @@ class _$LoadedImpl implements _Loaded {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult? Function(String error)? error,
   }) {
     return loaded?.call(bookings, nextPageUrl, isPaginating, startDate, endDate,
-        searchQuery, statusCounts);
+        searchQuery, status, statusCounts);
   }
 
   @override
@@ -1433,6 +1455,7 @@ class _$LoadedImpl implements _Loaded {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult Function(String error)? error,
@@ -1440,7 +1463,7 @@ class _$LoadedImpl implements _Loaded {
   }) {
     if (loaded != null) {
       return loaded(bookings, nextPageUrl, isPaginating, startDate, endDate,
-          searchQuery, statusCounts);
+          searchQuery, status, statusCounts);
     }
     return orElse();
   }
@@ -1491,6 +1514,7 @@ abstract class _Loaded implements AllBookingState {
       final String? startDate,
       final String? endDate,
       final String? searchQuery,
+      final String? status,
       final StatusCountsModel? statusCounts}) = _$LoadedImpl;
 
   List<DesktopBookingItemModel> get bookings;
@@ -1499,6 +1523,7 @@ abstract class _Loaded implements AllBookingState {
   String? get startDate;
   String? get endDate;
   String? get searchQuery;
+  String? get status;
   StatusCountsModel? get statusCounts;
 
   /// Create a copy of AllBookingState
@@ -1585,6 +1610,7 @@ class _$ErrorImpl implements _Error {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)
         loaded,
     required TResult Function(String error) error,
@@ -1604,6 +1630,7 @@ class _$ErrorImpl implements _Error {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult? Function(String error)? error,
@@ -1623,6 +1650,7 @@ class _$ErrorImpl implements _Error {
             String? startDate,
             String? endDate,
             String? searchQuery,
+            String? status,
             StatusCountsModel? statusCounts)?
         loaded,
     TResult Function(String error)? error,

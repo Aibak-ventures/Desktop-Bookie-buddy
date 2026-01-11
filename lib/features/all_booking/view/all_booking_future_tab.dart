@@ -49,7 +49,7 @@ class AllBookingFutureTab extends StatelessWidget {
                 )
               : const BookingListShimmer(itemCount: 10),
           loaded: (bookings, nextPageUrl, isPaginating, startDate, endDate,
-              searchQuery, statusCounts) {
+              searchQuery, status, statusCounts) {
             if (bookings.isEmpty) {
               return AllBookingEmptyWidget(
                 dateFilterNotifier: dateFilterNotifier,

@@ -22,7 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectProductScreen extends StatefulWidget {
-  final int serviceId;
+  final int? serviceId;
   final String pickupDate;
   final String returnDate;
   final TimeOfDay? pickupTime;
@@ -51,7 +51,7 @@ class SelectProductScreen extends StatefulWidget {
 
 class _SelectProductScreenState extends State<SelectProductScreen> {
   final searchController = TextEditingController();
-  late final ValueNotifier<int> selectedServiceIdNotifier;
+  late final ValueNotifier<int?> selectedServiceIdNotifier;
   late final ValueNotifier<MainServiceType> selectedMainServiceTypeNotifier;
   final isPriceFilterEnabled = ValueNotifier<bool>(false);
   final priceRangeNotifier = ValueNotifier(const RangeValues(0, 80000));
@@ -67,7 +67,8 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
           'SelectProductScreen: preSelectedData products: ${widget.preSelectedData!.map((p) => p.variant.name).toList()}');
     }
 
-    selectedServiceIdNotifier = ValueNotifier(widget.serviceId);
+    // Initialize with serviceId or 0 if null (All Services)
+    selectedServiceIdNotifier = ValueNotifier(widget.serviceId ?? 0);
     final services = context.read<ServiceBloc>().getServices();
     selectedMainServiceTypeNotifier = ValueNotifier(
       MainServiceType.fromServiceList(services, widget.serviceId),
@@ -80,7 +81,7 @@ class _SelectProductScreenState extends State<SelectProductScreen> {
 
     context.read<SelectProductBloc>().add(
           SelectProductEvent.loadProducts(
-            serviceId: selectedServiceIdNotifier.value,
+            serviceId: widget.serviceId,
             pickupDate: widget.pickupDate,
             returnDate: widget.returnDate,
             pickupTime: widget.pickupTime,

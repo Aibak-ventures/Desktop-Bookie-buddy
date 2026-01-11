@@ -19,7 +19,7 @@ mixin _$SelectProductEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -29,7 +29,7 @@ mixin _$SelectProductEvent {
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -47,7 +47,7 @@ mixin _$SelectProductEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -57,7 +57,7 @@ mixin _$SelectProductEvent {
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -75,7 +75,7 @@ mixin _$SelectProductEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -85,7 +85,7 @@ mixin _$SelectProductEvent {
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -157,7 +157,7 @@ abstract class _$$LoadProductsImplCopyWith<$Res> {
       __$$LoadProductsImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {int serviceId,
+      {int? serviceId,
       String pickupDate,
       String returnDate,
       TimeOfDay? pickupTime,
@@ -179,7 +179,7 @@ class __$$LoadProductsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? serviceId = null,
+    Object? serviceId = freezed,
     Object? pickupDate = null,
     Object? returnDate = null,
     Object? pickupTime = freezed,
@@ -188,10 +188,10 @@ class __$$LoadProductsImplCopyWithImpl<$Res>
     Object? isSales = null,
   }) {
     return _then(_$LoadProductsImpl(
-      serviceId: null == serviceId
+      serviceId: freezed == serviceId
           ? _value.serviceId
           : serviceId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       pickupDate: null == pickupDate
           ? _value.pickupDate
           : pickupDate // ignore: cast_nullable_to_non_nullable
@@ -224,7 +224,7 @@ class __$$LoadProductsImplCopyWithImpl<$Res>
 
 class _$LoadProductsImpl implements _LoadProducts {
   const _$LoadProductsImpl(
-      {required this.serviceId,
+      {this.serviceId,
       required this.pickupDate,
       required this.returnDate,
       this.pickupTime,
@@ -233,7 +233,7 @@ class _$LoadProductsImpl implements _LoadProducts {
       this.isSales = false});
 
   @override
-  final int serviceId;
+  final int? serviceId;
   @override
   final String pickupDate;
   @override
@@ -291,7 +291,7 @@ class _$LoadProductsImpl implements _LoadProducts {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -301,7 +301,7 @@ class _$LoadProductsImpl implements _LoadProducts {
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -323,7 +323,7 @@ class _$LoadProductsImpl implements _LoadProducts {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -333,7 +333,7 @@ class _$LoadProductsImpl implements _LoadProducts {
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -355,7 +355,7 @@ class _$LoadProductsImpl implements _LoadProducts {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -365,7 +365,7 @@ class _$LoadProductsImpl implements _LoadProducts {
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -428,7 +428,7 @@ class _$LoadProductsImpl implements _LoadProducts {
 
 abstract class _LoadProducts implements SelectProductEvent {
   const factory _LoadProducts(
-      {required final int serviceId,
+      {final int? serviceId,
       required final String pickupDate,
       required final String returnDate,
       final TimeOfDay? pickupTime,
@@ -436,7 +436,7 @@ abstract class _LoadProducts implements SelectProductEvent {
       final bool useAvailableProductsApi,
       final bool isSales}) = _$LoadProductsImpl;
 
-  int get serviceId;
+  int? get serviceId;
   String get pickupDate;
   String get returnDate;
   TimeOfDay? get pickupTime;
@@ -494,7 +494,7 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -504,7 +504,7 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -525,7 +525,7 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -535,7 +535,7 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -556,7 +556,7 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -566,7 +566,7 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -637,7 +637,7 @@ abstract class _$$SearchProductsImplCopyWith<$Res> {
       __$$SearchProductsImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {int serviceId,
+      {int? serviceId,
       String pickupDate,
       String returnDate,
       String? query,
@@ -663,7 +663,7 @@ class __$$SearchProductsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? serviceId = null,
+    Object? serviceId = freezed,
     Object? pickupDate = null,
     Object? returnDate = null,
     Object? query = freezed,
@@ -676,10 +676,10 @@ class __$$SearchProductsImplCopyWithImpl<$Res>
     Object? isSales = null,
   }) {
     return _then(_$SearchProductsImpl(
-      serviceId: null == serviceId
+      serviceId: freezed == serviceId
           ? _value.serviceId
           : serviceId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       pickupDate: null == pickupDate
           ? _value.pickupDate
           : pickupDate // ignore: cast_nullable_to_non_nullable
@@ -728,7 +728,7 @@ class __$$SearchProductsImplCopyWithImpl<$Res>
 
 class _$SearchProductsImpl implements _SearchProducts {
   const _$SearchProductsImpl(
-      {required this.serviceId,
+      {this.serviceId,
       required this.pickupDate,
       required this.returnDate,
       this.query,
@@ -741,7 +741,7 @@ class _$SearchProductsImpl implements _SearchProducts {
       this.isSales = false});
 
   @override
-  final int serviceId;
+  final int? serviceId;
   @override
   final String pickupDate;
   @override
@@ -826,7 +826,7 @@ class _$SearchProductsImpl implements _SearchProducts {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -836,7 +836,7 @@ class _$SearchProductsImpl implements _SearchProducts {
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -868,7 +868,7 @@ class _$SearchProductsImpl implements _SearchProducts {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -878,7 +878,7 @@ class _$SearchProductsImpl implements _SearchProducts {
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -910,7 +910,7 @@ class _$SearchProductsImpl implements _SearchProducts {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -920,7 +920,7 @@ class _$SearchProductsImpl implements _SearchProducts {
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -993,7 +993,7 @@ class _$SearchProductsImpl implements _SearchProducts {
 
 abstract class _SearchProducts implements SelectProductEvent {
   const factory _SearchProducts(
-      {required final int serviceId,
+      {final int? serviceId,
       required final String pickupDate,
       required final String returnDate,
       final String? query,
@@ -1005,7 +1005,7 @@ abstract class _SearchProducts implements SelectProductEvent {
       final bool useAvailableProductsApi,
       final bool isSales}) = _$SearchProductsImpl;
 
-  int get serviceId;
+  int? get serviceId;
   String get pickupDate;
   String get returnDate;
   String? get query;
@@ -1068,7 +1068,7 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -1078,7 +1078,7 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -1099,7 +1099,7 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -1109,7 +1109,7 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -1130,7 +1130,7 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             TimeOfDay? pickupTime,
@@ -1140,7 +1140,7 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             String? query,
@@ -1212,7 +1212,7 @@ mixin _$SelectProductState {
     required TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1235,7 +1235,7 @@ mixin _$SelectProductState {
     TResult? Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1258,7 +1258,7 @@ mixin _$SelectProductState {
     TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1366,7 +1366,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1392,7 +1392,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1418,7 +1418,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1489,7 +1489,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
   $Res call(
       {List<ProductModel> products,
       String? nextPageUrl,
-      int serviceId,
+      int? serviceId,
       String pickupDate,
       String returnDate,
       bool isPaginating,
@@ -1519,7 +1519,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
   $Res call({
     Object? products = null,
     Object? nextPageUrl = freezed,
-    Object? serviceId = null,
+    Object? serviceId = freezed,
     Object? pickupDate = null,
     Object? returnDate = null,
     Object? isPaginating = null,
@@ -1542,10 +1542,10 @@ class __$$LoadedImplCopyWithImpl<$Res>
           ? _value.nextPageUrl
           : nextPageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      serviceId: null == serviceId
+      serviceId: freezed == serviceId
           ? _value.serviceId
           : serviceId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       pickupDate: null == pickupDate
           ? _value.pickupDate
           : pickupDate // ignore: cast_nullable_to_non_nullable
@@ -1604,7 +1604,7 @@ class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl(
       {required final List<ProductModel> products,
       required this.nextPageUrl,
-      required this.serviceId,
+      this.serviceId,
       required this.pickupDate,
       required this.returnDate,
       this.isPaginating = false,
@@ -1630,7 +1630,7 @@ class _$LoadedImpl implements _Loaded {
   @override
   final String? nextPageUrl;
   @override
-  final int serviceId;
+  final int? serviceId;
   @override
   final String pickupDate;
   @override
@@ -1735,7 +1735,7 @@ class _$LoadedImpl implements _Loaded {
     required TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1776,7 +1776,7 @@ class _$LoadedImpl implements _Loaded {
     TResult? Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1817,7 +1817,7 @@ class _$LoadedImpl implements _Loaded {
     TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -1894,7 +1894,7 @@ abstract class _Loaded implements SelectProductState {
   const factory _Loaded(
       {required final List<ProductModel> products,
       required final String? nextPageUrl,
-      required final int serviceId,
+      final int? serviceId,
       required final String pickupDate,
       required final String returnDate,
       final bool isPaginating,
@@ -1910,7 +1910,7 @@ abstract class _Loaded implements SelectProductState {
 
   List<ProductModel> get products;
   String? get nextPageUrl;
-  int get serviceId;
+  int? get serviceId;
   String get pickupDate;
   String get returnDate;
   bool get isPaginating;
@@ -2003,7 +2003,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -2029,7 +2029,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,
@@ -2055,7 +2055,7 @@ class _$ErrorImpl implements _Error {
     TResult Function(
             List<ProductModel> products,
             String? nextPageUrl,
-            int serviceId,
+            int? serviceId,
             String pickupDate,
             String returnDate,
             bool isPaginating,

@@ -28,7 +28,7 @@ mixin _$BookingDetailsPaymentHistoryModel {
       defaultValue: PaymentMethod.cash,
       fromJson: PaymentMethod.fromJson)
   PaymentMethod get paymentMethod => throw _privateConstructorUsedError;
-  @JsonKey(name: 'datetime')
+  @JsonKey(name: 'created_at')
   String get dateTime => throw _privateConstructorUsedError;
 
   /// Serializes this BookingDetailsPaymentHistoryModel to a JSON map.
@@ -56,7 +56,7 @@ abstract class $BookingDetailsPaymentHistoryModelCopyWith<$Res> {
           defaultValue: PaymentMethod.cash,
           fromJson: PaymentMethod.fromJson)
       PaymentMethod paymentMethod,
-      @JsonKey(name: 'datetime') String dateTime});
+      @JsonKey(name: 'created_at') String dateTime});
 }
 
 /// @nodoc
@@ -112,7 +112,7 @@ abstract class _$$BookingDetailsPaymentHistoryModelImplCopyWith<$Res>
           defaultValue: PaymentMethod.cash,
           fromJson: PaymentMethod.fromJson)
       PaymentMethod paymentMethod,
-      @JsonKey(name: 'datetime') String dateTime});
+      @JsonKey(name: 'created_at') String dateTime});
 }
 
 /// @nodoc
@@ -162,7 +162,7 @@ class _$BookingDetailsPaymentHistoryModelImpl
           defaultValue: PaymentMethod.cash,
           fromJson: PaymentMethod.fromJson)
       required this.paymentMethod,
-      @JsonKey(name: 'datetime') required this.dateTime});
+      @JsonKey(name: 'created_at') required this.dateTime});
 
   factory _$BookingDetailsPaymentHistoryModelImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -178,7 +178,7 @@ class _$BookingDetailsPaymentHistoryModelImpl
       fromJson: PaymentMethod.fromJson)
   final PaymentMethod paymentMethod;
   @override
-  @JsonKey(name: 'datetime')
+  @JsonKey(name: 'created_at')
   final String dateTime;
 
   @override
@@ -229,7 +229,7 @@ abstract class _BookingDetailsPaymentHistoryModel
               defaultValue: PaymentMethod.cash,
               fromJson: PaymentMethod.fromJson)
           required final PaymentMethod paymentMethod,
-          @JsonKey(name: 'datetime') required final String dateTime}) =
+          @JsonKey(name: 'created_at') required final String dateTime}) =
       _$BookingDetailsPaymentHistoryModelImpl;
 
   factory _BookingDetailsPaymentHistoryModel.fromJson(
@@ -246,7 +246,7 @@ abstract class _BookingDetailsPaymentHistoryModel
       fromJson: PaymentMethod.fromJson)
   PaymentMethod get paymentMethod;
   @override
-  @JsonKey(name: 'datetime')
+  @JsonKey(name: 'created_at')
   String get dateTime;
 
   /// Create a copy of BookingDetailsPaymentHistoryModel

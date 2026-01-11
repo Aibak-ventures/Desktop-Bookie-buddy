@@ -42,7 +42,7 @@ class BookingDetailsRoot extends StatelessWidget {
   Widget build(BuildContext context) {
     final paymentHistoryCubit =
         context.read<BookingDetailsPaymentHistoryCubit>();
-    final isPaymentCompleted = booking.paidAmount >=
+    final isPaymentCompleted = booking.actualPaidAmount >=
         (booking.totalAmount - (booking.discountAmount ?? 0));
     final locationStart = booking.otherDetails.locationStart ?? '';
     final locationFrom = booking.otherDetails.locationFrom ?? '';
@@ -175,8 +175,8 @@ class BookingDetailsRoot extends StatelessWidget {
                               'N/A',
                           style: TextStyle(
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 19.sp,
                           ),
                         ),
                       ],
@@ -226,8 +226,8 @@ class BookingDetailsRoot extends StatelessWidget {
                               'N/A',
                           style: TextStyle(
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17.sp,
                           ),
                         ),
                       ],
@@ -286,41 +286,66 @@ class BookingDetailsRoot extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.grey.shade200),
             ),
-            child: Column(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Name',
-                            style: TextStyle(
-                              color: Color(0xFF707070),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            booking.client.name,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                // Left column - Name and Place
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Name
+                      Text(
+                        'Name',
+                        style: TextStyle(
+                          color: Color(0xFF707070),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16.sp,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Flexible(
-                      flex: 1,
-                      child: Column(
+                      SizedBox(height: 4.h),
+                      Text(
+                        booking.client.name,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.sp,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 16.h),
+                      // Place
+                      Text(
+                        'Place',
+                        style: TextStyle(
+                          color: Color(0xFF707070),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        booking.address ?? '',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.sp,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 24.w),
+                // Right column - Phone 1 and Phone 2
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Phone 1
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -328,70 +353,35 @@ class BookingDetailsRoot extends StatelessWidget {
                             style: TextStyle(
                               color: Color(0xFF707070),
                               fontWeight: FontWeight.w400,
-                              fontSize: 12.sp,
+                              fontSize: 16.sp,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Flexible(
-                                child: Text(
-                                  booking.client.phone1.toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14.sp,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                              Text(
+                                booking.client.phone1.toString(),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16.sp,
                                 ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(width: 8.w),
                               _launchPhoneCall(
-                                  phone: booking.client.phone2.toString()),
+                                  phone: booking.client.phone1.toString()),
                               SizedBox(width: 8.w),
                               _launchWhatsApp(
-                                  phone: booking.client.phone2.toString()),
+                                  phone: booking.client.phone1.toString()),
                             ],
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Place',
-                            style: TextStyle(
-                              color: Color(0xFF707070),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            booking.address ?? '',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Flexible(
-                      flex: 1,
-                      child: Column(
+                      SizedBox(height: 16.h),
+                      // Phone 2
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -399,22 +389,21 @@ class BookingDetailsRoot extends StatelessWidget {
                             style: TextStyle(
                               color: Color(0xFF707070),
                               fontWeight: FontWeight.w400,
-                              fontSize: 12.sp,
+                              fontSize: 16.sp,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Flexible(
-                                child: Text(
-                                  booking.client.phone2.toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14.sp,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                              Text(
+                                booking.client.phone2.toString(),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16.sp,
                                 ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(width: 8.w),
                               _launchPhoneCall(
@@ -426,8 +415,8 @@ class BookingDetailsRoot extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -35,9 +35,11 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     emit(const _Loading());
     try {
       final PaginationModel<ProductModel> result;
+      // Convert 0 to null for "All Services" mode
+      final serviceId = event.serviceId == 0 ? null : event.serviceId;
       if (event.useAvailableProductsApi) {
         result = await _repository.getAvailableProductsPaginated(
-          serviceId: event.serviceId,
+          serviceId: serviceId,
           page: 1,
           pickupDate: event.pickupDate,
           returnDate: event.returnDate,
@@ -47,7 +49,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
         );
       } else {
         result = await _repository.getProductsPaginated(
-          serviceId: event.serviceId,
+          serviceId: serviceId,
           page: 1,
           includeInStockOnly: event.isSales,
         );
@@ -83,9 +85,11 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
       final PaginationModel<ProductModel> result;
+      // Convert 0 to null for "All Services" mode
+      final serviceId = s.serviceId == 0 ? null : s.serviceId;
       if (s.useAvailableProductsApi) {
         result = await _repository.getAvailableProductsPaginated(
-          serviceId: s.serviceId,
+          serviceId: serviceId,
           page: page,
           pickupDate: s.pickupDate,
           returnDate: s.returnDate,
@@ -97,7 +101,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
         );
       } else {
         result = await _repository.getProductsPaginated(
-          serviceId: s.serviceId,
+          serviceId: serviceId,
           page: page,
           includeInStockOnly: s.isSales,
         );
@@ -123,9 +127,11 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
 
     try {
       final PaginationModel<ProductModel> result;
+      // Convert 0 to null for "All Services" mode
+      final serviceId = event.serviceId == 0 ? null : event.serviceId;
       if (event.useAvailableProductsApi) {
         result = await _repository.getAvailableProductsPaginated(
-          serviceId: event.serviceId,
+          serviceId: serviceId,
           page: 1,
           query: event.query,
           type: event.type,
@@ -139,7 +145,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
         );
       } else {
         result = await _repository.searchAndFilterProducts(
-          serviceId: event.serviceId,
+          serviceId: serviceId,
           query: event.query,
           type: event.type,
           endPrice: event.endPrice,
@@ -182,9 +188,11 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
       final PaginationModel<ProductModel> result;
+      // Convert 0 to null for "All Services" mode
+      final serviceId = s.serviceId == 0 ? null : s.serviceId;
       if (s.useAvailableProductsApi) {
         result = await _repository.getAvailableProductsPaginated(
-          serviceId: s.serviceId,
+          serviceId: serviceId,
           page: page,
           query: s.searchQuery,
           type: s.searchType,
@@ -198,7 +206,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
         );
       } else {
         result = await _repository.searchAndFilterProducts(
-          serviceId: s.serviceId,
+          serviceId: serviceId,
           page: page,
           query: s.searchQuery,
           type: s.searchType,

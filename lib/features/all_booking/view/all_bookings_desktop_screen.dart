@@ -327,7 +327,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           return state.maybeWhen(
             loading: () => const Center(
                 child: CircularProgressIndicator(color: Color(0xFF8A63FE))),
-            loaded: (bookings, _, __, ___, ____, _____, ______) {
+            loaded: (bookings, _, __, ___, ____, _____, ______, _______) {
               if (bookings.isEmpty)
                 return const Center(child: Text('No bookings found'));
               return _buildTable(bookings);
@@ -353,32 +353,121 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   Widget _buildTableHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F0FF),
+        borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(12), topRight: Radius.circular(12)),
       ),
       child: Row(
-        children: const [
-          SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
-          SizedBox(width: 100, child: _HeaderText('Booking ID')),
-          SizedBox(width: 12),
-          SizedBox(width: 95, child: _HeaderText('Pickup')),
-          SizedBox(width: 12),
-          SizedBox(width: 110, child: _HeaderText('Customer')),
-          SizedBox(width: 12),
-          SizedBox(width: 80, child: _HeaderText('Staff')),
-          SizedBox(width: 12),
-          SizedBox(width: 105, child: _HeaderText('Delivery')),
-          SizedBox(width: 12),
-          Expanded(child: _HeaderText('Items')),
-          SizedBox(width: 12),
-          SizedBox(width: 70, child: _HeaderText('Paid')),
-          SizedBox(width: 12),
-          SizedBox(width: 70, child: _HeaderText('Balance')),
-          SizedBox(width: 12),
-          SizedBox(width: 90, child: _HeaderText('Payment')),
-          SizedBox(width: 28), // Match chevron icon width + spacing
+        children: [
+          const SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
+          const SizedBox(
+            width: 100,
+            child: Text(
+              'Booking ID',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 95,
+            child: Text(
+              'Pickup',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 110,
+            child: Text(
+              'Customer',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 80,
+            child: Text(
+              'Staff',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 105,
+            child: Text(
+              'Delivery',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              'Items',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 70,
+            child: Text(
+              'Paid',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 70,
+            child: Text(
+              'Balance',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 90,
+            child: Text(
+              'Payment',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 28), // Match chevron icon width + spacing
         ],
       ),
     );
@@ -545,7 +634,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         );
       }).toList(),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
         decoration: BoxDecoration(
           color: status.color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(6),
@@ -553,17 +642,19 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              status.name,
-              style: TextStyle(
-                fontSize: 10,
-                color: status.color,
-                fontWeight: FontWeight.w600,
+            Flexible(
+              child: Text(
+                status.name,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: status.color,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 2),
             Icon(Icons.keyboard_arrow_down, size: 12, color: status.color),
           ],
         ),
@@ -589,28 +680,6 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           fontWeight: FontWeight.w600,
         ),
       ),
-    );
-  }
-}
-
-class _HeaderText extends StatelessWidget {
-  final String text;
-  const _HeaderText(this.text);
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(1.0),
-      child: Container(
-          color: Color(0xFFF1F0FF),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          )),
     );
   }
 }

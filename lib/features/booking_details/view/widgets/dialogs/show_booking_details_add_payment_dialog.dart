@@ -149,6 +149,7 @@ void showBookingDetailsAddPaymentDialog({
                     isLoading.value = true; // Start loading
 
                     try {
+                      // Dispatch the update payment event
                       context.read<BookingDetailsBloc>().add(
                             BookingDetailsEvent.updatePayment(
                               bookingId: id,
@@ -156,8 +157,23 @@ void showBookingDetailsAddPaymentDialog({
                               paymentMethod: paymentMethodNotifier.value,
                             ),
                           );
-                      // Close the dialog after update
-                      context.pop();
+
+                      // Wait for the bloc to emit the loaded state with updated data
+                      await context
+                          .read<BookingDetailsBloc>()
+                          .stream
+                          .firstWhere(
+                            (state) => state.maybeWhen(
+                              loaded: (_) => true,
+                              failed: (_) => true,
+                              orElse: () => false,
+                            ),
+                          );
+
+                      // Close the dialog after update completes
+                      if (context.mounted) {
+                        context.pop();
+                      }
                     } catch (e) {
                       CustomSnackBar(
                         message: 'Failed to update booking. Please try again.',
