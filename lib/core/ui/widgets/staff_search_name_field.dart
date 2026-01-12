@@ -36,7 +36,7 @@ class StaffSearchNameField extends StatelessWidget {
           },
 
           builder: (context, controller, focusNode) => SizedBox(
-            height: 34,
+            height: 40,
             child: CustomTextField(
               focusNode: focusNode,
               controller: controller,

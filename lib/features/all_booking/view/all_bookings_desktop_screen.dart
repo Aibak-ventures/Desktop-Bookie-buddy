@@ -628,6 +628,8 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         return PopupMenuItem<DeliveryStatus>(
           value: s,
           child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 width: 8,
@@ -659,10 +661,12 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
               child: Text(
                 status.name,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 10,
                   color: status.color,

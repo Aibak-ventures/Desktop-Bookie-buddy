@@ -76,6 +76,7 @@ class BookingDetailsInvoiceAndDeliveryStatusSection extends StatelessWidget {
                 ),
                 child: RepaintBoundary(
                   child: DropdownButton<DeliveryStatus>(
+                    isExpanded: true,
                     alignment: Alignment.center,
                     value: booking.deliveryStatus,
                     underline: const SizedBox(),
@@ -90,6 +91,22 @@ class BookingDetailsInvoiceAndDeliveryStatusSection extends StatelessWidget {
                               _confirmStatusChange(context, newValue);
                             }
                           },
+                    selectedItemBuilder: (BuildContext context) {
+                      return DeliveryStatus.values.map((status) {
+                        return Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            status.name,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: status.color,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                        );
+                      }).toList();
+                    },
                     items: DeliveryStatus.values
                         .map(
                           (status) => DropdownMenuItem<DeliveryStatus>(

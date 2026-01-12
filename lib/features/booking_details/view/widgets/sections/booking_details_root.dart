@@ -166,7 +166,7 @@ class BookingDetailsRoot extends StatelessWidget {
                           style: TextStyle(
                             color: Color(0xFF707070),
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.sp,
+                            fontSize: 16.sp,
                           ),
                         ),
                         SizedBox(height: 5.h),
@@ -189,7 +189,7 @@ class BookingDetailsRoot extends StatelessWidget {
                           style: TextStyle(
                             color: Color(0xFF707070),
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.sp,
+                            fontSize: 16.sp,
                           ),
                         ),
                         SizedBox(height: 5.h),
@@ -217,7 +217,7 @@ class BookingDetailsRoot extends StatelessWidget {
                           style: TextStyle(
                             color: Color(0xFF707070),
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.sp,
+                            fontSize: 16.sp,
                           ),
                         ),
                         SizedBox(height: 5.h),
@@ -240,7 +240,7 @@ class BookingDetailsRoot extends StatelessWidget {
                           style: TextStyle(
                             color: Color(0xFF707070),
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.sp,
+                            fontSize: 16.sp,
                           ),
                         ),
                         SizedBox(height: 5.h),
@@ -342,7 +342,7 @@ class BookingDetailsRoot extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Phone 1
                       Column(
@@ -361,7 +361,9 @@ class BookingDetailsRoot extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                booking.client.phone1.toString(),
+                                (booking.client.phone1 == 0)
+                                    ? 'Number not provided'
+                                    : booking.client.phone1.toString(),
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
@@ -369,12 +371,16 @@ class BookingDetailsRoot extends StatelessWidget {
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(width: 8.w),
-                              _launchPhoneCall(
-                                  phone: booking.client.phone1.toString()),
-                              SizedBox(width: 8.w),
-                              _launchWhatsApp(
-                                  phone: booking.client.phone1.toString()),
+                              if (booking.client.phone1 != 0)
+                                SizedBox(width: 8.w),
+                              if (booking.client.phone1 != 0)
+                                _launchPhoneCall(
+                                    phone: booking.client.phone1.toString()),
+                              if (booking.client.phone1 != 0)
+                                SizedBox(width: 8.w),
+                              if (booking.client.phone1 != 0)
+                                _launchWhatsApp(
+                                    phone: booking.client.phone1.toString()),
                             ],
                           ),
                         ],
@@ -397,7 +403,10 @@ class BookingDetailsRoot extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                booking.client.phone2.toString(),
+                                (booking.client.phone2 == null ||
+                                        booking.client.phone2 == 0)
+                                    ? 'Number not provided'
+                                    : booking.client.phone2.toString(),
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
@@ -405,12 +414,20 @@ class BookingDetailsRoot extends StatelessWidget {
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(width: 8.w),
-                              _launchPhoneCall(
-                                  phone: booking.client.phone2.toString()),
-                              SizedBox(width: 8.w),
-                              _launchWhatsApp(
-                                  phone: booking.client.phone2.toString()),
+                              if (booking.client.phone2 != null &&
+                                  booking.client.phone2 != 0)
+                                SizedBox(width: 8.w),
+                              if (booking.client.phone2 != null &&
+                                  booking.client.phone2 != 0)
+                                _launchPhoneCall(
+                                    phone: booking.client.phone2.toString()),
+                              if (booking.client.phone2 != null &&
+                                  booking.client.phone2 != 0)
+                                SizedBox(width: 8.w),
+                              if (booking.client.phone2 != null &&
+                                  booking.client.phone2 != 0)
+                                _launchWhatsApp(
+                                    phone: booking.client.phone2.toString()),
                             ],
                           ),
                         ],

@@ -91,7 +91,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   // Description
   final descriptionController = TextEditingController();
 
-  int? selectedServiceId;
+  int? selectedServiceId = -1; // Initialize to -1 for "All Services" as default
   final serviceSearchController = TextEditingController();
 
   // SelectProductBloc for inline search
@@ -685,7 +685,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         children: [
           // Calendar + date time (already compact)
           SizedBox(
-            height: 496,
+            height: 510,
             child: BookingCalendarWidget(
               staffNameController: staffNameController,
               clientNameController: clientNameController,
@@ -1019,7 +1019,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: Container(
-                  width: 40,
+                  width: 50,
                   height: 40,
                   color: Colors.grey.shade100,
                   child: product.image != null && product.image!.isNotEmpty
@@ -1042,15 +1042,35 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 child: Row(
                   children: [
                     Flexible(
-                      child: Text(
-                        product.name,
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.name,
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            product.color ?? 'color',
+                            style: const TextStyle(
+                                color: Color(0xFF707070),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 76),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      color: Color(0xFFA6A6A6),
+                    ),
+                    const SizedBox(width: 76),
                     if (variantAttributes.isNotEmpty)
                       Wrap(
                         spacing: 4,
@@ -1059,26 +1079,48 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                           return _variantChip(variant);
                         }).toList(),
                       ),
+                    SizedBox(width: 76),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      color: Color(0xFFA6A6A6),
+                    ),
+                    SizedBox(width: 76),
+                    Text(
+                      'rent price: ',
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
+                    Text(
+                      '₹$price',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
                   ],
                 ),
               ),
 
               const SizedBox(width: 8),
-              Text(
-                '₹$price',
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF6132E4),
-                ),
-              ),
+              // Text(
+              //   '₹$price',
+              //   style: const TextStyle(
+              //     fontSize: 11,
+              //     fontWeight: FontWeight.w600,
+              //     color: Color(0xFF6132E4),
+              //   ),
+              // ),
               const SizedBox(width: 8),
               Container(
-                width: 80,
+                width: 70,
                 height: 25,
                 decoration: BoxDecoration(
                   color: const Color(0xFF6132E4),
-                  borderRadius: BorderRadius.circular(50),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1185,17 +1227,16 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Variant: $variantText',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey.shade600,
+                  const SizedBox(height: 4),
+                  if (variantNames.isNotEmpty)
+                    Wrap(
+                      spacing: 4,
+                      runSpacing: 4,
+                      children: variantNames.map((variant) {
+                        return _variantChip(variant);
+                      }).toList(),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
                     '₹$price',
                     style: const TextStyle(
@@ -1382,7 +1423,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                    child: Text(product.name,
+                    child: Text('product.name',
                         style: const TextStyle(fontSize: 12))),
               ],
             ),
@@ -1650,7 +1691,18 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           ),
           Expanded(
             child: Text(
-              'Qty',
+              'Quantity',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'Available',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 10,
@@ -1801,24 +1853,28 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.name,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      if (product.variant.variantAttribute != null &&
-                          product.variant.variantAttribute!.isNotEmpty)
-                        Text(
-                          product.variant.variantAttribute!,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey.shade600,
-                          ),
+                      Text(
+                        product.variant.color ?? '',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFFA6A6A6),
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),
+                if (product.variant.variantAttribute != null &&
+                    product.variant.variantAttribute!.isNotEmpty)
+                  _variantChip(product.variant.variantAttribute!),
               ],
             ),
           ),
@@ -1836,7 +1892,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Icon(Icons.remove,
-                        size: 12, color: Colors.grey.shade700),
+                        size: 14, color: Colors.grey.shade700),
                   ),
                 ),
                 Padding(
@@ -1844,7 +1900,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   child: Text(
                     '${product.quantity}',
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                        fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
                 InkWell(
@@ -1856,34 +1912,66 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: const Icon(Icons.add,
-                        size: 12, color: Color(0xFF6132E4)),
+                        size: 14, color: Color(0xFF6132E4)),
                   ),
                 ),
               ],
             ),
           ),
-          // Price - Editable
+          // Available stock indicator
           Expanded(
-            child: InkWell(
-              onTap: () => _showPriceEditDialog(product),
+            child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
+                  color: product.variant.quantity > 0
+                      ? const Color(0xFF20D400).withOpacity(0.15)
+                      : Colors.red.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      product.amount.toCurrency(),
-                      style: const TextStyle(fontSize: 11),
-                    ),
-                    const SizedBox(width: 2),
-                    Icon(Icons.edit, size: 10, color: Colors.grey.shade500),
-                  ],
+                child: Text(
+                  '${product.variant.quantity} left',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: product.variant.quantity > 0
+                        ? const Color(0xFF20D400)
+                        : Colors.red,
+                  ),
                 ),
+              ),
+            ),
+          ),
+          // Price - Inline Editable
+          Expanded(
+            child: Container(
+              width: 150,
+              height: 32,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: TextField(
+                controller:
+                    TextEditingController(text: product.amount.toString())
+                      ..selection = TextSelection.fromPosition(
+                        TextPosition(offset: product.amount.toString().length),
+                      ),
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(vertical: 8),
+                  isDense: true,
+                  prefixText: '₹',
+                  prefixStyle: TextStyle(fontSize: 14),
+                ),
+                onSubmitted: (value) {
+                  final newPrice = int.tryParse(value) ?? product.amount;
+                  _updateProductPrice(product, newPrice);
+                },
               ),
             ),
           ),
@@ -1892,7 +1980,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: Text(
               total.toCurrency(),
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
           ),
           // Remove button
@@ -1900,7 +1988,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             width: 30,
             child: IconButton(
               onPressed: () => _removeProduct(product),
-              icon: Icon(Icons.close, size: 14, color: Colors.grey.shade500),
+              icon: Icon(Icons.close, size: 16, color: Colors.grey.shade500),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
@@ -1910,8 +1998,20 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  /// Increment quantity of a product
+  /// Increment quantity of a product with stock validation
   void _incrementQuantity(ProductSelectedModel product) {
+    // Check available stock
+    final availableStock = product.variant.quantity;
+    final currentQuantity = product.quantity;
+
+    if (currentQuantity >= availableStock) {
+      context.showSnackBar(
+        'Cannot add more. Only $availableStock items available in stock',
+        isError: true,
+      );
+      return;
+    }
+
     final products =
         List<ProductSelectedModel>.from(selectedProductsNotifier.value);
     final index = products.indexWhere(
@@ -2118,7 +2218,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       children: [
         Expanded(
           child: Container(
-            height: 43,
+            height: 48,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300, width: 1),
               borderRadius: BorderRadius.circular(8),
@@ -2128,13 +2228,14 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 12),
               decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 13),
                 hintText: label,
                 prefixText: '₹ ',
                 prefixStyle:
                     TextStyle(fontSize: 16, color: Colors.grey.shade600),
                 border: InputBorder.none,
                 contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
               ),
             ),
           ),
@@ -2152,7 +2253,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           children: [
             Text(
               'Additional Charges',
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+              style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
             ),
             InkWell(
               onTap: _addAdditionalCharge,
@@ -2183,7 +2284,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 child: Center(
                   child: Text(
                     'No additional charges',
-                    style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                   ),
                 ),
               );
@@ -2238,7 +2339,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       children: [
         Text(
           'Payment Method',
-          style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
         ),
         const SizedBox(height: 4),
         Row(
@@ -2315,7 +2416,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       children: [
         Text(
           'Delivery Status',
-          style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
         ),
         const SizedBox(height: 4),
         Container(
@@ -2640,19 +2741,42 @@ class DocumentFile {
 
 Widget _variantChip(String text) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    width: 35,
+    height: 35,
+    alignment: Alignment.center,
     decoration: BoxDecoration(
-      color: Colors.grey.shade50,
-      borderRadius: BorderRadius.circular(50),
-      border: Border.all(color: Colors.grey.shade200, width: 0.5),
+      shape: BoxShape.circle,
+      color: Color.fromARGB(255, 225, 215, 255),
+      border: Border.all(color: Colors.grey.shade200, width: 0.6),
     ),
     child: Text(
       text,
       style: TextStyle(
-        fontSize: 10,
-        fontWeight: FontWeight.w500,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
         color: Colors.grey.shade700,
       ),
     ),
   );
 }
+
+// Widget _variantChipForSelected(String text) {
+//   return Container(
+//     width: 35,
+//     height: 35,
+//     alignment: Alignment.center,
+//     decoration: BoxDecoration(
+//       shape: BoxShape.circle,
+//       // color: Color.fromARGB(255, 225, 215, 255),
+//       border: Border.all(color: Colors.grey.shade200, width: 0.6),
+//     ),
+//     child: Text(
+//       text,
+//       style: TextStyle(
+//         fontSize: 15,
+//         fontWeight: FontWeight.w600,
+//         color: Colors.grey.shade700,
+//       ),
+//     ),
+//   );
+// }

@@ -29,23 +29,32 @@ class BookingDetailsClientSection extends StatelessWidget {
             ),
             BookingDetailsDetailsColumn(
               label: 'Phone 1',
-              value: booking.client.phone1.toString(),
-              trailing: [
-                _launchPhoneCall(phone: booking.client.phone1.toString()),
-                25.width,
-                _launchWhatsApp(phone: booking.client.phone1.toString()),
-              ],
+              value: (booking.client.phone1 == 0)
+                  ? 'Number not provided'
+                  : booking.client.phone1.toString(),
+              trailing: (booking.client.phone1 != 0)
+                  ? [
+                      _launchPhoneCall(phone: booking.client.phone1.toString()),
+                      25.width,
+                      _launchWhatsApp(phone: booking.client.phone1.toString()),
+                    ]
+                  : null,
             ),
-            if (booking.client.phone2 != null)
-              BookingDetailsDetailsColumn(
-                label: 'Phone 2',
-                value: booking.client.phone2.toString(),
-                trailing: [
-                  _launchPhoneCall(phone: booking.client.phone2.toString()),
-                  25.width,
-                  _launchWhatsApp(phone: booking.client.phone2.toString()),
-                ],
-              ),
+            BookingDetailsDetailsColumn(
+              label: 'Phone 2',
+              value:
+                  (booking.client.phone2 == null || booking.client.phone2 == 0)
+                      ? 'Number not provided'
+                      : booking.client.phone2.toString(),
+              trailing: (booking.client.phone2 != null &&
+                      booking.client.phone2 != 0)
+                  ? [
+                      _launchPhoneCall(phone: booking.client.phone2.toString()),
+                      25.width,
+                      _launchWhatsApp(phone: booking.client.phone2.toString()),
+                    ]
+                  : null,
+            ),
             if (booking.address != null && booking.address!.isNotEmpty)
               BookingDetailsDetailsColumn(
                   label: 'Place', value: booking.address!),
