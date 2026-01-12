@@ -216,56 +216,73 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                       }
                     }
 
-                    return GestureDetector(
-                      onTap: () => _onStatusTabChanged(displayLabel),
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color:
-                              isActive ? const Color(0xFFE7E4FF) : Colors.white,
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Material(
+                        elevation: isActive ? 3 : 1,
+                        shadowColor: isActive
+                            ? const Color(0xFF8A63FE).withOpacity(0.3)
+                            : Colors.grey.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                        child: InkWell(
+                          onTap: () => _onStatusTabChanged(displayLabel),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: isActive
-                                ? const Color(0xFF8A63FE).withOpacity(0.3)
-                                : Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              displayLabel,
-                              style: TextStyle(
+                          hoverColor: const Color(0xFFE7E4FF).withOpacity(0.5),
+                          splashColor: const Color(0xFF8A63FE).withOpacity(0.2),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: isActive
+                                  ? const Color(0xFFE7E4FF)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                width: isActive ? 1.5 : 1,
                                 color: isActive
-                                    ? const Color(0xFF8A63FE)
-                                    : Colors.grey.shade600,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 10,
+                                    ? const Color(0xFF8A63FE).withOpacity(0.3)
+                                    : Colors.grey.shade300,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 4, vertical: 1),
-                              decoration: BoxDecoration(
-                                color: isActive
-                                    ? const Color(0xFF8A63FE)
-                                    : Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                '$count',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: isActive
-                                      ? Colors.white
-                                      : Colors.grey.shade700,
-                                  fontWeight: FontWeight.w400,
+                            child: Row(
+                              children: [
+                                Text(
+                                  displayLabel,
+                                  style: TextStyle(
+                                    color: isActive
+                                        ? const Color(0xFF8A63FE)
+                                        : Colors.grey.shade600,
+                                    fontWeight: isActive
+                                        ? FontWeight.w600
+                                        : FontWeight.w400,
+                                    fontSize: 10,
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 12),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: isActive
+                                        ? const Color(0xFF8A63FE)
+                                        : Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    '$count',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: isActive
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     );

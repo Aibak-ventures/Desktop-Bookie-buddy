@@ -213,6 +213,8 @@ class BookingDocumentUploadSection extends StatelessWidget {
         allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
         allowMultiple: true,
         withData: true,
+        withReadStream: false, // Better for Mac compatibility
+        dialogTitle: 'Select Documents', // Explicitly set dialog title for Mac
       );
 
       if (result != null && result.files.isNotEmpty) {
@@ -228,11 +230,26 @@ class BookingDocumentUploadSection extends StatelessWidget {
         currentDocs.addAll(newDocs);
         documentsNotifier.value = currentDocs;
       }
+    } on Exception catch (e) {
+      debugPrint('File picker error: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error selecting files: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
-      debugPrint('Error picking files: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error picking files')),
-      );
+      debugPrint('Unexpected error picking files: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('An unexpected error occurred while selecting files'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 

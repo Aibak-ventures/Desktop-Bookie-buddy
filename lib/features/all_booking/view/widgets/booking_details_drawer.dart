@@ -41,6 +41,41 @@ class BookingDetailsDrawer extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  // Close button header
+                  Container(
+                    // padding: const EdgeInsets.symmetric(
+                    //     horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey.shade200),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Text(
+                        //   'Booking Details',
+                        //   style: TextStyle(
+                        //     fontSize: 18,
+                        //     fontWeight: FontWeight.bold,
+                        //     color: Colors.grey.shade800,
+                        //   ),
+                        // ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            context
+                                .read<BookingDetailsDrawerCubit>()
+                                .closeDrawer();
+                          },
+                          tooltip: 'Close',
+                          color: Colors.grey.shade600,
+                          hoverColor: Colors.grey.shade100,
+                        ),
+                      ],
+                    ),
+                  ),
                   Expanded(
                     child: _buildContent(context, drawerState),
                   ),
