@@ -6,10 +6,12 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
     show ServicesModel;
+import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
@@ -2678,7 +2680,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     additionalChargesNotifier.value = charges;
   }
 
-  void _handleConfirmBooking() {
+  void _handleConfirmBooking() async {
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;
@@ -2693,18 +2695,73 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     final request = _buildBookingRequest();
     log('Booking Request: ${request.toJson()}');
 
-    // TODO: Call the API to create booking
-    context.showSnackBar('Booking created successfully!');
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      // Call the API to create booking
+      final repository = getIt<BookingRepository>();
+      await repository.addBooking(request);
+
+      // Close loading dialog
+      if (mounted) Navigator.of(context).pop();
+
+      // Show success message
+      if (mounted) {
+        context.showSnackBar('Booking created successfully!');
+
+        // Navigate back or close
+        if (widget.onClose != null) {
+          widget.onClose!();
+        } else {
+          Navigator.of(context).pop();
+        }
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.of(context).pop();
+
+      // Show error message
+      if (mounted) {
+        context.showSnackBar(
+          'Failed to create booking: ${e.toString()}',
+          isError: true,
+        );
+      }
+      log('Error creating booking: $e');
+    }
   }
 
   RequestBookingModel _buildBookingRequest() {
     final products = selectedProductsNotifier.value;
     final additionalCharges = additionalChargesNotifier.value;
 
+    // If there's no client ID, we need to send client data
+    ClientRequestModel? clientData;
+    if (selectedClientId == null) {
+      final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
+      final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
+
+      clientData = ClientRequestModel(
+        id: null,
+        name: clientNameController.text.trim().isEmpty
+            ? null
+            : clientNameController.text.trim(),
+        phone1: phone1,
+        phone2: phone2,
+      );
+    }
+
     return RequestBookingModel(
       clientId: selectedClientId,
       staffId: selectedStaffId,
-      client: null,
+      client: clientData,
       address: clientAddressController.text.trim(),
       pickupDate: pickupDate.format(),
       returnDate: returnDate.format(),
@@ -2712,6 +2769,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
+      purchaseMode: 'normal',
       paymentMethod: paymentMethod,
       deliveryStatus: deliveryStatus,
       products: products,
@@ -2780,3 +2838,64 @@ Widget _variantChip(String text) {
 //     ),
 //   );
 // }
+class WebToast extends StatelessWidget {
+  final String message;
+  final bool isError;
+  final Color? color;
+  final VoidCallback onClose;
+
+  const WebToast({
+    required this.message,
+    required this.onClose,
+    this.isError = false,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 320),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: color ??
+              (isError ? const Color(0xFFFFF0F0) : const Color(0xFFF0FFF5)),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isError ? Colors.red.shade300 : Colors.green.shade300,
+          ),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 12,
+              color: Colors.black.withOpacity(.12),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isError ? Icons.error_outline : Icons.check_circle_outline,
+              size: 18,
+              color: isError ? Colors.red : Colors.green,
+            ),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(
+                message,
+                style:
+                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+            ),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: onClose,
+              child: const Icon(Icons.close, size: 16),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

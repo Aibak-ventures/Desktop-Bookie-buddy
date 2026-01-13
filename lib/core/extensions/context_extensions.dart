@@ -95,23 +95,14 @@ extension GlobalX on BuildContext {
     bool isTitleVisible = true,
     Duration duration = const Duration(seconds: 4),
   }) {
-    if (positionTop) {
-      CustomSnackBar(
-        message: message,
-        isError: isError,
-        title: title,
-        isTitleVisible: isTitleVisible,
-        duration: duration,
-      );
-    } else {
-      ScaffoldMessenger.of(this).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: color ?? (isError ? Colors.red : Colors.green),
-          duration: duration,
-        ),
-      );
-    }
+    // Always use CustomSnackBar for consistent positioning
+    CustomSnackBar(
+      message: message,
+      isError: isError,
+      title: title,
+      isTitleVisible: isTitleVisible,
+      duration: duration,
+    );
   }
 
   void clearSnackBars() => ScaffoldMessenger.of(this).clearSnackBars();
