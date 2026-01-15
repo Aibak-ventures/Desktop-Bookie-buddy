@@ -50,6 +50,26 @@ class BookingService {
     }
   }
 
+  Future<CustomResponseModel> createSale(
+    Map<String, dynamic> saleData,
+  ) async {
+    try {
+      log('Creating sale with data: $saleData');
+      final response = await _dio.post(
+        ApiPaths.sales.salesV4,
+        data: saleData,
+      );
+
+      log(
+        'create sale response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error creating sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   Future<CustomResponseModel> updatePayment({
     required int bookingId,
     required int amount,

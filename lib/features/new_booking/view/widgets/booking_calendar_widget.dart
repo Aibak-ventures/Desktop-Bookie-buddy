@@ -1,11 +1,15 @@
+import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookingCalendarWidget extends StatefulWidget {
@@ -28,9 +32,13 @@ class BookingCalendarWidget extends StatefulWidget {
   final TextEditingController clientPhone1Controller;
   final TextEditingController clientPhone2Controller;
   final TextEditingController clientAddressController;
+  final TextEditingController? descriptionController;
 
   final ValueChanged<int?> onStaffSelected;
   final ValueChanged<int?> onClientSelected;
+
+  // Sales mode flag
+  final bool isSalesMode;
 
   const BookingCalendarWidget({
     super.key,
@@ -50,11 +58,13 @@ class BookingCalendarWidget extends StatefulWidget {
     required this.clientPhone1Controller,
     required this.clientPhone2Controller,
     required this.clientAddressController,
+    this.descriptionController,
     required this.isSearchClientEnabled,
     required this.onSearchClientToggle,
     required this.onStaffSelected,
     required this.onClientSelected,
     required this.onCoolingPeriodTimeChanged,
+    this.isSalesMode = false,
   });
 
   @override
@@ -69,7 +79,9 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
   @override
   void initState() {
     super.initState();
-    focusedDay = widget.pickupDate;
+    // Ensure focusedDay is not before now() (firstDay in calendar)
+    final now = DateTime.now();
+    focusedDay = widget.pickupDate.isBefore(now) ? now : widget.pickupDate;
     selectedDay = widget.pickupDate;
     context.read<StaffSearchCubit>()
       ..clearSelectedStaff()
@@ -124,33 +136,51 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildDateTimeRow(
-                        label: 'Pickup date',
-                        date: widget.pickupDate,
-                        time: widget.pickupTime,
-                        onDateTap: () => _selectDate(true),
-                        onTimeTap: () => _selectTime(true),
-                        iconData: Icons.calendar_today_outlined,
-                      ),
-                      const SizedBox(height: 12),
-                      // Return date and time
-                      _buildDateTimeRow(
-                        label: 'Return date',
-                        date: widget.returnDate,
-                        time: widget.returnTime,
-                        onDateTap: () => _selectDate(false),
-                        onTimeTap: () => _selectTime(false),
-                        iconData: Icons.calendar_today_outlined,
-                      ),
-                      const SizedBox(height: 12),
-                      // Cooling period
-                      _buildCoolingPeriodRow(),
-                      const SizedBox(height: 72),
+                      // Show different fields based on mode
+                      if (!widget.isSalesMode) ...[
+                        // Booking mode: show pickup, return, and cooling period
+                        _buildDateTimeRow(
+                          label: 'Pickup date',
+                          date: widget.pickupDate,
+                          time: widget.pickupTime,
+                          onDateTap: () => _selectDate(true),
+                          onTimeTap: () => _selectTime(true),
+                          iconData: Icons.calendar_today_outlined,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildDateTimeRow(
+                          label: 'Return date',
+                          date: widget.returnDate,
+                          time: widget.returnTime,
+                          onDateTap: () => _selectDate(false),
+                          onTimeTap: () => _selectTime(false),
+                          iconData: Icons.calendar_today_outlined,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildCoolingPeriodRow(),
+                        const SizedBox(height: 72),
+                      ],
+                      if (widget.isSalesMode) ...[
+                        // Sales mode: show only booked date (no time)
+                        _buildBookedDateField(),
+                        const SizedBox(height: 12),
+                      ],
 
-                      _compactField(widget.clientAddressController, 'Place',
-                          Icons.location_on_outlined),
+                      _compactField(
+                          widget.clientAddressController,
+                          'Place',
+                          Icons.location_on_outlined,
+                          TextInputType.text,
+                          AppInputValidators.address),
                       const SizedBox(height: 12),
                       _buildStaffDetailsCard(),
+
+                      // Description field only for sales mode
+                      if (widget.isSalesMode &&
+                          widget.descriptionController != null) ...[
+                        const SizedBox(height: 12),
+                        _buildDescriptionField(),
+                      ],
                     ],
                   ),
                 ),
@@ -191,57 +221,116 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
   Widget _buildClientSearchField() {
     return BlocBuilder<ClientCubit, ClientState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            SizedBox(
-              height: 34,
-              child: CustomTextField(
-                validator: (value) {},
-                controller: widget.clientNameController,
+        return TypeAheadField<ClientModel>(
+          controller: widget.clientNameController,
+          debounceDuration: const Duration(milliseconds: 200),
+          hideOnEmpty: false,
+          hideWithKeyboard: false,
+          hideOnUnfocus: true,
+          hideOnSelect: true,
+          builder: (context, controller, focusNode) => SizedBox(
+            height: 34,
+            child: TextFormField(
+              focusNode: focusNode,
+              controller: controller,
+              validator: AppInputValidators.name,
+              style: const TextStyle(fontSize: 12),
+              decoration: InputDecoration(
                 hintText: 'Search client',
+                hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                 prefixIcon: const Icon(Icons.search, size: 16),
-                // style: const TextStyle(fontSize: 12),
-                onChanged: (v) {
-                  if (v.length >= 3) {
-                    context.read<ClientCubit>().searchClient(v);
-                  }
-                },
+                suffixIcon: ValueListenableBuilder(
+                  valueListenable: controller,
+                  builder: (_, value, __) => value.text.isEmpty
+                      ? const SizedBox.shrink()
+                      : IconButton(
+                          icon: const Icon(Icons.clear, size: 14),
+                          onPressed: () {
+                            controller.clear();
+                            context.read<ClientCubit>().clearSelected();
+                          },
+                        ),
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      const BorderSide(color: AppColors.purple, width: 1.5),
+                ),
               ),
             ),
-            if (state.suggestions.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(8),
+          ),
+          suggestionsCallback: (query) async {
+            if (query.isEmpty) return [];
+            return await context.read<ClientCubit>().searchClient(query);
+          },
+          itemBuilder: (context, client) => ListTile(
+            dense: true,
+            visualDensity: const VisualDensity(vertical: -3),
+            title: Text(client.name, style: const TextStyle(fontSize: 12)),
+            subtitle: Text(
+              client.phone1.toString(),
+              style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+            ),
+          ),
+          onSelected: (client) {
+            widget.clientNameController.text = client.name;
+            widget.clientPhone1Controller.text = client.phone1.toString();
+            widget.clientPhone2Controller.text =
+                client.phone2?.toString() ?? '';
+            widget.onClientSelected(client.id);
+            context.read<ClientCubit>().selectClient(client);
+          },
+          decorationBuilder: (context, child) => DecoratedBox(
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: 8.radiusBorder,
+              border: BoxBorder.all(color: AppColors.grey300),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
                 ),
-                child: ListView.builder(
-                  itemCount: state.suggestions.length,
-                  itemBuilder: (_, i) {
-                    final c = state.suggestions[i];
-                    return ListTile(
-                      dense: true,
-                      visualDensity: const VisualDensity(vertical: -3),
-                      title: Text(c.name, style: const TextStyle(fontSize: 11)),
-                      subtitle: Text(c.phone1.toString(),
-                          style: TextStyle(
-                              fontSize: 10, color: Colors.grey.shade600)),
-                      onTap: () {
-                        widget.clientNameController.text = c.name;
-                        widget.clientPhone1Controller.text =
-                            c.phone1.toString();
-                        widget.clientPhone2Controller.text =
-                            c.phone2?.toString() ?? '';
-                        widget.onClientSelected(c.id);
-                        context.read<ClientCubit>().selectClient(c);
-                      },
-                    );
-                  },
-                ),
+              ],
+            ),
+            child: child,
+          ),
+          emptyBuilder: (_) => const SizedBox(
+            height: 70,
+            child: Center(
+              child: Text('No clients found', style: TextStyle(fontSize: 11)),
+            ),
+          ),
+          errorBuilder: (_, error) => SizedBox(
+            height: 70,
+            child: Center(
+              child: Text(
+                error.toString(),
+                style: const TextStyle(fontSize: 11, color: Colors.red),
               ),
-            ],
-          ],
+            ),
+          ),
+          loadingBuilder: (_) => const Padding(
+            padding: EdgeInsets.all(8),
+            child: Center(
+              child: SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+          ),
         );
       },
     );
@@ -253,13 +342,26 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
       child: Column(
         children: [
           _compactField(
-              widget.clientNameController, 'Name', Icons.person_outline),
+              widget.clientNameController,
+              'Name',
+              Icons.person_outline,
+              TextInputType.text,
+              AppInputValidators.name),
           const SizedBox(height: 8),
-          _compactField(widget.clientPhone1Controller, 'Phone',
-              Icons.phone_outlined, TextInputType.phone),
+          _compactField(
+              widget.clientPhone1Controller,
+              'Phone',
+              Icons.phone_outlined,
+              TextInputType.phone,
+              AppInputValidators.phoneNumber),
           const SizedBox(height: 8),
-          _compactField(widget.clientPhone2Controller, 'Phone 2',
-              Icons.phone_outlined, TextInputType.phone),
+          _compactField(
+              widget.clientPhone2Controller,
+              'Phone 2',
+              Icons.phone_outlined,
+              TextInputType.phone,
+              (value) =>
+                  AppInputValidators.phoneNumber(value, isRequired: false)),
         ],
       ),
     );
@@ -278,40 +380,71 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     );
   }
 
+  Widget _buildDescriptionField() {
+    return _card(
+      title: 'Description',
+      child: Container(
+        height: 100,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: TextField(
+          controller: widget.descriptionController,
+          maxLines: 4,
+          style: const TextStyle(fontSize: 12),
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+            isCollapsed: true,
+            hintText: 'Enter description (optional)',
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _compactField(
     TextEditingController c,
     String hint,
     IconData icon, [
     TextInputType type = TextInputType.text,
+    String? Function(String?)? validator,
   ]) {
     return SizedBox(
       height: 38,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
+      child: TextFormField(
+        controller: c,
+        keyboardType: type,
+        validator: validator,
+        style: const TextStyle(fontSize: 12),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
-          child: Row(
-            children: [
-              Icon(icon, size: 16, color: Colors.grey.shade600),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextField(
-                  controller: c,
-                  keyboardType: type,
-                  style: const TextStyle(fontSize: 12),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    isCollapsed: true,
-                    hintText: hint,
-                  ),
-                ),
-              ),
-            ],
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: AppColors.purple, width: 1.5),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          prefixIcon: Icon(icon, size: 16, color: Colors.grey.shade600),
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+          isDense: true,
         ),
       ),
     );
@@ -640,6 +773,16 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     );
   }
 
+  /// Build booked date field for sales mode (date only, no time)
+  Widget _buildBookedDateField() {
+    return _buildDateField(
+      label: 'Booked date',
+      value: widget.pickupDate.format(),
+      icon: Icons.calendar_today_outlined,
+      onTap: () => _selectBookedDate(),
+    );
+  }
+
   void _selectDate(bool isPickup) async {
     setState(() {
       isSelectingPickup = isPickup;
@@ -754,6 +897,30 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
 
     if (picked != null) {
       widget.onCoolingPeriodTimeChanged(picked);
+    }
+  }
+
+  /// Date picker for booked date in sales mode
+  void _selectBookedDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: widget.pickupDate,
+      firstDate: DateTime.now().subtract(const Duration(days: 30)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.purple,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      widget.onPickupDateChanged(picked);
     }
   }
 }

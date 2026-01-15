@@ -34,8 +34,11 @@ class ClientSearchNameField extends StatelessWidget {
           controller: nameController,
           focusNode: focusNode,
           scrollController: scrollController,
+          debounceDuration: const Duration(milliseconds: 200),
           hideOnEmpty: !isSearchEnabled,
           hideWithKeyboard: false,
+          hideOnUnfocus: true,
+          hideOnSelect: true,
           decorationBuilder: (context, child) => isSearchEnabled
               ? DecoratedBox(
                   decoration: BoxDecoration(
@@ -80,9 +83,9 @@ class ClientSearchNameField extends StatelessWidget {
             subtitle: Text(client.phone1.toString()),
           ),
           suggestionsCallback: (query) async {
-            if (isSearchEnabled)
-              return context.read<ClientCubit>().searchClient(query);
-            return null;
+            if (!isSearchEnabled) return [];
+            if (query.isEmpty) return [];
+            return await context.read<ClientCubit>().searchClient(query);
           },
           onSelected: (client) {
             context.read<ClientCubit>().selectClient(client);

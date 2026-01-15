@@ -86,14 +86,11 @@ class BookingSummarySection extends StatelessWidget {
       listenable: Listenable.merge([
         selectedProductsNotifier,
         additionalChargesNotifier,
-        advanceAmountController,
         discountAmountController,
       ]),
       builder: (context, _) {
         final products = selectedProductsNotifier.value;
         final additionalCharges = additionalChargesNotifier.value;
-        final advanceAmount =
-            advanceAmountController.text.trim().toIntOrNull() ?? 0;
         final discountAmount =
             discountAmountController.text.trim().toIntOrNull() ?? 0;
 
@@ -111,31 +108,37 @@ class BookingSummarySection extends StatelessWidget {
 
         // Calculate total payable
         final totalPayable = productTotal + additionalTotal - discountAmount;
-        final remainingAmount = totalPayable - advanceAmount;
 
         return Column(
           children: [
-            _buildSummaryRow('Product total', productTotal),
-            const SizedBox(height: 8),
-            _buildSummaryRow('Additional charges', additionalTotal),
+            // Hidden: Product total
+            // _buildSummaryRow('Product total', productTotal),
+            // const SizedBox(height: 8),
+
+            // Hidden: Additional charges
+            // _buildSummaryRow('Additional charges', additionalTotal),
+
             if (discountAmount > 0) ...[
-              const SizedBox(height: 8),
               _buildSummaryRow('Discount', -discountAmount, isNegative: true),
+              const SizedBox(height: 8),
             ],
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Divider(),
-            ),
+
+            // Hidden: Paid (advance amount)
+            // const Padding(
+            //   padding: EdgeInsets.symmetric(vertical: 12),
+            //   child: Divider(),
+            // ),
+            // _buildSummaryRow(
+            //   'Paid',
+            //   advanceAmount,
+            //   valueColor: AppColors.green,
+            //   isBold: true,
+            // ),
+            // const SizedBox(height: 8),
+
             _buildSummaryRow(
-              'Paid',
-              advanceAmount,
-              valueColor: AppColors.green,
-              isBold: true,
-            ),
-            const SizedBox(height: 8),
-            _buildSummaryRow(
-              'Total payable',
-              remainingAmount > 0 ? remainingAmount : 0,
+              'Total',
+              totalPayable,
               valueColor: AppColors.purple,
               isBold: true,
               isLarge: true,
@@ -160,7 +163,7 @@ class BookingSummarySection extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: isLarge ? 15 : 13,
+            fontSize: isLarge ? 17 : 15,
             fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
             color: Colors.grey.shade700,
           ),

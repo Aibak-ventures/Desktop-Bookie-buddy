@@ -53,6 +53,23 @@ class BookingRepository {
     }
   }
 
+  // Create a sale
+  Future<void> createSale(Map<String, dynamic> saleData) async {
+    try {
+      final response = await safeApiCall(
+        () => _bookingService.createSale(saleData),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error creating sale: ${response.devMessage}');
+      throw response.message;
+    } catch (e, stack) {
+      log('Error creating sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   // Create old booking
   Future<void> createOldBooking(RequestBookingModel bookingData) async {
     try {

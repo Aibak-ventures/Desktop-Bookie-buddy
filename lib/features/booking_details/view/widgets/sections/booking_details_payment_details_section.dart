@@ -73,6 +73,7 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                             const Divider(),
 
                           _PaymentDetailsRow(
+                            fontSize: 15,
                             title: 'Product total',
                             amount: productTotalAmount,
                           ),

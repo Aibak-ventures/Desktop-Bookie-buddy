@@ -20,21 +20,20 @@ class StaffSearchNameField extends StatelessWidget {
           controller: nameController,
           debounceDuration: const Duration(milliseconds: 150),
           hideWithKeyboard: false,
-
+          hideOnUnfocus: true,
+          hideOnSelect: true,
           suggestionsCallback: (search) {
             final staffs = state.staffs;
             if (search.isEmpty) return staffs;
             return staffs
-                .where((s) =>
-                    s.name.toLowerCase().contains(search.toLowerCase()))
+                .where(
+                    (s) => s.name.toLowerCase().contains(search.toLowerCase()))
                 .toList();
           },
-
           onSelected: (staff) {
             context.read<StaffSearchCubit>().selectStaff(staff);
             nameController.text = staff.name;
           },
-
           builder: (context, controller, focusNode) => SizedBox(
             height: 40,
             child: CustomTextField(
@@ -53,26 +52,22 @@ class StaffSearchNameField extends StatelessWidget {
                         icon: const Icon(Icons.clear, size: 14),
                         onPressed: () {
                           controller.clear();
-                          context
-                              .read<StaffSearchCubit>()
-                              .clearSelectedStaff();
+                          context.read<StaffSearchCubit>().clearSelectedStaff();
                         },
                       ),
               ),
               validator: AppInputValidators.name,
             ),
           ),
-
           itemBuilder: (context, staff) => ListTile(
             dense: true,
-            visualDensity: const VisualDensity(vertical: -3),
-            title: Text(staff.name, style: const TextStyle(fontSize: 11)),
+            // visualDensity: const VisualDensity(vertical: -3),
+            title: Text(staff.name, style: const TextStyle(fontSize: 14)),
             subtitle: Text(
               staff.phoneNumber,
-              style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
             ),
           ),
-
           decorationBuilder: (context, child) => DecoratedBox(
             decoration: BoxDecoration(
               color: AppColors.white,
@@ -88,21 +83,18 @@ class StaffSearchNameField extends StatelessWidget {
             ),
             child: child,
           ),
-
           emptyBuilder: (_) => const SizedBox(
             height: 70,
             child: Center(
               child: Text('No staff found', style: TextStyle(fontSize: 11)),
             ),
           ),
-
           errorBuilder: (_, error) => SizedBox(
             height: 70,
             child: Center(
-              child: Text(error.toString(),
-                  style: const TextStyle(fontSize: 11))),
+                child: Text(error.toString(),
+                    style: const TextStyle(fontSize: 11))),
           ),
-
           loadingBuilder: (_) => const Padding(
             padding: EdgeInsets.all(4),
             child: CircularProgressIndicator(strokeWidth: 2),

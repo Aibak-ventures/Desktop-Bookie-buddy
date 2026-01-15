@@ -540,7 +540,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             SizedBox(
               width: 95,
               child: Text(
-                booking.pickupDate.formatToUiDate(),
+                _formatDateWithLabel(booking.pickupDate),
                 style: const TextStyle(fontSize: 13),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -702,5 +702,32 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         ),
       ),
     );
+  }
+
+  /// Format date with Today/Tomorrow labels
+  String _formatDateWithLabel(String dateStr) {
+    try {
+      final bookingDate = dateStr.parseToDateTime();
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final tomorrow = today.add(const Duration(days: 1));
+      final dateOnly = DateTime(
+        bookingDate.year,
+        bookingDate.month,
+        bookingDate.day,
+      );
+
+      if (dateOnly == today) {
+        return 'Today';
+      } else if (dateOnly == tomorrow) {
+        return 'Tomorrow';
+      }
+
+      // Default: Use formatted date
+      return dateStr.formatToUiDate();
+    } catch (e) {
+      // Fallback to original format if parsing fails
+      return dateStr.formatToUiDate();
+    }
   }
 }

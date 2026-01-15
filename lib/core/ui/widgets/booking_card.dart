@@ -77,29 +77,7 @@ class BookingCard extends StatelessWidget {
                 borderRadius: 9.radiusBorder,
               ),
               child: displayDate != null
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          displayDate.day.toString(),
-                          style: TextStyle(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.w600,
-                            color: isAfterReturnDate
-                                ? AppColors.red
-                                : AppColors.purple,
-                          ),
-                        ),
-                        Text(
-                          AppDateUtils.getMonthName(displayDate.month),
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    )
+                  ? _buildDateDisplay(displayDate, isAfterReturnDate)
                   : const Center(child: Text('--/--')),
             ),
 
@@ -191,6 +169,90 @@ class BookingCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  /// Build date display with Today/Tomorrow labels
+  Widget _buildDateDisplay(DateTime displayDate, bool isAfterReturnDate) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
+    final dateOnly =
+        DateTime(displayDate.year, displayDate.month, displayDate.day);
+
+    final textColor = isAfterReturnDate ? AppColors.red : AppColors.purple;
+
+    // Check if date is today
+    if (dateOnly == today) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Today',
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+          Text(
+            displayDate.day.toString(),
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Check if date is tomorrow
+    if (dateOnly == tomorrow) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Tomorrow',
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+          Text(
+            displayDate.day.toString(),
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Default: Show day and month
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          displayDate.day.toString(),
+          style: TextStyle(
+            fontSize: 24.sp,
+            fontWeight: FontWeight.w600,
+            color: textColor,
+          ),
+        ),
+        Text(
+          AppDateUtils.getMonthName(displayDate.month),
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: AppColors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }

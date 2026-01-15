@@ -18,6 +18,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_client_details_section.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
@@ -694,6 +695,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               clientPhone1Controller: clientPhone1Controller,
               clientPhone2Controller: clientPhone2Controller,
               clientAddressController: clientAddressController,
+              descriptionController: descriptionController,
               isSearchClientEnabled: isSearchClientEnabled,
               onSearchClientToggle: (v) =>
                   setState(() => isSearchClientEnabled = v),
@@ -712,6 +714,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               onPickupTimeChanged: (t) => setState(() => pickupTime = t),
               onReturnTimeChanged: (t) => setState(() => returnTime = t),
               onCoolingPeriodTimeChanged: (_) {},
+              isSalesMode: selectedBookingType == BookingType.sales,
             ),
           ),
 
@@ -2158,11 +2161,14 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: 10),
                   // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
-                  _buildCompactAmountField(
-                    controller: advanceAmountController,
-                    label: 'Advance Amount (optional)',
-                  ),
-                  const SizedBox(height: 8),
+                  // Hide advance amount in sales mode
+                  if (!isSalesMode) ...[
+                    _buildCompactAmountField(
+                      controller: advanceAmountController,
+                      label: 'Advance Amount (optional)',
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                   if (!isSalesMode) ...[
                     _buildCompactAmountField(
                       controller: securityAmountController,
@@ -2175,9 +2181,11 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                     label: 'Discount Amount (optional)',
                   ),
                   const SizedBox(height: 10),
-                  // Additional charges
-                  _buildAdditionalChargesSection(),
-                  const SizedBox(height: 10),
+                  // Additional charges - hide in sales mode
+                  if (!isSalesMode) ...[
+                    _buildAdditionalChargesSection(),
+                    const SizedBox(height: 10),
+                  ],
                   // Payment method
                   // _buildPaymentMethodSection(),
                   const SizedBox(height: 10),
@@ -2552,7 +2560,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 15,
               fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
               color: Colors.grey.shade700,
             ),
@@ -2692,9 +2700,6 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
-    final request = _buildBookingRequest();
-    log('Booking Request: ${request.toJson()}');
-
     // Show loading indicator
     showDialog(
       context: context,
@@ -2705,22 +2710,50 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     try {
-      // Call the API to create booking
       final repository = getIt<BookingRepository>();
-      await repository.addBooking(request);
 
-      // Close loading dialog
-      if (mounted) Navigator.of(context).pop();
+      // Check if it's a sale or booking
+      if (selectedBookingType == BookingType.sales) {
+        // Build sales request
+        final salesRequest = _buildSalesRequest();
+        log('Sales Request: ${salesRequest.toJson()}');
 
-      // Show success message
-      if (mounted) {
-        context.showSnackBar('Booking created successfully!');
+        // Call the API to create sale
+        await repository.createSale(salesRequest.toJson());
 
-        // Navigate back or close
-        if (widget.onClose != null) {
-          widget.onClose!();
-        } else {
-          Navigator.of(context).pop();
+        // Close loading dialog
+        if (mounted) Navigator.of(context).pop();
+
+        // Show success message
+        if (mounted) {
+          context.showSnackBar('Sale created successfully!');
+          // Navigate back or close
+          if (widget.onClose != null) {
+            widget.onClose!();
+          } else {
+            Navigator.of(context).pop();
+          }
+        }
+      } else {
+        // Build booking request
+        final bookingRequest = _buildBookingRequest();
+        log('Booking Request: ${bookingRequest.toJson()}');
+
+        // Call the API to create booking
+        await repository.addBooking(bookingRequest);
+
+        // Close loading dialog
+        if (mounted) Navigator.of(context).pop();
+
+        // Show success message
+        if (mounted) {
+          context.showSnackBar('Booking created successfully!');
+          // Navigate back or close
+          if (widget.onClose != null) {
+            widget.onClose!();
+          } else {
+            Navigator.of(context).pop();
+          }
         }
       }
     } catch (e) {
@@ -2729,12 +2762,12 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
       // Show error message
       if (mounted) {
-        context.showSnackBar(
-          'Failed to create booking: ${e.toString()}',
-          isError: true,
-        );
+        final message = selectedBookingType == BookingType.sales
+            ? 'Failed to create sale: ${e.toString()}'
+            : 'Failed to create booking: ${e.toString()}';
+        context.showSnackBar(message, isError: true);
       }
-      log('Error creating booking: $e');
+      log('Error: $e');
     }
   }
 
@@ -2780,6 +2813,41 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           : null,
       pickupTime: pickupTime,
       returnTime: returnTime,
+    );
+  }
+
+  /// Build sales request for creating a sale
+  RequestSalesModel _buildSalesRequest() {
+    final products = selectedProductsNotifier.value;
+
+    // Build variants array with id, quantity, and amount
+    final variants = products.map((product) {
+      return {
+        'id': product.variant.variantId,
+        'quantity': product.quantity,
+        'amount': product.amount,
+      };
+    }).toList();
+
+    // Use phone1 as client_phone
+    final clientPhone = clientPhone1Controller.text.trim();
+
+    return RequestSalesModel(
+      staffId: selectedStaffId,
+      clientPhone: clientPhone.isEmpty ? null : clientPhone,
+      clientAddress: clientAddressController.text.trim().isEmpty
+          ? null
+          : clientAddressController.text.trim(),
+      saleDate: pickupDate.format(), // Use pickup date as sale date
+      description: descriptionController.text.trim().isEmpty
+          ? null
+          : descriptionController.text.trim(),
+      sendInvoice: false,
+      variants: variants,
+      paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+      paymentMethod: paymentMethod,
+      discount: discountAmountController.text.trim().toIntOrNull() ?? 0,
+      decreaseStock: false,
     );
   }
 }
