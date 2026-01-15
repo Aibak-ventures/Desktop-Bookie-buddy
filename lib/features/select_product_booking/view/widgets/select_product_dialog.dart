@@ -193,7 +193,10 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                                 : isSelected
                                     ? AppColors.purpleLight
                                     : const Color(0xFFE8E4FF),
-                            borderRadius: BorderRadius.circular(25),
+                            // Conditional border radius based on text length
+                            borderRadius: BorderRadius.circular(
+                              variant.attribute.length > 3 ? 8 : 25,
+                            ),
                             border: Border.all(
                               color: isSelected
                                   ? const Color(0xFF6C5CE7)

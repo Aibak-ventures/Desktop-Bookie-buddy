@@ -102,11 +102,9 @@ class _BookingClientDetailsSectionState
             SizedBox(
               height: 34,
               child: CustomTextField(
-                validator: (value) {
-                  
-                },
+                validator: (value) {},
                 controller: widget.clientNameController,
-                hintText: 'Search client',
+                hintText: 'Search clients',
                 prefixIcon: const Icon(Icons.search, size: 16),
                 // style: const TextStyle(fontSize: 12),
                 onChanged: (v) {
@@ -131,11 +129,10 @@ class _BookingClientDetailsSectionState
                     return ListTile(
                       dense: true,
                       visualDensity: const VisualDensity(vertical: -3),
-                      title:
-                          Text(c.name, style: const TextStyle(fontSize: 11)),
+                      title: Text(c.name, style: const TextStyle(fontSize: 15)),
                       subtitle: Text(c.phone1.toString(),
                           style: TextStyle(
-                              fontSize: 10, color: Colors.grey.shade600)),
+                              fontSize: 15, color: Colors.grey.shade600)),
                       onTap: () {
                         widget.clientNameController.text = c.name;
                         widget.clientPhone1Controller.text =
@@ -159,7 +156,8 @@ class _BookingClientDetailsSectionState
   Widget _buildClientManualFields() {
     return Column(
       children: [
-        _compactField(widget.clientNameController, 'Name', Icons.person_outline),
+        _compactField(
+            widget.clientNameController, 'Name', Icons.person_outline),
         const SizedBox(height: 8),
         _compactField(widget.clientPhone1Controller, 'Phone',
             Icons.phone_outlined, TextInputType.phone),
@@ -167,45 +165,46 @@ class _BookingClientDetailsSectionState
         _compactField(widget.clientPhone2Controller, 'Phone 2',
             Icons.phone_outlined, TextInputType.phone),
         const SizedBox(height: 8),
-        _compactField(
-            widget.clientAddressController, 'Place', Icons.location_on_outlined),
+        _compactField(widget.clientAddressController, 'Place',
+            Icons.location_on_outlined),
       ],
     );
   }
 
-Widget _compactField(
-  TextEditingController c,
-  String hint,
-  IconData icon, [
-  TextInputType type = TextInputType.text,
-]) {
-  return SizedBox(
-    height: 39,
-    child: TextField(
-      controller: c,
-      keyboardType: type,
-      style: const TextStyle(fontSize: 12),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 6),
-          child: Icon(icon, size: 16, color: Colors.grey.shade600),
+  Widget _compactField(
+    TextEditingController c,
+    String hint,
+    IconData icon, [
+    TextInputType type = TextInputType.text,
+  ]) {
+    return SizedBox(
+      height: 39,
+      child: TextField(
+        controller: c,
+        keyboardType: type,
+        style: const TextStyle(fontSize: 12),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 10, right: 6),
+            child: Icon(icon, size: 16, color: Colors.grey.shade600),
+          ),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 34,
+            minHeight: 34,
+          ),
+          isDense: true,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 34,
-          minHeight: 34,
-        ),
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
       ),
-    ),
-  );
-}
+    );
+  }
 
-
-  Widget _card({required String title, Widget? trailing, required Widget child}) {
+  Widget _card(
+      {required String title, Widget? trailing, required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

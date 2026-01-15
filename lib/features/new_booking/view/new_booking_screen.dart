@@ -9,6 +9,7 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
     show ServicesModel;
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
@@ -688,7 +689,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         children: [
           // Calendar + date time (already compact)
           SizedBox(
-            height: 510,
+            height: selectedBookingType == BookingType.sales ? 460 : 530,
             child: BookingCalendarWidget(
               staffNameController: staffNameController,
               clientNameController: clientNameController,
@@ -999,155 +1000,68 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     Overlay.of(context).insert(_searchOverlayEntry!);
   }
 
-  /// Builds search item for the overlay - tapping opens variant selection dialog
+  /// Builds search item for the overlay - requires variant selection before adding
   Widget _buildOverlaySearchItem(ProductModel product) {
-    final price = product.price ?? 0;
-    final variants = product.variants;
-    final variantAttributes =
-        variants.map((v) => v.attribute).where((a) => a.isNotEmpty).toList();
-
-    return InkWell(
-      onTap: () {
-        log('Overlay item tapped: ${product.name}');
+    return _OverlaySearchItem(
+      product: product,
+      onAddProduct: (selectedVariant) {
         _removeSearchOverlay();
         serviceSearchController.clear();
-        // Directly add the product instead of showing dialog
-        _addProductFromSearch(product);
+        _addProductFromSearchWithVariant(product, selectedVariant);
       },
-      child: Center(
-        child: Container(
-          // width: 950, // 👈 fixed width
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Row(
-            children: [
-              // Product Image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Container(
-                  width: 50,
-                  height: 40,
-                  color: Colors.grey.shade100,
-                  child: product.image != null && product.image!.isNotEmpty
-                      ? Image.network(
-                          product.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.image_outlined,
-                            size: 20,
-                            color: Colors.grey.shade400,
-                          ),
-                        )
-                      : Icon(Icons.image_outlined,
-                          size: 20, color: Colors.grey.shade400),
-                ),
-              ),
-              const SizedBox(width: 10),
-              // Product Info
-              Expanded(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product.name,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            product.color ?? 'color',
-                            style: const TextStyle(
-                                color: Color(0xFF707070),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 76),
-                    Container(
-                      width: 1,
-                      height: 30,
-                      color: Color(0xFFA6A6A6),
-                    ),
-                    const SizedBox(width: 76),
-                    if (variantAttributes.isNotEmpty)
-                      Wrap(
-                        spacing: 4,
-                        runSpacing: 4,
-                        children: variantAttributes.map((variant) {
-                          return _variantChip(variant);
-                        }).toList(),
-                      ),
-                    SizedBox(width: 76),
-                    Container(
-                      width: 1,
-                      height: 30,
-                      color: Color(0xFFA6A6A6),
-                    ),
-                    SizedBox(width: 76),
-                    Text(
-                      'rent price: ',
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                    ),
-                    Text(
-                      '₹$price',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 8),
-              // Text(
-              //   '₹$price',
-              //   style: const TextStyle(
-              //     fontSize: 11,
-              //     fontWeight: FontWeight.w600,
-              //     color: Color(0xFF6132E4),
-              //   ),
-              // ),
-              const SizedBox(width: 8),
-              Container(
-                width: 70,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6132E4),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.add, size: 18, color: Colors.white),
-                    SizedBox(width: 4),
-                    Text(
-                      'Add',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
+  }
+
+  /// Add product from search with specific variant
+  void _addProductFromSearchWithVariant(
+      ProductModel product, ProductVariantModel variant) {
+    log('_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}');
+
+    final price = variant.price ?? product.price ?? 0;
+    log('Adding variant: ${variant.attribute}, price: $price');
+
+    final products =
+        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+
+    // Check if this variant already exists
+    final existingIndex = products.indexWhere(
+      (p) => p.variant.variantId == variant.id,
+    );
+
+    if (existingIndex != -1) {
+      // Increment quantity
+      final existing = products[existingIndex];
+      products[existingIndex] =
+          existing.copyWith(quantity: existing.quantity + 1);
+    } else {
+      // Add new product with selected variant
+      final attribute =
+          variant.attribute.isEmpty ? (product.model ?? '') : variant.attribute;
+
+      products.add(ProductSelectedModel(
+        variant: ProductInfoModel(
+          id: variant.id,
+          variantId: variant.id,
+          productId: product.id,
+          name: product.name,
+          image: product.image,
+          amount: price,
+          category: product.category,
+          color: product.color,
+          model: product.model,
+          mainServiceType: product.mainServiceType,
+          variantAttribute: attribute,
+          measurements: [],
+          quantity: 1,
+        ),
+        quantity: 1,
+        amount: price,
+      ));
+    }
+
+    selectedProductsNotifier.value = products;
+    log('Product added. Total selected: ${products.length}');
+    setState(() {}); // Refresh to update UI
   }
 
   /// Builds individual search result item - tapping opens variant selection dialog
@@ -1688,7 +1602,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: Text(
               'Item',
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade600,
               ),
@@ -1699,7 +1613,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Quantity',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade600,
               ),
@@ -1710,7 +1624,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Available',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade600,
               ),
@@ -1721,7 +1635,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Price',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade600,
               ),
@@ -1732,7 +1646,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Total',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade600,
               ),
@@ -1858,7 +1772,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.name,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500,
                         ),
                         maxLines: 1,
@@ -1905,7 +1819,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   child: Text(
                     '${product.quantity}',
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w500),
+                        fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
                 InkWell(
@@ -1937,7 +1851,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 child: Text(
                   '${product.variant.quantity} left',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: product.variant.quantity > 0
                         ? const Color(0xFF20D400)
@@ -1965,14 +1879,23 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       ),
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(vertical: 8),
                   isDense: true,
                   prefixText: '₹',
-                  prefixStyle: TextStyle(fontSize: 14),
+                  prefixStyle:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
+                onChanged: (value) {
+                  // Update price immediately as user types
+                  final newPrice = int.tryParse(value);
+                  if (newPrice != null && newPrice >= 0) {
+                    _updateProductPrice(product, newPrice);
+                  }
+                },
                 onSubmitted: (value) {
                   final newPrice = int.tryParse(value) ?? product.amount;
                   _updateProductPrice(product, newPrice);
@@ -1985,7 +1908,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: Text(
               total.toCurrency(),
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
           // Remove button
@@ -2667,7 +2590,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6132E4),
             ),
-            child: const Text('Add'),
+            child: const Text(
+              'Add',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -2852,6 +2778,230 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   }
 }
 
+// Stateful widget for overlay search item with variant selection
+class _OverlaySearchItem extends StatefulWidget {
+  final ProductModel product;
+  final Function(ProductVariantModel) onAddProduct;
+
+  const _OverlaySearchItem({
+    required this.product,
+    required this.onAddProduct,
+  });
+
+  @override
+  State<_OverlaySearchItem> createState() => _OverlaySearchItemState();
+}
+
+class _OverlaySearchItemState extends State<_OverlaySearchItem> {
+  ProductVariantModel? selectedVariant;
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-select first variant if available
+    if (widget.product.variants.isNotEmpty) {
+      selectedVariant = widget.product.variants.first;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final price = widget.product.price ?? 0;
+    final variants = widget.product.variants;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(
+        children: [
+          // Product Image
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Container(
+              width: 50,
+              height: 40,
+              color: Colors.grey.shade100,
+              child: widget.product.image != null &&
+                      widget.product.image!.isNotEmpty
+                  ? Image.network(
+                      widget.product.image!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Icon(
+                        Icons.image_outlined,
+                        size: 20,
+                        color: Colors.grey.shade400,
+                      ),
+                    )
+                  : Icon(Icons.image_outlined,
+                      size: 20, color: Colors.grey.shade400),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Product Info
+          Expanded(
+            child: Row(
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.product.name,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        widget.product.color ?? 'color',
+                        style: const TextStyle(
+                            color: Color(0xFF707070),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 76),
+                Container(
+                  width: 1,
+                  height: 30,
+                  color: Color(0xFFA6A6A6),
+                ),
+                const SizedBox(width: 76),
+                // Selectable variant chips
+                if (variants.isNotEmpty)
+                  Wrap(
+                    spacing: 4,
+                    runSpacing: 4,
+                    children: variants.map((variant) {
+                      final isSelected = selectedVariant?.id == variant.id;
+                      return _SelectableVariantChip(
+                        text: variant.attribute,
+                        isSelected: isSelected,
+                        onTap: () {
+                          setState(() {
+                            selectedVariant = variant;
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                SizedBox(width: 76),
+                Container(
+                  width: 1,
+                  height: 30,
+                  color: Color(0xFFA6A6A6),
+                ),
+                SizedBox(width: 76),
+                Text(
+                  'rent price: ',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
+                ),
+                Text(
+                  '₹$price',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 8),
+          const SizedBox(width: 8),
+          // Add button - only enabled if variant selected
+          GestureDetector(
+            onTap: selectedVariant != null
+                ? () => widget.onAddProduct(selectedVariant!)
+                : null,
+            child: Container(
+              width: 70,
+              height: 25,
+              decoration: BoxDecoration(
+                color: selectedVariant != null
+                    ? const Color(0xFF6132E4)
+                    : Colors.grey.shade400,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.add, size: 18, color: Colors.white),
+                  SizedBox(width: 4),
+                  Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Selectable variant chip widget
+class _SelectableVariantChip extends StatelessWidget {
+  final String text;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _SelectableVariantChip({
+    required this.text,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isShortText = text.length <= 3;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: isShortText ? 33 : null,
+        height: 33,
+        padding:
+            isShortText ? null : const EdgeInsets.symmetric(horizontal: 12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
+          borderRadius: isShortText ? null : BorderRadius.circular(8),
+          color: isSelected
+              ? const Color(0xFF6132E4)
+              : Color.fromARGB(255, 225, 215, 255),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade200,
+            width: isSelected ? 2 : 0.6,
+          ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: isSelected ? Colors.white : Colors.grey.shade700,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // /// Model for uploaded document files
 class DocumentFile {
   final String name;
@@ -2866,19 +3016,25 @@ class DocumentFile {
 }
 
 Widget _variantChip(String text) {
+  final isShortText = text.length <= 3;
+
   return Container(
-    width: 35,
-    height: 35,
+    // Use fixed size for circles, flexible for rectangles
+    width: isShortText ? 35 : null,
+    height: 33,
+    padding: isShortText ? null : const EdgeInsets.symmetric(horizontal: 12),
     alignment: Alignment.center,
     decoration: BoxDecoration(
-      shape: BoxShape.circle,
+      // Use circle for short text, rounded rectangle for long text
+      shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
+      borderRadius: isShortText ? null : BorderRadius.circular(8),
       color: Color.fromARGB(255, 225, 215, 255),
       border: Border.all(color: Colors.grey.shade200, width: 0.6),
     ),
     child: Text(
       text,
       style: TextStyle(
-        fontSize: 15,
+        fontSize: 12,
         fontWeight: FontWeight.w600,
         color: Colors.grey.shade700,
       ),

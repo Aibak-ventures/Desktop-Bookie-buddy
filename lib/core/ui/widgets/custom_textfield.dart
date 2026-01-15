@@ -43,6 +43,8 @@ class CustomTextField extends StatelessWidget {
   final TextAlign textAlign;
   final String? errorText;
   final Iterable<String>? autofillHints;
+  final bool isDense;
+  final EdgeInsetsGeometry? contentPadding;
 
   const CustomTextField({
     required this.controller,
@@ -76,6 +78,8 @@ class CustomTextField extends StatelessWidget {
     this.errorText,
     this.canRequestFocus = true,
     this.autofillHints,
+    this.isDense = false,
+    this.contentPadding,
   });
 
   @override
@@ -131,6 +135,11 @@ class CustomTextField extends StatelessWidget {
           borderSide: const BorderSide(color: AppColors.redTomato),
           borderRadius: borderRadius.radiusBorder,
         ),
+        errorStyle: const TextStyle(
+          fontSize: 0, // Hide error text
+          height: 0, // Remove the space for error text
+        ),
+        errorMaxLines: 1,
         counterText: '',
         labelText: label,
         hintText: hintText,
@@ -141,7 +150,8 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         suffix: suffix,
         fillColor: fillColor,
-        
+        isDense: isDense,
+        contentPadding: contentPadding,
         filled: fillColor != null,
         hintStyle: const TextStyle(
           color: AppColors.grey,

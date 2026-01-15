@@ -133,7 +133,8 @@ class _AddAdditionalChargeDialogState extends State<AddAdditionalChargeDialog> {
           if (widget.existingCharge == null)
             TextButton(
               onPressed: () => _submit(false),
-              child: const Text('Add more'),
+              child: const Text('Add more',
+                  style: TextStyle(color: AppColors.white)),
             )
           else
             TextButton(

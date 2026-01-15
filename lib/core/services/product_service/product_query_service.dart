@@ -56,7 +56,8 @@ class ProductQueryService {
         queryParameters: {
           'page': page,
           if (query != null && query.isNotEmpty) 'search': query,
-          if (serviceId != null) 'shop_service_id': serviceId,
+          if (serviceId != null && serviceId != -1)
+            'shop_service_id': serviceId,
           if (query != null && query.isNotEmpty)
             'search_by': type, // "name","color","size","category","model"
           if (startPrice != null && endPrice != null) 'min_price': startPrice,
@@ -140,7 +141,8 @@ class ProductQueryService {
         ApiPaths.service.productsRoot,
         queryParameters: {
           'page': page,
-          if (serviceId != null) 'shop_service_id': serviceId,
+          if (serviceId != null && serviceId != -1)
+            'shop_service_id': serviceId,
           'in_stock_only': includeInStockOnly,
         },
       );

@@ -176,6 +176,16 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildFilterRow() {
+    // Hide status tabs when Sales tab is active
+    if (_activeActionTab == 1) {
+      return Row(
+        children: [
+          const Spacer(),
+          _buildSearchBar(),
+        ],
+      );
+    }
+
     return BlocBuilder<AllBookingBloc, AllBookingState>(
       builder: (context, state) {
         // Get status counts from the loaded state
@@ -339,21 +349,65 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: BlocBuilder<AllBookingBloc, AllBookingState>(
-        builder: (context, state) {
-          return state.maybeWhen(
-            loading: () => const Center(
-                child: CircularProgressIndicator(color: Color(0xFF8A63FE))),
-            loaded: (bookings, _, __, ___, ____, _____, ______, _______) {
-              if (bookings.isEmpty)
-                return const Center(child: Text('No bookings found'));
-              return _buildTable(bookings);
-            },
-            error: (msg) => Center(child: Text('Error: $msg')),
-            orElse: () => const SizedBox.shrink(),
-          );
-        },
-      ),
+      child: _activeActionTab == 1
+          ? _buildSalesPlaceholder()
+          : BlocBuilder<AllBookingBloc, AllBookingState>(
+              builder: (context, state) {
+                return state.maybeWhen(
+                  loading: () => const Center(
+                      child:
+                          CircularProgressIndicator(color: Color(0xFF8A63FE))),
+                  loaded: (bookings, _, __, ___, ____, _____, ______, _______) {
+                    if (bookings.isEmpty)
+                      return const Center(child: Text('No bookings found'));
+                    return _buildTable(bookings);
+                  },
+                  error: (msg) => Center(child: Text('Error: $msg')),
+                  orElse: () => const SizedBox.shrink(),
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _buildSalesPlaceholder() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        _buildTableHeader(),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(48.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.shopping_cart_outlined,
+                  size: 64,
+                  color: Colors.grey.shade300,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Sales data coming soon',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Sales records will be displayed here',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -368,6 +422,119 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildTableHeader() {
+    // Sales table header
+    if (_activeActionTab == 1) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF1F0FF),
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
+            const SizedBox(
+              width: 100,
+              child: Text(
+                'Sale ID',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const SizedBox(
+              width: 95,
+              child: Text(
+                'Sale Date',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const SizedBox(
+              width: 110,
+              child: Text(
+                'Phone',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text(
+                'Products',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const SizedBox(
+              width: 80,
+              child: Text(
+                'Total',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const SizedBox(
+              width: 70,
+              child: Text(
+                'Paid',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const SizedBox(
+              width: 70,
+              child: Text(
+                'Balance',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const SizedBox(
+              width: 70,
+              child: Text(
+                'Discount',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(width: 28), // Match chevron icon width + spacing
+          ],
+        ),
+      );
+    }
+
+    // Booking table header (original)
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(

@@ -166,12 +166,10 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                         const SizedBox(height: 12),
                       ],
 
-                      _compactField(
-                          widget.clientAddressController,
-                          'Place',
+                      _compactField(widget.clientAddressController, 'Place',
                           Icons.location_on_outlined,
-                          TextInputType.text,
-                          AppInputValidators.address),
+                          type: TextInputType.text,
+                          validator: AppInputValidators.address),
                       const SizedBox(height: 12),
                       _buildStaffDetailsCard(),
 
@@ -213,8 +211,59 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
         ],
       ),
       child: widget.isSearchClientEnabled
-          ? _buildClientSearchField()
+          ? _buildClientSearchWithFields()
           : _buildClientManualFields(),
+    );
+  }
+
+  // Combined search field with locked manual fields below
+  Widget _buildClientSearchWithFields() {
+    return Column(
+      children: [
+        _buildClientSearchField(),
+        const SizedBox(height: 12),
+        // Manual fields - disabled during search
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Column(
+            children: [
+              // Client name - hidden in sales mode
+              if (!widget.isSalesMode) ...[
+                // _compactField(
+                //   widget.clientNameController,
+                //   'Name',
+                //   Icons.person_outline,
+                //   type: TextInputType.text,
+                //   validator: AppInputValidators.name,
+                //   enabled: false, // Locked during search
+                // ),
+                const SizedBox(height: 8),
+              ],
+              _compactField(
+                widget.clientPhone1Controller,
+                'Phone',
+                Icons.phone_outlined,
+                type: TextInputType.phone,
+                validator: AppInputValidators.phoneNumber,
+                enabled: false, // Locked during search
+              ),
+              // Phone 2 - hidden in sales mode
+              if (!widget.isSalesMode) ...[
+                const SizedBox(height: 8),
+                _compactField(
+                  widget.clientPhone2Controller,
+                  'Phone 2',
+                  Icons.phone_outlined,
+                  type: TextInputType.phone,
+                  validator: (value) =>
+                      AppInputValidators.phoneNumber(value, isRequired: false),
+                  enabled: false, // Locked during search
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -277,10 +326,10 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           itemBuilder: (context, client) => ListTile(
             dense: true,
             visualDensity: const VisualDensity(vertical: -3),
-            title: Text(client.name, style: const TextStyle(fontSize: 12)),
+            title: Text(client.name, style: const TextStyle(fontSize: 13)),
             subtitle: Text(
               client.phone1.toString(),
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+              style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
             ),
           ),
           onSelected: (client) {
@@ -288,6 +337,10 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             widget.clientPhone1Controller.text = client.phone1.toString();
             widget.clientPhone2Controller.text =
                 client.phone2?.toString() ?? '';
+            // Auto-fill address if available
+            // if (client.address != null && client.a!.isNotEmpty) {
+            //   widget.clientAddressController.text = client.address!;
+            // }
             widget.onClientSelected(client.id);
             context.read<ClientCubit>().selectClient(client);
           },
@@ -341,27 +394,26 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
       constraints: const BoxConstraints(maxWidth: 400),
       child: Column(
         children: [
+          // Client name - hidden in sales mode
+          if (!widget.isSalesMode) ...[
+            _compactField(
+                widget.clientNameController, 'Name', Icons.person_outline,
+                type: TextInputType.text, validator: AppInputValidators.name),
+            const SizedBox(height: 8),
+          ],
           _compactField(
-              widget.clientNameController,
-              'Name',
-              Icons.person_outline,
-              TextInputType.text,
-              AppInputValidators.name),
-          const SizedBox(height: 8),
-          _compactField(
-              widget.clientPhone1Controller,
-              'Phone',
-              Icons.phone_outlined,
-              TextInputType.phone,
-              AppInputValidators.phoneNumber),
-          const SizedBox(height: 8),
-          _compactField(
-              widget.clientPhone2Controller,
-              'Phone 2',
-              Icons.phone_outlined,
-              TextInputType.phone,
-              (value) =>
-                  AppInputValidators.phoneNumber(value, isRequired: false)),
+              widget.clientPhone1Controller, 'Phone', Icons.phone_outlined,
+              type: TextInputType.phone,
+              validator: AppInputValidators.phoneNumber),
+          // Phone 2 - hidden in sales mode
+          if (!widget.isSalesMode) ...[
+            const SizedBox(height: 8),
+            _compactField(
+                widget.clientPhone2Controller, 'Phone 2', Icons.phone_outlined,
+                type: TextInputType.phone,
+                validator: (value) =>
+                    AppInputValidators.phoneNumber(value, isRequired: false)),
+          ],
         ],
       ),
     );
@@ -407,17 +459,22 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
   Widget _compactField(
     TextEditingController c,
     String hint,
-    IconData icon, [
+    IconData icon, {
     TextInputType type = TextInputType.text,
     String? Function(String?)? validator,
-  ]) {
+    bool enabled = true, // New parameter for locking fields
+  }) {
     return SizedBox(
       height: 38,
       child: TextFormField(
         controller: c,
         keyboardType: type,
         validator: validator,
-        style: const TextStyle(fontSize: 12),
+        enabled: enabled, // Controls if field is editable
+        style: TextStyle(
+          fontSize: 12,
+          color: enabled ? Colors.black : Colors.grey.shade500,
+        ),
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -427,6 +484,12 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          filled: !enabled, // Light background when disabled
+          fillColor: enabled ? null : Colors.grey.shade50,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: AppColors.purple, width: 1.5),
@@ -445,6 +508,11 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           hintText: hint,
           hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
           isDense: true,
+          errorStyle: const TextStyle(
+            fontSize: 0, // Hide error text
+            height: 0, // Remove the space for error text
+          ),
+          errorMaxLines: 1,
         ),
       ),
     );

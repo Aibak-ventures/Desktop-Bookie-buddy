@@ -79,8 +79,14 @@ class ClientSearchNameField extends StatelessWidget {
             validator: AppInputValidators.name,
           ),
           itemBuilder: (context, client) => ListTile(
-            title: Text(client.name),
-            subtitle: Text(client.phone1.toString()),
+            title: Text(
+              client.name,
+              style: TextStyle(fontSize: 34),
+            ),
+            subtitle: Text(
+              client.phone1.toString(),
+              style: TextStyle(fontSize: 14),
+            ),
           ),
           suggestionsCallback: (query) async {
             if (!isSearchEnabled) return [];
