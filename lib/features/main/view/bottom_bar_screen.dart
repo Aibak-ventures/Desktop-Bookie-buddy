@@ -14,6 +14,8 @@ import 'package:bookie_buddy_web/features/all_booking/view/all_bookings_desktop_
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/stock_management/view/stock_management_screen.dart';
+import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,7 +53,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       child: const AllBookingsDesktopScreen(),
     ),
     const HomeScreen(),
-    const HomeScreen(),
+    BlocProvider(
+      create: (context) => StockManagementCubit(
+        repository: getIt.get(),
+      ),
+      child: const StockManagementScreen(),
+    ),
   ];
 
   @override
