@@ -121,7 +121,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   'Total Products',
                   NumberFormat('#,###').format(totalProducts),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 20),
                 _summaryCard(
                   'Total Categories',
                   totalCategories.toString(),
@@ -131,17 +131,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           },
           orElse: () => Row(
             children: [
-              SizedBox(
-                width: 227,
-                height: 98,
-                child: _summaryCard('Total Products', '-'),
-              ),
-              const SizedBox(width: 16),
-              SizedBox(
-                width: 227,
-                height: 98,
-                child: _summaryCard('Total Categories', '-'),
-              ),
+              _summaryCard('Total Products', '-'),
+              const SizedBox(width: 20),
+              _summaryCard('Total Categories', '-'),
             ],
           ),
         );
@@ -151,49 +143,44 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
   Widget _summaryCard(String title, String value) {
     return Container(
-      width: 217,
-      height: 97,
-      // padding: const EdgeInsets.all(20),
+      width: 260,
+      height: 120,
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
           ),
         ],
+        border: Border.all(color: Colors.grey.shade100),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: 40,
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.2,
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1F2937),
-                ),
-              ),
-            ],
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1F2937),
+              height: 1,
+            ),
           ),
         ],
       ),
@@ -202,29 +189,39 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
   Widget _buildSearchBar() {
     return Container(
-      width: 269,
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      width: 320,
+      height: 48,
+      padding: const EdgeInsets.symmetric(horizontal: 18),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Icon(Icons.search, color: Colors.grey.shade500, size: 20),
-          const SizedBox(width: 12),
+          Icon(Icons.search, color: Colors.grey.shade500, size: 22),
+          const SizedBox(width: 14),
           Expanded(
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search by name or id',
                 hintStyle: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Colors.grey.shade400,
                 ),
                 border: InputBorder.none,
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
+              style: const TextStyle(fontSize: 15),
               onChanged: (value) {
                 // Debounce search
                 Future.delayed(const Duration(milliseconds: 500), () {
@@ -269,42 +266,14 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               final isSelected = category == selectedCategory;
               return Padding(
                 padding: const EdgeInsets.only(right: 12),
-                child: InkWell(
+                child: _CategoryTab(
+                  category: category,
+                  isSelected: isSelected,
                   onTap: () {
                     context
                         .read<StockManagementCubit>()
                         .filterByCategory(category);
                   },
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColors.purple.withOpacity(0.1)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.purple
-                            : Colors.grey.shade300,
-                        width: isSelected ? 2 : 1,
-                      ),
-                    ),
-                    child: Text(
-                      category,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w500,
-                        color: isSelected
-                            ? AppColors.purple
-                            : Colors.grey.shade700,
-                      ),
-                    ),
-                  ),
                 ),
               );
             }).toList(),
@@ -399,7 +368,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
   Widget _buildTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: const BoxDecoration(
         color: Color(0xFFF1F0FF),
         borderRadius: BorderRadius.only(
@@ -409,89 +378,97 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       ),
       child: Row(
         children: [
-          const SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
           SizedBox(
-            width: 241,
+            width: 240,
             child: Text(
               'ITEM',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 133,
-            child: Text(
-              'CATEGORY',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 117,
-            child: Text(
-              'SALE PRICE',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 102,
-            child: Text(
-              'RENT PRICE',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 106,
-            child: Text(
-              'TOTAL QTY',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 106,
-            child: Text(
-              'TOTAL VRNT',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-              textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(width: 12),
           SizedBox(
             width: 120,
             child: Text(
+              'CATEGORY',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 110,
+            child: Text(
+              'SALE PRICE',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 110,
+            child: Text(
+              'RENT PRICE',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 90,
+            child: Text(
+              'QTY',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 90,
+            child: Text(
+              'VARIANTS',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
               'ACTIONS',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
               textAlign: TextAlign.center,
             ),
@@ -508,205 +485,462 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     );
     final variantCount = product.variants.length;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey.shade100),
+    return _ProductRow(
+      product: product,
+      totalStock: totalStock,
+      variantCount: variantCount,
+    );
+  }
+}
+
+// Separate stateful widget for category tab with enhanced hover effects
+class _CategoryTab extends StatefulWidget {
+  final String category;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _CategoryTab({
+    required this.category,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  State<_CategoryTab> createState() => _CategoryTabState();
+}
+
+class _CategoryTabState extends State<_CategoryTab>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeOutCubic),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  void _onHoverChanged(bool isHovered) {
+    setState(() => _isHovered = isHovered);
+    if (isHovered && !widget.isSelected) {
+      _pulseController.forward();
+    } else {
+      _pulseController.reverse();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => _onHoverChanged(true),
+      onExit: (_) => _onHoverChanged(false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _pulseAnimation.value,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 14,
+                ),
+                decoration: BoxDecoration(
+                  gradient: widget.isSelected
+                      ? const LinearGradient(
+                          colors: [
+                            Color(0xFFE7E4FF),
+                            Color(0xFFF3F1FF),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : _isHovered
+                          ? LinearGradient(
+                              colors: [
+                                const Color(0xFFF8F7FF),
+                                const Color(0xFFFCFBFF),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : null,
+                  color:
+                      !widget.isSelected && !_isHovered ? Colors.white : null,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    width: widget.isSelected
+                        ? 2
+                        : _isHovered
+                            ? 1.5
+                            : 1,
+                    color: widget.isSelected
+                        ? AppColors.purple
+                        : _isHovered
+                            ? AppColors.purple.withOpacity(0.4)
+                            : Colors.grey.shade300,
+                  ),
+                  boxShadow: [
+                    if (widget.isSelected)
+                      BoxShadow(
+                        color: AppColors.purple.withOpacity(0.25),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    if (_isHovered && !widget.isSelected)
+                      BoxShadow(
+                        color: AppColors.purple.withOpacity(0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                        spreadRadius: 0,
+                      ),
+                    if (!widget.isSelected && !_isHovered)
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                  ],
+                ),
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  style: TextStyle(
+                    fontSize: widget.isSelected ? 15 : 14,
+                    fontWeight: widget.isSelected
+                        ? FontWeight.w700
+                        : _isHovered
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                    color: widget.isSelected
+                        ? AppColors.purple
+                        : _isHovered
+                            ? AppColors.purple.withOpacity(0.8)
+                            : Colors.grey.shade700,
+                    letterSpacing: widget.isSelected ? 0.3 : 0,
+                  ),
+                  child: Text(widget.category),
+                ),
+              ),
+            );
+          },
         ),
       ),
-      child: Row(
-        children: [
-          const SizedBox(width: 11), // Match header spacing
-          // Item (image + name) - Width: 241
-          SizedBox(
-            width: 241,
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(6),
+    );
+  }
+}
+
+// Separate stateful widget for product row with hover effect
+class _ProductRow extends StatefulWidget {
+  final ProductModel product;
+  final int totalStock;
+  final int variantCount;
+
+  const _ProductRow({
+    required this.product,
+    required this.totalStock,
+    required this.variantCount,
+  });
+
+  @override
+  State<_ProductRow> createState() => _ProductRowState();
+}
+
+class _ProductRowState extends State<_ProductRow> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: _isHovered ? AppColors.purple.withOpacity(0.03) : Colors.white,
+          border: Border(
+            bottom: BorderSide(color: Colors.grey.shade100),
+          ),
+        ),
+        child: Row(
+          children: [
+            // Item (image + name) - Width: 240
+            SizedBox(
+              width: 240,
+              child: Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: widget.product.thumbnailImage != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CustomNetworkImage(
+                              imageUrl: widget.product.thumbnailImage!,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Icon(Icons.image_outlined,
+                            color: Colors.grey.shade400, size: 24),
                   ),
-                  child: product.thumbnailImage != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: CustomNetworkImage(
-                            imageUrl: product.thumbnailImage!,
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Icon(Icons.image,
-                          color: Colors.grey.shade400, size: 20),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.name,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1F2937),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (product.description != null &&
-                          product.description!.isNotEmpty)
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         Text(
-                          product.description!,
+                          widget.product.name,
                           style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade600,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: _isHovered
+                                ? AppColors.purple
+                                : const Color(0xFF1F2937),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                    ],
+                        if (widget.product.description != null &&
+                            widget.product.description!.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            widget.product.description!,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Category - Width: 133
-          SizedBox(
-            width: 133,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-              decoration: BoxDecoration(
-                color: AppColors.purple.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(4),
+                ],
               ),
+            ),
+            const SizedBox(width: 12),
+            // Category - Width: 120
+            SizedBox(
+              width: 120,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: AppColors.purple.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  widget.product.category ?? 'Bridals',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.purple,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Sale Price - Width: 110
+            SizedBox(
+              width: 110,
               child: Text(
-                product.category ?? 'Bridals',
+                widget.product.price != null
+                    ? '₹${NumberFormat('#,###').format(widget.product.price)}'
+                    : '-',
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.purple,
+                  color: Color(0xFF1F2937),
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          // Sale Price - Width: 117
-          SizedBox(
-            width: 117,
-            child: Text(
-              product.price != null ? '₹ ${product.price}' : '-',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF1F2937),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Rent Price - Width: 102
-          SizedBox(
-            width: 102,
-            child: Text(
-              product.price != null ? '₹ ${product.price}' : '-',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF1F2937),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Total Quantity - Width: 106
-          SizedBox(
-            width: 106,
-            child: Text(
-              totalStock.toString(),
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Total Variants - Width: 106
-          SizedBox(
-            width: 106,
-            child: Text(
-              variantCount.toString(),
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Actions - Width: 120
-          SizedBox(
-            width: 120,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    // TODO: Navigate to edit product screen
-                  },
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  tooltip: 'Edit',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+            const SizedBox(width: 12),
+            // Rent Price - Width: 110
+            SizedBox(
+              width: 110,
+              child: Text(
+                widget.product.price != null
+                    ? '₹${NumberFormat('#,###').format(widget.product.price)}'
+                    : '-',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1F2937),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    // TODO: Navigate to view product details
-                  },
-                  icon: Icon(
-                    Icons.visibility_outlined,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  tooltip: 'View',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Total Quantity - Width: 90
+            SizedBox(
+              width: 90,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    // TODO: Show delete confirmation dialog
-                  },
-                  icon: Icon(
-                    Icons.delete_outline,
-                    size: 16,
-                    color: Colors.grey.shade600,
+                child: Text(
+                  widget.totalStock.toString(),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.green.shade700,
                   ),
-                  tooltip: 'Delete',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Total Variants - Width: 90
+            SizedBox(
+              width: 90,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  widget.variantCount.toString(),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.blue.shade700,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Actions - Expanded
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _ActionButton(
+                    icon: Icons.edit_outlined,
+                    tooltip: 'Edit',
+                    color: Colors.blue,
+                    onPressed: () {
+                      // TODO: Navigate to edit product screen
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  _ActionButton(
+                    icon: Icons.visibility_outlined,
+                    tooltip: 'View',
+                    color: Colors.green,
+                    onPressed: () {
+                      // TODO: Navigate to view product details
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  _ActionButton(
+                    icon: Icons.delete_outline,
+                    tooltip: 'Delete',
+                    color: Colors.red,
+                    onPressed: () {
+                      // TODO: Show delete confirmation dialog
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Separate stateful widget for action buttons with hover effect
+class _ActionButton extends StatefulWidget {
+  final IconData icon;
+  final String tooltip;
+  final Color color;
+  final VoidCallback onPressed;
+
+  const _ActionButton({
+    required this.icon,
+    required this.tooltip,
+    required this.color,
+    required this.onPressed,
+  });
+
+  @override
+  State<_ActionButton> createState() => _ActionButtonState();
+}
+
+class _ActionButtonState extends State<_ActionButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? widget.color.withOpacity(0.15)
+                : Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: _isHovered
+                  ? widget.color.withOpacity(0.4)
+                  : Colors.grey.shade200,
             ),
           ),
-        ],
+          child: Icon(
+            widget.icon,
+            size: 16,
+            color: _isHovered ? widget.color : Colors.grey.shade600,
+          ),
+        ),
       ),
     );
   }

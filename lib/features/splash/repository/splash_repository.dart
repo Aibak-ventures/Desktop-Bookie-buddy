@@ -18,7 +18,7 @@ class SplashRepository {
     final onboarding = SharedPreferenceHelper.getBool('onboarding');
     log('onboarding: $onboarding');
 
-    final initialScreen = !(onboarding ?? false)
+    final initialScreen = !(onboarding ?? false) || true
         ? const OnboardingScreen()
         : TokenStorage.refreshToken != null && TokenStorage.accessToken != null
             ? const BottomBarScreen()

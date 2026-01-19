@@ -228,72 +228,11 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
-                      child: Material(
-                        elevation: isActive ? 3 : 1,
-                        shadowColor: isActive
-                            ? const Color(0xFF8A63FE).withOpacity(0.3)
-                            : Colors.grey.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                        child: InkWell(
-                          onTap: () => _onStatusTabChanged(displayLabel),
-                          borderRadius: BorderRadius.circular(8),
-                          hoverColor: const Color(0xFFE7E4FF).withOpacity(0.5),
-                          splashColor: const Color(0xFF8A63FE).withOpacity(0.2),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: isActive
-                                  ? const Color(0xFFE7E4FF)
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                width: isActive ? 1.5 : 1,
-                                color: isActive
-                                    ? const Color(0xFF8A63FE).withOpacity(0.3)
-                                    : Colors.grey.shade300,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  displayLabel,
-                                  style: TextStyle(
-                                    color: isActive
-                                        ? const Color(0xFF8A63FE)
-                                        : Colors.grey.shade600,
-                                    fontWeight: isActive
-                                        ? FontWeight.w600
-                                        : FontWeight.w400,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4, vertical: 1),
-                                  decoration: BoxDecoration(
-                                    color: isActive
-                                        ? const Color(0xFF8A63FE)
-                                        : Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    '$count',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: isActive
-                                          ? Colors.white
-                                          : Colors.grey.shade700,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      child: _StatusTabButton(
+                        displayLabel: displayLabel,
+                        count: count,
+                        isActive: isActive,
+                        onTap: () => _onStatusTabChanged(displayLabel),
                       ),
                     );
                   }).toList(),
@@ -310,33 +249,42 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
   Widget _buildSearchBar() {
     return Container(
-      width: 350,
-      height: 40,
+      width: 380,
+      height: 48,
       decoration: BoxDecoration(
-        color: const Color(0xFFE7E4FF).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          const Icon(Icons.search, size: 20, color: Colors.grey),
-          const SizedBox(width: 8),
+          Icon(Icons.search, size: 22, color: Colors.grey.shade500),
+          const SizedBox(width: 12),
           Expanded(
             child: TextField(
               controller: _searchController,
               decoration: const InputDecoration(
                 hintText: 'Search by name or id',
-                hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
                 border: InputBorder.none,
                 isDense: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 12),
               ),
+              style: const TextStyle(fontSize: 15),
             ),
           ),
-          const SizedBox(width: 8),
-          Container(height: 20, width: 1, color: Colors.grey.shade300),
-          const SizedBox(width: 8),
-          const Icon(Icons.tune, size: 20, color: Color(0xFF8A63FE)),
+          const SizedBox(width: 12),
+          Container(height: 24, width: 1, color: Colors.grey.shade300),
+          const SizedBox(width: 12),
+          const Icon(Icons.tune, size: 22, color: Color(0xFF8A63FE)),
         ],
       ),
     );
@@ -536,141 +484,149 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
     // Booking table header (original)
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F0FF),
-        borderRadius: const BorderRadius.only(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      decoration: const BoxDecoration(
+        color: Color(0xFFF1F0FF),
+        borderRadius: BorderRadius.only(
             topLeft: Radius.circular(12), topRight: Radius.circular(12)),
       ),
       child: Row(
         children: [
-          const SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
-          const SizedBox(
-            width: 100,
-            child: Text(
-              'Booking ID',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 95,
-            child: Text(
-              'Pickup',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 110,
-            child: Text(
-              'Customer',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 80,
-            child: Text(
-              'Staff',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 105,
-            child: Text(
-              'Delivery',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Text(
-              'Items',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 70,
-            child: Text(
-              'Paid',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 70,
-            child: Text(
-              'Balance',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
+          SizedBox(
             width: 90,
             child: Text(
-              'Payment',
+              'BOOKING ID',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 28), // Match chevron icon width + spacing
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 80,
+            child: Text(
+              'PICKUP',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 105,
+            child: Text(
+              'CUSTOMER',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 80,
+            child: Text(
+              'STAFF',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 120,
+            child: Text(
+              'DELIVERY',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 230,
+            child: Text(
+              'ITEMS',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 75,
+            child: Text(
+              'PAID',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 75,
+            child: Text(
+              'BALANCE',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 95,
+            child: Text(
+              'PAYMENT',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 10),
+          const SizedBox(width: 32), // Match chevron icon width + spacing
         ],
       ),
     );
   }
 
   Widget _buildTableRow(DesktopBookingItemModel booking) {
-    // Parse staff color from hex string (e.g., "FF64B5F6")
-    Color barColor = Colors.purple;
-    if (booking.staffColor != null && booking.staffColor!.isNotEmpty) {
-      try {
-        final colorString = booking.staffColor!.toUpperCase();
-        barColor = Color(int.parse('0x$colorString'));
-      } catch (e) {
-        // Fall back to purple if parsing fails
-        barColor = Colors.purple;
-      }
-    }
-
-    return GestureDetector(
+    return _BookingRow(
+      booking: booking,
       onTap: () {
         if (booking.id != null) {
           // Open drawer
@@ -681,107 +637,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               );
         }
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-        ),
-        child: Row(
-          children: [
-            Container(
-                width: 3,
-                height: 20,
-                decoration: BoxDecoration(
-                    color: barColor, borderRadius: BorderRadius.circular(2))),
-            const SizedBox(width: 8),
-            SizedBox(
-              width: 100,
-              child: Text(
-                booking.shopBookingId,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 95,
-              child: Text(
-                _formatDateWithLabel(booking.pickupDate),
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 110,
-              child: Text(
-                booking.client,
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 80,
-              child: Text(
-                booking.staffName ?? '-',
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 105,
-              child: _buildDeliveryStatus(booking),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                booking.bookedItems,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 70,
-              child: Text(
-                '₹${booking.advanceAmount}',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 70,
-              child: Text(
-                '₹${booking.remainingAmount}',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 90,
-              child: _buildPaymentStatus(booking.paymentStatus),
-            ),
-            const SizedBox(width: 10),
-            const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDeliveryStatus(DesktopBookingItemModel booking) {
-    final status = booking.deliveryStatus;
-    return PopupMenuButton<DeliveryStatus>(
-      offset: const Offset(0, 40),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      onSelected: (DeliveryStatus newStatus) {
+      onDeliveryStatusChanged: (DeliveryStatus newStatus) {
         if (booking.id != null) {
           context.read<AllBookingBloc>().add(
                 AllBookingEvent.updateDeliveryStatus(
@@ -791,6 +647,480 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               );
         }
       },
+    );
+  }
+  }
+
+// Separate stateful widget for status tab with enhanced hover effects
+class _StatusTabButton extends StatefulWidget {
+  final String displayLabel;
+  final int count;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _StatusTabButton({
+    required this.displayLabel,
+    required this.count,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  State<_StatusTabButton> createState() => _StatusTabButtonState();
+}
+
+class _StatusTabButtonState extends State<_StatusTabButton>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeOutCubic),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  void _onHoverChanged(bool isHovered) {
+    setState(() => _isHovered = isHovered);
+    if (isHovered && !widget.isActive) {
+      _pulseController.forward();
+    } else {
+      _pulseController.reverse();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => _onHoverChanged(true),
+      onExit: (_) => _onHoverChanged(false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _pulseAnimation.value,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  gradient: widget.isActive
+                      ? const LinearGradient(
+                          colors: [
+                            Color(0xFFE7E4FF),
+                            Color(0xFFF3F1FF),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : _isHovered
+                          ? LinearGradient(
+                              colors: [
+                                const Color(0xFFF8F7FF),
+                                const Color(0xFFFCFBFF),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : null,
+                  color: !widget.isActive && !_isHovered
+                      ? Colors.white
+                      : null,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    width: widget.isActive ? 2 : _isHovered ? 1.5 : 1,
+                    color: widget.isActive
+                        ? const Color(0xFF8A63FE)
+                        : _isHovered
+                            ? const Color(0xFF8A63FE).withOpacity(0.4)
+                            : Colors.grey.shade300,
+                  ),
+                  boxShadow: [
+                    if (widget.isActive)
+                      BoxShadow(
+                        color: const Color(0xFF8A63FE).withOpacity(0.25),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    if (_isHovered && !widget.isActive)
+                      BoxShadow(
+                        color: const Color(0xFF8A63FE).withOpacity(0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                        spreadRadius: 0,
+                      ),
+                    if (!widget.isActive && !_isHovered)
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOutCubic,
+                      style: TextStyle(
+                        color: widget.isActive
+                            ? const Color(0xFF8A63FE)
+                            : _isHovered
+                                ? const Color(0xFF8A63FE).withOpacity(0.8)
+                                : Colors.grey.shade700,
+                        fontWeight: widget.isActive
+                            ? FontWeight.w700
+                            : _isHovered
+                                ? FontWeight.w600
+                                : FontWeight.w500,
+                        fontSize: widget.isActive ? 13 : 12,
+                        letterSpacing: widget.isActive ? 0.3 : 0,
+                      ),
+                      child: Text(widget.displayLabel),
+                    ),
+                    const SizedBox(width: 10),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOutCubic,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: widget.isActive
+                            ? const LinearGradient(
+                                colors: [
+                                  Color(0xFF8A63FE),
+                                  Color(0xFF9F7AFE),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              )
+                            : _isHovered
+                                ? LinearGradient(
+                                    colors: [
+                                      const Color(0xFF8A63FE).withOpacity(0.2),
+                                      const Color(0xFF9F7AFE).withOpacity(0.2),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  )
+                                : null,
+                        color: !widget.isActive && !_isHovered
+                            ? Colors.grey.shade200
+                            : null,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: widget.isActive
+                            ? [
+                                BoxShadow(
+                                  color: const Color(0xFF8A63FE)
+                                      .withOpacity(0.4),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOutCubic,
+                        style: TextStyle(
+                          fontSize: widget.isActive ? 12 : 11,
+                          color: widget.isActive
+                              ? Colors.white
+                              : _isHovered
+                                  ? const Color(0xFF8A63FE)
+                                  : Colors.grey.shade700,
+                          fontWeight: widget.isActive
+                              ? FontWeight.w700
+                              : FontWeight.w600,
+                        ),
+                        child: Text('${widget.count}'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+  /// Format date with Today/Tomorrow labels
+  String _formatDateWithLabel(String dateStr) {
+    try {
+      final bookingDate = dateStr.parseToDateTime();
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final tomorrow = today.add(const Duration(days: 1));
+      final dateOnly = DateTime(
+        bookingDate.year,
+        bookingDate.month,
+        bookingDate.day,
+      );
+
+      if (dateOnly == today) {
+        return 'Today';
+      } else if (dateOnly == tomorrow) {
+        return 'Tomorrow';
+      }
+
+      // Default: Use formatted date
+      return dateStr.formatToUiDate();
+    } catch (e) {
+      // Fallback to original format if parsing fails
+      return dateStr.formatToUiDate();
+    }
+  }
+
+
+// Separate stateful widget for booking row with hover effect
+class _BookingRow extends StatefulWidget {
+  final DesktopBookingItemModel booking;
+  final VoidCallback onTap;
+  final Function(DeliveryStatus) onDeliveryStatusChanged;
+
+  const _BookingRow({
+    required this.booking,
+    required this.onTap,
+    required this.onDeliveryStatusChanged,
+  });
+
+  @override
+  State<_BookingRow> createState() => _BookingRowState();
+}
+
+class _BookingRowState extends State<_BookingRow> {
+  bool _isHovered = false;
+
+  Color get barColor {
+    Color color = const Color(0xFF8A63FE);
+    if (widget.booking.staffColor != null &&
+        widget.booking.staffColor!.isNotEmpty) {
+      try {
+        final colorString = widget.booking.staffColor!.toUpperCase();
+        color = Color(int.parse('0x$colorString'));
+      } catch (e) {
+        // Fall back to purple if parsing fails
+        color = const Color(0xFF8A63FE);
+      }
+    }
+    return color;
+  }
+
+  String _formatDateWithLabel(String dateStr) {
+    try {
+      final bookingDate = dateStr.parseToDateTime();
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final tomorrow = today.add(const Duration(days: 1));
+      final dateOnly = DateTime(
+        bookingDate.year,
+        bookingDate.month,
+        bookingDate.day,
+      );
+
+      if (dateOnly == today) {
+        return 'Today';
+      } else if (dateOnly == tomorrow) {
+        return 'Tomorrow';
+      }
+
+      return dateStr.formatToUiDate();
+    } catch (e) {
+      return dateStr.formatToUiDate();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? const Color(0xFF8A63FE).withOpacity(0.03)
+                : Colors.white,
+            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+          ),
+          child: Row(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 4,
+                height: _isHovered ? 28 : 24,
+                decoration: BoxDecoration(
+                  color: barColor,
+                  borderRadius: BorderRadius.circular(2),
+                  boxShadow: _isHovered
+                      ? [
+                          BoxShadow(
+                            color: barColor.withOpacity(0.4),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : null,
+                ),
+              ),
+              const SizedBox(width: 12),
+              SizedBox(
+                width: 90,
+                child: Text(
+                  widget.booking.shopBookingId,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: _isHovered
+                        ? const Color(0xFF8A63FE)
+                        : const Color(0xFF1F2937),
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 80,
+                child: Text(
+                  _formatDateWithLabel(widget.booking.pickupDate),
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 105,
+                child: Text(
+                  widget.booking.client,
+                  style: const TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 80,
+                child: Text(
+                  widget.booking.staffName ?? '-',
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 120,
+                child: _buildDeliveryStatus(),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 230,
+                child: Text(
+                  widget.booking.bookedItems,
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 75,
+                child: Text(
+                  '₹${widget.booking.advanceAmount}',
+                  style: const TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 75,
+                child: Text(
+                  '₹${widget.booking.remainingAmount}',
+                  style: const TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 95,
+                child: _buildPaymentStatus(),
+              ),
+              const SizedBox(width: 10),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: _isHovered
+                      ? const Color(0xFF8A63FE).withOpacity(0.12)
+                      : Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: _isHovered
+                        ? const Color(0xFF8A63FE).withOpacity(0.3)
+                        : Colors.grey.shade200,
+                  ),
+                ),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: _isHovered
+                      ? const Color(0xFF8A63FE)
+                      : Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeliveryStatus() {
+    final status = widget.booking.deliveryStatus;
+    return PopupMenuButton<DeliveryStatus>(
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      onSelected: widget.onDeliveryStatusChanged,
       itemBuilder: (context) => DeliveryStatus.values.map((s) {
         return PopupMenuItem<DeliveryStatus>(
           value: s,
@@ -820,11 +1150,11 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         );
       }).toList(),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         decoration: BoxDecoration(
-          color: status.color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: status.color.withOpacity(0.2)),
+          color: status.color.withOpacity(0.12),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: status.color.withOpacity(0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -835,66 +1165,40 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 status.name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   color: status.color,
                   fontWeight: FontWeight.w600,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(width: 2),
-            Icon(Icons.keyboard_arrow_down, size: 12, color: status.color),
+            const SizedBox(width: 4),
+            Icon(Icons.keyboard_arrow_down, size: 14, color: status.color),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPaymentStatus(bool isPaid) {
+  Widget _buildPaymentStatus() {
+    final isPaid = widget.booking.paymentStatus;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: isPaid
-            ? const Color(0xFF20D400).withOpacity(0.1)
-            : const Color(0xFFD4B800).withOpacity(0.1),
+            ? const Color(0xFF20D400).withOpacity(0.12)
+            : const Color(0xFFD4B800).withOpacity(0.12),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         isPaid ? 'Completed' : 'Pending',
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 10,
+          fontSize: 12,
           color: isPaid ? const Color(0xFF20D400) : const Color(0xFFD4B800),
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
-  }
-
-  /// Format date with Today/Tomorrow labels
-  String _formatDateWithLabel(String dateStr) {
-    try {
-      final bookingDate = dateStr.parseToDateTime();
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final tomorrow = today.add(const Duration(days: 1));
-      final dateOnly = DateTime(
-        bookingDate.year,
-        bookingDate.month,
-        bookingDate.day,
-      );
-
-      if (dateOnly == today) {
-        return 'Today';
-      } else if (dateOnly == tomorrow) {
-        return 'Tomorrow';
-      }
-
-      // Default: Use formatted date
-      return dateStr.formatToUiDate();
-    } catch (e) {
-      // Fallback to original format if parsing fails
-      return dateStr.formatToUiDate();
-    }
   }
 }

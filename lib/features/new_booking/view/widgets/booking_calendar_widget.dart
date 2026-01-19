@@ -1,15 +1,7 @@
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookingCalendarWidget extends StatefulWidget {
@@ -25,19 +17,7 @@ class BookingCalendarWidget extends StatefulWidget {
   final ValueChanged<TimeOfDay?> onPickupTimeChanged;
   final ValueChanged<TimeOfDay?> onReturnTimeChanged;
   final ValueChanged<TimeOfDay?> onCoolingPeriodTimeChanged;
-  final bool isSearchClientEnabled;
-  final ValueChanged<bool> onSearchClientToggle;
-  final TextEditingController staffNameController;
-  final TextEditingController clientNameController;
-  final TextEditingController clientPhone1Controller;
-  final TextEditingController clientPhone2Controller;
-  final TextEditingController clientAddressController;
   final TextEditingController? descriptionController;
-
-  final ValueChanged<int?> onStaffSelected;
-  final ValueChanged<int?> onClientSelected;
-
-  // Sales mode flag
   final bool isSalesMode;
 
   const BookingCalendarWidget({
@@ -53,17 +33,8 @@ class BookingCalendarWidget extends StatefulWidget {
     required this.onCoolingPeriodDateChanged,
     required this.onPickupTimeChanged,
     required this.onReturnTimeChanged,
-    required this.staffNameController,
-    required this.clientNameController,
-    required this.clientPhone1Controller,
-    required this.clientPhone2Controller,
-    required this.clientAddressController,
-    this.descriptionController,
-    required this.isSearchClientEnabled,
-    required this.onSearchClientToggle,
-    required this.onStaffSelected,
-    required this.onClientSelected,
     required this.onCoolingPeriodTimeChanged,
+    this.descriptionController,
     this.isSalesMode = false,
   });
 
@@ -83,15 +54,12 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     final now = DateTime.now();
     focusedDay = widget.pickupDate.isBefore(now) ? now : widget.pickupDate;
     selectedDay = widget.pickupDate;
-    context.read<StaffSearchCubit>()
-      ..clearSelectedStaff()
-      ..getAllStaffs();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -106,328 +74,49 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Select dates',
-            style: TextStyle(
+          Text(
+            widget.isSalesMode ? 'Sale Date' : 'Booking Period',
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          // const SizedBox(height: 16),
-          // Calendar
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      _buildCalendar(),
-                      // _buildCalendar(),
-                      _buildClientDetailsCard(),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Show different fields based on mode
-                      if (!widget.isSalesMode) ...[
-                        // Booking mode: show pickup, return, and cooling period
-                        _buildDateTimeRow(
-                          label: 'Pickup date',
-                          date: widget.pickupDate,
-                          time: widget.pickupTime,
-                          onDateTap: () => _selectDate(true),
-                          onTimeTap: () => _selectTime(true),
-                          iconData: Icons.calendar_today_outlined,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildDateTimeRow(
-                          label: 'Return date',
-                          date: widget.returnDate,
-                          time: widget.returnTime,
-                          onDateTap: () => _selectDate(false),
-                          onTimeTap: () => _selectTime(false),
-                          iconData: Icons.calendar_today_outlined,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildCoolingPeriodRow(),
-                        const SizedBox(height: 72),
-                      ],
-                      if (widget.isSalesMode) ...[
-                        // Sales mode: show only booked date (no time)
-                        _buildBookedDateField(),
-                        const SizedBox(height: 12),
-                      ],
+          const SizedBox(height: 16),
 
-                      _compactField(widget.clientAddressController, 'Place',
-                          Icons.location_on_outlined,
-                          type: TextInputType.text,
-                          validator: AppInputValidators.address),
-                      const SizedBox(height: 12),
-                      _buildStaffDetailsCard(),
+          // Compact Calendar
+          _buildCalendar(),
+          const SizedBox(height: 16),
 
-                      // Description field only for sales mode
-                      if (widget.isSalesMode &&
-                          widget.descriptionController != null) ...[
-                        const SizedBox(height: 12),
-                        _buildDescriptionField(),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // const SizedBox(height: 20),
-          // Pickup date and time
-        ],
-      ),
-    );
-  }
-
-  _buildClientDetailsCard() {
-    return _card(
-      title: 'Client details',
-      trailing: Row(
-        children: [
-          Text('Search client',
-              style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-          const SizedBox(width: 6),
-          Transform.scale(
-            scale: .6,
-            child: Switch(
-              value: widget.isSearchClientEnabled,
-              onChanged: widget.onSearchClientToggle,
-              activeColor: AppColors.purple,
-            ),
-          ),
-        ],
-      ),
-      child: widget.isSearchClientEnabled
-          ? _buildClientSearchWithFields()
-          : _buildClientManualFields(),
-    );
-  }
-
-  // Combined search field with locked manual fields below
-  Widget _buildClientSearchWithFields() {
-    return Column(
-      children: [
-        _buildClientSearchField(),
-        const SizedBox(height: 12),
-        // Manual fields - disabled during search
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: Column(
-            children: [
-              // Client name - hidden in sales mode
-              if (!widget.isSalesMode) ...[
-                // _compactField(
-                //   widget.clientNameController,
-                //   'Name',
-                //   Icons.person_outline,
-                //   type: TextInputType.text,
-                //   validator: AppInputValidators.name,
-                //   enabled: false, // Locked during search
-                // ),
-                const SizedBox(height: 8),
-              ],
-              _compactField(
-                widget.clientPhone1Controller,
-                'Phone',
-                Icons.phone_outlined,
-                type: TextInputType.phone,
-                validator: AppInputValidators.phoneNumber,
-                enabled: false, // Locked during search
-              ),
-              // Phone 2 - hidden in sales mode
-              if (!widget.isSalesMode) ...[
-                const SizedBox(height: 8),
-                _compactField(
-                  widget.clientPhone2Controller,
-                  'Phone 2',
-                  Icons.phone_outlined,
-                  type: TextInputType.phone,
-                  validator: (value) =>
-                      AppInputValidators.phoneNumber(value, isRequired: false),
-                  enabled: false, // Locked during search
-                ),
-              ],
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildClientSearchField() {
-    return BlocBuilder<ClientCubit, ClientState>(
-      builder: (context, state) {
-        return TypeAheadField<ClientModel>(
-          controller: widget.clientNameController,
-          debounceDuration: const Duration(milliseconds: 200),
-          hideOnEmpty: false,
-          hideWithKeyboard: false,
-          hideOnUnfocus: true,
-          hideOnSelect: true,
-          builder: (context, controller, focusNode) => SizedBox(
-            height: 34,
-            child: TextFormField(
-              focusNode: focusNode,
-              controller: controller,
-              validator: AppInputValidators.name,
-              style: const TextStyle(fontSize: 12),
-              decoration: InputDecoration(
-                hintText: 'Search client',
-                hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-                prefixIcon: const Icon(Icons.search, size: 16),
-                suffixIcon: ValueListenableBuilder(
-                  valueListenable: controller,
-                  builder: (_, value, __) => value.text.isEmpty
-                      ? const SizedBox.shrink()
-                      : IconButton(
-                          icon: const Icon(Icons.clear, size: 14),
-                          onPressed: () {
-                            controller.clear();
-                            context.read<ClientCubit>().clearSelected();
-                          },
-                        ),
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                isDense: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      const BorderSide(color: AppColors.purple, width: 1.5),
-                ),
-              ),
-            ),
-          ),
-          suggestionsCallback: (query) async {
-            if (query.isEmpty) return [];
-            return await context.read<ClientCubit>().searchClient(query);
-          },
-          itemBuilder: (context, client) => ListTile(
-            dense: true,
-            visualDensity: const VisualDensity(vertical: -3),
-            title: Text(client.name, style: const TextStyle(fontSize: 13)),
-            subtitle: Text(
-              client.phone1.toString(),
-              style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-            ),
-          ),
-          onSelected: (client) {
-            widget.clientNameController.text = client.name;
-            widget.clientPhone1Controller.text = client.phone1.toString();
-            widget.clientPhone2Controller.text =
-                client.phone2?.toString() ?? '';
-            // Auto-fill address if available
-            // if (client.address != null && client.a!.isNotEmpty) {
-            //   widget.clientAddressController.text = client.address!;
-            // }
-            widget.onClientSelected(client.id);
-            context.read<ClientCubit>().selectClient(client);
-          },
-          decorationBuilder: (context, child) => DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: 8.radiusBorder,
-              border: BoxBorder.all(color: AppColors.grey300),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: child,
-          ),
-          emptyBuilder: (_) => const SizedBox(
-            height: 70,
-            child: Center(
-              child: Text('No clients found', style: TextStyle(fontSize: 11)),
-            ),
-          ),
-          errorBuilder: (_, error) => SizedBox(
-            height: 70,
-            child: Center(
-              child: Text(
-                error.toString(),
-                style: const TextStyle(fontSize: 11, color: Colors.red),
-              ),
-            ),
-          ),
-          loadingBuilder: (_) => const Padding(
-            padding: EdgeInsets.all(8),
-            child: Center(
-              child: SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildClientManualFields() {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 400),
-      child: Column(
-        children: [
-          // Client name - hidden in sales mode
+          // Date Inputs
           if (!widget.isSalesMode) ...[
-            _compactField(
-                widget.clientNameController, 'Name', Icons.person_outline,
-                type: TextInputType.text, validator: AppInputValidators.name),
-            const SizedBox(height: 8),
+            _buildDateTimeRow(
+              label: 'Pickup date',
+              date: widget.pickupDate,
+              time: widget.pickupTime,
+              onDateTap: () => _selectDate(true),
+              onTimeTap: () => _selectTime(true),
+              iconData: Icons.calendar_today_outlined,
+            ),
+            const SizedBox(height: 12),
+            _buildDateTimeRow(
+              label: 'Return date',
+              date: widget.returnDate,
+              time: widget.returnTime,
+              onDateTap: () => _selectDate(false),
+              onTimeTap: () => _selectTime(false),
+              iconData: Icons.calendar_today_outlined,
+            ),
+            const SizedBox(height: 12),
+            _buildCoolingPeriodRow(),
           ],
-          _compactField(
-              widget.clientPhone1Controller, 'Phone', Icons.phone_outlined,
-              type: TextInputType.phone,
-              validator: AppInputValidators.phoneNumber),
-          // Phone 2 - hidden in sales mode
-          if (!widget.isSalesMode) ...[
-            const SizedBox(height: 8),
-            _compactField(
-                widget.clientPhone2Controller, 'Phone 2', Icons.phone_outlined,
-                type: TextInputType.phone,
-                validator: (value) =>
-                    AppInputValidators.phoneNumber(value, isRequired: false)),
+
+          if (widget.isSalesMode) ...[
+            _buildBookedDateField(),
+            const SizedBox(height: 12),
+            if (widget.descriptionController != null) _buildDescriptionField(),
           ],
         ],
-      ),
-    );
-  }
-
-  Widget _buildStaffDetailsCard() {
-    return _card(
-      title: 'Staff details',
-      child: BlocListener<StaffSearchCubit, StaffSearchState>(
-        listener: (context, state) =>
-            widget.onStaffSelected(state.selectedStaff?.id),
-        child: StaffSearchNameField(
-          nameController: widget.staffNameController,
-        ),
       ),
     );
   }
@@ -451,68 +140,6 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             isCollapsed: true,
             hintText: 'Enter description (optional)',
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _compactField(
-    TextEditingController c,
-    String hint,
-    IconData icon, {
-    TextInputType type = TextInputType.text,
-    String? Function(String?)? validator,
-    bool enabled = true, // New parameter for locking fields
-  }) {
-    return SizedBox(
-      height: 38,
-      child: TextFormField(
-        controller: c,
-        keyboardType: type,
-        validator: validator,
-        enabled: enabled, // Controls if field is editable
-        style: TextStyle(
-          fontSize: 12,
-          color: enabled ? Colors.black : Colors.grey.shade500,
-        ),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade200),
-          ),
-          filled: !enabled, // Light background when disabled
-          fillColor: enabled ? null : Colors.grey.shade50,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.purple, width: 1.5),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red, width: 1.5),
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          prefixIcon: Icon(icon, size: 16, color: Colors.grey.shade600),
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-          isDense: true,
-          errorStyle: const TextStyle(
-            fontSize: 0, // Hide error text
-            height: 0, // Remove the space for error text
-          ),
-          errorMaxLines: 1,
         ),
       ),
     );

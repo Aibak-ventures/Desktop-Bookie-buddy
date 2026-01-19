@@ -21,7 +21,7 @@ import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_client_details_section.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_client_bar.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
@@ -233,21 +233,28 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
   Widget _buildCompactHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            const Color(0xFFFAFAFC),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         children: [
           // Back button
-          InkWell(
+          _BackButton(
             onTap: () {
               if (widget.onClose != null) {
                 widget.onClose!();
@@ -255,34 +262,19 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 Navigator.of(context).pop();
               }
             },
-            borderRadius: BorderRadius.circular(4),
-            child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.arrow_back_ios,
-                      size: 14, color: Colors.grey.shade600),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Back',
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
-            ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 20),
           // Title
           Text(
             _getTabTitle(),
             style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1F2937),
+              letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 24),
           // Tab buttons
           _buildTabButtons(),
           const Spacer(),
@@ -303,14 +295,16 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildTabButtons() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F0F0),
-        borderRadius: BorderRadius.circular(16),
+        color: const Color(0xFFE7E4FF).withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF8A63FE).withOpacity(0.1)),
       ),
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(3),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildTabButton('Booking', BookingType.booking),
+          const SizedBox(width: 4),
           _buildTabButton('Sales', BookingType.sales),
         ],
       ),
@@ -319,24 +313,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
   Widget _buildTabButton(String label, BookingType type) {
     final isSelected = selectedBookingType == type;
-    return GestureDetector(
+    return _HeaderTabButton(
+      label: label,
+      isSelected: isSelected,
       onTap: () => setState(() => selectedBookingType = type),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF6132E4) : Colors.transparent,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.grey.shade700,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            fontSize: 12,
-          ),
-        ),
-      ),
     );
   }
 
@@ -347,35 +327,68 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     return _buildBookingContent();
   }
 
-// BOOKING
   Widget _buildBookingContent() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Main area
+        // Left Main Area (Client Inputs + Products)
         Expanded(
-          flex: 5, // ⬅️ more space to main content
+          flex: 3,
           child: Column(
             children: [
-              SizedBox(
-                child: Row(
-                  children: [
-                    Expanded(child: _buildLeftTopSection()),
-                  ],
-                ),
+              // 1. Client & Staff Bar
+              BookingClientBar(
+                clientNameController: clientNameController,
+                clientPhone1Controller: clientPhone1Controller,
+                clientPhone2Controller: clientPhone2Controller,
+                clientAddressController: clientAddressController,
+                staffNameController: staffNameController,
+                onClientSelected: (id) => setState(() => selectedClientId = id),
+                onStaffSelected: (id) => setState(() => selectedStaffId = id),
+                isSalesMode: false,
               ),
-              const SizedBox(height: 10),
-              Expanded(child: _buildServiceSelectionSection()),
+
+              const SizedBox(height: 12),
+
+              // 2. Product Selection (Expanded)
+              Expanded(
+                child: _buildServiceSelectionSection(),
+              ),
             ],
           ),
         ),
 
-        const SizedBox(width: 10),
+        const SizedBox(width: 16),
 
-        // Right panel (Slim)
+        // Right Sidebar (Logistics + Summary) - Unified Scrollable
         SizedBox(
-          width: 300, // ⬅️ fixed slim width
-          child: _buildRightSection(),
+          width: 320,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Logistics Panel (Calendar & Dates)
+                BookingCalendarWidget(
+                  pickupDate: pickupDate,
+                  returnDate: returnDate,
+                  coolingPeriodDate: coolingPeriodDate,
+                  pickupTime: pickupTime,
+                  returnTime: returnTime,
+                  coolingPeriodTime: null,
+                  onPickupDateChanged: (d) => setState(() => pickupDate = d),
+                  onReturnDateChanged: (d) => setState(() => returnDate = d),
+                  onCoolingPeriodDateChanged: (d) =>
+                      setState(() => coolingPeriodDate = d),
+                  onPickupTimeChanged: (t) => setState(() => pickupTime = t),
+                  onReturnTimeChanged: (t) => setState(() => returnTime = t),
+                  onCoolingPeriodTimeChanged: (_) {},
+                  isSalesMode: false,
+                ),
+                const SizedBox(height: 12),
+                // Payment Summary - now just part of the column
+                _buildRightSection(),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -385,31 +398,64 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left section
+        // Left Main Area
         Expanded(
           flex: 3,
           child: Column(
             children: [
-              SizedBox(
-                // height: 160,
-                child: Row(
-                  children: [
-                    // Expanded(child: _buildSalesDateSection()),
-                    // const SizedBox(width: 12),
-                    Expanded(child: _buildLeftTopSection()),
-                  ],
-                ),
+              // Client & Staff Bar
+              BookingClientBar(
+                clientNameController: clientNameController,
+                clientPhone1Controller: clientPhone1Controller,
+                clientPhone2Controller: clientPhone2Controller,
+                clientAddressController: clientAddressController,
+                staffNameController: staffNameController,
+                onClientSelected: (id) => setState(() => selectedClientId = id),
+                onStaffSelected: (id) => setState(() => selectedStaffId = id),
+                isSalesMode: true,
               ),
-              const SizedBox(height: 10),
-              Expanded(child: _buildServiceSelectionSection()),
+
+              const SizedBox(height: 12),
+
+              // Product Section
+              Expanded(
+                child: _buildServiceSelectionSection(),
+              ),
             ],
           ),
         ),
-        const SizedBox(width: 12),
-        // Right section
-        Expanded(
-          flex: 1,
-          child: _buildRightSection(),
+
+        const SizedBox(width: 16),
+
+        // Right Sidebar
+        SizedBox(
+          width: 320,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Logistics Panel (Date only)
+                BookingCalendarWidget(
+                  pickupDate: pickupDate,
+                  returnDate: returnDate,
+                  coolingPeriodDate: coolingPeriodDate,
+                  pickupTime: pickupTime,
+                  returnTime: returnTime,
+                  coolingPeriodTime: null,
+                  onPickupDateChanged: (d) => setState(() => pickupDate = d),
+                  onReturnDateChanged: (d) => setState(() => returnDate = d),
+                  onCoolingPeriodDateChanged: (d) =>
+                      setState(() => coolingPeriodDate = d),
+                  onPickupTimeChanged: (t) => setState(() => pickupTime = t),
+                  onReturnTimeChanged: (t) => setState(() => returnTime = t),
+                  onCoolingPeriodTimeChanged: (_) {},
+                  isSalesMode: true,
+                  descriptionController: descriptionController,
+                ),
+                const SizedBox(height: 12),
+                _buildRightSection(),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -682,64 +728,6 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Widget _buildLeftTopSection() {
-    return SizedBox(
-      // height: 510,
-      child: Column(
-        children: [
-          // Calendar + date time (already compact)
-          SizedBox(
-            height: selectedBookingType == BookingType.sales ? 460 : 530,
-            child: BookingCalendarWidget(
-              staffNameController: staffNameController,
-              clientNameController: clientNameController,
-              clientPhone1Controller: clientPhone1Controller,
-              clientPhone2Controller: clientPhone2Controller,
-              clientAddressController: clientAddressController,
-              descriptionController: descriptionController,
-              isSearchClientEnabled: isSearchClientEnabled,
-              onSearchClientToggle: (v) =>
-                  setState(() => isSearchClientEnabled = v),
-              onStaffSelected: (id) => setState(() => selectedStaffId = id),
-              onClientSelected: (id) => setState(() => selectedClientId = id),
-              pickupDate: pickupDate,
-              returnDate: returnDate,
-              coolingPeriodDate: coolingPeriodDate,
-              pickupTime: pickupTime,
-              returnTime: returnTime,
-              coolingPeriodTime: null,
-              onPickupDateChanged: (d) => setState(() => pickupDate = d),
-              onReturnDateChanged: (d) => setState(() => returnDate = d),
-              onCoolingPeriodDateChanged: (d) =>
-                  setState(() => coolingPeriodDate = d),
-              onPickupTimeChanged: (t) => setState(() => pickupTime = t),
-              onReturnTimeChanged: (t) => setState(() => returnTime = t),
-              onCoolingPeriodTimeChanged: (_) {},
-              isSalesMode: selectedBookingType == BookingType.sales,
-            ),
-          ),
-
-          // const SizedBox(height: 10),
-
-          // Client + Staff compact block
-          // Expanded(
-          // child: BookingClientDetailsCompact(
-          // staffNameController: staffNameController,
-          // clientNameController: clientNameController,
-          // clientPhone1Controller: clientPhone1Controller,
-          // clientPhone2Controller: clientPhone2Controller,
-          // clientAddressController: clientAddressController,
-          // isSearchClientEnabled: isSearchClientEnabled,
-          // onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
-          // onStaffSelected: (id) => setState(() => selectedStaffId = id),
-          // onClientSelected: (id) => setState(() => selectedClientId = id),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildServiceSelectionSection() {
     return Container(
       decoration: BoxDecoration(
@@ -750,18 +738,16 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       child: Column(
         children: [
           SizedBox(height: 10),
-          Row(
-            children: [
-              SizedBox(
-                width: 10,
-                height: 20,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              'Selected Products',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF374151),
               ),
-              Text('  Selected Products',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800)),
-            ],
+            ),
           ),
           _buildProductSearchBar(),
           const SizedBox(height: 6),
@@ -1591,64 +1577,69 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
   Widget _buildProductListHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: const Color(0xFFF1F0FF),
       ),
       child: Row(
         children: [
           Expanded(
             flex: 3,
             child: Text(
-              'Item',
+              'ITEM',
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
             ),
           ),
           Expanded(
             child: Text(
-              'Quantity',
+              'QUANTITY',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
             ),
           ),
           Expanded(
             child: Text(
-              'Available',
+              'AVAILABLE',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
             ),
           ),
           Expanded(
             child: Text(
-              'Price',
+              'PRICE',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
             ),
           ),
           Expanded(
             child: Text(
-              'Total',
+              'TOTAL',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF8A63FE).withOpacity(0.8),
+                letterSpacing: 0.8,
               ),
             ),
           ),
@@ -1698,21 +1689,22 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.shopping_cart_outlined,
-                    size: 32, color: Colors.grey.shade300),
-                const SizedBox(height: 8),
+                    size: 48, color: Colors.grey.shade300),
+                const SizedBox(height: 16),
                 Text(
                   'No items selected',
                   style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey.shade500,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade600,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
-                  'Click on products to add',
+                  'Search and add products to get started',
                   style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey.shade400,
+                    fontSize: 12,
+                    color: Colors.grey.shade500,
                   ),
                 ),
               ],
@@ -1772,8 +1764,8 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.name,
                         style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -1781,9 +1773,9 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.color ?? '',
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFFA6A6A6),
+                          color: Color(0xFF9CA3AF),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -1819,7 +1811,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   child: Text(
                     '${product.quantity}',
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600),
+                        fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
                 InkWell(
@@ -1851,7 +1843,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 child: Text(
                   '${product.variant.quantity} left',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: product.variant.quantity > 0
                         ? const Color(0xFF20D400)
@@ -1880,14 +1872,14 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(vertical: 8),
                   isDense: true,
                   prefixText: '₹',
                   prefixStyle:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 onChanged: (value) {
                   // Update price immediately as user types
@@ -1908,7 +1900,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: Text(
               total.toCurrency(),
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
           ),
           // Remove button
@@ -2062,70 +2054,66 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     return Column(
       children: [
         // Payment section - compact
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Payment Details',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
-                  // Hide advance amount in sales mode
-                  if (!isSalesMode) ...[
-                    _buildCompactAmountField(
-                      controller: advanceAmountController,
-                      label: 'Advance Amount (optional)',
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  if (!isSalesMode) ...[
-                    _buildCompactAmountField(
-                      controller: securityAmountController,
-                      label: 'Security Amount (optional)',
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  _buildCompactAmountField(
-                    controller: discountAmountController,
-                    label: 'Discount Amount (optional)',
-                  ),
-                  const SizedBox(height: 10),
-                  // Additional charges - hide in sales mode
-                  if (!isSalesMode) ...[
-                    _buildAdditionalChargesSection(),
-                    const SizedBox(height: 10),
-                  ],
-                  // Payment method
-                  // _buildPaymentMethodSection(),
-                  const SizedBox(height: 10),
-                  // Delivery status
-                  if (!isSalesMode) _buildDeliveryStatusSection(),
-                  const SizedBox(height: 10),
-                  _buildPaymentMethodSection(),
-                  const SizedBox(height: 10),
-                  if (!isSalesMode) ...[
-                    BookingDocumentUploadSection(
-                      documentsNotifier: documentsNotifier,
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ],
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Payment Details',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
-            ),
+              const SizedBox(height: 10),
+              // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
+              // Hide advance amount in sales mode
+              if (!isSalesMode) ...[
+                _buildCompactAmountField(
+                  controller: advanceAmountController,
+                  label: 'Advance Amount (optional)',
+                ),
+                const SizedBox(height: 8),
+              ],
+              if (!isSalesMode) ...[
+                _buildCompactAmountField(
+                  controller: securityAmountController,
+                  label: 'Security Amount (optional)',
+                ),
+                const SizedBox(height: 8),
+              ],
+              _buildCompactAmountField(
+                controller: discountAmountController,
+                label: 'Discount Amount (optional)',
+              ),
+              const SizedBox(height: 10),
+              // Additional charges - hide in sales mode
+              if (!isSalesMode) ...[
+                _buildAdditionalChargesSection(),
+                const SizedBox(height: 10),
+              ],
+              // Payment method
+              // _buildPaymentMethodSection(),
+              const SizedBox(height: 10),
+              // Delivery status
+              if (!isSalesMode) _buildDeliveryStatusSection(),
+              const SizedBox(height: 10),
+              _buildPaymentMethodSection(),
+              const SizedBox(height: 10),
+              if (!isSalesMode) ...[
+                BookingDocumentUploadSection(
+                  documentsNotifier: documentsNotifier,
+                ),
+                const SizedBox(height: 20),
+              ],
+            ],
           ),
         ),
         const SizedBox(height: 8),
@@ -3118,6 +3106,193 @@ class WebToast extends StatelessWidget {
               child: const Icon(Icons.close, size: 16),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// Enhanced back button widget with hover effect
+class _BackButton extends StatefulWidget {
+  final VoidCallback onTap;
+
+  const _BackButton({required this.onTap});
+
+  @override
+  State<_BackButton> createState() => _BackButtonState();
+}
+
+class _BackButtonState extends State<_BackButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? const Color(0xFF8A63FE).withOpacity(0.08)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: _isHovered
+                  ? const Color(0xFF8A63FE).withOpacity(0.3)
+                  : Colors.transparent,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.arrow_back_ios,
+                size: 14,
+                color:
+                    _isHovered ? const Color(0xFF8A63FE) : Colors.grey.shade600,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'Back',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w500,
+                  color: _isHovered
+                      ? const Color(0xFF8A63FE)
+                      : Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Enhanced header tab button with premium effects
+class _HeaderTabButton extends StatefulWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _HeaderTabButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  State<_HeaderTabButton> createState() => _HeaderTabButtonState();
+}
+
+class _HeaderTabButtonState extends State<_HeaderTabButton>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.03).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() => _isHovered = true);
+        if (!widget.isSelected) _scaleController.forward();
+      },
+      onExit: (_) {
+        setState(() => _isHovered = false);
+        _scaleController.reverse();
+      },
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                decoration: BoxDecoration(
+                  gradient: widget.isSelected
+                      ? const LinearGradient(
+                          colors: [
+                            Color(0xFF8A63FE),
+                            Color(0xFF9F7AFE),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : _isHovered
+                          ? LinearGradient(
+                              colors: [
+                                const Color(0xFF8A63FE).withOpacity(0.1),
+                                const Color(0xFF9F7AFE).withOpacity(0.1),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : null,
+                  color: !widget.isSelected && !_isHovered
+                      ? Colors.transparent
+                      : null,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: widget.isSelected
+                      ? [
+                          BoxShadow(
+                            color: const Color(0xFF8A63FE).withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Text(
+                  widget.label,
+                  style: TextStyle(
+                    color: widget.isSelected
+                        ? Colors.white
+                        : _isHovered
+                            ? const Color(0xFF8A63FE)
+                            : Colors.grey.shade700,
+                    fontWeight: widget.isSelected
+                        ? FontWeight.w700
+                        : _isHovered
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                    fontSize: 13,
+                    letterSpacing: widget.isSelected ? 0.2 : 0,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
