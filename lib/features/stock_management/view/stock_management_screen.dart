@@ -46,67 +46,67 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      body: Column(
-        children: [
-          _buildHeader(),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(24),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1400),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSummaryCards(),
-                      const SizedBox(height: 24),
-                      _buildSearchBar(),
-                      const SizedBox(height: 20),
-                      _buildCategoryTabs(),
-                      const SizedBox(height: 20),
-                      _buildProductsTable(),
-                    ],
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1400),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 16),
+                _buildSummaryCards(),
+                const SizedBox(height: 24),
+                _buildSearchBar(),
+                const SizedBox(height: 20),
+                _buildCategoryTabs(),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: _buildProductsTable(),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back, size: 20),
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+        const SizedBox(width: 12),
+        const Text(
+          'All Orders > ',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_back, size: 24),
+        ),
+        const Text(
+          'Stock Management',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFF2D3436),
           ),
-          const SizedBox(width: 12),
-          const Text(
-            'Stock Management',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -117,18 +117,14 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           loaded: (_, totalProducts, totalCategories, __, ___, ____, _____) {
             return Row(
               children: [
-                Expanded(
-                  child: _summaryCard(
-                    'Total Products',
-                    NumberFormat('#,###').format(totalProducts),
-                  ),
+                _summaryCard(
+                  'Total Products',
+                  NumberFormat('#,###').format(totalProducts),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: _summaryCard(
-                    'Total Categories',
-                    totalCategories.toString(),
-                  ),
+                _summaryCard(
+                  'Total Categories',
+                  totalCategories.toString(),
                 ),
               ],
             );
@@ -169,25 +165,35 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w500,
-            ),
+          SizedBox(
+            width: 40,
           ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1F2937),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1F2937),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -339,32 +345,18 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               );
             }
 
-            return Column(
+            return ListView(
+              padding: EdgeInsets.zero,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      _buildTableHeader(),
-                      const Divider(height: 1),
-                      ...products.map((product) => _buildProductRow(product)),
-                    ],
-                  ),
-                ),
+                _buildTableHeader(),
+                ...products.map((product) => _buildProductRow(product)),
                 if (isPaginating)
                   const Padding(
                     padding: EdgeInsets.all(16),
-                    child: CircularProgressIndicator(),
+                    child: Center(
+                      child:
+                          CircularProgressIndicator(color: Color(0xFF8A63FE)),
+                    ),
                   ),
               ],
             );
@@ -417,6 +409,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       ),
       child: Row(
         children: [
+          const SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
           SizedBox(
             width: 241,
             child: Text(
@@ -428,7 +421,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           SizedBox(
             width: 133,
             child: Text(
@@ -440,7 +433,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           SizedBox(
             width: 117,
             child: Text(
@@ -452,7 +445,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           SizedBox(
             width: 102,
             child: Text(
@@ -464,7 +457,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           SizedBox(
             width: 106,
             child: Text(
@@ -477,7 +470,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           SizedBox(
             width: 106,
             child: Text(
@@ -490,7 +483,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           SizedBox(
             width: 120,
             child: Text(
@@ -516,7 +509,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     final variantCount = product.variants.length;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: Colors.grey.shade100),
@@ -524,31 +517,33 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       ),
       child: Row(
         children: [
+          const SizedBox(width: 11), // Match header spacing
           // Item (image + name) - Width: 241
           SizedBox(
             width: 241,
             child: Row(
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: product.thumbnailImage != null
                       ? ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(6),
                           child: CustomNetworkImage(
                             imageUrl: product.thumbnailImage!,
-                            width: 48,
-                            height: 48,
+                            width: 40,
+                            height: 40,
                             fit: BoxFit.cover,
                           ),
                         )
-                      : Icon(Icons.image, color: Colors.grey.shade400),
+                      : Icon(Icons.image,
+                          color: Colors.grey.shade400, size: 20),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -568,7 +563,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                         Text(
                           product.description!,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             color: Colors.grey.shade600,
                           ),
                           maxLines: 1,
@@ -580,15 +575,15 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           // Category - Width: 133
           SizedBox(
             width: 133,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
                 color: AppColors.purple.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
                 product.category ?? 'Bridals',
@@ -602,7 +597,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           // Sale Price - Width: 117
           SizedBox(
             width: 117,
@@ -616,7 +611,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           // Rent Price - Width: 102
           SizedBox(
             width: 102,
@@ -630,7 +625,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           // Total Quantity - Width: 106
           SizedBox(
             width: 106,
@@ -645,7 +640,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           // Total Variants - Width: 106
           SizedBox(
             width: 106,
@@ -660,7 +655,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 12),
           // Actions - Width: 120
           SizedBox(
             width: 120,
@@ -673,7 +668,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   },
                   icon: Icon(
                     Icons.edit_outlined,
-                    size: 18,
+                    size: 16,
                     color: Colors.grey.shade600,
                   ),
                   tooltip: 'Edit',
@@ -687,7 +682,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   },
                   icon: Icon(
                     Icons.visibility_outlined,
-                    size: 18,
+                    size: 16,
                     color: Colors.grey.shade600,
                   ),
                   tooltip: 'View',
@@ -701,8 +696,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   },
                   icon: Icon(
                     Icons.delete_outline,
-                    size: 18,
-                    color: Colors.red.shade400,
+                    size: 16,
+                    color: Colors.grey.shade600,
                   ),
                   tooltip: 'Delete',
                   padding: EdgeInsets.zero,
