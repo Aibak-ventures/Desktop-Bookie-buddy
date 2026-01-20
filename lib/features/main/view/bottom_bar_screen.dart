@@ -53,11 +53,14 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       child: const AllBookingsDesktopScreen(),
     ),
     const HomeScreen(),
-    BlocProvider(
-      create: (context) => StockManagementCubit(
-        repository: getIt.get(),
+    RepositoryProvider(
+      create: (context) => getIt.get<ProductRepository>(),
+      child: BlocProvider(
+        create: (context) => StockManagementCubit(
+          repository: getIt.get(),
+        ),
+        child: const StockManagementScreen(),
       ),
-      child: const StockManagementScreen(),
     ),
   ];
 

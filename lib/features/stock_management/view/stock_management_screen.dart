@@ -1,6 +1,9 @@
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
+import 'package:bookie_buddy_web/features/product_details/view/product_details_screen.dart';
+import 'package:bookie_buddy_web/features/product_details/view_model/product_details_cubit.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_state.dart';
 import 'package:flutter/material.dart';
@@ -345,20 +348,26 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               );
             }
 
-            return ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _buildTableHeader(),
-                ...products.map((product) => _buildProductRow(product)),
-                if (isPaginating)
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(
-                      child:
-                          CircularProgressIndicator(color: Color(0xFF8A63FE)),
-                    ),
-                  ),
-              ],
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: 1000),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildTableHeader(),
+                    ...products.map((product) => _buildProductRow(product)),
+                    if (isPaginating)
+                      const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                              color: Color(0xFF8A63FE)),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             );
           },
           error: (message) => Container(
@@ -678,7 +687,18 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: () {
-                    // TODO: Navigate to view product details
+                    // Get repository from current context before navigation
+                    final repository = context.read<ProductRepository>();
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => ProductDetailsCubit(repository)
+                            ..loadProductDetails(product.id),
+                          child: ProductDetailsScreen(productId: product.id),
+                        ),
+                      ),
+                    );
                   },
                   icon: Icon(
                     Icons.visibility_outlined,
