@@ -17,6 +17,7 @@ class StockManagementState with _$StockManagementState {
     required bool isPaginating,
     required String selectedCategory,
     required String searchQuery,
+    int? selectedProductId, // For showing product details
   }) = _Loaded;
 
   const factory StockManagementState.error({

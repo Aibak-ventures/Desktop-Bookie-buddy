@@ -20,7 +20,13 @@ mixin _$ProductDetailsState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(ProductModel product) loaded,
+    required TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)
+        loaded,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -28,7 +34,13 @@ mixin _$ProductDetailsState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(ProductModel product)? loaded,
+    TResult? Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -36,7 +48,13 @@ mixin _$ProductDetailsState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(ProductModel product)? loaded,
+    TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -132,7 +150,13 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(ProductModel product) loaded,
+    required TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)
+        loaded,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -143,7 +167,13 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(ProductModel product)? loaded,
+    TResult? Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -154,7 +184,13 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(ProductModel product)? loaded,
+    TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -249,7 +285,13 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(ProductModel product) loaded,
+    required TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)
+        loaded,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -260,7 +302,13 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(ProductModel product)? loaded,
+    TResult? Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -271,7 +319,13 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(ProductModel product)? loaded,
+    TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -329,7 +383,12 @@ abstract class _$$LoadedImplCopyWith<$Res> {
           _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ProductModel product});
+  $Res call(
+      {ProductModel product,
+      List<BookingsModel> bookings,
+      List<ProductMonthlyDataModel> monthlySummary,
+      String? nextPageUrl,
+      bool isPaginatingBookings});
 
   $ProductModelCopyWith<$Res> get product;
 }
@@ -348,12 +407,32 @@ class __$$LoadedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? product = null,
+    Object? bookings = null,
+    Object? monthlySummary = null,
+    Object? nextPageUrl = freezed,
+    Object? isPaginatingBookings = null,
   }) {
     return _then(_$LoadedImpl(
       product: null == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
               as ProductModel,
+      bookings: null == bookings
+          ? _value._bookings
+          : bookings // ignore: cast_nullable_to_non_nullable
+              as List<BookingsModel>,
+      monthlySummary: null == monthlySummary
+          ? _value._monthlySummary
+          : monthlySummary // ignore: cast_nullable_to_non_nullable
+              as List<ProductMonthlyDataModel>,
+      nextPageUrl: freezed == nextPageUrl
+          ? _value.nextPageUrl
+          : nextPageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPaginatingBookings: null == isPaginatingBookings
+          ? _value.isPaginatingBookings
+          : isPaginatingBookings // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 
@@ -371,14 +450,44 @@ class __$$LoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({required this.product});
+  const _$LoadedImpl(
+      {required this.product,
+      final List<BookingsModel> bookings = const [],
+      final List<ProductMonthlyDataModel> monthlySummary = const [],
+      this.nextPageUrl,
+      this.isPaginatingBookings = false})
+      : _bookings = bookings,
+        _monthlySummary = monthlySummary;
 
   @override
   final ProductModel product;
+  final List<BookingsModel> _bookings;
+  @override
+  @JsonKey()
+  List<BookingsModel> get bookings {
+    if (_bookings is EqualUnmodifiableListView) return _bookings;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_bookings);
+  }
+
+  final List<ProductMonthlyDataModel> _monthlySummary;
+  @override
+  @JsonKey()
+  List<ProductMonthlyDataModel> get monthlySummary {
+    if (_monthlySummary is EqualUnmodifiableListView) return _monthlySummary;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_monthlySummary);
+  }
+
+  @override
+  final String? nextPageUrl;
+  @override
+  @JsonKey()
+  final bool isPaginatingBookings;
 
   @override
   String toString() {
-    return 'ProductDetailsState.loaded(product: $product)';
+    return 'ProductDetailsState.loaded(product: $product, bookings: $bookings, monthlySummary: $monthlySummary, nextPageUrl: $nextPageUrl, isPaginatingBookings: $isPaginatingBookings)';
   }
 
   @override
@@ -386,11 +495,24 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            (identical(other.product, product) || other.product == product));
+            (identical(other.product, product) || other.product == product) &&
+            const DeepCollectionEquality().equals(other._bookings, _bookings) &&
+            const DeepCollectionEquality()
+                .equals(other._monthlySummary, _monthlySummary) &&
+            (identical(other.nextPageUrl, nextPageUrl) ||
+                other.nextPageUrl == nextPageUrl) &&
+            (identical(other.isPaginatingBookings, isPaginatingBookings) ||
+                other.isPaginatingBookings == isPaginatingBookings));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, product);
+  int get hashCode => Object.hash(
+      runtimeType,
+      product,
+      const DeepCollectionEquality().hash(_bookings),
+      const DeepCollectionEquality().hash(_monthlySummary),
+      nextPageUrl,
+      isPaginatingBookings);
 
   /// Create a copy of ProductDetailsState
   /// with the given fields replaced by the non-null parameter values.
@@ -405,10 +527,17 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(ProductModel product) loaded,
+    required TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)
+        loaded,
     required TResult Function(String message) error,
   }) {
-    return loaded(product);
+    return loaded(
+        product, bookings, monthlySummary, nextPageUrl, isPaginatingBookings);
   }
 
   @override
@@ -416,10 +545,17 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(ProductModel product)? loaded,
+    TResult? Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult? Function(String message)? error,
   }) {
-    return loaded?.call(product);
+    return loaded?.call(
+        product, bookings, monthlySummary, nextPageUrl, isPaginatingBookings);
   }
 
   @override
@@ -427,12 +563,19 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(ProductModel product)? loaded,
+    TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(product);
+      return loaded(
+          product, bookings, monthlySummary, nextPageUrl, isPaginatingBookings);
     }
     return orElse();
   }
@@ -476,9 +619,18 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements ProductDetailsState {
-  const factory _Loaded({required final ProductModel product}) = _$LoadedImpl;
+  const factory _Loaded(
+      {required final ProductModel product,
+      final List<BookingsModel> bookings,
+      final List<ProductMonthlyDataModel> monthlySummary,
+      final String? nextPageUrl,
+      final bool isPaginatingBookings}) = _$LoadedImpl;
 
   ProductModel get product;
+  List<BookingsModel> get bookings;
+  List<ProductMonthlyDataModel> get monthlySummary;
+  String? get nextPageUrl;
+  bool get isPaginatingBookings;
 
   /// Create a copy of ProductDetailsState
   /// with the given fields replaced by the non-null parameter values.
@@ -557,7 +709,13 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(ProductModel product) loaded,
+    required TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)
+        loaded,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -568,7 +726,13 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(ProductModel product)? loaded,
+    TResult? Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -579,7 +743,13 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(ProductModel product)? loaded,
+    TResult Function(
+            ProductModel product,
+            List<BookingsModel> bookings,
+            List<ProductMonthlyDataModel> monthlySummary,
+            String? nextPageUrl,
+            bool isPaginatingBookings)?
+        loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

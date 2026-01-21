@@ -57,22 +57,56 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(),
-                const SizedBox(height: 16),
-                _buildSummaryCards(),
-                const SizedBox(height: 24),
-                _buildSearchBar(),
-                const SizedBox(height: 20),
-                _buildCategoryTabs(),
-                const SizedBox(height: 20),
+                // Only show header when on product list, not on product details
+                BlocBuilder<StockManagementCubit, StockManagementState>(
+                  builder: (context, state) {
+                    final showingProductDetails = state.maybeWhen(
+                      loaded: (_, __, ___, ____, _____, ______, _______,
+                          selectedProductId) {
+                        return selectedProductId != null;
+                      },
+                      orElse: () => false,
+                    );
+
+                    if (!showingProductDetails) {
+                      return Column(
+                        children: [
+                          _buildHeader(),
+                          const SizedBox(height: 16),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: _buildProductsTable(),
+                  child:
+                      BlocBuilder<StockManagementCubit, StockManagementState>(
+                    builder: (context, state) {
+                      // Check if we should show product details
+                      return state.maybeWhen(
+                        loaded: (_, __, ___, ____, _____, ______, _______,
+                            selectedProductId) {
+                          if (selectedProductId != null) {
+                            // Show product details
+                            return RepositoryProvider.value(
+                              value: context.read<ProductRepository>(),
+                              child: BlocProvider(
+                                create: (context) => ProductDetailsCubit(
+                                  context.read<ProductRepository>(),
+                                )..loadProductDetails(selectedProductId),
+                                child: ProductDetailsScreen(
+                                    productId: selectedProductId),
+                              ),
+                            );
+                          } else {
+                            // Show product list
+                            return _buildProductList();
+                          }
+                        },
+                        orElse: () => _buildProductList(),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -80,6 +114,30 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildProductList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSummaryCards(),
+        const SizedBox(height: 24),
+        _buildSearchBar(),
+        const SizedBox(height: 20),
+        _buildCategoryTabs(),
+        const SizedBox(height: 20),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: _buildProductsTable(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -117,7 +175,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     return BlocBuilder<StockManagementCubit, StockManagementState>(
       builder: (context, state) {
         return state.maybeWhen(
-          loaded: (_, totalProducts, totalCategories, __, ___, ____, _____) {
+          loaded: (_, totalProducts, totalCategories, __, ___, ____, _____,
+              ______) {
             return Row(
               children: [
                 _summaryCard(
@@ -261,7 +320,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     return BlocBuilder<StockManagementCubit, StockManagementState>(
       builder: (context, state) {
         final selectedCategory = state.maybeWhen(
-          loaded: (_, __, ___, ____, _____, selected, ______) => selected,
+          loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
+              selected,
           orElse: () => 'All products',
         );
 
@@ -328,7 +388,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               child: CircularProgressIndicator(),
             ),
           ),
-          loaded: (products, _, __, ___, isPaginating, ____, _____) {
+          loaded: (products, _, __, ___, isPaginating, ____, _____, ______) {
             if (products.isEmpty) {
               return Container(
                 padding: const EdgeInsets.all(40),
@@ -348,26 +408,42 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               );
             }
 
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: 1000),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    _buildTableHeader(),
-                    ...products.map((product) => _buildProductRow(product)),
-                    if (isPaginating)
-                      const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                              color: Color(0xFF8A63FE)),
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: constraints.maxWidth < 1000
+                        ? 1000
+                        : constraints.maxWidth,
+                    child: Column(
+                      children: [
+                        _buildTableHeader(),
+                        Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: products.length + (isPaginating ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index < products.length) {
+                                return _buildProductRow(products[index]);
+                              } else {
+                                return const Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color(0xFF8A63FE),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
           error: (message) => Container(
@@ -687,18 +763,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: () {
-                    // Get repository from current context before navigation
-                    final repository = context.read<ProductRepository>();
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) => ProductDetailsCubit(repository)
-                            ..loadProductDetails(product.id),
-                          child: ProductDetailsScreen(productId: product.id),
-                        ),
-                      ),
-                    );
+                    // Use state-based navigation to show product details as full screen
+                    context
+                        .read<StockManagementCubit>()
+                        .showProductDetails(product.id);
                   },
                   icon: Icon(
                     Icons.visibility_outlined,

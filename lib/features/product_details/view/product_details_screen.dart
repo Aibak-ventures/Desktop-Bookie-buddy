@@ -1,19 +1,42 @@
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
+import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
+import 'package:bookie_buddy_web/features/product_details/view/widgets/monthly_bar_chart.dart';
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_cubit.dart';
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_state.dart';
+import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatefulWidget {
   final int productId;
 
   const ProductDetailsScreen({
     super.key,
     required this.productId,
   });
+
+  @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +49,9 @@ class ProductDetailsScreen extends StatelessWidget {
             loading: () => const Center(
               child: CircularProgressIndicator(color: AppColors.purple),
             ),
-            loaded: (product) => _buildContent(context, product),
+            loaded: (product, bookings, monthlySummary, nextPageUrl,
+                    isPaginatingBookings) =>
+                _buildContent(context, product, bookings, monthlySummary),
             error: (message) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +68,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     onPressed: () {
                       context
                           .read<ProductDetailsCubit>()
-                          .loadProductDetails(productId);
+                          .loadProductDetails(widget.productId);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.purple,
@@ -60,7 +85,12 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context, ProductModel product) {
+  Widget _buildContent(
+    BuildContext context,
+    ProductModel product,
+    List bookings,
+    List<ProductMonthlyDataModel> monthlySummary,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -79,7 +109,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 const SizedBox(width: 24),
                 Expanded(
                   flex: 3,
-                  child: _buildRightPanel(product),
+                  child: _buildRightPanel(product, bookings, monthlySummary),
                 ),
               ],
             ),
@@ -93,7 +123,10 @@ class ProductDetailsScreen extends StatelessWidget {
     return Row(
       children: [
         IconButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            // Use state-based navigation to return to product list
+            context.read<StockManagementCubit>().hideProductDetails();
+          },
           icon: const Icon(Icons.arrow_back, size: 20),
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
@@ -331,14 +364,18 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRightPanel(ProductModel product) {
+  Widget _buildRightPanel(
+    ProductModel product,
+    List bookings,
+    List<ProductMonthlyDataModel> monthlySummary,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -359,21 +396,12 @@ class ProductDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Placeholder for chart
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              color: AppColors.purple.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                'Sales chart will be displayed here',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                ),
-              ),
+          // Monthly summary bar chart
+          SizedBox(
+            width: double.infinity,
+            child: MonthlyBarChart(
+              monthlyData: monthlySummary,
+              height: 180,
             ),
           ),
 
@@ -396,9 +424,9 @@ class ProductDetailsScreen extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
 
-          // Bookings Section
+          // Bookings Section with Tabs
           const Text(
             'Bookings',
             style: TextStyle(
@@ -407,18 +435,60 @@ class ProductDetailsScreen extends StatelessWidget {
               color: Color(0xFF1F2937),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // Tabs placeholder
-          Expanded(
-            child: Center(
-              child: Text(
-                'Bookings list will be displayed here',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                ),
+          // Tab Bar
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.shade200, width: 1),
               ),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              labelColor: AppColors.purple,
+              unselectedLabelColor: Colors.grey.shade600,
+              indicatorColor: AppColors.purple,
+              indicatorWeight: 2,
+              labelStyle: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              tabs: const [
+                Tab(text: 'Upcoming'),
+                Tab(text: 'Completed'),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Tab Content
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Upcoming Bookings
+                _buildBookingsList(
+                  bookings
+                      .where((b) =>
+                          b.bookingStatus != 'completed' &&
+                          b.bookingStatus != 'cancelled')
+                      .toList(),
+                  'No upcoming bookings',
+                ),
+                // Completed Bookings
+                _buildBookingsList(
+                  bookings
+                      .where((b) => b.bookingStatus == 'completed')
+                      .toList(),
+                  'No completed bookings',
+                ),
+              ],
             ),
           ),
         ],
@@ -501,6 +571,228 @@ class ProductDetailsScreen extends StatelessWidget {
         },
         icon: const Icon(Icons.add, color: AppColors.purple),
       ),
+    );
+  }
+
+  Widget _buildBookingsList(List bookings, String emptyMessage) {
+    if (bookings.isEmpty) {
+      return Center(
+        child: Text(
+          emptyMessage,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.only(top: 8),
+      itemCount: bookings.length,
+      itemBuilder: (context, index) {
+        final booking = bookings[index];
+
+        // Parse pickup date to extract day and month
+        String pickupDay = '';
+        String pickupMonth = '';
+        if (booking.pickupDate != null && booking.pickupDate.isNotEmpty) {
+          try {
+            final parts = booking.pickupDate.split('-');
+            if (parts.length >= 2) {
+              pickupDay = parts[0];
+              final monthNames = [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+              ];
+              final monthNum = int.tryParse(parts[1]) ?? 1;
+              pickupMonth = monthNames[monthNum - 1];
+            }
+          } catch (e) {
+            pickupDay = '';
+            pickupMonth = '';
+          }
+        }
+
+        // Determine delivery status color
+        Color deliveryStatusColor = Colors.green;
+        if (booking.deliveryStatus == 'pending') {
+          deliveryStatusColor = Colors.orange;
+        } else if (booking.deliveryStatus == 'delivered') {
+          deliveryStatusColor = Colors.green;
+        } else if (booking.deliveryStatus == 'returned') {
+          deliveryStatusColor = Colors.blue;
+        }
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade200),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Date Box
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: AppColors.purple.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      pickupDay,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.purple,
+                      ),
+                    ),
+                    Text(
+                      pickupMonth,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.purple.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 14),
+
+              // Booking Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Client Name
+                    Text(
+                      booking.clientName,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1F2937),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+
+                    // Payment & Delivery Status Row
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.wallet,
+                          size: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Payment :',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: booking.paymentStatus.name == 'paid'
+                                ? Colors.orange.withOpacity(0.15)
+                                : Colors.grey.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            booking.paymentStatus.name == 'paid'
+                                ? 'Pending'
+                                : 'Unpaid',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: booking.paymentStatus.name == 'paid'
+                                  ? Colors.orange.shade700
+                                  : Colors.grey.shade700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    // Items
+                    if (booking.bookedItems.isNotEmpty)
+                      Text(
+                        'Items : ${booking.bookedItems.join(', ')}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                    const SizedBox(height: 6),
+
+                    // Delivery Status Badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: deliveryStatusColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        booking.deliveryStatus.toString().toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: deliveryStatusColor.withOpacity(0.9),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Arrow Icon
+              Icon(
+                Icons.chevron_right,
+                color: Colors.grey.shade400,
+                size: 24,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

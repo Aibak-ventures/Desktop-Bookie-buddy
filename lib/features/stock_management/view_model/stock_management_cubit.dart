@@ -24,7 +24,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
         // Keep current state but mark as paginating
         state.maybeWhen(
           loaded: (products, totalProducts, totalCategories, nextPageUrl,
-              isPaginating, selectedCategory, currentQuery) {
+              isPaginating, selectedCategory, currentQuery, selectedProductId) {
             emit(StockManagementState.loaded(
               products: products,
               totalProducts: totalProducts,
@@ -33,6 +33,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
               isPaginating: true,
               selectedCategory: selectedCategory,
               searchQuery: currentQuery,
+              selectedProductId: selectedProductId,
             ));
           },
           orElse: () {},
@@ -66,7 +67,8 @@ class StockManagementCubit extends Cubit<StockManagementState> {
       } else {
         // Append to existing products
         state.maybeWhen(
-          loaded: (existingProducts, _, __, ___, ____, _____, ______) {
+          loaded: (existingProducts, _, __, ___, ____, _____, ______,
+              selectedProductId) {
             emit(StockManagementState.loaded(
               products: [...existingProducts, ...productList],
               totalProducts: totalProducts,
@@ -75,6 +77,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
               isPaginating: false,
               selectedCategory: category,
               searchQuery: searchQuery,
+              selectedProductId: selectedProductId,
             ));
           },
           orElse: () {},
@@ -91,8 +94,14 @@ class StockManagementCubit extends Cubit<StockManagementState> {
   /// Load next page of products
   Future<void> loadNextPage() async {
     await state.maybeWhen(
-      loaded: (products, totalProducts, totalCategories, nextPageUrl,
-          isPaginating, selectedCategory, searchQuery) async {
+      loaded: (products,
+          totalProducts,
+          totalCategories,
+          nextPageUrl,
+          isPaginating,
+          selectedCategory,
+          searchQuery,
+          selectedProductId) async {
         if (nextPageUrl != null && !isPaginating) {
           // Extract page number from next URL
           final uri = Uri.parse(nextPageUrl);
@@ -116,7 +125,8 @@ class StockManagementCubit extends Cubit<StockManagementState> {
   /// Search products
   Future<void> searchProducts(String query) async {
     await state.maybeWhen(
-      loaded: (_, __, ___, ____, _____, selectedCategory, ______) async {
+      loaded:
+          (_, __, ___, ____, _____, selectedCategory, ______, _______) async {
         await loadProducts(
           category: selectedCategory,
           searchQuery: query,
@@ -126,6 +136,46 @@ class StockManagementCubit extends Cubit<StockManagementState> {
       orElse: () async {
         await loadProducts(searchQuery: query, page: 1);
       },
+    );
+  }
+
+  /// Show product details
+  void showProductDetails(int productId) {
+    state.maybeWhen(
+      loaded: (products, totalProducts, totalCategories, nextPageUrl,
+          isPaginating, selectedCategory, searchQuery, _) {
+        emit(StockManagementState.loaded(
+          products: products,
+          totalProducts: totalProducts,
+          totalCategories: totalCategories,
+          nextPageUrl: nextPageUrl,
+          isPaginating: isPaginating,
+          selectedCategory: selectedCategory,
+          searchQuery: searchQuery,
+          selectedProductId: productId,
+        ));
+      },
+      orElse: () {},
+    );
+  }
+
+  /// Hide product details (return to list view)
+  void hideProductDetails() {
+    state.maybeWhen(
+      loaded: (products, totalProducts, totalCategories, nextPageUrl,
+          isPaginating, selectedCategory, searchQuery, _) {
+        emit(StockManagementState.loaded(
+          products: products,
+          totalProducts: totalProducts,
+          totalCategories: totalCategories,
+          nextPageUrl: nextPageUrl,
+          isPaginating: isPaginating,
+          selectedCategory: selectedCategory,
+          searchQuery: searchQuery,
+          selectedProductId: null,
+        ));
+      },
+      orElse: () {},
     );
   }
 }

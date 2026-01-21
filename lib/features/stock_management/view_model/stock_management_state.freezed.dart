@@ -27,7 +27,8 @@ mixin _$StockManagementState {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)
+            String searchQuery,
+            int? selectedProductId)
         loaded,
     required TResult Function(String message) error,
   }) =>
@@ -43,7 +44,8 @@ mixin _$StockManagementState {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult? Function(String message)? error,
   }) =>
@@ -59,7 +61,8 @@ mixin _$StockManagementState {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -164,7 +167,8 @@ class _$InitialImpl implements _Initial {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)
+            String searchQuery,
+            int? selectedProductId)
         loaded,
     required TResult Function(String message) error,
   }) {
@@ -183,7 +187,8 @@ class _$InitialImpl implements _Initial {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult? Function(String message)? error,
   }) {
@@ -202,7 +207,8 @@ class _$InitialImpl implements _Initial {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -305,7 +311,8 @@ class _$LoadingImpl implements _Loading {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)
+            String searchQuery,
+            int? selectedProductId)
         loaded,
     required TResult Function(String message) error,
   }) {
@@ -324,7 +331,8 @@ class _$LoadingImpl implements _Loading {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult? Function(String message)? error,
   }) {
@@ -343,7 +351,8 @@ class _$LoadingImpl implements _Loading {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -409,7 +418,8 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       String? nextPageUrl,
       bool isPaginating,
       String selectedCategory,
-      String searchQuery});
+      String searchQuery,
+      int? selectedProductId});
 }
 
 /// @nodoc
@@ -432,6 +442,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? isPaginating = null,
     Object? selectedCategory = null,
     Object? searchQuery = null,
+    Object? selectedProductId = freezed,
   }) {
     return _then(_$LoadedImpl(
       products: null == products
@@ -462,6 +473,10 @@ class __$$LoadedImplCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String,
+      selectedProductId: freezed == selectedProductId
+          ? _value.selectedProductId
+          : selectedProductId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -476,7 +491,8 @@ class _$LoadedImpl implements _Loaded {
       required this.nextPageUrl,
       required this.isPaginating,
       required this.selectedCategory,
-      required this.searchQuery})
+      required this.searchQuery,
+      this.selectedProductId})
       : _products = products;
 
   final List<ProductModel> _products;
@@ -499,10 +515,12 @@ class _$LoadedImpl implements _Loaded {
   final String selectedCategory;
   @override
   final String searchQuery;
+  @override
+  final int? selectedProductId;
 
   @override
   String toString() {
-    return 'StockManagementState.loaded(products: $products, totalProducts: $totalProducts, totalCategories: $totalCategories, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, selectedCategory: $selectedCategory, searchQuery: $searchQuery)';
+    return 'StockManagementState.loaded(products: $products, totalProducts: $totalProducts, totalCategories: $totalCategories, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, selectedCategory: $selectedCategory, searchQuery: $searchQuery, selectedProductId: $selectedProductId)';
   }
 
   @override
@@ -522,7 +540,9 @@ class _$LoadedImpl implements _Loaded {
             (identical(other.selectedCategory, selectedCategory) ||
                 other.selectedCategory == selectedCategory) &&
             (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery));
+                other.searchQuery == searchQuery) &&
+            (identical(other.selectedProductId, selectedProductId) ||
+                other.selectedProductId == selectedProductId));
   }
 
   @override
@@ -534,7 +554,8 @@ class _$LoadedImpl implements _Loaded {
       nextPageUrl,
       isPaginating,
       selectedCategory,
-      searchQuery);
+      searchQuery,
+      selectedProductId);
 
   /// Create a copy of StockManagementState
   /// with the given fields replaced by the non-null parameter values.
@@ -556,12 +577,13 @@ class _$LoadedImpl implements _Loaded {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)
+            String searchQuery,
+            int? selectedProductId)
         loaded,
     required TResult Function(String message) error,
   }) {
     return loaded(products, totalProducts, totalCategories, nextPageUrl,
-        isPaginating, selectedCategory, searchQuery);
+        isPaginating, selectedCategory, searchQuery, selectedProductId);
   }
 
   @override
@@ -576,12 +598,13 @@ class _$LoadedImpl implements _Loaded {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call(products, totalProducts, totalCategories, nextPageUrl,
-        isPaginating, selectedCategory, searchQuery);
+        isPaginating, selectedCategory, searchQuery, selectedProductId);
   }
 
   @override
@@ -596,14 +619,15 @@ class _$LoadedImpl implements _Loaded {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
       return loaded(products, totalProducts, totalCategories, nextPageUrl,
-          isPaginating, selectedCategory, searchQuery);
+          isPaginating, selectedCategory, searchQuery, selectedProductId);
     }
     return orElse();
   }
@@ -654,7 +678,8 @@ abstract class _Loaded implements StockManagementState {
       required final String? nextPageUrl,
       required final bool isPaginating,
       required final String selectedCategory,
-      required final String searchQuery}) = _$LoadedImpl;
+      required final String searchQuery,
+      final int? selectedProductId}) = _$LoadedImpl;
 
   List<ProductModel> get products;
   int get totalProducts;
@@ -663,6 +688,7 @@ abstract class _Loaded implements StockManagementState {
   bool get isPaginating;
   String get selectedCategory;
   String get searchQuery;
+  int? get selectedProductId;
 
   /// Create a copy of StockManagementState
   /// with the given fields replaced by the non-null parameter values.
@@ -748,7 +774,8 @@ class _$ErrorImpl implements _Error {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)
+            String searchQuery,
+            int? selectedProductId)
         loaded,
     required TResult Function(String message) error,
   }) {
@@ -767,7 +794,8 @@ class _$ErrorImpl implements _Error {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult? Function(String message)? error,
   }) {
@@ -786,7 +814,8 @@ class _$ErrorImpl implements _Error {
             String? nextPageUrl,
             bool isPaginating,
             String selectedCategory,
-            String searchQuery)?
+            String searchQuery,
+            int? selectedProductId)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
