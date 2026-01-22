@@ -1,14 +1,29 @@
+import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
+import 'package:bookie_buddy_web/features/product/view/widgets/variant_size_type_text_field.dart';
 import 'package:bookie_buddy_web/features/product_details/view/widgets/monthly_bar_chart.dart';
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_cubit.dart';
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_state.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
+import 'package:bookie_buddy_web/features/stock_management/view/widgets/add_edit_product_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/product/view_model/cubit_add_expense/add_expense_cubit.dart';
+import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final int productId;
@@ -88,7 +103,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   Widget _buildContent(
     BuildContext context,
     ProductModel product,
-    List bookings,
+    List<BookingsModel> bookings,
     List<ProductMonthlyDataModel> monthlySummary,
   ) {
     return Padding(
@@ -141,57 +156,94 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           ),
         ),
         const Spacer(),
-        Flexible(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () {
-                    // TODO: Delete product
-                  },
-                  icon: const Icon(Icons.delete_outline, size: 16),
-                  label: const Text('Delete', style: TextStyle(fontSize: 13)),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.red,
-                    side: BorderSide(color: Colors.red.shade300),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
+        // Buttons aligned at the end
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            OutlinedButton.icon(
+              onPressed: () {
+                _showDeleteProductDialog(product);
+              },
+              icon: const Icon(Icons.delete_outline, size: 16),
+              label: const Text('Delete', style: TextStyle(fontSize: 13)),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.red,
+                side: BorderSide(color: Colors.red.shade300),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(width: 8),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    // TODO: Edit product
-                  },
-                  icon: const Icon(Icons.edit_outlined, size: 16),
-                  label: const Text('Edit', style: TextStyle(fontSize: 13)),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.grey.shade700,
-                    side: BorderSide(color: Colors.grey.shade300),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO: Add expense
-                  },
-                  icon: const Icon(Icons.add, size: 16),
-                  label:
-                      const Text('Add Expense', style: TextStyle(fontSize: 13)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.purple,
-                    foregroundColor: Colors.white,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            const SizedBox(width: 12),
+            OutlinedButton.icon(
+              onPressed: () async {
+                final selectedServiceId =
+                    context.read<StockManagementCubit>().state.maybeWhen(
+                          loaded: (_, __, ___, ____, _____, serviceId, ______,
+                                  _______) =>
+                              serviceId,
+                          orElse: () => null,
+                        );
+                final result = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => BlocProvider(
+                    create: (context) => SaveProductCubit(),
+                    child: AddEditProductDialog(
+                      serviceId: selectedServiceId,
+                      product: product,
+                    ),
+                  ),
+                );
+                if (result == true && context.mounted) {
+                  context
+                      .read<ProductDetailsCubit>()
+                      .loadProductDetails(product.id);
+                }
+              },
+              icon: const Icon(Icons.edit_outlined, size: 16),
+              label: const Text('Edit Product', style: TextStyle(fontSize: 13)),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.grey.shade700,
+                side: BorderSide(color: Colors.grey.shade300),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            ElevatedButton.icon(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => BlocProvider(
+                    create: (context) =>
+                        AddExpenseCubit(repository: getIt.get()),
+                    child: ProductAddExpenseDialog(
+                      variantId: product.variants.first.id,
+                      mainServiceType:
+                          product.mainServiceType ?? MainServiceType.others,
+                      variants: product.variants,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add, size: 16),
+              label: const Text('Add Expense', style: TextStyle(fontSize: 13)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.purple,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -204,169 +256,214 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product Image
-            Container(
-              width: double.infinity,
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: product.image != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: CustomNetworkImage(
-                        imageUrl: product.image!,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Icon(Icons.image, size: 80, color: Colors.grey.shade400),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Product Name and Price Row
+          Container(
+            width: 408,
+            height: 279,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
             ),
-            const SizedBox(height: 24),
-
-            // Product Name and Prices
-            Text(
-              product.name,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF1F2937),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            Row(
-              children: [
-                Column(
+            child: product.image != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CustomNetworkImage(
+                      imageUrl: product.image!,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Icon(Icons.image, size: 80, color: Colors.grey.shade400),
+          ),
+          SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Product Name
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Purchase',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '₹${NumberFormat('#,###').format(product.purchaseAmount ?? 0)}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 40),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Sale',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '₹${NumberFormat('#,###').format(product.price ?? 0)}',
+                      product.name,
                       style: const TextStyle(
+                        color: Colors.black,
                         fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.purple,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Purchase Price below name
+                    Text(
+                      'Purchase: ₹${NumberFormat('#,###').format(product.purchaseAmount ?? 0)}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 32),
-
-            // Product Specifications
-            const Text(
-              'Product Specifications',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
               ),
-            ),
-            const SizedBox(height: 16),
-
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                if (product.category != null && product.category!.isNotEmpty)
-                  _specChip(Icons.category, product.category!),
-                if (product.model != null && product.model!.isNotEmpty)
-                  _specChip(Icons.layers, product.model!),
-                if (product.color != null && product.color!.isNotEmpty)
-                  _specChip(Icons.palette, product.color!),
-              ],
-            ),
-
-            const SizedBox(height: 32),
-
-            // Available Variants
-            const Text(
-              'Available variants',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
+              const SizedBox(width: 16),
+              // Price on the right
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '₹${NumberFormat('#,###').format(product.price ?? 0)}',
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      color: Color(0xFF6132E4),
+                      fontSize: 20,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Sale price below main price (right aligned)
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'Sale:',
+                          style: TextStyle(
+                            color: Color(0xFF8E8E8E),
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                              ' ₹${NumberFormat('#,###').format(product.price ?? 0)}',
+                          style: const TextStyle(
+                            color: Color(0xFFFFA93A),
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
+            ],
+          ),
 
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
+          const SizedBox(height: 12),
+
+          // Divider
+          Container(
+            height: 1,
+            color: Colors.grey.shade300,
+          ),
+          const SizedBox(height: 7),
+
+          // Available Variants
+          const Text(
+            'Available variants',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1F2937),
+            ),
+          ),
+          const SizedBox(height: 7),
+
+          // Variants with specific styling
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
-                ...product.variants.map((variant) => _variantCard(variant)),
+                ...product.variants.map((variant) => Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: _variantCard(variant),
+                    )),
                 _addVariantButton(),
               ],
             ),
+          ),
 
-            const SizedBox(height: 32),
+          const SizedBox(height: 7),
 
-            // Description
-            if (product.description != null &&
-                product.description!.isNotEmpty) ...[
-              const Text(
-                'Description',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1F2937),
-                ),
+          // Product Specifications
+          if (product.category != null ||
+              product.model != null ||
+              product.color != null) ...[
+            const Text(
+              'Product Specifications',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
               ),
-              const SizedBox(height: 8),
-              Text(
-                product.description!,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade700,
-                  height: 1.5,
-                ),
+            ),
+            const SizedBox(height: 7),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  if (product.category != null && product.category!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: _specChip(Icons.category, product.category!),
+                    ),
+                  if (product.model != null && product.model!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: _specChip(Icons.layers, product.model!),
+                    ),
+                  if (product.color != null && product.color!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: _specChip(Icons.palette, product.color!),
+                    ),
+                ],
               ),
-            ],
+            ),
+            const SizedBox(height: 7),
           ],
-        ),
+
+          // Description
+          if (product.description != null &&
+              product.description!.isNotEmpty) ...[
+            const Text(
+              'Description',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 7),
+            Text(
+              product.description!,
+              style: const TextStyle(
+                color: Color(0xFF787878),
+                fontSize: 10,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
 
   Widget _buildRightPanel(
     ProductModel product,
-    List bookings,
+    List<BookingsModel> bookings,
     List<ProductMonthlyDataModel> monthlySummary,
   ) {
     return Container(
@@ -408,21 +505,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           const SizedBox(height: 16),
 
           // Metrics
-          Row(
-            children: [
-              Expanded(
-                child: _metricCard('Total Orders', '42', '+12%', Colors.green),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _metricCard('Revenue', '₹67.2K', '+8%', Colors.green),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _metricCard('Avg. Order', '₹1,600', '0%', Colors.grey),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _metricCard('Total Orders', '42', '+12%', Colors.green),
+          //     ),
+          //     const SizedBox(width: 16),
+          //     Expanded(
+          //       child: _metricCard('Revenue', '₹67.2K', '+8%', Colors.green),
+          //     ),
+          //     const SizedBox(width: 16),
+          //     Expanded(
+          //       child: _metricCard('Avg. Order', '₹1,600', '0%', Colors.grey),
+          //     ),
+          //   ],
+          // ),
 
           const SizedBox(height: 24),
 
@@ -460,7 +557,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               ),
               tabs: const [
                 Tab(text: 'Upcoming'),
-                Tab(text: 'Completed'),
+                Tab(text: 'Returns'),
               ],
             ),
           ),
@@ -476,17 +573,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 _buildBookingsList(
                   bookings
                       .where((b) =>
-                          b.bookingStatus != 'completed' &&
-                          b.bookingStatus != 'cancelled')
+                          b.bookingStatus == BookingStatus.upcoming &&
+                          b.deliveryStatus != DeliveryStatus.cancelled)
                       .toList(),
                   'No upcoming bookings',
                 ),
-                // Completed Bookings
+                // Returns (Completed) Bookings
                 _buildBookingsList(
                   bookings
-                      .where((b) => b.bookingStatus == 'completed')
+                      .where((b) => b.bookingStatus == BookingStatus.completed)
                       .toList(),
-                  'No completed bookings',
+                  'No returned bookings',
+                  isOngoing: true,
                 ),
               ],
             ),
@@ -498,21 +596,40 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   Widget _specChip(IconData icon, String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(8),
+      width: 118,
+      height: 20,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(
+            width: 0.50,
+            color: Color(0xFFE0E0E0),
+          ),
+          borderRadius: BorderRadius.circular(5),
+        ),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: Colors.grey.shade700),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade700,
+          Icon(
+            icon,
+            size: 14,
+            color: Colors.black,
+          ),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],
@@ -520,35 +637,133 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  Widget _variantCard(variant) {
-    final stockColor = variant.stock > 0 ? Colors.green : Colors.red;
-
-    return Container(
-      width: 100,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          Text(
-            variant.attribute,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1F2937),
+  Widget _variantCard(ProductVariantModel variant) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: 82,
+          height: 65,
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(
+                width: 1,
+                color: Color(0xFFE0E0E0),
+              ),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            '${variant.stock} stocks',
-            style: TextStyle(
-              fontSize: 12,
-              color: stockColor,
-              fontWeight: FontWeight.w500,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                variant.attribute,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0xFF171717),
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${variant.stock} stocks',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 10,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Positioned(
+        //   top: -5,
+        //   right: -5,
+        //   child: InkWell(
+        //     onTap: () {
+        //       _showDeleteVariantDialog(variant);
+        //     },
+        //     child: Container(
+        //       padding: const EdgeInsets.all(2),
+        //       decoration: const BoxDecoration(
+        //         color: Colors.red,
+        //         shape: BoxShape.circle,
+        //       ),
+        //       child: const Icon(
+        //         Icons.close,
+        //         size: 10,
+        //         color: Colors.white,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+      ],
+    );
+  }
+
+  void _showDeleteProductDialog(ProductModel product) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Product'),
+        content: Text(
+            'Are you sure you want to delete product "${product.name}"? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              try {
+                await context
+                    .read<ProductDetailsCubit>()
+                    .deleteProduct(product.id);
+                if (mounted) {
+                  context.read<StockManagementCubit>().hideProductDetails();
+                  context.showSnackBar('Product deleted successfully');
+                }
+              } catch (e) {
+                if (mounted) {
+                  context.showSnackBar('Failed to delete product: $e',
+                      isError: true);
+                }
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteVariantDialog(ProductVariantModel variant) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Variant'),
+        content: Text(
+            'Are you sure you want to delete variant "${variant.attribute}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<ProductDetailsCubit>().deleteProductVariant(
+                    productId: widget.productId,
+                    variantId: variant.id,
+                  );
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -557,24 +772,122 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   Widget _addVariantButton() {
     return Container(
-      width: 100,
-      height: 64,
+      width: 82,
+      height: 65,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(
             color: AppColors.purple, width: 2, style: BorderStyle.solid),
       ),
       child: IconButton(
         onPressed: () {
-          // TODO: Add variant
+          _showAddVariantDialog(context);
         },
         icon: const Icon(Icons.add, color: AppColors.purple),
       ),
     );
   }
 
-  Widget _buildBookingsList(List bookings, String emptyMessage) {
+  void _showAddVariantDialog(BuildContext context) {
+    final variantAttributeController = TextEditingController();
+    final variantQuantityController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    // Get current product from state to initialize variantsNotifier
+    final currentState = context.read<ProductDetailsCubit>().state;
+    List<ProductVariantModel> currentVariants = [];
+    currentState.maybeWhen(
+      loaded: (product, _, __, ___, ____) => currentVariants = product.variants,
+      orElse: () {},
+    );
+
+    final variantsNotifier =
+        ValueNotifier<List<ProductVariantModel>>(List.from(currentVariants));
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text(
+          'Add Variant',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Same field style as VariantsWidget
+              VariantSizeTypeTextField(
+                variantAttributeController: variantAttributeController,
+                variantsNotifier: variantsNotifier,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: variantQuantityController,
+                decoration: InputDecoration(
+                  labelText: 'Quantity',
+                  hintText: 'Enter quantity',
+                  border: const OutlineInputBorder(),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                validator: AppInputValidators.quantity,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                final attribute = variantAttributeController.text.trim();
+                final quantity =
+                    int.tryParse(variantQuantityController.text.trim()) ?? 0;
+
+                try {
+                  // Show loading or something if needed
+                  await context.read<ProductDetailsCubit>().addProductVariant(
+                        productId: widget.productId,
+                        attribute: attribute,
+                        stock: quantity,
+                      );
+
+                  if (context.mounted) {
+                    Navigator.of(dialogContext).pop();
+                    context.showSnackBar('Variant added successfully');
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to add variant: $e',
+                        isError: true);
+                  }
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.purple,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBookingsList(List<BookingsModel> bookings, String emptyMessage,
+      {bool isOngoing = false}) {
     if (bookings.isEmpty) {
       return Center(
         child: Text(
@@ -593,204 +906,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       itemBuilder: (context, index) {
         final booking = bookings[index];
 
-        // Parse pickup date to extract day and month
-        String pickupDay = '';
-        String pickupMonth = '';
-        if (booking.pickupDate != null && booking.pickupDate.isNotEmpty) {
-          try {
-            final parts = booking.pickupDate.split('-');
-            if (parts.length >= 2) {
-              pickupDay = parts[0];
-              final monthNames = [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec'
-              ];
-              final monthNum = int.tryParse(parts[1]) ?? 1;
-              pickupMonth = monthNames[monthNum - 1];
-            }
-          } catch (e) {
-            pickupDay = '';
-            pickupMonth = '';
-          }
-        }
-
-        // Determine delivery status color
-        Color deliveryStatusColor = Colors.green;
-        if (booking.deliveryStatus == 'pending') {
-          deliveryStatusColor = Colors.orange;
-        } else if (booking.deliveryStatus == 'delivered') {
-          deliveryStatusColor = Colors.green;
-        } else if (booking.deliveryStatus == 'returned') {
-          deliveryStatusColor = Colors.blue;
-        }
-
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade200),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.03),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              // Date Box
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: AppColors.purple.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      pickupDay,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.purple,
-                      ),
-                    ),
-                    Text(
-                      pickupMonth,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.purple.withOpacity(0.7),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 14),
-
-              // Booking Details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Client Name
-                    Text(
-                      booking.clientName,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1F2937),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Payment & Delivery Status Row
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.wallet,
-                          size: 14,
-                          color: Colors.grey.shade600,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Payment :',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: booking.paymentStatus.name == 'paid'
-                                ? Colors.orange.withOpacity(0.15)
-                                : Colors.grey.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            booking.paymentStatus.name == 'paid'
-                                ? 'Pending'
-                                : 'Unpaid',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: booking.paymentStatus.name == 'paid'
-                                  ? Colors.orange.shade700
-                                  : Colors.grey.shade700,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 6),
-
-                    // Items
-                    if (booking.bookedItems.isNotEmpty)
-                      Text(
-                        'Items : ${booking.bookedItems.join(', ')}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade700,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-
-                    const SizedBox(height: 6),
-
-                    // Delivery Status Badge
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: deliveryStatusColor.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        booking.deliveryStatus.toString().toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: deliveryStatusColor.withOpacity(0.9),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Arrow Icon
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey.shade400,
-                size: 24,
-              ),
-            ],
-          ),
+        return BookingCard(
+          booking: booking,
+          useReturnDate: isOngoing,
+          onTap: () async {
+            context.read<BookingSelectionCubit>().selectBooking(booking);
+            await context.push(
+              BookingDetailsScreen(bookingId: booking.id!),
+            );
+          },
         );
       },
     );

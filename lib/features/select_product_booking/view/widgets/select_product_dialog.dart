@@ -55,8 +55,8 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
     final initialQty = widget.initialQuantity ?? 1;
     quantityController = TextEditingController(text: initialQty.toString());
 
-    log(widget.availableVariants.first.toString());
-    selectedVariant = widget.availableVariants.first;
+    // Do not auto-select first variant as per user request
+    selectedVariant = null;
 
     // Check if there's already a selected variant for this product
     if (widget.alreadySelectedVariants.isNotEmpty) {
@@ -192,26 +192,22 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                                 ? Colors.grey.shade300
                                 : isSelected
                                     ? AppColors.purpleLight
-                                    : const Color(0xFFE8E4FF),
+                                    : const Color(0xFFF8F7FF),
                             // Conditional border radius based on text length
                             borderRadius: BorderRadius.circular(
                               variant.attribute.length > 3 ? 8 : 25,
                             ),
                             border: Border.all(
                               color: isSelected
-                                  ? const Color(0xFF6C5CE7)
-                                  : Colors.transparent,
-                              width: 2,
+                                  ? const Color(0xFF6132E4)
+                                  : Colors.grey.shade300,
+                              width: isSelected ? 2 : 1,
                             ),
                           ),
                           child: Text(
                             variant.attribute,
                             style: TextStyle(
-                              color: isDisabled
-                                  ? Colors.grey
-                                  : isSelected
-                                      ? const Color(0xFF6C5CE7)
-                                      : Colors.black87,
+                              color: isDisabled ? Colors.grey : Colors.black87,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -356,6 +352,12 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
     // Validate quantity
     if (qty == null || qty <= 0) {
       quantityErrorNotifier.value = 'Quantity must be greater than 0';
+      return;
+    }
+
+    // Validate variant selection
+    if (widget.availableVariants.isNotEmpty && selectedVariant == null) {
+      quantityErrorNotifier.value = 'Please select a variant';
       return;
     }
 

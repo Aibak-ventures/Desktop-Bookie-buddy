@@ -15,7 +15,8 @@ class StockManagementState with _$StockManagementState {
     required int totalCategories,
     required String? nextPageUrl,
     required bool isPaginating,
-    required String selectedCategory,
+    int?
+        selectedServiceId, // Changed from String selectedCategory to int? selectedServiceId (-1 means All Services)
     required String searchQuery,
     int? selectedProductId, // For showing product details
   }) = _Loaded;

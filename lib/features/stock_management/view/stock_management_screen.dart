@@ -2,8 +2,11 @@ import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
+import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
+import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/product_details/view/product_details_screen.dart';
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_cubit.dart';
+import 'package:bookie_buddy_web/features/stock_management/view/widgets/add_edit_product_dialog.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_state.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +45,41 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       context.read<StockManagementCubit>().loadNextPage();
+    }
+  }
+
+  /// Show add/edit product modal dialog
+  Future<void> _showAddEditProductDialog(BuildContext context,
+      {ProductModel? product}) async {
+    // Get current selected service ID from state
+    final selectedServiceId =
+        await context.read<StockManagementCubit>().state.maybeWhen(
+              loaded: (_, __, ___, ____, _____, serviceId, ______, _______) =>
+                  serviceId,
+              orElse: () => null,
+            );
+
+    if (!mounted) return;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => BlocProvider(
+        create: (context) => SaveProductCubit(),
+        child: AddEditProductDialog(
+          serviceId: selectedServiceId,
+          product: product,
+        ),
+      ),
+    );
+
+    // Refresh the product list if a product was added/edited
+    if (result == true && mounted) {
+      context.read<StockManagementCubit>().loadProducts(
+            serviceId: selectedServiceId,
+            searchQuery: _searchController.text,
+            page: 1,
+          );
     }
   }
 
@@ -263,115 +301,195 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
   }
 
   Widget _buildSearchBar() {
-    return Container(
-      width: 269,
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.search, color: Colors.grey.shade500, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search by name or id',
-                hintStyle: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade400,
+    return Row(
+      children: [
+        Container(
+          width: 269,
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.search, color: Colors.grey.shade500, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search by name or id',
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade400,
+                    ),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    // Debounce search
+                    Future.delayed(const Duration(milliseconds: 500), () {
+                      if (_searchController.text == value) {
+                        context
+                            .read<StockManagementCubit>()
+                            .searchProducts(value);
+                      }
+                    });
+                  },
                 ),
-                border: InputBorder.none,
               ),
-              onChanged: (value) {
-                // Debounce search
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  if (_searchController.text == value) {
-                    context.read<StockManagementCubit>().searchProducts(value);
-                  }
-                });
-              },
+              IconButton(
+                onPressed: () {
+                  // Filter button - could open filter dialog
+                },
+                icon: Icon(Icons.tune, color: Colors.grey.shade600, size: 20),
+              ),
+            ],
+          ),
+        ),
+        const Spacer(),
+        // Add Product Button
+        ElevatedButton.icon(
+          onPressed: () {
+            _showAddEditProductDialog(context);
+          },
+          icon: const Icon(Icons.add, size: 18),
+          label: const Text(
+            'Add Product',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.purple,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
+            elevation: 0,
           ),
-          IconButton(
-            onPressed: () {
-              // Filter button - could open filter dialog
-            },
-            icon: Icon(Icons.tune, color: Colors.grey.shade600, size: 20),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildCategoryTabs() {
-    final categories = [
-      'All products',
-      'Jewellery',
-      'Grooms',
-      'Bridals',
-      'Accessories',
-    ];
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      builder: (context, serviceState) {
+        return BlocBuilder<StockManagementCubit, StockManagementState>(
+          builder: (context, state) {
+            final selectedServiceId = state.maybeWhen(
+              loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
+                  selected,
+              orElse: () => -1, // Default to -1 (All Services)
+            );
 
-    return BlocBuilder<StockManagementCubit, StockManagementState>(
-      builder: (context, state) {
-        final selectedCategory = state.maybeWhen(
-          loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
-              selected,
-          orElse: () => 'All products',
-        );
-
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: categories.map((category) {
-              final isSelected = category == selectedCategory;
-              return Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: InkWell(
-                  onTap: () {
-                    context
-                        .read<StockManagementCubit>()
-                        .filterByCategory(category);
-                  },
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColors.purple.withOpacity(0.1)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.purple
-                            : Colors.grey.shade300,
-                        width: isSelected ? 2 : 1,
+            return serviceState.maybeWhen(
+              loaded: (services) {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      // "All Services" tab
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: InkWell(
+                          onTap: () {
+                            context
+                                .read<StockManagementCubit>()
+                                .filterByService(-1);
+                          },
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: selectedServiceId == -1
+                                  ? AppColors.purple.withOpacity(0.1)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: selectedServiceId == -1
+                                    ? AppColors.purple
+                                    : Colors.grey.shade300,
+                                width: selectedServiceId == -1 ? 2 : 1,
+                              ),
+                            ),
+                            child: Text(
+                              'All Services',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: selectedServiceId == -1
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                                color: selectedServiceId == -1
+                                    ? AppColors.purple
+                                    : Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      category,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w500,
-                        color: isSelected
-                            ? AppColors.purple
-                            : Colors.grey.shade700,
-                      ),
-                    ),
+                      // Service tabs from API
+                      ...services.map((service) {
+                        final isSelected = service.id == selectedServiceId;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: InkWell(
+                            onTap: () {
+                              context
+                                  .read<StockManagementCubit>()
+                                  .filterByService(service.id);
+                            },
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppColors.purple.withOpacity(0.1)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.purple
+                                      : Colors.grey.shade300,
+                                  width: isSelected ? 2 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                service.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.w500,
+                                  color: isSelected
+                                      ? AppColors.purple
+                                      : Colors.grey.shade700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ],
                   ),
+                );
+              },
+              orElse: () => const Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-              );
-            }).toList(),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -593,206 +711,267 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     );
     final variantCount = product.variants.length;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey.shade100),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: InkWell(
+        onTap: () {
+          // Navigate to product details when clicking anywhere on the row
+          context.read<StockManagementCubit>().showProductDetails(product.id);
+        },
+        hoverColor: AppColors.purple.withOpacity(0.04),
+        splashColor: AppColors.purple.withOpacity(0.1),
+        highlightColor: AppColors.purple.withOpacity(0.05),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.grey.shade100),
+            ),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 11), // Match header spacing
+              // Item (image + name) - Width: 241
+              SizedBox(
+                width: 241,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: product.thumbnailImage != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: CustomNetworkImage(
+                                imageUrl: product.thumbnailImage!,
+                                width: 52,
+                                height: 52,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Icon(Icons.image,
+                              color: Colors.grey.shade400, size: 24),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.name,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF1F2937),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (product.description != null &&
+                              product.description!.isNotEmpty)
+                            Text(
+                              product.description!,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade600,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Category - Width: 133
+              SizedBox(
+                width: 133,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.purple.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      product.category ?? 'Bridals',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.purple,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Sale Price - Width: 117
+              SizedBox(
+                width: 117,
+                child: Text(
+                  product.price != null ? '₹ ${product.price}' : '-',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1F2937),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Rent Price - Width: 102
+              SizedBox(
+                width: 102,
+                child: Text(
+                  product.price != null ? '₹ ${product.price}' : '-',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1F2937),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Total Quantity - Width: 106
+              SizedBox(
+                width: 106,
+                child: Text(
+                  totalStock.toString(),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1F2937),
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Total Variants - Width: 106
+              SizedBox(
+                width: 106,
+                child: Text(
+                  variantCount.toString(),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1F2937),
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Actions - Width: 120
+              SizedBox(
+                width: 120,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _showAddEditProductDialog(context, product: product);
+                      },
+                      icon: Icon(
+                        Icons.edit_outlined,
+                        size: 20,
+                        color: Colors.grey.shade600,
+                      ),
+                      tooltip: 'Edit',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: () {
+                        // Use state-based navigation to show product details as full screen
+                        context
+                            .read<StockManagementCubit>()
+                            .showProductDetails(product.id);
+                      },
+                      icon: Icon(
+                        Icons.visibility_outlined,
+                        size: 20,
+                        color: Colors.grey.shade600,
+                      ),
+                      tooltip: 'View',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: () {
+                        _showDeleteConfirmationDialog(context, product);
+                      },
+                      icon: Icon(
+                        Icons.delete_outline,
+                        size: 20,
+                        color: Colors.grey.shade600,
+                      ),
+                      tooltip: 'Delete',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      child: Row(
-        children: [
-          const SizedBox(width: 11), // Match header spacing
-          // Item (image + name) - Width: 241
-          SizedBox(
-            width: 241,
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: product.thumbnailImage != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: CustomNetworkImage(
-                            imageUrl: product.thumbnailImage!,
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Icon(Icons.image,
-                          color: Colors.grey.shade400, size: 20),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.name,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1F2937),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (product.description != null &&
-                          product.description!.isNotEmpty)
-                        Text(
-                          product.description!,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(
+      BuildContext context, ProductModel product) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Product'),
+        content: Text(
+            'Are you sure you want to delete product "${product.name}"? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
           ),
-          const SizedBox(width: 12),
-          // Category - Width: 133
-          SizedBox(
-            width: 133,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-              decoration: BoxDecoration(
-                color: AppColors.purple.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                product.category ?? 'Bridals',
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.purple,
-                ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Sale Price - Width: 117
-          SizedBox(
-            width: 117,
-            child: Text(
-              product.price != null ? '₹ ${product.price}' : '-',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF1F2937),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Rent Price - Width: 102
-          SizedBox(
-            width: 102,
-            child: Text(
-              product.price != null ? '₹ ${product.price}' : '-',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF1F2937),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Total Quantity - Width: 106
-          SizedBox(
-            width: 106,
-            child: Text(
-              totalStock.toString(),
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Total Variants - Width: 106
-          SizedBox(
-            width: 106,
-            child: Text(
-              variantCount.toString(),
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Actions - Width: 120
-          SizedBox(
-            width: 120,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    // TODO: Navigate to edit product screen
-                  },
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  tooltip: 'Edit',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    // Use state-based navigation to show product details as full screen
-                    context
-                        .read<StockManagementCubit>()
-                        .showProductDetails(product.id);
-                  },
-                  icon: Icon(
-                    Icons.visibility_outlined,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  tooltip: 'View',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    // TODO: Show delete confirmation dialog
-                  },
-                  icon: Icon(
-                    Icons.delete_outline,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                  tooltip: 'Delete',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ],
-            ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              try {
+                // Show loading indicator if possible, or just call the cubit
+                await context
+                    .read<StockManagementCubit>()
+                    .deleteProduct(product.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Product deleted successfully')),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to delete product: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

@@ -95,4 +95,50 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
       orElse: () {},
     );
   }
+
+  /// Add a new variant to the product
+  Future<void> addProductVariant({
+    required int productId,
+    required String attribute,
+    required int stock,
+  }) async {
+    try {
+      await _repository.addProductVariants(
+        productId: productId,
+        attribute: attribute,
+        stock: stock,
+      );
+      // Reload product details to show the new variant
+      await loadProductDetails(productId);
+    } catch (e) {
+      log('Error adding product variant: $e');
+      rethrow;
+    }
+  }
+
+  /// Delete a variant from the product
+  Future<void> deleteProductVariant(
+      {required int productId, required int variantId}) async {
+    try {
+      await _repository.deleteProduct(
+        productId: productId,
+        variantId: variantId,
+      );
+      // Reload product details to refresh the variants list
+      await loadProductDetails(productId);
+    } catch (e) {
+      log('Error deleting product variant: $e');
+      rethrow;
+    }
+  }
+
+  /// Delete the entire product
+  Future<void> deleteProduct(int productId) async {
+    try {
+      await _repository.deleteProduct(productId: productId);
+    } catch (e) {
+      log('Error deleting product: $e');
+      rethrow;
+    }
+  }
 }

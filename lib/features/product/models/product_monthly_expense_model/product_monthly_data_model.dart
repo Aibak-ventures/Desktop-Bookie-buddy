@@ -8,8 +8,8 @@ class ProductMonthlyDataModel with _$ProductMonthlyDataModel {
   const factory ProductMonthlyDataModel({
     required int year,
     required int month,
-    @JsonKey(name: 'total_expense') required int totalExpense,
-    @JsonKey(name: 'total_earned') required int totalEarned,
+    @JsonKey(name: 'total_expense') required double totalExpense,
+    @JsonKey(name: 'total_earned') required double totalEarned,
   }) = _ProductMonthlyDataModel;
 
   factory ProductMonthlyDataModel.fromJson(Map<String, dynamic> json) =>

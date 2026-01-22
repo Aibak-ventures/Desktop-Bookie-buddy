@@ -24,9 +24,9 @@ mixin _$ProductMonthlyDataModel {
   int get year => throw _privateConstructorUsedError;
   int get month => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_expense')
-  int get totalExpense => throw _privateConstructorUsedError;
+  double get totalExpense => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_earned')
-  int get totalEarned => throw _privateConstructorUsedError;
+  double get totalEarned => throw _privateConstructorUsedError;
 
   /// Serializes this ProductMonthlyDataModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,8 +47,8 @@ abstract class $ProductMonthlyDataModelCopyWith<$Res> {
   $Res call(
       {int year,
       int month,
-      @JsonKey(name: 'total_expense') int totalExpense,
-      @JsonKey(name: 'total_earned') int totalEarned});
+      @JsonKey(name: 'total_expense') double totalExpense,
+      @JsonKey(name: 'total_earned') double totalEarned});
 }
 
 /// @nodoc
@@ -84,11 +84,11 @@ class _$ProductMonthlyDataModelCopyWithImpl<$Res,
       totalExpense: null == totalExpense
           ? _value.totalExpense
           : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       totalEarned: null == totalEarned
           ? _value.totalEarned
           : totalEarned // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
     ) as $Val);
   }
 }
@@ -105,8 +105,8 @@ abstract class _$$ProductMonthlyDataModelImplCopyWith<$Res>
   $Res call(
       {int year,
       int month,
-      @JsonKey(name: 'total_expense') int totalExpense,
-      @JsonKey(name: 'total_earned') int totalEarned});
+      @JsonKey(name: 'total_expense') double totalExpense,
+      @JsonKey(name: 'total_earned') double totalEarned});
 }
 
 /// @nodoc
@@ -141,11 +141,11 @@ class __$$ProductMonthlyDataModelImplCopyWithImpl<$Res>
       totalExpense: null == totalExpense
           ? _value.totalExpense
           : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       totalEarned: null == totalEarned
           ? _value.totalEarned
           : totalEarned // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
     ));
   }
 }
@@ -168,10 +168,10 @@ class _$ProductMonthlyDataModelImpl implements _ProductMonthlyDataModel {
   final int month;
   @override
   @JsonKey(name: 'total_expense')
-  final int totalExpense;
+  final double totalExpense;
   @override
   @JsonKey(name: 'total_earned')
-  final int totalEarned;
+  final double totalEarned;
 
   @override
   String toString() {
@@ -217,8 +217,8 @@ abstract class _ProductMonthlyDataModel implements ProductMonthlyDataModel {
   const factory _ProductMonthlyDataModel(
           {required final int year,
           required final int month,
-          @JsonKey(name: 'total_expense') required final int totalExpense,
-          @JsonKey(name: 'total_earned') required final int totalEarned}) =
+          @JsonKey(name: 'total_expense') required final double totalExpense,
+          @JsonKey(name: 'total_earned') required final double totalEarned}) =
       _$ProductMonthlyDataModelImpl;
 
   factory _ProductMonthlyDataModel.fromJson(Map<String, dynamic> json) =
@@ -230,10 +230,10 @@ abstract class _ProductMonthlyDataModel implements ProductMonthlyDataModel {
   int get month;
   @override
   @JsonKey(name: 'total_expense')
-  int get totalExpense;
+  double get totalExpense;
   @override
   @JsonKey(name: 'total_earned')
-  int get totalEarned;
+  double get totalEarned;
 
   /// Create a copy of ProductMonthlyDataModel
   /// with the given fields replaced by the non-null parameter values.

@@ -13,7 +13,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
 
   /// Load products with optional filtering and searching
   Future<void> loadProducts({
-    String category = 'All products',
+    int? serviceId, // null or -1 means "All Services"
     String searchQuery = '',
     int page = 1,
   }) async {
@@ -23,15 +23,21 @@ class StockManagementCubit extends Cubit<StockManagementState> {
       } else {
         // Keep current state but mark as paginating
         state.maybeWhen(
-          loaded: (products, totalProducts, totalCategories, nextPageUrl,
-              isPaginating, selectedCategory, currentQuery, selectedProductId) {
+          loaded: (products,
+              totalProducts,
+              totalCategories,
+              nextPageUrl,
+              isPaginating,
+              selectedServiceId,
+              currentQuery,
+              selectedProductId) {
             emit(StockManagementState.loaded(
               products: products,
               totalProducts: totalProducts,
               totalCategories: totalCategories,
               nextPageUrl: nextPageUrl,
               isPaginating: true,
-              selectedCategory: selectedCategory,
+              selectedServiceId: selectedServiceId,
               searchQuery: currentQuery,
               selectedProductId: selectedProductId,
             ));
@@ -40,12 +46,30 @@ class StockManagementCubit extends Cubit<StockManagementState> {
         );
       }
 
-      // Use searchAllProducts which calls the product-search API
-      // This API supports both search and getting all products
-      final paginationModel = await _repository.searchAllProducts(
-        query: searchQuery.isEmpty ? null : searchQuery,
-        page: page,
-      );
+      // Prepare the service ID for API (null if -1 or null means all services)
+      final int? apiServiceId =
+          (serviceId == null || serviceId == -1) ? null : serviceId;
+
+      final paginationModel = (apiServiceId == null)
+          ? await _repository.searchAllProducts(
+              query: searchQuery,
+              page: page,
+            )
+          : (searchQuery.isEmpty)
+              ? await _repository.getProductsPaginated(
+                  serviceId: apiServiceId,
+                  page: page,
+                  includeInStockOnly: false,
+                )
+              : await _repository.searchAndFilterProducts(
+                  serviceId: apiServiceId,
+                  query: searchQuery,
+                  type: 'name',
+                  startPrice: null,
+                  endPrice: null,
+                  page: page,
+                  includeInStockOnly: false,
+                );
 
       final productList = paginationModel.data;
       final nextPageUrl = paginationModel.nextPageUrl;
@@ -61,7 +85,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
           totalCategories: totalCategories,
           nextPageUrl: nextPageUrl,
           isPaginating: false,
-          selectedCategory: category,
+          selectedServiceId: serviceId ?? -1, // Default to -1 (All Services)
           searchQuery: searchQuery,
         ));
       } else {
@@ -75,7 +99,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
               totalCategories: totalCategories,
               nextPageUrl: nextPageUrl,
               isPaginating: false,
-              selectedCategory: category,
+              selectedServiceId: serviceId ?? -1,
               searchQuery: searchQuery,
               selectedProductId: selectedProductId,
             ));
@@ -99,7 +123,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
           totalCategories,
           nextPageUrl,
           isPaginating,
-          selectedCategory,
+          selectedServiceId,
           searchQuery,
           selectedProductId) async {
         if (nextPageUrl != null && !isPaginating) {
@@ -107,7 +131,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
           final uri = Uri.parse(nextPageUrl);
           final page = int.tryParse(uri.queryParameters['page'] ?? '1') ?? 1;
           await loadProducts(
-            category: selectedCategory,
+            serviceId: selectedServiceId,
             searchQuery: searchQuery,
             page: page,
           );
@@ -117,18 +141,18 @@ class StockManagementCubit extends Cubit<StockManagementState> {
     );
   }
 
-  /// Filter by category
-  Future<void> filterByCategory(String category) async {
-    await loadProducts(category: category, searchQuery: '', page: 1);
+  /// Filter by service ID
+  Future<void> filterByService(int? serviceId) async {
+    await loadProducts(serviceId: serviceId, searchQuery: '', page: 1);
   }
 
   /// Search products
   Future<void> searchProducts(String query) async {
     await state.maybeWhen(
       loaded:
-          (_, __, ___, ____, _____, selectedCategory, ______, _______) async {
+          (_, __, ___, ____, _____, selectedServiceId, ______, _______) async {
         await loadProducts(
-          category: selectedCategory,
+          serviceId: selectedServiceId,
           searchQuery: query,
           page: 1,
         );
@@ -143,14 +167,14 @@ class StockManagementCubit extends Cubit<StockManagementState> {
   void showProductDetails(int productId) {
     state.maybeWhen(
       loaded: (products, totalProducts, totalCategories, nextPageUrl,
-          isPaginating, selectedCategory, searchQuery, _) {
+          isPaginating, selectedServiceId, searchQuery, _) {
         emit(StockManagementState.loaded(
           products: products,
           totalProducts: totalProducts,
           totalCategories: totalCategories,
           nextPageUrl: nextPageUrl,
           isPaginating: isPaginating,
-          selectedCategory: selectedCategory,
+          selectedServiceId: selectedServiceId,
           searchQuery: searchQuery,
           selectedProductId: productId,
         ));
@@ -163,19 +187,31 @@ class StockManagementCubit extends Cubit<StockManagementState> {
   void hideProductDetails() {
     state.maybeWhen(
       loaded: (products, totalProducts, totalCategories, nextPageUrl,
-          isPaginating, selectedCategory, searchQuery, _) {
+          isPaginating, selectedServiceId, searchQuery, _) {
         emit(StockManagementState.loaded(
           products: products,
           totalProducts: totalProducts,
           totalCategories: totalCategories,
           nextPageUrl: nextPageUrl,
           isPaginating: isPaginating,
-          selectedCategory: selectedCategory,
+          selectedServiceId: selectedServiceId,
           searchQuery: searchQuery,
           selectedProductId: null,
         ));
       },
       orElse: () {},
     );
+  }
+
+  /// Delete a product
+  Future<void> deleteProduct(int productId) async {
+    try {
+      await _repository.deleteProduct(productId: productId);
+      // Refresh the list after deletion
+      await loadProducts();
+    } catch (e) {
+      log('Error deleting product: $e');
+      rethrow;
+    }
   }
 }

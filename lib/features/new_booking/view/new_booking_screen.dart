@@ -1694,28 +1694,30 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       builder: (context, products, _) {
         if (products.isEmpty) {
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.shopping_cart_outlined,
-                    size: 32, color: Colors.grey.shade300),
-                const SizedBox(height: 8),
-                Text(
-                  'No items selected',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey.shade500,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.shopping_cart_outlined,
+                      size: 32, color: Colors.grey.shade300),
+                  const SizedBox(height: 8),
+                  Text(
+                    'No items selected',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Click on products to add',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey.shade400,
+                  const SizedBox(height: 4),
+                  Text(
+                    'Click on products to add',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey.shade400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         }
@@ -2798,10 +2800,8 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
   @override
   void initState() {
     super.initState();
-    // Auto-select first variant if available
-    if (widget.product.variants.isNotEmpty) {
-      selectedVariant = widget.product.variants.first;
-    }
+    // Do not auto-select first variant as per user request
+    selectedVariant = null;
   }
 
   @override
@@ -2836,71 +2836,93 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
             ),
           ),
           const SizedBox(width: 10),
-          // Product Info
-          Expanded(
-            child: Row(
+
+          // Product Info - Fixed width
+          SizedBox(
+            width: 180,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.product.name,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        widget.product.color ?? 'color',
-                        style: const TextStyle(
-                            color: Color(0xFF707070),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 76),
-                Container(
-                  width: 1,
-                  height: 30,
-                  color: Color(0xFFA6A6A6),
-                ),
-                const SizedBox(width: 76),
-                // Selectable variant chips
-                if (variants.isNotEmpty)
-                  Wrap(
-                    spacing: 4,
-                    runSpacing: 4,
-                    children: variants.map((variant) {
-                      final isSelected = selectedVariant?.id == variant.id;
-                      return _SelectableVariantChip(
-                        text: variant.attribute,
-                        isSelected: isSelected,
-                        onTap: () {
-                          setState(() {
-                            selectedVariant = variant;
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
-                SizedBox(width: 76),
-                Container(
-                  width: 1,
-                  height: 30,
-                  color: Color(0xFFA6A6A6),
-                ),
-                SizedBox(width: 76),
                 Text(
-                  'rent price: ',
+                  widget.product.name,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  widget.product.color ?? 'color',
+                  style: const TextStyle(
+                      color: Color(0xFF707070),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 12),
+          // Divider
+          Container(
+            width: 1,
+            height: 30,
+            color: const Color(0xFFA6A6A6),
+          ),
+          const SizedBox(width: 12),
+
+          // Variants section - Flexible with horizontal scroll
+          Expanded(
+            child: SizedBox(
+              height: 40,
+              child: variants.isNotEmpty
+                  ? SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: variants.map((variant) {
+                          final isSelected = selectedVariant?.id == variant.id;
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: _SelectableVariantChip(
+                              text: variant.attribute,
+                              isSelected: isSelected,
+                              onTap: () {
+                                setState(() {
+                                  selectedVariant = variant;
+                                });
+                              },
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ),
+
+          const SizedBox(width: 12),
+          // Divider
+          Container(
+            width: 1,
+            height: 30,
+            color: const Color(0xFFA6A6A6),
+          ),
+          const SizedBox(width: 12),
+
+          // Price section - Fixed width (equal to button)
+          SizedBox(
+            width: 90,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'rent price',
                   style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w400,
-                      color: Colors.black),
+                      color: Colors.grey.shade600),
                 ),
                 Text(
                   '₹$price',
@@ -2914,21 +2936,20 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
             ),
           ),
 
-          const SizedBox(width: 8),
-          const SizedBox(width: 8),
-          // Add button - only enabled if variant selected
+          const SizedBox(width: 12),
+          // Add button - Fixed width (equal to price)
           GestureDetector(
             onTap: selectedVariant != null
                 ? () => widget.onAddProduct(selectedVariant!)
                 : null,
             child: Container(
-              width: 70,
-              height: 25,
+              width: 90,
+              height: 36,
               decoration: BoxDecoration(
                 color: selectedVariant != null
                     ? const Color(0xFF6132E4)
                     : Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -2981,12 +3002,10 @@ class _SelectableVariantChip extends StatelessWidget {
         decoration: BoxDecoration(
           shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
           borderRadius: isShortText ? null : BorderRadius.circular(8),
-          color: isSelected
-              ? const Color(0xFF6132E4)
-              : Color.fromARGB(255, 225, 215, 255),
+          color: isSelected ? AppColors.purpleLight : const Color(0xFFF8F7FF),
           border: Border.all(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade200,
-            width: isSelected ? 2 : 0.6,
+            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+            width: isSelected ? 2 : 1,
           ),
         ),
         child: Text(
@@ -2994,7 +3013,7 @@ class _SelectableVariantChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : Colors.grey.shade700,
+            color: Colors.black87,
           ),
         ),
       ),
