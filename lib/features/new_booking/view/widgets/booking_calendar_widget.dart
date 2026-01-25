@@ -109,9 +109,9 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           const Text(
             'Select dates',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: Colors.black,
             ),
           ),
           // const SizedBox(height: 16),
@@ -158,25 +158,25 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                         ),
                         const SizedBox(height: 12),
                         _buildCoolingPeriodRow(),
-                        const SizedBox(height: 72),
+                        const SizedBox(height: 7),
                       ],
                       if (widget.isSalesMode) ...[
                         // Sales mode: show only booked date (no time)
                         _buildBookedDateField(),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 7),
                       ],
 
                       _compactField(widget.clientAddressController, 'Place',
                           Icons.location_on_outlined,
                           type: TextInputType.text,
-                          validator: AppInputValidators.address),
-                      const SizedBox(height: 12),
+                          validator: (v) =>
+                              AppInputValidators.address(v, isRequired: false)),
+                      // const SizedBox(height: 6),
                       _buildStaffDetailsCard(),
 
-                      // Description field only for sales mode
-                      if (widget.isSalesMode &&
-                          widget.descriptionController != null) ...[
-                        const SizedBox(height: 12),
+                      // Description field for both booking and sales mode
+                      if (widget.descriptionController != null) ...[
+                        // const SizedBox(height: ),
                         _buildDescriptionField(),
                       ],
                     ],
@@ -237,7 +237,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                 //   validator: AppInputValidators.name,
                 //   enabled: false, // Locked during search
                 // ),
-                const SizedBox(height: 8),
+                // const SizedBox(height: 8),
               ],
               _compactField(
                 widget.clientPhone1Controller,
@@ -249,7 +249,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
               ),
               // Phone 2 - hidden in sales mode
               if (!widget.isSalesMode) ...[
-                const SizedBox(height: 8),
+                // const SizedBox(height: 8),
                 _compactField(
                   widget.clientPhone2Controller,
                   'Phone 2',
@@ -278,15 +278,18 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           hideOnUnfocus: true,
           hideOnSelect: true,
           builder: (context, controller, focusNode) => SizedBox(
-            height: 34,
+            height: 48, // Height standardized
             child: TextFormField(
               focusNode: focusNode,
               controller: controller,
               validator: AppInputValidators.name,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 13),
               decoration: InputDecoration(
                 hintText: 'Search client',
-                hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                hintStyle: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF8C8C8C),
+                    fontFamily: 'Inter'),
                 prefixIcon: const Icon(Icons.search, size: 16),
                 suffixIcon: ValueListenableBuilder(
                   valueListenable: controller,
@@ -301,15 +304,17 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                         ),
                 ),
                 contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 isDense: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -421,7 +426,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
 
   Widget _buildStaffDetailsCard() {
     return _card(
-      title: 'Staff details',
+      // title: '',
       child: BlocListener<StaffSearchCubit, StaffSearchState>(
         listener: (context, state) =>
             widget.onStaffSelected(state.selectedStaff?.id),
@@ -436,20 +441,27 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     return _card(
       title: 'Description',
       child: Container(
-        height: 100,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        height: 80,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: TextField(
           controller: widget.descriptionController,
           maxLines: 4,
-          style: const TextStyle(fontSize: 12),
+          style: const TextStyle(
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+          ),
           decoration: const InputDecoration(
             border: InputBorder.none,
             isCollapsed: true,
-            hintText: 'Enter description (optional)',
+            hintText: 'Enter notes here...',
+            hintStyle: TextStyle(
+                fontSize: 13, color: Color(0xFFCCCCCC), fontFamily: 'Inter'),
           ),
         ),
       ),
@@ -462,33 +474,35 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     IconData icon, {
     TextInputType type = TextInputType.text,
     String? Function(String?)? validator,
-    bool enabled = true, // New parameter for locking fields
+    bool enabled = true,
   }) {
     return SizedBox(
-      height: 38,
+      height: 48,
       child: TextFormField(
         controller: c,
         keyboardType: type,
         validator: validator,
-        enabled: enabled, // Controls if field is editable
+        enabled: enabled,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 13,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w500,
           color: enabled ? Colors.black : Colors.grey.shade500,
         ),
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade200),
+            borderSide: const BorderSide(color: Color(0xFFEEEEEE), width: 1),
           ),
-          filled: !enabled, // Light background when disabled
+          filled: !enabled,
           fillColor: enabled ? null : Colors.grey.shade50,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -496,32 +510,33 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: Colors.red, width: 1.5),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
           prefixIcon: Icon(icon, size: 16, color: Colors.grey.shade600),
           hintText: hint,
-          hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-          isDense: true,
-          errorStyle: const TextStyle(
-            fontSize: 0, // Hide error text
-            height: 0, // Remove the space for error text
+          hintStyle: const TextStyle(
+            fontSize: 13,
+            color: Color(0xFF8C8C8C),
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
           ),
+          isDense: true,
+          errorStyle: const TextStyle(fontSize: 0, height: 0),
           errorMaxLines: 1,
         ),
       ),
     );
   }
 
-  Widget _card(
-      {required String title, Widget? trailing, required Widget child}) {
+  Widget _card({String? title, Widget? trailing, required Widget child}) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
         color: Colors.white,
         // borderRadius: BorderRadius.circular(10),
@@ -532,14 +547,18 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
         children: [
           Row(
             children: [
-              Text(title,
+              Text(title ?? '',
                   style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w600)),
+                    color: Color(0xFF8C8C8C),
+                    fontSize: 11,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                  )),
               const Spacer(),
               if (trailing != null) trailing,
             ],
           ),
-          const SizedBox(height: 8),
+          // const SizedBox(height: 8),
           child,
         ],
       ),
@@ -657,47 +676,36 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     required IconData icon,
     required VoidCallback onTap,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 6),
-        InkWell(
-          onTap: onTap,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: AppColors.purple.withOpacity(0.05),
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Icon(icon, size: 18, color: AppColors.purple),
-                const SizedBox(width: 8),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const Spacer(),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 18, color: Colors.grey.shade500),
-              ],
-            ),
-          ),
         ),
-      ],
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: AppColors.purple),
+            const SizedBox(width: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+            const Spacer(),
+            Icon(Icons.keyboard_arrow_down,
+                size: 18, color: Colors.grey.shade400),
+          ],
+        ),
+      ),
     );
   }
 
@@ -706,136 +714,112 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     required String value,
     required VoidCallback onTap,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 6),
-        InkWell(
-          onTap: onTap,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300, width: 1),
           borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: AppColors.purple.withOpacity(0.05),
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 18, color: Colors.grey.shade500),
-              ],
-            ),
-          ),
         ),
-      ],
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Icon(Icons.keyboard_arrow_down,
+                size: 18, color: Colors.grey.shade400),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildCoolingPeriodRow() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Text(
-          'Cooling period',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontWeight: FontWeight.w500,
+        Expanded(
+          flex: 2,
+          child: InkWell(
+            onTap: _selectCoolingPeriodDate,
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              height: 48,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today_outlined,
+                      size: 16, color: AppColors.purple),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.coolingPeriodDate?.format() ?? 'Cooling period',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                      color: widget.coolingPeriodDate != null
+                          ? Colors.black
+                          : const Color(0xFF8C8C8C),
+                    ),
+                  ),
+                  const Spacer(),
+                  Icon(Icons.keyboard_arrow_down,
+                      size: 18, color: Colors.grey.shade400),
+                ],
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: 6),
-        Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: InkWell(
-                onTap: _selectCoolingPeriodDate,
+        const SizedBox(width: 12),
+        Expanded(
+          child: InkWell(
+            onTap: _selectCoolingPeriodTime,
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              height: 48,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300, width: 1),
                 borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.purple.withOpacity(0.05),
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.calendar_today_outlined,
-                          size: 18, color: AppColors.purple),
-                      const SizedBox(width: 8),
-                      Text(
-                        widget.coolingPeriodDate?.format() ?? 'Select date',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: widget.coolingPeriodDate != null
-                              ? Colors.black87
-                              : Colors.grey.shade500,
-                        ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.coolingPeriodTime?.format(context) ?? '-:-- PM',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                        color: widget.coolingPeriodTime != null
+                            ? Colors.black
+                            : const Color(0xFF8C8C8C),
                       ),
-                      const Spacer(),
-                      Icon(Icons.keyboard_arrow_down,
-                          size: 18, color: Colors.grey.shade500),
-                    ],
+                    ),
                   ),
-                ),
+                  Icon(Icons.keyboard_arrow_down,
+                      size: 18, color: Colors.grey.shade400),
+                ],
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: InkWell(
-                onTap: _selectCoolingPeriodTime,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.purple.withOpacity(0.05),
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.coolingPeriodTime?.format(context) ??
-                              '-:-- PM',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: widget.coolingPeriodTime != null
-                                ? Colors.black87
-                                : Colors.grey.shade500,
-                          ),
-                        ),
-                      ),
-                      Icon(Icons.keyboard_arrow_down,
-                          size: 18, color: Colors.grey.shade500),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ],
     );

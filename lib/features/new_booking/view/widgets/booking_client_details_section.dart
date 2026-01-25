@@ -59,7 +59,7 @@ class _BookingClientDetailsSectionState
 
   Widget _buildStaffDetailsCard() {
     return _card(
-      title: 'Staff details',
+      title: '',
       child: BlocListener<StaffSearchCubit, StaffSearchState>(
         listener: (context, state) =>
             widget.onStaffSelected(state.selectedStaff?.id),

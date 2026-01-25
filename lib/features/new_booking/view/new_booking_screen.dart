@@ -15,7 +15,9 @@ import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/show_search_type_bottom_sheet.dart';
+
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
@@ -48,10 +50,10 @@ class NewBookingScreen extends StatefulWidget {
   const NewBookingScreen({super.key, this.onClose});
 
   @override
-  State<NewBookingScreen> createState() => _NewBookingScreenState();
+  State<NewBookingScreen> createState() => NewBookingScreenState();
 }
 
-class _NewBookingScreenState extends State<NewBookingScreen> {
+class NewBookingScreenState extends State<NewBookingScreen> {
   // Current selected tab
   BookingType selectedBookingType = BookingType.booking;
 
@@ -62,6 +64,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   late DateTime pickupDate;
   late DateTime returnDate;
   DateTime? coolingPeriodDate;
+  TimeOfDay? coolingPeriodTime;
   TimeOfDay? pickupTime;
   TimeOfDay? returnTime;
 
@@ -80,6 +83,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   final discountAmountController = TextEditingController();
   PaymentMethod paymentMethod = PaymentMethod.gPay;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
+  bool sendPdfToWhatsApp = true;
 
   // Products/Services
   final selectedProductsNotifier =
@@ -104,6 +108,13 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
+
+  // Product search filter state
+  final _searchTypes = ['Name', 'Category', 'Model', 'Color'];
+  final _selectedSearchTypeIndex = ValueNotifier<int>(0);
+  final _priceRange = ValueNotifier<RangeValues>(const RangeValues(0, 50000));
+  final _maxPriceNotifier = ValueNotifier<double>(50000);
+  final _isPriceFilterEnabled = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -139,12 +150,193 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     documentsNotifier.dispose();
     serviceSearchController.dispose();
     _selectProductBloc.close();
+    _selectedSearchTypeIndex.dispose();
+    _priceRange.dispose();
+    _maxPriceNotifier.dispose();
+    _isPriceFilterEnabled.dispose();
     super.dispose();
   }
 
   void _removeSearchOverlay() {
     _searchOverlayEntry?.remove();
     _searchOverlayEntry = null;
+  }
+
+  /// Check if there are any unsaved changes
+  bool hasUnsavedChanges() {
+    // Check if products are selected
+    if (selectedProductsNotifier.value.isNotEmpty) return true;
+
+    // Check if client details are filled
+    if (clientNameController.text.trim().isNotEmpty) return true;
+    if (clientPhone1Controller.text.trim().isNotEmpty) return true;
+    if (clientPhone2Controller.text.trim().isNotEmpty) return true;
+    if (clientAddressController.text.trim().isNotEmpty) return true;
+
+    // Check if payment details are filled
+    if (advanceAmountController.text.trim().isNotEmpty) return true;
+    if (securityAmountController.text.trim().isNotEmpty) return true;
+    if (discountAmountController.text.trim().isNotEmpty) return true;
+
+    // Check if additional charges exist
+    if (additionalChargesNotifier.value.isNotEmpty) return true;
+
+    // Check if documents are uploaded
+    if (documentsNotifier.value.isNotEmpty) return true;
+
+    // Check if description is filled
+    if (descriptionController.text.trim().isNotEmpty) return true;
+
+    return false;
+  }
+
+  /// Handle back navigation with discard dialog if needed
+  Future<void> _handleBackNavigation() async {
+    if (hasUnsavedChanges()) {
+      final shouldDiscard = await showDiscardDialog(context);
+      if (shouldDiscard == true) {
+        if (!mounted) return;
+        if (widget.onClose != null) {
+          widget.onClose!();
+        } else {
+          Navigator.of(context).pop();
+        }
+      }
+    } else {
+      // No changes, navigate directly
+      if (widget.onClose != null) {
+        widget.onClose!();
+      } else {
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
+  /// Show product filter bottom sheet
+  void _showProductFilterBottomSheet() {
+    // Calculate max price from current product list
+    final currentProducts = _selectProductBloc.state.maybeWhen(
+      loaded: (
+        products,
+        nextPageUrl,
+        serviceId,
+        pickupDate,
+        returnDate,
+        isPaginating,
+        isSearching,
+        searchQuery,
+        searchType,
+        startPrice,
+        endPrice,
+        pickupTime,
+        returnTime,
+        useAvailableProductsApi,
+        isSales,
+      ) =>
+          products,
+      orElse: () => <ProductModel>[],
+    );
+
+    if (currentProducts.isNotEmpty) {
+      double maxProductPrice = 0;
+      for (final product in currentProducts) {
+        final productPrice = product.price ?? 0;
+        if (productPrice > maxProductPrice) {
+          maxProductPrice = productPrice.toDouble();
+        }
+        // Also check variant prices
+        for (final variant in product.variants) {
+          final variantPrice = variant.price ?? 0;
+          if (variantPrice > maxProductPrice) {
+            maxProductPrice = variantPrice.toDouble();
+          }
+        }
+      }
+      if (maxProductPrice > _maxPriceNotifier.value) {
+        _maxPriceNotifier.value = maxProductPrice;
+        _priceRange.value = RangeValues(0, maxProductPrice);
+      }
+    }
+
+    showSearchTypeBottomSheet(
+      context: context,
+      searchTypes: _searchTypes,
+      selectedSearchTypeIndex: _selectedSearchTypeIndex,
+      onTap: (type, index) {
+        _selectedSearchTypeIndex.value = index;
+      },
+      priceRange: _priceRange,
+      minPrice: 0,
+      maxPriceNotifier: _maxPriceNotifier,
+      onPriceChanged: (range) {
+        _priceRange.value = range;
+      },
+      isPriceFilterEnabledNotifier: _isPriceFilterEnabled,
+      onApply: (typeIndex, range, isPriceEnabled) {
+        // Apply filters to product search
+        _applyProductFilters(typeIndex, range, isPriceEnabled);
+      },
+    );
+  }
+
+  /// Apply product filters based on selection
+  void _applyProductFilters(
+      int searchTypeIndex, RangeValues priceRange, bool isPriceEnabled) {
+    final searchTerm = serviceSearchController.text.trim();
+    final isSales = selectedBookingType == BookingType.sales;
+
+    // Determine search type
+    String? searchType;
+    switch (searchTypeIndex) {
+      case 0:
+        searchType = 'name';
+        break;
+      case 1:
+        searchType = 'category';
+        break;
+      case 2:
+        searchType = 'model';
+        break;
+      case 3:
+        searchType = 'color';
+        break;
+    }
+
+    // Check if any filter is applied
+    final hasAnyFilter =
+        searchTerm.isNotEmpty || isPriceEnabled || searchTypeIndex != 0;
+
+    // Trigger search with filters
+    if (hasAnyFilter) {
+      _selectProductBloc.add(
+        SelectProductEvent.searchProducts(
+          serviceId: selectedServiceId == -1 ? null : selectedServiceId,
+          query: searchTerm.isEmpty ? null : searchTerm,
+          type: searchType,
+          startPrice: isPriceEnabled ? priceRange.start.toInt() : null,
+          endPrice: isPriceEnabled ? priceRange.end.toInt() : null,
+          pickupDate: pickupDate.format(),
+          returnDate: returnDate.format(),
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+          useAvailableProductsApi: !isSales,
+          isSales: isSales,
+        ),
+      );
+    } else {
+      // No filters applied, load all products
+      _selectProductBloc.add(
+        SelectProductEvent.loadProducts(
+          serviceId: selectedServiceId == -1 ? null : selectedServiceId,
+          pickupDate: pickupDate.format(),
+          returnDate: returnDate.format(),
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+          useAvailableProductsApi: !isSales,
+          isSales: isSales,
+        ),
+      );
+    }
   }
 
   void _onSearchChanged() {
@@ -209,23 +401,30 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
-      color: const Color(0xFFF5F6FA),
-      height: screenHeight,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            // Header with tabs
-            _buildCompactHeader(),
-            // Main content - no scrolling
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: _buildMainContent(),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        await _handleBackNavigation();
+      },
+      child: Container(
+        color: const Color(0xFFF5F6FA),
+        height: screenHeight,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // Header with tabs
+              _buildCompactHeader(),
+              // Main content - no scrolling
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  child: _buildMainContent(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -248,13 +447,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         children: [
           // Back button
           InkWell(
-            onTap: () {
-              if (widget.onClose != null) {
-                widget.onClose!();
-              } else {
-                Navigator.of(context).pop();
-              }
-            },
+            onTap: _handleBackNavigation,
             borderRadius: BorderRadius.circular(4),
             child: Padding(
               padding: const EdgeInsets.all(4),
@@ -333,7 +526,8 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           style: TextStyle(
             color: isSelected ? Colors.white : Colors.grey.shade700,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            fontSize: 12,
+            fontSize: 13,
+            fontFamily: 'Inter',
           ),
         ),
       ),
@@ -660,19 +854,26 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade300, width: 1),
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
                 controller: descriptionController,
                 maxLines: null,
                 expands: true,
-                style: const TextStyle(fontSize: 12),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
                 decoration: InputDecoration(
                   hintText: 'Enter notes...',
-                  hintStyle:
-                      TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(8),
+                  contentPadding: const EdgeInsets.all(12),
                 ),
               ),
             ),
@@ -689,7 +890,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         children: [
           // Calendar + date time (already compact)
           SizedBox(
-            height: selectedBookingType == BookingType.sales ? 460 : 530,
+            height: selectedBookingType == BookingType.sales ? 460 : 490,
             child: BookingCalendarWidget(
               staffNameController: staffNameController,
               clientNameController: clientNameController,
@@ -707,14 +908,15 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               coolingPeriodDate: coolingPeriodDate,
               pickupTime: pickupTime,
               returnTime: returnTime,
-              coolingPeriodTime: null,
+              coolingPeriodTime: coolingPeriodTime,
               onPickupDateChanged: (d) => setState(() => pickupDate = d),
               onReturnDateChanged: (d) => setState(() => returnDate = d),
               onCoolingPeriodDateChanged: (d) =>
                   setState(() => coolingPeriodDate = d),
               onPickupTimeChanged: (t) => setState(() => pickupTime = t),
               onReturnTimeChanged: (t) => setState(() => returnTime = t),
-              onCoolingPeriodTimeChanged: (_) {},
+              onCoolingPeriodTimeChanged: (t) =>
+                  setState(() => coolingPeriodTime = t),
               isSalesMode: selectedBookingType == BookingType.sales,
             ),
           ),
@@ -788,10 +990,17 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           listener: (context, state) {
             // Show/hide overlay based on state
             state.maybeWhen(
-              loaded: (products, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11,
-                  p12, p13, p14) {
+              loaded: (products, p1, p2, p3, p4, p5, isSearching, p7, p8, p9,
+                  p10, p11, p12, p13, p14) {
+                // Show overlay if:
+                // 1. There are products AND
+                // 2. Either search text is not empty OR filters are applied (isSearching = true)
+                final hasSearchText = serviceSearchController.text.isNotEmpty;
+                final hasFilters = _isPriceFilterEnabled.value ||
+                    _selectedSearchTypeIndex.value != 0;
+
                 if (products.isNotEmpty &&
-                    serviceSearchController.text.isNotEmpty) {
+                    (hasSearchText || hasFilters || isSearching)) {
                   _showSearchOverlay(products);
                 } else {
                   _removeSearchOverlay();
@@ -810,10 +1019,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   serviceState.maybeWhen(
                     loaded: (services) {
                       return Container(
-                        height: 34,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        height: 48,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.grey.shade300),
                         ),
@@ -822,7 +1031,8 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                             value: selectedServiceId,
                             hint: const Text(
                               'Select Service',
-                              style: TextStyle(fontSize: 12),
+                              style:
+                                  TextStyle(fontSize: 13, fontFamily: 'Inter'),
                             ),
                             icon: Icon(
                               Icons.keyboard_arrow_down,
@@ -830,8 +1040,9 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                               color: Colors.grey.shade600,
                             ),
                             style: const TextStyle(
-                              fontSize: 12,
+                              fontSize: 13,
                               color: Colors.black87,
+                              fontFamily: 'Inter',
                             ),
                             items: [
                               // "All Services" option
@@ -891,13 +1102,32 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(width: 8),
                   // Search TextField
                   Expanded(
-                    child: SizedBox(
-                      height: 34,
-                      child: CustomTextField(
-                        validator: (value) => null,
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: TextField(
                         controller: serviceSearchController,
-                        hintText: 'Search product name',
-                        prefixIcon: const Icon(Icons.search, size: 16),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Search products',
+                          hintStyle: const TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                            color: Color(0xFF8C8C8C),
+                          ),
+                          prefixIcon: const Icon(Icons.search, size: 18),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 14),
+                        ),
                         onChanged: (value) {
                           _onSearchChanged();
                           if (value.isEmpty) {
@@ -905,6 +1135,23 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                           }
                         },
                       ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Filter Button
+                  Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: IconButton(
+                      onPressed: _showProductFilterBottomSheet,
+                      icon: const Icon(Icons.tune, size: 20),
+                      color: const Color(0xFF6132E4),
+                      tooltip: 'Filter products',
                     ),
                   ),
                 ],
@@ -1108,10 +1355,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           children: [
             // Product Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(10),
               child: Container(
-                width: 48,
-                height: 48,
+                width: 72,
+                height: 72,
                 color: Colors.grey.shade100,
                 child: product.image != null && product.image!.isNotEmpty
                     ? Image.network(
@@ -1119,13 +1366,13 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Icon(
                           Icons.image_outlined,
-                          size: 24,
+                          size: 32,
                           color: Colors.grey.shade400,
                         ),
                       )
                     : Icon(
                         Icons.image_outlined,
-                        size: 24,
+                        size: 32,
                         color: Colors.grey.shade400,
                       ),
               ),
@@ -1309,16 +1556,46 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
   Widget _buildProductTableHeader() {
     return Container(
-      height: 32,
+      height: 36,
       color: Colors.grey.shade100,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
-        children: const [
+        children: [
           Expanded(
-              flex: 4, child: Text("Item", style: TextStyle(fontSize: 11))),
-          Expanded(child: Text("Variants", style: TextStyle(fontSize: 11))),
-          Expanded(child: Text("Price", style: TextStyle(fontSize: 11))),
-          SizedBox(width: 60),
+            flex: 4,
+            child: Text(
+              "Item",
+              style: TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              "Variants",
+              style: TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              "Price",
+              style: TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ),
+          const SizedBox(width: 60),
         ],
       ),
     );
@@ -1602,9 +1879,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: Text(
               'Item',
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
+                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                color: Colors.grey.shade700,
               ),
             ),
           ),
@@ -1613,9 +1891,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Quantity',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
+                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                color: Colors.grey.shade700,
               ),
             ),
           ),
@@ -1624,9 +1903,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Available',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
+                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                color: Colors.grey.shade700,
               ),
             ),
           ),
@@ -1635,9 +1915,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Price',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
+                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                color: Colors.grey.shade700,
               ),
             ),
           ),
@@ -1646,9 +1927,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               'Total',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
+                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                color: Colors.grey.shade700,
               ),
             ),
           ),
@@ -1744,8 +2026,8 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: Row(
               children: [
                 Container(
-                  width: 32,
-                  height: 32,
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(4),
@@ -1758,13 +2040,13 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) => Icon(
                               Icons.image,
-                              size: 16,
+                              size: 24,
                               color: Colors.grey.shade400,
                             ),
                           ),
                         )
                       : Icon(Icons.image,
-                          size: 16, color: Colors.grey.shade400),
+                          size: 24, color: Colors.grey.shade400),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -1774,8 +2056,9 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.name,
                         style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -1783,8 +2066,9 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.color ?? '',
                         style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
                           color: Color(0xFFA6A6A6),
                         ),
                         maxLines: 1,
@@ -1825,15 +2109,29 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () => _incrementQuantity(product),
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6132E4).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(3),
+                  onTap: product.quantity >= product.variant.quantity
+                      ? null
+                      : () => _incrementQuantity(product),
+                  child: Opacity(
+                    opacity: product.quantity >= product.variant.quantity
+                        ? 0.4
+                        : 1.0,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: product.quantity >= product.variant.quantity
+                            ? Colors.grey.shade300
+                            : const Color(0xFF6132E4).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        size: 14,
+                        color: product.quantity >= product.variant.quantity
+                            ? Colors.grey.shade500
+                            : const Color(0xFF6132E4),
+                      ),
                     ),
-                    child: const Icon(Icons.add,
-                        size: 14, color: Color(0xFF6132E4)),
                   ),
                 ),
               ],
@@ -1867,11 +2165,11 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           Expanded(
             child: Container(
               width: 150,
-              height: 32,
+              height: 48,
               padding: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
                 controller:
@@ -2113,17 +2411,17 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   ],
                   // Payment method
                   // _buildPaymentMethodSection(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 3),
                   // Delivery status
                   if (!isSalesMode) _buildDeliveryStatusSection(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 3),
                   _buildPaymentMethodSection(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 3),
                   if (!isSalesMode) ...[
                     BookingDocumentUploadSection(
                       documentsNotifier: documentsNotifier,
                     ),
-                    const SizedBox(height: 20),
+                    // const SizedBox(height: 20),
                   ],
                 ],
               ),
@@ -2134,9 +2432,15 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         // Summary section
         Row(
           children: [
+            const SizedBox(width: 6),
             const Text(
               'Summary',
-              style: TextStyle(fontSize: 18, color: Color(0xFF3E3E3E)),
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF3E3E3E),
+              ),
             ),
           ],
         ),
@@ -2161,13 +2465,25 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+              ),
               decoration: InputDecoration(
-                hintStyle: TextStyle(fontSize: 13),
+                hintStyle: const TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  color: Color(0xFF8C8C8C),
+                ),
                 hintText: label,
                 prefixText: '₹ ',
-                prefixStyle:
-                    TextStyle(fontSize: 16, color: Colors.grey.shade600),
+                prefixStyle: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade600,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
                 border: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
@@ -2196,7 +2512,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6132E4).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child:
                     const Icon(Icons.add, size: 14, color: Color(0xFF6132E4)),
@@ -2213,7 +2529,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
                 child: Center(
@@ -2232,7 +2548,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.grey.shade200),
                   ),
                   child: Row(
@@ -2240,14 +2556,21 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                     children: [
                       Text(
                         charge.name ?? 'Charge',
-                        style: const TextStyle(fontSize: 11),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       Row(
                         children: [
                           Text(
                             '₹${charge.amount ?? 0}',
                             style: const TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.w600),
+                              fontSize: 13,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           const SizedBox(width: 4),
                           InkWell(
@@ -2310,12 +2633,13 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       onTap: () => setState(() => paymentMethod = value),
       borderRadius: BorderRadius.circular(6),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        height: 40, // Consistent height for payment method options
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF6132E4).withOpacity(0.1)
               : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
             width: isSelected ? 1.5 : 1,
@@ -2333,7 +2657,8 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
             Text(
               label,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 13,
+                fontFamily: 'Inter',
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color:
                     isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
@@ -2355,11 +2680,12 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
         ),
         const SizedBox(height: 4),
         Container(
-          height: 32,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          height: 42,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
+            color: Colors.white,
             border: Border.all(color: Colors.grey.shade300, width: 1),
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<DeliveryStatus>(
@@ -2367,7 +2693,12 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               isExpanded: true,
               icon: Icon(Icons.keyboard_arrow_down,
                   size: 18, color: Colors.grey.shade600),
-              style: const TextStyle(fontSize: 12, color: Colors.black87),
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.black87,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+              ),
               items: DeliveryStatus.values
                   .map((status) => DropdownMenuItem(
                         value: status,
@@ -2387,7 +2718,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
 
   Widget _buildSummarySection() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Color.fromARGB(255, 245, 242, 254),
         borderRadius: BorderRadius.circular(10),
@@ -2431,24 +2762,75 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
                   if (discountAmount > 0)
                     _buildSummaryRow('- Discount', discountAmount,
                         isNegative: true),
-                  const Divider(height: 12),
+                  const Divider(height: 6),
                   _buildSummaryRow('Paid', advanceAmount,
-                      valueColor: AppColors.green),
+                      valueColor: const Color(0xFF1AB000)),
                   _buildSummaryRow(
                     'Total payable',
                     remainingAmount > 0 ? remainingAmount : 0,
-                    valueColor: const Color(0xFF6132E4),
+                    valueColor: const Color(0xFFD30000),
                     isBold: true,
                   ),
                 ],
               );
             },
           ),
-          const SizedBox(height: 10),
+          // const SizedBox(height: 3),
+          // Send invoice to WhatsApp with premium tag
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    const Flexible(
+                      child: Text(
+                        'Send invoice to WhatsApp',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF3E3E3E),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFD700),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'PREMIUM',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Transform.scale(
+                scale: 0.8,
+                child: Switch(
+                  value: sendPdfToWhatsApp,
+                  onChanged: (v) => setState(() => sendPdfToWhatsApp = v),
+                  activeColor: const Color(0xFF1AB000),
+                ),
+              ),
+            ],
+          ),
+          // const SizedBox(height: 3),
           // Confirm button - Color #6132E4
           SizedBox(
             width: double.infinity,
-            height: 38,
+            height: 39, // Balanced height
             child: ElevatedButton(
               onPressed: _handleConfirmBooking,
               style: ElevatedButton.styleFrom(
@@ -2461,7 +2843,11 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
               ),
               child: const Text(
                 'Confirm Booking',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -2477,6 +2863,35 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
     bool isBold = false,
     bool isNegative = false,
   }) {
+    final isTotalPayable = label == 'Total payable';
+    final isPaid = label == 'Paid';
+    final isProductTotal = label == 'Product total';
+
+    double labelSize = 15;
+    double valueSize = 13;
+    FontWeight labelWeight = isBold ? FontWeight.w600 : FontWeight.w400;
+    FontWeight valueWeight = isBold ? FontWeight.w700 : FontWeight.w500;
+    Color labelColor = const Color(0xFF3E3E3E);
+
+    if (isTotalPayable) {
+      labelSize = 15;
+      valueSize = 15;
+      labelWeight = FontWeight.w600;
+      valueWeight = FontWeight.w700;
+      valueColor = const Color(0xFFD30000);
+    } else if (isPaid) {
+      labelSize = 15;
+      valueSize = 15;
+      labelWeight = FontWeight.w500;
+      valueWeight = FontWeight.w600;
+      valueColor = const Color(0xFF1AB000);
+    } else if (isProductTotal) {
+      labelSize = 13;
+      valueSize = 13;
+      labelWeight = FontWeight.w400;
+      valueWeight = FontWeight.w500;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -2485,16 +2900,18 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 15,
-              fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
-              color: Colors.grey.shade700,
+              fontSize: labelSize,
+              fontFamily: 'Inter',
+              fontWeight: labelWeight,
+              color: labelColor,
             ),
           ),
           Text(
             '${isNegative ? '-' : ''}${amount.abs().toCurrency()}',
             style: TextStyle(
-              fontSize: isBold ? 14 : 12,
-              fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+              fontSize: valueSize,
+              fontFamily: 'Inter',
+              fontWeight: valueWeight,
               color: valueColor ?? Colors.black87,
             ),
           ),
@@ -2724,9 +3141,10 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       staffId: selectedStaffId,
       client: clientData,
       address: clientAddressController.text.trim(),
-      pickupDate: pickupDate.format(),
-      returnDate: returnDate.format(),
-      coolingPeriodDate: coolingPeriodDate?.format(),
+      pickupDate: pickupDate.format().appendTimeToDate(time: pickupTime),
+      returnDate: returnDate.format().appendTimeToDate(time: returnTime),
+      coolingPeriodDate:
+          coolingPeriodDate?.format().appendTimeToDate(time: coolingPeriodTime),
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
@@ -2739,8 +3157,8 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       description: descriptionController.text.trim().isNotEmpty
           ? descriptionController.text.trim()
           : null,
-      pickupTime: pickupTime,
       returnTime: returnTime,
+      sendPdfToWhatsApp: sendPdfToWhatsApp,
     );
   }
 
@@ -2770,7 +3188,7 @@ class _NewBookingScreenState extends State<NewBookingScreen> {
       description: descriptionController.text.trim().isEmpty
           ? null
           : descriptionController.text.trim(),
-      sendInvoice: false,
+      sendInvoice: sendPdfToWhatsApp,
       variants: variants,
       paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
       paymentMethod: paymentMethod,

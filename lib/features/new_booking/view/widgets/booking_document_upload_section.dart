@@ -16,7 +16,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -213,8 +213,6 @@ class BookingDocumentUploadSection extends StatelessWidget {
         allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
         allowMultiple: true,
         withData: true,
-        withReadStream: false, // Better for Mac compatibility
-        dialogTitle: 'Select Documents', // Explicitly set dialog title for Mac
       );
 
       if (result != null && result.files.isNotEmpty) {

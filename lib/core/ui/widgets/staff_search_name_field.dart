@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
+
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,31 +35,59 @@ class StaffSearchNameField extends StatelessWidget {
             nameController.text = staff.name;
           },
           builder: (context, controller, focusNode) => SizedBox(
-            height: 38,
-            child: CustomTextField(
+            height: 48,
+            child: TextFormField(
               focusNode: focusNode,
               controller: controller,
-              hintText: 'Search or select staff',
               keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
-              // t: const TextStyle(fontSize: 12),
-              prefixIcon: const Icon(Icons.person, size: 16),
-              suffixIcon: ValueListenableBuilder(
-                valueListenable: controller,
-                builder: (_, value, __) => value.text.isEmpty
-                    ? const SizedBox.shrink()
-                    : IconButton(
-                        icon: const Icon(Icons.clear, size: 14),
-                        onPressed: () {
-                          controller.clear();
-                          context.read<StaffSearchCubit>().clearSelectedStaff();
-                        },
-                      ),
+              style: const TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Search or select staff',
+                hintStyle: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF8C8C8C),
+                  fontFamily: 'Inter',
+                ),
+                prefixIcon: const Icon(Icons.person, size: 16),
+                suffixIcon: ValueListenableBuilder(
+                  valueListenable: controller,
+                  builder: (_, value, __) => value.text.isEmpty
+                      ? const SizedBox.shrink()
+                      : IconButton(
+                          icon: const Icon(Icons.clear, size: 14),
+                          onPressed: () {
+                            controller.clear();
+                            context
+                                .read<StaffSearchCubit>()
+                                .clearSelectedStaff();
+                          },
+                        ),
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      const BorderSide(color: AppColors.purple, width: 1.5),
+                ),
               ),
               validator: AppInputValidators.name,
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             ),
           ),
           itemBuilder: (context, staff) => ListTile(

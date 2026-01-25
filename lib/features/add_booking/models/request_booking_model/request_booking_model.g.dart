@@ -83,7 +83,6 @@ const _$DeliveryStatusEnumMap = {
   DeliveryStatus.readyToDeliver: 'readyToDeliver',
   DeliveryStatus.delivered: 'delivered',
   DeliveryStatus.returned: 'returned',
-  DeliveryStatus.cancelled: 'cancelled',
 };
 
 const _$BookingStatusEnumMap = {

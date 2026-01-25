@@ -25,6 +25,13 @@ class BookingDetailsOtherDetailsSection extends StatelessWidget {
               label: 'Purchase mode',
               value: booking.purchaseMode.name,
             ),
+            if (booking.description != null &&
+                booking.description!.isNotEmpty) ...[
+              BookingDetailsDetailsColumn(
+                label: 'Description',
+                value: booking.description!,
+              ),
+            ],
           ],
         ),
       );

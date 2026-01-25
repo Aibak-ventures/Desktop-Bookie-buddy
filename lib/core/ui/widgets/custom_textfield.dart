@@ -114,18 +114,19 @@ class CustomTextField extends StatelessWidget {
         errorText: errorText,
         border: OutlineInputBorder(
           borderRadius: borderRadius.radiusBorder,
-          borderSide: BorderSide(color: AppColors.grey400),
+          borderSide: const BorderSide(color: Color(0xFFA2A2A2), width: 0.5),
         ),
         disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.grey400),
+          borderSide: const BorderSide(color: Color(0xFFEEEEEE), width: 0.5),
           borderRadius: borderRadius.radiusBorder,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.grey400),
+          borderSide: const BorderSide(color: Color(0xFFA2A2A2), width: 0.5),
           borderRadius: borderRadius.radiusBorder,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: borderRadius.radiusBorder,
+          borderSide: const BorderSide(color: AppColors.purple, width: 1.0),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: AppColors.redTomato),
@@ -154,13 +155,16 @@ class CustomTextField extends StatelessWidget {
         contentPadding: contentPadding,
         filled: fillColor != null,
         hintStyle: const TextStyle(
-          color: AppColors.grey,
+          color: Color(0xFFCCCCCC),
           fontWeight: FontWeight.w500,
+          fontSize: 11,
+          fontFamily: 'Inter',
         ),
         labelStyle: const TextStyle(
-          color: AppColors.grey,
-          fontWeight: FontWeight.w500,
-          // fontSize: 18.sp,
+          color: Color(0xFF8C8C8C),
+          fontWeight: FontWeight.w400,
+          fontSize: 11,
+          fontFamily: 'Inter',
         ),
       ),
       keyboardType: keyboardType,

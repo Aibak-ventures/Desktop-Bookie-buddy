@@ -572,9 +572,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 // Upcoming Bookings
                 _buildBookingsList(
                   bookings
-                      .where((b) =>
-                          b.bookingStatus == BookingStatus.upcoming &&
-                          b.deliveryStatus != DeliveryStatus.cancelled)
+                      .where((b) => b.bookingStatus == BookingStatus.upcoming)
                       .toList(),
                   'No upcoming bookings',
                 ),

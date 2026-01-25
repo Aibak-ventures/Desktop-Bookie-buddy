@@ -628,7 +628,11 @@ class BookingDetailsRoot extends StatelessWidget {
                         locationTo: locationTo,
                       ),
                     ),
-                  // const SizedBox(height: 24),
+                  _buildWebCard(
+                    'Other Details',
+                    BookingDetailsOtherDetailsSection(booking: booking),
+                  ),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_modal.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:flutter/material.dart';
@@ -176,7 +177,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // Action buttons
-                // _buildActionButtons(context, booking),
+                _buildActionButtons(context, booking),
               ],
             ),
           ),
@@ -185,65 +186,77 @@ class BookingDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, dynamic booking) {
+  Widget _buildActionButtons(
+      BuildContext context, BookingDetailsModel booking) {
     return Column(
       children: [
         // Edit button
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
-            onPressed: () {
-              // TODO: Implement edit functionality
-              context.showSnackBar('Edit functionality coming soon');
+            onPressed: () async {
+              // Import the modal
+              final result = await showEditBookingModal(
+                context: context,
+                booking: booking,
+              );
+
+              // Refresh booking details after edit
+              if (context.mounted) {
+                context.read<BookingDetailsBloc>().add(
+                      BookingDetailsEvent.fetchBookingDetails(booking.id),
+                    );
+              }
             },
-            icon: const Icon(Icons.edit, color: Colors.white),
+            icon:
+                const Icon(Icons.edit_outlined, color: Colors.white, size: 18),
             label: const Text(
               'Edit Booking',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 15,
+                fontSize: 14,
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade600,
+              backgroundColor: const Color(0xFF6132E4),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
-              elevation: 2,
+              elevation: 0,
             ),
           ),
         ),
 
         const SizedBox(height: 12),
 
-        // Delete button
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: () {
-              // TODO: Implement delete functionality
-              context.showSnackBar('Delete functionality coming soon');
-            },
-            icon: Icon(Icons.delete, color: Colors.red.shade600),
-            label: Text(
-              'Delete Booking',
-              style: TextStyle(
-                color: Colors.red.shade600,
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              side: BorderSide(color: Colors.red.shade600, width: 1.5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-        ),
+        // Delete button (commented for now)
+        // SizedBox(
+        //   width: double.infinity,
+        //   child: OutlinedButton.icon(
+        //     onPressed: () {
+        //       // TODO: Implement delete functionality
+        //       context.showSnackBar('Delete functionality coming soon');
+        //     },
+        //     icon: Icon(Icons.delete_outline, color: Colors.red.shade600),
+        //     label: Text(
+        //       'Delete Booking',
+        //       style: TextStyle(
+        //         color: Colors.red.shade600,
+        //         fontWeight: FontWeight.w600,
+        //         fontSize: 15,
+        //       ),
+        //     ),
+        //     style: OutlinedButton.styleFrom(
+        //       padding: const EdgeInsets.symmetric(vertical: 14),
+        //       side: BorderSide(color: Colors.red.shade600, width: 1.5),
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(10),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

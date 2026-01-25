@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
@@ -32,6 +33,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   late PageController pageController;
   bool newOrderActive = false;
   bool showNewBookingInContent = false;
+
+  // GlobalKey to access NewBookingScreen state
+  final GlobalKey<NewBookingScreenState> _newBookingKey = GlobalKey();
 
   final List<Widget> screens = [
     const HomeScreen(),
@@ -71,6 +75,16 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     super.initState();
   }
 
+  /// Check for unsaved changes before navigating away from NewBookingScreen
+  Future<bool> _checkNavigationFromNewBooking() async {
+    final newBookingState = _newBookingKey.currentState;
+    if (newBookingState != null && newBookingState.hasUnsavedChanges()) {
+      final shouldDiscard = await showDiscardDialog(context);
+      return shouldDiscard ?? false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +95,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           Expanded(
             child: showNewBookingInContent
                 ? NewBookingScreen(
+                    key: _newBookingKey,
                     onClose: () {
                       setState(() {
                         showNewBookingInContent = false;
@@ -321,7 +336,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        onTap: () {
+        onTap: () async {
           if (isNewOrder) {
             setState(() {
               newOrderActive = true;
@@ -329,6 +344,15 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               currentIndex = -1; // no sidebar item selected
             });
           } else {
+            // If NewBookingScreen is active, check for unsaved changes
+            if (showNewBookingInContent) {
+              // We need to get the callback from NewBookingScreen's state
+              // For now, we'll call the onClose which will handle the discard check
+              // But we need to modify this to await the result
+              final shouldNavigate = await _checkNavigationFromNewBooking();
+              if (!shouldNavigate) return;
+            }
+
             setState(() {
               newOrderActive = false;
               showNewBookingInContent = false;

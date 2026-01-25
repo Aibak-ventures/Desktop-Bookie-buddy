@@ -21,7 +21,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   String _activeStatusTab = 'upcoming'; // API status value
   final TextEditingController _searchController = TextEditingController();
 
-  final List<String> _actionTabs = ['Booking', 'Sales', 'Custom work'];
+  final List<String> _actionTabs = ['Booking', 'Sales'];
 
   // Map display labels to API status values
   final Map<String, String> _statusApiMap = {
