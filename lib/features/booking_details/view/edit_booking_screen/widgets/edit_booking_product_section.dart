@@ -378,6 +378,7 @@ class _EditBookingProductSectionState extends State<EditBookingProductSection> {
       quantity: 1,
       amount: variant.price ?? product.price ?? 0,
       measurements: const [],
+      stock: variant.remainingStock ?? variant.stock,
     );
 
     // Create a new ProductSelectedModel
@@ -463,6 +464,7 @@ class _EditBookingProductSectionState extends State<EditBookingProductSection> {
           quantity: quantity,
           amount: int.tryParse(amount) ?? 0,
           measurements: const [],
+          stock: selectedVariant.remainingStock ?? selectedVariant.stock,
         );
 
         // Create a new ProductSelectedModel
@@ -908,7 +910,8 @@ class _EditBookingProductSectionState extends State<EditBookingProductSection> {
   Widget _buildProductRow(ProductSelectedModel productModel, int index) {
     final variant = productModel.variant;
     final total = productModel.amount * productModel.quantity;
-    final availableQty = variant.quantity;
+    final availableQty =
+        variant.stock ?? 999; // Default to high number if stock not provided
     final isLowStock = availableQty <= 3;
     final canEdit = !widget.formController.isReturnDateBeforeCurrentDate;
 

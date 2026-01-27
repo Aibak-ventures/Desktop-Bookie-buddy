@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:flutter/services.dart';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
@@ -19,6 +20,8 @@ import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/show_search_type_bottom_sheet.dart';
 
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
@@ -212,6 +215,43 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
+  Future<void> _handleTabSwitch(BookingType newType) async {
+    // print('Switching tab to $newType');
+    if (selectedBookingType == newType) return;
+
+    if (hasUnsavedChanges()) {
+      final shouldDiscard = await showDiscardDialog(context);
+      if (shouldDiscard == true) {
+        _resetForm();
+        setState(() => selectedBookingType = newType);
+        _loadProductsForService(selectedServiceId);
+      }
+    } else {
+      setState(() => selectedBookingType = newType);
+      _loadProductsForService(selectedServiceId);
+    }
+  }
+
+  void _resetForm() {
+    clientNameController.clear();
+    clientPhone1Controller.clear();
+    clientPhone2Controller.clear();
+    clientAddressController.clear();
+    staffNameController.clear();
+    selectedStaffId = null;
+    selectedClientId = null;
+    advanceAmountController.clear();
+    securityAmountController.clear();
+    discountAmountController.clear();
+    descriptionController.clear();
+    selectedProductsNotifier.value = [];
+    additionalChargesNotifier.value = [];
+    documentsNotifier.value = [];
+    serviceSearchController.clear();
+    context.read<StaffSearchCubit>().clearSelectedStaff();
+    context.read<ClientCubit>().clearSelected();
+  }
+
   /// Show product filter bottom sheet
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
@@ -282,6 +322,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// Apply product filters based on selection
   void _applyProductFilters(
       int searchTypeIndex, RangeValues priceRange, bool isPriceEnabled) {
+    _isPriceFilterEnabled.value = isPriceEnabled;
     final searchTerm = serviceSearchController.text.trim();
     final isSales = selectedBookingType == BookingType.sales;
 
@@ -349,7 +390,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             ? null
             : selectedServiceId;
 
-    if (query.isEmpty) {
+    final hasFilters =
+        _isPriceFilterEnabled.value || _selectedSearchTypeIndex.value != 0;
+
+    if (query.isEmpty && !hasFilters) {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: serviceIdToUse,
@@ -362,11 +406,34 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         ),
       );
     } else {
+      // Determine search type
+      String? searchType;
+      switch (_selectedSearchTypeIndex.value) {
+        case 0:
+          searchType = 'name';
+          break;
+        case 1:
+          searchType = 'category';
+          break;
+        case 2:
+          searchType = 'model';
+          break;
+        case 3:
+          searchType = 'color';
+          break;
+      }
+
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: serviceIdToUse,
-          query: query,
-          type: 'name',
+          query: query.isEmpty ? null : query,
+          type: searchType,
+          startPrice: _isPriceFilterEnabled.value
+              ? _priceRange.value.start.toInt()
+              : null,
+          endPrice: _isPriceFilterEnabled.value
+              ? _priceRange.value.end.toInt()
+              : null,
           pickupDate: pickupDate.format(),
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
@@ -513,7 +580,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildTabButton(String label, BookingType type) {
     final isSelected = selectedBookingType == type;
     return GestureDetector(
-      onTap: () => setState(() => selectedBookingType = type),
+      onTap: () => _handleTabSwitch(type),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
@@ -999,8 +1066,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 final hasFilters = _isPriceFilterEnabled.value ||
                     _selectedSearchTypeIndex.value != 0;
 
-                if (products.isNotEmpty &&
-                    (hasSearchText || hasFilters || isSearching)) {
+                if (hasSearchText ||
+                    hasFilters ||
+                    (products.isNotEmpty && isSearching)) {
                   _showSearchOverlay(products);
                 } else {
                   _removeSearchOverlay();
@@ -1223,19 +1291,50 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ),
                   ),
                   // Product list
-                  Flexible(
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      itemCount: products.length,
-                      separatorBuilder: (_, __) => Divider(
-                        height: 1,
-                        color: Colors.grey.shade200,
-                      ),
-                      itemBuilder: (_, i) =>
-                          _buildOverlaySearchItem(products[i]),
-                    ),
-                  ),
+                  products.isEmpty
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 32, horizontal: 16),
+                          alignment: Alignment.center,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.search_off_rounded,
+                                  size: 48, color: Colors.grey.shade300),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No results found',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Try adjusting your search or filters',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Flexible(
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            itemCount: products.length,
+                            separatorBuilder: (_, __) => Divider(
+                              height: 1,
+                              color: Colors.grey.shade200,
+                            ),
+                            itemBuilder: (_, i) =>
+                                _buildOverlaySearchItem(products[i]),
+                          ),
+                        ),
                 ],
               ),
             ),
@@ -2149,7 +2248,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  '${product.variant.quantity} left',
+                  '${product.quantity} left',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -2456,38 +2555,71 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            height: 48,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300, width: 1),
-              borderRadius: BorderRadius.circular(8),
+          child: TextFormField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'[0-9]')), // Strict regex for digits
+            ],
+            onChanged: (value) {
+              // Extra layer of protection
+              if (value.contains(RegExp(r'[^0-9]'))) {
+                final cleanText = value.replaceAll(RegExp(r'[^0-9]'), '');
+                controller.value = TextEditingValue(
+                  text: cleanText,
+                  selection: TextSelection.collapsed(offset: cleanText.length),
+                );
+              }
+            },
+            validator: (value) {
+              if (value != null && value.isNotEmpty) {
+                final amount = int.tryParse(value);
+                if (amount == 0) {
+                  return 'Amount cannot be 0';
+                }
+              }
+              return null;
+            },
+            style: const TextStyle(
+              fontSize: 13,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
             ),
-            child: TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              style: const TextStyle(
+            decoration: InputDecoration(
+              hintStyle: const TextStyle(
                 fontSize: 13,
                 fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
+                color: Color(0xFF8C8C8C),
               ),
-              decoration: InputDecoration(
-                hintStyle: const TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'Inter',
-                  color: Color(0xFF8C8C8C),
-                ),
-                hintText: label,
-                prefixText: '₹ ',
-                prefixStyle: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey.shade600,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-                border: InputBorder.none,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+              hintText: label,
+              prefixText: '₹ ',
+              prefixStyle: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
               ),
+              // Use OutlineInputBorder to match previous container style
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Color(0xFF6132E4), width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             ),
           ),
         ),

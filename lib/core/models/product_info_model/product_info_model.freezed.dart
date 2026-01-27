@@ -42,7 +42,8 @@ mixin _$ProductInfoModel {
   int get amount => throw _privateConstructorUsedError;
   @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
   List<MeasurementValueModel> get measurements =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // Available stock from the variant
+  int? get stock => throw _privateConstructorUsedError;
 
   /// Serializes this ProductInfoModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -75,7 +76,8 @@ abstract class $ProductInfoModelCopyWith<$Res> {
       int quantity,
       @JsonKey(defaultValue: 0) int amount,
       @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      List<MeasurementValueModel> measurements});
+      List<MeasurementValueModel> measurements,
+      int? stock});
 }
 
 /// @nodoc
@@ -106,6 +108,7 @@ class _$ProductInfoModelCopyWithImpl<$Res, $Val extends ProductInfoModel>
     Object? quantity = null,
     Object? amount = null,
     Object? measurements = null,
+    Object? stock = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -160,6 +163,10 @@ class _$ProductInfoModelCopyWithImpl<$Res, $Val extends ProductInfoModel>
           ? _value.measurements
           : measurements // ignore: cast_nullable_to_non_nullable
               as List<MeasurementValueModel>,
+      stock: freezed == stock
+          ? _value.stock
+          : stock // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -187,7 +194,8 @@ abstract class _$$ProductInfoModelImplCopyWith<$Res>
       int quantity,
       @JsonKey(defaultValue: 0) int amount,
       @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      List<MeasurementValueModel> measurements});
+      List<MeasurementValueModel> measurements,
+      int? stock});
 }
 
 /// @nodoc
@@ -216,6 +224,7 @@ class __$$ProductInfoModelImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? amount = null,
     Object? measurements = null,
+    Object? stock = freezed,
   }) {
     return _then(_$ProductInfoModelImpl(
       id: null == id
@@ -270,6 +279,10 @@ class __$$ProductInfoModelImplCopyWithImpl<$Res>
           ? _value._measurements
           : measurements // ignore: cast_nullable_to_non_nullable
               as List<MeasurementValueModel>,
+      stock: freezed == stock
+          ? _value.stock
+          : stock // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -292,7 +305,8 @@ class _$ProductInfoModelImpl implements _ProductInfoModel {
       required this.quantity,
       @JsonKey(defaultValue: 0) required this.amount,
       @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      final List<MeasurementValueModel> measurements = const []})
+      final List<MeasurementValueModel> measurements = const [],
+      this.stock})
       : _measurements = measurements;
 
   factory _$ProductInfoModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -339,9 +353,13 @@ class _$ProductInfoModelImpl implements _ProductInfoModel {
     return EqualUnmodifiableListView(_measurements);
   }
 
+// Available stock from the variant
+  @override
+  final int? stock;
+
   @override
   String toString() {
-    return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, measurements: $measurements)';
+    return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, measurements: $measurements, stock: $stock)';
   }
 
   @override
@@ -368,7 +386,8 @@ class _$ProductInfoModelImpl implements _ProductInfoModel {
                 other.quantity == quantity) &&
             (identical(other.amount, amount) || other.amount == amount) &&
             const DeepCollectionEquality()
-                .equals(other._measurements, _measurements));
+                .equals(other._measurements, _measurements) &&
+            (identical(other.stock, stock) || other.stock == stock));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -387,7 +406,8 @@ class _$ProductInfoModelImpl implements _ProductInfoModel {
       model,
       quantity,
       amount,
-      const DeepCollectionEquality().hash(_measurements));
+      const DeepCollectionEquality().hash(_measurements),
+      stock);
 
   /// Create a copy of ProductInfoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -423,7 +443,8 @@ abstract class _ProductInfoModel implements ProductInfoModel {
       required final int quantity,
       @JsonKey(defaultValue: 0) required final int amount,
       @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-      final List<MeasurementValueModel> measurements}) = _$ProductInfoModelImpl;
+      final List<MeasurementValueModel> measurements,
+      final int? stock}) = _$ProductInfoModelImpl;
 
   factory _ProductInfoModel.fromJson(Map<String, dynamic> json) =
       _$ProductInfoModelImpl.fromJson;
@@ -462,7 +483,10 @@ abstract class _ProductInfoModel implements ProductInfoModel {
   int get amount;
   @override
   @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
-  List<MeasurementValueModel> get measurements;
+  List<MeasurementValueModel>
+      get measurements; // Available stock from the variant
+  @override
+  int? get stock;
 
   /// Create a copy of ProductInfoModel
   /// with the given fields replaced by the non-null parameter values.

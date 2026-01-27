@@ -43,6 +43,8 @@ class ProductInfoModel with _$ProductInfoModel {
     @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
     @Default(const [])
     List<MeasurementValueModel> measurements,
+    // Available stock from the variant
+    int? stock,
   }) = _ProductInfoModel;
 
   factory ProductInfoModel.fromJson(Map<String, dynamic> json) =>

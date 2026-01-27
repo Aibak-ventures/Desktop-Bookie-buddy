@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void showAddAdditionalChargeDialog({
   required BuildContext context,
@@ -119,6 +120,9 @@ class _AddAdditionalChargeDialogState extends State<AddAdditionalChargeDialog> {
                 controller: amountController,
                 validator: (value) => AppInputValidators.amount(value),
                 keyboardType: TextInputType.number,
+                textInputFormatter: [
+                  FilteringTextInputFormatter.digitsOnly, // Only allow digits
+                ],
                 label: 'Amount',
                 onFieldSubmit: (value) {
                   _submit();

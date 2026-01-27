@@ -88,7 +88,8 @@ class _BookingProductSelectionSectionState
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.purple,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -315,7 +316,8 @@ class _BookingProductSelectionSectionState
   Widget _buildProductRow(ProductSelectedModel product) {
     final variant = product.variant;
     final total = product.amount * product.quantity;
-    final availableQty = variant.quantity;
+    final availableQty =
+        variant.stock ?? 999; // Default to high number if stock not provided
     final isLowStock = availableQty <= 3;
 
     return Container(
@@ -400,21 +402,28 @@ class _BookingProductSelectionSectionState
           Expanded(
             flex: 1,
             child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: isLowStock ? Colors.red.shade50 : Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  '$availableQty left',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isLowStock ? Colors.red : Colors.green,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              child: availableQty <= 5
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isLowStock
+                            ? Colors.red.shade50
+                            : Colors.orange.shade50,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        '$availableQty left',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color:
+                              isLowStock ? Colors.red : Colors.orange.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )
+                  : const SizedBox
+                      .shrink(), // Don't show badge when stock is sufficient
             ),
           ),
           // Quantity with +/- buttons

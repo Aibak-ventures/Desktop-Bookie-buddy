@@ -34,61 +34,56 @@ class StaffSearchNameField extends StatelessWidget {
             context.read<StaffSearchCubit>().selectStaff(staff);
             nameController.text = staff.name;
           },
-          builder: (context, controller, focusNode) => SizedBox(
-            height: 48,
-            child: TextFormField(
-              focusNode: focusNode,
-              controller: controller,
-              keyboardType: TextInputType.name,
-              textInputAction: TextInputAction.next,
-              style: const TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Search or select staff',
-                hintStyle: const TextStyle(
-                  fontSize: 13,
-                  color: Color(0xFF8C8C8C),
-                  fontFamily: 'Inter',
-                ),
-                prefixIcon: const Icon(Icons.person, size: 16),
-                suffixIcon: ValueListenableBuilder(
-                  valueListenable: controller,
-                  builder: (_, value, __) => value.text.isEmpty
-                      ? const SizedBox.shrink()
-                      : IconButton(
-                          icon: const Icon(Icons.clear, size: 14),
-                          onPressed: () {
-                            controller.clear();
-                            context
-                                .read<StaffSearchCubit>()
-                                .clearSelectedStaff();
-                          },
-                        ),
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                isDense: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      const BorderSide(color: AppColors.purple, width: 1.5),
-                ),
-              ),
-              validator: AppInputValidators.name,
+          builder: (context, controller, focusNode) => TextFormField(
+            focusNode: focusNode,
+            controller: controller,
+            keyboardType: TextInputType.name,
+            textInputAction: TextInputAction.next,
+            style: const TextStyle(
+              fontSize: 13,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
             ),
+            decoration: InputDecoration(
+              hintText: 'Search or select staff',
+              hintStyle: const TextStyle(
+                fontSize: 13,
+                color: Color(0xFF8C8C8C),
+                fontFamily: 'Inter',
+              ),
+              prefixIcon: const Icon(Icons.person, size: 16),
+              suffixIcon: ValueListenableBuilder(
+                valueListenable: controller,
+                builder: (_, value, __) => value.text.isEmpty
+                    ? const SizedBox.shrink()
+                    : IconButton(
+                        icon: const Icon(Icons.clear, size: 14),
+                        onPressed: () {
+                          controller.clear();
+                          context.read<StaffSearchCubit>().clearSelectedStaff();
+                        },
+                      ),
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              isDense: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: AppColors.purple, width: 1.5),
+              ),
+            ),
+            validator: AppInputValidators.name,
           ),
           itemBuilder: (context, staff) => ListTile(
             dense: true,

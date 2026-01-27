@@ -277,50 +277,45 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           hideWithKeyboard: false,
           hideOnUnfocus: true,
           hideOnSelect: true,
-          builder: (context, controller, focusNode) => SizedBox(
-            height: 48, // Height standardized
-            child: TextFormField(
-              focusNode: focusNode,
-              controller: controller,
-              validator: AppInputValidators.name,
-              style: const TextStyle(fontSize: 13),
-              decoration: InputDecoration(
-                hintText: 'Search client',
-                hintStyle: const TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF8C8C8C),
-                    fontFamily: 'Inter'),
-                prefixIcon: const Icon(Icons.search, size: 16),
-                suffixIcon: ValueListenableBuilder(
-                  valueListenable: controller,
-                  builder: (_, value, __) => value.text.isEmpty
-                      ? const SizedBox.shrink()
-                      : IconButton(
-                          icon: const Icon(Icons.clear, size: 14),
-                          onPressed: () {
-                            controller.clear();
-                            context.read<ClientCubit>().clearSelected();
-                          },
-                        ),
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                isDense: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      const BorderSide(color: AppColors.purple, width: 1.5),
-                ),
+          builder: (context, controller, focusNode) => TextFormField(
+            focusNode: focusNode,
+            controller: controller,
+            validator: AppInputValidators.name,
+            style: const TextStyle(fontSize: 13),
+            decoration: InputDecoration(
+              hintText: 'Search client',
+              hintStyle: const TextStyle(
+                  fontSize: 13, color: Color(0xFF8C8C8C), fontFamily: 'Inter'),
+              prefixIcon: const Icon(Icons.search, size: 16),
+              suffixIcon: ValueListenableBuilder(
+                valueListenable: controller,
+                builder: (_, value, __) => value.text.isEmpty
+                    ? const SizedBox.shrink()
+                    : IconButton(
+                        icon: const Icon(Icons.clear, size: 14),
+                        onPressed: () {
+                          controller.clear();
+                          context.read<ClientCubit>().clearSelected();
+                        },
+                      ),
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              isDense: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: AppColors.purple, width: 1.5),
               ),
             ),
           ),
@@ -476,60 +471,57 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     String? Function(String?)? validator,
     bool enabled = true,
   }) {
-    return SizedBox(
-      height: 48,
-      child: TextFormField(
-        controller: c,
-        keyboardType: type,
-        validator: validator,
-        enabled: enabled,
-        style: TextStyle(
+    return TextFormField(
+      controller: c,
+      keyboardType: type,
+      validator: validator,
+      enabled: enabled,
+      style: TextStyle(
+        fontSize: 13,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w500,
+        color: enabled ? Colors.black : Colors.grey.shade500,
+      ),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Color(0xFFEEEEEE), width: 1),
+        ),
+        filled: !enabled,
+        fillColor: enabled ? null : Colors.grey.shade50,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: AppColors.purple, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+        prefixIcon: Icon(icon, size: 16, color: Colors.grey.shade600),
+        hintText: hint,
+        hintStyle: const TextStyle(
           fontSize: 13,
+          color: Color(0xFF8C8C8C),
           fontFamily: 'Inter',
-          fontWeight: FontWeight.w500,
-          color: enabled ? Colors.black : Colors.grey.shade500,
+          fontWeight: FontWeight.w400,
         ),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFEEEEEE), width: 1),
-          ),
-          filled: !enabled,
-          fillColor: enabled ? null : Colors.grey.shade50,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.purple, width: 1.5),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red, width: 1),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red, width: 1.5),
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-          prefixIcon: Icon(icon, size: 16, color: Colors.grey.shade600),
-          hintText: hint,
-          hintStyle: const TextStyle(
-            fontSize: 13,
-            color: Color(0xFF8C8C8C),
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-          ),
-          isDense: true,
-          errorStyle: const TextStyle(fontSize: 0, height: 0),
-          errorMaxLines: 1,
-        ),
+        isDense: true,
+        errorStyle: const TextStyle(fontSize: 0, height: 0),
+        errorMaxLines: 1,
       ),
     );
   }
