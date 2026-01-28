@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -20,6 +21,8 @@ void showSearchTypeBottomSheet({
     RangeValues range,
     bool isPriceEnabled,
   ) onApply,
+  List<ServicesModel>? services,
+  ValueNotifier<int>? selectedServiceIdNotifier,
 }) {
   final TextEditingController maxPriceController = TextEditingController();
   final isPriceFilterEnabledWidgetNotifier =
@@ -110,6 +113,115 @@ void showSearchTypeBottomSheet({
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Service Filter Section (Optional)
+                    if (services != null &&
+                        services.isNotEmpty &&
+                        selectedServiceIdNotifier != null) ...[
+                      const Text(
+                        'Service',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2D2D2D),
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      ValueListenableBuilder<int>(
+                        valueListenable: selectedServiceIdNotifier,
+                        builder: (context, selectedId, _) {
+                          return Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: [
+                              // "All Services" Option
+                              InkWell(
+                                onTap: () =>
+                                    selectedServiceIdNotifier.value = -1,
+                                borderRadius: BorderRadius.circular(12),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: selectedId == -1
+                                        ? const Color(0xFF6132E4)
+                                        : Colors.grey.shade50,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: selectedId == -1
+                                          ? const Color(0xFF6132E4)
+                                          : Colors.grey.shade300,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'All',
+                                    style: TextStyle(
+                                      color: selectedId == -1
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                      fontWeight: selectedId == -1
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                      fontSize: 14,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Service Options
+                              ...services.map((service) {
+                                final isSelected = selectedId == service.id;
+                                return InkWell(
+                                  onTap: () => selectedServiceIdNotifier.value =
+                                      service.id,
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? const Color(0xFF6132E4)
+                                          : Colors.grey.shade50,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? const Color(0xFF6132E4)
+                                            : Colors.grey.shade300,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      service.name,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.grey.shade700,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.w500,
+                                        fontSize: 14,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ],
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      const Divider(height: 1),
+                      const SizedBox(height: 24),
+                    ],
+
                     // Search Type Section
                     const Text(
                       'Search Type',

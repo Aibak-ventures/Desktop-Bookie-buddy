@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:flutter/services.dart';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
@@ -35,9 +36,15 @@ import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/se
 import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_header.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_date_section.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_product_selection_section.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_client_details_section.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_payment_details_section.dart';
 
 /// Booking types enum for the tab selection
-enum BookingType { booking, sales }
+enum BookingType { booking, sales, customWork }
 
 /// New Booking Screen - ERP Desktop Layout
 /// Features:
@@ -58,6 +65,9 @@ class NewBookingScreen extends StatefulWidget {
 class NewBookingScreenState extends State<NewBookingScreen> {
   // Current selected tab
   BookingType selectedBookingType = BookingType.booking;
+
+  static const double kFieldSpacing = 10.0;
+  bool isDocumentsExpanded = false;
 
   // Form key
   final _formKey = GlobalKey<FormState>();
@@ -101,30 +111,35 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final documentsNotifier = ValueNotifier<List<DocumentFile>>([]);
 
   // Description
+  // Description
   final descriptionController = TextEditingController();
 
   int? selectedServiceId = -1; // Initialize to -1 for "All Services" as default
-  final serviceSearchController = TextEditingController();
 
   // SelectProductBloc for inline search
   late SelectProductBloc _selectProductBloc;
 
-  // Search overlay management
+  // Right Panel Page Controller
+  late PageController _rightPanelPageController;
+  final startLocationController = TextEditingController();
+  final destinationController = TextEditingController();
+
+  final serviceSearchController = TextEditingController();
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
-
-  // Product search filter state
-  final _searchTypes = ['Name', 'Category', 'Model', 'Color'];
-  final _selectedSearchTypeIndex = ValueNotifier<int>(0);
-  final _priceRange = ValueNotifier<RangeValues>(const RangeValues(0, 50000));
-  final _maxPriceNotifier = ValueNotifier<double>(50000);
-  final _isPriceFilterEnabled = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isPriceFilterEnabled = ValueNotifier<bool>(false);
+  final ValueNotifier<int> _selectedSearchTypeIndex = ValueNotifier<int>(0);
+  final List<String> _searchTypes = ['Name', 'Category', 'Model', 'Color'];
+  final ValueNotifier<double> _maxPriceNotifier = ValueNotifier<double>(10000);
+  final ValueNotifier<RangeValues> _priceRange =
+      ValueNotifier<RangeValues>(const RangeValues(0, 10000));
 
   @override
   void initState() {
     super.initState();
     pickupDate = DateTime.now();
     returnDate = DateTime.now().add(const Duration(days: 1));
+    _rightPanelPageController = PageController();
 
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
@@ -134,12 +149,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     // Load services and auto-select first one
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+      context.read<StaffSearchCubit>().getAllStaffs();
     });
   }
 
   @override
   void dispose() {
-    _removeSearchOverlay();
     clientNameController.dispose();
     clientPhone1Controller.dispose();
     clientPhone2Controller.dispose();
@@ -152,18 +167,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     selectedProductsNotifier.dispose();
     additionalChargesNotifier.dispose();
     documentsNotifier.dispose();
-    serviceSearchController.dispose();
     _selectProductBloc.close();
-    _selectedSearchTypeIndex.dispose();
-    _priceRange.dispose();
-    _maxPriceNotifier.dispose();
+    _rightPanelPageController.dispose();
+    startLocationController.dispose();
+    destinationController.dispose();
+    serviceSearchController.dispose();
     _isPriceFilterEnabled.dispose();
+    _selectedSearchTypeIndex.dispose();
+    _maxPriceNotifier.dispose();
+    _priceRange.dispose();
     super.dispose();
-  }
-
-  void _removeSearchOverlay() {
-    _searchOverlayEntry?.remove();
-    _searchOverlayEntry = null;
   }
 
   /// Check if there are any unsaved changes
@@ -255,6 +268,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Show product filter bottom sheet
   void _showProductFilterBottomSheet() {
+    // Get available services
+    final serviceState = context.read<ServiceBloc>().state;
+    final services = serviceState.maybeWhen(
+        loaded: (s) => s, orElse: () => <ServicesModel>[]);
+
+    // Create notifier for service selection (default to -1/All if null)
+    final selectedServiceIdNotifier =
+        ValueNotifier<int>(selectedServiceId ?? -1);
+
     // Calculate max price from current product list
     final currentProducts = _selectProductBloc.state.maybeWhen(
       loaded: (
@@ -314,9 +336,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       },
       isPriceFilterEnabledNotifier: _isPriceFilterEnabled,
       onApply: (typeIndex, range, isPriceEnabled) {
+        // Update selected service
+        setState(() {
+          selectedServiceId = selectedServiceIdNotifier.value;
+        });
+
         // Apply filters to product search
         _applyProductFilters(typeIndex, range, isPriceEnabled);
       },
+      services: services,
+      selectedServiceIdNotifier: selectedServiceIdNotifier,
     );
   }
 
@@ -381,71 +410,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  void _onSearchChanged() {
-    // Allow search even if selectedServiceId is null (All Services)
-    final query = serviceSearchController.text.trim();
-    final isSales = selectedBookingType == BookingType.sales;
-    // If "All Services" is selected, serviceId will be -1, so we pass null to API
-    final serviceIdToUse =
-        (selectedServiceId == null || selectedServiceId == -1)
-            ? null
-            : selectedServiceId;
-
-    final hasFilters =
-        _isPriceFilterEnabled.value || _selectedSearchTypeIndex.value != 0;
-
-    if (query.isEmpty && !hasFilters) {
-      _selectProductBloc.add(
-        SelectProductEvent.loadProducts(
-          serviceId: serviceIdToUse,
-          pickupDate: pickupDate.format(),
-          returnDate: returnDate.format(),
-          pickupTime: pickupTime,
-          returnTime: returnTime,
-          useAvailableProductsApi: !isSales,
-          isSales: isSales,
-        ),
-      );
-    } else {
-      // Determine search type
-      String? searchType;
-      switch (_selectedSearchTypeIndex.value) {
-        case 0:
-          searchType = 'name';
-          break;
-        case 1:
-          searchType = 'category';
-          break;
-        case 2:
-          searchType = 'model';
-          break;
-        case 3:
-          searchType = 'color';
-          break;
-      }
-
-      _selectProductBloc.add(
-        SelectProductEvent.searchProducts(
-          serviceId: serviceIdToUse,
-          query: query.isEmpty ? null : query,
-          type: searchType,
-          startPrice: _isPriceFilterEnabled.value
-              ? _priceRange.value.start.toInt()
-              : null,
-          endPrice: _isPriceFilterEnabled.value
-              ? _priceRange.value.end.toInt()
-              : null,
-          pickupDate: pickupDate.format(),
-          returnDate: returnDate.format(),
-          pickupTime: pickupTime,
-          returnTime: returnTime,
-          useAvailableProductsApi: !isSales,
-          isSales: isSales,
-        ),
-      );
-    }
-  }
-
   void _loadProductsForService(int? serviceId) {
     final isSales = selectedBookingType == BookingType.sales;
     // If "All Services" is selected (-1), pass null to API
@@ -483,7 +447,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           child: Column(
             children: [
               // Header with tabs
-              _buildCompactHeader(),
+              BookingHeader(
+                selectedBookingType: selectedBookingType,
+                onTabSwitch: _handleTabSwitch,
+                onBack: _handleBackNavigation,
+              ),
               // Main content - no scrolling
               Expanded(
                 child: Padding(
@@ -498,115 +466,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Widget _buildCompactHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Back button
-          InkWell(
-            onTap: _handleBackNavigation,
-            borderRadius: BorderRadius.circular(4),
-            child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.arrow_back_ios,
-                      size: 14, color: Colors.grey.shade600),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Back',
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Title
-          Text(
-            _getTabTitle(),
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Tab buttons
-          _buildTabButtons(),
-          const Spacer(),
-        ],
-      ),
-    );
-  }
-
-  String _getTabTitle() {
-    switch (selectedBookingType) {
-      case BookingType.booking:
-        return 'New Booking';
-      case BookingType.sales:
-        return 'New Sale';
-    }
-  }
-
-  Widget _buildTabButtons() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0F0F0),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.all(2),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildTabButton('Booking', BookingType.booking),
-          _buildTabButton('Sales', BookingType.sales),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabButton(String label, BookingType type) {
-    final isSelected = selectedBookingType == type;
-    return GestureDetector(
-      onTap: () => _handleTabSwitch(type),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF6132E4) : Colors.transparent,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.grey.shade700,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            fontSize: 13,
-            fontFamily: 'Inter',
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildMainContent() {
-    if (selectedBookingType == BookingType.sales) {
-      return _buildSalesContent();
+    switch (selectedBookingType) {
+      case BookingType.sales:
+        return _buildSalesContent();
+      case BookingType.customWork:
+        return const Center(child: Text('Custom Work UI Placeholder'));
+      case BookingType.booking:
+        return _buildBookingContent();
     }
-    return _buildBookingContent();
   }
 
 // BOOKING
@@ -619,15 +487,42 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           flex: 5, // ⬅️ more space to main content
           child: Column(
             children: [
-              SizedBox(
-                child: Row(
-                  children: [
-                    Expanded(child: _buildLeftTopSection()),
-                  ],
-                ),
+              BookingDateSection(
+                pickupDate: pickupDate,
+                returnDate: returnDate,
+                pickupTime: pickupTime,
+                returnTime: returnTime,
+                coolingPeriodDays: coolingPeriodDays,
+                onPickupDateTap: () => _selectDate(isPickup: true),
+                onReturnDateTap: () => _selectDate(isPickup: false),
+                onPickupTimeTap: () => _selectTime(isPickup: true),
+                onReturnTimeTap: () => _selectTime(isPickup: false),
+                onCoolingPeriodChanged: (days) {
+                  if (days != null) {
+                    setState(() {
+                      coolingPeriodDays = days;
+                      if (days > 0) {
+                        coolingPeriodDate =
+                            returnDate.add(Duration(days: days));
+                      } else {
+                        coolingPeriodDate = null;
+                      }
+                    });
+                  }
+                },
               ),
               const SizedBox(height: 10),
-              Expanded(child: _buildServiceSelectionSection()),
+              Expanded(
+                child: BookingProductSelectionSection(
+                  selectProductBloc: _selectProductBloc,
+                  selectedProductsNotifier: selectedProductsNotifier,
+                  bookingType: selectedBookingType,
+                  pickupDate: pickupDate,
+                  returnDate: returnDate,
+                  pickupTime: pickupTime,
+                  returnTime: returnTime,
+                ),
+              ),
             ],
           ),
         ),
@@ -649,28 +544,52 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       children: [
         // Left section
         Expanded(
-          flex: 3,
+          flex: 5,
           child: Column(
             children: [
-              SizedBox(
-                // height: 160,
-                child: Row(
-                  children: [
-                    // Expanded(child: _buildSalesDateSection()),
-                    // const SizedBox(width: 12),
-                    Expanded(child: _buildLeftTopSection()),
-                  ],
-                ),
+              BookingDateSection(
+                pickupDate: pickupDate,
+                returnDate: returnDate,
+                pickupTime: pickupTime,
+                returnTime: returnTime,
+                coolingPeriodDays: coolingPeriodDays,
+                onPickupDateTap: () => _selectDate(isPickup: true),
+                onReturnDateTap: () => _selectDate(isPickup: false),
+                onPickupTimeTap: () => _selectTime(isPickup: true),
+                onReturnTimeTap: () => _selectTime(isPickup: false),
+                onCoolingPeriodChanged: (days) {
+                  if (days != null) {
+                    setState(() {
+                      coolingPeriodDays = days;
+                      if (days > 0) {
+                        coolingPeriodDate =
+                            returnDate.add(Duration(days: days));
+                      } else {
+                        coolingPeriodDate = null;
+                      }
+                    });
+                  }
+                },
               ),
               const SizedBox(height: 10),
-              Expanded(child: _buildServiceSelectionSection()),
+              Expanded(
+                child: BookingProductSelectionSection(
+                  selectProductBloc: _selectProductBloc,
+                  selectedProductsNotifier: selectedProductsNotifier,
+                  bookingType: selectedBookingType,
+                  pickupDate: pickupDate,
+                  returnDate: returnDate,
+                  pickupTime: pickupTime,
+                  returnTime: returnTime,
+                ),
+              ),
             ],
           ),
         ),
-        const SizedBox(width: 12),
-        // Right section
-        Expanded(
-          flex: 1,
+        const SizedBox(width: 10),
+        // Right panel (Slim)
+        SizedBox(
+          width: 300, // ⬅️ fixed slim width
           child: _buildRightSection(),
         ),
       ],
@@ -969,19 +888,53 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             children: [
               // Pickup Date
               Expanded(
-                child: _buildCompactDateField(
-                  label: 'Pickup Date',
-                  value: pickupDate.format(),
-                  onTap: () => _selectDate(isPickup: true),
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: _buildCompactDateField(
+                        label: 'Pickup Date',
+                        value: pickupDate.format(),
+                        onTap: () => _selectDate(isPickup: true),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: _buildCompactTimeField(
+                        label: 'Time',
+                        value: pickupTime?.format(context) ?? '--:--',
+                        onTap: () => _selectTime(isPickup: true),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 16),
               // Return Date
               Expanded(
-                child: _buildCompactDateField(
-                  label: 'Return Date',
-                  value: returnDate.format(),
-                  onTap: () => _selectDate(isPickup: false),
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: _buildCompactDateField(
+                        label: 'Return Date',
+                        value: returnDate.format(),
+                        onTap: () => _selectDate(isPickup: false),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: _buildCompactTimeField(
+                        label: 'Time',
+                        value: returnTime?.format(context) ?? '--:--',
+                        onTap: () => _selectTime(isPickup: false),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 16),
@@ -1130,92 +1083,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 children: [
-                  // Service Category Dropdown
-                  serviceState.maybeWhen(
-                    loaded: (services) {
-                      return Container(
-                        height: 48,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<int>(
-                            value: selectedServiceId,
-                            hint: const Text(
-                              'Select Service',
-                              style:
-                                  TextStyle(fontSize: 13, fontFamily: 'Inter'),
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 18,
-                              color: Colors.grey.shade600,
-                            ),
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87,
-                              fontFamily: 'Inter',
-                            ),
-                            items: [
-                              // "All Services" option
-                              DropdownMenuItem<int>(
-                                value: -1,
-                                child: Row(
-                                  children: const [
-                                    Icon(Icons.apps,
-                                        size: 14, color: Color(0xFF6132E4)),
-                                    SizedBox(width: 6),
-                                    Text(
-                                      'All Services',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF6132E4),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Regular service options
-                              ...services.map((service) {
-                                return DropdownMenuItem<int>(
-                                  value: service.id,
-                                  child: Text(
-                                    service.name,
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                );
-                              }).toList(),
-                            ],
-                            onChanged: (id) {
-                              if (id != null) {
-                                setState(() => selectedServiceId = id);
-                                _loadProductsForService(id);
-                                serviceSearchController.clear();
-                                _removeSearchOverlay();
-                              }
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                    orElse: () => const SizedBox(
-                      width: 100,
-                      height: 34,
-                      child: Center(
-                        child: SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Search TextField
+                  // Search TextField - Now takes full width minus filter button
                   Expanded(
                     child: Container(
                       height: 48,
@@ -1276,6 +1144,52 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         );
       },
     );
+  }
+
+  void _onSearchChanged() {
+    final searchTerm = serviceSearchController.text.trim();
+    final isSales = selectedBookingType == BookingType.sales;
+
+    // Determine search type
+    String? searchType;
+    switch (_selectedSearchTypeIndex.value) {
+      case 0:
+        searchType = 'name';
+        break;
+      case 1:
+        searchType = 'category';
+        break;
+      case 2:
+        searchType = 'model';
+        break;
+      case 3:
+        searchType = 'color';
+        break;
+    }
+
+    _selectProductBloc.add(
+      SelectProductEvent.searchProducts(
+        serviceId: selectedServiceId == -1 ? null : selectedServiceId,
+        query: searchTerm.isEmpty ? null : searchTerm,
+        type: searchType,
+        startPrice: _isPriceFilterEnabled.value
+            ? _priceRange.value.start.toInt()
+            : null,
+        endPrice:
+            _isPriceFilterEnabled.value ? _priceRange.value.end.toInt() : null,
+        pickupDate: pickupDate.format(),
+        returnDate: returnDate.format(),
+        pickupTime: pickupTime,
+        returnTime: returnTime,
+        useAvailableProductsApi: !isSales,
+        isSales: isSales,
+      ),
+    );
+  }
+
+  void _removeSearchOverlay() {
+    _searchOverlayEntry?.remove();
+    _searchOverlayEntry = null;
   }
 
   void _showSearchOverlay(List<ProductModel> products) {
@@ -2021,66 +1935,131 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       child: Row(
         children: [
           Expanded(
-            flex: 3,
-            child: Text(
-              'Item',
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+            flex: 4,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'items',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
+          const SizedBox(width: 4),
           Expanded(
-            child: Text(
-              'Quantity',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+            flex: 2,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Variants',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
+          const SizedBox(width: 4),
           Expanded(
-            child: Text(
-              'Available',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+            flex: 2,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Available',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
+          const SizedBox(width: 4),
           Expanded(
-            child: Text(
-              'Price',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+            flex: 2,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Quantity',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
+          const SizedBox(width: 4),
           Expanded(
-            child: Text(
-              'Total',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
+            flex: 2,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Price / item',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 30),
+          const SizedBox(width: 4),
+          Expanded(
+            flex: 2,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Total',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 30), // Spacing for close icon
         ],
       ),
     );
@@ -2163,20 +2142,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildProductRow(ProductSelectedModel product) {
     final total = product.amount * product.quantity;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
-          // Item name with variant info
+          // ITEMS COLUMN (Flex 4)
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Row(
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: Colors.grey.shade200),
                   ),
                   child: product.variant.image != null
                       ? ClipRRect(
@@ -2185,16 +2165,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             product.variant.image!,
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) => Icon(
-                              Icons.image,
-                              size: 24,
+                              Icons.image_outlined,
+                              size: 20,
                               color: Colors.grey.shade400,
                             ),
                           ),
                         )
-                      : Icon(Icons.image,
-                          size: 24, color: Colors.grey.shade400),
+                      : Icon(Icons.image_outlined,
+                          size: 20, color: Colors.grey.shade400),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -2202,20 +2182,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         product.variant.name,
                         style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 13,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
+                          color: Colors.black87,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        product.variant.color ?? '',
+                        '${product.variant.color ?? ''}, ${product.variant.category ?? ''}',
                         style: const TextStyle(
-                          fontSize: 13,
+                          fontSize: 11,
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
-                          color: Color(0xFFA6A6A6),
+                          color: Color(0xFF8C8C8C),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -2223,138 +2204,138 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ],
                   ),
                 ),
-                if (product.variant.variantAttribute != null &&
-                    product.variant.variantAttribute!.isNotEmpty)
-                  _variantChip(product.variant.variantAttribute!),
               ],
             ),
           ),
-          // Quantity with +/- controls
+          const SizedBox(width: 4),
+          // VARIANTS COLUMN (Flex 2)
           Expanded(
+            flex: 2,
+            child: Center(
+              child: Text(
+                (product.variant.variantAttribute != null &&
+                        product.variant.variantAttribute!.isNotEmpty)
+                    ? product.variant.variantAttribute!
+                    : '-',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          // AVAILABLE COLUMN (Flex 2)
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF20D400).withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1AB000),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${product.variant.quantity} left',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF1AB000),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          // QUANTITY COLUMN (Flex 2)
+          Expanded(
+            flex: 2,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
                   onTap: () => _decrementQuantity(product),
+                  borderRadius: BorderRadius.circular(4),
                   child: Container(
-                    padding: const EdgeInsets.all(2),
+                    width: 24,
+                    height: 24,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(3),
+                      color: const Color(0xFFF0EAFC),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Icon(Icons.remove,
-                        size: 14, color: Colors.grey.shade700),
+                    child: const Icon(Icons.remove,
+                        size: 14, color: Color(0xFF6132E4)),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     '${product.quantity}',
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
                 InkWell(
                   onTap: product.quantity >= product.variant.quantity
                       ? null
                       : () => _incrementQuantity(product),
-                  child: Opacity(
-                    opacity: product.quantity >= product.variant.quantity
-                        ? 0.4
-                        : 1.0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: product.quantity >= product.variant.quantity
-                            ? Colors.grey.shade300
-                            : const Color(0xFF6132E4).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        size: 14,
-                        color: product.quantity >= product.variant.quantity
-                            ? Colors.grey.shade500
-                            : const Color(0xFF6132E4),
-                      ),
+                  borderRadius: BorderRadius.circular(4),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0EAFC),
+                      borderRadius: BorderRadius.circular(4),
                     ),
+                    child: const Icon(Icons.add,
+                        size: 14, color: Color(0xFF6132E4)),
                   ),
                 ),
               ],
             ),
           ),
-          // Available stock indicator
+          const SizedBox(width: 4),
+          // PRICE / ITEM COLUMN (Flex 2)
           Expanded(
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: product.variant.quantity > 0
-                      ? const Color(0xFF20D400).withOpacity(0.15)
-                      : Colors.red.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  '${product.quantity} left',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: product.variant.quantity > 0
-                        ? const Color(0xFF20D400)
-                        : Colors.red,
-                  ),
-                ),
-              ),
+            flex: 2,
+            child: _InlinePriceEditor(
+              initialPrice: product.amount,
+              onPriceChanged: (newPrice) =>
+                  _updateProductPrice(product, newPrice),
             ),
           ),
-          // Price - Inline Editable
+          const SizedBox(width: 4),
+          // TOTAL COLUMN (Flex 2)
           Expanded(
-            child: Container(
-              width: 150,
-              height: 48,
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller:
-                    TextEditingController(text: product.amount.toString())
-                      ..selection = TextSelection.fromPosition(
-                        TextPosition(offset: product.amount.toString().length),
-                      ),
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 8),
-                  isDense: true,
-                  prefixText: '₹',
-                  prefixStyle:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                onChanged: (value) {
-                  // Update price immediately as user types
-                  final newPrice = int.tryParse(value);
-                  if (newPrice != null && newPrice >= 0) {
-                    _updateProductPrice(product, newPrice);
-                  }
-                },
-                onSubmitted: (value) {
-                  final newPrice = int.tryParse(value) ?? product.amount;
-                  _updateProductPrice(product, newPrice);
-                },
-              ),
-            ),
-          ),
-          // Total
-          Expanded(
+            flex: 2,
             child: Text(
               total.toCurrency(),
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
             ),
           ),
           // Remove button
@@ -2362,9 +2343,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             width: 30,
             child: IconButton(
               onPressed: () => _removeProduct(product),
-              icon: Icon(Icons.close, size: 16, color: Colors.grey.shade500),
+              icon: const Icon(Icons.close, size: 18, color: Colors.black87),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
+              splashRadius: 20,
             ),
           ),
         ],
@@ -2426,6 +2408,24 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       (p) => p.variant.variantId == product.variant.variantId,
     );
     selectedProductsNotifier.value = products;
+  }
+
+  /// Update product price
+  void _updateProductPrice(ProductSelectedModel product, int newPrice) {
+    if (newPrice < 0) return;
+
+    final products =
+        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final index = products.indexWhere(
+      (p) => p.variant.variantId == product.variant.variantId,
+    );
+
+    if (index != -1) {
+      products[index] = products[index].copyWith(
+        amount: newPrice,
+      );
+      selectedProductsNotifier.value = products;
+    }
   }
 
   /// Show dialog to edit product price
@@ -2490,24 +2490,147 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  /// Update the price of a product
-  void _updateProductPrice(ProductSelectedModel product, int newPrice) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
+  Widget _buildRightSection() {
+    return PageView(
+      controller: _rightPanelPageController,
+      physics: const NeverScrollableScrollPhysics(), // Disable swipe
+      children: [
+        BookingClientDetailsSection(
+          clientNameController: clientNameController,
+          clientPhone1Controller: clientPhone1Controller,
+          clientPhone2Controller: clientPhone2Controller,
+          clientAddressController: clientAddressController,
+          staffNameController: staffNameController,
+          descriptionController: descriptionController,
+          documentsNotifier: documentsNotifier,
+          sendPdfToWhatsApp: sendPdfToWhatsApp,
+          onWhatsAppChanged: (val) => setState(() => sendPdfToWhatsApp = val),
+          onStaffSelected: (staff) {
+            setState(() {
+              selectedStaffId = staff.id;
+              staffNameController.text = staff.name;
+            });
+          },
+          onContinue: () {
+            _rightPanelPageController.animateToPage(
+              1,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+        ),
+        BookingPaymentDetailsSection(
+          startLocationController: startLocationController,
+          pickupLocationController:
+              clientAddressController, // reusing client address as pickup?
+          destinationController: destinationController,
+          advanceAmountController: advanceAmountController,
+          securityAmountController: securityAmountController,
+          discountAmountController: discountAmountController,
+          additionalChargesNotifier: additionalChargesNotifier,
+          selectedProductsNotifier: selectedProductsNotifier,
+          onBack: () {
+            _rightPanelPageController.animateToPage(
+              0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          onConfirmBooking: _handleConfirmBooking,
+        ),
+      ],
     );
-    if (index != -1) {
-      products[index] = products[index].copyWith(amount: newPrice);
-      selectedProductsNotifier.value = products;
-    }
   }
 
-  Widget _buildRightSection() {
-    final isSalesMode = selectedBookingType == BookingType.sales;
+  Widget _buildClientDetailsStep() {
     return Column(
       children: [
-        // Payment section - compact
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Client Details',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: kFieldSpacing),
+                        _buildClientField("Name", clientNameController),
+                        const SizedBox(height: kFieldSpacing),
+                        _buildClientField("Phone", clientPhone1Controller),
+                        const SizedBox(height: kFieldSpacing),
+                        _buildClientField("Phone 2", clientPhone2Controller),
+                        const SizedBox(height: kFieldSpacing),
+                        // Replaced standard field with Autocomplete
+                        _buildAddressAutocompleteField(
+                            "Place", clientAddressController),
+                        const SizedBox(height: kFieldSpacing),
+                        _buildWhatsappSection(),
+                        const SizedBox(height: kFieldSpacing),
+                        _buildDocumentUploadSection(),
+                        const SizedBox(height: kFieldSpacing),
+                        _buildStaffSection(),
+                        const SizedBox(height: kFieldSpacing),
+                        _buildNotesField(),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+                // Continue Button (Fixed at bottom)
+                SizedBox(
+                  width: double.infinity,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _rightPanelPageController.animateToPage(
+                        1,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6132E4),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentStep() {
+    return Column(
+      children: [
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(12),
@@ -2520,35 +2643,174 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Client Details',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
+                  // Back Button Header
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          _rightPanelPageController.animateToPage(
+                            0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Icon(Icons.arrow_back,
+                            size: 18, color: Colors.grey.shade700),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Details',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 15),
-                  _buildClientField("Name", clientNameController),
-                  const SizedBox(height: 15),
-                  _buildClientField("Phone", clientPhone1Controller),
-                  const SizedBox(height: 15),
-                  _buildClientField("Phone 2", clientPhone2Controller),
-                  const SizedBox(height: 15),
-                  _buildClientField("Place", clientAddressController),
-                  const SizedBox(height: 15),
-                  _buildWhatsappSection(),
+                  const SizedBox(height: 16),
+
+                  // Locations Section
+                  Row(
+                    children: const [
+                      Text(
+                        'Locations',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF3E3E3E),
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        '(optional)',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF8C8C8C),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _buildClientField("Start location", startLocationController,
+                      action: TextInputAction.next),
+                  const SizedBox(height: kFieldSpacing),
+                  _buildClientField("Pickup location", clientAddressController,
+                      action: TextInputAction.next),
+                  const SizedBox(height: kFieldSpacing),
+                  _buildClientField(
+                      "Destination location", destinationController,
+                      action: TextInputAction.next),
+
+                  const SizedBox(height: 16),
+
+                  // Payment Details Section
+                  Row(
+                    children: const [
+                      Text(
+                        'Payment details',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF3E3E3E),
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        '(optional)',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF8C8C8C),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _buildClientField("Advance amount", advanceAmountController,
+                      action: TextInputAction.next),
+                  const SizedBox(height: kFieldSpacing),
+                  _buildClientField("Security amount", securityAmountController,
+                      action: TextInputAction.next),
+                  const SizedBox(height: kFieldSpacing),
+                  _buildClientField("Discount amount", discountAmountController,
+                      action: TextInputAction.done),
+
+                  const SizedBox(height: 16),
+
+                  // Additional Charges Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Additional charges',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF8C8C8C),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: _addAdditionalCharge,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF5F2FF),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Icon(Icons.add,
+                              size: 16, color: Color(0xFF6132E4)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // List of additional charges
+                  ValueListenableBuilder<List<AdditionalChargesModel>>(
+                    valueListenable: additionalChargesNotifier,
+                    builder: (context, charges, _) {
+                      if (charges.isEmpty) return const SizedBox.shrink();
+                      return Column(
+                        children: charges.map((charge) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    charge.name ?? 'Charge',
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                ),
+                                Text(
+                                  '+ ₹${charge.amount ?? 0}',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                InkWell(
+                                  onTap: () => _removeCharge(charge),
+                                  child: const Icon(Icons.close,
+                                      size: 14, color: Colors.red),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
           ),
         ),
         const SizedBox(height: 8),
-        // Summary section
+        // Summary Header for the second step
         Row(
-          children: [
-            const SizedBox(width: 6),
-            const Text(
+          children: const [
+            SizedBox(width: 6),
+            Text(
               'Summary',
               style: TextStyle(
                 fontSize: 14,
@@ -2868,7 +3130,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return Container(
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 245, 242, 254),
+        color: const Color.fromARGB(255, 245, 242, 254),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade200),
       ),
@@ -2876,179 +3138,335 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         children: [
           // Summary rows
           ListenableBuilder(
-            listenable: Listenable.merge([
-              selectedProductsNotifier,
-              additionalChargesNotifier,
-              advanceAmountController,
-              discountAmountController,
-            ]),
-            builder: (context, _) {
-              final products = selectedProductsNotifier.value;
-              final additionalCharges = additionalChargesNotifier.value;
-              final advanceAmount =
-                  advanceAmountController.text.trim().toIntOrNull() ?? 0;
-              final discountAmount =
-                  discountAmountController.text.trim().toIntOrNull() ?? 0;
+              listenable: Listenable.merge([
+                selectedProductsNotifier,
+                additionalChargesNotifier,
+                advanceAmountController,
+                discountAmountController,
+              ]),
+              builder: (context, _) {
+                final products = selectedProductsNotifier.value;
+                final additionalCharges = additionalChargesNotifier.value;
+                final advanceAmount =
+                    advanceAmountController.text.trim().toIntOrNull() ?? 0;
+                final discountAmount =
+                    discountAmountController.text.trim().toIntOrNull() ?? 0;
 
-              final productTotal = products.fold<int>(
-                0,
-                (sum, product) => sum + (product.amount * product.quantity),
-              );
-              final additionalTotal = additionalCharges.fold<int>(
-                0,
-                (sum, charge) => sum + (charge.amount ?? 0),
-              );
-              final totalPayable =
-                  productTotal + additionalTotal - discountAmount;
-              final remainingAmount = totalPayable - advanceAmount;
+                final productTotal = products.fold<int>(
+                  0,
+                  (sum, product) => sum + (product.amount * product.quantity),
+                );
+                final additionalTotal = additionalCharges.fold<int>(
+                  0,
+                  (sum, charge) => sum + (charge.amount ?? 0),
+                );
+                final totalPayable =
+                    productTotal + additionalTotal - discountAmount;
+                final remainingAmount = totalPayable - advanceAmount;
 
-              return Column(
-                children: [
-                  _buildSummaryRow('Product total', productTotal),
-                  if (additionalTotal > 0)
-                    _buildSummaryRow('Additional charges', additionalTotal),
-                  if (discountAmount > 0)
-                    _buildSummaryRow('- Discount', discountAmount,
-                        isNegative: true),
-                  const Divider(height: 6),
-                  _buildSummaryRow('Paid', advanceAmount,
-                      valueColor: const Color(0xFF1AB000)),
-                  _buildSummaryRow(
-                    'Total payable',
-                    remainingAmount > 0 ? remainingAmount : 0,
-                    valueColor: const Color(0xFFD30000),
-                    isBold: true,
-                  ),
-                ],
-              );
-            },
-          ),
-          // const SizedBox(height: 3),
-          // Send invoice to WhatsApp with premium tag
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
+                return Column(
                   children: [
-                    const Flexible(
-                      child: Text(
-                        'Send invoice to WhatsApp',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF3E3E3E),
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    _buildSummaryRow('Product total', productTotal),
+                    if (additionalTotal > 0)
+                      _buildSummaryRow('Additional charges', additionalTotal),
+                    if (discountAmount > 0)
+                      _buildSummaryRow('- Discount', discountAmount,
+                          isNegative: true),
+                    const Divider(height: 6),
+                    _buildSummaryRow('Paid', advanceAmount,
+                        valueColor: const Color(0xFF1AB000)),
+                    _buildSummaryRow(
+                      'Total payable',
+                      remainingAmount > 0 ? remainingAmount : 0,
+                      valueColor: const Color(0xFFD30000),
+                      isBold: true,
                     ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFD700),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Text(
-                        'PREMIUM',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 45,
+                      child: ElevatedButton(
+                        onPressed: _handleConfirmBooking,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6132E4),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          'Confirm Booking',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
                   ],
-
-              ),
-              Transform.scale(
-                scale: 0.8,
-                child: Switch(
-                  value: sendPdfToWhatsApp,
-                  onChanged: (v) => setState(() => sendPdfToWhatsApp = v),
-                  activeColor: const Color(0xFF1AB000),
-                ),
-              ),
-            ],
-          ),
-          // const SizedBox(height: 3),
-          // Confirm button - Color #6132E4
-          SizedBox(
-            width: double.infinity,
-            height: 39, // Balanced height
-            child: ElevatedButton(
-              onPressed: _handleConfirmBooking,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Confirm Booking',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
+                );
+              }),
         ],
       ),
     );
   }
 
-  Widget _buildClientField(String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 218,
-          child: Text(
-            '$label ',
-            style: const TextStyle(
-              color: Color(0xFF8C8C8C),
-              fontSize: 13,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-        const SizedBox(height: 5),
-        Container(
-          width: double.infinity, // Making it responsive
-          height: 37,
-          alignment: Alignment.center,
-          decoration: ShapeDecoration(
-            shape: RoundedRectangleBorder(
-              side: const BorderSide(
-                width: 0.50,
-                color: Color(0xFFA2A2A2),
+  Widget _buildStaffSection() {
+    return BlocBuilder<StaffSearchCubit, StaffSearchState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Staff Details',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
               ),
-              borderRadius: BorderRadius.circular(5),
             ),
+            const SizedBox(height: 4),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return Autocomplete<StaffModel>(
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text == '') {
+                      return state.staffs;
+                    }
+                    return state.staffs.where((StaffModel option) {
+                      return option.name
+                          .toLowerCase()
+                          .contains(textEditingValue.text.toLowerCase());
+                    });
+                  },
+                  displayStringForOption: (StaffModel option) => option.name,
+                  onSelected: (StaffModel selection) {
+                    setState(() {
+                      selectedStaffId = selection.id;
+                      staffNameController.text = selection.name;
+                    });
+                  },
+                  fieldViewBuilder: (
+                    BuildContext context,
+                    TextEditingController textEditingController,
+                    FocusNode focusNode,
+                    VoidCallback onFieldSubmitted,
+                  ) {
+                    // Sync controller with local state if needed
+                    if (selectedStaffId != null &&
+                        textEditingController.text.isEmpty &&
+                        staffNameController.text.isNotEmpty) {
+                      textEditingController.text = staffNameController.text;
+                    }
+
+                    return Container(
+                      height: 40,
+                      alignment: Alignment.centerLeft,
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                            width: 0.50,
+                            color: Color(0xFFA2A2A2),
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: TextField(
+                        controller: textEditingController,
+                        focusNode: focusNode,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          color: Colors.black87,
+                        ),
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 12),
+                          hintText: 'Select Staff',
+                          hintStyle: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                          ),
+                          suffixIcon: Icon(Icons.keyboard_arrow_down,
+                              size: 18, color: Color(0xFF8C8C8C)),
+                        ),
+                      ),
+                    );
+                  },
+                  optionsViewBuilder: (
+                    BuildContext context,
+                    AutocompleteOnSelected<StaffModel> onSelected,
+                    Iterable<StaffModel> options,
+                  ) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: Material(
+                        elevation: 4.0,
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        child: Container(
+                          width: constraints.maxWidth,
+                          constraints: const BoxConstraints(maxHeight: 200),
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: options.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final StaffModel option =
+                                  options.elementAt(index);
+                              return InkWell(
+                                onTap: () {
+                                  onSelected(option);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 10.0),
+                                  child: Text(
+                                    option.name,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildClientField(String label, TextEditingController controller,
+      {TextInputAction action = TextInputAction.next}) {
+    return Container(
+      width: double.infinity,
+      height: 37,
+      alignment: Alignment.center,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(
+            width: 0.50,
+            color: Color(0xFFA2A2A2),
           ),
-          child: TextField(
-            controller: controller,
-            style: const TextStyle(
-              fontSize: 13,
-              fontFamily: 'Inter',
-              color: Colors.black87,
-            ),
-            decoration: const InputDecoration(
-              isDense: true,
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            ),
-          ),
+          borderRadius: BorderRadius.circular(5),
         ),
-      ],
+      ),
+      child: TextField(
+        controller: controller,
+        textInputAction: action,
+        style: const TextStyle(
+          fontSize: 13,
+          fontFamily: 'Inter',
+          color: Colors.black87,
+        ),
+        decoration: InputDecoration(
+          hintText: label,
+          hintStyle: const TextStyle(
+            color: Color(0xFF8C8C8C),
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+          isDense: true,
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddressAutocompleteField(
+      String label, TextEditingController controller) {
+    return Container(
+      width: double.infinity,
+      height: 37,
+      alignment: Alignment.center,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(
+            width: 0.50,
+            color: Color(0xFFA2A2A2),
+          ),
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(
+          fontSize: 13,
+          fontFamily: 'Inter',
+          color: Colors.black87,
+        ),
+        decoration: InputDecoration(
+          hintText: label,
+          hintStyle: const TextStyle(
+            color: Color(0xFF8C8C8C),
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+          isDense: true,
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotesField() {
+    return Container(
+      width: double.infinity,
+      height: 77,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(
+            width: 0.50,
+            color: Color(0xFFA2A2A2),
+          ),
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+      child: TextField(
+        controller: descriptionController,
+        maxLines: null,
+        expands: true,
+        textInputAction: TextInputAction.newline,
+        textAlignVertical: TextAlignVertical.top,
+        style: const TextStyle(
+          fontSize: 13,
+          fontFamily: 'Inter',
+          color: Colors.black87,
+        ),
+        decoration: const InputDecoration(
+          hintText: 'Notes',
+          hintStyle: TextStyle(
+            color: Color(0xFF8C8C8C),
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        ),
+      ),
     );
   }
 
@@ -3065,17 +3483,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             width: 18,
             height: 18,
             decoration: ShapeDecoration(
-              color: sendPdfToWhatsApp ? const Color(0xFF6132E4) : Colors.transparent,
+              color: sendPdfToWhatsApp
+                  ? const Color(0xFF6132E4)
+                  : Colors.transparent,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   width: 1,
-                  color: sendPdfToWhatsApp ? const Color(0xFF6132E4) : const Color(0xFFA2A2A2),
+                  color: sendPdfToWhatsApp
+                      ? const Color(0xFF6132E4)
+                      : const Color(0xFFA2A2A2),
                 ),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
             child: sendPdfToWhatsApp
-                ? const Icon(Icons.check, size: 14, color: Color(0xFFFFD700)) // Golden tick
+                ? const Icon(Icons.check,
+                    size: 14, color: Color(0xFFFFD700)) // Golden tick
                 : null,
           ),
         ),
@@ -3270,6 +3693,214 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         List<AdditionalChargesModel>.from(additionalChargesNotifier.value);
     charges.remove(charge);
     additionalChargesNotifier.value = charges;
+  }
+
+  Widget _buildDocumentUploadSection() {
+    return ValueListenableBuilder<List<DocumentFile>>(
+      valueListenable: documentsNotifier,
+      builder: (context, documents, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Upload Documents',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (documents.isEmpty)
+              InkWell(
+                onTap: () => _pickDocuments(),
+                child: Container(
+                  width: double.infinity,
+                  height: 40,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        width: 0.50,
+                        color: Color(0xFFA2A2A2),
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.upload_file,
+                          size: 16, color: Color(0xFF8C8C8C)),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Click to upload',
+                        style: TextStyle(
+                          color: const Color(0xFF8C8C8C),
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else if (!isDocumentsExpanded)
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isDocumentsExpanded = true;
+                  });
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 40,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(
+                        width: 0.50,
+                        color: Color(0xFFA2A2A2),
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${documents.length} document uploads',
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              )
+            else
+              Container(
+                height: 80,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    side:
+                        const BorderSide(width: 0.5, color: Color(0xFFA2A2A2)),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: documents.length + 1,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (context, index) {
+                    if (index == documents.length) {
+                      return InkWell(
+                        onTap: () => _pickDocuments(),
+                        child: Container(
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: const Icon(Icons.add, color: Colors.grey),
+                        ),
+                      );
+                    }
+                    final doc = documents[index];
+                    // Basic thumbnail
+                    return Stack(
+                      children: [
+                        Container(
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.grey.shade200),
+                          ),
+                          child: doc.bytes != null &&
+                                  [
+                                    'jpg',
+                                    'jpeg',
+                                    'png',
+                                    'gif',
+                                    'webp'
+                                  ].contains(
+                                      doc.name.split('.').last.toLowerCase())
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: Image.memory(
+                                    Uint8List.fromList(doc.bytes!),
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : const Center(
+                                  child: Icon(Icons.description,
+                                      size: 24, color: Colors.grey)),
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: InkWell(
+                            onTap: () {
+                              final newDocs = List<DocumentFile>.from(
+                                  documentsNotifier.value);
+                              newDocs.removeAt(index);
+                              documentsNotifier.value = newDocs;
+                              if (newDocs.isEmpty) {
+                                setState(() {
+                                  isDocumentsExpanded = false;
+                                });
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              color: Colors.white.withOpacity(0.7),
+                              child: const Icon(Icons.close,
+                                  size: 12, color: Colors.red),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _pickDocuments() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
+        allowMultiple: true,
+        withData: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final newDocs = result.files.map((file) {
+          return DocumentFile(
+            name: file.name,
+            path: file.path ?? '',
+            bytes: file.bytes,
+          );
+        }).toList();
+
+        final currentDocs = List<DocumentFile>.from(documentsNotifier.value);
+        currentDocs.addAll(newDocs);
+        documentsNotifier.value = currentDocs;
+      }
+    } catch (e) {
+      debugPrint('Error picking files: $e');
+      if (mounted) {
+        context.showSnackBar('Error picking files', isError: true);
+      }
+    }
   }
 
   void _handleConfirmBooking() async {
@@ -3793,6 +4424,130 @@ class WebToast extends StatelessWidget {
               onTap: onClose,
               child: const Icon(Icons.close, size: 16),
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InlinePriceEditor extends StatefulWidget {
+  final int initialPrice;
+  final ValueChanged<int> onPriceChanged;
+
+  const _InlinePriceEditor({
+    required this.initialPrice,
+    required this.onPriceChanged,
+  });
+
+  @override
+  State<_InlinePriceEditor> createState() => _InlinePriceEditorState();
+}
+
+class _InlinePriceEditorState extends State<_InlinePriceEditor> {
+  bool _isEditing = false;
+  late TextEditingController _controller;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialPrice.toString());
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && _isEditing) {
+        _submitPrice();
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant _InlinePriceEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialPrice != oldWidget.initialPrice && !_isEditing) {
+      _controller.text = widget.initialPrice.toString();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _submitPrice() {
+    final newPrice = int.tryParse(_controller.text);
+    if (newPrice != null) {
+      widget.onPriceChanged(newPrice);
+    } else {
+      _controller.text = widget.initialPrice.toString();
+    }
+    setState(() {
+      _isEditing = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isEditing) {
+      return SizedBox(
+        width: 80,
+        height: 32,
+        child: TextField(
+          controller: _controller,
+          focusNode: _focusNode,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            isDense: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: const BorderSide(color: Color(0xFF6132E4)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: const BorderSide(color: Color(0xFF6132E4)),
+            ),
+          ),
+          onSubmitted: (_) => _submitPrice(),
+        ),
+      );
+    }
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _isEditing = true;
+        });
+        _focusNode.requestFocus();
+      },
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.initialPrice.toCurrency(),
+              style: const TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.edit_outlined, size: 14, color: Color(0xFF6132E4)),
           ],
         ),
       ),

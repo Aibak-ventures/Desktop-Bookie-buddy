@@ -1,252 +1,264 @@
-import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/add_additional_charge_dialog.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_address_autocomplete_field.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class BookingPaymentDetailsSection extends StatelessWidget {
+  final TextEditingController startLocationController;
+  final TextEditingController pickupLocationController;
+  final TextEditingController destinationController;
   final TextEditingController advanceAmountController;
   final TextEditingController securityAmountController;
   final TextEditingController discountAmountController;
   final ValueNotifier<List<AdditionalChargesModel>> additionalChargesNotifier;
-  final DeliveryStatus deliveryStatus;
-  final ValueChanged<DeliveryStatus> onDeliveryStatusChanged;
-  final PaymentMethod paymentMethod;
-  final ValueChanged<PaymentMethod> onPaymentMethodChanged;
-  final bool isSalesMode;
+  final ValueNotifier<List<ProductSelectedModel>> selectedProductsNotifier;
+  final VoidCallback onBack;
+  final VoidCallback onConfirmBooking;
+
+  static const double kFieldSpacing = 10.0;
 
   const BookingPaymentDetailsSection({
     super.key,
+    required this.startLocationController,
+    required this.pickupLocationController,
+    required this.destinationController,
     required this.advanceAmountController,
     required this.securityAmountController,
     required this.discountAmountController,
     required this.additionalChargesNotifier,
-    required this.deliveryStatus,
-    required this.onDeliveryStatusChanged,
-    required this.paymentMethod,
-    required this.onPaymentMethodChanged,
-    this.isSalesMode = false,
+    required this.selectedProductsNotifier,
+    required this.onBack,
+    required this.onConfirmBooking,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Payment details',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Only show additional fields if not in sales mode
-          if (!isSalesMode) ...[
-            // 1. Advance amount
-            _buildAmountField(
-              controller: advanceAmountController,
-              hint: 'Advance amount (optional)',
-            ),
-            const SizedBox(height: 10),
-            // 2. Security amount
-            _buildAmountField(
-              controller: securityAmountController,
-              hint: 'Security amount (optional)',
-            ),
-            const SizedBox(height: 10),
-            // 3. Discount amount
-            _buildAmountField(
-              controller: discountAmountController,
-              hint: 'Discount amount (optional)',
-            ),
-            const SizedBox(height: 14),
-            // 4. Additional charges
-            _buildAdditionalChargesSection(context),
-            const SizedBox(height: 14),
-            // 5. Payment method
-            _buildPaymentMethodSection(),
-            const SizedBox(height: 14),
-            // 6. Delivery status
-            _buildDeliveryStatusSection(),
-          ],
-          // Sales mode - simplified
-          if (isSalesMode) ...[
-            _buildAmountField(
-              controller: advanceAmountController,
-              hint: 'Amount received',
-            ),
-            const SizedBox(height: 10),
-            _buildAmountField(
-              controller: discountAmountController,
-              hint: 'Discount (optional)',
-            ),
-            const SizedBox(height: 14),
-            _buildPaymentMethodSection(),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentMethodSection() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Payment method',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Back Button Header
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: onBack,
+                        child: Icon(Icons.arrow_back,
+                            size: 18, color: Colors.grey.shade700),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Details',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Locations Section
+                  Row(
+                    children: const [
+                      Text(
+                        'Locations',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF3E3E3E),
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        '(optional)',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF8C8C8C),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  BookingAddressAutocompleteField(
+                      label: "Start location",
+                      controller: startLocationController),
+                  const SizedBox(height: kFieldSpacing),
+                  BookingAddressAutocompleteField(
+                      label: "Pickup location",
+                      controller: pickupLocationController),
+                  const SizedBox(height: kFieldSpacing),
+                  BookingAddressAutocompleteField(
+                      label: "Destination location",
+                      controller: destinationController),
+
+                  const SizedBox(height: 16),
+
+                  // Payment Details Section
+                  Row(
+                    children: const [
+                      Text(
+                        'Payment details',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF3E3E3E),
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        '(optional)',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF8C8C8C),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _buildCompactAmountField(
+                      controller: advanceAmountController,
+                      label: "Advance amount"),
+                  const SizedBox(height: kFieldSpacing),
+                  _buildCompactAmountField(
+                      controller: securityAmountController,
+                      label: "Security amount"),
+                  const SizedBox(height: kFieldSpacing),
+                  _buildCompactAmountField(
+                      controller: discountAmountController,
+                      label: "Discount amount"),
+
+                  const SizedBox(height: 16),
+
+                  // Additional Charges Section
+                  _buildAdditionalChargesSection(context),
+                ],
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 8),
+        // Summary Header for the second step
         Row(
-          children: [
-            Expanded(
-              child: _buildPaymentMethodOption(
-                label: 'UPI',
-                value: PaymentMethod.gPay,
-                icon: Icons.account_balance_wallet_outlined,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildPaymentMethodOption(
-                label: 'Cash',
-                value: PaymentMethod.cash,
-                icon: Icons.money_outlined,
+          children: const [
+            SizedBox(width: 6),
+            Text(
+              'Summary',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF3E3E3E),
               ),
             ),
           ],
+        ),
+        BookingSummarySection(
+          selectedProductsNotifier: selectedProductsNotifier,
+          additionalChargesNotifier: additionalChargesNotifier,
+          advanceAmountController: advanceAmountController,
+          discountAmountController: discountAmountController,
+          onConfirmBooking: onConfirmBooking,
         ),
       ],
     );
   }
 
-  Widget _buildPaymentMethodOption({
-    required String label,
-    required PaymentMethod value,
-    required IconData icon,
-  }) {
-    final isSelected = paymentMethod == value;
-    return InkWell(
-      onTap: () => onPaymentMethodChanged(value),
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.purple.withOpacity(0.1)
-              : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isSelected ? AppColors.purple : Colors.grey.shade200,
-            width: isSelected ? 1.5 : 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 18,
-              color: isSelected ? AppColors.purple : Colors.grey.shade600,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? AppColors.purple : Colors.grey.shade700,
-              ),
-            ),
-            const Spacer(),
-            if (isSelected)
-              Icon(
-                Icons.check_circle,
-                size: 18,
-                color: AppColors.purple,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAmountField({
+  Widget _buildCompactAmountField({
     required TextEditingController controller,
-    required String hint,
+    required String label,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(
-              RegExp(r'[0-9]')), // Strict regex for digits
-        ],
-        onChanged: (value) {
-          // Extra layer of protection: remove any non-digit characters if they somehow slip through
-          if (value.contains(RegExp(r'[^0-9]'))) {
-            final cleanText = value.replaceAll(RegExp(r'[^0-9]'), '');
-            controller.value = TextEditingValue(
-              text: cleanText,
-              selection: TextSelection.collapsed(offset: cleanText.length),
-            );
-          }
-        },
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            color: Colors.grey.shade500,
-            fontSize: 14,
-          ),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.only(left: 12, right: 8),
-            child: Text(
-              '₹',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
+    return Row(
+      children: [
+        Expanded(
+          child: TextFormField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'[0-9]')), // Strict regex for digits
+            ],
+            onChanged: (value) {
+              // Extra layer of protection
+              if (value.contains(RegExp(r'[^0-9]'))) {
+                final cleanText = value.replaceAll(RegExp(r'[^0-9]'), '');
+                controller.value = TextEditingValue(
+                  text: cleanText,
+                  selection: TextSelection.collapsed(offset: cleanText.length),
+                );
+              }
+            },
+            validator: (value) {
+              if (value != null && value.isNotEmpty) {
+                final amount = int.tryParse(value);
+                if (amount == 0) {
+                  return 'Amount cannot be 0';
+                }
+              }
+              return null;
+            },
+            style: const TextStyle(
+              fontSize: 13,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+            decoration: InputDecoration(
+              hintStyle: const TextStyle(
+                fontSize: 13,
+                fontFamily: 'Inter',
+                color: Color(0xFF8C8C8C),
               ),
+              hintText: label,
+              prefixText: '₹ ',
+              prefixStyle: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Color(0xFF6132E4), width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             ),
           ),
-          prefixIconConstraints:
-              const BoxConstraints(minWidth: 0, minHeight: 0),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
-      ),
+      ],
     );
   }
 
   Widget _buildAdditionalChargesSection(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,59 +266,59 @@ class BookingPaymentDetailsSection extends StatelessWidget {
             const Text(
               'Additional charges',
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF8C8C8C),
               ),
             ),
             InkWell(
-              onTap: () {
-                showAddAdditionalChargeDialog(
-                  context: context,
-                  additionalChargesNotifier: additionalChargesNotifier,
-                );
-              },
+              onTap: () => _addAdditionalCharge(context),
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: AppColors.purple.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(6),
+                  color: const Color(0xFFF5F2FF),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Icon(
-                  Icons.add,
-                  color: AppColors.purple,
-                  size: 18,
-                ),
+                child:
+                    const Icon(Icons.add, size: 16, color: Color(0xFF6132E4)),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        // List of additional charges
         ValueListenableBuilder<List<AdditionalChargesModel>>(
           valueListenable: additionalChargesNotifier,
           builder: (context, charges, _) {
-            if (charges.isEmpty) {
-              return Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Center(
-                  child: Text(
-                    'No additional charges',
-                    style: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              );
-            }
+            if (charges.isEmpty) return const SizedBox.shrink();
             return Column(
-              children:
-                  charges.map((charge) => _buildChargeItem(charge)).toList(),
+              children: charges.map((charge) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          charge.name ?? 'Charge',
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ),
+                      Text(
+                        '+ ₹${charge.amount ?? 0}',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: () => _removeCharge(charge),
+                        child: const Icon(Icons.close,
+                            size: 14, color: Colors.red),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
             );
           },
         ),
@@ -314,100 +326,58 @@ class BookingPaymentDetailsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildChargeItem(AdditionalChargesModel charge) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            charge.name ?? 'Charge',
-            style: const TextStyle(fontSize: 13),
+  void _addAdditionalCharge(BuildContext context) {
+    final nameController = TextEditingController();
+    final amountController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Charge'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Charge Name'),
+            ),
+            TextField(
+              controller: amountController,
+              decoration: const InputDecoration(labelText: 'Amount'),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
           ),
-          Row(
-            children: [
-              Text(
-                '₹${charge.amount ?? 0}',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(width: 8),
-              InkWell(
-                onTap: () {
-                  final charges = List<AdditionalChargesModel>.from(
-                    additionalChargesNotifier.value,
-                  );
-                  charges.remove(charge);
-                  additionalChargesNotifier.value = charges;
-                },
-                child: Icon(
-                  Icons.close,
-                  size: 16,
-                  color: Colors.grey.shade500,
-                ),
-              ),
-            ],
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty &&
+                  amountController.text.isNotEmpty) {
+                final charges = List<AdditionalChargesModel>.from(
+                    additionalChargesNotifier.value);
+                charges.add(AdditionalChargesModel(
+                  name: nameController.text,
+                  amount: int.tryParse(amountController.text) ?? 0,
+                ));
+                additionalChargesNotifier.value = charges;
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDeliveryStatusSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Delivery status',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<DeliveryStatus>(
-              value: deliveryStatus,
-              isExpanded: true,
-              icon:
-                  Icon(Icons.keyboard_arrow_down, color: Colors.grey.shade600),
-              items: DeliveryStatus.values
-                  .map(
-                    (status) => DropdownMenuItem(
-                      value: status,
-                      child: Text(
-                        status.name,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  onDeliveryStatusChanged(value);
-                }
-              },
-            ),
-          ),
-        ),
-      ],
-    );
+  void _removeCharge(AdditionalChargesModel charge) {
+    final charges =
+        List<AdditionalChargesModel>.from(additionalChargesNotifier.value);
+    charges.remove(charge);
+    additionalChargesNotifier.value = charges;
   }
 }

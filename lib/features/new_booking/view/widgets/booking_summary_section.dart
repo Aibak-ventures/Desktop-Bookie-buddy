@@ -1,6 +1,5 @@
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ class BookingSummarySection extends StatelessWidget {
   final TextEditingController advanceAmountController;
   final TextEditingController discountAmountController;
   final VoidCallback onConfirmBooking;
-  final Color? confirmButtonColor;
 
   const BookingSummarySection({
     super.key,
@@ -20,132 +18,93 @@ class BookingSummarySection extends StatelessWidget {
     required this.advanceAmountController,
     required this.discountAmountController,
     required this.onConfirmBooking,
-    this.confirmButtonColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: const Color.fromARGB(255, 245, 242, 254),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Summary',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Summary items
-          _buildSummaryContent(),
-          const SizedBox(height: 20),
-          // Confirm button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onConfirmBooking,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: confirmButtonColor ?? AppColors.green,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Confirm booking',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+          ListenableBuilder(
+            listenable: Listenable.merge([
+              selectedProductsNotifier,
+              additionalChargesNotifier,
+              advanceAmountController,
+              discountAmountController,
+            ]),
+            builder: (context, _) {
+              final products = selectedProductsNotifier.value;
+              final additionalCharges = additionalChargesNotifier.value;
+              final advanceAmount =
+                  advanceAmountController.text.trim().toIntOrNull() ?? 0;
+              final discountAmount =
+                  discountAmountController.text.trim().toIntOrNull() ?? 0;
+
+              final productTotal = products.fold<int>(
+                0,
+                (sum, product) => sum + (product.amount * product.quantity),
+              );
+              final additionalTotal = additionalCharges.fold<int>(
+                0,
+                (sum, charge) => sum + (charge.amount ?? 0),
+              );
+              final totalPayable =
+                  productTotal + additionalTotal - discountAmount;
+              final remainingAmount = totalPayable - advanceAmount;
+
+              return Column(
+                children: [
+                  _buildSummaryRow('Product total', productTotal),
+                  if (additionalTotal > 0)
+                    _buildSummaryRow('Additional charges', additionalTotal),
+                  if (discountAmount > 0)
+                    _buildSummaryRow('- Discount', discountAmount,
+                        isNegative: true),
+                  const Divider(height: 6),
+                  _buildSummaryRow('Paid', advanceAmount,
+                      valueColor: const Color(0xFF1AB000)),
+                  _buildSummaryRow(
+                    'Total payable',
+                    remainingAmount > 0 ? remainingAmount : 0,
+                    valueColor: const Color(0xFFD30000),
+                    isBold: true,
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: ElevatedButton(
+                      onPressed: onConfirmBooking,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6132E4),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        'Confirm Booking',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSummaryContent() {
-    return ListenableBuilder(
-      listenable: Listenable.merge([
-        selectedProductsNotifier,
-        additionalChargesNotifier,
-        discountAmountController,
-      ]),
-      builder: (context, _) {
-        final products = selectedProductsNotifier.value;
-        final additionalCharges = additionalChargesNotifier.value;
-        final discountAmount =
-            discountAmountController.text.trim().toIntOrNull() ?? 0;
-
-        // Calculate product total
-        final productTotal = products.fold<int>(
-          0,
-          (sum, product) => sum + (product.amount * product.quantity),
-        );
-
-        // Calculate additional charges total
-        final additionalTotal = additionalCharges.fold<int>(
-          0,
-          (sum, charge) => sum + (charge.amount ?? 0),
-        );
-
-        // Calculate total payable
-        final totalPayable = productTotal + additionalTotal - discountAmount;
-
-        return Column(
-          children: [
-            // Hidden: Product total
-            // _buildSummaryRow('Product total', productTotal),
-            // const SizedBox(height: 8),
-
-            // Hidden: Additional charges
-            // _buildSummaryRow('Additional charges', additionalTotal),
-
-            if (discountAmount > 0) ...[
-              _buildSummaryRow('Discount', -discountAmount, isNegative: true),
-              const SizedBox(height: 8),
-            ],
-
-            // Hidden: Paid (advance amount)
-            // const Padding(
-            //   padding: EdgeInsets.symmetric(vertical: 12),
-            //   child: Divider(),
-            // ),
-            // _buildSummaryRow(
-            //   'Paid',
-            //   advanceAmount,
-            //   valueColor: AppColors.green,
-            //   isBold: true,
-            // ),
-            // const SizedBox(height: 8),
-
-            _buildSummaryRow(
-              'Total',
-              totalPayable,
-              valueColor: AppColors.purple,
-              isBold: true,
-              isLarge: true,
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -157,26 +116,29 @@ class BookingSummarySection extends StatelessWidget {
     bool isLarge = false,
     bool isNegative = false,
   }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: isLarge ? 17 : 15,
-            fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
-            color: Colors.grey.shade700,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isLarge ? 15 : 13,
+              fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
+              color: Colors.grey.shade700,
+            ),
           ),
-        ),
-        Text(
-          '${isNegative ? '-' : ''}${amount.abs().toCurrency()}',
-          style: TextStyle(
-            fontSize: isLarge ? 18 : 14,
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
-            color: valueColor ?? Colors.black87,
+          Text(
+            '${isNegative ? '-' : ''}${amount.abs().toCurrency()}',
+            style: TextStyle(
+              fontSize: isLarge ? 15 : 13,
+              fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+              color: valueColor ?? Colors.black87,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
