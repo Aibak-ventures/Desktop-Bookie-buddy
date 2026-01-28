@@ -25,8 +25,7 @@ import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_client_details_section.dart';
+
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
@@ -69,7 +68,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   DateTime? coolingPeriodDate;
   TimeOfDay? coolingPeriodTime;
   TimeOfDay? pickupTime;
+
   TimeOfDay? returnTime;
+  int coolingPeriodDays = 0;
 
   // Client details controllers
   final clientNameController = TextEditingController();
@@ -854,6 +855,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         } else {
           returnDate = picked;
         }
+        // Update cooling period date if days are selected
+        if (coolingPeriodDays > 0) {
+          coolingPeriodDate = returnDate.add(Duration(days: coolingPeriodDays));
+        }
       });
     }
   }
@@ -951,61 +956,103 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildLeftTopSection() {
-    return SizedBox(
-      // height: 510,
-      child: Column(
-        children: [
-          // Calendar + date time (already compact)
-          SizedBox(
-            height: selectedBookingType == BookingType.sales ? 460 : 490,
-            child: BookingCalendarWidget(
-              staffNameController: staffNameController,
-              clientNameController: clientNameController,
-              clientPhone1Controller: clientPhone1Controller,
-              clientPhone2Controller: clientPhone2Controller,
-              clientAddressController: clientAddressController,
-              descriptionController: descriptionController,
-              isSearchClientEnabled: isSearchClientEnabled,
-              onSearchClientToggle: (v) =>
-                  setState(() => isSearchClientEnabled = v),
-              onStaffSelected: (id) => setState(() => selectedStaffId = id),
-              onClientSelected: (id) => setState(() => selectedClientId = id),
-              pickupDate: pickupDate,
-              returnDate: returnDate,
-              coolingPeriodDate: coolingPeriodDate,
-              pickupTime: pickupTime,
-              returnTime: returnTime,
-              coolingPeriodTime: coolingPeriodTime,
-              onPickupDateChanged: (d) => setState(() => pickupDate = d),
-              onReturnDateChanged: (d) => setState(() => returnDate = d),
-              onCoolingPeriodDateChanged: (d) =>
-                  setState(() => coolingPeriodDate = d),
-              onPickupTimeChanged: (t) => setState(() => pickupTime = t),
-              onReturnTimeChanged: (t) => setState(() => returnTime = t),
-              onCoolingPeriodTimeChanged: (t) =>
-                  setState(() => coolingPeriodTime = t),
-              isSalesMode: selectedBookingType == BookingType.sales,
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Row(
+            children: [
+              // Pickup Date
+              Expanded(
+                child: _buildCompactDateField(
+                  label: 'Pickup Date',
+                  value: pickupDate.format(),
+                  onTap: () => _selectDate(isPickup: true),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Return Date
+              Expanded(
+                child: _buildCompactDateField(
+                  label: 'Return Date',
+                  value: returnDate.format(),
+                  onTap: () => _selectDate(isPickup: false),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Cooling Period (Days Selector)
+              Expanded(
+                child: _buildCoolingPeriodSelector(),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCoolingPeriodSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Cooling Period',
+          style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          height: 38, // Match approximate height of date field
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300, width: 1),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<int>(
+              value: coolingPeriodDays,
+              isExpanded: true,
+              icon: Icon(Icons.keyboard_arrow_down,
+                  size: 16, color: Colors.grey.shade500),
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+                fontFamily: 'Inter',
+              ),
+              items: [
+                const DropdownMenuItem<int>(
+                  value: 0,
+                  child: Text('None'),
+                ),
+                ...List.generate(30, (index) {
+                  final days = index + 1;
+                  return DropdownMenuItem<int>(
+                    value: days,
+                    child: Text('$days Day${days > 1 ? 's' : ''}'),
+                  );
+                }),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    coolingPeriodDays = value;
+                    if (value > 0) {
+                      coolingPeriodDate = returnDate.add(Duration(days: value));
+                    } else {
+                      coolingPeriodDate = null;
+                    }
+                  });
+                }
+              },
             ),
           ),
-
-          // const SizedBox(height: 10),
-
-          // Client + Staff compact block
-          // Expanded(
-          // child: BookingClientDetailsCompact(
-          // staffNameController: staffNameController,
-          // clientNameController: clientNameController,
-          // clientPhone1Controller: clientPhone1Controller,
-          // clientPhone2Controller: clientPhone2Controller,
-          // clientAddressController: clientAddressController,
-          // isSearchClientEnabled: isSearchClientEnabled,
-          // onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
-          // onStaffSelected: (id) => setState(() => selectedStaffId = id),
-          // onClientSelected: (id) => setState(() => selectedClientId = id),
-          //   ),
-          // ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -2474,54 +2521,23 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Payment Details',
+                    'Client Details',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
-                  // Hide advance amount in sales mode
-                  if (!isSalesMode) ...[
-                    _buildCompactAmountField(
-                      controller: advanceAmountController,
-                      label: 'Advance Amount (optional)',
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  if (!isSalesMode) ...[
-                    _buildCompactAmountField(
-                      controller: securityAmountController,
-                      label: 'Security Amount (optional)',
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  _buildCompactAmountField(
-                    controller: discountAmountController,
-                    label: 'Discount Amount (optional)',
-                  ),
-                  const SizedBox(height: 10),
-                  // Additional charges - hide in sales mode
-                  if (!isSalesMode) ...[
-                    _buildAdditionalChargesSection(),
-                    const SizedBox(height: 10),
-                  ],
-                  // Payment method
-                  // _buildPaymentMethodSection(),
-                  const SizedBox(height: 3),
-                  // Delivery status
-                  if (!isSalesMode) _buildDeliveryStatusSection(),
-                  const SizedBox(height: 3),
-                  _buildPaymentMethodSection(),
-                  const SizedBox(height: 3),
-                  if (!isSalesMode) ...[
-                    BookingDocumentUploadSection(
-                      documentsNotifier: documentsNotifier,
-                    ),
-                    // const SizedBox(height: 20),
-                  ],
+                  const SizedBox(height: 15),
+                  _buildClientField("Name", clientNameController),
+                  const SizedBox(height: 15),
+                  _buildClientField("Phone", clientPhone1Controller),
+                  const SizedBox(height: 15),
+                  _buildClientField("Phone 2", clientPhone2Controller),
+                  const SizedBox(height: 15),
+                  _buildClientField("Place", clientAddressController),
+                  const SizedBox(height: 15),
+                  _buildWhatsappSection(),
                 ],
               ),
             ),
@@ -2946,7 +2962,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       ),
                     ),
                   ],
-                ),
+
               ),
               Transform.scale(
                 scale: 0.8,
@@ -2985,6 +3001,97 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildClientField(String label, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 218,
+          child: Text(
+            '$label ',
+            style: const TextStyle(
+              color: Color(0xFF8C8C8C),
+              fontSize: 13,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
+        Container(
+          width: double.infinity, // Making it responsive
+          height: 37,
+          alignment: Alignment.center,
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(
+                width: 0.50,
+                color: Color(0xFFA2A2A2),
+              ),
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          child: TextField(
+            controller: controller,
+            style: const TextStyle(
+              fontSize: 13,
+              fontFamily: 'Inter',
+              color: Colors.black87,
+            ),
+            decoration: const InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWhatsappSection() {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () {
+            setState(() {
+              sendPdfToWhatsApp = !sendPdfToWhatsApp;
+            });
+          },
+          child: Container(
+            width: 18,
+            height: 18,
+            decoration: ShapeDecoration(
+              color: sendPdfToWhatsApp ? const Color(0xFF6132E4) : Colors.transparent,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  width: 1,
+                  color: sendPdfToWhatsApp ? const Color(0xFF6132E4) : const Color(0xFFA2A2A2),
+                ),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            child: sendPdfToWhatsApp
+                ? const Icon(Icons.check, size: 14, color: Color(0xFFFFD700)) // Golden tick
+                : null,
+          ),
+        ),
+        const SizedBox(width: 10),
+        const SizedBox(
+          child: Text(
+            'Send invoice to whatsapp',
+            style: TextStyle(
+              color: Color(0xFF8C8C8C),
+              fontSize: 13,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        )
+      ],
     );
   }
 
