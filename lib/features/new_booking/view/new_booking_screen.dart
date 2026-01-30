@@ -122,7 +122,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // New Fields for Redesign
   int coolingPeriodDays = 1;
+  // int coolingPeriodDays = 1;
   final runningKilometersController = TextEditingController();
+
+  // Inline editing state
+  int? _editingVariantId;
+  final _inlinePriceController = TextEditingController();
+  final _inlinePriceFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -147,7 +153,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     clientNameController.dispose();
     clientPhone1Controller.dispose();
     clientPhone2Controller.dispose();
+    clientPhone2Controller.dispose();
     clientAddressController.dispose();
+    _inlinePriceController.dispose();
+    _inlinePriceFocusNode.dispose();
     staffNameController.dispose();
     advanceAmountController.dispose();
     securityAmountController.dispose();
@@ -2304,234 +2313,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  /// Add product from search results (uses first variant by default)
-  void _addProductFromSearch(ProductModel product) {
-    log('_addProductFromSearch called for: ${product.name}');
-
-    final variants = product.variants;
-    if (variants.isEmpty) {
-      log('No variants available');
-      context.showSnackBar('No variants available for this product',
-          isError: true);
-      return;
-    }
-
-    // Get first variant
-    final variant = variants.first;
-    final price = variant.price ?? product.price ?? 0;
-    log('Adding variant: ${variant.attribute}, price: $price');
-
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
-
-    // Check if this variant already exists
-    final existingIndex = products.indexWhere(
-      (p) => p.variant.variantId == variant.id,
-    );
-
-    if (existingIndex != -1) {
-      // Increment quantity
-      final existing = products[existingIndex];
-      products[existingIndex] =
-          existing.copyWith(quantity: existing.quantity + 1);
-    } else {
-      // Add new product with first variant
-      final attribute =
-          variant.attribute.isEmpty ? (product.model ?? '') : variant.attribute;
-
-      products.add(ProductSelectedModel(
-        variant: ProductInfoModel(
-          id: variant.id,
-          variantId: variant.id,
-          productId: product.id,
-          name: product.name,
-          image: product.image,
-          amount: price,
-          category: product.category,
-          color: product.color,
-          model: product.model,
-          mainServiceType: product.mainServiceType,
-          variantAttribute: attribute,
-          measurements: [],
-          quantity: 1,
-        ),
-        quantity: 1,
-        amount: price,
-      ));
-    }
-
-    selectedProductsNotifier.value = products;
-    log('Product added. Total selected: ${products.length}');
-    setState(() {}); // Refresh to update UI
-  }
-
-  /// Decrement product quantity from search results
-  void _decrementProductFromSearch(ProductModel product) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
-
-    // Find all variants of this product
-    final productVariants =
-        products.where((p) => p.variant.productId == product.id).toList();
-
-    if (productVariants.isEmpty) return;
-
-    // Decrement from last added variant
-    final lastVariant = productVariants.last;
-    final index = products.indexOf(lastVariant);
-
-    if (lastVariant.quantity > 1) {
-      products[index] =
-          lastVariant.copyWith(quantity: lastVariant.quantity - 1);
-    } else {
-      products.removeAt(index);
-    }
-
-    selectedProductsNotifier.value = products;
-    setState(() {}); // Refresh to update UI
-  }
-
-  Widget _buildProductTableHeader() {
-    return Container(
-      height: 36,
-      color: Colors.grey.shade100,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Text(
-              "Item",
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              "Variants",
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              "Price",
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade700,
-              ),
-            ),
-          ),
-          const SizedBox(width: 60),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductTableRow(dynamic product) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey.shade200))),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: Image.network(product.image,
-                      width: 32, height: 32, fit: BoxFit.cover),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                    child: Text('product.name',
-                        style: const TextStyle(fontSize: 12))),
-              ],
-            ),
-          ),
-          Expanded(
-              child: Text("${product.variants.length}",
-                  style: const TextStyle(fontSize: 12))),
-          Expanded(
-              child: Text(product.rentPrice.toCurrency(),
-                  style: const TextStyle(fontSize: 12))),
-          SizedBox(
-            width: 60,
-            child: ElevatedButton(
-              // onPressed: () {
-              //   print(product);
-              // },
-              onPressed: () => _showVariantSelectionDialog(product),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
-                minimumSize: const Size(50, 26),
-                padding: EdgeInsets.zero,
-              ),
-              child: const Text("Add", style: TextStyle(fontSize: 11)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductListTable() {
-    return BlocBuilder<SelectProductBloc, SelectProductState>(
-      bloc: _selectProductBloc,
-      builder: (context, state) {
-        return state.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e) => Center(child: Text(e)),
-          loaded: (
-            products,
-            _,
-            __,
-            ___,
-            ____,
-            _____,
-            isSearching,
-            p1,
-            p2,
-            p3,
-            p4,
-            p5,
-            p6,
-            p7,
-            p8,
-          ) {
-            if (products.isEmpty) {
-              return const Center(child: Text("No products"));
-            }
-
-            return Column(
-              children: [
-                _buildProductTableHeader(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: products.length,
-                    itemBuilder: (_, i) => _buildProductTableRow(products[i]),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
   void _showVariantSelectionDialog(dynamic product) {
     final variants = product.variants ?? [];
 
@@ -2595,240 +2376,53 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  void _addProductVariant(dynamic product, dynamic variant) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
-
-    // Check if variant already exists
-    final existingIndex = products.indexWhere(
-      (p) => p.variant.variantId == variant.variantId,
-    );
-
-    if (existingIndex != -1) {
-      // Increment quantity
-      final existing = products[existingIndex];
-      products[existingIndex] =
-          existing.copyWith(quantity: existing.quantity + 1);
-    } else {
-      // Add new product
-      final isSales = selectedBookingType == BookingType.sales;
-      final price =
-          isSales ? (variant.sellPrice ?? 0) : (variant.rentPrice ?? 0);
-
-      products.add(ProductSelectedModel(
-        variant: variant,
-        quantity: 1,
-        amount: price,
-      ));
-    }
-
-    selectedProductsNotifier.value = products;
-    context.showSnackBar('Added ${variant.name ?? "item"} to selection');
-  }
-
-  Widget _buildServiceTabs() {
-    return BlocBuilder<ServiceBloc, ServiceState>(
-      builder: (context, state) {
-        return state.when(
-          loading: () => const SizedBox(
-            height: 26,
-            child: Center(
-              child: SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-          ),
-          error: (error) => Text(
-            'Error loading services',
-            style: TextStyle(color: Colors.red.shade400, fontSize: 11),
-          ),
-          loaded: (services) {
-            // Auto-select first service and load products
-            if (selectedServiceId == null && services.isNotEmpty) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                setState(() => selectedServiceId = services.first.id);
-                _loadProductsForService(services.first.id);
-              });
-            }
-            return SizedBox(
-              height: 26,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: services.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 6),
-                itemBuilder: (context, index) {
-                  final service = services[index];
-                  final isSelected = selectedServiceId == service.id;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() => selectedServiceId = service.id);
-                      _loadProductsForService(service.id);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? const Color(0xFF6132E4).withOpacity(0.1)
-                            : Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(13),
-                        border: Border.all(
-                          color: isSelected
-                              ? const Color(0xFF6132E4)
-                              : Colors.grey.shade300,
-                          width: isSelected ? 1.5 : 1,
-                        ),
-                      ),
-                      child: Text(
-                        service.name,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w500,
-                          color: isSelected
-                              ? const Color(0xFF6132E4)
-                              : Colors.grey.shade700,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   Widget _buildProductListHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F0FF),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(8),
-          topRight: Radius.circular(8),
-        ),
-        border: Border(
-          bottom: BorderSide(color: Colors.grey.shade300, width: 1),
-        ),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              'Item Name',
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
+            flex: 3,
+            child: _buildHeaderCell('items', alignLeft: true),
           ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 100,
-            child: Text(
-              'Variant',
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 70,
-            child: Text(
-              'Stock',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 100,
-            child: Text(
-              'Quantity',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 80,
-            child: Text(
-              'Price',
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 80,
-            child: Text(
-              'Total',
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 40), // Space for close icon
+          const SizedBox(width: 4),
+          Expanded(child: _buildHeaderCell('Variants')),
+          const SizedBox(width: 4),
+          Expanded(child: _buildHeaderCell('Available')),
+          const SizedBox(width: 4),
+          Expanded(child: _buildHeaderCell('Quantity')),
+          const SizedBox(width: 4),
+          Expanded(child: _buildHeaderCell('Price / item')),
+          const SizedBox(width: 4),
+          Expanded(child: _buildHeaderCell('Total')),
+          const SizedBox(width: 50), // Matches row close button area
         ],
       ),
     );
   }
 
-  Widget _buildCategoryDropdown(List<ServicesModel> services) {
+  Widget _buildHeaderCell(String title, {bool alignLeft = false}) {
     return Container(
-      height: 30,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(6),
+        color: const Color(0xFFF9F9F9), // Very light grey from image
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey.shade200),
       ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<int>(
-          value: selectedServiceId,
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, size: 18),
-          style: const TextStyle(fontSize: 12, color: Colors.black),
-          items: services
-              .map((s) => DropdownMenuItem(
-                    value: s.id,
-                    child: Text(s.name, style: const TextStyle(fontSize: 12)),
-                  ))
-              .toList(),
-          onChanged: (id) {
-            if (id == null) return;
-            setState(() => selectedServiceId = id);
-            _loadProductsForService(id);
-          },
+      alignment: alignLeft ? Alignment.centerLeft : Alignment.center,
+      child: Padding(
+        padding: alignLeft
+            ? const EdgeInsets.only(left: 12)
+            : const EdgeInsets.symmetric(horizontal: 4),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 13,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D3436),
+          ),
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
@@ -2840,25 +2434,27 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       builder: (context, products, _) {
         if (products.isEmpty) {
           return Center(
-            child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.shopping_cart_outlined,
-                      size: 32, color: Colors.grey.shade300),
-                  const SizedBox(height: 8),
+                      size: 48, color: Colors.grey.shade200),
+                  const SizedBox(height: 16),
                   Text(
                     'No items selected',
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       color: Colors.grey.shade500,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Text(
-                    'Click on products to add',
+                    'Select a service and click on products to add them',
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
                       color: Colors.grey.shade400,
                     ),
                   ),
@@ -2868,7 +2464,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 0),
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
           itemCount: products.length,
           itemBuilder: (context, index) => _buildProductRow(products[index]),
         );
@@ -2887,15 +2485,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         children: [
           // Item Name & Image
           Expanded(
+            flex: 3,
             child: Row(
               children: [
                 // Image
                 Container(
-                  width: 40,
+                  width: 48, // Slightly larger looking in image
                   height: 40,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(6),
                     color: Colors.grey.shade100,
+                    border: Border.all(color: Colors.grey.shade200),
                     image: product.variant.image != null &&
                             product.variant.image!.isNotEmpty
                         ? DecorationImage(
@@ -2910,7 +2510,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           size: 20, color: Colors.grey)
                       : null,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 // Text
                 Expanded(
                   child: Column(
@@ -2921,23 +2521,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         product.variant.name ?? '',
                         style: const TextStyle(
                           fontSize: 14,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: Color(0xFF2D3436),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
                       Text(
                         [
                           product.variant.color,
                           product.variant.category,
-                          product.variant.model
                         ].where((e) => e != null && e.isNotEmpty).join(', '),
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 12,
                           color: Colors.grey.shade500,
+                          height: 1.1,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -2948,31 +2547,34 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4),
           // Variant
-          SizedBox(
-            width: 100,
-            child: Text(
-              (product.variant.variantAttribute?.isNotEmpty ?? false)
-                  ? product.variant.variantAttribute!
-                  : product.variant.model ?? '-',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
+          Expanded(
+            child: Center(
+              child: Text(
+                (product.variant.variantAttribute?.isNotEmpty ?? false)
+                    ? product.variant.variantAttribute!
+                    : product.variant.model ?? '-',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4),
           // Available Badge
-          SizedBox(
-            width: 70,
+          Expanded(
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                //  width: 58,
+  // height: 21,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE5F8ED), // Light green bg
-                  borderRadius: BorderRadius.circular(4),
+                  color: const Color(0x1C1FD300),// Light green bg
+                  borderRadius: BorderRadius.circular(3),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -2989,8 +2591,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     Text(
                       '${product.variant.quantity} left',
                       style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 12, // Slightly larger font 12
+                        fontWeight: FontWeight.w600,
                         color: Color(0xFF27AE60),
                       ),
                     ),
@@ -2999,26 +2601,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4),
           // Quantity Buttons
-          SizedBox(
-            width: 100,
+          Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: () => _decrementQuantity(product),
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3F0FF), // Light purple
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(Icons.remove,
-                        size: 16, color: Color(0xFF6132E4)),
-                  ),
-                ),
+                _buildQuantityBtn(
+                    icon: Icons.remove,
+                    onTap: () => _decrementQuantity(product)),
                 const SizedBox(width: 12),
                 Text(
                   '${product.quantity}',
@@ -3029,72 +2620,105 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                InkWell(
-                  onTap: () => _incrementQuantity(product),
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3F0FF), // Light purple
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(Icons.add,
-                        size: 16, color: Color(0xFF6132E4)),
-                  ),
-                ),
+                _buildQuantityBtn(
+                    icon: Icons.add, onTap: () => _incrementQuantity(product)),
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4),
           // Price / item
-          SizedBox(
-            width: 80,
-            child: GestureDetector(
-              onTap: () => _showPriceEditDialog(product),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    '${product.amount}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w400,
+          Expanded(
+            child: _editingVariantId == product.variant.variantId
+                ? Center(
+                    child: Container(
+                      width: 80,
+                      height: 32,
+                      child: TextField(
+                        controller: _inlinePriceController,
+                        focusNode: _inlinePriceFocusNode,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide(color: Colors.grey.shade400),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide:
+                                const BorderSide(color: Color(0xFF6132E4)),
+                          ),
+                        ),
+                        onSubmitted: (_) => _saveEditingPrice(product),
+                      ),
+                    ),
+                  )
+                : GestureDetector(
+                    onTap: () => _startEditingPrice(product),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${product.amount}', // format currency if needed
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF2D3436),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(Icons.edit_outlined,
+                            size: 16, color: const Color(0xFF6132E4)),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 6),
-                  Icon(Icons.edit_outlined,
-                      size: 14, color: const Color(0xFF6132E4)),
-                ],
-              ),
-            ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4),
           // Total
-          SizedBox(
-            width: 80,
-            child: Text(
-              '${product.amount * product.quantity}',
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+          Expanded(
+            child: Center(
+              child: Text(
+                '${product.amount * product.quantity}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700, // Bold
+                  color: Color(0xFF2D3436),
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
           // Remove
           SizedBox(
-            width: 40,
+            width: 50,
             child: IconButton(
-              icon: const Icon(Icons.close, size: 20, color: Colors.black54),
+              icon: const Icon(Icons.close, size: 20, color: Colors.black87),
               onPressed: () => _removeProduct(product),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildQuantityBtn(
+      {required IconData icon, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: Container(
+        width: 27,
+        height: 22,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF3F0FF), // Light purple bg
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Icon(icon, size: 14, color: const Color(0xFF6132E4)),
       ),
     );
   }
@@ -3143,6 +2767,32 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       }
       selectedProductsNotifier.value = products;
     }
+  }
+
+  void _startEditingPrice(ProductSelectedModel product) {
+    setState(() {
+      _editingVariantId = product.variant.variantId;
+      _inlinePriceController.text = product.amount.toString();
+      // Schedule focus request for next frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _inlinePriceFocusNode.requestFocus();
+      });
+    });
+  }
+
+  void _saveEditingPrice(ProductSelectedModel product) {
+    if (_editingVariantId == null) return;
+
+    final newPrice = int.tryParse(_inlinePriceController.text);
+    if (newPrice != null) {
+      _updateProductPrice(product, newPrice);
+    }
+
+    setState(() {
+      _editingVariantId = null;
+      _inlinePriceController.clear();
+      _inlinePriceFocusNode.unfocus();
+    });
   }
 
   /// Remove a product from the selected list
@@ -4417,7 +4067,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ],
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 7),
 
                   // Upload documents
                   const Text(
@@ -4433,7 +4083,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     documentsNotifier: documentsNotifier,
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 7),
 
                   // Staff Details
                   const Text(
@@ -4444,11 +4094,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 7),
 
                   _buildStaffSelector(),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 7),
 
                   // Notes
                   Container(
@@ -4472,15 +4122,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 7),
 
                   // Running Kilometers
                   _buildSimpleTextField(
                       controller: runningKilometersController,
                       hint: 'Running Kilometers'),
-
-                  const SizedBox(height: 24),
-                  _buildSimpleSummary(),
                 ],
               ),
             ),
@@ -4631,36 +4278,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildSimpleSummary() {
-    // A simplified summary for the right panel to keep track of total
-    return ValueListenableBuilder<List<ProductSelectedModel>>(
-      valueListenable: selectedProductsNotifier,
-      builder: (context, products, _) {
-        final total = products.fold<int>(
-            0, (sum, item) => sum + (item.amount * item.quantity));
-        if (total == 0) return const SizedBox();
-
-        return Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Total Estimated:',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
-              Text(total.toCurrency(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Color(0xFF6132E4))),
-            ],
-          ),
-        );
-      },
     );
   }
 }

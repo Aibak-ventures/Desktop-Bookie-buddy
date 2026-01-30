@@ -76,6 +76,21 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
   late DateTime selectedDay;
   bool isSelectingPickup = true; // true = pickup, false = return
 
+  // Focus nodes for explicit traversal
+  final _nameFocus = FocusNode();
+  final _phone1Focus = FocusNode();
+  final _phone2Focus = FocusNode();
+  final _addressFocus = FocusNode();
+
+  @override
+  void dispose() {
+    _nameFocus.dispose();
+    _phone1Focus.dispose();
+    _phone2Focus.dispose();
+    _addressFocus.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -169,8 +184,10 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                       _compactField(widget.clientAddressController, 'Place',
                           Icons.location_on_outlined,
                           type: TextInputType.text,
+                          focusNode: _addressFocus,
                           validator: (v) =>
-                              AppInputValidators.address(v, isRequired: false)),
+                              AppInputValidators.address(v, isRequired: false),
+                          textInputAction: TextInputAction.done),
                       // const SizedBox(height: 6),
                       _buildStaffDetailsCard(),
 
@@ -278,8 +295,11 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           hideOnUnfocus: true,
           hideOnSelect: true,
           builder: (context, controller, focusNode) => TextFormField(
-            focusNode: focusNode,
+            focusNode:
+                focusNode, // TypeAhead uses its own focus node for the text field
             controller: controller,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _phone1Focus.requestFocus(),
             validator: AppInputValidators.name,
             style: const TextStyle(fontSize: 13),
             decoration: InputDecoration(
@@ -397,22 +417,43 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
           // Client name - hidden in sales mode
           if (!widget.isSalesMode) ...[
             _compactField(
-                widget.clientNameController, 'Name', Icons.person_outline,
-                type: TextInputType.text, validator: AppInputValidators.name),
+              widget.clientNameController,
+              'Name',
+              Icons.person_outline,
+              type: TextInputType.text,
+              validator: AppInputValidators.name,
+              focusNode: _nameFocus,
+              onFieldSubmitted: (_) => _phone1Focus.requestFocus(),
+              textInputAction: TextInputAction.next,
+            ),
             const SizedBox(height: 8),
           ],
           _compactField(
-              widget.clientPhone1Controller, 'Phone', Icons.phone_outlined,
-              type: TextInputType.phone,
-              validator: AppInputValidators.phoneNumber),
+            widget.clientPhone1Controller,
+            'Phone',
+            Icons.phone_outlined,
+            type: TextInputType.phone,
+            validator: AppInputValidators.phoneNumber,
+            focusNode: _phone1Focus,
+            onFieldSubmitted: (_) => !widget.isSalesMode
+                ? _phone2Focus.requestFocus()
+                : _addressFocus.requestFocus(),
+            textInputAction: TextInputAction.next,
+          ),
           // Phone 2 - hidden in sales mode
           if (!widget.isSalesMode) ...[
             const SizedBox(height: 8),
             _compactField(
-                widget.clientPhone2Controller, 'Phone 2', Icons.phone_outlined,
-                type: TextInputType.phone,
-                validator: (value) =>
-                    AppInputValidators.phoneNumber(value, isRequired: false)),
+              widget.clientPhone2Controller,
+              'Phone 2',
+              Icons.phone_outlined,
+              type: TextInputType.phone,
+              validator: (value) =>
+                  AppInputValidators.phoneNumber(value, isRequired: false),
+              focusNode: _phone2Focus,
+              onFieldSubmitted: (_) => _addressFocus.requestFocus(),
+              textInputAction: TextInputAction.next,
+            ),
           ],
         ],
       ),
@@ -470,10 +511,17 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     TextInputType type = TextInputType.text,
     String? Function(String?)? validator,
     bool enabled = true,
+    TextInputAction? textInputAction,
+    FocusNode? focusNode,
+    ValueChanged<String>? onFieldSubmitted,
   }) {
     return TextFormField(
       controller: c,
+      focusNode: focusNode,
       keyboardType: type,
+      textInputAction: textInputAction,
+      onFieldSubmitted:
+          onFieldSubmitted ?? (_) => FocusScope.of(context).nextFocus(),
       validator: validator,
       enabled: enabled,
       style: TextStyle(
