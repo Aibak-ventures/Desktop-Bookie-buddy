@@ -2827,7 +2827,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           onChanged: (id) {
             if (id == null) return;
             setState(() => selectedServiceId = id);
-            _loadProductsForService(id); // <<< CRITICAL
+            _loadProductsForService(id);
           },
         ),
       ),
@@ -2885,17 +2885,67 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       ),
       child: Row(
         children: [
-          // Item Name
+          // Item Name & Image
           Expanded(
-            child: Text(
-              product.variant.name ?? '',
-              style: const TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              children: [
+                // Image
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.grey.shade100,
+                    image: product.variant.image != null &&
+                            product.variant.image!.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(product.variant.image!),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                  ),
+                  child: product.variant.image == null ||
+                          product.variant.image!.isEmpty
+                      ? const Icon(Icons.image_not_supported,
+                          size: 20, color: Colors.grey)
+                      : null,
+                ),
+                const SizedBox(width: 12),
+                // Text
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        product.variant.name ?? '',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF2D3436),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        [
+                          product.variant.color,
+                          product.variant.category,
+                          product.variant.model
+                        ].where((e) => e != null && e.isNotEmpty).join(', '),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 12),
@@ -2906,22 +2956,51 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               (product.variant.variantAttribute?.isNotEmpty ?? false)
                   ? product.variant.variantAttribute!
                   : product.variant.model ?? '-',
-              style: const TextStyle(fontSize: 12, color: Colors.black87),
-              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
             ),
           ),
           const SizedBox(width: 12),
-          // Available
+          // Available Badge
           SizedBox(
             width: 70,
-            child: Text(
-              '${product.variant.quantity}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, color: Colors.black87),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE5F8ED), // Light green bg
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF27AE60), // Green dot
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${product.variant.quantity} left',
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF27AE60),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
-          // Quantity
+          // Quantity Buttons
           SizedBox(
             width: 100,
             child: Row(
@@ -2930,32 +3009,37 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 InkWell(
                   onTap: () => _decrementQuantity(product),
                   child: Container(
-                    padding: const EdgeInsets.all(4),
+                    width: 28,
+                    height: 28,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: const Color(0xFFF3F0FF), // Light purple
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Icon(Icons.remove,
-                        size: 14, color: Colors.grey.shade700),
+                    child: const Icon(Icons.remove,
+                        size: 16, color: Color(0xFF6132E4)),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Text(
                   '${product.quantity}',
                   style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.w600),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 InkWell(
                   onTap: () => _incrementQuantity(product),
                   child: Container(
-                    padding: const EdgeInsets.all(4),
+                    width: 28,
+                    height: 28,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: const Color(0xFFF3F0FF), // Light purple
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child:
-                        Icon(Icons.add, size: 14, color: Colors.grey.shade700),
+                    child: const Icon(Icons.add,
+                        size: 16, color: Color(0xFF6132E4)),
                   ),
                 ),
               ],
@@ -2965,17 +3049,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           // Price / item
           SizedBox(
             width: 80,
-            child: InkWell(
+            child: GestureDetector(
               onTap: () => _showPriceEditDialog(product),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    '₹${product.amount}',
-                    style: const TextStyle(fontSize: 12, color: Colors.black87),
+                    '${product.amount}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  const SizedBox(width: 4),
-                  Icon(Icons.edit, size: 10, color: Colors.grey.shade400),
+                  const SizedBox(width: 6),
+                  Icon(Icons.edit_outlined,
+                      size: 14, color: const Color(0xFF6132E4)),
                 ],
               ),
             ),
@@ -2985,20 +3074,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           SizedBox(
             width: 80,
             child: Text(
-              '₹${product.amount * product.quantity}',
+              '${product.amount * product.quantity}',
               textAlign: TextAlign.right,
               style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
             ),
           ),
           const SizedBox(width: 12),
           // Remove
           SizedBox(
-            width: 28,
+            width: 40,
             child: IconButton(
-              icon: const Icon(Icons.close, size: 18, color: Colors.redAccent),
+              icon: const Icon(Icons.close, size: 20, color: Colors.black54),
               onPressed: () => _removeProduct(product),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
