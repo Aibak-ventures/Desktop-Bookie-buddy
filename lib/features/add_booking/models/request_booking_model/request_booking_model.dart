@@ -36,8 +36,7 @@ class RequestBookingModel with _$RequestBookingModel {
     @JsonKey(name: 'discount_amount') int? discountAmount,
     @JsonKey(name: 'purchase_mode') String? purchaseMode,
     @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'payment_method')
-    PaymentMethod? paymentMethod,
+    @JsonKey(name: 'payment_method') PaymentMethod? paymentMethod,
     @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
     DeliveryStatus? deliveryStatus,
     @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
@@ -56,6 +55,7 @@ class RequestBookingModel with _$RequestBookingModel {
     @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
     @Default(false)
     bool sendPdfToWhatsApp,
+    @JsonKey(name: 'running_kilometers') String? runningKilometers,
   }) = _RequestBookingModel;
 
   factory RequestBookingModel.fromJson(Map<String, dynamic> json) =>

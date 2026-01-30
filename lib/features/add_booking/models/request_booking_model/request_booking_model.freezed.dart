@@ -69,6 +69,8 @@ mixin _$RequestBookingModel {
   TimeOfDay? get returnTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
   bool get sendPdfToWhatsApp => throw _privateConstructorUsedError;
+  @JsonKey(name: 'running_kilometers')
+  String? get runningKilometers => throw _privateConstructorUsedError;
 
   /// Serializes this RequestBookingModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -121,7 +123,8 @@ abstract class $RequestBookingModelCopyWith<$Res> {
       TimeOfDay? returnTime,
       @JsonKey(
           name: 'send_invoice', includeToJson: true, includeFromJson: false)
-      bool sendPdfToWhatsApp});
+      bool sendPdfToWhatsApp,
+      @JsonKey(name: 'running_kilometers') String? runningKilometers});
 
   $ClientRequestModelCopyWith<$Res>? get client;
   $BookingOtherDetailsModelCopyWith<$Res>? get otherDetails;
@@ -165,6 +168,7 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
     Object? pickupTime = freezed,
     Object? returnTime = freezed,
     Object? sendPdfToWhatsApp = null,
+    Object? runningKilometers = freezed,
   }) {
     return _then(_value.copyWith(
       clientId: freezed == clientId
@@ -259,6 +263,10 @@ class _$RequestBookingModelCopyWithImpl<$Res, $Val extends RequestBookingModel>
           ? _value.sendPdfToWhatsApp
           : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
               as bool,
+      runningKilometers: freezed == runningKilometers
+          ? _value.runningKilometers
+          : runningKilometers // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -335,7 +343,8 @@ abstract class _$$RequestBookingModelImplCopyWith<$Res>
       TimeOfDay? returnTime,
       @JsonKey(
           name: 'send_invoice', includeToJson: true, includeFromJson: false)
-      bool sendPdfToWhatsApp});
+      bool sendPdfToWhatsApp,
+      @JsonKey(name: 'running_kilometers') String? runningKilometers});
 
   @override
   $ClientRequestModelCopyWith<$Res>? get client;
@@ -379,6 +388,7 @@ class __$$RequestBookingModelImplCopyWithImpl<$Res>
     Object? pickupTime = freezed,
     Object? returnTime = freezed,
     Object? sendPdfToWhatsApp = null,
+    Object? runningKilometers = freezed,
   }) {
     return _then(_$RequestBookingModelImpl(
       clientId: freezed == clientId
@@ -473,6 +483,10 @@ class __$$RequestBookingModelImplCopyWithImpl<$Res>
           ? _value.sendPdfToWhatsApp
           : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
               as bool,
+      runningKilometers: freezed == runningKilometers
+          ? _value.runningKilometers
+          : runningKilometers // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -516,7 +530,8 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
       this.returnTime,
       @JsonKey(
           name: 'send_invoice', includeToJson: true, includeFromJson: false)
-      this.sendPdfToWhatsApp = false})
+      this.sendPdfToWhatsApp = false,
+      @JsonKey(name: 'running_kilometers') this.runningKilometers})
       : _products = products,
         _additionalCharges = additionalCharges;
 
@@ -609,10 +624,13 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
   @override
   @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
   final bool sendPdfToWhatsApp;
+  @override
+  @JsonKey(name: 'running_kilometers')
+  final String? runningKilometers;
 
   @override
   String toString() {
-    return 'RequestBookingModel(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, paymentMethod: $paymentMethod, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime, sendPdfToWhatsApp: $sendPdfToWhatsApp)';
+    return 'RequestBookingModel(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, paymentMethod: $paymentMethod, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime, sendPdfToWhatsApp: $sendPdfToWhatsApp, runningKilometers: $runningKilometers)';
   }
 
   @override
@@ -661,7 +679,9 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
             (identical(other.returnTime, returnTime) ||
                 other.returnTime == returnTime) &&
             (identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) ||
-                other.sendPdfToWhatsApp == sendPdfToWhatsApp));
+                other.sendPdfToWhatsApp == sendPdfToWhatsApp) &&
+            (identical(other.runningKilometers, runningKilometers) ||
+                other.runningKilometers == runningKilometers));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -690,7 +710,8 @@ class _$RequestBookingModelImpl implements _RequestBookingModel {
         serviceId,
         pickupTime,
         returnTime,
-        sendPdfToWhatsApp
+        sendPdfToWhatsApp,
+        runningKilometers
       ]);
 
   /// Create a copy of RequestBookingModel
@@ -746,7 +767,9 @@ abstract class _RequestBookingModel implements RequestBookingModel {
       final TimeOfDay? returnTime,
       @JsonKey(
           name: 'send_invoice', includeToJson: true, includeFromJson: false)
-      final bool sendPdfToWhatsApp}) = _$RequestBookingModelImpl;
+      final bool sendPdfToWhatsApp,
+      @JsonKey(name: 'running_kilometers')
+      final String? runningKilometers}) = _$RequestBookingModelImpl;
 
   factory _RequestBookingModel.fromJson(Map<String, dynamic> json) =
       _$RequestBookingModelImpl.fromJson;
@@ -820,6 +843,9 @@ abstract class _RequestBookingModel implements RequestBookingModel {
   @override
   @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
   bool get sendPdfToWhatsApp;
+  @override
+  @JsonKey(name: 'running_kilometers')
+  String? get runningKilometers;
 
   /// Create a copy of RequestBookingModel
   /// with the given fields replaced by the non-null parameter values.

@@ -41,6 +41,7 @@ _$RequestBookingModelImpl _$$RequestBookingModelImplFromJson(
           ?.map(
               (e) => AdditionalChargesModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      runningKilometers: json['running_kilometers'] as String?,
     );
 
 Map<String, dynamic> _$$RequestBookingModelImplToJson(
@@ -71,6 +72,8 @@ Map<String, dynamic> _$$RequestBookingModelImplToJson(
       if (instance.additionalCharges case final value?)
         'additional_charges': value,
       'send_invoice': instance.sendPdfToWhatsApp,
+      if (instance.runningKilometers case final value?)
+        'running_kilometers': value,
     };
 
 const _$PaymentMethodEnumMap = {
