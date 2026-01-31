@@ -69,9 +69,10 @@ class BookingAdditionalChargesSection extends StatelessWidget {
                       flex: 2,
                       child: TextField(
                         controller: TextEditingController(
-                          text: additionalCharges[index].name,
+                          text: additionalCharges[index].name ?? '',
                         )..selection = TextSelection.fromPosition(TextPosition(
-                            offset: additionalCharges[index].name.length)),
+                            offset:
+                                (additionalCharges[index].name ?? '').length)),
                         onChanged: (v) => onNameChanged(index, v),
                         decoration: InputDecoration(
                           hintText: 'Charge name',

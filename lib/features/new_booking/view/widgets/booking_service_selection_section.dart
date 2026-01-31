@@ -38,66 +38,64 @@ class BookingServiceSelectionSection extends StatelessWidget {
           const SizedBox(height: 12),
           BlocBuilder<ServiceBloc, ServiceState>(
             builder: (context, state) {
-              if (state.isLoading) {
-                return const Center(
+              return state.when(
+                loading: () => const Center(
                   child: Padding(
                     padding: EdgeInsets.all(20.0),
                     child: CircularProgressIndicator(),
                   ),
-                );
-              }
-
-              if (state.errorMessage != null) {
-                return Center(
+                ),
+                error: (error) => Center(
                   child: Text(
-                    state.errorMessage!,
+                    error,
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
-                );
-              }
+                ),
+                loaded: (services) {
+                  final filteredServices = serviceTypeSelected != null
+                      ? services
+                          .where((s) => MainServiceType.fromString(s.mainServiceName) == serviceTypeSelected)
+                          .toList()
+                      : [];
 
-              final filteredServices = serviceTypeSelected != null
-                  ? state.serviceList
-                      .where((s) => s.mainServiceType == serviceTypeSelected)
-                      .toList()
-                  : [];
-
-              if (filteredServices.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      'No services available',
-                      style: TextStyle(color: Colors.grey.shade600),
-                    ),
-                  ),
-                );
-              }
-
-              return Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: filteredServices.map((service) {
-                  return InkWell(
-                    onTap: () => onServiceSelected(service),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        service.name,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black87,
+                  if (filteredServices.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          'No services available',
+                          style: TextStyle(color: Colors.grey.shade600),
                         ),
                       ),
-                    ),
+                    );
+                  }
+
+                  return Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: filteredServices.map((service) {
+                      return InkWell(
+                        onTap: () => onServiceSelected(service),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            service.name,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
+                },
               );
             },
           ),

@@ -815,7 +815,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                       fontWeight: FontWeight.w500,
                       color: widget.coolingPeriodDate != null
                           ? Colors.black
-                          : const AppColors.textQuaternary,
+                          :  AppColors.textQuaternary,
                     ),
                   ),
                   const Spacer(),
@@ -850,7 +850,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                         fontWeight: FontWeight.w500,
                         color: widget.coolingPeriodTime != null
                             ? Colors.black
-                            : const AppColors.textQuaternary,
+                            :  AppColors.textQuaternary,
                       ),
                     ),
                   ),

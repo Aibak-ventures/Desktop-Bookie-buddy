@@ -3,8 +3,8 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class BookingPaymentMethodSection extends StatelessWidget {
-  final PaymentMethodEnum? selectedPaymentMethod;
-  final Function(PaymentMethodEnum) onPaymentMethodChanged;
+  final PaymentMethod? selectedPaymentMethod;
+  final Function(PaymentMethod) onPaymentMethodChanged;
 
   const BookingPaymentMethodSection({
     super.key,
@@ -36,9 +36,9 @@ class BookingPaymentMethodSection extends StatelessWidget {
           Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: PaymentMethodEnum.values.map((method) {
+            children: PaymentMethod.values.map((method) {
               return _buildPaymentMethodOption(
-                label: method.displayName,
+                label: method.name,
                 method: method,
               );
             }).toList(),
@@ -50,7 +50,7 @@ class BookingPaymentMethodSection extends StatelessWidget {
 
   Widget _buildPaymentMethodOption({
     required String label,
-    required PaymentMethodEnum method,
+    required PaymentMethod method,
   }) {
     final isSelected = selectedPaymentMethod == method;
 
