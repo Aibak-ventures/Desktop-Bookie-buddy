@@ -330,7 +330,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide:
-                    const BorderSide(color: AppColors.grey300, width: 1.0),
+                     BorderSide(color: AppColors.grey300, width: 1.0),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),

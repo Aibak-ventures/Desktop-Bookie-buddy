@@ -1570,7 +1570,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 content: Text(
                                   'Customization saved: ${measurements.length} measurements',
                                 ),
-                                backgroundColor: const AppColors.greenSuccess,
+                                backgroundColor:  AppColors.greenSuccess,
                               ),
                             );
                           },
