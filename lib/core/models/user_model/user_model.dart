@@ -36,6 +36,7 @@ class UserModel with _$UserModel {
     @JsonKey(name: 'full_name') required String firstName,
     @JsonKey(name: 'last_name', defaultValue: '') required String lastName,
     required String phone,
+    @JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? role,
     @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
     ShopRole? shopRole,
     @JsonKey(defaultValue: false) required bool block,

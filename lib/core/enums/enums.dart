@@ -79,7 +79,7 @@ enum ShopRole {
   String get name {
     switch (this) {
       case ShopRole.owner:
-        return 'Owner';
+        return 'OWNER';
       case ShopRole.manager:
         return 'Manager';
       case ShopRole.staff:

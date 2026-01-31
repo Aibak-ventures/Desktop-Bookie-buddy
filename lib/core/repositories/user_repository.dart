@@ -124,4 +124,36 @@ class UserRepository {
       log('Error updating FCM token: $e', stackTrace: stack);
     }
   }
+
+  Future<List<dynamic>> fetchAvailableShops() async {
+    try {
+      final response = await safeApiCall(_userService.fetchAvailableShops);
+
+      if (response.status.isSuccess) {
+        return response.data as List<dynamic>;
+      }
+      log('Failed to fetch available shops: ${response.devMessage}');
+      throw response.message;
+    } catch (e, stack) {
+      log('Error fetching available shops: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<UserModel> switchShop(int shopId) async {
+    try {
+      final response = await safeApiCall(() => _userService.switchShop(shopId));
+
+      if (response.status.isSuccess) {
+        await setShopId(shopId);
+        final userData = await fetchUserData();
+        return userData;
+      }
+      log('Failed to switch shop: ${response.devMessage}');
+      throw response.message;
+    } catch (e, stack) {
+      log('Error switching shop: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
 }

@@ -40,12 +40,13 @@ import 'package:bookie_buddy_web/features/new_booking/helpers/booking_product_he
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/web_toast.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Booking types enum for the tab selection
-enum BookingType { booking, sales }
+enum BookingType { booking, sales, customWork }
 
 class NewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -1368,8 +1369,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           key: _formKey,
           child: Column(
             children: [
-              // Header with tabs
-              _buildCompactHeader(),
+              // New app bar with tabs and shop selector
+              NewBookingAppBar(
+                selectedTab: _convertBookingTypeToTabType(selectedBookingType),
+                onTabChanged: (tabType) {
+                  _handleTabSwitch(_convertTabTypeToBookingType(tabType));
+                },
+                onBack: _handleBackNavigation,
+              ),
               // Main content - no scrolling
               Expanded(
                 child: Padding(
@@ -1382,6 +1389,28 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         ),
       ),
     );
+  }
+
+  BookingTabType _convertBookingTypeToTabType(BookingType type) {
+    switch (type) {
+      case BookingType.booking:
+        return BookingTabType.booking;
+      case BookingType.sales:
+        return BookingTabType.sales;
+      case BookingType.customWork:
+        return BookingTabType.customWork;
+    }
+  }
+
+  BookingType _convertTabTypeToBookingType(BookingTabType tabType) {
+    switch (tabType) {
+      case BookingTabType.booking:
+        return BookingType.booking;
+      case BookingTabType.sales:
+        return BookingType.sales;
+      case BookingTabType.customWork:
+        return BookingType.customWork;
+    }
   }
 
   Widget _buildCompactHeader() {
@@ -1444,6 +1473,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         return 'New Booking';
       case BookingType.sales:
         return 'New Sale';
+      case BookingType.customWork:
+        return 'Custom Work';
     }
   }
 
@@ -1489,10 +1520,46 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildMainContent() {
-    if (selectedBookingType == BookingType.sales) {
-      return _buildSalesContent();
+    switch (selectedBookingType) {
+      case BookingType.booking:
+        return _buildBookingContent();
+      case BookingType.sales:
+        return _buildSalesContent();
+      case BookingType.customWork:
+        return _buildCustomWorkContent();
     }
-    return _buildBookingContent();
+  }
+
+  Widget _buildCustomWorkContent() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.construction,
+            size: 64,
+            color: Colors.grey.shade400,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Custom Work',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Custom work feature coming soon',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
 // BOOKING
@@ -1585,11 +1652,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           child: Column(
             children: [
               SizedBox(
-                // height: 160,
                 child: Row(
                   children: [
-                    // Expanded(child: _buildSalesDateSection()),
-                    // const SizedBox(width: 12),
+                    Expanded(child: _buildSalesDateSection()),
+                    const SizedBox(width: 12),
                     Expanded(child: _buildLeftTopSection()),
                   ],
                 ),
@@ -1820,7 +1886,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   Widget _buildSalesDateSection() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -1832,49 +1898,35 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           const Text(
             'Sale Date',
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 10),
-          _buildCompactDateField(
-            label: 'Date',
-            value: pickupDate.format(),
+          const SizedBox(height: 12),
+          // Single date field for sales
+          InkWell(
             onTap: () => _selectDate(isPickup: true),
-          ),
-          const SizedBox(height: 8),
-          // Description
-          Text(
-            'Notes',
-            style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-          ),
-          const SizedBox(height: 4),
-          Expanded(
+            borderRadius: BorderRadius.circular(8),
             child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300, width: 1),
+                border: Border.all(color: Colors.grey.shade300),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: TextField(
-                controller: descriptionController,
-                maxLines: null,
-                expands: true,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Enter notes...',
-                  hintStyle: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 13,
-                    fontFamily: 'Inter',
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today,
+                      size: 16, color: Colors.grey.shade600),
+                  const SizedBox(width: 8),
+                  Text(
+                    pickupDate.format(),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.black87,
+                    ),
                   ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(12),
-                ),
+                ],
               ),
             ),
           ),
@@ -3173,8 +3225,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Increment quantity of a product with stock validation
   void _incrementQuantity(ProductSelectedModel product) {
-    // Check available stock
-    final availableStock = product.variant.quantity;
+    // Check available stock using remainingStock with fallback to stock
+    final availableStock =
+        product.variant.remainingStock ?? product.variant.stock ?? 0;
     final currentQuantity = product.quantity;
 
     if (currentQuantity >= availableStock) {
@@ -4502,21 +4555,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   const SizedBox(height: 7),
 
-                  // Upload documents
-                  const Text(
-                    'Upload documents',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
+                  // Upload documents - Only for Booking mode
+                  if (selectedBookingType == BookingType.booking) ...[
+                    const Text(
+                      'Upload documents',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  BookingDocumentUploadSection(
-                    documentsNotifier: documentsNotifier,
-                  ),
-
-                  const SizedBox(height: 7),
+                    const SizedBox(height: 8),
+                    BookingDocumentUploadSection(
+                      documentsNotifier: documentsNotifier,
+                    ),
+                    const SizedBox(height: 7),
+                  ],
 
                   // Staff Details
                   const Text(

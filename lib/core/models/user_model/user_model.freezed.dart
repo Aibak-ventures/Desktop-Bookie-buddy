@@ -26,6 +26,8 @@ mixin _$UserModel {
   @JsonKey(name: 'last_name', defaultValue: '')
   String get lastName => throw _privateConstructorUsedError;
   String get phone => throw _privateConstructorUsedError;
+  @JsonKey(name: 'role', fromJson: ShopRole.fromJson)
+  ShopRole? get role => throw _privateConstructorUsedError;
   @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
   ShopRole? get shopRole => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: false)
@@ -64,6 +66,7 @@ abstract class $UserModelCopyWith<$Res> {
       @JsonKey(name: 'full_name') String firstName,
       @JsonKey(name: 'last_name', defaultValue: '') String lastName,
       String phone,
+      @JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? role,
       @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
       ShopRole? shopRole,
       @JsonKey(defaultValue: false) bool block,
@@ -101,6 +104,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? firstName = null,
     Object? lastName = null,
     Object? phone = null,
+    Object? role = freezed,
     Object? shopRole = freezed,
     Object? block = null,
     Object? haveMultipleShops = null,
@@ -127,6 +131,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as String,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as ShopRole?,
       shopRole: freezed == shopRole
           ? _value.shopRole
           : shopRole // ignore: cast_nullable_to_non_nullable
@@ -210,6 +218,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
       @JsonKey(name: 'full_name') String firstName,
       @JsonKey(name: 'last_name', defaultValue: '') String lastName,
       String phone,
+      @JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? role,
       @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
       ShopRole? shopRole,
       @JsonKey(defaultValue: false) bool block,
@@ -248,6 +257,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? firstName = null,
     Object? lastName = null,
     Object? phone = null,
+    Object? role = freezed,
     Object? shopRole = freezed,
     Object? block = null,
     Object? haveMultipleShops = null,
@@ -274,6 +284,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as String,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as ShopRole?,
       shopRole: freezed == shopRole
           ? _value.shopRole
           : shopRole // ignore: cast_nullable_to_non_nullable
@@ -318,6 +332,7 @@ class _$UserModelImpl implements _UserModel {
       @JsonKey(name: 'full_name') required this.firstName,
       @JsonKey(name: 'last_name', defaultValue: '') required this.lastName,
       required this.phone,
+      @JsonKey(name: 'role', fromJson: ShopRole.fromJson) this.role,
       @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) this.shopRole,
       @JsonKey(defaultValue: false) required this.block,
       @JsonKey(name: 'multiple_shops', defaultValue: false)
@@ -344,6 +359,9 @@ class _$UserModelImpl implements _UserModel {
   final String lastName;
   @override
   final String phone;
+  @override
+  @JsonKey(name: 'role', fromJson: ShopRole.fromJson)
+  final ShopRole? role;
   @override
   @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
   final ShopRole? shopRole;
@@ -378,7 +396,7 @@ class _$UserModelImpl implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, shopRole: $shopRole, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+    return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, role: $role, shopRole: $shopRole, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
   }
 
   @override
@@ -392,6 +410,7 @@ class _$UserModelImpl implements _UserModel {
             (identical(other.lastName, lastName) ||
                 other.lastName == lastName) &&
             (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.role, role) || other.role == role) &&
             (identical(other.shopRole, shopRole) ||
                 other.shopRole == shopRole) &&
             (identical(other.block, block) || other.block == block) &&
@@ -417,6 +436,7 @@ class _$UserModelImpl implements _UserModel {
       firstName,
       lastName,
       phone,
+      role,
       shopRole,
       block,
       haveMultipleShops,
@@ -449,6 +469,7 @@ abstract class _UserModel implements UserModel {
       @JsonKey(name: 'last_name', defaultValue: '')
       required final String lastName,
       required final String phone,
+      @JsonKey(name: 'role', fromJson: ShopRole.fromJson) final ShopRole? role,
       @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
       final ShopRole? shopRole,
       @JsonKey(defaultValue: false) required final bool block,
@@ -477,6 +498,9 @@ abstract class _UserModel implements UserModel {
   String get lastName;
   @override
   String get phone;
+  @override
+  @JsonKey(name: 'role', fromJson: ShopRole.fromJson)
+  ShopRole? get role;
   @override
   @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
   ShopRole? get shopRole;

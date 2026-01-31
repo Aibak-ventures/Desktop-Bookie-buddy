@@ -58,4 +58,32 @@ class UserCubit extends Cubit<UserModel?> {
       log(e.toString(), stackTrace: stack);
     }
   }
+
+  Future<List<dynamic>> fetchAvailableShops() async {
+    try {
+      return await _repository.fetchAvailableShops();
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      return [];
+    }
+  }
+
+  Future<void> switchShop(int shopId, String? fcmToken) async {
+    try {
+      // Update FCM token if available
+      if (fcmToken != null) {
+        await updateFCMTokenWhenShopSwitching(
+          fcmToken: fcmToken,
+          newShopId: shopId,
+        );
+      }
+
+      // Switch shop and reload user data
+      final userData = await _repository.switchShop(shopId);
+      emit(userData);
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      rethrow;
+    }
+  }
 }
