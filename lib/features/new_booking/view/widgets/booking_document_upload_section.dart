@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 

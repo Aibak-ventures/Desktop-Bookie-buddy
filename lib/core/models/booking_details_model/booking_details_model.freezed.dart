@@ -64,6 +64,7 @@ mixin _$BookingDetailsModel {
   String? get address => throw _privateConstructorUsedError;
   ClientModel get client => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  List<dynamic> get documents => throw _privateConstructorUsedError;
   List<ProductInfoModel> get bookedItems => throw _privateConstructorUsedError;
   @JsonKey(name: 'additional_charges')
   List<AdditionalChargesModel> get additionalCharges =>
@@ -71,6 +72,11 @@ mixin _$BookingDetailsModel {
   @JsonKey(name: 'payments')
   List<BookingDetailsPaymentHistoryModel> get payments =>
       throw _privateConstructorUsedError;
+  List<dynamic> get refunds => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total_refunded')
+  double get totalRefunded => throw _privateConstructorUsedError;
+  @JsonKey(name: 'refundable_balance')
+  double get refundableBalance => throw _privateConstructorUsedError;
 
   /// Serializes this BookingDetailsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -125,11 +131,15 @@ abstract class $BookingDetailsModelCopyWith<$Res> {
       @JsonKey(name: 'client_address') String? address,
       ClientModel client,
       String? description,
+      List<dynamic> documents,
       List<ProductInfoModel> bookedItems,
       @JsonKey(name: 'additional_charges')
       List<AdditionalChargesModel> additionalCharges,
       @JsonKey(name: 'payments')
-      List<BookingDetailsPaymentHistoryModel> payments});
+      List<BookingDetailsPaymentHistoryModel> payments,
+      List<dynamic> refunds,
+      @JsonKey(name: 'total_refunded') double totalRefunded,
+      @JsonKey(name: 'refundable_balance') double refundableBalance});
 
   $BookingOtherDetailsModelCopyWith<$Res> get otherDetails;
   $ClientModelCopyWith<$Res> get client;
@@ -171,9 +181,13 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
     Object? address = freezed,
     Object? client = null,
     Object? description = freezed,
+    Object? documents = null,
     Object? bookedItems = null,
     Object? additionalCharges = null,
     Object? payments = null,
+    Object? refunds = null,
+    Object? totalRefunded = null,
+    Object? refundableBalance = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -260,6 +274,10 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      documents: null == documents
+          ? _value.documents
+          : documents // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
       bookedItems: null == bookedItems
           ? _value.bookedItems
           : bookedItems // ignore: cast_nullable_to_non_nullable
@@ -272,6 +290,18 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
           ? _value.payments
           : payments // ignore: cast_nullable_to_non_nullable
               as List<BookingDetailsPaymentHistoryModel>,
+      refunds: null == refunds
+          ? _value.refunds
+          : refunds // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      totalRefunded: null == totalRefunded
+          ? _value.totalRefunded
+          : totalRefunded // ignore: cast_nullable_to_non_nullable
+              as double,
+      refundableBalance: null == refundableBalance
+          ? _value.refundableBalance
+          : refundableBalance // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 
@@ -342,11 +372,15 @@ abstract class _$$BookingDetailsModelImplCopyWith<$Res>
       @JsonKey(name: 'client_address') String? address,
       ClientModel client,
       String? description,
+      List<dynamic> documents,
       List<ProductInfoModel> bookedItems,
       @JsonKey(name: 'additional_charges')
       List<AdditionalChargesModel> additionalCharges,
       @JsonKey(name: 'payments')
-      List<BookingDetailsPaymentHistoryModel> payments});
+      List<BookingDetailsPaymentHistoryModel> payments,
+      List<dynamic> refunds,
+      @JsonKey(name: 'total_refunded') double totalRefunded,
+      @JsonKey(name: 'refundable_balance') double refundableBalance});
 
   @override
   $BookingOtherDetailsModelCopyWith<$Res> get otherDetails;
@@ -388,9 +422,13 @@ class __$$BookingDetailsModelImplCopyWithImpl<$Res>
     Object? address = freezed,
     Object? client = null,
     Object? description = freezed,
+    Object? documents = null,
     Object? bookedItems = null,
     Object? additionalCharges = null,
     Object? payments = null,
+    Object? refunds = null,
+    Object? totalRefunded = null,
+    Object? refundableBalance = null,
   }) {
     return _then(_$BookingDetailsModelImpl(
       id: null == id
@@ -477,6 +515,10 @@ class __$$BookingDetailsModelImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      documents: null == documents
+          ? _value._documents
+          : documents // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
       bookedItems: null == bookedItems
           ? _value._bookedItems
           : bookedItems // ignore: cast_nullable_to_non_nullable
@@ -489,6 +531,18 @@ class __$$BookingDetailsModelImplCopyWithImpl<$Res>
           ? _value._payments
           : payments // ignore: cast_nullable_to_non_nullable
               as List<BookingDetailsPaymentHistoryModel>,
+      refunds: null == refunds
+          ? _value._refunds
+          : refunds // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      totalRefunded: null == totalRefunded
+          ? _value.totalRefunded
+          : totalRefunded // ignore: cast_nullable_to_non_nullable
+              as double,
+      refundableBalance: null == refundableBalance
+          ? _value.refundableBalance
+          : refundableBalance // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -534,14 +588,20 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
       @JsonKey(name: 'client_address') this.address,
       required this.client,
       this.description,
+      final List<dynamic> documents = const [],
       required final List<ProductInfoModel> bookedItems,
       @JsonKey(name: 'additional_charges')
       final List<AdditionalChargesModel> additionalCharges = const [],
       @JsonKey(name: 'payments')
-      final List<BookingDetailsPaymentHistoryModel> payments = const []})
-      : _bookedItems = bookedItems,
+      final List<BookingDetailsPaymentHistoryModel> payments = const [],
+      final List<dynamic> refunds = const [],
+      @JsonKey(name: 'total_refunded') this.totalRefunded = 0.0,
+      @JsonKey(name: 'refundable_balance') this.refundableBalance = 0.0})
+      : _documents = documents,
+        _bookedItems = bookedItems,
         _additionalCharges = additionalCharges,
-        _payments = payments;
+        _payments = payments,
+        _refunds = refunds;
 
   factory _$BookingDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$BookingDetailsModelImplFromJson(json);
@@ -610,6 +670,15 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
   final ClientModel client;
   @override
   final String? description;
+  final List<dynamic> _documents;
+  @override
+  @JsonKey()
+  List<dynamic> get documents {
+    if (_documents is EqualUnmodifiableListView) return _documents;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_documents);
+  }
+
   final List<ProductInfoModel> _bookedItems;
   @override
   List<ProductInfoModel> get bookedItems {
@@ -637,9 +706,25 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
     return EqualUnmodifiableListView(_payments);
   }
 
+  final List<dynamic> _refunds;
+  @override
+  @JsonKey()
+  List<dynamic> get refunds {
+    if (_refunds is EqualUnmodifiableListView) return _refunds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_refunds);
+  }
+
+  @override
+  @JsonKey(name: 'total_refunded')
+  final double totalRefunded;
+  @override
+  @JsonKey(name: 'refundable_balance')
+  final double refundableBalance;
+
   @override
   String toString() {
-    return 'BookingDetailsModel(id: $id, invoiceId: $invoiceId, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, securityAmount: $securityAmount, purchaseMode: $purchaseMode, bookingStatus: $bookingStatus, paymentStatus: $paymentStatus, deliveryStatus: $deliveryStatus, staffName: $staffName, staffId: $staffId, otherDetails: $otherDetails, bookedDate: $bookedDate, bookingCompletedDate: $bookingCompletedDate, address: $address, client: $client, description: $description, bookedItems: $bookedItems, additionalCharges: $additionalCharges, payments: $payments)';
+    return 'BookingDetailsModel(id: $id, invoiceId: $invoiceId, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, securityAmount: $securityAmount, purchaseMode: $purchaseMode, bookingStatus: $bookingStatus, paymentStatus: $paymentStatus, deliveryStatus: $deliveryStatus, staffName: $staffName, staffId: $staffId, otherDetails: $otherDetails, bookedDate: $bookedDate, bookingCompletedDate: $bookingCompletedDate, address: $address, client: $client, description: $description, documents: $documents, bookedItems: $bookedItems, additionalCharges: $additionalCharges, payments: $payments, refunds: $refunds, totalRefunded: $totalRefunded, refundableBalance: $refundableBalance)';
   }
 
   @override
@@ -686,10 +771,17 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
             (identical(other.description, description) ||
                 other.description == description) &&
             const DeepCollectionEquality()
+                .equals(other._documents, _documents) &&
+            const DeepCollectionEquality()
                 .equals(other._bookedItems, _bookedItems) &&
             const DeepCollectionEquality()
                 .equals(other._additionalCharges, _additionalCharges) &&
-            const DeepCollectionEquality().equals(other._payments, _payments));
+            const DeepCollectionEquality().equals(other._payments, _payments) &&
+            const DeepCollectionEquality().equals(other._refunds, _refunds) &&
+            (identical(other.totalRefunded, totalRefunded) ||
+                other.totalRefunded == totalRefunded) &&
+            (identical(other.refundableBalance, refundableBalance) ||
+                other.refundableBalance == refundableBalance));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -717,9 +809,13 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
         address,
         client,
         description,
+        const DeepCollectionEquality().hash(_documents),
         const DeepCollectionEquality().hash(_bookedItems),
         const DeepCollectionEquality().hash(_additionalCharges),
-        const DeepCollectionEquality().hash(_payments)
+        const DeepCollectionEquality().hash(_payments),
+        const DeepCollectionEquality().hash(_refunds),
+        totalRefunded,
+        refundableBalance
       ]);
 
   /// Create a copy of BookingDetailsModel
@@ -777,12 +873,16 @@ abstract class _BookingDetailsModel implements BookingDetailsModel {
       @JsonKey(name: 'client_address') final String? address,
       required final ClientModel client,
       final String? description,
+      final List<dynamic> documents,
       required final List<ProductInfoModel> bookedItems,
       @JsonKey(name: 'additional_charges')
       final List<AdditionalChargesModel> additionalCharges,
       @JsonKey(name: 'payments')
-      final List<BookingDetailsPaymentHistoryModel>
-          payments}) = _$BookingDetailsModelImpl;
+      final List<BookingDetailsPaymentHistoryModel> payments,
+      final List<dynamic> refunds,
+      @JsonKey(name: 'total_refunded') final double totalRefunded,
+      @JsonKey(name: 'refundable_balance')
+      final double refundableBalance}) = _$BookingDetailsModelImpl;
 
   factory _BookingDetailsModel.fromJson(Map<String, dynamic> json) =
       _$BookingDetailsModelImpl.fromJson;
@@ -852,6 +952,8 @@ abstract class _BookingDetailsModel implements BookingDetailsModel {
   @override
   String? get description;
   @override
+  List<dynamic> get documents;
+  @override
   List<ProductInfoModel> get bookedItems;
   @override
   @JsonKey(name: 'additional_charges')
@@ -859,6 +961,14 @@ abstract class _BookingDetailsModel implements BookingDetailsModel {
   @override
   @JsonKey(name: 'payments')
   List<BookingDetailsPaymentHistoryModel> get payments;
+  @override
+  List<dynamic> get refunds;
+  @override
+  @JsonKey(name: 'total_refunded')
+  double get totalRefunded;
+  @override
+  @JsonKey(name: 'refundable_balance')
+  double get refundableBalance;
 
   /// Create a copy of BookingDetailsModel
   /// with the given fields replaced by the non-null parameter values.

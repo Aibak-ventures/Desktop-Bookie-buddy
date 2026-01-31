@@ -26,6 +26,7 @@ _$ProductInfoModelImpl _$$ProductInfoModelImplFromJson(
           ? const []
           : _parseMeasurements(json['measurements']),
       stock: (json['stock'] as num?)?.toInt(),
+      remainingStock: (json['remaining_stock'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$ProductInfoModelImplToJson(
@@ -45,6 +46,7 @@ Map<String, dynamic> _$$ProductInfoModelImplToJson(
       'amount': instance.amount,
       'measurements': instance.measurements,
       'stock': instance.stock,
+      'remaining_stock': instance.remainingStock,
     };
 
 const _$MainServiceTypeEnumMap = {

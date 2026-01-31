@@ -106,11 +106,11 @@ class ClientSearchNameField extends StatelessWidget {
           itemBuilder: (context, client) => ListTile(
             title: Text(
               client.name,
-              style: TextStyle(fontSize: 34),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
             subtitle: Text(
               client.phone1.toString(),
-              style: TextStyle(fontSize: 14),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ),
           suggestionsCallback: (query) async {

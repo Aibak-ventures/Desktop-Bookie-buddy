@@ -45,6 +45,7 @@ class ProductInfoModel with _$ProductInfoModel {
     List<MeasurementValueModel> measurements,
     // Available stock from the variant
     int? stock,
+    @JsonKey(name: 'remaining_stock') int? remainingStock,
   }) = _ProductInfoModel;
 
   factory ProductInfoModel.fromJson(Map<String, dynamic> json) =>

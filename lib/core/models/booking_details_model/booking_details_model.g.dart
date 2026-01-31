@@ -41,6 +41,7 @@ _$BookingDetailsModelImpl _$$BookingDetailsModelImplFromJson(
       address: json['client_address'] as String?,
       client: ClientModel.fromJson(json['client'] as Map<String, dynamic>),
       description: json['description'] as String?,
+      documents: json['documents'] as List<dynamic>? ?? const [],
       bookedItems: (json['booked_items'] as List<dynamic>)
           .map((e) => ProductInfoModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -54,6 +55,10 @@ _$BookingDetailsModelImpl _$$BookingDetailsModelImplFromJson(
                   e as Map<String, dynamic>))
               .toList() ??
           const [],
+      refunds: json['refunds'] as List<dynamic>? ?? const [],
+      totalRefunded: (json['total_refunded'] as num?)?.toDouble() ?? 0.0,
+      refundableBalance:
+          (json['refundable_balance'] as num?)?.toDouble() ?? 0.0,
     );
 
 Map<String, dynamic> _$$BookingDetailsModelImplToJson(
@@ -80,9 +85,13 @@ Map<String, dynamic> _$$BookingDetailsModelImplToJson(
       'client_address': instance.address,
       'client': instance.client,
       'description': instance.description,
+      'documents': instance.documents,
       'booked_items': instance.bookedItems,
       'additional_charges': instance.additionalCharges,
       'payments': instance.payments,
+      'refunds': instance.refunds,
+      'total_refunded': instance.totalRefunded,
+      'refundable_balance': instance.refundableBalance,
     };
 
 const _$PurchaseModeEnumMap = {

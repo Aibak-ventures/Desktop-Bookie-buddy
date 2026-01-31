@@ -55,6 +55,7 @@ class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'client_address') String? address,
     required ClientModel client,
     String? description,
+    @Default([]) List<dynamic> documents,
     required List<ProductInfoModel> bookedItems,
     @JsonKey(name: 'additional_charges')
     @Default([])
@@ -62,6 +63,9 @@ class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'payments')
     @Default([])
     List<BookingDetailsPaymentHistoryModel> payments,
+    @Default([]) List<dynamic> refunds,
+    @JsonKey(name: 'total_refunded') @Default(0.0) double totalRefunded,
+    @JsonKey(name: 'refundable_balance') @Default(0.0) double refundableBalance,
   }) = _BookingDetailsModel;
 
   factory BookingDetailsModel.fromJson(Map<String, dynamic> json) =>

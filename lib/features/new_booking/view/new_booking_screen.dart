@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -33,6 +34,12 @@ import 'package:bookie_buddy_web/features/select_product_booking/view/select_pro
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';
+import 'package:bookie_buddy_web/features/new_booking/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/new_booking/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/new_booking/helpers/booking_product_helper.dart';
+import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/web_toast.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -289,6 +296,31 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     serviceSearchController.clear();
     context.read<StaffSearchCubit>().clearSelectedStaff();
     context.read<ClientCubit>().clearSelected();
+  }
+
+  /// Validates client details and continues to next step if valid
+  void _validateAndContinue() {
+    // Get the selected staff from cubit
+    final staffState = context.read<StaffSearchCubit>().state;
+    final selectedStaff = staffState.selectedStaff;
+
+    final validationResult = BookingValidationHelper.validateClientDetailsPanel(
+      clientName: clientNameController.text,
+      phone1: clientPhone1Controller.text,
+      phone2: clientPhone2Controller.text,
+      address: clientAddressController.text,
+      documentsCount: documentsNotifier.value.length,
+      selectedStaffId: selectedStaff?.id,
+      staffName: staffNameController.text,
+    );
+
+    if (validationResult.isValid) {
+      // Move to next step
+      setState(() => _bookingStep = 1);
+    } else {
+      // Show validation errors
+      BookingValidationHelper.showValidationErrors(context, validationResult);
+    }
   }
 
   /// Show product filter bottom sheet
@@ -1968,36 +2000,46 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ),
           const SizedBox(height: 20),
 
-          // Locations (Optional)
-          _buildStepSectionHeader('Locations', optional: true),
-          const SizedBox(height: _fieldSpacing),
-          _buildSimpleTextField(
-              controller: startLocationController, hint: 'Start location'),
-          const SizedBox(height: _fieldSpacing),
-          _buildSimpleTextField(
-              controller: pickupLocationController, hint: 'Pickup location'),
-          const SizedBox(height: _fieldSpacing),
-          _buildSimpleTextField(
-              controller: destinationLocationController, hint: 'Destination'),
-
-          const SizedBox(height: _fieldSpacing),
+          // Locations (Optional) - Only for Vehicles
+          ValueListenableBuilder<List<ProductSelectedModel>>(
+            valueListenable: selectedProductsNotifier,
+            builder: (context, products, _) {
+              final hasVehicles = products.any(
+                (p) => p.variant.mainServiceType?.isVehicle ?? false,
+              );
+              if (!hasVehicles) return const SizedBox.shrink();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildStepSectionHeader('Locations', optional: true),
+                  const SizedBox(height: _fieldSpacing),
+                  BookingTextFieldBuilder.buildSimpleTextField(
+                      startLocationController, 'Start location'),
+                  const SizedBox(height: _fieldSpacing),
+                  BookingTextFieldBuilder.buildSimpleTextField(
+                      pickupLocationController, 'Pickup location'),
+                  const SizedBox(height: _fieldSpacing),
+                  BookingTextFieldBuilder.buildSimpleTextField(
+                      destinationLocationController, 'Destination'),
+                  const SizedBox(height: _fieldSpacing),
+                ],
+              );
+            },
+          ),
 
           // Payment details (Optional)
           _buildStepSectionHeader('Payment details', optional: true),
           const SizedBox(height: 12),
-          _buildSimpleTextField(
-              controller: advanceAmountController,
-              hint: 'Advance amount',
+          BookingTextFieldBuilder.buildSimpleTextField(
+              advanceAmountController, 'Advance amount',
               isNumber: true),
           const SizedBox(height: 12),
-          _buildSimpleTextField(
-              controller: securityAmountController,
-              hint: 'Security amount',
+          BookingTextFieldBuilder.buildSimpleTextField(
+              securityAmountController, 'Security amount',
               isNumber: true),
           const SizedBox(height: 12),
-          _buildSimpleTextField(
-              controller: discountAmountController,
-              hint: 'Discount amount',
+          BookingTextFieldBuilder.buildSimpleTextField(
+              discountAmountController, 'Discount amount',
               isNumber: true),
 
           const SizedBox(height: 24),
@@ -2131,34 +2173,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ),
         ],
       ],
-    );
-  }
-
-  Widget _buildSimpleTextField(
-      {required TextEditingController controller,
-      required String hint,
-      bool isNumber = false}) {
-    return Container(
-      height: 48,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      alignment: Alignment.centerLeft,
-      child: TextField(
-        controller: controller,
-        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-        style: const TextStyle(fontSize: 13, color: Colors.black87),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-        ),
-      ),
     );
   }
 
@@ -2570,6 +2584,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           variantAttribute: attribute,
           measurements: [],
           quantity: 1,
+          stock: variant.stock,
+          remainingStock: variant.remainingStock,
         ),
         quantity: 1,
         amount: price,
@@ -2669,7 +2685,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       spacing: 4,
                       runSpacing: 4,
                       children: variantNames.map((variant) {
-                        return _variantChip(variant);
+                        return variantChip(variant);
                       }).toList(),
                     ),
                   const SizedBox(height: 4),
@@ -2763,6 +2779,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 : variants.first.attribute)
             : size;
 
+        // Find the selected variant to get stock info
+        final selectedVariant = variants.firstWhere(
+          (v) => v.id == id,
+          orElse: () => variants.first,
+        );
+
         final products =
             List<ProductSelectedModel>.from(selectedProductsNotifier.value);
 
@@ -2789,6 +2811,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               variantAttribute: attribute,
               measurements: [],
               quantity: quantity,
+              stock: selectedVariant.stock,
+              remainingStock: selectedVariant.remainingStock,
             ),
             quantity: quantity,
             amount: amount.toInt(),
@@ -3013,7 +3037,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      '${product.variant.quantity} left',
+                      '${product.variant.remainingStock ?? product.variant.stock} left',
                       style: const TextStyle(
                         fontSize: 12, // Slightly larger font 12
                         fontWeight: FontWeight.w600,
@@ -3333,20 +3357,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
                   // Hide advance amount in sales mode
                   if (!isSalesMode) ...[
-                    _buildCompactAmountField(
+                    BookingTextFieldBuilder.buildCompactAmountField(
                       controller: advanceAmountController,
                       label: 'Advance Amount (optional)',
                     ),
                     const SizedBox(height: 8),
                   ],
                   if (!isSalesMode) ...[
-                    _buildCompactAmountField(
+                    BookingTextFieldBuilder.buildCompactAmountField(
                       controller: securityAmountController,
                       label: 'Security Amount (optional)',
                     ),
                     const SizedBox(height: 8),
                   ],
-                  _buildCompactAmountField(
+                  BookingTextFieldBuilder.buildCompactAmountField(
                     controller: discountAmountController,
                     label: 'Discount Amount (optional)',
                   ),
@@ -3392,85 +3416,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         //   ],
         // ),
         _buildSummarySection(),
-      ],
-    );
-  }
-
-  Widget _buildCompactAmountField({
-    required TextEditingController controller,
-    required String label,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextFormField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                  RegExp(r'[0-9]')), // Strict regex for digits
-            ],
-            onChanged: (value) {
-              // Extra layer of protection
-              if (value.contains(RegExp(r'[^0-9]'))) {
-                final cleanText = value.replaceAll(RegExp(r'[^0-9]'), '');
-                controller.value = TextEditingValue(
-                  text: cleanText,
-                  selection: TextSelection.collapsed(offset: cleanText.length),
-                );
-              }
-            },
-            validator: (value) {
-              if (value != null && value.isNotEmpty) {
-                final amount = int.tryParse(value);
-                if (amount == 0) {
-                  return 'Amount cannot be 0';
-                }
-              }
-              return null;
-            },
-            style: const TextStyle(
-              fontSize: 13,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
-            ),
-            decoration: InputDecoration(
-              hintStyle: const TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                color: Color(0xFF8C8C8C),
-              ),
-              hintText: label,
-              prefixText: '₹ ',
-              prefixStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.grey.shade600,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-              ),
-              // Use OutlineInputBorder to match previous container style
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(color: Color(0xFF6132E4), width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.red, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.red, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -3758,37 +3703,46 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           // const SizedBox(height: 3),
 
           // const SizedBox(height: 3),
-          // Add customization button
-          SizedBox(
-            width: double.infinity,
-            height: 39,
-            child: OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  showCustomization = true;
-                });
-              },
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF6132E4),
-                side: const BorderSide(
-                  color: Color(0xFF6132E4),
-                  width: 1.5,
+          // Add customization button - Only for Dresses
+          ValueListenableBuilder<List<ProductSelectedModel>>(
+            valueListenable: selectedProductsNotifier,
+            builder: (context, products, _) {
+              final hasDresses = products.any(
+                (p) => p.variant.mainServiceType?.isDress ?? false,
+              );
+              if (!hasDresses) return const SizedBox.shrink();
+              return SizedBox(
+                width: double.infinity,
+                height: 39,
+                child: OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      showCustomization = true;
+                    });
+                  },
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color(0xFF6132E4),
+                    side: const BorderSide(
+                      color: Color(0xFF6132E4),
+                      width: 1.5,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Add customization',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Add customization',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+              );
+            },
           ),
           const SizedBox(height: 8),
           // Confirm button - Color #6132E4
@@ -4483,7 +4437,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   BlocBuilder<ClientCubit, ClientState>(
                     builder: (context, state) {
                       final isClientSelected = state.selectedClient != null;
-                      return _buildRightPanelTextField(
+                      return BookingTextFieldBuilder.buildRightPanelTextField(
                         controller: clientPhone1Controller,
                         hint: 'Phone',
                         isNumber: true,
@@ -4498,7 +4452,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   BlocBuilder<ClientCubit, ClientState>(
                     builder: (context, state) {
                       final isClientSelected = state.selectedClient != null;
-                      return _buildRightPanelTextField(
+                      return BookingTextFieldBuilder.buildRightPanelTextField(
                         controller: clientPhone2Controller,
                         hint: 'Phone 2',
                         isNumber: true,
@@ -4510,7 +4464,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: _fieldSpacing),
                   // Place
-                  _buildRightPanelTextField(
+                  BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: clientAddressController,
                     hint: 'place',
                     focusNode: _clientAddressFocusNode,
@@ -4603,10 +4557,26 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   const SizedBox(height: 7),
 
-                  // Running Kilometers
-                  _buildRightPanelTextField(
-                      controller: runningKilometersController,
-                      hint: 'Running Kilometers'),
+                  // Running Kilometers - Only for Vehicles
+                  ValueListenableBuilder<List<ProductSelectedModel>>(
+                    valueListenable: selectedProductsNotifier,
+                    builder: (context, products, _) {
+                      final hasVehicles = products.any(
+                        (p) => p.variant.mainServiceType?.isVehicle ?? false,
+                      );
+                      if (!hasVehicles) return const SizedBox.shrink();
+                      return Column(
+                        children: [
+                          BookingTextFieldBuilder.buildRightPanelTextField(
+                            controller: runningKilometersController,
+                            hint: 'Running Kilometers',
+                            isNumber: true,
+                          ),
+                          const SizedBox(height: 7),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -4619,10 +4589,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: () {
-                  // Move to next step
-                  setState(() => _bookingStep = 1);
-                },
+                onPressed: _validateAndContinue,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6132E4),
                   shape: RoundedRectangleBorder(
@@ -4678,37 +4645,53 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Locations
-                  _buildSectionHeader('Locations', optional: true),
-                  const SizedBox(height: _fieldSpacing),
-                  _buildRightPanelTextField(
-                      controller: startLocationController,
-                      hint: 'Start location'),
-                  const SizedBox(height: _fieldSpacing),
-                  _buildRightPanelTextField(
-                      controller: pickupLocationController,
-                      hint: 'Pickup location'),
-                  const SizedBox(height: _fieldSpacing),
-                  _buildRightPanelTextField(
-                      controller: destinationLocationController,
-                      hint: 'Destination'),
-
-                  const SizedBox(height: 14),
+                  // Locations - Only for Vehicles
+                  ValueListenableBuilder<List<ProductSelectedModel>>(
+                    valueListenable: selectedProductsNotifier,
+                    builder: (context, products, _) {
+                      final hasVehicles = products.any(
+                        (p) => p.variant.mainServiceType?.isVehicle ?? false,
+                      );
+                      if (!hasVehicles) return const SizedBox.shrink();
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BookingTextFieldBuilder.buildSectionHeader(
+                              'Locations',
+                              optional: true),
+                          const SizedBox(height: _fieldSpacing),
+                          BookingTextFieldBuilder.buildRightPanelTextField(
+                              controller: startLocationController,
+                              hint: 'Start location'),
+                          const SizedBox(height: _fieldSpacing),
+                          BookingTextFieldBuilder.buildRightPanelTextField(
+                              controller: pickupLocationController,
+                              hint: 'Pickup location'),
+                          const SizedBox(height: _fieldSpacing),
+                          BookingTextFieldBuilder.buildRightPanelTextField(
+                              controller: destinationLocationController,
+                              hint: 'Destination'),
+                          const SizedBox(height: 14),
+                        ],
+                      );
+                    },
+                  ),
 
                   // Payment details
-                  _buildSectionHeader('Payment details', optional: true),
+                  BookingTextFieldBuilder.buildSectionHeader('Payment details',
+                      optional: true),
                   const SizedBox(height: _fieldSpacing),
-                  _buildRightPanelTextField(
+                  BookingTextFieldBuilder.buildRightPanelTextField(
                       controller: advanceAmountController,
                       hint: 'Advance amount',
                       isNumber: true),
                   const SizedBox(height: _fieldSpacing),
-                  _buildRightPanelTextField(
+                  BookingTextFieldBuilder.buildRightPanelTextField(
                       controller: securityAmountController,
                       hint: 'Security amount',
                       isNumber: true),
                   const SizedBox(height: _fieldSpacing),
-                  _buildRightPanelTextField(
+                  BookingTextFieldBuilder.buildRightPanelTextField(
                       controller: discountAmountController,
                       hint: 'Discount amount',
                       isNumber: true),
@@ -4795,77 +4778,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title, {bool optional = false}) {
-    return Row(
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A1A),
-          ),
-        ),
-        if (optional) ...[
-          const SizedBox(width: 4),
-          Text(
-            '(optional)',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Colors.grey.shade500,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildRightPanelTextField({
-    required TextEditingController controller,
-    required String hint,
-    bool isNumber = false,
-    bool enabled = true,
-    FocusNode? focusNode,
-    FocusNode? nextFocusNode,
-  }) {
-    return Container(
-      height: 42,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-        color: enabled ? Colors.white : Colors.grey.shade100,
-      ),
-      alignment: Alignment.centerLeft,
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        enabled: enabled,
-        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-        textInputAction:
-            nextFocusNode != null ? TextInputAction.next : TextInputAction.done,
-        onEditingComplete: () {
-          if (nextFocusNode != null) {
-            nextFocusNode.requestFocus();
-          } else {
-            focusNode?.unfocus();
-          }
-        },
-        style: TextStyle(
-          fontSize: 13,
-          color: enabled ? Colors.black87 : Colors.grey.shade500,
-        ),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-        ),
-      ),
-    );
-  }
+  // Helper methods replaced - Using BookingTextFieldBuilder
 
   Widget _buildFinalSummary() {
     return ValueListenableBuilder<List<ProductSelectedModel>>(
@@ -5221,128 +5134,6 @@ class _SelectableVariantChip extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// /// Model for uploaded document files
-class DocumentFile {
-  final String name;
-  final String path;
-  final List<int>? bytes;
-
-  DocumentFile({
-    required this.name,
-    required this.path,
-    this.bytes,
-  });
-}
-
-Widget _variantChip(String text) {
-  final isShortText = text.length <= 3;
-
-  return Container(
-    // Use fixed size for circles, flexible for rectangles
-    width: isShortText ? 35 : null,
-    height: 33,
-    padding: isShortText ? null : const EdgeInsets.symmetric(horizontal: 12),
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      // Use circle for short text, rounded rectangle for long text
-      shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
-      borderRadius: isShortText ? null : BorderRadius.circular(8),
-      color: Color.fromARGB(255, 225, 215, 255),
-      border: Border.all(color: Colors.grey.shade200, width: 0.6),
-    ),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        color: Colors.grey.shade700,
-      ),
-    ),
-  );
-}
-
-// Widget _variantChipForSelected(String text) {
-//   return Container(
-//     width: 35,
-//     height: 35,
-//     alignment: Alignment.center,
-//     decoration: BoxDecoration(
-//       shape: BoxShape.circle,
-//       // color: Color.fromARGB(255, 225, 215, 255),
-//       border: Border.all(color: Colors.grey.shade200, width: 0.6),
-//     ),
-//     child: Text(
-//       text,
-//       style: TextStyle(
-//         fontSize: 15,
-//         fontWeight: FontWeight.w600,
-//         color: Colors.grey.shade700,
-//       ),
-//     ),
-//   );
-// }
-class WebToast extends StatelessWidget {
-  final String message;
-  final bool isError;
-  final Color? color;
-  final VoidCallback onClose;
-
-  const WebToast({
-    required this.message,
-    required this.onClose,
-    this.isError = false,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 320),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: color ??
-              (isError ? const Color(0xFFFFF0F0) : const Color(0xFFF0FFF5)),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isError ? Colors.red.shade300 : Colors.green.shade300,
-          ),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 12,
-              color: Colors.black.withOpacity(.12),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isError ? Icons.error_outline : Icons.check_circle_outline,
-              size: 18,
-              color: isError ? Colors.red : Colors.green,
-            ),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Text(
-                message,
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              ),
-            ),
-            const SizedBox(width: 10),
-            GestureDetector(
-              onTap: onClose,
-              child: const Icon(Icons.close, size: 16),
-            )
-          ],
         ),
       ),
     );
