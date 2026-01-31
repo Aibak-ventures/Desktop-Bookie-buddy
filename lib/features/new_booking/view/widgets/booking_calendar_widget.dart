@@ -305,7 +305,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             decoration: InputDecoration(
               hintText: 'Search client',
               hintStyle: const TextStyle(
-                  fontSize: 13, color: Color(0xFF8C8C8C), fontFamily: 'Inter'),
+                  fontSize: 13, color: AppColors.textQuaternary, fontFamily: 'Inter'),
               prefixIcon: const Icon(Icons.search, size: 16),
               suffixIcon: ValueListenableBuilder(
                 valueListenable: controller,
@@ -325,12 +325,12 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide:
-                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                    const BorderSide(color: AppColors.grey300, width: 1.0),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide:
-                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                    const BorderSide(color: AppColors.grey300, width: 1.0),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -497,7 +497,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             isCollapsed: true,
             hintText: 'Enter notes here...',
             hintStyle: TextStyle(
-                fontSize: 13, color: Color(0xFFCCCCCC), fontFamily: 'Inter'),
+                fontSize: 13, color: AppColors.grey400, fontFamily: 'Inter'),
           ),
         ),
       ),
@@ -541,7 +541,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFEEEEEE), width: 1),
+          borderSide: const BorderSide(color: AppColors.grey200, width: 1),
         ),
         filled: !enabled,
         fillColor: enabled ? null : Colors.grey.shade50,
@@ -563,7 +563,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
         hintText: hint,
         hintStyle: const TextStyle(
           fontSize: 13,
-          color: Color(0xFF8C8C8C),
+          color: AppColors.textQuaternary,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w400,
         ),
@@ -589,7 +589,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             children: [
               Text(title ?? '',
                   style: const TextStyle(
-                    color: Color(0xFF8C8C8C),
+                    color: AppColors.textQuaternary,
                     fontSize: 11,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w400,
@@ -815,7 +815,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                       fontWeight: FontWeight.w500,
                       color: widget.coolingPeriodDate != null
                           ? Colors.black
-                          : const Color(0xFF8C8C8C),
+                          : const AppColors.textQuaternary,
                     ),
                   ),
                   const Spacer(),
@@ -850,7 +850,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
                         fontWeight: FontWeight.w500,
                         color: widget.coolingPeriodTime != null
                             ? Colors.black
-                            : const Color(0xFF8C8C8C),
+                            : const AppColors.textQuaternary,
                       ),
                     ),
                   ),
@@ -1016,3 +1016,4 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     }
   }
 }
+

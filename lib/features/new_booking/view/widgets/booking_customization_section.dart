@@ -161,7 +161,7 @@ class _BookingCustomizationSectionState
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF5F6FA),
+      color:  AppColors.backgroundLight,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -259,7 +259,7 @@ class _BookingCustomizationSectionState
 
   Widget _buildProductRow(ProductSelectedModel product, bool isSelected) {
     return Container(
-      color: isSelected ? const Color(0xFFEBE4FF) : Colors.white, // Highlight
+      color: isSelected ?  AppColors.primaryLight : Colors.white, // Highlight
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
@@ -334,8 +334,8 @@ class _BookingCustomizationSectionState
                   onPressed: () => _selectProduct(product),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isSelected
-                        ? const Color(0xFF6132E4).withOpacity(0.2)
-                        : const Color(0xFFE5FFEA),
+                        ?  AppColors.primaryDark.withOpacity(0.2)
+                        :  AppColors.greenSuccessLight,
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     shape: RoundedRectangleBorder(
@@ -346,7 +346,7 @@ class _BookingCustomizationSectionState
                     isSelected ? 'Edit' : 'Add',
                     style: TextStyle(
                       color:
-                          isSelected ? const Color(0xFF6132E4) : Colors.green,
+                          isSelected ? const AppColors.primaryDark : Colors.green,
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
@@ -374,7 +374,7 @@ class _BookingCustomizationSectionState
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5), // Light grey background as in image
+        color: const AppColors.surfaceGrey, // Light grey background as in image
         borderRadius: BorderRadius.circular(10),
         // border: Border.all(color: Colors.grey.shade200),
       ),
@@ -418,7 +418,7 @@ class _BookingCustomizationSectionState
                         child: Container(
                           height: 40,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFEBE4FF).withOpacity(0.5),
+                            color: const AppColors.primaryLight.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
@@ -467,7 +467,7 @@ class _BookingCustomizationSectionState
                           height: 40,
                           width: 40,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFEBE4FF).withOpacity(0.5),
+                            color: const AppColors.primaryLight.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
@@ -484,12 +484,12 @@ class _BookingCustomizationSectionState
                     child: ElevatedButton(
                       onPressed: _saveMeasurements,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF5F5F5),
-                        foregroundColor: const Color(0xFF6132E4),
+                        backgroundColor: const AppColors.surfaceGrey,
+                        foregroundColor: const AppColors.primaryDark,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
-                          side: const BorderSide(color: Color(0xFF6132E4)),
+                          side: const BorderSide(color: AppColors.primaryDark),
                         ),
                       ),
                       child: const Text(
@@ -624,3 +624,4 @@ class _BookingCustomizationSectionState
     );
   }
 }
+
