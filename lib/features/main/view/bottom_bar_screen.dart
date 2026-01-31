@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
+import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_sele
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_bookings_desktop_screen.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
@@ -52,6 +54,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         BlocProvider(
           create: (context) => BookingDetailsPaymentHistoryCubit(
             repository: getIt.get<BookingRepository>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => AllSalesBloc(
+            repository: getIt.get<SalesRepository>(),
           ),
         ),
       ],

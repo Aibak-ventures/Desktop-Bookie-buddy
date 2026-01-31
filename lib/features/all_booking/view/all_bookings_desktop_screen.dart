@@ -1,8 +1,10 @@
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
+import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:flutter/material.dart';
@@ -51,14 +53,26 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   void _loadData() {
-    context.read<AllBookingBloc>().add(
-          AllBookingEvent.loadBookings(
-            status: _activeStatusTab,
-            searchQuery: _searchController.text.trim().isEmpty
-                ? null
-                : _searchController.text.trim(),
-          ),
-        );
+    if (_activeActionTab == 1) {
+      // Load sales data
+      context.read<AllSalesBloc>().add(
+            AllSalesEvent.loadSales(
+              searchQuery: _searchController.text.trim().isEmpty
+                  ? null
+                  : _searchController.text.trim(),
+            ),
+          );
+    } else {
+      // Load booking data
+      context.read<AllBookingBloc>().add(
+            AllBookingEvent.loadBookings(
+              status: _activeStatusTab,
+              searchQuery: _searchController.text.trim().isEmpty
+                  ? null
+                  : _searchController.text.trim(),
+            ),
+          );
+    }
   }
 
   void _onStatusTabChanged(String displayLabel) {
@@ -140,7 +154,10 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         children: List.generate(_actionTabs.length, (index) {
           final isActive = _activeActionTab == index;
           return GestureDetector(
-            onTap: () => setState(() => _activeActionTab = index),
+            onTap: () {
+              setState(() => _activeActionTab = index);
+              _loadData();
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               decoration: BoxDecoration(
@@ -350,7 +367,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: _activeActionTab == 1
-          ? _buildSalesPlaceholder()
+          ? _buildSalesContent()
           : BlocBuilder<AllBookingBloc, AllBookingState>(
               builder: (context, state) {
                 return state.maybeWhen(
@@ -370,43 +387,32 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     );
   }
 
-  Widget _buildSalesPlaceholder() {
+  Widget _buildSalesContent() {
+    return BlocBuilder<AllSalesBloc, AllSalesState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
+          ),
+          loaded: (sales, _, __) {
+            if (sales.isEmpty) {
+              return const Center(child: Text('No sales found'));
+            }
+            return _buildSalesTable(sales);
+          },
+          error: (msg) => Center(child: Text('Error: $msg')),
+          orElse: () => const SizedBox.shrink(),
+        );
+      },
+    );
+  }
+
+  Widget _buildSalesTable(List<SaleModel> sales) {
     return ListView(
       padding: EdgeInsets.zero,
       children: [
         _buildTableHeader(),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(48.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 64,
-                  color: Colors.grey.shade300,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Sales data coming soon',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sales records will be displayed here',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        ...sales.map((sale) => _buildSalesTableRow(sale)),
       ],
     );
   }
@@ -544,47 +550,10 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       ),
       child: Row(
         children: [
-          const SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
           const SizedBox(
             width: 100,
             child: Text(
               'Booking ID',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 95,
-            child: Text(
-              'Pickup',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 110,
-            child: Text(
-              'Customer',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
-            width: 80,
-            child: Text(
-              'Staff',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -605,9 +574,33 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             ),
           ),
           const SizedBox(width: 12),
+          const SizedBox(
+            width: 95,
+            child: Text(
+              'Pickup',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
           const Expanded(
             child: Text(
               'Items',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 110,
+            child: Text(
+              'Customer',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -658,18 +651,6 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildTableRow(DesktopBookingItemModel booking) {
-    // Parse staff color from hex string (e.g., "FF64B5F6")
-    Color barColor = Colors.purple;
-    if (booking.staffColor != null && booking.staffColor!.isNotEmpty) {
-      try {
-        final colorString = booking.staffColor!.toUpperCase();
-        barColor = Color(int.parse('0x$colorString'));
-      } catch (e) {
-        // Fall back to purple if parsing fails
-        barColor = Colors.purple;
-      }
-    }
-
     return GestureDetector(
       onTap: () {
         if (booking.id != null) {
@@ -688,20 +669,31 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         ),
         child: Row(
           children: [
-            Container(
-                width: 3,
-                height: 20,
-                decoration: BoxDecoration(
-                    color: barColor, borderRadius: BorderRadius.circular(2))),
-            const SizedBox(width: 8),
             SizedBox(
               width: 100,
-              child: Text(
-                booking.shopBookingId,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                overflow: TextOverflow.ellipsis,
+              child: Tooltip(
+                message: booking.staffName ?? 'No staff assigned',
+                decoration: BoxDecoration(
+                  color: _parseStaffColor(booking.staffColor),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+                child: Text(
+                  booking.shopBookingId,
+                  style:
+                      const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 105,
+              child: _buildDeliveryStatusDisplay(booking.deliveryStatus),
             ),
             const SizedBox(width: 12),
             SizedBox(
@@ -713,35 +705,21 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               ),
             ),
             const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                booking.bookedItems,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
             SizedBox(
               width: 110,
               child: Text(
                 booking.client,
                 style:
                     const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 80,
-              child: Text(
-                booking.staffName ?? '-',
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 105,
-              child: _buildDeliveryStatus(booking),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                booking.bookedItems,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -772,6 +750,27 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDeliveryStatusDisplay(DeliveryStatus status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: status.color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: status.color.withOpacity(0.2)),
+      ),
+      child: Text(
+        status.name,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 11,
+          color: status.color,
+          fontWeight: FontWeight.w600,
+        ),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -896,5 +895,116 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       // Fallback to original format if parsing fails
       return dateStr.formatToUiDate();
     }
+  }
+
+  /// Parse staff color from hex string (e.g., "FF64B5F6")
+  Color _parseStaffColor(String? staffColor) {
+    if (staffColor != null && staffColor.isNotEmpty) {
+      try {
+        final colorString = staffColor.toUpperCase();
+        return Color(int.parse('0x$colorString'));
+      } catch (e) {
+        // Fall back to grey if parsing fails
+        return Colors.grey.shade700;
+      }
+    }
+    return Colors.grey.shade700;
+  }
+
+  Widget _buildSalesTableRow(SaleModel sale) {
+    final balance = sale.totalAmount - sale.paidAmount;
+    final paymentStatus = balance == 0;
+
+    return GestureDetector(
+      onTap: () {
+        // TODO: Open sale details drawer
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 11),
+            SizedBox(
+              width: 100,
+              child: Text(
+                '#${sale.id}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 95,
+              child: Text(
+                sale.saleDate,
+                style: const TextStyle(fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 110,
+              child: Text(
+                sale.clientPhone?.toString() ?? 'N/A',
+                style:
+                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                sale.products,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 80,
+              child: Text(
+                '₹${sale.totalAmount}',
+                style: const TextStyle(fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 70,
+              child: Text(
+                '₹${sale.paidAmount}',
+                style: const TextStyle(fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 70,
+              child: Text(
+                '₹$balance',
+                style: const TextStyle(fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 70,
+              child: Text(
+                '₹${sale.discountAmount}',
+                style: const TextStyle(fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
+          ],
+        ),
+      ),
+    );
   }
 }
