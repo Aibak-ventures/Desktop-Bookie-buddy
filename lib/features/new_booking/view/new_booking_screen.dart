@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -19,17 +18,16 @@ import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/show_search_type_bottom_sheet.dart';
-
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_client_details_section.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
+import 'package:bookie_buddy_web/features/new_booking/view/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
@@ -42,13 +40,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// Booking types enum for the tab selection
 enum BookingType { booking, sales }
 
-/// New Booking Screen - ERP Desktop Layout
-/// Features:
-/// - Fixed sidebar always visible (rendered by parent)
-/// - No full page scrolling
-/// - Compact UI
-/// - Service-based selection
-/// - Time fields for pickup/return
 class NewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
 
@@ -147,6 +138,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final _clientPhone1FocusNode = FocusNode();
   final _clientPhone2FocusNode = FocusNode();
   final _clientAddressFocusNode = FocusNode();
+
+  // Customization state
+  bool showCustomization = false;
+  List<MeasurementValueModel> customizationMeasurements = [];
 
   @override
   void initState() {
@@ -1473,7 +1468,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left Side: Dates + Products
+        // Left Side: Dates + Products OR Customization
         Expanded(
           flex: 7,
           child: Column(
@@ -1481,7 +1476,58 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             children: [
               _buildDateSelectionSection(),
               const SizedBox(height: 16),
-              Expanded(child: _buildServiceSelectionSection()),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    // Product search slides left, customization slides in from right
+                    final offsetAnimation = Tween<Offset>(
+                      begin: child.key == const ValueKey('customization')
+                          ? const Offset(1.0, 0.0) // Slide from right
+                          : const Offset(-1.0, 0.0), // Slide to left
+                      end: Offset.zero,
+                    ).animate(animation);
+
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                  child: showCustomization
+                      ? ProductCustomizationWidget(
+                          key: const ValueKey('customization'),
+                          onBack: () {
+                            setState(() {
+                              showCustomization = false;
+                            });
+                          },
+                          onSave: (measurements) {
+                            setState(() {
+                              customizationMeasurements = measurements;
+                              showCustomization = false;
+                            });
+                            // Show success message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Customization saved: ${measurements.length} measurements',
+                                ),
+                                backgroundColor: const Color(0xFF27AE60),
+                              ),
+                            );
+                          },
+                          selectedProducts: selectedProductsNotifier.value,
+                          addedMeasurements: customizationMeasurements,
+                        )
+                      : Container(
+                          key: const ValueKey('products'),
+                          child: _buildServiceSelectionSection(),
+                        ),
+                ),
+              ),
             ],
           ),
         ),
@@ -2022,7 +2068,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    // Add customization logic
+                    setState(() {
+                      showCustomization = true;
+                    });
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Colors.grey.shade300),
@@ -3708,7 +3756,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             },
           ),
           // const SizedBox(height: 3),
-     
+
           // const SizedBox(height: 3),
           // Add customization button
           SizedBox(
@@ -3716,7 +3764,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             height: 39,
             child: OutlinedButton(
               onPressed: () {
-                // TODO: Add customization functionality
+                setState(() {
+                  showCustomization = true;
+                });
               },
               style: OutlinedButton.styleFrom(
                 backgroundColor: Colors.white,

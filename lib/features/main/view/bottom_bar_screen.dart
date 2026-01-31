@@ -11,7 +11,6 @@ import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen_v2.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
