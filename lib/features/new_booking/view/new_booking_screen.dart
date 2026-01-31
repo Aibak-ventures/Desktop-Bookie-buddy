@@ -1520,49 +1520,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildMainContent() {
-    switch (selectedBookingType) {
-      case BookingType.booking:
-        return _buildBookingContent();
-      case BookingType.sales:
-        return _buildSalesContent();
-      case BookingType.customWork:
-        return _buildCustomWorkContent();
+    if (selectedBookingType == BookingType.customWork) {
+      return Container(
+        child: Center(
+          child: Text('Custom Work - Coming Soon'),
+        ),
+      );
     }
+    // Same UI for both booking and sales
+    return _buildBookingContent();
   }
 
-  Widget _buildCustomWorkContent() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.construction,
-            size: 64,
-            color: Colors.grey.shade400,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Custom Work',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade700,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Custom work feature coming soon',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-// BOOKING
+// BOOKING & SALES - Same UI with conditional fields
   Widget _buildBookingContent() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1637,39 +1606,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         SizedBox(
           width: 340,
           child: _buildRightSidePanel(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSalesContent() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Left section
-        Expanded(
-          flex: 3,
-          child: Column(
-            children: [
-              SizedBox(
-                child: Row(
-                  children: [
-                    Expanded(child: _buildSalesDateSection()),
-                    const SizedBox(width: 12),
-                    Expanded(child: _buildLeftTopSection()),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(child: _buildServiceSelectionSection()),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
-        // Right section
-        Expanded(
-          flex: 1,
-          child: _buildRightSection(),
         ),
       ],
     );
@@ -4174,6 +4110,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildDateSelectionSection() {
+    final isSales = selectedBookingType == BookingType.sales;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
@@ -4190,115 +4128,127 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Select dates',
-            style: TextStyle(
+          Text(
+            isSales ? 'Sale date' : 'Select dates',
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
           const SizedBox(height: 7),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // Pickup Date
-              Expanded(
-                flex: 3,
-                child: _buildNewDateField(
-                  label: 'Pickup date',
-                  value: pickupDate.format(),
-                  onTap: () => _selectDate(isPickup: true),
-                ),
+          if (isSales)
+            // Sales mode - single date only
+            SizedBox(width: 400,
+              child: _buildNewDateField(
+                label: 'Sale date',
+                value: pickupDate.format(),
+                onTap: () => _selectDate(isPickup: true),
               ),
-              const SizedBox(width: 12),
-              // Pickup Time
-              Expanded(
-                flex: 2,
-                child: _buildNewTimeField(
-                  label: 'time',
-                  value: pickupTime?.format(context) ?? '--:--',
-                  onTap: () => _selectTime(isPickup: true),
+            )
+          else
+            // Booking mode - pickup and return dates
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Pickup Date
+                Expanded(
+                  flex: 3,
+                  child: _buildNewDateField(
+                    label: 'Pickup date',
+                    value: pickupDate.format(),
+                    onTap: () => _selectDate(isPickup: true),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 24),
+                const SizedBox(width: 12),
+                // Pickup Time
+                Expanded(
+                  flex: 2,
+                  child: _buildNewTimeField(
+                    label: 'time',
+                    value: pickupTime?.format(context) ?? '--:--',
+                    onTap: () => _selectTime(isPickup: true),
+                  ),
+                ),
+                const SizedBox(width: 24),
 
-              // Return Date
-              Expanded(
-                flex: 3,
-                child: _buildNewDateField(
-                  label: 'Return date',
-                  value: returnDate.format(),
-                  onTap: () => _selectDate(isPickup: false),
+                // Return Date
+                Expanded(
+                  flex: 3,
+                  child: _buildNewDateField(
+                    label: 'Return date',
+                    value: returnDate.format(),
+                    onTap: () => _selectDate(isPickup: false),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              // Return Time
-              Expanded(
-                flex: 2,
-                child: _buildNewTimeField(
-                  label: 'time',
-                  value: returnTime?.format(context) ?? '--:--',
-                  onTap: () => _selectTime(isPickup: false),
+                const SizedBox(width: 12),
+                // Return Time
+                Expanded(
+                  flex: 2,
+                  child: _buildNewTimeField(
+                    label: 'time',
+                    value: returnTime?.format(context) ?? '--:--',
+                    onTap: () => _selectTime(isPickup: false),
+                  ),
                 ),
-              ),
 
-              const SizedBox(width: 24),
+                const SizedBox(width: 24),
 
-              // Cooling Period (Days)
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Cooling period',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      height: 42,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<int>(
-                          value: coolingPeriodDays,
-                          isExpanded: true,
-                          icon: const Icon(Icons.keyboard_arrow_down, size: 18),
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.black87,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                          ),
-                          items: List.generate(30, (index) {
-                            final days = index + 1;
-                            return DropdownMenuItem(
-                              value: days,
-                              child: Text('$days day${days > 1 ? 's' : ''}'),
-                            );
-                          }),
-                          onChanged: (val) {
-                            if (val != null) {
-                              setState(() => coolingPeriodDays = val);
-                            }
-                          },
+                // Cooling Period (Days)
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Cooling period',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Container(
+                        height: 42,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<int>(
+                            value: coolingPeriodDays,
+                            isExpanded: true,
+                            icon:
+                                const Icon(Icons.keyboard_arrow_down, size: 18),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                            ),
+                            items: List.generate(30, (index) {
+                              final days = index + 1;
+                              return DropdownMenuItem(
+                                value: days,
+                                child: Text('$days day${days > 1 ? 's' : ''}'),
+                              );
+                            }),
+                            onChanged: (val) {
+                              if (val != null) {
+                                setState(() => coolingPeriodDays = val);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );

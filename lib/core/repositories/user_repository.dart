@@ -142,15 +142,12 @@ class UserRepository {
 
   Future<UserModel> switchShop(int shopId) async {
     try {
-      final response = await safeApiCall(() => _userService.switchShop(shopId));
+      // Set the new shop ID in local storage
+      await setShopId(shopId);
 
-      if (response.status.isSuccess) {
-        await setShopId(shopId);
-        final userData = await fetchUserData();
-        return userData;
-      }
-      log('Failed to switch shop: ${response.devMessage}');
-      throw response.message;
+      // Reload user data which will fetch data for the new shop
+      final userData = await fetchUserData();
+      return userData;
     } catch (e, stack) {
       log('Error switching shop: $e', stackTrace: stack);
       rethrow;

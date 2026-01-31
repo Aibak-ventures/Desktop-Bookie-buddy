@@ -77,17 +77,4 @@ class UserService {
       rethrow;
     }
   }
-
-  Future<CustomResponseModel> switchShop(int shopId) async {
-    try {
-      final response = await DioClient.dio.post(
-        '/api/v3/shop/switch-shop/',
-        data: {'shop_id': shopId},
-      );
-      return CustomResponseModel.fromJson(response.data);
-    } catch (e, stack) {
-      log('Error in switchShop: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
 }

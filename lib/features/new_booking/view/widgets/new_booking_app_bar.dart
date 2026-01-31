@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -82,12 +83,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         Navigator.of(context).pop(); // Close loading dialog
 
         // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Shop switched successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        context.showSnackBar('Shop switched successfully');
 
         // Reload page to refresh data
         // TODO: Implement proper page reload or data refresh
@@ -96,11 +92,9 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
       if (mounted) {
         Navigator.of(context).pop(); // Close loading dialog
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to switch shop: $e'),
-            backgroundColor: Colors.red,
-          ),
+        context.showSnackBar(
+          'Failed to switch shop: $e',
+          isError: true,
         );
       }
     }
@@ -204,8 +198,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
       builder: (context, user) {
         dev.log(
             '🔍 User role: ${user?.role?.value}, haveMultipleShops: ${user?.haveMultipleShops}');
-        final shouldShowDropdown =
-            true;
+        final shouldShowDropdown = true;
         dev.log('🔍 Should show dropdown: $shouldShowDropdown');
 
         return Container(
