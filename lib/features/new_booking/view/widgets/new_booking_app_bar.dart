@@ -2,6 +2,7 @@ import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -153,7 +154,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
                           fontWeight:
                               isCurrentShop ? FontWeight.w600 : FontWeight.w500,
                           color: isCurrentShop
-                              ? const AppColors.primaryDark
+                              ?  AppColors.primaryDark
                               : Colors.black87,
                         ),
                         maxLines: 1,
@@ -175,7 +176,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
                   ),
                 ),
                 if (isCurrentShop)
-                  const Icon(
+                   Icon(
                     Icons.check_circle,
                     color: AppColors.primaryDark,
                     size: 20,
@@ -250,7 +251,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
     return Container(
       height: 36,
       decoration: BoxDecoration(
-        color: const AppColors.surfaceGrey,
+        color:  AppColors.surfaceGrey,
         borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.all(2),
@@ -273,7 +274,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? const AppColors.primaryDark : Colors.transparent,
+          color: isSelected ?  AppColors.primaryDark : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(

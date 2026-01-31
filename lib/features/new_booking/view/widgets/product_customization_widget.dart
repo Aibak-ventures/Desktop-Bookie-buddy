@@ -213,7 +213,7 @@ class _ProductCustomizationWidgetState
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedProduct != null
-                        ? const AppColors.greenSuccess
+                        ?  AppColors.greenSuccess
                         : Colors.grey,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
@@ -268,7 +268,7 @@ class _ProductCustomizationWidgetState
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const AppColors.backgroundLightest,
+                  color:  AppColors.backgroundLightest,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
