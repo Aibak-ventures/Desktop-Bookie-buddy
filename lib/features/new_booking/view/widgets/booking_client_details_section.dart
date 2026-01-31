@@ -38,12 +38,30 @@ class BookingClientDetailsSection extends StatefulWidget {
 
 class _BookingClientDetailsSectionState
     extends State<BookingClientDetailsSection> {
+  // UI Constants
+  static const double _fieldSpacing = 7.0;
+
+  // Focus nodes for navigation
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _phone1FocusNode = FocusNode();
+  final FocusNode _phone2FocusNode = FocusNode();
+  final FocusNode _addressFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
     context.read<StaffSearchCubit>()
       ..clearSelectedStaff()
       ..getAllStaffs();
+  }
+
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _phone1FocusNode.dispose();
+    _phone2FocusNode.dispose();
+    _addressFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -157,16 +175,40 @@ class _BookingClientDetailsSectionState
     return Column(
       children: [
         _compactField(
-            widget.clientNameController, 'Name', Icons.person_outline),
-        const SizedBox(height: 8),
-        _compactField(widget.clientPhone1Controller, 'Phone',
-            Icons.phone_outlined, TextInputType.phone),
-        const SizedBox(height: 8),
-        _compactField(widget.clientPhone2Controller, 'Phone 2',
-            Icons.phone_outlined, TextInputType.phone),
-        const SizedBox(height: 8),
-        _compactField(widget.clientAddressController, 'Place',
-            Icons.location_on_outlined),
+          widget.clientNameController,
+          'Name',
+          Icons.person_outline,
+          TextInputType.text,
+          _nameFocusNode,
+          _phone1FocusNode,
+        ),
+        const SizedBox(height: _fieldSpacing),
+        _compactField(
+          widget.clientPhone1Controller,
+          'Phone',
+          Icons.phone_outlined,
+          TextInputType.phone,
+          _phone1FocusNode,
+          _phone2FocusNode,
+        ),
+        const SizedBox(height: _fieldSpacing),
+        _compactField(
+          widget.clientPhone2Controller,
+          'Phone 2',
+          Icons.phone_outlined,
+          TextInputType.phone,
+          _phone2FocusNode,
+          _addressFocusNode,
+        ),
+        const SizedBox(height: _fieldSpacing),
+        _compactField(
+          widget.clientAddressController,
+          'Place',
+          Icons.location_on_outlined,
+          TextInputType.text,
+          _addressFocusNode,
+          null, // Last field, no next field
+        ),
       ],
     );
   }
@@ -174,14 +216,26 @@ class _BookingClientDetailsSectionState
   Widget _compactField(
     TextEditingController c,
     String hint,
-    IconData icon, [
-    TextInputType type = TextInputType.text,
-  ]) {
+    IconData icon,
+    TextInputType type,
+    FocusNode focusNode,
+    FocusNode? nextFocusNode,
+  ) {
     return SizedBox(
       height: 39,
       child: TextField(
         controller: c,
+        focusNode: focusNode,
         keyboardType: type,
+        textInputAction:
+            nextFocusNode != null ? TextInputAction.next : TextInputAction.done,
+        onEditingComplete: () {
+          if (nextFocusNode != null) {
+            nextFocusNode.requestFocus();
+          } else {
+            focusNode.unfocus();
+          }
+        },
         style: const TextStyle(fontSize: 12),
         decoration: InputDecoration(
           hintText: hint,

@@ -138,7 +138,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final _inlinePriceFocusNode = FocusNode();
 
   // UI Constants
-  static const double _fieldSpacing = 7.0;
+  static const double _fieldSpacing = 6.0;
+
+  // Focus nodes for client details navigation
+  final _clientNameFocusNode = FocusNode();
+  final _clientPhone1FocusNode = FocusNode();
+  final _clientPhone2FocusNode = FocusNode();
+  final _clientAddressFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -171,6 +177,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     destinationLocationController.dispose();
     _inlinePriceController.dispose();
     _inlinePriceFocusNode.dispose();
+    _clientNameFocusNode.dispose();
+    _clientPhone1FocusNode.dispose();
+    _clientPhone2FocusNode.dispose();
+    _clientAddressFocusNode.dispose();
     staffNameController.dispose();
     advanceAmountController.dispose();
     securityAmountController.dispose();
@@ -1910,17 +1920,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
           // Locations (Optional)
           _buildStepSectionHeader('Locations', optional: true),
-          const SizedBox(height: 12),
+          const SizedBox(height: _fieldSpacing),
           _buildSimpleTextField(
               controller: startLocationController, hint: 'Start location'),
-          const SizedBox(height: 12),
+          const SizedBox(height: _fieldSpacing),
           _buildSimpleTextField(
               controller: pickupLocationController, hint: 'Pickup location'),
-          const SizedBox(height: 12),
+          const SizedBox(height: _fieldSpacing),
           _buildSimpleTextField(
               controller: destinationLocationController, hint: 'Destination'),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: _fieldSpacing),
 
           // Payment details (Optional)
           _buildStepSectionHeader('Payment details', optional: true),
@@ -1995,10 +2005,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             },
           ),
 
-          const SizedBox(height: 24),
+          // const SizedBox(height: 7),
 
           // Summary Section
-          _buildStepTwoSummary(),
+          _buildFinalSummary(),
 
           const SizedBox(height: 24),
 
@@ -3315,20 +3325,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         ),
         const SizedBox(height: 8),
         // Summary section
-        Row(
-          children: [
-            const SizedBox(width: 6),
-            const Text(
-              'Summary',
-              style: TextStyle(
-                fontSize: 14,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF3E3E3E),
-              ),
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     const SizedBox(width: 6),
+        //     const Text(
+        //       'Summary',
+        //       style: TextStyle(
+        //         fontSize: 14,
+        //         fontFamily: 'Inter',
+        //         fontWeight: FontWeight.w500,
+        //         color: Color(0xFF3E3E3E),
+        //       ),
+        //     ),
+        //   ],
+        // ),
         _buildSummarySection(),
       ],
     );
@@ -3745,6 +3755,37 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             ],
           ),
           // const SizedBox(height: 3),
+          // Add customization button
+          SizedBox(
+            width: double.infinity,
+            height: 39,
+            child: OutlinedButton(
+              onPressed: () {
+                // TODO: Add customization functionality
+              },
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF6132E4),
+                side: const BorderSide(
+                  color: Color(0xFF6132E4),
+                  width: 1.5,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'Add customization',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           // Confirm button - Color #6132E4
           SizedBox(
             width: double.infinity,
@@ -4399,29 +4440,43 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 7),
+                  const SizedBox(height: _fieldSpacing),
 
                   // Name
                   _buildRightPanelTextField(
-                      controller: clientNameController, hint: 'Name'),
-                  const SizedBox(height: 7),
+                    controller: clientNameController,
+                    hint: 'Name',
+                    focusNode: _clientNameFocusNode,
+                    nextFocusNode: _clientPhone1FocusNode,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
                   // Phone
                   _buildRightPanelTextField(
-                      controller: clientPhone1Controller,
-                      hint: 'Phone',
-                      isNumber: true),
-                  const SizedBox(height: 7),
+                    controller: clientPhone1Controller,
+                    hint: 'Phone',
+                    isNumber: true,
+                    focusNode: _clientPhone1FocusNode,
+                    nextFocusNode: _clientPhone2FocusNode,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
                   // Phone 2
                   _buildRightPanelTextField(
-                      controller: clientPhone2Controller,
-                      hint: 'Phone 2',
-                      isNumber: true),
-                  const SizedBox(height: 12),
+                    controller: clientPhone2Controller,
+                    hint: 'Phone 2',
+                    isNumber: true,
+                    focusNode: _clientPhone2FocusNode,
+                    nextFocusNode: _clientAddressFocusNode,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
                   // Place
                   _buildRightPanelTextField(
-                      controller: clientAddressController, hint: 'place'),
+                    controller: clientAddressController,
+                    hint: 'place',
+                    focusNode: _clientAddressFocusNode,
+                    nextFocusNode: null, // Last field
+                  ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _fieldSpacing),
 
                   // WhatsApp Checkbox
                   Row(
@@ -4584,40 +4639,40 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Locations
                   _buildSectionHeader('Locations', optional: true),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _fieldSpacing),
                   _buildRightPanelTextField(
                       controller: startLocationController,
                       hint: 'Start location'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _fieldSpacing),
                   _buildRightPanelTextField(
                       controller: pickupLocationController,
                       hint: 'Pickup location'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _fieldSpacing),
                   _buildRightPanelTextField(
                       controller: destinationLocationController,
                       hint: 'Destination'),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
 
                   // Payment details
                   _buildSectionHeader('Payment details', optional: true),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _fieldSpacing),
                   _buildRightPanelTextField(
                       controller: advanceAmountController,
                       hint: 'Advance amount',
                       isNumber: true),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _fieldSpacing),
                   _buildRightPanelTextField(
                       controller: securityAmountController,
                       hint: 'Security amount',
                       isNumber: true),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: _fieldSpacing),
                   _buildRightPanelTextField(
                       controller: discountAmountController,
                       hint: 'Discount amount',
                       isNumber: true),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
 
                   // Additional Charges
                   Row(
@@ -4643,7 +4698,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   // Additional charges list
                   ValueListenableBuilder<List<AdditionalChargesModel>>(
                     valueListenable: additionalChargesNotifier,
@@ -4677,7 +4732,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 6),
 
                   // Summary
                   const Text(
@@ -4688,58 +4743,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  _buildFinalSummary(),
+                  const SizedBox(height: 32),
+                  _buildSummarySection(),
                 ],
               ),
-            ),
-          ),
-
-          // Bottom Buttons
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      // Add customization logic
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.grey.shade300),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Text('Add customization',
-                        style: TextStyle(
-                            fontSize: 14, color: Colors.grey.shade700)),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: _handleConfirmBooking,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Confirm Booking',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
@@ -4777,9 +4784,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     required TextEditingController controller,
     required String hint,
     bool isNumber = false,
+    FocusNode? focusNode,
+    FocusNode? nextFocusNode,
   }) {
     return Container(
-      height: 48,
+      height: 42,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
@@ -4789,7 +4798,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       alignment: Alignment.centerLeft,
       child: TextField(
         controller: controller,
+        focusNode: focusNode,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        textInputAction:
+            nextFocusNode != null ? TextInputAction.next : TextInputAction.done,
+        onEditingComplete: () {
+          if (nextFocusNode != null) {
+            nextFocusNode.requestFocus();
+          } else {
+            focusNode?.unfocus();
+          }
+        },
         style: const TextStyle(fontSize: 13, color: Colors.black87),
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -4857,7 +4876,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 ),
               ],
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: EdgeInsets.symmetric(vertical: 4),
                 child: Divider(height: 1),
               ),
               Row(
