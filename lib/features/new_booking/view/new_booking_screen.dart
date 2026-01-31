@@ -123,12 +123,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // New Fields for Redesign
   int coolingPeriodDays = 1;
   // int coolingPeriodDays = 1;
+  // int coolingPeriodDays = 1;
   final runningKilometersController = TextEditingController();
+
+  // Step state
+  int _bookingStep = 0;
+  final startLocationController = TextEditingController();
+  final pickupLocationController = TextEditingController();
+  final destinationLocationController = TextEditingController();
 
   // Inline editing state
   int? _editingVariantId;
   final _inlinePriceController = TextEditingController();
   final _inlinePriceFocusNode = FocusNode();
+
+  // UI Constants
+  static const double _fieldSpacing = 7.0;
 
   @override
   void initState() {
@@ -154,7 +164,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     clientPhone1Controller.dispose();
     clientPhone2Controller.dispose();
     clientPhone2Controller.dispose();
+    clientPhone2Controller.dispose();
     clientAddressController.dispose();
+    startLocationController.dispose();
+    pickupLocationController.dispose();
+    destinationLocationController.dispose();
     _inlinePriceController.dispose();
     _inlinePriceFocusNode.dispose();
     staffNameController.dispose();
@@ -1778,8 +1792,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildLeftTopSection() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+      child: _bookingStep == 0 ? _buildStepOne() : _buildStepTwo(),
+    );
+  }
+
+  Widget _buildStepOne() {
     return SizedBox(
-      // height: 510,
+      key: const ValueKey(0),
       child: Column(
         children: [
           // Calendar + date time (already compact)
@@ -1814,25 +1838,363 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               isSalesMode: selectedBookingType == BookingType.sales,
             ),
           ),
-
-          // const SizedBox(height: 10),
-
-          // Client + Staff compact block
-          // Expanded(
-          // child: BookingClientDetailsCompact(
-          // staffNameController: staffNameController,
-          // clientNameController: clientNameController,
-          // clientPhone1Controller: clientPhone1Controller,
-          // clientPhone2Controller: clientPhone2Controller,
-          // clientAddressController: clientAddressController,
-          // isSearchClientEnabled: isSearchClientEnabled,
-          // onSearchClientToggle: (v) => setState(() => isSearchClientEnabled = v),
-          // onStaffSelected: (id) => setState(() => selectedStaffId = id),
-          // onClientSelected: (id) => setState(() => selectedClientId = id),
-          //   ),
-          // ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed: () {
+                // Validate fields if needed, then move to step 2
+                setState(() => _bookingStep = 1);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6132E4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                elevation: 0,
+              ),
+              child: const Text('Continue',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white)),
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStepTwo() {
+    return Container(
+      key: const ValueKey(1),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Back Button + Header
+          Row(
+            children: [
+              InkWell(
+                onTap: () => setState(() => _bookingStep = 0),
+                borderRadius: BorderRadius.circular(20),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(Icons.arrow_back,
+                      size: 20, color: Colors.grey.shade700),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Complete Booking',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Locations (Optional)
+          _buildStepSectionHeader('Locations', optional: true),
+          const SizedBox(height: 12),
+          _buildSimpleTextField(
+              controller: startLocationController, hint: 'Start location'),
+          const SizedBox(height: 12),
+          _buildSimpleTextField(
+              controller: pickupLocationController, hint: 'Pickup location'),
+          const SizedBox(height: 12),
+          _buildSimpleTextField(
+              controller: destinationLocationController, hint: 'Destination'),
+
+          const SizedBox(height: 24),
+
+          // Payment details (Optional)
+          _buildStepSectionHeader('Payment details', optional: true),
+          const SizedBox(height: 12),
+          _buildSimpleTextField(
+              controller: advanceAmountController,
+              hint: 'Advance amount',
+              isNumber: true),
+          const SizedBox(height: 12),
+          _buildSimpleTextField(
+              controller: securityAmountController,
+              hint: 'Security amount',
+              isNumber: true),
+          const SizedBox(height: 12),
+          _buildSimpleTextField(
+              controller: discountAmountController,
+              hint: 'Discount amount',
+              isNumber: true),
+
+          const SizedBox(height: 24),
+
+          // Additional Charges
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Additional charges',
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+              ),
+              InkWell(
+                onTap: _addAdditionalCharge,
+                borderRadius: BorderRadius.circular(4),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6132E4).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child:
+                      const Icon(Icons.add, size: 16, color: Color(0xFF6132E4)),
+                ),
+              ),
+            ],
+          ),
+          // Additional charges list (if any)
+          ValueListenableBuilder<List<AdditionalChargesModel>>(
+            valueListenable: additionalChargesNotifier,
+            builder: (context, charges, _) {
+              if (charges.isEmpty) return const SizedBox();
+              return Column(
+                children: charges
+                    .map((c) => Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              Text(c.name ?? '',
+                                  style: const TextStyle(fontSize: 12)),
+                              const Spacer(),
+                              Text('₹${c.amount}',
+                                  style: const TextStyle(fontSize: 12)),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () => _removeCharge(c),
+                                child: Icon(Icons.close,
+                                    size: 14, color: Colors.grey.shade500),
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+              );
+            },
+          ),
+
+          const SizedBox(height: 24),
+
+          // Summary Section
+          _buildStepTwoSummary(),
+
+          const SizedBox(height: 24),
+
+          // Action Buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    // Add customization logic
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.grey.shade300),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: Text('Add customization',
+                      style:
+                          TextStyle(fontSize: 13, color: Colors.grey.shade700)),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6132E4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: const Text('Confirm Booking',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStepSectionHeader(String title, {bool optional = false}) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+        if (optional) ...[
+          const SizedBox(width: 4),
+          Text(
+            '(optional)',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: Colors.grey.shade500,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildSimpleTextField(
+      {required TextEditingController controller,
+      required String hint,
+      bool isNumber = false}) {
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      alignment: Alignment.centerLeft,
+      child: TextField(
+        controller: controller,
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        style: const TextStyle(fontSize: 13, color: Colors.black87),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStepTwoSummary() {
+    return ValueListenableBuilder<List<ProductSelectedModel>>(
+      valueListenable: selectedProductsNotifier,
+      builder: (context, products, _) {
+        final productTotal = products.fold<int>(
+            0, (sum, item) => sum + (item.amount * item.quantity));
+        final additional = additionalChargesNotifier.value.fold<double>(
+            0, (sum, item) => sum + (item.amount?.toDouble() ?? 0));
+
+        final advance = double.tryParse(advanceAmountController.text) ?? 0;
+        final discount = double.tryParse(discountAmountController.text) ?? 0;
+
+        final totalPayable = productTotal + additional - advance - discount;
+
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF6F4FF), // Light purple bg
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFFEBE5FF)),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Product total',
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF2D2D2D),
+                          fontWeight: FontWeight.w500)),
+                  Text('₹${productTotal.toCurrency()}',
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1A1A1A))),
+                ],
+              ),
+              if (additional > 0) ...[
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Additional charges',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF2D2D2D),
+                            fontWeight: FontWeight.w500)),
+                    Text('₹${additional.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1A1A1A))),
+                  ],
+                ),
+              ],
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Divider(height: 1, color: Color(0xFFE0D9FF)),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Paid',
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF2D2D2D),
+                          fontWeight: FontWeight.w500)),
+                  Text('₹${advance.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF27AE60))),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Total payable',
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Color(0xFF1A1A1A),
+                          fontWeight: FontWeight.w600)),
+                  Text('₹${totalPayable.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFFEB5757))),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -2569,11 +2931,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             child: Center(
               child: Container(
                 //  width: 58,
-  // height: 21,
+                // height: 21,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0x1C1FD300),// Light green bg
+                  color: const Color(0x1C1FD300), // Light green bg
                   borderRadius: BorderRadius.circular(3),
                 ),
                 child: Row(
@@ -3997,7 +4359,28 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildRightSidePanel() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+            ),
+            child: child,
+          ),
+        );
+      },
+      child: _bookingStep == 0
+          ? _buildClientDetailsPanel()
+          : _buildPaymentSummaryPanel(),
+    );
+  }
+
+  Widget _buildClientDetailsPanel() {
     return Container(
+      key: const ValueKey(0),
       color: Colors.white,
       child: Column(
         children: [
@@ -4016,26 +4399,26 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 7),
 
                   // Name
-                  _buildSimpleTextField(
+                  _buildRightPanelTextField(
                       controller: clientNameController, hint: 'Name'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 7),
                   // Phone
-                  _buildSimpleTextField(
+                  _buildRightPanelTextField(
                       controller: clientPhone1Controller,
                       hint: 'Phone',
                       isNumber: true),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 7),
                   // Phone 2
-                  _buildSimpleTextField(
+                  _buildRightPanelTextField(
                       controller: clientPhone2Controller,
                       hint: 'Phone 2',
                       isNumber: true),
                   const SizedBox(height: 12),
                   // Place
-                  _buildSimpleTextField(
+                  _buildRightPanelTextField(
                       controller: clientAddressController, hint: 'place'),
 
                   const SizedBox(height: 12),
@@ -4125,7 +4508,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 7),
 
                   // Running Kilometers
-                  _buildSimpleTextField(
+                  _buildRightPanelTextField(
                       controller: runningKilometersController,
                       hint: 'Running Kilometers'),
                 ],
@@ -4133,14 +4516,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             ),
           ),
 
-          // Bottom Button
+          // Bottom Button - Continue
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: _handleConfirmBooking,
+                onPressed: () {
+                  // Move to next step
+                  setState(() => _bookingStep = 1);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6132E4),
                   shape: RoundedRectangleBorder(
@@ -4163,31 +4549,376 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Widget _buildSimpleTextField(
-      {required TextEditingController controller,
-      required String hint,
-      bool isNumber = false}) {
+  Widget _buildPaymentSummaryPanel() {
     return Container(
-      height: 42,
+      key: const ValueKey(1),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Back Button
+                  InkWell(
+                    onTap: () => setState(() => _bookingStep = 0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_back,
+                            size: 20, color: Colors.grey.shade700),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Back',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Locations
+                  _buildSectionHeader('Locations', optional: true),
+                  const SizedBox(height: 12),
+                  _buildRightPanelTextField(
+                      controller: startLocationController,
+                      hint: 'Start location'),
+                  const SizedBox(height: 12),
+                  _buildRightPanelTextField(
+                      controller: pickupLocationController,
+                      hint: 'Pickup location'),
+                  const SizedBox(height: 12),
+                  _buildRightPanelTextField(
+                      controller: destinationLocationController,
+                      hint: 'Destination'),
+
+                  const SizedBox(height: 20),
+
+                  // Payment details
+                  _buildSectionHeader('Payment details', optional: true),
+                  const SizedBox(height: 12),
+                  _buildRightPanelTextField(
+                      controller: advanceAmountController,
+                      hint: 'Advance amount',
+                      isNumber: true),
+                  const SizedBox(height: 12),
+                  _buildRightPanelTextField(
+                      controller: securityAmountController,
+                      hint: 'Security amount',
+                      isNumber: true),
+                  const SizedBox(height: 12),
+                  _buildRightPanelTextField(
+                      controller: discountAmountController,
+                      hint: 'Discount amount',
+                      isNumber: true),
+
+                  const SizedBox(height: 20),
+
+                  // Additional Charges
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Additional charges',
+                        style: TextStyle(
+                            fontSize: 13, color: Colors.grey.shade600),
+                      ),
+                      InkWell(
+                        onTap: _addAdditionalCharge,
+                        borderRadius: BorderRadius.circular(4),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF6132E4).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Icon(Icons.add,
+                              size: 16, color: Color(0xFF6132E4)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  // Additional charges list
+                  ValueListenableBuilder<List<AdditionalChargesModel>>(
+                    valueListenable: additionalChargesNotifier,
+                    builder: (context, charges, _) {
+                      if (charges.isEmpty) return const SizedBox();
+                      return Column(
+                        children: charges
+                            .map((c) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(c.name ?? '',
+                                            style:
+                                                const TextStyle(fontSize: 13)),
+                                      ),
+                                      Text('₹${c.amount}',
+                                          style: const TextStyle(fontSize: 13)),
+                                      const SizedBox(width: 8),
+                                      GestureDetector(
+                                        onTap: () => _removeCharge(c),
+                                        child: Icon(Icons.close,
+                                            size: 14,
+                                            color: Colors.grey.shade500),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                            .toList(),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Summary
+                  const Text(
+                    'Summary',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildFinalSummary(),
+                ],
+              ),
+            ),
+          ),
+
+          // Bottom Buttons
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      // Add customization logic
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.grey.shade300),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text('Add customization',
+                        style: TextStyle(
+                            fontSize: 14, color: Colors.grey.shade700)),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: _handleConfirmBooking,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6132E4),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Confirm Booking',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, {bool optional = false}) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+        if (optional) ...[
+          const SizedBox(width: 4),
+          Text(
+            '(optional)',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: Colors.grey.shade500,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildRightPanelTextField({
+    required TextEditingController controller,
+    required String hint,
+    bool isNumber = false,
+  }) {
+    return Container(
+      height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
       ),
+      alignment: Alignment.centerLeft,
       child: TextField(
         controller: controller,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        style: const TextStyle(fontSize: 13, color: Colors.black87),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hint,
           hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-          contentPadding: const EdgeInsets.only(bottom: 8),
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
         ),
-        style: const TextStyle(fontSize: 13, color: Colors.black87),
       ),
     );
   }
+
+  Widget _buildFinalSummary() {
+    return ValueListenableBuilder<List<ProductSelectedModel>>(
+      valueListenable: selectedProductsNotifier,
+      builder: (context, products, _) {
+        final productTotal = products.fold<int>(
+            0, (sum, item) => sum + (item.amount * item.quantity));
+        final additional = additionalChargesNotifier.value.fold<double>(
+            0, (sum, item) => sum + (item.amount?.toDouble() ?? 0));
+
+        final advance = double.tryParse(advanceAmountController.text) ?? 0;
+        final discount = double.tryParse(discountAmountController.text) ?? 0;
+
+        final totalPayable = productTotal + additional - advance - discount;
+
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF6F6F6),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Text('Product total',
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500)),
+                      const SizedBox(width: 8),
+                      Icon(Icons.keyboard_arrow_down,
+                          size: 16, color: Colors.grey.shade600),
+                    ],
+                  ),
+                  Text('₹${productTotal.toCurrency()}',
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w600)),
+                ],
+              ),
+              if (additional > 0) ...[
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Additional charges',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500)),
+                    Text('₹${additional.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ],
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Divider(height: 1),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Paid',
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                  Text('₹${advance.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF27AE60))),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Total payable',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  Text('₹${totalPayable.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFFEB5757))),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Widget _buildSimpleTextField(
+  //     {required TextEditingController controller,
+  //     required String hint,
+  //     bool isNumber = false}) {
+  //   return Container(
+  //     height: 42,
+  //     padding: const EdgeInsets.symmetric(horizontal: 12),
+  //     decoration: BoxDecoration(
+  //       border: Border.all(color: Colors.grey.shade300),
+  //       borderRadius: BorderRadius.circular(8),
+  //       color: Colors.white,
+  //     ),
+  //     child: TextField(
+  //       controller: controller,
+  //       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+  //       decoration: InputDecoration(
+  //         border: InputBorder.none,
+  //         hintText: hint,
+  //         hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+  //         contentPadding: const EdgeInsets.only(bottom: 8),
+  //       ),
+  //       style: const TextStyle(fontSize: 13, color: Colors.black87),
+  //     ),
+  //   );
+  // }
 
   Widget _buildStaffSelector() {
     return InkWell(
