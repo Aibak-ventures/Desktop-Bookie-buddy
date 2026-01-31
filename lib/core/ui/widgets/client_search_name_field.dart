@@ -1,9 +1,6 @@
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_shimmer_box.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-// import 'package:bookie_buddy_web/core/view_model/bloc_client/client_bloc.dart' hide ClientState;
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
@@ -57,26 +54,54 @@ class ClientSearchNameField extends StatelessWidget {
                   child: child,
                 )
               : const SizedBox.shrink(),
-          builder: (context, controller, focusNode) => CustomTextField(
-            focusNode: focusNode,
-            controller: controller,
-            hintText: hitText,
-            keyboardType: TextInputType.name,
-            textInputAction: TextInputAction.next,
-            prefixIcon: const Icon(Icons.person),
-            suffixIcon: ValueListenableBuilder(
-              valueListenable: controller,
-              builder: (context, searchValue, child) => searchValue.text.isEmpty
-                  ? const SizedBox.shrink()
-                  : IconButton(
-                      onPressed: () {
-                        controller.clear();
-                        context.read<ClientCubit>().clearSelected(onClear);
-                      },
-                      icon: const Icon(Icons.clear),
-                    ),
+          builder: (context, controller, focusNode) => Container(
+            height: 42,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
             ),
-            validator: AppInputValidators.name,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                const Icon(Icons.person, size: 16, color: Colors.grey),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    focusNode: focusNode,
+                    controller: controller,
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    style: const TextStyle(fontSize: 13, color: Colors.black87),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hitText,
+                      hintStyle:
+                          TextStyle(fontSize: 13, color: Colors.grey.shade400),
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: controller,
+                  builder: (context, searchValue, child) => searchValue
+                          .text.isEmpty
+                      ? const SizedBox.shrink()
+                      : IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            controller.clear();
+                            context.read<ClientCubit>().clearSelected(onClear);
+                          },
+                          icon: const Icon(Icons.clear,
+                              size: 16, color: Colors.grey),
+                        ),
+                ),
+              ],
+            ),
           ),
           itemBuilder: (context, client) => ListTile(
             title: Text(

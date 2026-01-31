@@ -6,6 +6,8 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
 import 'package:flutter/services.dart';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
@@ -160,6 +162,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     // Load services and auto-select first one
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+      // Load staffs for staff search dropdown
+      context.read<StaffSearchCubit>().getAllStaffs();
     });
   }
 
@@ -2982,7 +2986,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 _buildQuantityBtn(
                     icon: Icons.remove,
                     onTap: () => _decrementQuantity(product)),
-                const SizedBox(width: 12),
+                const SizedBox(width: 6), // Reduced from 12 to 6
                 Text(
                   '${product.quantity}',
                   style: const TextStyle(
@@ -2991,7 +2995,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 6), // Reduced from 12 to 6
                 _buildQuantityBtn(
                     icon: Icons.add, onTap: () => _incrementQuantity(product)),
               ],
@@ -3704,56 +3708,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             },
           ),
           // const SizedBox(height: 3),
-          // Send invoice to WhatsApp with premium tag
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    const Flexible(
-                      child: Text(
-                        'Send invoice to WhatsApp',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF3E3E3E),
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFD700),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Text(
-                        'PREMIUM',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Transform.scale(
-                scale: 0.8,
-                child: Switch(
-                  value: sendPdfToWhatsApp,
-                  onChanged: (v) => setState(() => sendPdfToWhatsApp = v),
-                  activeColor: const Color(0xFF1AB000),
-                ),
-              ),
-            ],
-          ),
+     
           // const SizedBox(height: 3),
           // Add customization button
           SizedBox(
@@ -4443,29 +4398,65 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: _fieldSpacing),
 
                   // Name
-                  _buildRightPanelTextField(
-                    controller: clientNameController,
-                    hint: 'Name',
-                    focusNode: _clientNameFocusNode,
-                    nextFocusNode: _clientPhone1FocusNode,
+                  // ClientName with Search
+                  BlocListener<ClientCubit, ClientState>(
+                    listener: (context, state) {
+                      if (state.selectedClient != null) {
+                        final client = state.selectedClient!;
+                        // Auto-fill fields
+                        clientNameController.text = client.name;
+                        clientPhone1Controller.text = client.phone1.toString();
+                        if (client.phone2 != null) {
+                          clientPhone2Controller.text =
+                              client.phone2.toString();
+                        }
+                        // Store selected client ID
+                        selectedClientId = client.id;
+                      }
+                    },
+                    child: ClientSearchNameField(
+                      nameController: clientNameController,
+                      focusNode: _clientNameFocusNode,
+                      hitText: 'Search client by name',
+                      onClear: () {
+                        // Clear all client fields when search is cleared
+                        clientNameController.clear();
+                        clientPhone1Controller.clear();
+                        clientPhone2Controller.clear();
+                        clientAddressController.clear();
+                        selectedClientId = null;
+                      },
+                    ),
                   ),
                   const SizedBox(height: _fieldSpacing),
-                  // Phone
-                  _buildRightPanelTextField(
-                    controller: clientPhone1Controller,
-                    hint: 'Phone',
-                    isNumber: true,
-                    focusNode: _clientPhone1FocusNode,
-                    nextFocusNode: _clientPhone2FocusNode,
+                  // Phone - Disabled if client is selected
+                  BlocBuilder<ClientCubit, ClientState>(
+                    builder: (context, state) {
+                      final isClientSelected = state.selectedClient != null;
+                      return _buildRightPanelTextField(
+                        controller: clientPhone1Controller,
+                        hint: 'Phone',
+                        isNumber: true,
+                        focusNode: _clientPhone1FocusNode,
+                        nextFocusNode: _clientPhone2FocusNode,
+                        enabled: !isClientSelected,
+                      );
+                    },
                   ),
                   const SizedBox(height: _fieldSpacing),
-                  // Phone 2
-                  _buildRightPanelTextField(
-                    controller: clientPhone2Controller,
-                    hint: 'Phone 2',
-                    isNumber: true,
-                    focusNode: _clientPhone2FocusNode,
-                    nextFocusNode: _clientAddressFocusNode,
+                  // Phone 2 - Disabled if client is selected
+                  BlocBuilder<ClientCubit, ClientState>(
+                    builder: (context, state) {
+                      final isClientSelected = state.selectedClient != null;
+                      return _buildRightPanelTextField(
+                        controller: clientPhone2Controller,
+                        hint: 'Phone 2',
+                        isNumber: true,
+                        focusNode: _clientPhone2FocusNode,
+                        nextFocusNode: _clientAddressFocusNode,
+                        enabled: !isClientSelected,
+                      );
+                    },
                   ),
                   const SizedBox(height: _fieldSpacing),
                   // Place
@@ -4534,7 +4525,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: 7),
 
-                  _buildStaffSelector(),
+                  StaffSearchNameField(nameController: staffNameController),
 
                   const SizedBox(height: 7),
 
@@ -4784,6 +4775,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     required TextEditingController controller,
     required String hint,
     bool isNumber = false,
+    bool enabled = true,
     FocusNode? focusNode,
     FocusNode? nextFocusNode,
   }) {
@@ -4793,12 +4785,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
-        color: Colors.white,
+        color: enabled ? Colors.white : Colors.grey.shade100,
       ),
       alignment: Alignment.centerLeft,
       child: TextField(
         controller: controller,
         focusNode: focusNode,
+        enabled: enabled,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
         textInputAction:
             nextFocusNode != null ? TextInputAction.next : TextInputAction.done,
@@ -4809,7 +4802,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             focusNode?.unfocus();
           }
         },
-        style: const TextStyle(fontSize: 13, color: Colors.black87),
+        style: TextStyle(
+          fontSize: 13,
+          color: enabled ? Colors.black87 : Colors.grey.shade500,
+        ),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hint,
@@ -4938,98 +4934,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   //     ),
   //   );
   // }
-
-  Widget _buildStaffSelector() {
-    return InkWell(
-      onTap: () {
-        // Show staff search
-        showDialog(
-          context: context,
-          builder: (context) => Dialog(
-            child: Container(
-              width: 400,
-              height: 500,
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  const Text('Select Staff',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Search staff...',
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (val) {
-                      // context.read<StaffSearchCubit>().selectStaffById(val);
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  // Expanded(
-                  //   child: BlocBuilder<StaffSearchCubit, StaffSearchState>(
-                  //     builder: (context, state) {
-                  //       return state.m(
-                  //         loaded: (staff) => ListView.builder(
-                  //           itemCount: staff.length,
-                  //           itemBuilder: (context, index) {
-                  //             final s = staff[index];
-                  //             return ListTile(
-                  //               title: Text(s.name),
-                  //               onTap: () {
-                  //                 setState(() {
-                  //                   selectedStaffId = s.id;
-                  //                   staffNameController.text = s.name;
-                  //                 });
-                  //                 Navigator.pop(context);
-                  //               },
-                  //             );
-                  //           },
-                  //         ),
-                  //         loading: () =>
-                  //             const Center(child: CircularProgressIndicator()),
-                  //         orElse: () => const SizedBox(),
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        height: 42,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                staffNameController.text.isEmpty
-                    ? 'Drop down'
-                    : staffNameController.text,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: staffNameController.text.isEmpty
-                      ? Colors.grey.shade400
-                      : Colors.black87,
-                ),
-              ),
-            ),
-            Icon(Icons.keyboard_arrow_down,
-                size: 18, color: Colors.grey.shade400),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 // Stateful widget for overlay search item with variant selection

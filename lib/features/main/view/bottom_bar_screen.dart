@@ -132,9 +132,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       onEnter: (_) => setState(() => isSidebarExpanded = true),
       onExit: (_) => setState(() => isSidebarExpanded = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(
+            milliseconds: 400), // Slowed down to prevent overflow
         curve: Curves.easeInOut,
         width: isSidebarExpanded ? expandedWidth : collapsedWidth,
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/assets/images/bottom_bar_background.png'),
@@ -148,11 +150,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ],
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 24),
+        child: ClipRect(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 24),
               _profileHeader(),
               const SizedBox(height: 24),
               Padding(
@@ -165,20 +166,24 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  children: [
-                    _navItem(0, Icons.add_box_outlined, "New Order"),
-                    _navItem(1, Icons.dashboard_outlined, "Dashboard"),
-                    _navItem(2, Icons.list_alt, "Orders"),
-                    _navItem(3, Icons.menu_book_rounded, "Ledger book"),
-                    _navItem(4, Icons.bar_chart_outlined, "Stocks"),
-                  ],
+              // Scrollable navigation items area
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    children: [
+                      _navItem(0, Icons.add_box_outlined, "New Order"),
+                      _navItem(1, Icons.dashboard_outlined, "Dashboard"),
+                      _navItem(2, Icons.list_alt, "Orders"),
+                      _navItem(3, Icons.menu_book_rounded, "Ledger book"),
+                      _navItem(4, Icons.bar_chart_outlined, "Stocks"),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
+              // Logout button fixed at bottom
               _logoutButton(),
+              const SizedBox(height: 20),
             ],
           ),
         ),
