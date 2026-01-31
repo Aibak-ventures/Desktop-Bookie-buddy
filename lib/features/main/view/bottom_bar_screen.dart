@@ -33,6 +33,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   late PageController pageController;
   bool newOrderActive = false;
   bool showNewBookingInContent = false;
+  bool isSidebarExpanded = false; // Track sidebar hover state
 
   // GlobalKey to access NewBookingScreen state
   final GlobalKey<NewBookingScreenState> _newBookingKey = GlobalKey();
@@ -89,10 +90,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Row(
+      body: Stack(
         children: [
-          _glassSidebar(),
-          Expanded(
+          // Main content - with left padding to account for collapsed sidebar
+          Positioned.fill(
+            left: 80, // Space for collapsed sidebar (icon-only width)
             child: showNewBookingInContent
                 ? NewBookingScreen(
                     key: _newBookingKey,
@@ -110,63 +112,76 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                     children: screens,
                   ),
           ),
+          // Hover-expandable sidebar (positioned absolutely, overlays content)
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            child: _glassSidebar(),
+          ),
         ],
       ),
     );
   }
 
   Widget _glassSidebar() {
-    return Container(
-      width: 260,
-      // margin: const EdgeInsets.only(right: 16), // Only margin on right side
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/assets/images/bottom_bar_background.png'),
-          fit: BoxFit.cover,
+    const collapsedWidth = 80.0;
+    const expandedWidth = 260.0;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => isSidebarExpanded = true),
+      onExit: (_) => setState(() => isSidebarExpanded = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        width: isSidebarExpanded ? expandedWidth : collapsedWidth,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/assets/images/bottom_bar_background.png'),
+            fit: BoxFit.cover,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.only(
-            // topRight: Radius.circular(24),
-            // bottomRight: Radius.circular(24),
-            ), // Only round right side
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 24),
-          _profileHeader(),
-          // const SizedBox(height: 24),
-          // _newOrderButton(),
-          const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22),
-            child: Divider(
-              color: Colors.grey,
-              thickness: 1,
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                children: [
-                  _navItem(0, Icons.add_box_outlined, "New Order"),
-                  _navItem(1, Icons.dashboard_outlined, "Dashboard"),
-                  _navItem(2, Icons.list_alt, "Orders"),
-                  _navItem(3, Icons.menu_book_rounded, "Ledger book"),
-                  _navItem(4, Icons.bar_chart_outlined, "Stocks"),
-                ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _profileHeader(),
+              const SizedBox(height: 24),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isSidebarExpanded ? 22 : 12,
+                ),
+                child: Divider(
+                  color: Colors.grey,
+                  thickness: 1,
+                ),
               ),
-            ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  children: [
+                    _navItem(0, Icons.add_box_outlined, "New Order"),
+                    _navItem(1, Icons.dashboard_outlined, "Dashboard"),
+                    _navItem(2, Icons.list_alt, "Orders"),
+                    _navItem(3, Icons.menu_book_rounded, "Ledger book"),
+                    _navItem(4, Icons.bar_chart_outlined, "Stocks"),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              _logoutButton(),
+            ],
           ),
-          _logoutButton(),
-          const SizedBox(height: 20),
-        ],
+        ),
       ),
     );
   }
@@ -182,7 +197,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         final shopImage = user?.shopDetails.image;
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(
+            horizontal: isSidebarExpanded ? 20 : 12,
+          ),
           child: Column(
             children: [
               // Profile Image with border
@@ -205,65 +222,65 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                     border: Border.all(color: Colors.white, width: 2),
                   ),
                   child: CircleAvatar(
-                    radius: 38,
+                    radius: isSidebarExpanded ? 38 : 22,
                     backgroundColor: Colors.white,
                     child: shopImage != null && shopImage.isNotEmpty
                         ? ClipOval(
                             child: CustomNetworkImage(
                               imageUrl: shopImage,
-                              width: 72,
-                              height: 72,
+                              width: isSidebarExpanded ? 72 : 40,
+                              height: isSidebarExpanded ? 72 : 40,
                               fit: BoxFit.cover,
                             ),
                           )
-                        : const Icon(
+                        : Icon(
                             Icons.store_rounded,
-                            size: 36,
-                            color: Color(0xFF6C5CE7),
+                            size: isSidebarExpanded ? 36 : 20,
+                            color: const Color(0xFF6C5CE7),
                           ),
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
-              // Shop Name
-              Text(
-                shopName,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF2D3436),
-                  letterSpacing: 0.3,
+              if (isSidebarExpanded) const SizedBox(height: 14),
+              if (isSidebarExpanded)
+                Text(
+                  shopName,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF2D3436),
+                    letterSpacing: 0.3,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              // Location with icon
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.location_on_rounded,
-                    size: 14,
-                    color: Colors.grey.shade600,
-                  ),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      shopAddress,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              if (isSidebarExpanded) const SizedBox(height: 4),
+              if (isSidebarExpanded)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.location_on_rounded,
+                      size: 14,
+                      color: Colors.grey.shade600,
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        shopAddress,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey.shade600,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         );
@@ -366,7 +383,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: isSidebarExpanded ? 10 : 12,
+          ),
           decoration: BoxDecoration(
             gradient: (isActive || isNewOrderActive)
                 ? const LinearGradient(
@@ -389,30 +409,40 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                   ]
                 : [],
           ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: (isActive || isNewOrderActive)
-                    ? Colors.white
-                    : Colors.grey.shade600,
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+          child: isSidebarExpanded
+              ? Row(
+                  children: [
+                    Icon(
+                      icon,
+                      size: 20,
+                      color: (isActive || isNewOrderActive)
+                          ? Colors.white
+                          : Colors.grey.shade600,
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: (isActive || isNewOrderActive)
+                              ? Colors.white
+                              : const Color(0xFF636E72),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Icon(
+                    icon,
+                    size: 22,
                     color: (isActive || isNewOrderActive)
                         ? Colors.white
-                        : const Color(0xFF636E72),
+                        : Colors.grey.shade600,
                   ),
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -420,7 +450,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   Widget _logoutButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSidebarExpanded ? 20 : 12,
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -431,7 +463,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           borderRadius: BorderRadius.circular(12),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.symmetric(
+              vertical: isSidebarExpanded ? 12 : 14,
+            ),
             decoration: BoxDecoration(
               color: Colors.red.shade50.withOpacity(0.8),
               borderRadius: BorderRadius.circular(12),
@@ -440,25 +474,33 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 width: 1,
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.logout_rounded,
-                  size: 18,
-                  color: Colors.red.shade400,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "Log out",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.red.shade400,
+            child: isSidebarExpanded
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.logout_rounded,
+                        size: 18,
+                        color: Colors.red.shade400,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Log out",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red.shade400,
+                        ),
+                      ),
+                    ],
+                  )
+                : Center(
+                    child: Icon(
+                      Icons.logout_rounded,
+                      size: 20,
+                      color: Colors.red.shade400,
+                    ),
                   ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
