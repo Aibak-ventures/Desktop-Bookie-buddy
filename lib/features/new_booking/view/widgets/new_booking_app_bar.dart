@@ -153,7 +153,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
                           fontWeight:
                               isCurrentShop ? FontWeight.w600 : FontWeight.w500,
                           color: isCurrentShop
-                              ? const Color(0xFF6132E4)
+                              ? const AppColors.primaryDark
                               : Colors.black87,
                         ),
                         maxLines: 1,
@@ -177,7 +177,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
                 if (isCurrentShop)
                   const Icon(
                     Icons.check_circle,
-                    color: Color(0xFF6132E4),
+                    color: AppColors.primaryDark,
                     size: 20,
                   ),
               ],
@@ -250,7 +250,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
     return Container(
       height: 36,
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: const AppColors.surfaceGrey,
         borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.all(2),
@@ -273,7 +273,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF6132E4) : Colors.transparent,
+          color: isSelected ? const AppColors.primaryDark : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
@@ -360,3 +360,4 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
     );
   }
 }
+

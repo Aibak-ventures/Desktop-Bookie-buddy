@@ -23,7 +23,7 @@ class WebToast extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: color ??
-              (isError ? const Color(0xFFFFF0F0) : const Color(0xFFF0FFF5)),
+              (isError ? AppColors.redLight : AppColors.greenSuccessLight),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isError ? Colors.red.shade300 : Colors.green.shade300,
@@ -62,3 +62,4 @@ class WebToast extends StatelessWidget {
     );
   }
 }
+

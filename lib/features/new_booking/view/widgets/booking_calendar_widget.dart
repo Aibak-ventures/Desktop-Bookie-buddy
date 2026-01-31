@@ -325,7 +325,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide:
-                    const BorderSide(color: AppColors.grey300, width: 1.0),
+                     BorderSide(color: AppColors.grey300, width: 1.0),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -492,7 +492,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
-          decoration: const InputDecoration(
+          decoration:  InputDecoration(
             border: InputBorder.none,
             isCollapsed: true,
             hintText: 'Enter notes here...',
@@ -541,7 +541,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.grey200, width: 1),
+          borderSide:  BorderSide(color: AppColors.grey200, width: 1),
         ),
         filled: !enabled,
         fillColor: enabled ? null : Colors.grey.shade50,

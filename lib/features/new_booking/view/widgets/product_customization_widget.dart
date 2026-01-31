@@ -174,7 +174,7 @@ class _ProductCustomizationWidgetState
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Color(0xFF6C5CE7)),
+                  icon: const Icon(Icons.arrow_back, color: AppColors.primary),
                   onPressed: widget.onBack,
                   tooltip: 'Back to products',
                 ),
@@ -188,7 +188,7 @@ class _ProductCustomizationWidgetState
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF2D3436),
+                          color: AppColors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -198,7 +198,7 @@ class _ProductCustomizationWidgetState
                             : 'Select a product to add measurements',
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF636E72),
+                          color: AppColors.textTertiary,
                         ),
                       ),
                     ],
@@ -213,7 +213,7 @@ class _ProductCustomizationWidgetState
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedProduct != null
-                        ? const Color(0xFF27AE60)
+                        ? const AppColors.greenSuccess
                         : Colors.grey,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
@@ -268,7 +268,7 @@ class _ProductCustomizationWidgetState
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: const AppColors.backgroundLightest,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
@@ -279,7 +279,7 @@ class _ProductCustomizationWidgetState
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D3436),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -329,7 +329,7 @@ class _ProductCustomizationWidgetState
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF2D3436),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 12),
@@ -369,7 +369,7 @@ class _ProductCustomizationWidgetState
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 13,
-                                          color: Color(0xFF2D3436),
+                                          color: AppColors.textSecondary,
                                         ),
                                       ),
                                       if (field.description.isNotEmpty)
@@ -419,7 +419,7 @@ class _ProductCustomizationWidgetState
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: const AppColors.backgroundLightest,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
@@ -431,7 +431,7 @@ class _ProductCustomizationWidgetState
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D3436),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -465,7 +465,7 @@ class _ProductCustomizationWidgetState
                               style:
                                   TextStyle(color: Colors.white, fontSize: 13)),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6C5CE7),
+                            backgroundColor: const AppColors.primary,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 16),
                             elevation: 0,
@@ -485,7 +485,7 @@ class _ProductCustomizationWidgetState
 
   Widget _buildProductsList() {
     return Container(
-      color: const Color(0xFFF8F9FA),
+      color: const AppColors.backgroundLightest,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -505,7 +505,7 @@ class _ProductCustomizationWidgetState
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.textSecondary,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -562,12 +562,12 @@ class _ProductCustomizationWidgetState
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? const Color(0xFFE8E4FF)
+                              ? AppColors.primaryLight
                               : Colors.white,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: isSelected
-                                ? const Color(0xFF6C5CE7)
+                                ? const AppColors.primary
                                 : Colors.grey.shade200,
                             width: isSelected ? 2 : 1,
                           ),
@@ -610,7 +610,7 @@ class _ProductCustomizationWidgetState
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF2D3436),
+                                      color: AppColors.textSecondary,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -641,8 +641,8 @@ class _ProductCustomizationWidgetState
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: isSelected
-                                    ? const Color(0xFF6C5CE7)
-                                    : const Color(0xFF27AE60),
+                                    ? const AppColors.primary
+                                    : const AppColors.greenSuccess,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 8),
@@ -766,3 +766,4 @@ class _ProductCustomizationWidgetState
         ),
       ];
 }
+

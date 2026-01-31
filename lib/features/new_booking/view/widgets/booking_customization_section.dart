@@ -346,7 +346,7 @@ class _BookingCustomizationSectionState
                     isSelected ? 'Edit' : 'Add',
                     style: TextStyle(
                       color:
-                          isSelected ? const AppColors.primaryDark : Colors.green,
+                          isSelected ?  AppColors.primaryDark : Colors.green,
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
@@ -374,7 +374,7 @@ class _BookingCustomizationSectionState
 
     return Container(
       decoration: BoxDecoration(
-        color: const AppColors.surfaceGrey, // Light grey background as in image
+        color:  AppColors.surfaceGrey, // Light grey background as in image
         borderRadius: BorderRadius.circular(10),
         // border: Border.all(color: Colors.grey.shade200),
       ),
@@ -418,7 +418,7 @@ class _BookingCustomizationSectionState
                         child: Container(
                           height: 40,
                           decoration: BoxDecoration(
-                            color: const AppColors.primaryLight.withOpacity(0.5),
+                            color:  AppColors.primaryLight.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
@@ -467,7 +467,7 @@ class _BookingCustomizationSectionState
                           height: 40,
                           width: 40,
                           decoration: BoxDecoration(
-                            color: const AppColors.primaryLight.withOpacity(0.5),
+                            color:  AppColors.primaryLight.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
@@ -484,12 +484,12 @@ class _BookingCustomizationSectionState
                     child: ElevatedButton(
                       onPressed: _saveMeasurements,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const AppColors.surfaceGrey,
-                        foregroundColor: const AppColors.primaryDark,
+                        backgroundColor:  AppColors.surfaceGrey,
+                        foregroundColor:  AppColors.primaryDark,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
-                          side: const BorderSide(color: AppColors.primaryDark),
+                          side: BorderSide(color: AppColors.primaryDark),
                         ),
                       ),
                       child: const Text(
