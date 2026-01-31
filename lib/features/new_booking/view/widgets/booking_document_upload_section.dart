@@ -216,17 +216,22 @@ class BookingDocumentUploadSection extends StatelessWidget {
       );
 
       if (result != null && result.files.isNotEmpty) {
-        final newDocs = result.files.map((file) {
+        final newDocs = result.files
+            .where((file) =>
+                file.bytes != null) // Only process files with bytes data
+            .map((file) {
           return DocumentFile(
             name: file.name,
-            path: file.path ?? '',
+            path: file.path ?? '', // Path may be null on web/macOS
             bytes: file.bytes,
           );
         }).toList();
 
-        final currentDocs = List<DocumentFile>.from(documentsNotifier.value);
-        currentDocs.addAll(newDocs);
-        documentsNotifier.value = currentDocs;
+        if (newDocs.isNotEmpty) {
+          final currentDocs = List<DocumentFile>.from(documentsNotifier.value);
+          currentDocs.addAll(newDocs);
+          documentsNotifier.value = currentDocs;
+        }
       }
     } on Exception catch (e) {
       debugPrint('File picker error: $e');

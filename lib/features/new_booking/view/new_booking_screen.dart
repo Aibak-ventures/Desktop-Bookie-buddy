@@ -398,15 +398,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             maxHeight: 700,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
-              ),
-            ],
+            boxShadow: [AppColors.mediumShadow],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -416,12 +410,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: AppColors.backgroundLightest,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(20),
                   ),
                   border: Border(
-                    bottom: BorderSide(color: Colors.grey.shade200, width: 1),
+                    bottom: BorderSide(color: AppColors.grey200, width: 1),
                   ),
                 ),
                 child: Row(
@@ -429,12 +423,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6132E4).withOpacity(0.1),
+                        color: AppColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(
                         Icons.tune_rounded,
-                        color: Color(0xFF6132E4),
+                        color: AppColors.primary,
                         size: 22,
                       ),
                     ),
@@ -444,16 +438,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: AppColors.textPrimary,
                         fontFamily: 'Inter',
                       ),
                     ),
                     const Spacer(),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: Icon(Icons.close, color: Colors.grey.shade600),
+                      icon: Icon(Icons.close, color: AppColors.grey600),
                       style: IconButton.styleFrom(
-                        backgroundColor: Colors.grey.shade100,
+                        backgroundColor: AppColors.grey100,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -476,7 +470,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D2D2D),
+                          color: AppColors.textSecondary,
                           fontFamily: 'Inter',
                         ),
                       ),
@@ -514,32 +508,25 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                         horizontal: 16, vertical: 10),
                                     decoration: BoxDecoration(
                                       color: isSelected
-                                          ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade50,
+                                          ? AppColors.primary
+                                          : AppColors.grey50,
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                         color: isSelected
-                                            ? const Color(0xFF6132E4)
-                                            : Colors.grey.shade300,
+                                            ? AppColors.primary
+                                            : AppColors.grey300,
                                         width: 1.5,
                                       ),
                                       boxShadow: isSelected
-                                          ? [
-                                              BoxShadow(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ]
+                                          ? [AppColors.primaryShadow]
                                           : null,
                                     ),
                                     child: Text(
                                       name,
                                       style: TextStyle(
                                         color: isSelected
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
+                                            ? AppColors.white
+                                            : AppColors.grey700,
                                         fontWeight: isSelected
                                             ? FontWeight.w600
                                             : FontWeight.w500,
@@ -563,7 +550,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D2D2D),
+                          color: AppColors.textSecondary,
                           fontFamily: 'Inter',
                         ),
                       ),
@@ -590,19 +577,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? const Color(0xFF6132E4)
+                                        ? AppColors.primaryDark
                                         : Colors.grey.shade50,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                       color: isSelected
-                                          ? const Color(0xFF6132E4)
+                                          ? AppColors.primaryDark
                                           : Colors.grey.shade300,
                                       width: 1.5,
                                     ),
                                     boxShadow: isSelected
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFF6132E4)
+                                              color: AppColors.primaryDark
                                                   .withOpacity(0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 4),
@@ -657,7 +644,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF2D2D2D),
+                              color: AppColors.textSecondary,
                               fontFamily: 'Inter',
                             ),
                           ),
@@ -672,9 +659,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                   isPriceFilterEnabledWidgetNotifier.value =
                                       value;
                                 },
-                                activeColor: const Color(0xFF6132E4),
+                                activeColor: AppColors.primaryDark,
                                 activeTrackColor:
-                                    const Color(0xFF6132E4).withOpacity(0.3),
+                                    AppColors.primaryDark.withOpacity(0.3),
                                 inactiveThumbColor: Colors.grey.shade400,
                                 inactiveTrackColor: Colors.grey.shade200,
                               ),
@@ -702,7 +689,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                           style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w500,
-                                            color: Color(0xFF6B6B6B),
+                                            color: AppColors.textTertiary,
                                             fontFamily: 'Inter',
                                           ),
                                         ),
@@ -723,7 +710,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                                 vertical: 10,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: const Color(0xFFF8F9FA),
+                                                color: AppColors.backgroundLightest,
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 border: Border.all(
@@ -753,7 +740,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                                   prefixText: '₹ ',
                                                   prefixStyle: TextStyle(
                                                     fontWeight: FontWeight.w600,
-                                                    color: Color(0xFF6132E4),
+                                                    color: AppColors.primaryDark,
                                                   ),
                                                 ),
                                                 onChanged: (value) {
@@ -805,16 +792,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
+                                                  AppColors.primaryDark
                                                       .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
+                                                  AppColors.primaryDark
                                                       .withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
+                                                color: AppColors.primaryDark
                                                     .withOpacity(0.3),
                                               ),
                                             ),
@@ -823,7 +810,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                               style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w700,
-                                                color: Color(0xFF6132E4),
+                                                color: AppColors.primaryDark,
                                                 fontFamily: 'Inter',
                                               ),
                                             ),
@@ -845,16 +832,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
+                                                  AppColors.primaryDark
                                                       .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
+                                                  AppColors.primaryDark
                                                       .withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
+                                                color: AppColors.primaryDark
                                                     .withOpacity(0.3),
                                               ),
                                             ),
@@ -863,7 +850,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                               style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w700,
-                                                color: Color(0xFF6132E4),
+                                                color: AppColors.primaryDark,
                                                 fontFamily: 'Inter',
                                               ),
                                             ),
@@ -885,12 +872,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                                 SliderTheme(
                                           data: SliderThemeData(
                                             activeTrackColor:
-                                                const Color(0xFF6132E4),
+                                                AppColors.primaryDark,
                                             inactiveTrackColor:
                                                 Colors.grey.shade200,
-                                            thumbColor: const Color(0xFF6132E4),
+                                            thumbColor: AppColors.primaryDark,
                                             overlayColor:
-                                                const Color(0xFF6132E4)
+                                                AppColors.primaryDark
                                                     .withOpacity(0.2),
                                             trackHeight: 4,
                                             thumbShape:
@@ -923,7 +910,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xFF2D2D2D),
+                                        color: AppColors.textSecondary,
                                         fontFamily: 'Inter',
                                       ),
                                     ),
@@ -969,7 +956,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: AppColors.backgroundLightest,
                   borderRadius: const BorderRadius.vertical(
                     bottom: Radius.circular(20),
                   ),
@@ -1035,10 +1022,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          backgroundColor: const Color(0xFF6132E4),
+                          backgroundColor: AppColors.primaryDark,
                           foregroundColor: Colors.white,
                           elevation: 0,
-                          shadowColor: const Color(0xFF6132E4).withOpacity(0.3),
+                          shadowColor: AppColors.primaryDark.withOpacity(0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -1186,11 +1173,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
+                    isSelected ? AppColors.primaryDark : Colors.grey.shade50,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: isSelected
-                      ? const Color(0xFF6132E4)
+                      ? AppColors.primaryDark
                       : Colors.grey.shade300,
                 ),
               ),
@@ -1363,7 +1350,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         await _handleBackNavigation();
       },
       child: Container(
-        color: const Color(0xFFF5F6FA),
+        color: AppColors.backgroundLight,
         height: screenHeight,
         child: Form(
           key: _formKey,
@@ -1481,7 +1468,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildTabButtons() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F0F0),
+        color: AppColors.greyBorder,
         borderRadius: BorderRadius.circular(16),
       ),
       padding: const EdgeInsets.all(2),
@@ -1503,7 +1490,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF6132E4) : Colors.transparent,
+          color: isSelected ? AppColors.primaryDark : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Text(
@@ -1583,7 +1570,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 content: Text(
                                   'Customization saved: ${measurements.length} measurements',
                                 ),
-                                backgroundColor: const Color(0xFF27AE60),
+                                backgroundColor: const AppColors.greenSuccess,
                               ),
                             );
                           },
@@ -1773,7 +1760,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+            colorScheme: const ColorScheme.light(primary: AppColors.primaryDark),
           ),
           child: child!,
         );
@@ -1803,7 +1790,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+            colorScheme: const ColorScheme.light(primary: AppColors.primaryDark),
           ),
           child: child!,
         );
@@ -1928,7 +1915,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 setState(() => _bookingStep = 1);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
+                backgroundColor: AppColors.primaryDark,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 elevation: 0,
@@ -2046,11 +2033,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4).withOpacity(0.1),
+                    color: AppColors.primaryDark.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child:
-                      const Icon(Icons.add, size: 16, color: Color(0xFF6132E4)),
+                      const Icon(Icons.add, size: 16, color: AppColors.primaryDark),
                 ),
               ),
             ],
@@ -2121,7 +2108,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
+                backgroundColor: AppColors.primaryDark,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
@@ -2146,7 +2133,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A1A),
+            color: AppColors.textPrimary,
           ),
         ),
         if (optional) ...[
@@ -2181,7 +2168,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFFF6F4FF), // Light purple bg
+            color: AppColors.primaryLightShade, // Light purple bg
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: const Color(0xFFEBE5FF)),
           ),
@@ -2193,13 +2180,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const Text('Product total',
                       style: TextStyle(
                           fontSize: 13,
-                          color: Color(0xFF2D2D2D),
+                          color: AppColors.textSecondary,
                           fontWeight: FontWeight.w500)),
                   Text('₹${productTotal.toCurrency()}',
                       style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A1A1A))),
+                          color: AppColors.textPrimary)),
                 ],
               ),
               if (additional > 0) ...[
@@ -2210,19 +2197,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     const Text('Additional charges',
                         style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF2D2D2D),
+                            color: AppColors.textSecondary,
                             fontWeight: FontWeight.w500)),
                     Text('₹${additional.toStringAsFixed(0)}',
                         style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF1A1A1A))),
+                            color: AppColors.textPrimary)),
                   ],
                 ),
               ],
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, color: Color(0xFFE0D9FF)),
+                child: Divider(height: 1, color: AppColors.primaryBorder),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2230,13 +2217,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const Text('Paid',
                       style: TextStyle(
                           fontSize: 13,
-                          color: Color(0xFF2D2D2D),
+                          color: AppColors.textSecondary,
                           fontWeight: FontWeight.w500)),
                   Text('₹${advance.toStringAsFixed(0)}',
                       style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF27AE60))),
+                          color: AppColors.greenSuccess)),
                 ],
               ),
               const SizedBox(height: 8),
@@ -2246,13 +2233,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const Text('Total payable',
                       style: TextStyle(
                           fontSize: 15,
-                          color: Color(0xFF1A1A1A),
+                          color: AppColors.textPrimary,
                           fontWeight: FontWeight.w600)),
                   Text('₹${totalPayable.toStringAsFixed(0)}',
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFFEB5757))),
+                          color: AppColors.redError)),
                 ],
               ),
             ],
@@ -2362,7 +2349,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           hintStyle: const TextStyle(
                             fontSize: 13,
                             fontFamily: 'Inter',
-                            color: Color(0xFF8C8C8C),
+                            color: AppColors.textQuaternary,
                           ),
                           prefixIcon: const Icon(Icons.search, size: 18),
                           border: InputBorder.none,
@@ -2391,7 +2378,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     child: IconButton(
                       onPressed: _showProductFilterBottomSheet,
                       icon: const Icon(Icons.tune, size: 20),
-                      color: const Color(0xFF6132E4),
+                      color: AppColors.primaryDark,
                       tooltip: 'Filter products',
                     ),
                   ),
@@ -2682,7 +2669,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF6132E4),
+                      color: AppColors.primaryDark,
                     ),
                   ),
                 ],
@@ -2722,7 +2709,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4),
+                    color: AppColors.primaryDark,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
@@ -3019,7 +3006,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       width: 6,
                       height: 6,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF27AE60), // Green dot
+                        color: AppColors.greenSuccess, // Green dot
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -3029,7 +3016,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       style: const TextStyle(
                         fontSize: 12, // Slightly larger font 12
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF27AE60),
+                        color: AppColors.greenSuccess,
                       ),
                     ),
                   ],
@@ -3088,7 +3075,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(4),
                             borderSide:
-                                const BorderSide(color: Color(0xFF6132E4)),
+                                const BorderSide(color: AppColors.primaryDark),
                           ),
                         ),
                         onSubmitted: (_) => _saveEditingPrice(product),
@@ -3110,7 +3097,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         ),
                         const SizedBox(width: 8),
                         Icon(Icons.edit_outlined,
-                            size: 16, color: const Color(0xFF6132E4)),
+                            size: 16, color: AppColors.primaryDark),
                       ],
                     ),
                   ),
@@ -3154,7 +3141,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           color: const Color(0xFFF3F0FF), // Light purple bg
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Icon(icon, size: 14, color: const Color(0xFF6132E4)),
+        child: Icon(icon, size: 14, color: AppColors.primaryDark),
       ),
     );
   }
@@ -3295,7 +3282,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
+              backgroundColor: AppColors.primaryDark,
             ),
             child: const Text('Update', style: TextStyle(color: Colors.white)),
           ),
@@ -3425,11 +3412,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               child: Container(
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6132E4).withOpacity(0.1),
+                  color: AppColors.primaryDark.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child:
-                    const Icon(Icons.add, size: 14, color: Color(0xFF6132E4)),
+                    const Icon(Icons.add, size: 14, color: AppColors.primaryDark),
               ),
             ),
           ],
@@ -3551,11 +3538,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF6132E4).withOpacity(0.1)
+              ? AppColors.primaryDark.withOpacity(0.1)
               : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+            color: isSelected ? AppColors.primaryDark : Colors.grey.shade300,
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -3565,7 +3552,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             Icon(icon,
                 size: 14,
                 color: isSelected
-                    ? const Color(0xFF6132E4)
+                    ? AppColors.primaryDark
                     : Colors.grey.shade600),
             const SizedBox(width: 4),
             Text(
@@ -3575,7 +3562,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 fontFamily: 'Inter',
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+                    isSelected ? AppColors.primaryDark : Colors.grey.shade700,
               ),
             ),
           ],
@@ -3711,9 +3698,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF6132E4),
+                    foregroundColor: AppColors.primaryDark,
                     side: const BorderSide(
-                      color: Color(0xFF6132E4),
+                      color: AppColors.primaryDark,
                       width: 1.5,
                     ),
                     shape: RoundedRectangleBorder(
@@ -3741,7 +3728,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             child: ElevatedButton(
               onPressed: _handleConfirmBooking,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
+                backgroundColor: AppColors.primaryDark,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -3914,7 +3901,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
+              backgroundColor: AppColors.primaryDark,
             ),
             child: const Text(
               'Add',
@@ -4595,7 +4582,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               child: ElevatedButton(
                 onPressed: _validateAndContinue,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6132E4),
+                  backgroundColor: AppColors.primaryDark,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   elevation: 0,
@@ -4717,11 +4704,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6132E4).withOpacity(0.1),
+                            color: AppColors.primaryDark.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(Icons.add,
-                              size: 16, color: Color(0xFF6132E4)),
+                              size: 16, color: AppColors.primaryDark),
                         ),
                       ),
                     ],
@@ -4852,7 +4839,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF27AE60))),
+                          color: AppColors.greenSuccess)),
                 ],
               ),
               const SizedBox(height: 12),
@@ -4866,7 +4853,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFFEB5757))),
+                          color: AppColors.redError)),
                 ],
               ),
             ],
@@ -5070,7 +5057,7 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
               height: 36,
               decoration: BoxDecoration(
                 color: selectedVariant != null
-                    ? const Color(0xFF6132E4)
+                    ? AppColors.primaryDark
                     : Colors.grey.shade400,
                 borderRadius: BorderRadius.circular(6),
               ),
@@ -5127,7 +5114,7 @@ class _SelectableVariantChip extends StatelessWidget {
           borderRadius: isShortText ? null : BorderRadius.circular(8),
           color: isSelected ? AppColors.purpleLight : const Color(0xFFF8F7FF),
           border: Border.all(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+            color: isSelected ? AppColors.primaryDark : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),
