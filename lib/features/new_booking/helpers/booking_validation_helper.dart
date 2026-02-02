@@ -6,11 +6,13 @@ class BookingValidationResult {
   final bool isValid;
   final List<String> errors;
   final String? firstErrorField;
+  final Map<String, String> fieldErrors;
 
   const BookingValidationResult({
     required this.isValid,
     this.errors = const [],
     this.firstErrorField,
+    this.fieldErrors = const {},
   });
 
   factory BookingValidationResult.valid() =>
@@ -19,11 +21,13 @@ class BookingValidationResult {
   factory BookingValidationResult.invalid({
     required List<String> errors,
     String? firstErrorField,
+    Map<String, String> fieldErrors = const {},
   }) =>
       BookingValidationResult(
         isValid: false,
         errors: errors,
         firstErrorField: firstErrorField,
+        fieldErrors: fieldErrors,
       );
 }
 
@@ -77,9 +81,24 @@ class BookingValidationHelper {
       return BookingValidationResult.valid();
     }
 
+    // Construct field errors map
+    final fieldErrors = <String, String>{};
+    if (clientName.trim().isEmpty) {
+      fieldErrors['clientName'] = 'Name is required';
+    }
+    if (phone1.trim().isEmpty) {
+      fieldErrors['phone1'] = 'Phone is required';
+    } else if (!_isValidPhoneNumber(phone1)) {
+      fieldErrors['phone1'] = 'Invalid phone';
+    }
+    if (selectedStaffId == null && staffName.trim().isEmpty) {
+      fieldErrors['staff'] = 'Staff is required';
+    }
+
     return BookingValidationResult.invalid(
       errors: errors,
       firstErrorField: firstErrorField,
+      fieldErrors: fieldErrors,
     );
   }
 

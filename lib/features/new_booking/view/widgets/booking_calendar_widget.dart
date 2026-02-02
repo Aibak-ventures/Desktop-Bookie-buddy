@@ -4,12 +4,12 @@ import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookingCalendarWidget extends StatefulWidget {
@@ -65,7 +65,12 @@ class BookingCalendarWidget extends StatefulWidget {
     required this.onClientSelected,
     required this.onCoolingPeriodTimeChanged,
     this.isSalesMode = false,
+    this.clientNameError,
+    this.staffNameError,
   });
+
+  final String? clientNameError;
+  final String? staffNameError;
 
   @override
   State<BookingCalendarWidget> createState() => _BookingCalendarWidgetState();
@@ -285,127 +290,19 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
   }
 
   Widget _buildClientSearchField() {
-    return BlocBuilder<ClientCubit, ClientState>(
-      builder: (context, state) {
-        return TypeAheadField<ClientModel>(
-          controller: widget.clientNameController,
-          debounceDuration: const Duration(milliseconds: 200),
-          hideOnEmpty: false,
-          hideWithKeyboard: false,
-          hideOnUnfocus: true,
-          hideOnSelect: true,
-          builder: (context, controller, focusNode) => TextFormField(
-            focusNode:
-                focusNode, // TypeAhead uses its own focus node for the text field
-            controller: controller,
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) => _phone1Focus.requestFocus(),
-            validator: AppInputValidators.name,
-            style: const TextStyle(fontSize: 13),
-            decoration: InputDecoration(
-              hintText: 'Search client',
-              hintStyle: const TextStyle(
-                  fontSize: 13, color: Color(0xFF8C8C8C), fontFamily: 'Inter'),
-              prefixIcon: const Icon(Icons.search, size: 16),
-              suffixIcon: ValueListenableBuilder(
-                valueListenable: controller,
-                builder: (_, value, __) => value.text.isEmpty
-                    ? const SizedBox.shrink()
-                    : IconButton(
-                        icon: const Icon(Icons.clear, size: 14),
-                        onPressed: () {
-                          controller.clear();
-                          context.read<ClientCubit>().clearSelected();
-                        },
-                      ),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-              isDense: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    const BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    const BorderSide(color: AppColors.purple, width: 1.5),
-              ),
-            ),
-          ),
-          suggestionsCallback: (query) async {
-            if (query.isEmpty) return [];
-            return await context.read<ClientCubit>().searchClient(query);
-          },
-          itemBuilder: (context, client) => ListTile(
-            dense: true,
-            visualDensity: const VisualDensity(vertical: -3),
-            title: Text(client.name, style: const TextStyle(fontSize: 13)),
-            subtitle: Text(
-              client.phone1.toString(),
-              style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-            ),
-          ),
-          onSelected: (client) {
-            widget.clientNameController.text = client.name;
-            widget.clientPhone1Controller.text = client.phone1.toString();
-            widget.clientPhone2Controller.text =
-                client.phone2?.toString() ?? '';
-            // Auto-fill address if available
-            // if (client.address != null && client.a!.isNotEmpty) {
-            //   widget.clientAddressController.text = client.address!;
-            // }
-            widget.onClientSelected(client.id);
-            context.read<ClientCubit>().selectClient(client);
-          },
-          decorationBuilder: (context, child) => DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: 8.radiusBorder,
-              border: BoxBorder.all(color: AppColors.grey300),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: child,
-          ),
-          emptyBuilder: (_) => const SizedBox(
-            height: 70,
-            child: Center(
-              child: Text('No clients found', style: TextStyle(fontSize: 11)),
-            ),
-          ),
-          errorBuilder: (_, error) => SizedBox(
-            height: 70,
-            child: Center(
-              child: Text(
-                error.toString(),
-                style: const TextStyle(fontSize: 11, color: Colors.red),
-              ),
-            ),
-          ),
-          loadingBuilder: (_) => const Padding(
-            padding: EdgeInsets.all(8),
-            child: Center(
-              child: SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-          ),
-        );
+    return ClientSearchNameField(
+      nameController: widget.clientNameController,
+      onClear: () {
+        widget.clientNameController.clear();
+        context.read<ClientCubit>().clearSelected();
       },
+      onClientSelected: (client) {
+        widget.clientNameController.text = client.name;
+        widget.clientPhone1Controller.text = client.phone1.toString();
+        widget.clientPhone2Controller.text = client.phone2?.toString() ?? '';
+        widget.onClientSelected(client.id);
+      },
+      errorText: widget.clientNameError,
     );
   }
 
@@ -468,6 +365,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             widget.onStaffSelected(state.selectedStaff?.id),
         child: StaffSearchNameField(
           nameController: widget.staffNameController,
+          errorText: widget.staffNameError,
         ),
       ),
     );

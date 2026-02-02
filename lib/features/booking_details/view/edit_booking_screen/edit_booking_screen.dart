@@ -1,23 +1,14 @@
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/controller/edit_booking_form_state_controller.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_additional_charges_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_additional_details_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_button.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_client_details_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_date_section.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_date_selection_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_edit_product_list_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_location_details_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_section_column.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_time_section.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_right_panel.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EditBookingScreen extends StatefulWidget {
   final BookingDetailsModel booking;
@@ -31,14 +22,57 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
   // Unified controller managing all form state
   final _formController = EditBookingFormStateController();
 
+  // State for date/time
+  late DateTime pickupDate;
+  late DateTime returnDate;
+  DateTime? coolingPeriodDate;
+  TimeOfDay? pickupTime;
+  TimeOfDay? returnTime;
+  TimeOfDay? coolingPeriodTime;
+
+  // Track if it's a sales booking
+  bool isSalesMode = false;
+
+  // Selected products notifier
+  late ValueNotifier<List<ProductSelectedModel>> selectedProductsNotifier;
+
+  // Additional charges notifier
+  late ValueNotifier<List<AdditionalChargesModel>> additionalChargesNotifier;
+
+  // Payment controllers
+  final advanceAmountController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _formController.setInitialValues(context: context, booking: widget.booking);
+
+    // Initialize dates from booking (convert String to DateTime)
+    pickupDate = widget.booking.pickupDate?.parseToDateTime() ?? DateTime.now();
+    returnDate = widget.booking.returnDate.parseToDateTime();
+    coolingPeriodDate = widget.booking.coolingPeriodDate?.parseToDateTime();
+
+    // Extract time from dates
+    pickupTime = widget.booking.pickupDate?.parseToDateTime().toTimeOfDay;
+    returnTime = widget.booking.returnDate.parseToDateTime().toTimeOfDay;
+    coolingPeriodTime =
+        widget.booking.coolingPeriodDate?.parseToDateTime().toTimeOfDay;
+
+    // Determine if it's a sales booking (typically sales don't have pickup dates)
+    isSalesMode =
+        widget.booking.pickupDate == null || widget.booking.pickupDate!.isEmpty;
+
+    // Initialize notifiers
+    selectedProductsNotifier = _formController.selectedProductsNotifier;
+    additionalChargesNotifier = _formController.additionalChargesNotifier;
+
+    // Initialize advance amount
+    advanceAmountController.text = widget.booking.paidAmount.toString();
   }
 
   @override
   void dispose() {
+    advanceAmountController.dispose();
     _formController.dispose();
     super.dispose();
   }
@@ -52,353 +86,155 @@ class _EditBookingScreenState extends State<EditBookingScreen> {
     if (_formController.hasUnsavedChanges(widget.booking)) {
       final shouldDiscard = await showDiscardDialog(context);
       if (shouldDiscard ?? false) {
-        Navigator.pop(context, result); // allow pop
+        if (mounted) Navigator.pop(context, result);
       }
-      // else do nothing – cancel pop
     } else {
-      Navigator.pop(context, result); // allow pop
+      if (mounted) Navigator.pop(context, result);
     }
   }
 
   @override
-  Widget build(BuildContext context) => PopScope(
-        canPop: false,
-        onPopInvokedWithResult: handlePop,
-        child: Scaffold(
-          backgroundColor: context.isDesktop ? const Color(0xFFF5F7FA) : null,
-          appBar: AppBar(
-            title: const Text('Edit Booking'),
-            backgroundColor: context.isDesktop ? Colors.white : null,
-            elevation: context.isDesktop ? 1 : null,
-          ),
-          body: context.isDesktop ? _buildWebLayout() : _buildMobileLayout(),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
 
-  Widget _buildWebLayout() {
-    return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 1400),
-          margin: const EdgeInsets.all(32),
-          child: Form(
-            key: _formController.formKey,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Main Form Content (70%)
-                Expanded(
-                  flex: 7,
-                  child: Container(
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Booking Information',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-
-                        // Two-column grid for form sections
-                        _buildWebFormGrid(),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 24),
-
-                // Action Panel (30%)
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Actions',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Save/Update Button
-                        EditBookingButton(
-                          formController: _formController,
-                          booking: widget.booking,
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Cancel Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.pop(context),
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: Colors.grey.shade400),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(
-                                color: Colors.grey.shade700,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWebFormGrid() {
-    return Column(
-      children: [
-        // Row 1: Staff Details & Client Details
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: EditBookingSectionColumn(
-                title: 'Staff Details',
-                child: StaffSearchNameField(
-                  nameController: _formController.staffNameController,
-                ),
-              ),
-            ),
-            const SizedBox(width: 24),
-            Expanded(
-              child: EditBookingClientDetailsSection(
-                clientNameController: _formController.clientNameController,
-                clientPhone1Controller: _formController.clientPhone1Controller,
-                clientPhone2Controller: _formController.clientPhone2Controller,
-                clientAddressController:
-                    _formController.clientAddressController,
-                isClientSearchEnabledNotifier:
-                    _formController.isClientSearchEnabledNotifier,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 32),
-
-        // Row 2: Location Details (if vehicle) - Full Width
-        if (widget.booking.bookedItems.firstOrNull?.mainServiceType.isVehicle ??
-            false)
-          Column(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: handlePop,
+      child: Container(
+        color: const Color(0xFFF5F6FA),
+        height: screenHeight,
+        child: Form(
+          key: _formController.formKey,
+          child: Column(
             children: [
-              EditBookingLocationDetailsSection(
-                locationStartController:
-                    _formController.locationStartController,
-                locationFromController: _formController.locationFromController,
-                locationToController: _formController.locationToController,
+              // Compact Header
+              _buildCompactHeader(),
+              // Main content
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  child: _buildMainContent(),
+                ),
               ),
-              const SizedBox(height: 32),
             ],
           ),
-
-        // Row 3: Product Details - Full Width
-        EditBookingEditProductListSection(
-          selectedProductsNotifier: _formController.selectedProductsNotifier,
-          formController: _formController,
-          pickUpdDateController: _formController.pickUpdDateController,
-          returnDateController: _formController.returnDateController,
-          coolingPeriodDateController:
-              _formController.coolingPeriodDateController,
         ),
-
-        const SizedBox(height: 32),
-
-        // Row 4: Notes & Time Section
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: EditBookingSectionColumn(
-                title: 'Notes',
-                child: CustomTextField(
-                  controller: _formController.descriptionController,
-                  validator: (value) => AppInputValidators.isEmpty(value)
-                      ? null
-                      : AppInputValidators.description(value),
-                  hintText: 'Enter Notes',
-                  maxLines: 4,
-                ),
-              ),
-            ),
-            const SizedBox(width: 24),
-            Expanded(
-              child: EditBookingTimeSection(formController: _formController),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 32),
-
-        // Row 5: Date Section - Full Width
-        EditBookingDateSection(formController: _formController),
-
-        const SizedBox(height: 32),
-
-        // Row 6: Additional Details & Additional Charges
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: EditBookingAdditionalDetailsSection(
-                securityAmountController:
-                    _formController.securityAmountController,
-                discountAmountController:
-                    _formController.discountAmountController,
-              ),
-            ),
-            const SizedBox(width: 24),
-            Expanded(
-              child: EditBookingAdditionalChargesSection(
-                additionalChargesNotifier:
-                    _formController.additionalChargesNotifier,
-              ),
-            ),
-          ],
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildMobileLayout() {
-    return SingleChildScrollView(
-      padding: 16.padding,
-      child: Form(
-        key: _formController.formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 30.w,
-          children: [
-            // staff details
-            EditBookingSectionColumn(
-              title: 'Staff Details',
-              child: StaffSearchNameField(
-                nameController: _formController.staffNameController,
-              ),
-            ),
-
-            // client details
-            EditBookingClientDetailsSection(
-              clientNameController: _formController.clientNameController,
-              clientPhone1Controller: _formController.clientPhone1Controller,
-              clientPhone2Controller: _formController.clientPhone2Controller,
-              clientAddressController: _formController.clientAddressController,
-              isClientSearchEnabledNotifier:
-                  _formController.isClientSearchEnabledNotifier,
-            ),
-
-            // location details
-            // Only show if it's a vehicle
-            if (widget.booking.bookedItems.firstOrNull?.mainServiceType
-                    .isVehicle ??
-                false)
-              EditBookingLocationDetailsSection(
-                locationStartController:
-                    _formController.locationStartController,
-                locationFromController: _formController.locationFromController,
-                locationToController: _formController.locationToController,
-              ),
-
-            // product details
-            EditBookingEditProductListSection(
-              selectedProductsNotifier:
-                  _formController.selectedProductsNotifier,
-              formController: _formController,
-              pickUpdDateController: _formController.pickUpdDateController,
-              returnDateController: _formController.returnDateController,
-              coolingPeriodDateController:
-                  _formController.coolingPeriodDateController,
-            ),
-
-            // product notes (description)
-            EditBookingSectionColumn(
-              title: 'Notes',
-              child: CustomTextField(
-                controller: _formController.descriptionController,
-                validator: (value) => AppInputValidators.isEmpty(value)
-                    ? null
-                    : AppInputValidators.description(value),
-                hintText: 'Enter Notes',
-              ),
-            ),
-            //Times
-            EditBookingTimeSection(formController: _formController),
-
-            // dates
-            EditBookingDateSection(formController: _formController),
-
-            // additional details
-            EditBookingAdditionalDetailsSection(
-              securityAmountController:
-                  _formController.securityAmountController,
-              discountAmountController:
-                  _formController.discountAmountController,
-            ),
-
-            // additional charges
-            EditBookingAdditionalChargesSection(
-              additionalChargesNotifier:
-                  _formController.additionalChargesNotifier,
-            ),
-
-            // save button
-            EditBookingButton(
-              formController: _formController,
-              booking: widget.booking,
-            ),
-            0.01.heightCustom,
-          ],
-        ),
+  Widget _buildCompactHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
+      child: Row(
+        children: [
+          // Back button
+          InkWell(
+            onTap: () => handlePop(false, null),
+            borderRadius: BorderRadius.circular(4),
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.arrow_back_ios,
+                      size: 14, color: Colors.grey.shade600),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Back',
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          // Title
+          Text(
+            isSalesMode ? 'Edit Sale' : 'Edit Booking',
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMainContent() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Left Side: Dates + Products
+        Expanded(
+          flex: 7,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Date Selection Section
+              EditBookingDateSelectionSection(
+                pickupDate: pickupDate,
+                returnDate: returnDate,
+                coolingPeriodDate: coolingPeriodDate,
+                pickupTime: pickupTime,
+                returnTime: returnTime,
+                coolingPeriodTime: coolingPeriodTime,
+                onPickupDateChanged: (d) => setState(() => pickupDate = d),
+                onReturnDateChanged: (d) => setState(() => returnDate = d),
+                onCoolingPeriodDateChanged: (d) =>
+                    setState(() => coolingPeriodDate = d),
+                onPickupTimeChanged: (t) => setState(() => pickupTime = t),
+                onReturnTimeChanged: (t) => setState(() => returnTime = t),
+                onCoolingPeriodTimeChanged: (t) =>
+                    setState(() => coolingPeriodTime = t),
+                isSalesMode: isSalesMode,
+              ),
+              const SizedBox(height: 16),
+
+              // Product List Section
+              Expanded(
+                child: EditBookingEditProductListSection(
+                  selectedProductsNotifier: selectedProductsNotifier,
+                  formController: _formController,
+                  pickUpdDateController: _formController.pickUpdDateController,
+                  returnDateController: _formController.returnDateController,
+                  coolingPeriodDateController:
+                      _formController.coolingPeriodDateController,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(width: 16),
+
+        // Right panel: Staff, Client, Summary
+        SizedBox(
+          width: 340,
+          child: EditBookingRightPanel(
+            formController: _formController,
+            booking: widget.booking,
+            selectedProductsNotifier: selectedProductsNotifier,
+            additionalChargesNotifier: additionalChargesNotifier,
+            advanceAmountController: advanceAmountController,
+            discountAmountController: _formController.discountAmountController,
+            securityAmountController: _formController.securityAmountController,
+          ),
+        ),
+      ],
     );
   }
 }

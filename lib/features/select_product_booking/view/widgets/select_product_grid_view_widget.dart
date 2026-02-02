@@ -52,8 +52,8 @@ class SelectProductGridViewWidget extends StatelessWidget {
       crossAxisCount = 3;
       aspectRatio = 0.7;
     } else if (context.isDesktop) {
-      crossAxisCount = 5; // Consistent with grid delegate below
-      aspectRatio = 0.8;
+      crossAxisCount = 4; // Reduced from 5 for wider cards
+      aspectRatio = 0.85;
     }
 
     final cubit = context.read<SelectedProductsCubit>();
@@ -66,7 +66,7 @@ class SelectProductGridViewWidget extends StatelessWidget {
             padding: EdgeInsets.all(gridPadding),
             itemCount: 16,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
+              crossAxisCount: 4,
               crossAxisSpacing: gridSpacing,
               mainAxisSpacing: gridSpacing,
               childAspectRatio: aspectRatio,
@@ -129,7 +129,7 @@ class SelectProductGridViewWidget extends StatelessWidget {
                         padding: EdgeInsets.all(gridPadding),
                         itemCount: products.length + 1,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
+                          crossAxisCount: 4,
                           crossAxisSpacing: gridSpacing,
                           mainAxisSpacing: gridSpacing,
                           childAspectRatio: aspectRatio,

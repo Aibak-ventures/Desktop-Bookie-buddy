@@ -1,7 +1,5 @@
 import 'dart:ui';
-
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
@@ -9,7 +7,6 @@ import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/add_booking_date_selecting_screen.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_bookings_desktop_screen.dart';
@@ -138,8 +135,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       onEnter: (_) => setState(() => isSidebarExpanded = true),
       onExit: (_) => setState(() => isSidebarExpanded = false),
       child: AnimatedContainer(
-        duration: const Duration(
-            milliseconds: 400), // Slowed down to prevent overflow
+        duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
         width: isSidebarExpanded ? expandedWidth : collapsedWidth,
         clipBehavior: Clip.hardEdge,
@@ -299,61 +295,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     );
   }
 
-  Widget _newOrderButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => context.push(const AddBookingDateSelectingScreen()),
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF6C5CE7),
-                  Color(0xFF8B7CF7),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF6C5CE7).withOpacity(0.4),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.add_circle_outline_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  "New Order",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _navItem(int index, IconData icon, String label) {
     final isActive = currentIndex == index;
     final isNewOrder = index == 0; // New Order is at index 0
@@ -458,7 +399,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       ),
     );
   }
-
   Widget _logoutButton() {
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -468,7 +408,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // Handle logout
             context.read<UserCubit>().logOut();
           },
           borderRadius: BorderRadius.circular(12),
@@ -485,33 +424,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 width: 1,
               ),
             ),
-            child: isSidebarExpanded
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.logout_rounded,
-                        size: 18,
-                        color: Colors.red.shade400,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        "Log out",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red.shade400,
-                        ),
-                      ),
-                    ],
-                  )
-                : Center(
-                    child: Icon(
-                      Icons.logout_rounded,
-                      size: 20,
-                      color: Colors.red.shade400,
-                    ),
-                  ),
           ),
         ),
       ),

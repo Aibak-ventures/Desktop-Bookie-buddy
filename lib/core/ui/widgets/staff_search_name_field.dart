@@ -9,8 +9,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class StaffSearchNameField extends StatelessWidget {
-  const StaffSearchNameField({super.key, required this.nameController});
+  const StaffSearchNameField({
+    super.key,
+    required this.nameController,
+    this.errorText,
+  });
   final TextEditingController nameController;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +50,7 @@ class StaffSearchNameField extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
+              errorText: errorText,
               hintText: 'Search or select staff',
               hintStyle: const TextStyle(
                 fontSize: 13,

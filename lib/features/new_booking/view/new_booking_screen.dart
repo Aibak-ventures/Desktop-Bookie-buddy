@@ -36,9 +36,8 @@ import 'package:bookie_buddy_web/features/select_product_booking/view/view_model
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/features/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/new_booking/helpers/booking_product_helper.dart';
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/web_toast.dart';
+
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
@@ -129,6 +128,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // Step state
   int _bookingStep = 0;
+  String? _clientNameError;
+  String? _staffNameError;
+  String? _phoneError;
   final startLocationController = TextEditingController();
   final pickupLocationController = TextEditingController();
   final destinationLocationController = TextEditingController();
@@ -139,7 +141,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final _inlinePriceFocusNode = FocusNode();
 
   // UI Constants
-  static const double _fieldSpacing = 6.0;
+  static const double _fieldSpacing = 8.0;
 
   // Focus nodes for client details navigation
   final _clientNameFocusNode = FocusNode();
@@ -301,6 +303,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Validates client details and continues to next step if valid
   void _validateAndContinue() {
+    setState(() {
+      _clientNameError = null;
+      _phoneError = null;
+      _staffNameError = null;
+    });
+
     // Get the selected staff from cubit
     final staffState = context.read<StaffSearchCubit>().state;
     final selectedStaff = staffState.selectedStaff;
@@ -320,6 +328,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       setState(() => _bookingStep = 1);
     } else {
       // Show validation errors
+      setState(() {
+        _clientNameError = validationResult.fieldErrors['clientName'];
+        _phoneError = validationResult.fieldErrors['phone1'];
+        _staffNameError = validationResult.fieldErrors['staff'];
+      });
       BookingValidationHelper.showValidationErrors(context, validationResult);
     }
   }
@@ -1916,6 +1929,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               onCoolingPeriodTimeChanged: (t) =>
                   setState(() => coolingPeriodTime = t),
               isSalesMode: selectedBookingType == BookingType.sales,
+              clientNameError: _clientNameError,
+              staffNameError: _staffNameError,
             ),
           ),
           const SizedBox(height: 16),
@@ -1924,8 +1939,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                // Validate fields if needed, then move to step 2
-                setState(() => _bookingStep = 1);
+                setState(() {
+                  _clientNameError = clientNameController.text.trim().isEmpty
+                      ? 'Client name is required'
+                      : null;
+                  _staffNameError = staffNameController.text.trim().isEmpty
+                      ? 'Staff is required'
+                      : null;
+                });
+
+                final isFormValid = _formKey.currentState?.validate() ?? false;
+                if (isFormValid &&
+                    _clientNameError == null &&
+                    _staffNameError == null) {
+                  setState(() => _bookingStep = 1);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6132E4),
@@ -2389,7 +2417,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       border: Border.all(color: Colors.grey.shade300),
                     ),
                     child: IconButton(
-                      onPressed: _showProductFilterBottomSheet,
+                      onPressed: () {
+                        _removeSearchOverlay();
+                        _showProductFilterBottomSheet();
+                      },
                       icon: const Icon(Icons.tune, size: 20),
                       color: const Color(0xFF6132E4),
                       tooltip: 'Filter products',
@@ -2409,7 +2440,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     _searchOverlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        width: MediaQuery.of(context).size.width * 0.60 - 24,
+        width: 1000,
         child: CompositedTransformFollower(
           link: _searchLayerLink,
           showWhenUnlinked: false,
@@ -4139,7 +4170,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           const SizedBox(height: 7),
           if (isSales)
             // Sales mode - single date only
-            SizedBox(width: 400,
+            SizedBox(
+              width: 400,
               child: _buildNewDateField(
                 label: 'Sale date',
                 value: pickupDate.format(),
@@ -4229,7 +4261,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w500,
                             ),
-                            items: List.generate(30, (index) {
+                            items: List.generate(10, (index) {
                               final days = index + 1;
                               return DropdownMenuItem(
                                 value: days,
@@ -4433,6 +4465,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         clientAddressController.clear();
                         selectedClientId = null;
                       },
+                      errorText: _clientNameError,
                     ),
                   ),
                   const SizedBox(height: _fieldSpacing),
@@ -4447,6 +4480,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         focusNode: _clientPhone1FocusNode,
                         nextFocusNode: _clientPhone2FocusNode,
                         enabled: !isClientSelected,
+                        errorText: _phoneError,
                       );
                     },
                   ),
@@ -4475,7 +4509,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
 
                   const SizedBox(height: _fieldSpacing),
-
+                  const SizedBox(height: 16),
                   // WhatsApp Checkbox
                   Row(
                     children: [
@@ -4507,14 +4541,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Upload documents - Only for Booking mode
                   if (selectedBookingType == BookingType.booking) ...[
-                    const Text(
-                      'Upload documents',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
                     const SizedBox(height: 8),
                     BookingDocumentUploadSection(
                       documentsNotifier: documentsNotifier,
@@ -4533,7 +4559,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: 7),
 
-                  StaffSearchNameField(nameController: staffNameController),
+                  StaffSearchNameField(
+                    nameController: staffNameController,
+                    errorText: _staffNameError,
+                  ),
 
                   const SizedBox(height: 7),
 
@@ -4759,22 +4788,39 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       );
                     },
                   ),
-
-                  const SizedBox(height: 6),
-
-                  // Summary
-                  const Text(
-                    'Summary',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  _buildSummarySection(),
+                  const SizedBox(height: 20),
                 ],
               ),
+            ),
+          ),
+
+          // Fixed Bottom Section
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Summary',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildSummarySection(),
+              ],
             ),
           ),
         ],

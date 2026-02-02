@@ -11,42 +11,67 @@ class BookingTextFieldBuilder {
     bool enabled = true,
     FocusNode? focusNode,
     FocusNode? nextFocusNode,
+    String? errorText,
   }) {
-    return Container(
-      height: 42,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-        color: enabled ? Colors.white : Colors.grey.shade100,
-      ),
-      alignment: Alignment.centerLeft,
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        enabled: enabled,
-        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-        textInputAction:
-            nextFocusNode != null ? TextInputAction.next : TextInputAction.done,
-        onEditingComplete: () {
-          if (nextFocusNode != null) {
-            nextFocusNode.requestFocus();
-          } else {
-            focusNode?.unfocus();
-          }
-        },
-        style: TextStyle(
-          fontSize: 13,
-          color: enabled ? Colors.black87 : Colors.grey.shade500,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 42,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: errorText != null
+                  ? Colors.red.shade400
+                  : Colors.grey.shade300,
+            ),
+            borderRadius: BorderRadius.circular(8),
+            color: enabled ? Colors.white : Colors.grey.shade100,
+          ),
+          alignment: Alignment.centerLeft,
+          child: TextField(
+            controller: controller,
+            focusNode: focusNode,
+            enabled: enabled,
+            keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+            textInputAction: nextFocusNode != null
+                ? TextInputAction.next
+                : TextInputAction.done,
+            onEditingComplete: () {
+              if (nextFocusNode != null) {
+                nextFocusNode.requestFocus();
+              } else {
+                focusNode?.unfocus();
+              }
+            },
+            style: TextStyle(
+              fontSize: 13,
+              color: enabled ? Colors.black87 : Colors.grey.shade500,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: hint,
+              hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+              isDense: true,
+              contentPadding: EdgeInsets.zero,
+            ),
+          ),
         ),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-        ),
-      ),
+        if (errorText != null) ...[
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Text(
+              errorText,
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.red.shade600,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 
