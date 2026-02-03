@@ -13,6 +13,7 @@ class AllBookingState with _$AllBookingState {
     String? searchQuery,
     String? status,
     StatusCountsModel? statusCounts,
+    String? actionError,
   }) = _Loaded;
   const factory AllBookingState.error(String error) = _Error;
 }

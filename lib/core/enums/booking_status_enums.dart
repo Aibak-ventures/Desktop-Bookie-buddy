@@ -45,7 +45,8 @@ enum DeliveryStatus {
   /// - "delivered"
   /// - "returned"
   /// - "cancelled"
-  static DeliveryStatus fromString(String status) {
+  static DeliveryStatus fromString(dynamic status) {
+    if (status == null) return DeliveryStatus.booked;
     switch (status.toLowerCase()) {
       case 'booked':
         return DeliveryStatus.booked;

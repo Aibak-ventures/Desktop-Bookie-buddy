@@ -14,6 +14,8 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/stock_management/view/stock_management_screen.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +57,14 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ),
         BlocProvider(
           create: (context) => AllSalesBloc(
+            repository: getIt.get<SalesRepository>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SalesDetailsDrawerCubit(),
+        ),
+        BlocProvider(
+          create: (context) => SalesDetailsBloc(
             repository: getIt.get<SalesRepository>(),
           ),
         ),
@@ -196,102 +206,94 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget _profileHeader() {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
-        final shopName = user?.shopDetails.name ?? 'Business Name';
-        final shopAddress = user?.shopDetails.place ??
-            user?.shopDetails.city ??
-            user?.shopDetails.address ??
-            'Location';
-        final shopImage = user?.shopDetails.image;
+        final userName = user?.userFullName ?? 'User';
+        // Use first letter as "spelling icon"
+        final firstLetter =
+            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
 
         return Padding(
           padding: EdgeInsets.symmetric(
             horizontal: isSidebarExpanded ? 20 : 12,
           ),
-          child: Column(
-            children: [
-              // Profile Image with border
-              Container(
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      const Color(0xFF6C5CE7),
-                      const Color(0xFF00B4DB),
-                    ],
-                  ),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: CircleAvatar(
-                    radius: isSidebarExpanded ? 38 : 22,
-                    backgroundColor: Colors.white,
-                    child: shopImage != null && shopImage.isNotEmpty
-                        ? ClipOval(
-                            child: CustomNetworkImage(
-                              imageUrl: shopImage,
-                              width: isSidebarExpanded ? 72 : 40,
-                              height: isSidebarExpanded ? 72 : 40,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Icon(
-                            Icons.store_rounded,
-                            size: isSidebarExpanded ? 36 : 20,
-                            color: const Color(0xFF6C5CE7),
-                          ),
-                  ),
-                ),
-              ),
-              if (isSidebarExpanded) const SizedBox(height: 14),
-              if (isSidebarExpanded)
-                Text(
-                  shopName,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF2D3436),
-                    letterSpacing: 0.3,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              if (isSidebarExpanded) const SizedBox(height: 4),
-              if (isSidebarExpanded)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
+          child: isSidebarExpanded
+              ? Row(
                   children: [
-                    Icon(
-                      Icons.location_on_rounded,
-                      size: 14,
-                      color: Colors.grey.shade600,
-                    ),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        shopAddress,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    _buildAvatar(firstLetter),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userName,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF2D3436),
+                              letterSpacing: 0.3,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          // Optional: Show Role or Shop Name below?
+                          // User didn't ask, but it's good context.
+                          // "we are showing the shop name and all right but that we need to change"
+                          // Maybe show Shop Name as subtitle?
+                          if (user?.shopDetails.name != null)
+                            Text(
+                              user!.shopDetails.name,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
                       ),
                     ),
                   ],
-                ),
-            ],
-          ),
+                )
+              : _buildAvatar(firstLetter),
         );
       },
+    );
+  }
+
+  Widget _buildAvatar(String letter) {
+    return Container(
+      width: isSidebarExpanded ? 48 : 40,
+      height: isSidebarExpanded ? 48 : 40,
+      padding: const EdgeInsets.all(2),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF6C5CE7),
+            Color(0xFF00B4DB),
+          ],
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 2),
+          color: Colors.white,
+        ),
+        child: Center(
+          child: Text(
+            letter,
+            style: TextStyle(
+              fontSize: isSidebarExpanded ? 20 : 16,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF6C5CE7),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -399,6 +401,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       ),
     );
   }
+
   Widget _logoutButton() {
     return Padding(
       padding: EdgeInsets.symmetric(

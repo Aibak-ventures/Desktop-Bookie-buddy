@@ -6,8 +6,10 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:flutter/services.dart';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
@@ -42,6 +44,13 @@ import 'package:bookie_buddy_web/features/new_booking/view/widgets/new_booking_a
 import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:go_router/go_router.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
+
+import 'package:bookie_buddy_web/features/sale_details/view/widgets/generate_sale_details_pdf.dart';
+import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
+// import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 
 /// Booking types enum for the tab selection
 enum BookingType { booking, sales, customWork }
@@ -4174,19 +4183,23 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         log('Sales Request: ${salesRequest.toJson()}');
 
         // Call the API to create sale
-        await repository.createSale(salesRequest.toJson());
+        final saleId = await repository.createSale(salesRequest.toJson());
 
         // Close loading dialog
         if (mounted) Navigator.of(context).pop();
 
-        // Show success message
+        // Show success message or dialog
         if (mounted) {
-          context.showSnackBar('Sale created successfully!');
-          // Navigate back or close
-          if (widget.onClose != null) {
-            widget.onClose!();
+          if (saleId != 0) {
+            _showSuccessDialog(saleId, BookingType.sales);
           } else {
-            Navigator.of(context).pop();
+            context.showSnackBar('Sale created successfully!');
+            // Navigate back or close
+            if (widget.onClose != null) {
+              widget.onClose!();
+            } else {
+              Navigator.of(context).pop();
+            }
           }
         }
       } else {
@@ -4195,19 +4208,23 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         log('Booking Request: ${bookingRequest.toJson()}');
 
         // Call the API to create booking
-        await repository.addBooking(bookingRequest);
+        final bookingId = await repository.addBooking(bookingRequest);
 
         // Close loading dialog
         if (mounted) Navigator.of(context).pop();
 
-        // Show success message
+        // Show success message or dialog
         if (mounted) {
-          context.showSnackBar('Booking created successfully!');
-          // Navigate back or close
-          if (widget.onClose != null) {
-            widget.onClose!();
+          if (bookingId != 0) {
+            _showSuccessDialog(bookingId, BookingType.booking);
           } else {
-            Navigator.of(context).pop();
+            context.showSnackBar('Booking created successfully!');
+            // Navigate back or close
+            if (widget.onClose != null) {
+              widget.onClose!();
+            } else {
+              Navigator.of(context).pop();
+            }
           }
         }
       }
@@ -4813,6 +4830,144 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showSuccessDialog(int id, BookingType type) {
+    final isSale = type == BookingType.sales;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.check_circle_rounded,
+                color: Colors.green, size: 64),
+            const SizedBox(height: 16),
+            const Text(
+              'Successful!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              isSale
+                  ? 'Sale has been successfully created.'
+                  : 'Booking has been successfully created.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop(); // Close dialog
+                      if (widget.onClose != null) {
+                        widget.onClose!();
+                      } else {
+                        Navigator.of(context).pop(); // Close screen
+                      }
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      side: BorderSide(color: Colors.grey.shade300),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text(
+                      'Close',
+                      style: TextStyle(color: Colors.grey.shade700),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        GlobalLoadingOverlay.show(context);
+                        final userShop =
+                            context.read<UserCubit>().state?.shopDetails;
+
+                        if (userShop == null) {
+                          throw 'Shop details not found';
+                        }
+
+                        if (isSale) {
+                          final repo = getIt<SalesRepository>();
+                          final sale = await repo.getSaleDetails(id);
+
+                          // Close loading before showing dialog
+                          GlobalLoadingOverlay.hide();
+
+                          if (mounted) {
+                            await GenerateSaleDetailsPdf.shareInvoice(
+                              context: context,
+                              saleDetails: sale,
+                              shopDetails: userShop,
+                            );
+                          }
+                        } else {
+                          final repo = getIt<BookingRepository>();
+                          final booking = await repo.getBooking(id);
+
+                          // Close loading before showing dialog
+                          GlobalLoadingOverlay.hide();
+
+                          if (mounted) {
+                            await GenerateBookingPdf.printInvoice(
+                              context: context,
+                              bookingDetails: booking,
+                              shopDetails: userShop,
+                            );
+                          }
+                        }
+
+                        // Close dialog and screen
+                        if (mounted) {
+                          Navigator.of(dialogContext).pop();
+                          if (widget.onClose != null) {
+                            widget.onClose!();
+                          } else {
+                            Navigator.of(context).pop();
+                          }
+                        }
+                      } catch (e) {
+                        GlobalLoadingOverlay.hide();
+                        log('Error generating PDF: $e');
+                        if (mounted) {
+                          context.showSnackBar('Failed to generate invoice: $e',
+                              isError: true);
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6132E4),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text(
+                      isSale ? 'View Sale' : 'View Invoice',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

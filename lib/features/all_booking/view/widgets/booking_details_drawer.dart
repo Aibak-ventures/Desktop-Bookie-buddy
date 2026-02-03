@@ -3,7 +3,9 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
@@ -11,6 +13,8 @@ import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_scre
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -188,7 +192,8 @@ class BookingDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDeliveryStatus(BuildContext context, BookingDetailsModel booking) {
+  Widget _buildDeliveryStatus(
+      BuildContext context, BookingDetailsModel booking) {
     final status = booking.deliveryStatus ?? DeliveryStatus.booked;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -593,7 +598,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                   await launchUrl(uri);
                 }
               },
-              child: Icon(Icons.message, size: 18, color: Colors.green.shade600),
+              child:
+                  Icon(Icons.message, size: 18, color: Colors.green.shade600),
             ),
           ],
         ),
@@ -647,9 +653,7 @@ class BookingDetailsDrawer extends StatelessWidget {
               valueColor: Colors.green.shade600, fontSize: 14),
           const SizedBox(height: 8),
           _buildPaymentRow('Balance', '₹$balance',
-              valueColor: Colors.red.shade600,
-              isBold: true,
-              fontSize: 15),
+              valueColor: Colors.red.shade600, isBold: true, fontSize: 15),
         ],
       ),
     );
@@ -698,7 +702,8 @@ class BookingDetailsDrawer extends StatelessWidget {
         dateLabel = dateStr.formatToUiDate();
       }
 
-      final time = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} ${date.hour >= 12 ? 'pm' : 'am'}';
+      final time =
+          '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} ${date.hour >= 12 ? 'pm' : 'am'}';
       return '$dateLabel, $time';
     } catch (e) {
       return dateStr;
@@ -718,67 +723,154 @@ class BookingDetailsDrawer extends StatelessWidget {
       BuildContext context, BookingDetailsModel booking) {
     return Row(
       children: [
-        // Cancel/Delete button
-        Expanded(
-          child: OutlinedButton(
-            onPressed: () {
-              // TODO: Implement cancel/delete functionality
-              context.showSnackBar('Cancel functionality coming soon');
-            },
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: Colors.grey.shade300, width: 1.5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+        // Delete button
+        _buildIconActionButton(
+          context,
+          icon: Icons.delete_outline,
+          color: Colors.red,
+          onTap: () async {
+            final confirm = await showDialog<bool>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Delete Booking'),
+                content: const Text(
+                    'Are you sure you want to delete this booking? This action cannot be undone.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
+                    child: const Text('Delete'),
+                  ),
+                ],
               ),
-            ),
-            child: Text(
-              'Cancel',
-              style: TextStyle(
-                color: Colors.grey.shade700,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-            ),
-          ),
+            );
+
+            if (confirm == true && context.mounted) {
+              context.read<AllBookingBloc>().add(
+                    AllBookingEvent.deleteBooking(bookingId: booking.id),
+                  );
+              context.read<BookingDetailsDrawerCubit>().closeDrawer();
+            }
+          },
         ),
         const SizedBox(width: 12),
         // Edit button
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () async {
-              final result = await showEditBookingModal(
-                context: context,
-                booking: booking,
-              );
+        _buildIconActionButton(
+          context,
+          icon: Icons.edit_outlined,
+          color: AppColors.purple,
+          onTap: () async {
+            final result = await showEditBookingModal(
+              context: context,
+              booking: booking,
+            );
 
-              // Refresh booking details after edit
-              if (context.mounted) {
-                context.read<BookingDetailsBloc>().add(
-                      BookingDetailsEvent.fetchBookingDetails(booking.id),
-                    );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.purple
-              ,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            if (context.mounted) {
+              context.read<BookingDetailsBloc>().add(
+                    BookingDetailsEvent.fetchBookingDetails(booking.id),
+                  );
+            }
+          },
+        ),
+        const SizedBox(width: 12),
+        // Download Invoice
+        _buildIconActionButton(
+          context,
+          icon: Icons.download_outlined,
+          color: AppColors.purple,
+          onTap: () async {
+            final user = context.read<UserCubit>().state;
+            final shop = user?.shopDetails;
+
+            if (shop == null) {
+              context.showSnackBar('Shop info not found', isError: true);
+              return;
+            }
+
+            // Generate Booking PDF
+            await GenerateBookingPdf.shareInvoice(
+              context: context,
+              bookingDetails: booking,
+              shopDetails: shop,
+            );
+          },
+        ),
+        const Spacer(),
+        // Mark as Completed button
+        ElevatedButton(
+          onPressed: () async {
+            final confirm = await showDialog<bool>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Mark as Completed'),
+                content: const Text(
+                    'Are you sure you want to mark this booking as completed?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('Confirm'),
+                  ),
+                ],
               ),
-              elevation: 0,
+            );
+
+            if (confirm == true && context.mounted) {
+              context.read<AllBookingBloc>().add(
+                    AllBookingEvent.markAsCompleted(
+                      bookingId: booking.id,
+                      currentStatus: booking.deliveryStatus,
+                    ),
+                  );
+              context.read<BookingDetailsDrawerCubit>().closeDrawer();
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.purple,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: const Text(
-              'Edit Booking',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
+            elevation: 0,
+          ),
+          child: const Text(
+            'Mark as Completed',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildIconActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Icon(icon, color: color, size: 24),
+      ),
     );
   }
 }

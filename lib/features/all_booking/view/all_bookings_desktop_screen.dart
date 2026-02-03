@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
@@ -7,8 +8,16 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_bookin
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/booking_date_filter.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/features/all_booking/view/widgets/sales_details_drawer.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
   const AllBookingsDesktopScreen({super.key});
@@ -22,6 +31,9 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   int _activeActionTab = 0; // 0: Booking, 1: Sales, 2: Custom work
   String _activeStatusTab = 'upcoming'; // API status value
   final TextEditingController _searchController = TextEditingController();
+  final ValueNotifier<DateFilterModel> _dateFilterNotifier =
+      ValueNotifier(const DateFilterModel());
+  Timer? _debounce;
 
   final List<String> _actionTabs = ['Booking', 'Sales'];
 
@@ -44,12 +56,16 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _dateFilterNotifier.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
   void _onSearchChanged() {
-    // Debounce search - you can add a timer here if needed
-    _loadData();
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _loadData();
+    });
   }
 
   void _loadData() {
@@ -64,12 +80,15 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           );
     } else {
       // Load booking data
+      // Load booking data
       context.read<AllBookingBloc>().add(
             AllBookingEvent.loadBookings(
               status: _activeStatusTab,
               searchQuery: _searchController.text.trim().isEmpty
                   ? null
                   : _searchController.text.trim(),
+              startDate: _dateFilterNotifier.value.startDate?.format(),
+              endDate: _dateFilterNotifier.value.endDate?.format(),
             ),
           );
     }
@@ -87,25 +106,38 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // Main content
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTopHeader(),
-                const SizedBox(height: 24),
-                _buildFilterRow(),
-                const SizedBox(height: 16),
-                Expanded(child: _buildMainContent()),
-              ],
+      body: BlocListener<AllBookingBloc, AllBookingState>(
+        listener: (context, state) {
+          state.mapOrNull(
+            loaded: (s) {
+              if (s.actionError != null) {
+                // Show SnackBar
+                context.showSnackBar(s.actionError!, isError: true);
+              }
+            },
+          );
+        },
+        child: Stack(
+          children: [
+            // Main content
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTopHeader(),
+                  const SizedBox(height: 24),
+                  _buildFilterRow(),
+                  const SizedBox(height: 16),
+                  Expanded(child: _buildMainContent()),
+                ],
+              ),
             ),
-          ),
-          // Drawer overlay
-          const BookingDetailsDrawer(),
-        ],
+            // Drawer overlay
+            const BookingDetailsDrawer(),
+            const SalesDetailsDrawer(),
+          ],
+        ),
       ),
     );
   }
@@ -342,9 +374,11 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           Expanded(
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search by name or id',
-                hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+              decoration: InputDecoration(
+                hintText: _activeActionTab == 1
+                    ? 'Search sales...'
+                    : 'Search in ${_activeStatusTab.replaceAll('_', ' ')}...',
+                hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
                 border: InputBorder.none,
                 isDense: true,
               ),
@@ -353,8 +387,58 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           const SizedBox(width: 8),
           Container(height: 20, width: 1, color: Colors.grey.shade300),
           const SizedBox(width: 8),
-          const Icon(Icons.tune, size: 20, color: Color(0xFF8A63FE)),
+          ValueListenableBuilder<DateFilterModel>(
+            valueListenable: _dateFilterNotifier,
+            builder: (context, filter, _) {
+              final hasFilter = filter.hasActiveFilter;
+              return InkWell(
+                onTap: () => _showDateFilterModal(context),
+                borderRadius: BorderRadius.circular(4),
+                child: Icon(
+                  hasFilter ? Icons.filter_list_alt : Icons.tune,
+                  size: 20,
+                  color: hasFilter
+                      ? const Color(0xFF8A63FE)
+                      : Colors.grey.shade600,
+                ),
+              );
+            },
+          ),
         ],
+      ),
+    );
+  }
+
+  void _showDateFilterModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: BookingDateFilter(
+                isGeneratePdf: false,
+                initialStartDate: _dateFilterNotifier.value.startDate,
+                initialEndDate: _dateFilterNotifier.value.endDate,
+                onDateFilterChanged: (startDate, endDate) {
+                  _dateFilterNotifier.value =
+                      _dateFilterNotifier.value.copyWith(
+                    startDate: startDate,
+                    endDate: endDate,
+                  );
+                  _loadData();
+                  Navigator.pop(context);
+                },
+                onApplyFilter: (p0, p1, p2) {},
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -374,7 +458,8 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   loading: () => const Center(
                       child:
                           CircularProgressIndicator(color: Color(0xFF8A63FE))),
-                  loaded: (bookings, _, __, ___, ____, _____, ______, _______) {
+                  loaded: (bookings, _, __, ___, ____, _____, ______, _______,
+                      ________) {
                     if (bookings.isEmpty)
                       return const Center(child: Text('No bookings found'));
                     return _buildTable(bookings);
@@ -566,6 +651,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             width: 105,
             child: Text(
               'Delivery',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -683,9 +769,9 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   fontWeight: FontWeight.w500,
                 ),
                 child: Text(
-                  booking.shopBookingId,
-                  style:
-                      const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  booking.shopBookingId ?? '',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 13),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -699,7 +785,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             SizedBox(
               width: 95,
               child: Text(
-                _formatDateWithLabel(booking.pickupDate),
+                _formatDateWithLabel(booking.pickupDate ?? ''),
                 style: const TextStyle(fontSize: 13),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -707,7 +793,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                booking.bookedItems,
+                booking.bookedItems ?? '',
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -717,7 +803,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             SizedBox(
               width: 110,
               child: Text(
-                booking.client,
+                booking.client ?? '',
                 style:
                     const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                 overflow: TextOverflow.ellipsis,
@@ -754,20 +840,21 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     );
   }
 
-  Widget _buildDeliveryStatusDisplay(DeliveryStatus status) {
+  Widget _buildDeliveryStatusDisplay(DeliveryStatus? status) {
+    final effectiveStatus = status ?? DeliveryStatus.booked;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: status.color.withOpacity(0.1),
+        color: effectiveStatus.color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: status.color.withOpacity(0.2)),
+        border: Border.all(color: effectiveStatus.color.withOpacity(0.2)),
       ),
       child: Text(
-        status.name,
+        effectiveStatus.name,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 11,
-          color: status.color,
+          color: effectiveStatus.color,
           fontWeight: FontWeight.w600,
         ),
         overflow: TextOverflow.ellipsis,
@@ -776,7 +863,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildDeliveryStatus(DesktopBookingItemModel booking) {
-    final status = booking.deliveryStatus;
+    final status = booking.deliveryStatus ?? DeliveryStatus.booked;
     return PopupMenuButton<DeliveryStatus>(
       offset: const Offset(0, 40),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -872,6 +959,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
   /// Format date with Today/Tomorrow labels
   String _formatDateWithLabel(String dateStr) {
+    if (dateStr.isEmpty) return 'N/A';
     try {
       final bookingDate = dateStr.parseToDateTime();
       final now = DateTime.now();
@@ -917,7 +1005,10 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
     return GestureDetector(
       onTap: () {
-        // TODO: Open sale details drawer
+        context.read<SalesDetailsDrawerCubit>().openDrawer(sale.id);
+        context.read<SalesDetailsBloc>().add(
+              SalesDetailsEvent.fetchSaleDetails(sale.id),
+            );
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

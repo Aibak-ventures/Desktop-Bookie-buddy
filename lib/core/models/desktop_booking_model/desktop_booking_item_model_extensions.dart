@@ -15,7 +15,7 @@ extension DesktopBookingItemModelX on DesktopBookingItemModel {
       bookedDate: createdAt,
       pickupDate: pickupDate,
       returnDate: returnDate,
-      deliveryStatus: deliveryStatus,
+      deliveryStatus: deliveryStatus ?? DeliveryStatus.booked,
       paymentStatus:
           paymentStatus ? PaymentStatus.completed : PaymentStatus.pending,
       shopBookingId: shopBookingId,

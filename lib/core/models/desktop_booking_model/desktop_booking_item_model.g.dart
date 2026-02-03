@@ -17,8 +17,7 @@ _$DesktopBookingItemModelImpl _$$DesktopBookingItemModelImplFromJson(
       paymentStatus: _paymentStatusFromBool(json['payment_status']),
       staffName: json['staff_name'] as String?,
       staffColor: json['staff_color'] as String?,
-      deliveryStatus:
-          DeliveryStatus.fromString(json['delivery_status'] as String),
+      deliveryStatus: DeliveryStatus.fromString(json['delivery_status']),
       createdAt: json['created_at'] as String,
       bookedItems: json['booked_items'] as String,
       advanceAmount: (json['advance_amount'] as num).toInt(),

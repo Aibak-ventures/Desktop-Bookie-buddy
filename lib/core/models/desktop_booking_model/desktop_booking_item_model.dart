@@ -27,7 +27,7 @@ class DesktopBookingItemModel with _$DesktopBookingItemModel {
       fromJson: DeliveryStatus.fromString,
       toJson: DeliveryStatus.toJson,
     )
-    required DeliveryStatus deliveryStatus,
+    DeliveryStatus? deliveryStatus,
     @JsonKey(name: 'created_at') required String createdAt,
     @JsonKey(name: 'booked_items') required String bookedItems,
     @JsonKey(name: 'advance_amount') required int advanceAmount,

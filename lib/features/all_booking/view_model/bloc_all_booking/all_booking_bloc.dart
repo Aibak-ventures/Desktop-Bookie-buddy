@@ -30,6 +30,8 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     on<_UpdateBooking>(_onUpdateBooking);
 
     on<_UpdateDeliveryStatus>(_onUpdateDeliveryStatus);
+    on<_DeleteBooking>(_onDeleteBooking);
+    on<_MarkAsCompleted>(_onMarkAsCompleted);
   }
 
   Future<void> _onUpdateDeliveryStatus(
@@ -56,7 +58,79 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
       }
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
-      emit(_Error(e.toString()));
+      if (state is _Loaded) {
+        emit((state as _Loaded).copyWith(actionError: e.toString()));
+        emit((state as _Loaded).copyWith(actionError: null));
+      } else {
+        emit(_Error(e.toString()));
+      }
+    }
+  }
+
+  Future<void> _onDeleteBooking(
+    _DeleteBooking event,
+    Emitter<AllBookingState> emit,
+  ) async {
+    try {
+      await _repository.deleteBooking(event.bookingId);
+      if (state is _Loaded) {
+        final s = state as _Loaded;
+        // Reload to ensure data consistency
+        add(AllBookingEvent.loadBookings(
+          status: s.status,
+          startDate: s.startDate,
+          endDate: s.endDate,
+          searchQuery: s.searchQuery,
+        ));
+      }
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      if (state is _Loaded) {
+        emit((state as _Loaded).copyWith(actionError: e.toString()));
+        emit((state as _Loaded).copyWith(actionError: null));
+      } else {
+        emit(_Error(e.toString()));
+      }
+    }
+  }
+
+  Future<void> _onMarkAsCompleted(
+    _MarkAsCompleted event,
+    Emitter<AllBookingState> emit,
+  ) async {
+    try {
+      // API requires items to be returned before completing
+      if (event.currentStatus != DeliveryStatus.returned) {
+        await _repository.updateDeliveryStatus(
+          event.bookingId,
+          DeliveryStatus.returned,
+        );
+      }
+
+      await _repository.updateBookingStatus(
+        event.bookingId,
+        BookingStatus.completed,
+      );
+
+      if (state is _Loaded) {
+        final s = state as _Loaded;
+        // Reload to ensure data consistency
+        add(AllBookingEvent.loadBookings(
+          status: s
+              .status, // If status was 'pending', removing item should happen via reload naturally
+          startDate: s.startDate,
+          endDate: s.endDate,
+          searchQuery: s.searchQuery,
+        ));
+      }
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      if (state is _Loaded) {
+        emit((state as _Loaded).copyWith(actionError: e.toString()));
+        emit((state as _Loaded).copyWith(actionError: null));
+      } else {
+        emit(_Error(e.toString()));
+      }
     }
   }
 

@@ -27,6 +27,9 @@ mixin _$AllBookingEvent {
         updateBooking,
     required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
         updateDeliveryStatus,
+    required TResult Function(int bookingId) deleteBooking,
+    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
+        markAsCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -40,6 +43,9 @@ mixin _$AllBookingEvent {
         updateBooking,
     TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult? Function(int bookingId)? deleteBooking,
+    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -53,6 +59,9 @@ mixin _$AllBookingEvent {
         updateBooking,
     TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult Function(int bookingId)? deleteBooking,
+    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -62,6 +71,8 @@ mixin _$AllBookingEvent {
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
     required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+    required TResult Function(_DeleteBooking value) deleteBooking,
+    required TResult Function(_MarkAsCompleted value) markAsCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -70,6 +81,8 @@ mixin _$AllBookingEvent {
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
     TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult? Function(_DeleteBooking value)? deleteBooking,
+    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -78,6 +91,8 @@ mixin _$AllBookingEvent {
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult Function(_DeleteBooking value)? deleteBooking,
+    TResult Function(_MarkAsCompleted value)? markAsCompleted,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -213,6 +228,9 @@ class _$LoadBookingsImpl implements _LoadBookings {
         updateBooking,
     required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
         updateDeliveryStatus,
+    required TResult Function(int bookingId) deleteBooking,
+    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
+        markAsCompleted,
   }) {
     return loadBookings(status, startDate, endDate, searchQuery);
   }
@@ -229,6 +247,9 @@ class _$LoadBookingsImpl implements _LoadBookings {
         updateBooking,
     TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult? Function(int bookingId)? deleteBooking,
+    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
   }) {
     return loadBookings?.call(status, startDate, endDate, searchQuery);
   }
@@ -245,6 +266,9 @@ class _$LoadBookingsImpl implements _LoadBookings {
         updateBooking,
     TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult Function(int bookingId)? deleteBooking,
+    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
     required TResult orElse(),
   }) {
     if (loadBookings != null) {
@@ -260,6 +284,8 @@ class _$LoadBookingsImpl implements _LoadBookings {
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
     required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+    required TResult Function(_DeleteBooking value) deleteBooking,
+    required TResult Function(_MarkAsCompleted value) markAsCompleted,
   }) {
     return loadBookings(this);
   }
@@ -271,6 +297,8 @@ class _$LoadBookingsImpl implements _LoadBookings {
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
     TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult? Function(_DeleteBooking value)? deleteBooking,
+    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
   }) {
     return loadBookings?.call(this);
   }
@@ -282,6 +310,8 @@ class _$LoadBookingsImpl implements _LoadBookings {
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult Function(_DeleteBooking value)? deleteBooking,
+    TResult Function(_MarkAsCompleted value)? markAsCompleted,
     required TResult orElse(),
   }) {
     if (loadBookings != null) {
@@ -361,6 +391,9 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
         updateBooking,
     required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
         updateDeliveryStatus,
+    required TResult Function(int bookingId) deleteBooking,
+    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
+        markAsCompleted,
   }) {
     return loadNextPageBookings();
   }
@@ -377,6 +410,9 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
         updateBooking,
     TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult? Function(int bookingId)? deleteBooking,
+    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
   }) {
     return loadNextPageBookings?.call();
   }
@@ -393,6 +429,9 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
         updateBooking,
     TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult Function(int bookingId)? deleteBooking,
+    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
     required TResult orElse(),
   }) {
     if (loadNextPageBookings != null) {
@@ -408,6 +447,8 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
     required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+    required TResult Function(_DeleteBooking value) deleteBooking,
+    required TResult Function(_MarkAsCompleted value) markAsCompleted,
   }) {
     return loadNextPageBookings(this);
   }
@@ -419,6 +460,8 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
     TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult? Function(_DeleteBooking value)? deleteBooking,
+    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
   }) {
     return loadNextPageBookings?.call(this);
   }
@@ -430,6 +473,8 @@ class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult Function(_DeleteBooking value)? deleteBooking,
+    TResult Function(_MarkAsCompleted value)? markAsCompleted,
     required TResult orElse(),
   }) {
     if (loadNextPageBookings != null) {
@@ -559,6 +604,9 @@ class _$UpdateBookingImpl implements _UpdateBooking {
         updateBooking,
     required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
         updateDeliveryStatus,
+    required TResult Function(int bookingId) deleteBooking,
+    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
+        markAsCompleted,
   }) {
     return updateBooking(booking, shouldRefresh, isDeleted);
   }
@@ -575,6 +623,9 @@ class _$UpdateBookingImpl implements _UpdateBooking {
         updateBooking,
     TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult? Function(int bookingId)? deleteBooking,
+    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
   }) {
     return updateBooking?.call(booking, shouldRefresh, isDeleted);
   }
@@ -591,6 +642,9 @@ class _$UpdateBookingImpl implements _UpdateBooking {
         updateBooking,
     TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult Function(int bookingId)? deleteBooking,
+    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
     required TResult orElse(),
   }) {
     if (updateBooking != null) {
@@ -606,6 +660,8 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
     required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+    required TResult Function(_DeleteBooking value) deleteBooking,
+    required TResult Function(_MarkAsCompleted value) markAsCompleted,
   }) {
     return updateBooking(this);
   }
@@ -617,6 +673,8 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
     TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult? Function(_DeleteBooking value)? deleteBooking,
+    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
   }) {
     return updateBooking?.call(this);
   }
@@ -628,6 +686,8 @@ class _$UpdateBookingImpl implements _UpdateBooking {
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult Function(_DeleteBooking value)? deleteBooking,
+    TResult Function(_MarkAsCompleted value)? markAsCompleted,
     required TResult orElse(),
   }) {
     if (updateBooking != null) {
@@ -742,6 +802,9 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
         updateBooking,
     required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
         updateDeliveryStatus,
+    required TResult Function(int bookingId) deleteBooking,
+    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
+        markAsCompleted,
   }) {
     return updateDeliveryStatus(bookingId, deliveryStatus);
   }
@@ -758,6 +821,9 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
         updateBooking,
     TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult? Function(int bookingId)? deleteBooking,
+    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
   }) {
     return updateDeliveryStatus?.call(bookingId, deliveryStatus);
   }
@@ -774,6 +840,9 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
         updateBooking,
     TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
         updateDeliveryStatus,
+    TResult Function(int bookingId)? deleteBooking,
+    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
     required TResult orElse(),
   }) {
     if (updateDeliveryStatus != null) {
@@ -789,6 +858,8 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
     required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
     required TResult Function(_UpdateBooking value) updateBooking,
     required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+    required TResult Function(_DeleteBooking value) deleteBooking,
+    required TResult Function(_MarkAsCompleted value) markAsCompleted,
   }) {
     return updateDeliveryStatus(this);
   }
@@ -800,6 +871,8 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
     TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult? Function(_UpdateBooking value)? updateBooking,
     TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult? Function(_DeleteBooking value)? deleteBooking,
+    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
   }) {
     return updateDeliveryStatus?.call(this);
   }
@@ -811,6 +884,8 @@ class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
     TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
     TResult Function(_UpdateBooking value)? updateBooking,
     TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult Function(_DeleteBooking value)? deleteBooking,
+    TResult Function(_MarkAsCompleted value)? markAsCompleted,
     required TResult orElse(),
   }) {
     if (updateDeliveryStatus != null) {
@@ -837,6 +912,387 @@ abstract class _UpdateDeliveryStatus implements AllBookingEvent {
 }
 
 /// @nodoc
+abstract class _$$DeleteBookingImplCopyWith<$Res> {
+  factory _$$DeleteBookingImplCopyWith(
+          _$DeleteBookingImpl value, $Res Function(_$DeleteBookingImpl) then) =
+      __$$DeleteBookingImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int bookingId});
+}
+
+/// @nodoc
+class __$$DeleteBookingImplCopyWithImpl<$Res>
+    extends _$AllBookingEventCopyWithImpl<$Res, _$DeleteBookingImpl>
+    implements _$$DeleteBookingImplCopyWith<$Res> {
+  __$$DeleteBookingImplCopyWithImpl(
+      _$DeleteBookingImpl _value, $Res Function(_$DeleteBookingImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? bookingId = null,
+  }) {
+    return _then(_$DeleteBookingImpl(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DeleteBookingImpl implements _DeleteBooking {
+  const _$DeleteBookingImpl({required this.bookingId});
+
+  @override
+  final int bookingId;
+
+  @override
+  String toString() {
+    return 'AllBookingEvent.deleteBooking(bookingId: $bookingId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeleteBookingImpl &&
+            (identical(other.bookingId, bookingId) ||
+                other.bookingId == bookingId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, bookingId);
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeleteBookingImplCopyWith<_$DeleteBookingImpl> get copyWith =>
+      __$$DeleteBookingImplCopyWithImpl<_$DeleteBookingImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? status, String? startDate,
+            String? endDate, String? searchQuery)
+        loadBookings,
+    required TResult Function() loadNextPageBookings,
+    required TResult Function(DesktopBookingItemModel? booking,
+            bool shouldRefresh, bool isDeleted)
+        updateBooking,
+    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
+        updateDeliveryStatus,
+    required TResult Function(int bookingId) deleteBooking,
+    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
+        markAsCompleted,
+  }) {
+    return deleteBooking(bookingId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? status, String? startDate, String? endDate,
+            String? searchQuery)?
+        loadBookings,
+    TResult? Function()? loadNextPageBookings,
+    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
+            bool isDeleted)?
+        updateBooking,
+    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
+    TResult? Function(int bookingId)? deleteBooking,
+    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
+  }) {
+    return deleteBooking?.call(bookingId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? status, String? startDate, String? endDate,
+            String? searchQuery)?
+        loadBookings,
+    TResult Function()? loadNextPageBookings,
+    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
+            bool isDeleted)?
+        updateBooking,
+    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
+    TResult Function(int bookingId)? deleteBooking,
+    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
+    required TResult orElse(),
+  }) {
+    if (deleteBooking != null) {
+      return deleteBooking(bookingId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadBookings value) loadBookings,
+    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
+    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+    required TResult Function(_DeleteBooking value) deleteBooking,
+    required TResult Function(_MarkAsCompleted value) markAsCompleted,
+  }) {
+    return deleteBooking(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadBookings value)? loadBookings,
+    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
+    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult? Function(_DeleteBooking value)? deleteBooking,
+    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
+  }) {
+    return deleteBooking?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadBookings value)? loadBookings,
+    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
+    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult Function(_DeleteBooking value)? deleteBooking,
+    TResult Function(_MarkAsCompleted value)? markAsCompleted,
+    required TResult orElse(),
+  }) {
+    if (deleteBooking != null) {
+      return deleteBooking(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DeleteBooking implements AllBookingEvent {
+  const factory _DeleteBooking({required final int bookingId}) =
+      _$DeleteBookingImpl;
+
+  int get bookingId;
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DeleteBookingImplCopyWith<_$DeleteBookingImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$MarkAsCompletedImplCopyWith<$Res> {
+  factory _$$MarkAsCompletedImplCopyWith(_$MarkAsCompletedImpl value,
+          $Res Function(_$MarkAsCompletedImpl) then) =
+      __$$MarkAsCompletedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int bookingId, DeliveryStatus? currentStatus});
+}
+
+/// @nodoc
+class __$$MarkAsCompletedImplCopyWithImpl<$Res>
+    extends _$AllBookingEventCopyWithImpl<$Res, _$MarkAsCompletedImpl>
+    implements _$$MarkAsCompletedImplCopyWith<$Res> {
+  __$$MarkAsCompletedImplCopyWithImpl(
+      _$MarkAsCompletedImpl _value, $Res Function(_$MarkAsCompletedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? bookingId = null,
+    Object? currentStatus = freezed,
+  }) {
+    return _then(_$MarkAsCompletedImpl(
+      bookingId: null == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentStatus: freezed == currentStatus
+          ? _value.currentStatus
+          : currentStatus // ignore: cast_nullable_to_non_nullable
+              as DeliveryStatus?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$MarkAsCompletedImpl implements _MarkAsCompleted {
+  const _$MarkAsCompletedImpl(
+      {required this.bookingId, required this.currentStatus});
+
+  @override
+  final int bookingId;
+  @override
+  final DeliveryStatus? currentStatus;
+
+  @override
+  String toString() {
+    return 'AllBookingEvent.markAsCompleted(bookingId: $bookingId, currentStatus: $currentStatus)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MarkAsCompletedImpl &&
+            (identical(other.bookingId, bookingId) ||
+                other.bookingId == bookingId) &&
+            (identical(other.currentStatus, currentStatus) ||
+                other.currentStatus == currentStatus));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, bookingId, currentStatus);
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MarkAsCompletedImplCopyWith<_$MarkAsCompletedImpl> get copyWith =>
+      __$$MarkAsCompletedImplCopyWithImpl<_$MarkAsCompletedImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? status, String? startDate,
+            String? endDate, String? searchQuery)
+        loadBookings,
+    required TResult Function() loadNextPageBookings,
+    required TResult Function(DesktopBookingItemModel? booking,
+            bool shouldRefresh, bool isDeleted)
+        updateBooking,
+    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
+        updateDeliveryStatus,
+    required TResult Function(int bookingId) deleteBooking,
+    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
+        markAsCompleted,
+  }) {
+    return markAsCompleted(bookingId, currentStatus);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? status, String? startDate, String? endDate,
+            String? searchQuery)?
+        loadBookings,
+    TResult? Function()? loadNextPageBookings,
+    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
+            bool isDeleted)?
+        updateBooking,
+    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
+    TResult? Function(int bookingId)? deleteBooking,
+    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
+  }) {
+    return markAsCompleted?.call(bookingId, currentStatus);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? status, String? startDate, String? endDate,
+            String? searchQuery)?
+        loadBookings,
+    TResult Function()? loadNextPageBookings,
+    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
+            bool isDeleted)?
+        updateBooking,
+    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
+        updateDeliveryStatus,
+    TResult Function(int bookingId)? deleteBooking,
+    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
+        markAsCompleted,
+    required TResult orElse(),
+  }) {
+    if (markAsCompleted != null) {
+      return markAsCompleted(bookingId, currentStatus);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadBookings value) loadBookings,
+    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
+    required TResult Function(_UpdateBooking value) updateBooking,
+    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
+    required TResult Function(_DeleteBooking value) deleteBooking,
+    required TResult Function(_MarkAsCompleted value) markAsCompleted,
+  }) {
+    return markAsCompleted(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadBookings value)? loadBookings,
+    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
+    TResult? Function(_UpdateBooking value)? updateBooking,
+    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult? Function(_DeleteBooking value)? deleteBooking,
+    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
+  }) {
+    return markAsCompleted?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadBookings value)? loadBookings,
+    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
+    TResult Function(_UpdateBooking value)? updateBooking,
+    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
+    TResult Function(_DeleteBooking value)? deleteBooking,
+    TResult Function(_MarkAsCompleted value)? markAsCompleted,
+    required TResult orElse(),
+  }) {
+    if (markAsCompleted != null) {
+      return markAsCompleted(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _MarkAsCompleted implements AllBookingEvent {
+  const factory _MarkAsCompleted(
+      {required final int bookingId,
+      required final DeliveryStatus? currentStatus}) = _$MarkAsCompletedImpl;
+
+  int get bookingId;
+  DeliveryStatus? get currentStatus;
+
+  /// Create a copy of AllBookingEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MarkAsCompletedImplCopyWith<_$MarkAsCompletedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$AllBookingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
@@ -850,7 +1306,8 @@ mixin _$AllBookingState {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)
+            StatusCountsModel? statusCounts,
+            String? actionError)
         loaded,
     required TResult Function(String error) error,
   }) =>
@@ -867,7 +1324,8 @@ mixin _$AllBookingState {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult? Function(String error)? error,
   }) =>
@@ -884,7 +1342,8 @@ mixin _$AllBookingState {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
@@ -989,7 +1448,8 @@ class _$InitialImpl implements _Initial {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)
+            StatusCountsModel? statusCounts,
+            String? actionError)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -1009,7 +1469,8 @@ class _$InitialImpl implements _Initial {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult? Function(String error)? error,
   }) {
@@ -1029,7 +1490,8 @@ class _$InitialImpl implements _Initial {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
@@ -1133,7 +1595,8 @@ class _$LoadingImpl implements _Loading {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)
+            StatusCountsModel? statusCounts,
+            String? actionError)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -1153,7 +1616,8 @@ class _$LoadingImpl implements _Loading {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult? Function(String error)? error,
   }) {
@@ -1173,7 +1637,8 @@ class _$LoadingImpl implements _Loading {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
@@ -1240,7 +1705,8 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       String? endDate,
       String? searchQuery,
       String? status,
-      StatusCountsModel? statusCounts});
+      StatusCountsModel? statusCounts,
+      String? actionError});
 
   $StatusCountsModelCopyWith<$Res>? get statusCounts;
 }
@@ -1266,6 +1732,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? searchQuery = freezed,
     Object? status = freezed,
     Object? statusCounts = freezed,
+    Object? actionError = freezed,
   }) {
     return _then(_$LoadedImpl(
       bookings: null == bookings
@@ -1300,6 +1767,10 @@ class __$$LoadedImplCopyWithImpl<$Res>
           ? _value.statusCounts
           : statusCounts // ignore: cast_nullable_to_non_nullable
               as StatusCountsModel?,
+      actionError: freezed == actionError
+          ? _value.actionError
+          : actionError // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 
@@ -1329,7 +1800,8 @@ class _$LoadedImpl implements _Loaded {
       this.endDate,
       this.searchQuery,
       this.status,
-      this.statusCounts})
+      this.statusCounts,
+      this.actionError})
       : _bookings = bookings;
 
   final List<DesktopBookingItemModel> _bookings;
@@ -1355,10 +1827,12 @@ class _$LoadedImpl implements _Loaded {
   final String? status;
   @override
   final StatusCountsModel? statusCounts;
+  @override
+  final String? actionError;
 
   @override
   String toString() {
-    return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, status: $status, statusCounts: $statusCounts)';
+    return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, status: $status, statusCounts: $statusCounts, actionError: $actionError)';
   }
 
   @override
@@ -1378,7 +1852,9 @@ class _$LoadedImpl implements _Loaded {
                 other.searchQuery == searchQuery) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.statusCounts, statusCounts) ||
-                other.statusCounts == statusCounts));
+                other.statusCounts == statusCounts) &&
+            (identical(other.actionError, actionError) ||
+                other.actionError == actionError));
   }
 
   @override
@@ -1391,7 +1867,8 @@ class _$LoadedImpl implements _Loaded {
       endDate,
       searchQuery,
       status,
-      statusCounts);
+      statusCounts,
+      actionError);
 
   /// Create a copy of AllBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -1414,12 +1891,13 @@ class _$LoadedImpl implements _Loaded {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)
+            StatusCountsModel? statusCounts,
+            String? actionError)
         loaded,
     required TResult Function(String error) error,
   }) {
     return loaded(bookings, nextPageUrl, isPaginating, startDate, endDate,
-        searchQuery, status, statusCounts);
+        searchQuery, status, statusCounts, actionError);
   }
 
   @override
@@ -1435,12 +1913,13 @@ class _$LoadedImpl implements _Loaded {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult? Function(String error)? error,
   }) {
     return loaded?.call(bookings, nextPageUrl, isPaginating, startDate, endDate,
-        searchQuery, status, statusCounts);
+        searchQuery, status, statusCounts, actionError);
   }
 
   @override
@@ -1456,14 +1935,15 @@ class _$LoadedImpl implements _Loaded {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
       return loaded(bookings, nextPageUrl, isPaginating, startDate, endDate,
-          searchQuery, status, statusCounts);
+          searchQuery, status, statusCounts, actionError);
     }
     return orElse();
   }
@@ -1515,7 +1995,8 @@ abstract class _Loaded implements AllBookingState {
       final String? endDate,
       final String? searchQuery,
       final String? status,
-      final StatusCountsModel? statusCounts}) = _$LoadedImpl;
+      final StatusCountsModel? statusCounts,
+      final String? actionError}) = _$LoadedImpl;
 
   List<DesktopBookingItemModel> get bookings;
   String? get nextPageUrl;
@@ -1525,6 +2006,7 @@ abstract class _Loaded implements AllBookingState {
   String? get searchQuery;
   String? get status;
   StatusCountsModel? get statusCounts;
+  String? get actionError;
 
   /// Create a copy of AllBookingState
   /// with the given fields replaced by the non-null parameter values.
@@ -1611,7 +2093,8 @@ class _$ErrorImpl implements _Error {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)
+            StatusCountsModel? statusCounts,
+            String? actionError)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -1631,7 +2114,8 @@ class _$ErrorImpl implements _Error {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult? Function(String error)? error,
   }) {
@@ -1651,7 +2135,8 @@ class _$ErrorImpl implements _Error {
             String? endDate,
             String? searchQuery,
             String? status,
-            StatusCountsModel? statusCounts)?
+            StatusCountsModel? statusCounts,
+            String? actionError)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),

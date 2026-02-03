@@ -29,7 +29,7 @@ _$BookingDetailsModelImpl _$$BookingDetailsModelImplFromJson(
           : PaymentStatus.fromBool(json['payment_status'] as bool?),
       deliveryStatus: json['delivery_status'] == null
           ? DeliveryStatus.booked
-          : DeliveryStatus.fromString(json['delivery_status'] as String),
+          : DeliveryStatus.fromString(json['delivery_status']),
       staffName: json['staff_name'] as String?,
       staffId: (json['staff_id'] as num?)?.toInt(),
       otherDetails: json['details'] == null

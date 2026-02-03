@@ -42,7 +42,7 @@ mixin _$DesktopBookingItemModel {
       name: 'delivery_status',
       fromJson: DeliveryStatus.fromString,
       toJson: DeliveryStatus.toJson)
-  DeliveryStatus get deliveryStatus => throw _privateConstructorUsedError;
+  DeliveryStatus? get deliveryStatus => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   String get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'booked_items')
@@ -85,7 +85,7 @@ abstract class $DesktopBookingItemModelCopyWith<$Res> {
           name: 'delivery_status',
           fromJson: DeliveryStatus.fromString,
           toJson: DeliveryStatus.toJson)
-      DeliveryStatus deliveryStatus,
+      DeliveryStatus? deliveryStatus,
       @JsonKey(name: 'created_at') String createdAt,
       @JsonKey(name: 'booked_items') String bookedItems,
       @JsonKey(name: 'advance_amount') int advanceAmount,
@@ -116,7 +116,7 @@ class _$DesktopBookingItemModelCopyWithImpl<$Res,
     Object? paymentStatus = null,
     Object? staffName = freezed,
     Object? staffColor = freezed,
-    Object? deliveryStatus = null,
+    Object? deliveryStatus = freezed,
     Object? createdAt = null,
     Object? bookedItems = null,
     Object? advanceAmount = null,
@@ -155,10 +155,10 @@ class _$DesktopBookingItemModelCopyWithImpl<$Res,
           ? _value.staffColor
           : staffColor // ignore: cast_nullable_to_non_nullable
               as String?,
-      deliveryStatus: null == deliveryStatus
+      deliveryStatus: freezed == deliveryStatus
           ? _value.deliveryStatus
           : deliveryStatus // ignore: cast_nullable_to_non_nullable
-              as DeliveryStatus,
+              as DeliveryStatus?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -205,7 +205,7 @@ abstract class _$$DesktopBookingItemModelImplCopyWith<$Res>
           name: 'delivery_status',
           fromJson: DeliveryStatus.fromString,
           toJson: DeliveryStatus.toJson)
-      DeliveryStatus deliveryStatus,
+      DeliveryStatus? deliveryStatus,
       @JsonKey(name: 'created_at') String createdAt,
       @JsonKey(name: 'booked_items') String bookedItems,
       @JsonKey(name: 'advance_amount') int advanceAmount,
@@ -235,7 +235,7 @@ class __$$DesktopBookingItemModelImplCopyWithImpl<$Res>
     Object? paymentStatus = null,
     Object? staffName = freezed,
     Object? staffColor = freezed,
-    Object? deliveryStatus = null,
+    Object? deliveryStatus = freezed,
     Object? createdAt = null,
     Object? bookedItems = null,
     Object? advanceAmount = null,
@@ -274,10 +274,10 @@ class __$$DesktopBookingItemModelImplCopyWithImpl<$Res>
           ? _value.staffColor
           : staffColor // ignore: cast_nullable_to_non_nullable
               as String?,
-      deliveryStatus: null == deliveryStatus
+      deliveryStatus: freezed == deliveryStatus
           ? _value.deliveryStatus
           : deliveryStatus // ignore: cast_nullable_to_non_nullable
-              as DeliveryStatus,
+              as DeliveryStatus?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -318,7 +318,7 @@ class _$DesktopBookingItemModelImpl implements _DesktopBookingItemModel {
           name: 'delivery_status',
           fromJson: DeliveryStatus.fromString,
           toJson: DeliveryStatus.toJson)
-      required this.deliveryStatus,
+      this.deliveryStatus,
       @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'booked_items') required this.bookedItems,
       @JsonKey(name: 'advance_amount') required this.advanceAmount,
@@ -357,7 +357,7 @@ class _$DesktopBookingItemModelImpl implements _DesktopBookingItemModel {
       name: 'delivery_status',
       fromJson: DeliveryStatus.fromString,
       toJson: DeliveryStatus.toJson)
-  final DeliveryStatus deliveryStatus;
+  final DeliveryStatus? deliveryStatus;
   @override
   @JsonKey(name: 'created_at')
   final String createdAt;
@@ -460,7 +460,7 @@ abstract class _DesktopBookingItemModel implements DesktopBookingItemModel {
           name: 'delivery_status',
           fromJson: DeliveryStatus.fromString,
           toJson: DeliveryStatus.toJson)
-      required final DeliveryStatus deliveryStatus,
+      final DeliveryStatus? deliveryStatus,
       @JsonKey(name: 'created_at') required final String createdAt,
       @JsonKey(name: 'booked_items') required final String bookedItems,
       @JsonKey(name: 'advance_amount') required final int advanceAmount,
@@ -500,7 +500,7 @@ abstract class _DesktopBookingItemModel implements DesktopBookingItemModel {
       name: 'delivery_status',
       fromJson: DeliveryStatus.fromString,
       toJson: DeliveryStatus.toJson)
-  DeliveryStatus get deliveryStatus;
+  DeliveryStatus? get deliveryStatus;
   @override
   @JsonKey(name: 'created_at')
   String get createdAt;

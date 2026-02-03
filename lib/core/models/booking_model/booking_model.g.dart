@@ -17,7 +17,7 @@ _$BookingsModelImpl _$$BookingsModelImplFromJson(Map<String, dynamic> json) =>
       returnDate: json['return_date'] as String?,
       deliveryStatus: json['delivery_status'] == null
           ? DeliveryStatus.booked
-          : DeliveryStatus.fromString(json['delivery_status'] as String),
+          : DeliveryStatus.fromString(json['delivery_status']),
       paymentStatus: json['payment_status'] == null
           ? PaymentStatus.pending
           : PaymentStatus.fromBool(json['payment_status'] as bool?),

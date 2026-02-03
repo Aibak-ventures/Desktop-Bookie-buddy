@@ -5,8 +5,7 @@ import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/utils/download_file.dart';
@@ -22,23 +21,23 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 
-class GenerateBookingPdf {
+class GenerateSalesPdf {
   static Future<void> shareInvoice({
     required BuildContext context,
-    required BookingDetailsModel bookingDetails,
+    required SaleDetailsModel saleDetails,
     required UserShopModel shopDetails,
   }) async {
     try {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF...');
 
       // Generate PDF locally instead of downloading from server
-      final pdfBytes = await generateInvoice(bookingDetails, shopDetails);
+      final pdfBytes = await generateInvoice(saleDetails, shopDetails);
 
       GlobalLoadingOverlay.hide();
 
       if (kIsWeb) {
         // On web, trigger browser download
-        final fileName = 'invoice_${bookingDetails.invoiceId}.pdf';
+        final fileName = 'invoice_${saleDetails.invoiceId}.pdf';
         downloadFileWeb(pdfBytes, fileName);
 
         if (context.mounted) {
@@ -46,7 +45,7 @@ class GenerateBookingPdf {
         }
       } else {
         // On mobile/desktop, save to file
-        final fileName = 'invoice_${bookingDetails.invoiceId}.pdf';
+        final fileName = 'invoice_${saleDetails.invoiceId}.pdf';
 
         // For Windows desktop, save to Downloads folder and open
         if (Platform.isWindows) {
@@ -90,29 +89,6 @@ class GenerateBookingPdf {
     }
   }
 
-  static Future<void> printInvoice({
-    required BuildContext context,
-    required BookingDetailsModel bookingDetails,
-    required UserShopModel shopDetails,
-  }) async {
-    try {
-      GlobalLoadingOverlay.show(context, text: 'Generating PDF for print...');
-
-      // For web, we'll use the share functionality
-      // You could also implement a web-specific print dialog here
-      await shareInvoice(
-        context: context,
-        bookingDetails: bookingDetails,
-        shopDetails: shopDetails,
-      );
-    } catch (e, stack) {
-      log('Error printing invoice: $e', stackTrace: stack);
-      rethrow;
-    } finally {
-      GlobalLoadingOverlay.hide();
-    }
-  }
-
   // Cached unknown product image (lazy)
   static pw.ImageProvider? _cachedUnknownImage;
   static pw.ImageProvider get _unknownProductImage => _cachedUnknownImage ??=
@@ -138,7 +114,7 @@ class GenerateBookingPdf {
   static final _customColor = const PdfColor.fromInt(0xFF6C5CE7);
 
   static Future<Uint8List> generateInvoice(
-    BookingDetailsModel bookingDetails,
+    SaleDetailsModel saleDetails,
     UserShopModel shopDetails,
   ) async {
     // Font loading logic
@@ -163,7 +139,7 @@ class GenerateBookingPdf {
 
     final pdf = pw.Document(
       creator: 'Bookie Buddy',
-      author: 'AFNAN P',
+      author: 'Bookie Buddy',
       theme: pw.ThemeData.withFont(
         base: ttfRegular,
         bold: ttfMedium,
@@ -178,7 +154,7 @@ class GenerateBookingPdf {
       dio: dio,
     );
     final productImages = await Future.wait<pw.ImageProvider>(
-      bookingDetails.bookedItems
+      saleDetails.products
           .map(
             (product) async => getPdfImageProvider(
               imagePath: product.image,
@@ -238,11 +214,11 @@ class GenerateBookingPdf {
             ttfExtraBold,
           ),
           pw.SizedBox(height: 30),
-          _buildInvoiceDetails(bookingDetails),
+          _buildInvoiceDetails(saleDetails),
           pw.SizedBox(height: 20),
-          _buildItemsTable(bookingDetails, productImages),
+          _buildItemsTable(saleDetails, productImages),
           pw.SizedBox(height: 30),
-          _buildSummaryAndTerms(bookingDetails, ttfExtraBold),
+          _buildSummaryAndTerms(saleDetails, ttfExtraBold),
         ],
       ),
     );
@@ -284,7 +260,7 @@ class GenerateBookingPdf {
       );
 
   // Invoice details
-  static pw.Widget _buildInvoiceDetails(BookingDetailsModel bookingDetails) {
+  static pw.Widget _buildInvoiceDetails(SaleDetailsModel saleDetails) {
     pw.RichText text(String text, String secondText) => pw.RichText(
           text: pw.TextSpan(
             text: text,
@@ -308,20 +284,22 @@ class GenerateBookingPdf {
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            text('INVOICE NO: ', bookingDetails.invoiceId),
+            text('INVOICE NO: ', saleDetails.invoiceId),
             pw.SizedBox(height: 4),
-            text('DATE: ', bookingDetails.bookedDate.formatToUiDate()),
+            text('DATE: ', saleDetails.saleDate),
           ],
         ),
-        _buildClientBlock(bookingDetails),
+        _buildClientBlock(saleDetails),
       ],
     );
   }
 
   // Client block
-  static pw.Widget _buildClientBlock(BookingDetailsModel bookingDetails) {
-    final client = bookingDetails.client;
-    final clientAddress = bookingDetails.address;
+  static pw.Widget _buildClientBlock(SaleDetailsModel saleDetails) {
+    if (saleDetails.client == null) return pw.SizedBox.shrink();
+
+    final client = saleDetails.client!;
+    final clientAddress = saleDetails.address;
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.end,
       children: [
@@ -329,8 +307,8 @@ class GenerateBookingPdf {
         pw.SizedBox(height: 4),
         pw.Text(client.name, style: _boldStyle.copyWith(fontSize: 14)),
         if (client.phone1 != 0) pw.Text(client.phone1.toString()),
-        if ((clientAddress ?? '').isNotEmpty)
-          ...clientAddress!.splitByWords().map(
+        if (clientAddress.isNotEmpty)
+          ...clientAddress.splitByWords().map(
                 (line) =>
                     pw.Text(line, style: const pw.TextStyle(lineSpacing: 2)),
               ),
@@ -338,11 +316,9 @@ class GenerateBookingPdf {
     );
   }
 
-  /// Splits a string into chunks of a specific length.
-
   // Product items table
   static pw.Widget _buildItemsTable(
-    BookingDetailsModel bookingDetails,
+    SaleDetailsModel saleDetails,
     List<pw.ImageProvider> productImages,
   ) {
     pw.Text tableHeadingText(
@@ -388,9 +364,9 @@ class GenerateBookingPdf {
             ),
           ),
           // products rows
-          if (bookingDetails.bookedItems.isNotEmpty)
-            ...List.generate(bookingDetails.bookedItems.length, (index) {
-              final product = bookingDetails.bookedItems[index];
+          if (saleDetails.products.isNotEmpty)
+            ...List.generate(saleDetails.products.length, (index) {
+              final product = saleDetails.products[index];
               final productImage = index < productImages.length
                   ? productImages[index]
                   : _unknownProductImage;
@@ -421,7 +397,7 @@ class GenerateBookingPdf {
                         children: [
                           pw.Center(
                             child: pw.Text(
-                              product.amount.toCurrency(),
+                              product.subtotal.toCurrency(),
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                               ),
@@ -442,7 +418,7 @@ class GenerateBookingPdf {
 
   static pw.Row _itemBuilder(
     pw.ImageProvider productImage,
-    ProductInfoModel product,
+    ProductSaleInfoModel product,
   ) {
     final mainServiceType = product.mainServiceType;
     const textStyle = const pw.TextStyle(
@@ -469,20 +445,18 @@ class GenerateBookingPdf {
               product.name,
               style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
             ),
-            if (mainServiceType.isDress)
+            if (product.variantAttribute != null)
               pw.Text(
-                'Size: ${product.variantAttribute ?? '-'}',
+                'Size: ${product.variantAttribute}',
                 style: textStyle,
               ),
-            if (mainServiceType.isDress || mainServiceType.isOthers)
-              pw.Text('Color: ${product.color ?? '-'}', style: textStyle),
-            if (mainServiceType.isVehicle)
-              pw.Text('Model: ${product.model ?? '-'}', style: textStyle),
-            if (mainServiceType.isVehicle ||
-                mainServiceType.isOthers ||
-                mainServiceType.isEquipment)
+            if (product.color != null)
+              pw.Text('Color: ${product.color}', style: textStyle),
+            if (product.model != null)
+              pw.Text('Model: ${product.model}', style: textStyle),
+            if (product.category != null)
               pw.Text(
-                '${mainServiceType.isVehicle ? 'Brand' : 'Category'} : ${product.category ?? '-'}',
+                'Category : ${product.category}',
                 style: textStyle,
               ),
           ],
@@ -493,126 +467,45 @@ class GenerateBookingPdf {
 
   /// Builds the summary and terms section of the PDF.
   static pw.Widget _buildSummaryAndTerms(
-    BookingDetailsModel bookingDetails,
+    SaleDetailsModel saleDetails,
     pw.Font? fontBold,
   ) {
-    final locationStart = bookingDetails.otherDetails.locationStart ?? '';
-    final locationFrom = bookingDetails.otherDetails.locationFrom ?? '';
-    final locationTo = bookingDetails.otherDetails.locationTo ?? '';
-    const double lineSpacing = 3;
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       children: [
-        // Left side: Booking info
+        // Left side: Terms
         pw.Expanded(
-          flex: 2,
-          child: pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.RichText(
-                text: pw.TextSpan(
-                  text: 'BOOKING ',
-                  children: const [
-                    pw.TextSpan(
-                      text: 'INFO:',
-                      style: pw.TextStyle(color: PdfColors.black),
-                    ),
-                  ],
-                  style: pw.TextStyle(
-                    fontWeight: pw.FontWeight.bold,
-                    color: _customColor,
-                    letterSpacing: _letterSpacing,
-                  ),
-                ),
-              ),
-              pw.SizedBox(height: 4),
-              if (bookingDetails.pickupDate != null) ...[
-                pw.Text(
-                  'Pickup : ${bookingDetails.pickupDate!.formatToUiDate()}, ${bookingDetails.pickupDate!.formatToUiTime()}',
-                ),
-                pw.SizedBox(height: lineSpacing),
-              ],
-              pw.Text(
-                'Return : ${bookingDetails.returnDate.formatToUiDate()}, ${bookingDetails.returnDate.formatToUiTime()}',
-              ),
-              pw.SizedBox(height: lineSpacing),
-              if (bookingDetails.bookedItems.isNotEmpty &&
-                  bookingDetails
-                      .bookedItems.first.mainServiceType.isVehicle) ...[
-                if (locationStart.isNotEmpty)
-                  pw.Padding(
-                    padding: const pw.EdgeInsets.only(bottom: lineSpacing),
-                    child: pw.Text(
-                      'Start Location: ${locationStart.isNotEmpty ? locationStart : 'Not available'}',
-                      textAlign: pw.TextAlign.end,
-                    ),
-                  ),
-                if (locationFrom.isNotEmpty)
-                  pw.Padding(
-                    padding: const pw.EdgeInsets.only(bottom: lineSpacing),
-                    child: pw.Text(
-                      'Pickup Location: ${locationFrom.isNotEmpty ? locationFrom : 'Not available'}',
-                      textAlign: pw.TextAlign.end,
-                    ),
-                  ),
-                if (locationTo.isNotEmpty)
-                  pw.Padding(
-                    padding: const pw.EdgeInsets.only(bottom: lineSpacing),
-                    child: pw.Text(
-                      'Destination: ${locationTo.isNotEmpty ? locationTo : 'Not available'}',
-                      textAlign: pw.TextAlign.end,
-                    ),
-                  ),
-              ],
-              // pw.SizedBox(height: 20),
-              // _buildTermsAndConditions(termsAndConditions),
-            ],
-          ),
-        ),
-        // Right side: Totals and Signature
+            flex: 2, child: pw.SizedBox.shrink()), // Placeholder if needed
+
+        // Right side: Totals
         pw.Expanded(
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.end,
             children: [
-              if ((bookingDetails.securityAmount ?? 0) > 0)
-                _buildTotalRow(
-                  'SECURITY AMOUNT',
-                  bookingDetails.securityAmount!.toCurrency(),
-                ),
-              if (bookingDetails.additionalCharges.isNotEmpty)
-                ...bookingDetails.additionalCharges.map(
-                  (e) => _buildTotalRow(
-                    e.name?.toUpperCase() ?? '-----',
-                    e.amount?.toCurrency() ?? '0',
-                  ),
-                ),
-              if ((bookingDetails.discountAmount ?? 0) > 0)
+              if ((saleDetails.discountAmount) > 0)
                 _buildTotalRow(
                   'DISCOUNT TOTAL',
-                  bookingDetails.discountAmount!.toCurrency(),
+                  saleDetails.discountAmount.toCurrency(),
                 ),
               _buildTotalRow(
                 'PAID AMOUNT',
-                bookingDetails.paidAmount.toCurrency(),
+                saleDetails.paidAmount.toCurrency(),
                 fontBold: fontBold,
               ),
               pw.Divider(),
               _buildTotalRow(
                 'GRAND TOTAL',
-                bookingDetails.totalAmount.toCurrency(),
+                saleDetails.totalAmount.toCurrency(),
                 fontBold: fontBold,
               ),
-              if (bookingDetails.totalAmount > bookingDetails.paidAmount)
+              if (saleDetails.balanceDueAmount > 0)
                 pw.Padding(
                   padding: const pw.EdgeInsets.only(top: 6),
                   child: _buildTotalRow(
                     'BALANCE DUE',
                     isBalanceDue: true,
-                    (bookingDetails.totalAmount -
-                            (bookingDetails.paidAmount +
-                                (bookingDetails.discountAmount ?? 0)))
-                        .toCurrency(),
+                    saleDetails.balanceDueAmount.toCurrency(),
                   ),
                 ),
             ],

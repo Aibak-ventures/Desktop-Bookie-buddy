@@ -43,12 +43,12 @@ class BookingRepository {
         () => _bookingService.addBooking(bookingData),
       );
       if (response.status.isSuccess) {
-        if (response.data is Map && response.data.containsKey('id')) {
-          return response.data['id'] as int;
+        if (response.data is Map) {
+          final data = response.data as Map;
+          if (data.containsKey('id')) return data['id'] as int;
+          if (data.containsKey('booking_id')) return data['booking_id'] as int;
+          if (data.containsKey('sale_id')) return data['sale_id'] as int;
         }
-        // Fallback or throw if ID is missing but status is success?
-        // Maybe return 0 or throw.
-        // Assuming API returns { "id": 123, ... }
         if (response.data is int) return response.data as int;
         return 0; // Or handle error
       }
@@ -59,22 +59,21 @@ class BookingRepository {
       rethrow;
     }
   }
-      log('Error adding booking: ${response.devMessage}');
-      throw response.message;
-    } catch (e, stack) {
-      log('Error adding booking: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
 
   // Create a sale
-  Future<void> createSale(Map<String, dynamic> saleData) async {
+  Future<int> createSale(Map<String, dynamic> saleData) async {
     try {
       final response = await safeApiCall(
         () => _bookingService.createSale(saleData),
       );
       if (response.status.isSuccess) {
-        return;
+        if (response.data is Map) {
+          final data = response.data as Map;
+          if (data.containsKey('sale_id')) return data['sale_id'] as int;
+          if (data.containsKey('id')) return data['id'] as int;
+        }
+        if (response.data is int) return response.data as int;
+        return 0;
       }
       log('Error creating sale: ${response.devMessage}');
       throw response.message;
