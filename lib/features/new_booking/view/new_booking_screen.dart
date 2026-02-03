@@ -25,7 +25,6 @@ import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/product_customization_widget.dart';
@@ -140,6 +139,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final _inlinePriceController = TextEditingController();
   final _inlinePriceFocusNode = FocusNode();
 
+  // State variables for payment method
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
+
   // UI Constants
   static const double _fieldSpacing = 8.0;
 
@@ -151,7 +153,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
-  List<MeasurementValueModel> customizationMeasurements = [];
 
   @override
   void initState() {
@@ -177,8 +178,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _removeSearchOverlay();
     clientNameController.dispose();
     clientPhone1Controller.dispose();
-    clientPhone2Controller.dispose();
-    clientPhone2Controller.dispose();
     clientPhone2Controller.dispose();
     clientAddressController.dispose();
     startLocationController.dispose();
@@ -1389,6 +1388,23 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   _handleTabSwitch(_convertTabTypeToBookingType(tabType));
                 },
                 onBack: _handleBackNavigation,
+                onBeforeShopSwitch: () async {
+                  // Always ask for confirmation when switching shops from new booking screen
+                  final shouldSwitch =
+                      await _showShopSwitchConfirmation(context);
+                  return shouldSwitch ?? false;
+                },
+                onShopSwitchSuccess: () {
+                  if (mounted) {
+                    // Call the onClose callback provided by the parent (BottomBarScreen)
+                    // This will update the parent state to hide NewBookingScreen and show Dashboard
+                    if (widget.onClose != null) {
+                      widget.onClose!();
+                    } else {
+                      Navigator.of(context).pop();
+                    }
+                  }
+                },
               ),
               // Main content - no scrolling
               Expanded(
@@ -1585,23 +1601,29 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               showCustomization = false;
                             });
                           },
-                          onSave: (measurements) {
+                          onSaveForProduct: (product, measurements) {
                             setState(() {
-                              customizationMeasurements = measurements;
-                              showCustomization = false;
+                              // Find and update the specific product with measurements
+                              final index =
+                                  selectedProductsNotifier.value.indexWhere(
+                                (p) =>
+                                    p.variant.variantId ==
+                                    product.variant.variantId,
+                              );
+                              if (index != -1) {
+                                final updatedProducts =
+                                    List<ProductSelectedModel>.from(
+                                  selectedProductsNotifier.value,
+                                );
+                                updatedProducts[index] = product.copyWith(
+                                  measurements: measurements,
+                                );
+                                selectedProductsNotifier.value =
+                                    updatedProducts;
+                              }
                             });
-                            // Show success message
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Customization saved: ${measurements.length} measurements',
-                                ),
-                                backgroundColor: const Color(0xFF27AE60),
-                              ),
-                            );
                           },
                           selectedProducts: selectedProductsNotifier.value,
-                          addedMeasurements: customizationMeasurements,
                         )
                       : Container(
                           key: const ValueKey('products'),
@@ -1621,6 +1643,158 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           child: _buildRightSidePanel(),
         ),
       ],
+    );
+  }
+
+  /// Shows a confirmation dialog specifically for shop switching
+  Future<bool?> _showShopSwitchConfirmation(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          width: 450,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 40,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
+                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2196F3).withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.store_rounded,
+                        color: Color(0xFF1976D2),
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Switch Shop?',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1A1A1A),
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Current progress will be lost',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF1565C0),
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Are you sure you want to switch your shop? All selected products, measurements, and started booking details will be discarded.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.6,
+                        color: Color(0xFF4A4A4A),
+                        fontFamily: 'Inter',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Action Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              side: BorderSide(
+                                  color: Colors.grey.shade300, width: 1.5),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1A1A1A),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              backgroundColor: const Color(0xFF2196F3),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
+                            child: const Text(
+                              'Switch & Discard',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -2059,6 +2233,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               isNumber: true),
 
           const SizedBox(height: 24),
+          _buildStepSectionHeader('Payment Method'),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
+              const SizedBox(width: 12),
+              _buildPaymentMethodOption(PaymentMethod.gPay, Icons.qr_code),
+            ],
+          ),
+
+          const SizedBox(height: 24),
 
           // Additional Charges
           Row(
@@ -2323,6 +2508,72 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           Expanded(child: _buildSelectedProductsTable()),
         ],
       ),
+    );
+  }
+
+  Widget _buildPaymentMethodOption(PaymentMethod method, IconData icon) {
+    final isSelected = _selectedPaymentMethod == method;
+    return Expanded(
+      child: InkWell(
+        onTap: () => setState(() => _selectedPaymentMethod = method),
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color:
+                  isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+              width: isSelected ? 1.5 : 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+            color: isSelected
+                ? const Color(0xFF6132E4).withOpacity(0.05)
+                : Colors.white,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color:
+                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                method.name,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected
+                      ? const Color(0xFF6132E4)
+                      : Colors.grey.shade700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Payment Method',
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            _buildPaymentMethodOption(PaymentMethod.gPay, Icons.qr_code),
+            const SizedBox(width: 8),
+            _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
+          ],
+        ),
+      ],
     );
   }
 
@@ -3401,12 +3652,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     const SizedBox(height: 10),
                   ],
                   // Payment method
-                  // _buildPaymentMethodSection(),
+                  _buildPaymentMethodSection(),
                   const SizedBox(height: 3),
                   // Delivery status
                   if (!isSalesMode) _buildDeliveryStatusSection(),
                   const SizedBox(height: 3),
-                  _buildPaymentMethodSection(),
+                  // _buildPaymentMethodSection(),
                   const SizedBox(height: 3),
                   if (!isSalesMode) ...[
                     BookingDocumentUploadSection(
@@ -3536,85 +3787,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Widget _buildPaymentMethodSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Payment Method',
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            Expanded(
-              child: _buildPaymentMethodOption(
-                label: 'UPI',
-                value: PaymentMethod.gPay,
-                icon: Icons.account_balance_wallet_outlined,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _buildPaymentMethodOption(
-                label: 'Cash',
-                value: PaymentMethod.cash,
-                icon: Icons.money_outlined,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentMethodOption({
-    required String label,
-    required PaymentMethod value,
-    required IconData icon,
-  }) {
-    final isSelected = paymentMethod == value;
-    return InkWell(
-      onTap: () => setState(() => paymentMethod = value),
-      borderRadius: BorderRadius.circular(6),
-      child: Container(
-        height: 40, // Consistent height for payment method options
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFF6132E4).withOpacity(0.1)
-              : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
-            width: isSelected ? 1.5 : 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon,
-                size: 14,
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade600),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildDeliveryStatusSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3667,7 +3839,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       decoration: BoxDecoration(
         color: Color.fromARGB(255, 245, 242, 254),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Colors.white),
       ),
       child: Column(
         children: [
@@ -4729,6 +4901,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       hint: 'Discount amount',
                       isNumber: true),
 
+                  const SizedBox(height: 14),
+                  // Payment Method Selection
+                  _buildPaymentMethodSection(),
                   const SizedBox(height: 14),
 
                   // Additional Charges

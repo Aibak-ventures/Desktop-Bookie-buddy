@@ -12,15 +12,14 @@ class ProductCustomizationWidget extends StatefulWidget {
   const ProductCustomizationWidget({
     super.key,
     required this.onBack,
-    required this.onSave,
+    required this.onSaveForProduct,
     required this.selectedProducts,
-    this.addedMeasurements = const [],
   });
 
   final VoidCallback onBack;
-  final Function(List<MeasurementValueModel>) onSave;
+  final Function(ProductSelectedModel product,
+      List<MeasurementValueModel> measurements) onSaveForProduct;
   final List<ProductSelectedModel> selectedProducts;
-  final List<MeasurementValueModel> addedMeasurements;
 
   @override
   State<ProductCustomizationWidget> createState() =>
@@ -37,20 +36,51 @@ class _ProductCustomizationWidgetState
 
   // Currently selected product for customization
   ProductSelectedModel? selectedProduct;
+  int? selectedProductIndex;
 
   @override
   void initState() {
     super.initState();
-    // Auto-select first product if available
-    if (widget.selectedProducts.isNotEmpty) {
-      selectedProduct = widget.selectedProducts.first;
+    // Auto-select first product without measurements
+    _selectFirstProductWithoutMeasurements();
+  }
+
+  void _selectFirstProductWithoutMeasurements() {
+    for (int i = 0; i < widget.selectedProducts.length; i++) {
+      if (widget.selectedProducts[i].measurements.isEmpty) {
+        setState(() {
+          selectedProduct = widget.selectedProducts[i];
+          selectedProductIndex = i;
+        });
+        _initializeMeasurements();
+        return;
+      }
     }
-    _initializeMeasurements();
+    // If all products have measurements, select the first one
+    if (widget.selectedProducts.isNotEmpty) {
+      setState(() {
+        selectedProduct = widget.selectedProducts.first;
+        selectedProductIndex = 0;
+      });
+      _initializeMeasurements();
+    }
   }
 
   void _initializeMeasurements() {
-    if (widget.addedMeasurements.isNotEmpty) {
-      final genders = widget.addedMeasurements.map((e) => e.gender).toSet();
+    // Dispose old controllers
+    for (var field in measurementsNotifier.value) {
+      field.controller.dispose();
+    }
+
+    if (selectedProduct == null) {
+      measurementsNotifier.value = [];
+      return;
+    }
+
+    final productMeasurements = selectedProduct!.measurements;
+
+    if (productMeasurements.isNotEmpty) {
+      final genders = productMeasurements.map((e) => e.gender).toSet();
       final filteredGenders =
           genders.where((g) => g != GenderType.unisex).toSet();
 
@@ -64,7 +94,7 @@ class _ProductCustomizationWidgetState
     final baseMeasurements = _getMeasurements();
 
     final updatedMeasurements = baseMeasurements.map((field) {
-      final existing = widget.addedMeasurements.firstWhere(
+      final existing = productMeasurements.firstWhere(
         (e) => e.key == field.key,
         orElse: () => MeasurementValueModel(
           name: field.name,
@@ -78,7 +108,7 @@ class _ProductCustomizationWidgetState
       );
     }).toList();
 
-    final customMeasurements = widget.addedMeasurements
+    final customMeasurements = productMeasurements
         .where((e) => !baseMeasurements.any((f) => f.key == e.key))
         .map(
           (e) => MeasurementFieldModel(
@@ -106,7 +136,9 @@ class _ProductCustomizationWidgetState
     super.dispose();
   }
 
-  void _saveMeasurements() {
+  void _saveMeasurements({bool moveToNext = false}) {
+    if (selectedProduct == null) return;
+
     if (formKey.currentState?.validate() ?? false) {
       final filteredMeasurements = measurementsNotifier.value
           .where((field) => field.controller.text.trim().isNotEmpty)
@@ -119,7 +151,29 @@ class _ProductCustomizationWidgetState
             ),
           )
           .toList();
-      widget.onSave(filteredMeasurements);
+
+      widget.onSaveForProduct(selectedProduct!, filteredMeasurements);
+
+      if (moveToNext) {
+        _moveToNextProduct();
+      }
+    }
+  }
+
+  void _moveToNextProduct() {
+    if (selectedProductIndex == null) return;
+
+    // Find next product
+    final nextIndex = selectedProductIndex! + 1;
+    if (nextIndex < widget.selectedProducts.length) {
+      setState(() {
+        selectedProductIndex = nextIndex;
+        selectedProduct = widget.selectedProducts[nextIndex];
+      });
+      _initializeMeasurements();
+    } else {
+      // All products done
+      widget.onBack();
     }
   }
 
@@ -204,21 +258,49 @@ class _ProductCustomizationWidgetState
                     ],
                   ),
                 ),
-                ElevatedButton.icon(
-                  onPressed: selectedProduct != null ? _saveMeasurements : null,
-                  icon: const Icon(Icons.save, size: 16, color: Colors.white),
-                  label: const Text(
-                    'Save Measurements',
-                    style: TextStyle(color: Colors.white, fontSize: 13),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedProduct != null
-                        ? const Color(0xFF27AE60)
-                        : Colors.grey,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    elevation: 0,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: selectedProduct != null
+                          ? () => _saveMeasurements()
+                          : null,
+                      icon:
+                          const Icon(Icons.save, size: 16, color: Colors.white),
+                      label: const Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: selectedProduct != null
+                            ? const Color(0xFF27AE60)
+                            : Colors.grey,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        elevation: 0,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      onPressed: selectedProduct != null
+                          ? () => _saveMeasurements(moveToNext: true)
+                          : null,
+                      icon: const Icon(Icons.skip_next,
+                          size: 16, color: Colors.white),
+                      label: const Text(
+                        'Save & Next',
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: selectedProduct != null
+                            ? const Color(0xFF6C5CE7)
+                            : Colors.grey,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        elevation: 0,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -264,6 +346,43 @@ class _ProductCustomizationWidgetState
           builder: (context, selectedGender, child) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Customisation header - moved from product list
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8F9FA),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(
+                        Icons.design_services,
+                        color: Color(0xFF6C5CE7),
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Customisation',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF2D3436),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
               // Gender selection
               Container(
                 padding: const EdgeInsets.all(16),
@@ -508,18 +627,9 @@ class _ProductCustomizationWidgetState
                     color: Color(0xFF2D3436),
                   ),
                 ),
-                const SizedBox(width: 16),
-                Text(
-                  'Variants',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
                 const Spacer(),
                 Text(
-                  'Customisation',
+                  'Status',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -615,44 +725,104 @@ class _ProductCustomizationWidgetState
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    [
-                                      product.variant.color,
-                                      product.variant.category
-                                    ]
-                                        .where((e) => e != null && e.isNotEmpty)
-                                        .join(', '),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey.shade600,
-                                    ),
+                                  const SizedBox(height: 6),
+                                  // Variant details in chips
+                                  Wrap(
+                                    spacing: 6,
+                                    runSpacing: 4,
+                                    children: [
+                                      if (product.variant.variantAttribute !=
+                                              null &&
+                                          product.variant.variantAttribute!
+                                              .isNotEmpty)
+                                        _buildVariantChip(
+                                            product.variant.variantAttribute!,
+                                            Icons.label),
+                                      if (product.variant.color != null &&
+                                          product.variant.color!.isNotEmpty)
+                                        _buildVariantChip(
+                                            product.variant.color!,
+                                            Icons.palette),
+                                      if (product.variant.model != null &&
+                                          product.variant.model!.isNotEmpty)
+                                        _buildVariantChip(
+                                            product.variant.model!,
+                                            Icons.style),
+                                      if (product.variant.category != null &&
+                                          product.variant.category!.isNotEmpty)
+                                        _buildVariantChip(
+                                            product.variant.category!,
+                                            Icons.category),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
 
-                            // Add button
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedProduct = product;
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isSelected
-                                    ? const Color(0xFF6C5CE7)
-                                    : const Color(0xFF27AE60),
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                minimumSize: const Size(60, 32),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                isSelected ? 'Selected' : 'add',
-                                style: const TextStyle(fontSize: 12),
-                              ),
+                            // Status and action
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (product.measurements.isNotEmpty)
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF27AE60),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(
+                                          Icons.check_circle,
+                                          size: 14,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '${product.measurements.length}',
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedProduct = product;
+                                      selectedProductIndex = index;
+                                    });
+                                    _initializeMeasurements();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isSelected
+                                        ? const Color(0xFF6C5CE7)
+                                        : product.measurements.isNotEmpty
+                                            ? const Color(0xFF6C5CE7)
+                                                .withOpacity(0.7)
+                                            : const Color(0xFF636E72),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    minimumSize: const Size(50, 32),
+                                    elevation: 0,
+                                  ),
+                                  child: Text(
+                                    isSelected
+                                        ? 'Active'
+                                        : product.measurements.isNotEmpty
+                                            ? 'Edit'
+                                            : 'Add',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -765,4 +935,31 @@ class _ProductCustomizationWidgetState
           gender: GenderType.male,
         ),
       ];
+
+  // Helper method to build variant chips
+  Widget _buildVariantChip(String label, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F0F0),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey.shade300, width: 0.5),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 10, color: Colors.grey.shade600),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

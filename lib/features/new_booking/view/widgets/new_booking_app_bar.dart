@@ -19,7 +19,12 @@ class NewBookingAppBar extends StatefulWidget {
     required this.selectedTab,
     required this.onTabChanged,
     this.onBack,
+    this.onBeforeShopSwitch,
+    this.onShopSwitchSuccess,
   });
+
+  final Future<bool> Function()? onBeforeShopSwitch;
+  final VoidCallback? onShopSwitchSuccess;
 
   @override
   State<NewBookingAppBar> createState() => _NewBookingAppBarState();
@@ -85,8 +90,10 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         // Show success message
         context.showSnackBar('Shop switched successfully');
 
-        // Reload page to refresh data
-        // TODO: Implement proper page reload or data refresh
+        // Handle success navigation
+        if (widget.onShopSwitchSuccess != null) {
+          widget.onShopSwitchSuccess!();
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -185,8 +192,12 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
           ),
         );
       }).toList(),
-    ).then((selectedShopId) {
+    ).then((selectedShopId) async {
       if (selectedShopId != null && selectedShopId != user.shopDetails.id) {
+        if (widget.onBeforeShopSwitch != null) {
+          final shouldProceed = await widget.onBeforeShopSwitch!();
+          if (!shouldProceed) return;
+        }
         _switchShop(selectedShopId as int);
       }
     });

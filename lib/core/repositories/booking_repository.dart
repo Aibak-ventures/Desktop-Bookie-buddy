@@ -37,14 +37,28 @@ class BookingRepository {
   }
 
   // Create a booking
-  Future<void> addBooking(RequestBookingModel bookingData) async {
+  Future<int> addBooking(RequestBookingModel bookingData) async {
     try {
       final response = await safeApiCall(
         () => _bookingService.addBooking(bookingData),
       );
       if (response.status.isSuccess) {
-        return;
+        if (response.data is Map && response.data.containsKey('id')) {
+          return response.data['id'] as int;
+        }
+        // Fallback or throw if ID is missing but status is success?
+        // Maybe return 0 or throw.
+        // Assuming API returns { "id": 123, ... }
+        if (response.data is int) return response.data as int;
+        return 0; // Or handle error
       }
+      log('Error adding booking: ${response.devMessage}');
+      throw response.message;
+    } catch (e, stack) {
+      log('Error adding booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
       log('Error adding booking: ${response.devMessage}');
       throw response.message;
     } catch (e, stack) {
