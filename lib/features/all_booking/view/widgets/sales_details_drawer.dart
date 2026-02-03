@@ -18,65 +18,83 @@ class SalesDetailsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SalesDetailsDrawerCubit, SalesDetailsDrawerState>(
-      builder: (context, drawerState) {
-        return AnimatedPositioned(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          right: drawerState.isOpen ? 0 : -650,
-          top: 0,
-          bottom: 0,
-          width: 470,
-          child: Material(
-            elevation: 16,
-            shadowColor: Colors.black.withOpacity(0.3),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(-4, 0),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Close button header
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey.shade200),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            context
-                                .read<SalesDetailsDrawerCubit>()
-                                .closeDrawer();
-                          },
-                          tooltip: 'Close',
-                          color: Colors.grey.shade600,
-                          hoverColor: Colors.grey.shade100,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildContent(context, drawerState),
-                  ),
-                ],
-              ),
-            ),
-          ),
+    return BlocListener<SalesDetailsBloc, SalesDetailsState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          success: (message, didPop, needRefresh) {
+            context.showSnackBar(message);
+            if (needRefresh) {
+              context.read<AllSalesBloc>().add(const AllSalesEvent.loadSales());
+            }
+            if (didPop) {
+              context.read<SalesDetailsDrawerCubit>().closeDrawer();
+            }
+          },
+          error: (message) {
+            context.showSnackBar(message, isError: true);
+          },
         );
       },
+      child: BlocBuilder<SalesDetailsDrawerCubit, SalesDetailsDrawerState>(
+        builder: (context, drawerState) {
+          return AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            right: drawerState.isOpen ? 0 : -650,
+            top: 0,
+            bottom: 0,
+            width: 470,
+            child: Material(
+              elevation: 16,
+              shadowColor: Colors.black.withOpacity(0.3),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(-4, 0),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    // Close button header
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey.shade200),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              context
+                                  .read<SalesDetailsDrawerCubit>()
+                                  .closeDrawer();
+                            },
+                            tooltip: 'Close',
+                            color: Colors.grey.shade600,
+                            hoverColor: Colors.grey.shade100,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildContent(context, drawerState),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -565,10 +583,6 @@ class SalesDetailsDrawer extends StatelessWidget {
               context.read<SalesDetailsBloc>().add(
                     SalesDetailsEvent.deleteSale(sale.id),
                   );
-              // We also need to refresh the All Sales list.
-              // AllSalesBloc is available in context?
-              context.read<AllSalesBloc>().add(const AllSalesEvent.loadSales());
-              context.read<SalesDetailsDrawerCubit>().closeDrawer();
             }
           },
           icon: const Icon(Icons.delete_outline, color: Colors.red),
