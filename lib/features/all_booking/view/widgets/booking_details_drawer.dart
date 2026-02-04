@@ -4,12 +4,18 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_modal.dart';
+import 'package:bookie_buddy_web/features/edit_booking/view/edit_new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:flutter/material.dart';
@@ -764,12 +770,36 @@ class BookingDetailsDrawer extends StatelessWidget {
           icon: Icons.edit_outlined,
           color: AppColors.purple,
           onTap: () async {
-            final result = await showEditBookingModal(
-              context: context,
-              booking: booking,
+            // Close the drawer first
+            context.read<BookingDetailsDrawerCubit>().closeDrawer();
+            
+            // Navigate to the new edit booking screen with necessary providers
+            final result = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (_) => ServiceBloc(repository: getIt()),
+                    ),
+                    BlocProvider(
+                      create: (_) => ClientCubit(repository: getIt()),
+                    ),
+                    BlocProvider(
+                      create: (_) => StaffSearchCubit(repository: getIt()),
+                    ),
+                    BlocProvider(
+                      create: (_) => SelectedProductsCubit(),
+                    ),
+                  ],
+                  child: EditNewBookingScreen(
+                    bookingDetails: booking,
+                  ),
+                ),
+              ),
             );
 
-            if (context.mounted) {
+            // Refresh booking details if edited
+            if (result == true && context.mounted) {
               context.read<BookingDetailsBloc>().add(
                     BookingDetailsEvent.fetchBookingDetails(booking.id),
                   );
