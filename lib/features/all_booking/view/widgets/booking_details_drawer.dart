@@ -12,7 +12,6 @@ import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_modal.dart';
 import 'package:bookie_buddy_web/features/edit_booking/view/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
@@ -772,7 +771,7 @@ class BookingDetailsDrawer extends StatelessWidget {
           onTap: () async {
             // Close the drawer first
             context.read<BookingDetailsDrawerCubit>().closeDrawer();
-            
+
             // Navigate to the new edit booking screen with necessary providers
             final result = await Navigator.of(context).push(
               MaterialPageRoute(

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
@@ -420,7 +420,6 @@ class GenerateSalesPdf {
     pw.ImageProvider productImage,
     ProductSaleInfoModel product,
   ) {
-    final mainServiceType = product.mainServiceType;
     const textStyle = const pw.TextStyle(
       fontSize: 12,
       color: PdfColors.grey600,

@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
@@ -166,7 +165,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     // Determine edit mode
     if (widget.bookingDetails != null) {
       selectedBookingType = EditBookingType.booking;
@@ -195,11 +194,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     pickupDate = booking.pickupDate?.parseToDateTime() ?? DateTime.now();
     returnDate = booking.returnDate.parseToDateTime();
     coolingPeriodDate = booking.coolingPeriodDate?.parseToDateTime();
-    
+
     // Initialize times
     pickupTime = booking.pickupDate?.parseToDateTime().toTimeOfDay;
     returnTime = booking.returnDate.parseToDateTime().toTimeOfDay;
-    coolingPeriodTime = booking.coolingPeriodDate?.parseToDateTime().toTimeOfDay;
+    coolingPeriodTime =
+        booking.coolingPeriodDate?.parseToDateTime().toTimeOfDay;
 
     // Initialize client details
     clientNameController.text = booking.client.name;
@@ -207,7 +207,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     clientPhone2Controller.text = booking.client.phone2?.toString() ?? '';
     clientAddressController.text = booking.address ?? '';
     selectedClientId = booking.client.id;
-    
+
     // Initialize staff
     staffNameController.text = booking.staffName ?? '';
     selectedStaffId = booking.staffId;
@@ -217,8 +217,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     securityAmountController.text = booking.securityAmount?.toString() ?? '0';
     discountAmountController.text = booking.discountAmount?.toString() ?? '0';
     // Get payment method from payments history if available
-    final paymentMethodValue = booking.payments.isNotEmpty 
-        ? booking.payments.first.paymentMethod 
+    final paymentMethodValue = booking.payments.isNotEmpty
+        ? booking.payments.first.paymentMethod
         : PaymentMethod.cash;
     paymentMethod = paymentMethodValue;
     deliveryStatus = booking.deliveryStatus;
@@ -233,11 +233,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Note: runningKilometers is not in the model, leaving empty
     runningKilometersController.text = '';
 
-    // Initialize products (would need to convert from booking products)
-    // TODO: Convert booking.products to ProductSelectedModel list
-    
+    // Initialize products
+    selectedProductsNotifier.value = booking.bookedItems.map((item) {
+      return ProductSelectedModel(
+        variant: item,
+        amount: item.amount,
+        quantity: item.quantity,
+        measurements: item.measurements,
+      );
+    }).toList();
+
     // Initialize additional charges
-    // TODO: Convert booking additional charges if available
+    additionalChargesNotifier.value = booking.additionalCharges;
   }
 
   void _initializeFromSale(SaleDetailsModel sale) {
@@ -265,8 +272,30 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Initialize description
     descriptionController.text = sale.description ?? '';
 
-    // Initialize products (would need to convert from sale products)
-    // TODO: Convert sale.products to ProductSelectedModel list
+    // Initialize products
+    selectedProductsNotifier.value = sale.products.map((item) {
+      // Create ProductInfoModel from ProductSaleInfoModel
+      final variant = ProductInfoModel(
+        id: item.variantId,
+        productId: item.productId,
+        variantId: item.variantId,
+        name: item.name,
+        image: item.image,
+        mainServiceType: item.mainServiceType,
+        variantAttribute: item.variantAttribute,
+        color: item.color,
+        category: item.category,
+        model: item.model,
+        quantity: item.quantity,
+        amount: item.price,
+      );
+
+      return ProductSelectedModel(
+        variant: variant,
+        amount: item.price,
+        quantity: item.quantity,
+      );
+    }).toList();
   }
 
   void _saveInitialState() {
@@ -293,7 +322,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   bool _checkForChanges() {
     if (_initialState == null) return false;
-    
+
     return _initialState!['clientName'] != clientNameController.text ||
         _initialState!['clientPhone1'] != clientPhone1Controller.text ||
         _initialState!['clientPhone2'] != clientPhone2Controller.text ||
@@ -308,8 +337,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         _initialState!['coolingPeriodDate'] != coolingPeriodDate ||
         _initialState!['paymentMethod'] != paymentMethod ||
         _initialState!['deliveryStatus'] != deliveryStatus ||
-        _initialState!['selectedProducts'] != selectedProductsNotifier.value.length ||
-        _initialState!['additionalCharges'] != additionalChargesNotifier.value.length ||
+        _initialState!['selectedProducts'] !=
+            selectedProductsNotifier.value.length ||
+        _initialState!['additionalCharges'] !=
+            additionalChargesNotifier.value.length ||
         _initialState!['documents'] != documentsNotifier.value.length;
   }
 
@@ -438,41 +469,76 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
   }
 
+  void _openProductSelection() async {
+    final isSales = selectedBookingType == EditBookingType.sales;
+
+    // If "All Services" is selected (-1), pass null to the screen to show all
+    final serviceIdToUse = (selectedServiceId == -1) ? null : selectedServiceId;
+
+    final result = await Navigator.push<List<ProductSelectedModel>>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => SelectProductBloc(
+                repository: getIt<ProductRepository>(),
+              ),
+            ),
+            BlocProvider(create: (_) => SelectedProductsCubit()),
+          ],
+          child: SelectProductScreen(
+            serviceId: serviceIdToUse,
+            pickupDate: pickupDate.format(),
+            returnDate: returnDate.format(),
+            pickupTime: pickupTime,
+            returnTime: returnTime,
+            preSelectedData: selectedProductsNotifier.value,
+            isSales: isSales,
+            useAvailableProductsApi: !isSales,
+          ),
+        ),
+      ),
+    );
+
+    if (result != null) {
+      selectedProductsNotifier.value = result;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) return;
-        await _handleBackNavigation();
-      },
-      child: Container(
-        color: const Color(0xFFF5F6FA),
-        height: screenHeight,
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F6FA),
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          await _handleBackNavigation();
+        },
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              // Edit booking app bar
-              EditBookingAppBar(
-                bookingType: selectedBookingType == EditBookingType.booking
-                    ? 'Booking'
-                    : 'Sale',
-                bookingId: widget.bookingDetails?.id ?? 
-                    widget.saleDetails?.id ?? 0,
-                onBack: _handleBackNavigation,
-                onSave: _handleSave,
-              ),
-              // Main content
-              Expanded(
-                child: Padding(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 24),
+            child: Column(
+              children: [
+                // Edit booking app bar
+                EditBookingAppBar(
+                  bookingType: selectedBookingType == EditBookingType.booking
+                      ? 'Booking'
+                      : 'Sale',
+                  bookingId:
+                      widget.bookingDetails?.id ?? widget.saleDetails?.id ?? 0,
+                  onBack: _handleBackNavigation,
+                  onSave: _handleSave,
+                ),
+                // Main content
+                Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: _buildMainContent(),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -502,61 +568,57 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             children: [
               _buildDateSelectionSection(),
               const SizedBox(height: 16),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  switchInCurve: Curves.easeInOut,
-                  switchOutCurve: Curves.easeInOut,
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                    final offsetAnimation = Tween<Offset>(
-                      begin: child.key == const ValueKey('customization')
-                          ? const Offset(1.0, 0.0)
-                          : const Offset(-1.0, 0.0),
-                      end: Offset.zero,
-                    ).animate(animation);
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  final offsetAnimation = Tween<Offset>(
+                    begin: child.key == const ValueKey('customization')
+                        ? const Offset(1.0, 0.0)
+                        : const Offset(-1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(animation);
 
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                  child: showCustomization
-                      ? ProductCustomizationWidget(
-                          key: const ValueKey('customization'),
-                          onBack: () {
-                            setState(() {
-                              showCustomization = false;
-                            });
-                          },
-                          onSaveForProduct: (product, measurements) {
-                            setState(() {
-                              final index =
-                                  selectedProductsNotifier.value.indexWhere(
-                                (p) =>
-                                    p.variant.variantId ==
-                                    product.variant.variantId,
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+                child: showCustomization
+                    ? ProductCustomizationWidget(
+                        key: const ValueKey('customization'),
+                        onBack: () {
+                          setState(() {
+                            showCustomization = false;
+                          });
+                        },
+                        onSaveForProduct: (product, measurements) {
+                          setState(() {
+                            final index =
+                                selectedProductsNotifier.value.indexWhere(
+                              (p) =>
+                                  p.variant.variantId ==
+                                  product.variant.variantId,
+                            );
+                            if (index != -1) {
+                              final updatedProducts =
+                                  List<ProductSelectedModel>.from(
+                                selectedProductsNotifier.value,
                               );
-                              if (index != -1) {
-                                final updatedProducts =
-                                    List<ProductSelectedModel>.from(
-                                  selectedProductsNotifier.value,
-                                );
-                                updatedProducts[index] = product.copyWith(
-                                  measurements: measurements,
-                                );
-                                selectedProductsNotifier.value =
-                                    updatedProducts;
-                              }
-                            });
-                          },
-                          selectedProducts: selectedProductsNotifier.value,
-                        )
-                      : Container(
-                          key: const ValueKey('products'),
-                          child: _buildServiceSelectionSection(),
-                        ),
-                ),
+                              updatedProducts[index] = product.copyWith(
+                                measurements: measurements,
+                              );
+                              selectedProductsNotifier.value = updatedProducts;
+                            }
+                          });
+                        },
+                        selectedProducts: selectedProductsNotifier.value,
+                      )
+                    : Container(
+                        key: const ValueKey('products'),
+                        child: _buildServiceSelectionSection(),
+                      ),
               ),
             ],
           ),
@@ -674,9 +736,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    // Show product selection dialog
-                  },
+                  onPressed: _openProductSelection,
                   icon: const Icon(Icons.add, size: 18),
                   label: const Text('Add Products'),
                   style: ElevatedButton.styleFrom(
@@ -692,44 +752,46 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             ),
           ),
           // Products list
-          Expanded(
-            child: ValueListenableBuilder<List<ProductSelectedModel>>(
-              valueListenable: selectedProductsNotifier,
-              builder: (context, products, _) {
-                if (products.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.inventory_2_outlined,
-                          size: 64,
-                          color: Colors.grey.shade300,
+          ValueListenableBuilder<List<ProductSelectedModel>>(
+            valueListenable: selectedProductsNotifier,
+            builder: (context, products, _) {
+              if (products.isEmpty) {
+                return Container(
+                  height: 200,
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.inventory_2_outlined,
+                        size: 64,
+                        color: Colors.grey.shade300,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No products selected',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade600,
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No products selected',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: products.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    return _buildProductCard(product);
-                  },
+                      ),
+                    ],
+                  ),
                 );
-              },
-            ),
+              }
+              return ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                itemCount: products.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return _buildProductCard(product);
+                },
+              );
+            },
           ),
         ],
       ),
@@ -817,6 +879,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         children: [
           _buildClientSection(),
@@ -995,9 +1059,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               );
             }
             return Column(
-              children: documents
-                  .map((doc) => _buildDocumentCard(doc))
-                  .toList(),
+              children:
+                  documents.map((doc) => _buildDocumentCard(doc)).toList(),
             );
           },
         ),
@@ -1088,7 +1151,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       // Hide loading
       if (mounted) {
         GlobalLoadingOverlay.hide();
-        
+
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -1104,7 +1167,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       // Hide loading
       if (mounted) {
         GlobalLoadingOverlay.hide();
-        
+
         // Show error
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
