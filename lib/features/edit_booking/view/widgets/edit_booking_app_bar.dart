@@ -38,7 +38,8 @@ class EditBookingAppBar extends StatelessWidget {
               onTap: onBack,
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
@@ -143,40 +144,6 @@ class EditBookingAppBar extends StatelessWidget {
                       color: Colors.grey.shade700,
                       fontFamily: 'Inter',
                     ),
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-
-                // Save button
-                ElevatedButton(
-                  onPressed: onSave,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    backgroundColor: const Color(0xFF6132E4),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.save_outlined, size: 18),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Save Changes',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ],

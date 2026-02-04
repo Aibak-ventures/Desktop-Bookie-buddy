@@ -6,7 +6,8 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
+import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
+
 import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -207,14 +208,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Set dates
     if (booking.pickupDate != null) {
-      pickupDate = DateTime.parse(booking.pickupDate!);
+      pickupDate = booking.pickupDate!.parseToDateTime();
       pickupTime = TimeOfDay.fromDateTime(pickupDate);
     }
-    returnDate = DateTime.parse(booking.returnDate);
+    returnDate = booking.returnDate.parseToDateTime();
     returnTime = TimeOfDay.fromDateTime(returnDate);
 
     if (booking.coolingPeriodDate != null) {
-      coolingPeriodDate = DateTime.parse(booking.coolingPeriodDate!);
+      coolingPeriodDate = booking.coolingPeriodDate!.parseToDateTime();
     }
 
     // Set client details
@@ -247,6 +248,20 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Set description
     if (booking.description != null) {
       descriptionController.text = booking.description!;
+    }
+
+    // Set other details (locations & running kilometers)
+    if (booking.otherDetails.locationStart != null) {
+      startLocationController.text = booking.otherDetails.locationStart!;
+    }
+    if (booking.otherDetails.locationFrom != null) {
+      pickupLocationController.text = booking.otherDetails.locationFrom!;
+    }
+    if (booking.otherDetails.locationTo != null) {
+      destinationLocationController.text = booking.otherDetails.locationTo!;
+    }
+    if (booking.otherDetails.end != null) {
+      runningKilometersController.text = booking.otherDetails.end!;
     }
 
     // Set products
@@ -286,7 +301,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     selectedBookingType = BookingType.sales;
 
     // Set sale date
-    pickupDate = DateTime.parse(sale.saleDate);
+    pickupDate = sale.saleDate.parseToDateTime();
 
     // Set client details
     clientPhone1Controller.text = sale.clientPhone.toString();
@@ -1539,31 +1554,33 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         if (didPop) return;
         await _handleBackNavigation();
       },
-      child: Container(
-        color: const Color(0xFFF5F6FA),
-        height: screenHeight,
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Edit booking app bar
-              EditBookingAppBar(
-                onSave: _handleSaveBooking,
-                bookingId: widget.bookingId ??
-                    widget.bookingDetails?.id ??
-                    widget.saleDetails?.id ??
-                    0,
-                bookingType: selectedBookingType.name,
-                onBack: _handleBackNavigation,
-              ),
-              // Main content - no scrolling
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: _buildMainContent(),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F6FA),
+        body: Container(
+          height: screenHeight,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                // Edit booking app bar
+                EditBookingAppBar(
+                  onSave: _handleSaveBooking,
+                  bookingId: widget.bookingId ??
+                      widget.bookingDetails?.id ??
+                      widget.saleDetails?.id ??
+                      0,
+                  bookingType: selectedBookingType.name,
+                  onBack: _handleBackNavigation,
                 ),
-              ),
-            ],
+                // Main content - no scrolling
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: _buildMainContent(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -2482,14 +2499,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: _handleSaveBooking,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6132E4),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              child: const Text('Confirm Booking',
+              child: const Text('Save Changes',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -4092,7 +4109,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             width: double.infinity,
             height: 39, // Balanced height
             child: ElevatedButton(
-              onPressed: _handleConfirmBooking,
+              onPressed: _handleSaveBooking,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6132E4),
                 foregroundColor: Colors.white,
@@ -4102,7 +4119,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 elevation: 0,
               ),
               child: const Text(
-                'Confirm Booking',
+                'Save Changes',
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: 'Inter',
@@ -4488,8 +4505,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           : null,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
-      runningKilometers:
-          runningKilometersController.text.trim(), // Added running kilometers
+      otherDetails: BookingOtherDetailsModel(
+        locationStart: startLocationController.text.trim().nullIfEmpty,
+        locationFrom: pickupLocationController.text.trim().nullIfEmpty,
+        locationTo: destinationLocationController.text.trim().nullIfEmpty,
+        end: runningKilometersController.text.trim().nullIfEmpty,
+      ),
     );
   }
 

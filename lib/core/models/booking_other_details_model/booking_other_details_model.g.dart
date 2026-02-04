@@ -12,6 +12,7 @@ _$BookingOtherDetailsModelImpl _$$BookingOtherDetailsModelImplFromJson(
       locationStart: json['location_start'] as String?,
       locationFrom: json['location_from'] as String?,
       locationTo: json['location_to'] as String?,
+      end: json['end'] as String?,
     );
 
 Map<String, dynamic> _$$BookingOtherDetailsModelImplToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$BookingOtherDetailsModelImplToJson(
       if (instance.locationStart case final value?) 'location_start': value,
       if (instance.locationFrom case final value?) 'location_from': value,
       if (instance.locationTo case final value?) 'location_to': value,
+      if (instance.end case final value?) 'end': value,
     };

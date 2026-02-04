@@ -27,6 +27,8 @@ mixin _$BookingOtherDetailsModel {
   String? get locationFrom => throw _privateConstructorUsedError;
   @JsonKey(name: 'location_to')
   String? get locationTo => throw _privateConstructorUsedError;
+  @JsonKey(name: 'end')
+  String? get end => throw _privateConstructorUsedError;
 
   /// Serializes this BookingOtherDetailsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,7 +49,8 @@ abstract class $BookingOtherDetailsModelCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'location_start') String? locationStart,
       @JsonKey(name: 'location_from') String? locationFrom,
-      @JsonKey(name: 'location_to') String? locationTo});
+      @JsonKey(name: 'location_to') String? locationTo,
+      @JsonKey(name: 'end') String? end});
 }
 
 /// @nodoc
@@ -69,6 +72,7 @@ class _$BookingOtherDetailsModelCopyWithImpl<$Res,
     Object? locationStart = freezed,
     Object? locationFrom = freezed,
     Object? locationTo = freezed,
+    Object? end = freezed,
   }) {
     return _then(_value.copyWith(
       locationStart: freezed == locationStart
@@ -82,6 +86,10 @@ class _$BookingOtherDetailsModelCopyWithImpl<$Res,
       locationTo: freezed == locationTo
           ? _value.locationTo
           : locationTo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      end: freezed == end
+          ? _value.end
+          : end // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -99,7 +107,8 @@ abstract class _$$BookingOtherDetailsModelImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'location_start') String? locationStart,
       @JsonKey(name: 'location_from') String? locationFrom,
-      @JsonKey(name: 'location_to') String? locationTo});
+      @JsonKey(name: 'location_to') String? locationTo,
+      @JsonKey(name: 'end') String? end});
 }
 
 /// @nodoc
@@ -120,6 +129,7 @@ class __$$BookingOtherDetailsModelImplCopyWithImpl<$Res>
     Object? locationStart = freezed,
     Object? locationFrom = freezed,
     Object? locationTo = freezed,
+    Object? end = freezed,
   }) {
     return _then(_$BookingOtherDetailsModelImpl(
       locationStart: freezed == locationStart
@@ -134,6 +144,10 @@ class __$$BookingOtherDetailsModelImplCopyWithImpl<$Res>
           ? _value.locationTo
           : locationTo // ignore: cast_nullable_to_non_nullable
               as String?,
+      end: freezed == end
+          ? _value.end
+          : end // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -146,7 +160,8 @@ class _$BookingOtherDetailsModelImpl implements _BookingOtherDetailsModel {
   const _$BookingOtherDetailsModelImpl(
       {@JsonKey(name: 'location_start') this.locationStart,
       @JsonKey(name: 'location_from') this.locationFrom,
-      @JsonKey(name: 'location_to') this.locationTo});
+      @JsonKey(name: 'location_to') this.locationTo,
+      @JsonKey(name: 'end') this.end});
 
   factory _$BookingOtherDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$BookingOtherDetailsModelImplFromJson(json);
@@ -160,10 +175,13 @@ class _$BookingOtherDetailsModelImpl implements _BookingOtherDetailsModel {
   @override
   @JsonKey(name: 'location_to')
   final String? locationTo;
+  @override
+  @JsonKey(name: 'end')
+  final String? end;
 
   @override
   String toString() {
-    return 'BookingOtherDetailsModel(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo)';
+    return 'BookingOtherDetailsModel(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end)';
   }
 
   @override
@@ -176,13 +194,14 @@ class _$BookingOtherDetailsModelImpl implements _BookingOtherDetailsModel {
             (identical(other.locationFrom, locationFrom) ||
                 other.locationFrom == locationFrom) &&
             (identical(other.locationTo, locationTo) ||
-                other.locationTo == locationTo));
+                other.locationTo == locationTo) &&
+            (identical(other.end, end) || other.end == end));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, locationStart, locationFrom, locationTo);
+      Object.hash(runtimeType, locationStart, locationFrom, locationTo, end);
 
   /// Create a copy of BookingOtherDetailsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -205,7 +224,8 @@ abstract class _BookingOtherDetailsModel implements BookingOtherDetailsModel {
   const factory _BookingOtherDetailsModel(
           {@JsonKey(name: 'location_start') final String? locationStart,
           @JsonKey(name: 'location_from') final String? locationFrom,
-          @JsonKey(name: 'location_to') final String? locationTo}) =
+          @JsonKey(name: 'location_to') final String? locationTo,
+          @JsonKey(name: 'end') final String? end}) =
       _$BookingOtherDetailsModelImpl;
 
   factory _BookingOtherDetailsModel.fromJson(Map<String, dynamic> json) =
@@ -220,6 +240,9 @@ abstract class _BookingOtherDetailsModel implements BookingOtherDetailsModel {
   @override
   @JsonKey(name: 'location_to')
   String? get locationTo;
+  @override
+  @JsonKey(name: 'end')
+  String? get end;
 
   /// Create a copy of BookingOtherDetailsModel
   /// with the given fields replaced by the non-null parameter values.

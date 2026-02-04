@@ -14,6 +14,7 @@ class BookingOtherDetailsModel with _$BookingOtherDetailsModel {
     @JsonKey(name: 'location_start') String? locationStart,
     @JsonKey(name: 'location_from') String? locationFrom,
     @JsonKey(name: 'location_to') String? locationTo,
+    @JsonKey(name: 'end') String? end,
   }) = _BookingOtherDetailsModel;
 
   factory BookingOtherDetailsModel.fromJson(Map<String, dynamic> json) =>
