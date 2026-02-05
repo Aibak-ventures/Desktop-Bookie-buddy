@@ -71,7 +71,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       ],
       child: const AllBookingsDesktopScreen(),
     ),
-    const HomeScreen(),
     RepositoryProvider(
       create: (context) => getIt.get<ProductRepository>(),
       child: BlocProvider(
@@ -145,7 +144,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       onEnter: (_) => setState(() => isSidebarExpanded = true),
       onExit: (_) => setState(() => isSidebarExpanded = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
         width: isSidebarExpanded ? expandedWidth : collapsedWidth,
         clipBehavior: Clip.hardEdge,
@@ -163,108 +162,146 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ],
         ),
         child: ClipRect(
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
-              _profileHeader(),
-              const SizedBox(height: 24),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isSidebarExpanded ? 22 : 12,
-                ),
-                child: Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Scrollable navigation items area
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(
-                    children: [
-                      _navItem(0, Icons.add_box_outlined, "New Order"),
-                      _navItem(1, Icons.dashboard_outlined, "Dashboard"),
-                      _navItem(2, Icons.list_alt, "Orders"),
-                      _navItem(3, Icons.menu_book_rounded, "Ledger book"),
-                      _navItem(4, Icons.bar_chart_outlined, "Stocks"),
-                    ],
-                  ),
-                ),
-              ),
-              // Logout button fixed at bottom
-              _logoutButton(),
-              const SizedBox(height: 20),
-            ],
+          child: OverflowBox(
+            minWidth: collapsedWidth,
+            maxWidth: expandedWidth,
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: isSidebarExpanded ? expandedWidth : collapsedWidth,
+              child: isSidebarExpanded
+                  ? _buildExpandedSidebar()
+                  : _buildCollapsedSidebar(),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _profileHeader() {
+  Widget _buildExpandedSidebar() {
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        _profileHeaderExpanded(),
+        const SizedBox(height: 24),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 22),
+          child: Divider(color: Colors.grey, thickness: 1),
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              children: [
+                _navItemExpanded(0, Icons.add_box_outlined, "New Order"),
+                _navItemExpanded(1, Icons.dashboard_outlined, "Dashboard"),
+                _navItemExpanded(2, Icons.list_alt, "Orders"),
+                _navItemExpanded(3, Icons.bar_chart_outlined, "Stocks"),
+              ],
+            ),
+          ),
+        ),
+        _logoutButtonExpanded(),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _buildCollapsedSidebar() {
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        _profileHeaderCollapsed(),
+        const SizedBox(height: 24),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Divider(color: Colors.grey, thickness: 1),
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              children: [
+                _navItemCollapsed(0, Icons.add_box_outlined),
+                _navItemCollapsed(1, Icons.dashboard_outlined),
+                _navItemCollapsed(2, Icons.list_alt),
+                _navItemCollapsed(3, Icons.bar_chart_outlined),
+              ],
+            ),
+          ),
+        ),
+        _logoutButtonCollapsed(),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _profileHeaderExpanded() {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
         final userName = user?.userFullName ?? 'User';
-        // Use first letter as "spelling icon"
         final firstLetter =
             userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
 
         return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: isSidebarExpanded ? 20 : 12,
-          ),
-          child: isSidebarExpanded
-              ? Row(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              _buildAvatar(firstLetter, 48),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildAvatar(firstLetter),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            userName,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF2D3436),
-                              letterSpacing: 0.3,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          // Optional: Show Role or Shop Name below?
-                          // User didn't ask, but it's good context.
-                          // "we are showing the shop name and all right but that we need to change"
-                          // Maybe show Shop Name as subtitle?
-                          if (user?.shopDetails.name != null)
-                            Text(
-                              user!.shopDetails.name,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        ],
+                    Text(
+                      userName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF2D3436),
+                        letterSpacing: 0.3,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    if (user?.shopDetails.name != null)
+                      Text(
+                        user!.shopDetails.name,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                   ],
-                )
-              : _buildAvatar(firstLetter),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  Widget _buildAvatar(String letter) {
+  Widget _profileHeaderCollapsed() {
+    return BlocBuilder<UserCubit, UserModel?>(
+      builder: (context, user) {
+        final userName = user?.userFullName ?? 'User';
+        final firstLetter =
+            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+        return _buildAvatar(firstLetter, 40);
+      },
+    );
+  }
+
+  Widget _buildAvatar(String letter, double size) {
     return Container(
-      width: isSidebarExpanded ? 48 : 40,
-      height: isSidebarExpanded ? 48 : 40,
+      width: size,
+      height: size,
       padding: const EdgeInsets.all(2),
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
@@ -287,7 +324,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           child: Text(
             letter,
             style: TextStyle(
-              fontSize: isSidebarExpanded ? 20 : 16,
+              fontSize: size * 0.4,
               fontWeight: FontWeight.bold,
               color: const Color(0xFF6C5CE7),
             ),
@@ -297,128 +334,134 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     );
   }
 
-  Widget _navItem(int index, IconData icon, String label) {
+  Widget _navItemExpanded(int index, IconData icon, String label) {
     final isActive = currentIndex == index;
-    final isNewOrder = index == 0; // New Order is at index 0
-    // Check if New Order is actually active
+    final isNewOrder = index == 0;
     final isNewOrderActive = isNewOrder && newOrderActive;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        onTap: () async {
-          if (isNewOrder) {
-            setState(() {
-              newOrderActive = true;
-              showNewBookingInContent = true;
-              currentIndex = -1; // no sidebar item selected
-            });
-          } else {
-            // If NewBookingScreen is active, check for unsaved changes
-            if (showNewBookingInContent) {
-              // We need to get the callback from NewBookingScreen's state
-              // For now, we'll call the onClose which will handle the discard check
-              // But we need to modify this to await the result
-              final shouldNavigate = await _checkNavigationFromNewBooking();
-              if (!shouldNavigate) return;
-            }
-
-            setState(() {
-              newOrderActive = false;
-              showNewBookingInContent = false;
-              currentIndex = index;
-            });
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (pageController.hasClients) {
-                pageController.jumpToPage(index - 1);
-              }
-            });
-          }
-        },
+        onTap: () => _handleNavTap(index, isNewOrder),
         child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: isSidebarExpanded ? 10 : 12,
-          ),
-          decoration: BoxDecoration(
-            gradient: (isActive || isNewOrderActive)
-                ? const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF6C5CE7),
-                      Color(0xFF8B7CF7),
-                    ],
-                  )
-                : null,
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: (isActive || isNewOrderActive)
-                ? [
-                    BoxShadow(
-                      color: const Color(0xFF6C5CE7).withOpacity(0.35),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    )
-                  ]
-                : [],
-          ),
-          child: isSidebarExpanded
-              ? Row(
-                  children: [
-                    Icon(
-                      icon,
-                      size: 20,
-                      color: (isActive || isNewOrderActive)
-                          ? Colors.white
-                          : Colors.grey.shade600,
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: (isActive || isNewOrderActive)
-                              ? Colors.white
-                              : const Color(0xFF636E72),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : Center(
-                  child: Icon(
-                    icon,
-                    size: 22,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: _getNavDecoration(isActive, isNewOrderActive),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: (isActive || isNewOrderActive)
+                    ? Colors.white
+                    : Colors.grey.shade600,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
                     color: (isActive || isNewOrderActive)
                         ? Colors.white
-                        : Colors.grey.shade600,
+                        : const Color(0xFF636E72),
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _logoutButton() {
+  Widget _navItemCollapsed(int index, IconData icon) {
+    final isActive = currentIndex == index;
+    final isNewOrder = index == 0;
+    final isNewOrderActive = isNewOrder && newOrderActive;
+
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: isSidebarExpanded ? 20 : 12,
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => _handleNavTap(index, isNewOrder),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          decoration: _getNavDecoration(isActive, isNewOrderActive),
+          child: Center(
+            child: Icon(
+              icon,
+              size: 22,
+              color: (isActive || isNewOrderActive)
+                  ? Colors.white
+                  : Colors.grey.shade600,
+            ),
+          ),
+        ),
       ),
+    );
+  }
+
+  BoxDecoration? _getNavDecoration(bool isActive, bool isNewOrderActive) {
+    if (isActive || isNewOrderActive) {
+      return BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF6C5CE7), Color(0xFF8B7CF7)],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6C5CE7).withOpacity(0.35),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          )
+        ],
+      );
+    }
+    return null;
+  }
+
+  Future<void> _handleNavTap(int index, bool isNewOrder) async {
+    if (isNewOrder) {
+      setState(() {
+        newOrderActive = true;
+        showNewBookingInContent = true;
+        currentIndex = -1;
+      });
+    } else {
+      if (showNewBookingInContent) {
+        final shouldNavigate = await _checkNavigationFromNewBooking();
+        if (!shouldNavigate) return;
+      }
+      setState(() {
+        newOrderActive = false;
+        showNewBookingInContent = false;
+        currentIndex = index;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (pageController.hasClients) {
+          pageController.jumpToPage(index - 1);
+        }
+      });
+    }
+  }
+
+  Widget _logoutButtonExpanded() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            context.read<UserCubit>().logOut();
-          },
+          onTap: () => context.read<UserCubit>().logOut(),
           borderRadius: BorderRadius.circular(12),
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(
-              vertical: isSidebarExpanded ? 12 : 14,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
               color: Colors.red.shade50.withOpacity(0.8),
               borderRadius: BorderRadius.circular(12),
@@ -427,6 +470,49 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 width: 1,
               ),
             ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.logout_rounded,
+                    color: Colors.red.shade400, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Logout',
+                  style: TextStyle(
+                    color: Colors.red.shade500,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _logoutButtonCollapsed() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => context.read<UserCubit>().logOut(),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.red.shade200.withOpacity(0.5),
+                width: 1,
+              ),
+            ),
+            child: Icon(Icons.logout_rounded,
+                color: Colors.red.shade400, size: 20),
           ),
         ),
       ),
