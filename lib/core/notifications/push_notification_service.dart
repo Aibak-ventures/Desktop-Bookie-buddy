@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../features/booking_details/view/booking_details_screen.dart';
@@ -51,7 +49,7 @@ class PushNotificationService {
 
   static Future<void> _requestPermission() async {
     await FirebaseMessaging.instance.requestPermission();
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       await Permission.notification.request();
     }
   }
@@ -253,6 +251,10 @@ class PushNotificationService {
     String url, {
     String fileName = 'notification_image',
   }) async {
+    // Disabled to support Web (no dart:io).
+    // If mobile specific caching is needed, use a separate file with conditional imports.
+    return null;
+    /*
     try {
       final response = await Dio().get<List<int>>(
         url,
@@ -269,6 +271,7 @@ class PushNotificationService {
       log('Error caching image: $e', stackTrace: stack);
       return null;
     }
+    */
   }
 
   static void showLocalNotification({

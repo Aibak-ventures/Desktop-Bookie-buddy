@@ -150,7 +150,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/assets/images/bottom_bar_background.png'),
+            image: AssetImage('assets/images/bottom_bar_background.png'),
             fit: BoxFit.cover,
           ),
           boxShadow: [

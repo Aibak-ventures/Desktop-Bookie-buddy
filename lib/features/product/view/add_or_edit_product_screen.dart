@@ -1,23 +1,23 @@
-import 'dart:io';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
+import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
 import 'package:bookie_buddy_web/features/product/view/widgets/variants_widget.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../core/theme/app_colors.dart';
-import '../../../core/ui/widgets/custom_button.dart';
-import '../../../core/ui/widgets/custom_textfield.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddOrEditProductScreen extends StatefulWidget {
   final int? serviceId;
@@ -43,7 +43,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
   final _purchaseAmountController = TextEditingController();
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _imageNotifier = ValueNotifier<File?>(null);
+  final _imageNotifier = ValueNotifier<XFile?>(null);
   final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
   late final MainServiceType mainServiceType;
 
@@ -281,30 +281,43 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
   }
 
   Widget _buildImagePicker(BuildContext context) {
-    return ValueListenableBuilder<File?>(
+    return ValueListenableBuilder<XFile?>(
       valueListenable: _imageNotifier,
       builder: (context, image, child) {
-        final imageWidget = image != null
-            ? Image.file(image, fit: BoxFit.cover)
-            : widget.product?.image != null
-                ? CustomNetworkImage(imageUrl: widget.product!.image!)
-                : const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_photo_alternate_rounded,
-                            size: 50, color: AppColors.purpleLight),
-                        SizedBox(height: 8),
-                        Text(
-                          "Click to add image",
-                          style: TextStyle(
-                            color: AppColors.purpleLight,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+        Widget imageWidget;
+
+        if (image != null) {
+          imageWidget = FutureBuilder<Uint8List>(
+            future: image.readAsBytes(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Image.memory(snapshot.data!, fit: BoxFit.cover);
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          );
+        } else if (widget.product?.image != null) {
+          imageWidget = CustomNetworkImage(imageUrl: widget.product!.image!);
+        } else {
+          imageWidget = const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_photo_alternate_rounded,
+                    size: 50, color: AppColors.purpleLight),
+                SizedBox(height: 8),
+                Text(
+                  "Click to add image",
+                  style: TextStyle(
+                    color: AppColors.purpleLight,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
 
         return GestureDetector(
           onTap: () async => await _pickProductImage(),
@@ -404,10 +417,17 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
         type: FileType.image,
         allowMultiple: false,
         dialogTitle: 'Select Product Image',
+        withData:
+            true, // Needed for bytes availability across platforms (especially if path access is restricted or blob)
       );
 
-      if (result != null && result.files.single.path != null) {
-        _imageNotifier.value = File(result.files.single.path!);
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        if (file.bytes != null) {
+          _imageNotifier.value = XFile.fromData(file.bytes!, name: file.name);
+        } else if (file.path != null) {
+          _imageNotifier.value = XFile(file.path!);
+        }
       }
     } catch (e) {
       debugPrint('Error picking image: $e');

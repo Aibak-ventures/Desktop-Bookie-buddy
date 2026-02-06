@@ -34,36 +34,35 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     body: Stack(
-  children: [
-    Positioned.fill(
-      child: Image.asset(
-        'assets/assets/images/desktop_login_backgrond.png',
-        fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/desktop_login_backgrond.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // TOP LEFT APP LOGO
+          Positioned(
+            top: 20,
+            left: 20,
+            child: Image.asset(
+              'assets/images/app_icon_dart.png',
+              height: 110,
+            ),
+          ),
+
+          Center(
+            child: Form(
+              key: formKey,
+              child: _loginCard(),
+            ),
+          ),
+
+          Positioned(bottom: 24, left: 0, right: 0, child: _contactSupport()),
+        ],
       ),
-    ),
-
-    // TOP LEFT APP LOGO
-    Positioned(
-      top: 20,
-      left: 20,
-      child: Image.asset(
-        'assets/assets/images/app_icon_dart.png',
-        height: 110,
-      ),
-    ),
-
-    Center(
-  child: Form(
-    key: formKey,
-    child: _loginCard(),
-  ),
-),
-
-    Positioned(bottom: 24, left: 0, right: 0, child: _contactSupport()),
-  ],
-),
-
     );
   }
 
@@ -78,8 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
         boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 30)],
       ),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        SizedBox(height:50),
-        const Text("Welcome Back", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+        SizedBox(height: 50),
+        const Text("Welcome Back",
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
         const SizedBox(height: 13),
         const Text(
           "Ready to continue your journey?\nYour smart business path starts here",
@@ -96,7 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
         BlocConsumer<AuthBloc, AuthState>(
           listener: _authListener,
           builder: (context, state) {
-            final loading = state.maybeWhen(loading: () => true, orElse: () => false);
+            final loading =
+                state.maybeWhen(loading: () => true, orElse: () => false);
             return SizedBox(
               width: double.infinity,
               height: 48,
@@ -104,48 +105,56 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: loading ? null : _login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B6CFF),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-                child: Text(loading ? 'Please wait...' : 'Log In',style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.w500),),
+                child: Text(
+                  loading ? 'Please wait...' : 'Log In',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500),
+                ),
               ),
             );
           },
         ),
-        SizedBox(height:36),
+        SizedBox(height: 36),
       ]),
     );
   }
 
- Widget _input(String hint, TextEditingController controller, TextInputType type,
-    {bool obscure = false, String? Function(String?)? validator}) {
-  return TextFormField(
-    controller: controller,
-    keyboardType: type,
-    obscureText: obscure,
-    validator: validator,
-    decoration: InputDecoration(
-      hintText: hint,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Color(0xFFE0E0E0), width: 1),
+  Widget _input(
+      String hint, TextEditingController controller, TextInputType type,
+      {bool obscure = false, String? Function(String?)? validator}) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: type,
+      obscureText: obscure,
+      validator: validator,
+      decoration: InputDecoration(
+        hintText: hint,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFFE0E0E0), width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFF8B6CFF), width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
       ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Color(0xFF8B6CFF), width: 1.5),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Colors.red, width: 1),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Colors.red, width: 1.5),
-      ),
-    ),
-  );
-}
-
+    );
+  }
 
   void _login() {
     if (!formKey.currentState!.validate()) {
@@ -164,7 +173,9 @@ class _LoginScreenState extends State<LoginScreen> {
       authenticated: () async {
         await SharedPreferenceHelper.setBool('onboarding', true);
         context.read<UserCubit>().loadUserData();
-        context.read<DashboardBloc>().add(const DashboardEvent.loadDashboardData());
+        context
+            .read<DashboardBloc>()
+            .add(const DashboardEvent.loadDashboardData());
         context.pushAndRemoveUntil(const BottomBarScreen());
       },
       error: (e) => context.showSnackBar(e, isError: true),

@@ -42,7 +42,7 @@ mixin _$ProductRequestModel {
   List<ProductVariantModel>? get variants =>
       throw _privateConstructorUsedError; // Don't include this in auto-generated JSON
   @JsonKey(includeFromJson: false, includeToJson: false)
-  File? get image => throw _privateConstructorUsedError;
+  XFile? get image => throw _privateConstructorUsedError;
 
   /// Serializes this ProductRequestModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -72,7 +72,7 @@ abstract class $ProductRequestModelCopyWith<$Res> {
       @JsonKey(includeIfNull: false) String? model,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       List<ProductVariantModel>? variants,
-      @JsonKey(includeFromJson: false, includeToJson: false) File? image});
+      @JsonKey(includeFromJson: false, includeToJson: false) XFile? image});
 }
 
 /// @nodoc
@@ -146,7 +146,7 @@ class _$ProductRequestModelCopyWithImpl<$Res, $Val extends ProductRequestModel>
       image: freezed == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
-              as File?,
+              as XFile?,
     ) as $Val);
   }
 }
@@ -171,7 +171,7 @@ abstract class _$$ProductRequestModelImplCopyWith<$Res>
       @JsonKey(includeIfNull: false) String? model,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       List<ProductVariantModel>? variants,
-      @JsonKey(includeFromJson: false, includeToJson: false) File? image});
+      @JsonKey(includeFromJson: false, includeToJson: false) XFile? image});
 }
 
 /// @nodoc
@@ -243,7 +243,7 @@ class __$$ProductRequestModelImplCopyWithImpl<$Res>
       image: freezed == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
-              as File?,
+              as XFile?,
     ));
   }
 }
@@ -310,7 +310,7 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
 // Don't include this in auto-generated JSON
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  final File? image;
+  final XFile? image;
 
   @override
   String toString() {
@@ -389,7 +389,7 @@ abstract class _ProductRequestModel implements ProductRequestModel {
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       final List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false)
-      final File? image}) = _$ProductRequestModelImpl;
+      final XFile? image}) = _$ProductRequestModelImpl;
 
   factory _ProductRequestModel.fromJson(Map<String, dynamic> json) =
       _$ProductRequestModelImpl.fromJson;
@@ -427,7 +427,7 @@ abstract class _ProductRequestModel implements ProductRequestModel {
       get variants; // Don't include this in auto-generated JSON
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  File? get image;
+  XFile? get image;
 
   /// Create a copy of ProductRequestModel
   /// with the given fields replaced by the non-null parameter values.

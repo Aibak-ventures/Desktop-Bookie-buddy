@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -15,8 +14,10 @@ import 'package:bookie_buddy_web/features/product/models/product_request_model/p
 import 'package:bookie_buddy_web/features/product/view/widgets/variants_widget.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Modal dialog for adding or editing products
 /// This is a web-optimized modal version of the AddOrEditProductScreen
@@ -44,7 +45,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _purchaseAmountController = TextEditingController();
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _imageNotifier = ValueNotifier<File?>(null);
+  final _imageNotifier = ValueNotifier<XFile?>(null);
   final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
   late final MainServiceType mainServiceType;
 
@@ -253,18 +254,18 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                             : AppInputValidators.model(value),
                       ),
                     ),
-                      SizedBox(
-            width: 280,
-            child: CustomTextField(
-              label: 'Description (Optional)',
-              maxLines: 2,
-              // minLines: 2,
-              controller: _descriptionController,
-              validator: (value) => AppInputValidators.isEmpty(value)
-                  ? null
-                  : AppInputValidators.description(value),
-            ),
-          ),
+                    SizedBox(
+                      width: 280,
+                      child: CustomTextField(
+                        label: 'Description (Optional)',
+                        maxLines: 2,
+                        // minLines: 2,
+                        controller: _descriptionController,
+                        validator: (value) => AppInputValidators.isEmpty(value)
+                            ? null
+                            : AppInputValidators.description(value),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -273,7 +274,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           const SizedBox(height: 20),
 
           // Description field - full width but smaller
-        
+
           const SizedBox(height: 20),
 
           // Variants section (for dress type)
@@ -353,31 +354,45 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   }
 
   Widget _buildImagePicker(BuildContext context) {
-    return ValueListenableBuilder<File?>(
+    return ValueListenableBuilder<XFile?>(
       valueListenable: _imageNotifier,
       builder: (context, image, child) {
-        final imageWidget = image != null
-            ? Image.file(image, fit: BoxFit.cover)
-            : widget.product?.image != null
-                ? CustomNetworkImage(imageUrl: widget.product!.image!)
-                : const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_photo_alternate_rounded,
-                            size: 32, color: AppColors.purpleLight),
-                        SizedBox(height: 6),
-                        Text(
-                          "Add image",
-                          style: TextStyle(
-                            color: AppColors.purpleLight,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+        Widget imageWidget;
+        if (image != null) {
+          // Use FutureBuilder to read bytes for both Web and Mobile to avoid dart:io dependency
+          // This is safe everywhere.
+          imageWidget = FutureBuilder<Uint8List>(
+            future: image.readAsBytes(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Image.memory(snapshot.data!, fit: BoxFit.cover);
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          );
+        } else if (widget.product?.image != null) {
+          imageWidget = CustomNetworkImage(imageUrl: widget.product!.image!);
+        } else {
+          imageWidget = const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_photo_alternate_rounded,
+                    size: 32, color: AppColors.purpleLight),
+                SizedBox(height: 6),
+                Text(
+                  "Add image",
+                  style: TextStyle(
+                    color: AppColors.purpleLight,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
 
         return GestureDetector(
           onTap: () async => await _pickProductImage(),
@@ -473,10 +488,22 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         type: FileType.image,
         allowMultiple: false,
         dialogTitle: 'Select Product Image',
+        withData: true, // Crucial for Web to get bytes
       );
 
-      if (result != null && result.files.single.path != null) {
-        _imageNotifier.value = File(result.files.single.path!);
+      if (result != null && result.files.isNotEmpty) {
+        if (kIsWeb) {
+          if (result.files.first.bytes != null) {
+            _imageNotifier.value = XFile.fromData(
+              result.files.first.bytes!,
+              name: result.files.first.name,
+            );
+          }
+        } else {
+          if (result.files.single.path != null) {
+            _imageNotifier.value = XFile(result.files.single.path!);
+          }
+        }
       }
     } catch (e) {
       debugPrint('Error picking image: $e');

@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:bookie_buddy_web/config/dio_client/auth_interceptor.dart';
 import 'package:bookie_buddy_web/core/api/baseurl.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 
 class DioClient {
@@ -56,17 +53,8 @@ class DioClient {
   /// when using self-signed certificates. This should not be used in production
   /// as it bypasses SSL certificate validation.
   static void init() {
-    if (kDebugMode && !kIsWeb) {
-      // Only configure SSL for non-web platforms in debug mode
-      // In debug mode, configure the Dio HTTP client adapter to accept all SSL certificates.
-      // This is useful for development and testing purposes when using self-signed certificates.
-      (DioClient.dio.httpClientAdapter as IOHttpClientAdapter)
-          .createHttpClient = () {
-        final client = HttpClient();
-        client.badCertificateCallback = (cert, host, port) => true;
-        return client;
-      };
-    }
+    // SSL Pinning/Certificate handling removed to support Web.
+    // If needed for mobile/desktop, use conditional imports.
 
     // Configure for web platform
     if (kIsWeb) {

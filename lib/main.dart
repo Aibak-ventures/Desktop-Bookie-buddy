@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
@@ -7,6 +5,7 @@ import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/my_app.dart';
 import 'package:feedback/feedback.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:window_manager/window_manager.dart';
@@ -15,13 +14,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize window manager for Windows desktop
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux ||
+          defaultTargetPlatform == TargetPlatform.macOS)) {
     await windowManager.ensureInitialized();
 
     const windowOptions = WindowOptions(
-      size: Size(1280, 720),           // Initial window size
-      minimumSize: Size(800, 600),     // Minimum window size (cannot resize smaller) - prevents UI breaking
-      center: true,                     // Center window on screen
+      size: Size(1280, 720), // Initial window size
+      minimumSize: Size(800,
+          600), // Minimum window size (cannot resize smaller) - prevents UI breaking
+      center: true, // Center window on screen
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.normal,
@@ -30,21 +33,21 @@ void main() async {
     await windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
-      
+
       // Additional window manager options (uncomment as needed):
-      
+
       // 1. Disable minimize button:
       // await windowManager.setMinimizable(false);
-      
+
       // 2. Completely disable resizing:
       // await windowManager.setResizable(false);
-      
+
       // 3. Set maximum size (if needed):
       // await windowManager.setMaximumSize(const Size(1920, 1080));
-      
+
       // 4. Always on top:
       // await windowManager.setAlwaysOnTop(true);
-      
+
       // 5. Fullscreen mode:
       // await windowManager.setFullScreen(true);
     });
@@ -53,9 +56,11 @@ void main() async {
   DioClient.init();
   await SharedPreferenceHelper.init();
   AppDependencies.init();
-  TokenManager.startProactiveRefresh();
-  FilePicker.platform;
-  
+  if (!kIsWeb) {
+    TokenManager.startProactiveRefresh();
+    FilePicker.platform;
+  }
+
   runApp(
     BetterFeedback(
       theme: FeedbackThemeData(

@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/utils/image_crop.dart';
@@ -8,9 +7,8 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
-Future<File?> pickAndCompressImage({
+Future<XFile?> pickAndCompressImage({
   required BuildContext context,
   required ImageSource source,
   double maxSizeInMB = 2.5,
@@ -24,8 +22,12 @@ Future<File?> pickAndCompressImage({
   );
   if (croppedPath == null) return null;
 
-  final croppedFile = File(croppedPath);
-  final originalSize = await croppedFile.length() / (1024 * 1024);
+  final XFile croppedFile =
+      XFile(croppedPath); // CroppedFile path works on web as blob url usually
+
+  // Basic size check (approximate for web/cross-platform)
+  final len = await croppedFile.length();
+  final originalSize = len / (1024 * 1024);
   log('Original image size: ${originalSize.toStringAsFixed(2)} MB');
 
   if (originalSize <= maxSizeInMB) return croppedFile;
@@ -33,17 +35,16 @@ Future<File?> pickAndCompressImage({
   try {
     final originalBytes = await croppedFile.readAsBytes();
     final compressedBytes = await compressImage(originalBytes);
-
-    final tempDir = await getTemporaryDirectory();
-    final compressedFile = await File(
-      '${tempDir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg',
-    ).writeAsBytes(compressedBytes);
-
-    final compressedSize = compressedFile.lengthSync() / (1024 * 1024);
+    final compressedSize = compressedBytes.lengthInBytes / (1024 * 1024);
     log('Compressed image size: ${compressedSize.toStringAsFixed(2)} MB');
 
     if (compressedSize <= maxSizeInMB) {
-      return compressedFile;
+      // Return XFile from bytes for both Web and Mobile to avoid dart:io dependency
+      return XFile.fromData(
+        compressedBytes,
+        name: 'compressed_${DateTime.now().millisecondsSinceEpoch}.jpg',
+        mimeType: 'image/jpeg',
+      );
     } else {
       CustomSnackBar(message: 'Image is still too large after compression');
     }
