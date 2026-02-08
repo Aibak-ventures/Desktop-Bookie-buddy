@@ -302,206 +302,211 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         ],
       ),
       padding: const EdgeInsets.all(28),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Name and Price Row
-          Container(
-            width: 408,
-            height: 279,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Product Name and Price Row
+            Container(
+              width: 408,
+              height: 279,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: product.image != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: CustomNetworkImage(
+                        imageUrl: product.image!,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Icon(Icons.image, size: 80, color: Colors.grey.shade400),
             ),
-            child: product.image != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: CustomNetworkImage(
-                      imageUrl: product.image!,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : Icon(Icons.image, size: 80, color: Colors.grey.shade400),
-          ),
-          SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Product Name
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product Name
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // Purchase Price below name
+                      Text(
+                        'Purchase: ₹${NumberFormat('#,###').format(product.purchaseAmount ?? 0)}',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Price on the right
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      product.name,
+                      '₹${NumberFormat('#,###').format(product.price ?? 0)}',
+                      textAlign: TextAlign.right,
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: Color(0xFF6132E4),
                         fontSize: 20,
                         fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    // Purchase Price below name
-                    Text(
-                      'Purchase: ₹${NumberFormat('#,###').format(product.purchaseAmount ?? 0)}',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w400,
+                    // Sale price below main price (right aligned)
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(
+                            text: 'Sale:',
+                            style: TextStyle(
+                              color: Color(0xFF8E8E8E),
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                ' ₹${NumberFormat('#,###').format(product.price ?? 0)}',
+                            style: const TextStyle(
+                              color: Color(0xFFFFA93A),
+                              fontSize: 12,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
+                      textAlign: TextAlign.right,
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(width: 16),
-              // Price on the right
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '₹${NumberFormat('#,###').format(product.price ?? 0)}',
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      color: Color(0xFF6132E4),
-                      fontSize: 20,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Sale price below main price (right aligned)
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Sale:',
-                          style: TextStyle(
-                            color: Color(0xFF8E8E8E),
-                            fontSize: 12,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        TextSpan(
-                          text:
-                              ' ₹${NumberFormat('#,###').format(product.price ?? 0)}',
-                          style: const TextStyle(
-                            color: Color(0xFFFFA93A),
-                            fontSize: 12,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Divider
-          Container(
-            height: 1,
-            color: Colors.grey.shade300,
-          ),
-          const SizedBox(height: 7),
-
-          // Available Variants
-          const Text(
-            'Available variants',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
-            ),
-          ),
-          const SizedBox(height: 7),
-
-          // Variants with specific styling
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                ...product.variants.map((variant) => Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: _variantCard(variant),
-                    )),
-                _addVariantButton(),
               ],
             ),
-          ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-          // Product Specifications
-          if (product.category != null ||
-              product.model != null ||
-              product.color != null) ...[
+            // Divider
+            Container(
+              height: 1,
+              color: Colors.grey.shade300,
+            ),
+            const SizedBox(height: 16),
+
+            // Available Variants
             const Text(
-              'Product Specifications',
+              'Available variants',
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontFamily: 'Inter',
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
+                color: Color(0xFF1F2937),
               ),
             ),
-            const SizedBox(height: 7),
+            const SizedBox(height: 12),
+
+            // Variants with specific styling
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  if (product.category != null && product.category!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12,),
-                      child: _specChip(Icons.category, product.category!),
-                    ),
-                  if (product.model != null && product.model!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: _specChip(Icons.layers, product.model!),
-                    ),
-                  if (product.color != null && product.color!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: _specChip(Icons.palette, product.color!),
-                    ),
+                  ...product.variants.map((variant) => Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: _variantCard(variant),
+                      )),
+                  _addVariantButton(),
                 ],
               ),
             ),
-            const SizedBox(height: 7),
-          ],
 
-          // Description
-          if (product.description != null &&
-              product.description!.isNotEmpty) ...[
-            const Text(
-              'Description',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
+            const SizedBox(height: 16),
+
+            // Product Specifications
+            if (product.category != null ||
+                product.model != null ||
+                product.color != null) ...[
+              const Text(
+                'Product Specifications',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(height: 7),
-            Text(
-              product.description!,
-              style: const TextStyle(
-                color: Color(0xFF787878),
-                fontSize: 10,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
+              const SizedBox(height: 12),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    if (product.category != null &&
+                        product.category!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          right: 12,
+                        ),
+                        child: _specChip(Icons.category, product.category!),
+                      ),
+                    if (product.model != null && product.model!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: _specChip(Icons.layers, product.model!),
+                      ),
+                    if (product.color != null && product.color!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: _specChip(Icons.palette, product.color!),
+                      ),
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(height: 16),
+            ],
+
+            // Description
+            if (product.description != null &&
+                product.description!.isNotEmpty) ...[
+              const Text(
+                'Description',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                product.description!,
+                style: const TextStyle(
+                  color: Color(0xFF787878),
+                  fontSize: 10,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -978,7 +983,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             booking: booking,
             useReturnDate: isOngoing,
             // No onTap - display only, no navigation
-            onTap: (){},
+            onTap: () {},
           ),
         );
       },
