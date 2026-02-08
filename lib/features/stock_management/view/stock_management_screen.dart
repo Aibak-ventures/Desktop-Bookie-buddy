@@ -170,7 +170,22 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(
+                color: Colors.grey.shade200,
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.02),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: _buildProductsTable(),
           ),
@@ -526,42 +541,32 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               );
             }
 
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: SizedBox(
-                    width: constraints.maxWidth < 1000
-                        ? 1000
-                        : constraints.maxWidth,
-                    child: Column(
-                      children: [
-                        _buildTableHeader(),
-                        Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            itemCount: products.length + (isPaginating ? 1 : 0),
-                            itemBuilder: (context, index) {
-                              if (index < products.length) {
-                                return _buildProductRow(products[index]);
-                              } else {
-                                return const Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color(0xFF8A63FE),
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
+            return Column(
+              children: [
+                _buildTableHeader(),
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.zero,
+                    itemCount: products.length + (isPaginating ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index < products.length) {
+                        return _buildProductRow(products[index]);
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.purple,
+                              strokeWidth: 3,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        );
+                      }
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             );
           },
           error: (message) => Container(
@@ -602,99 +607,125 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
   Widget _buildTableHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: Color(0xFFF1F0FF),
-        borderRadius: BorderRadius.only(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.purple.withOpacity(0.08),
+            AppColors.purple.withOpacity(0.12),
+          ],
+        ),
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
+        ),
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.purple.withOpacity(0.2),
+            width: 2,
+          ),
         ),
       ),
       child: Row(
         children: [
-          const SizedBox(width: 11), // Match the bar (3px) + spacing (8px)
-          SizedBox(
-            width: 241,
+          // Item column - enhanced width for better visibility
+          Expanded(
+            flex: 3,
             child: Text(
               'ITEM',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.9),
+                letterSpacing: 0.8,
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 133,
+          const SizedBox(width: 16),
+          // Category column
+          Expanded(
+            flex: 2,
             child: Text(
               'CATEGORY',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.9),
+                letterSpacing: 0.8,
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 117,
+          const SizedBox(width: 16),
+          // Sale Price column
+          Expanded(
+            flex: 2,
             child: Text(
               'SALE PRICE',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.9),
+                letterSpacing: 0.8,
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 102,
+          const SizedBox(width: 16),
+          // Rent Price column
+          Expanded(
+            flex: 2,
             child: Text(
               'RENT PRICE',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.9),
+                letterSpacing: 0.8,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
+          // Total Qty column
           SizedBox(
-            width: 106,
+            width: 100,
             child: Text(
-              'TOTAL QTY',
+              'QUANTITY',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.9),
+                letterSpacing: 0.8,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
+          // Total Variants column
           SizedBox(
-            width: 106,
+            width: 100,
             child: Text(
-              'TOTAL VRNT',
+              'VARIANTS',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.9),
+                letterSpacing: 0.8,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
+          // Actions column
           SizedBox(
-            width: 120,
+            width: 140,
             child: Text(
               'ACTIONS',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.purple.withOpacity(0.9),
+                letterSpacing: 0.8,
               ),
               textAlign: TextAlign.center,
             ),
@@ -713,220 +744,322 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: InkWell(
-        onTap: () {
-          // Navigate to product details when clicking anywhere on the row
-          context.read<StockManagementCubit>().showProductDetails(product.id);
-        },
-        hoverColor: AppColors.purple.withOpacity(0.04),
-        splashColor: AppColors.purple.withOpacity(0.1),
-        highlightColor: AppColors.purple.withOpacity(0.05),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey.shade100),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade100,
+              width: 1,
             ),
           ),
-          child: Row(
-            children: [
-              const SizedBox(width: 11), // Match header spacing
-              // Item (image + name) - Width: 241
-              SizedBox(
-                width: 241,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: product.thumbnailImage != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(6),
-                              child: CustomNetworkImage(
-                                imageUrl: product.thumbnailImage!,
-                                width: 52,
-                                height: 52,
-                                fit: BoxFit.cover,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              context
+                  .read<StockManagementCubit>()
+                  .showProductDetails(product.id);
+            },
+            hoverColor: AppColors.purple.withOpacity(0.03),
+            splashColor: AppColors.purple.withOpacity(0.08),
+            highlightColor: AppColors.purple.withOpacity(0.05),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Row(
+                children: [
+                  // Item column (image + name)
+                  Expanded(
+                    flex: 3,
+                    child: Row(
+                      children: [
+                        // Enhanced image with shadow
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                              width: 1,
+                            ),
+                          ),
+                          child: product.thumbnailImage != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CustomNetworkImage(
+                                    imageUrl: product.thumbnailImage!,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Icon(
+                                  Icons.image_outlined,
+                                  color: Colors.grey.shade400,
+                                  size: 28,
+                                ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                product.name,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF1F2937),
+                                  height: 1.3,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (product.description != null &&
+                                  product.description!.isNotEmpty) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  product.description!,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                    height: 1.4,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Category column with modern badge (only show if category exists)
+                  Expanded(
+                    flex: 2,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: product.category != null &&
+                              product.category!.isNotEmpty
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppColors.purple.withOpacity(0.12),
+                                    AppColors.purple.withOpacity(0.08),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: AppColors.purple.withOpacity(0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                product.category!,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.purple.withOpacity(0.95),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             )
-                          : Icon(Icons.image,
-                              color: Colors.grey.shade400, size: 24),
+                          : const SizedBox.shrink(), // Hide if no category
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product.name,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF1F2937),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (product.description != null &&
-                              product.description!.isNotEmpty)
-                            Text(
-                              product.description!,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade600,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Category - Width: 133
-              SizedBox(
-                width: 133,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.purple.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Sale Price column
+                  Expanded(
+                    flex: 2,
                     child: Text(
-                      product.category ?? 'Bridals',
+                      product.price != null
+                          ? '₹ ${NumberFormat('#,###').format(product.price)}'
+                          : '-',
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.purple,
+                        color: Color(0xFF1F2937),
                       ),
-                      textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Sale Price - Width: 117
-              SizedBox(
-                width: 117,
-                child: Text(
-                  product.price != null ? '₹ ${product.price}' : '-',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF1F2937),
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Rent Price - Width: 102
-              SizedBox(
-                width: 102,
-                child: Text(
-                  product.price != null ? '₹ ${product.price}' : '-',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF1F2937),
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Total Quantity - Width: 106
-              SizedBox(
-                width: 106,
-                child: Text(
-                  totalStock.toString(),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F2937),
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Total Variants - Width: 106
-              SizedBox(
-                width: 106,
-                child: Text(
-                  variantCount.toString(),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F2937),
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Actions - Width: 120
-              SizedBox(
-                width: 120,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        _showAddEditProductDialog(context, product: product);
-                      },
-                      icon: Icon(
-                        Icons.edit_outlined,
-                        size: 20,
-                        color: Colors.grey.shade600,
+                  const SizedBox(width: 16),
+                  // Rent Price column
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      product.price != null
+                          ? '₹ ${NumberFormat('#,###').format(product.price)}'
+                          : '-',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1F2937),
                       ),
-                      tooltip: 'Edit',
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      onPressed: () {
-                        // Use state-based navigation to show product details as full screen
-                        context
-                            .read<StockManagementCubit>()
-                            .showProductDetails(product.id);
-                      },
-                      icon: Icon(
-                        Icons.visibility_outlined,
-                        size: 20,
-                        color: Colors.grey.shade600,
+                  ),
+                  const SizedBox(width: 16),
+                  // Quantity column with badge
+                  SizedBox(
+                    width: 100,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: totalStock > 0
+                              ? Colors.green.shade50
+                              : Colors.red.shade50,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: totalStock > 0
+                                ? Colors.green.shade200
+                                : Colors.red.shade200,
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          totalStock.toString(),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: totalStock > 0
+                                ? Colors.green.shade800
+                                : Colors.red.shade800,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      tooltip: 'View',
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
                     ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      onPressed: () {
-                        _showDeleteConfirmationDialog(context, product);
-                      },
-                      icon: Icon(
-                        Icons.delete_outline,
-                        size: 20,
-                        color: Colors.grey.shade600,
+                  ),
+                  const SizedBox(width: 16),
+                  // Variants column with badge
+                  SizedBox(
+                    width: 100,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: Colors.blue.shade200,
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          variantCount.toString(),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.blue.shade800,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      tooltip: 'Delete',
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Actions column with modern styled buttons
+                  SizedBox(
+                    width: 140,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildActionButton(
+                          icon: Icons.edit_outlined,
+                          tooltip: 'Edit Product',
+                          color: Colors.blue,
+                          onPressed: () {
+                            _showAddEditProductDialog(context,
+                                product: product);
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        _buildActionButton(
+                          icon: Icons.visibility_outlined,
+                          tooltip: 'View Details',
+                          color: Colors.green,
+                          onPressed: () {
+                            context
+                                .read<StockManagementCubit>()
+                                .showProductDetails(product.id);
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        _buildActionButton(
+                          icon: Icons.delete_outline,
+                          tooltip: 'Delete Product',
+                          color: Colors.red,
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(context, product);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Build a modern styled action button
+  Widget _buildActionButton({
+    required IconData icon,
+    required String tooltip,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      waitDuration: const Duration(milliseconds: 500),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(6),
+        hoverColor: color.withOpacity(0.1),
+        splashColor: color.withOpacity(0.2),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: color.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Icon(
+            icon,
+            size: 18,
+            color: color,
           ),
         ),
       ),

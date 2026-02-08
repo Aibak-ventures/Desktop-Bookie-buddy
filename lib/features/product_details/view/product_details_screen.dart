@@ -135,117 +135,155 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   }
 
   Widget _buildHeader(BuildContext context, ProductModel product) {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () {
-            // Use state-based navigation to return to product list
-            context.read<StockManagementCubit>().hideProductDetails();
-          },
-          icon: const Icon(Icons.arrow_back, size: 20),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-        ),
-        const SizedBox(width: 12),
-        const Text(
-          'Product Overview',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          // Back button with better styling
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: IconButton(
+              onPressed: () {
+                context.read<StockManagementCubit>().hideProductDetails();
+              },
+              icon: const Icon(Icons.arrow_back, size: 20),
+              padding: const EdgeInsets.all(8),
+              constraints: const BoxConstraints(),
+              tooltip: 'Back to Stock Management',
+            ),
           ),
-        ),
-        const Spacer(),
-        // Buttons aligned at the end
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            OutlinedButton.icon(
-              onPressed: () {
-                _showDeleteProductDialog(product);
-              },
-              icon: const Icon(Icons.delete_outline, size: 16),
-              label: const Text('Delete', style: TextStyle(fontSize: 13)),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.red,
-                side: BorderSide(color: Colors.red.shade300),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+          const SizedBox(width: 16),
+          // Title with gradient accent
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Product Overview',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1F2937),
+                  letterSpacing: -0.5,
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            OutlinedButton.icon(
-              onPressed: () async {
-                final selectedServiceId =
-                    context.read<StockManagementCubit>().state.maybeWhen(
-                          loaded: (_, __, ___, ____, _____, serviceId, ______,
-                                  _______) =>
-                              serviceId,
-                          orElse: () => null,
-                        );
-                final result = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => BlocProvider(
-                    create: (context) => SaveProductCubit(),
-                    child: AddEditProductDialog(
-                      serviceId: selectedServiceId,
-                      product: product,
-                    ),
+              const SizedBox(height: 4),
+              Text(
+                'Detailed view and management',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          // Action buttons with enhanced styling
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () {
+                  _showDeleteProductDialog(product);
+                },
+                icon: const Icon(Icons.delete_outline, size: 16),
+                label: const Text('Delete',
+                    style:
+                        TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.red.shade600,
+                  side: BorderSide(color: Colors.red.shade200, width: 1.5),
+                  backgroundColor: Colors.red.shade50,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                );
-                if (result == true && context.mounted) {
-                  context
-                      .read<ProductDetailsCubit>()
-                      .loadProductDetails(product.id);
-                }
-              },
-              icon: const Icon(Icons.edit_outlined, size: 16),
-              label: const Text('Edit Product', style: TextStyle(fontSize: 13)),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.grey.shade700,
-                side: BorderSide(color: Colors.grey.shade300),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton.icon(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => BlocProvider(
-                    create: (context) =>
-                        AddExpenseCubit(repository: getIt.get()),
-                    child: ProductAddExpenseDialog(
-                      variantId: product.variants.first.id,
-                      mainServiceType:
-                          product.mainServiceType ?? MainServiceType.others,
-                      variants: product.variants,
+              const SizedBox(width: 12),
+              OutlinedButton.icon(
+                onPressed: () async {
+                  final selectedServiceId =
+                      context.read<StockManagementCubit>().state.maybeWhen(
+                            loaded: (_, __, ___, ____, _____, serviceId, ______,
+                                    _______) =>
+                                serviceId,
+                            orElse: () => null,
+                          );
+                  final result = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => BlocProvider(
+                      create: (context) => SaveProductCubit(),
+                      child: AddEditProductDialog(
+                        serviceId: selectedServiceId,
+                        product: product,
+                      ),
                     ),
+                  );
+                  if (result == true && context.mounted) {
+                    context
+                        .read<ProductDetailsCubit>()
+                        .loadProductDetails(product.id);
+                  }
+                },
+                icon: const Icon(Icons.edit_outlined, size: 16),
+                label: const Text('Edit Product',
+                    style:
+                        TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.purple,
+                  side: BorderSide(
+                      color: AppColors.purple.withOpacity(0.3), width: 1.5),
+                  backgroundColor: AppColors.purple.withOpacity(0.05),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                );
-              },
-              icon: const Icon(Icons.add, size: 16),
-              label: const Text('Add Expense', style: TextStyle(fontSize: 13)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.purple,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+              const SizedBox(width: 12),
+              ElevatedButton.icon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => BlocProvider(
+                      create: (context) =>
+                          AddExpenseCubit(repository: getIt.get()),
+                      child: ProductAddExpenseDialog(
+                        variantId: product.variants.first.id,
+                        mainServiceType:
+                            product.mainServiceType ?? MainServiceType.others,
+                        variants: product.variants,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.add, size: 16),
+                label: const Text('Add Expense',
+                    style:
+                        TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.purple,
+                  foregroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  elevation: 0,
+                  shadowColor: AppColors.purple.withOpacity(0.3),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -253,10 +291,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -392,7 +437,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             ),
           ),
 
-          const SizedBox(height: 7),
+          const SizedBox(height: 12),
 
           // Product Specifications
           if (product.category != null ||
@@ -414,7 +459,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 children: [
                   if (product.category != null && product.category!.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(right: 12),
+                      padding: const EdgeInsets.only(right: 12,),
                       child: _specChip(Icons.category, product.category!),
                     ),
                   if (product.model != null && product.model!.isNotEmpty)
@@ -469,10 +514,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -594,8 +646,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   Widget _specChip(IconData icon, String label) {
     return Container(
-      width: 118,
-      height: 20,
+      width: 130,
+      height: 25,
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -888,31 +940,46 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       {bool isOngoing = false}) {
     if (bookings.isEmpty) {
       return Center(
-        child: Text(
-          emptyMessage,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey.shade600,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.event_busy_outlined,
+                size: 48,
+                color: Colors.grey.shade300,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                emptyMessage,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       );
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 12),
       itemCount: bookings.length,
       itemBuilder: (context, index) {
         final booking = bookings[index];
 
-        return BookingCard(
-          booking: booking,
-          useReturnDate: isOngoing,
-          onTap: () async {
-            context.read<BookingSelectionCubit>().selectBooking(booking);
-            await context.push(
-              BookingDetailsScreen(bookingId: booking.id!),
-            );
-          },
+        // Display booking card without navigation
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: BookingCard(
+            booking: booking,
+            useReturnDate: isOngoing,
+            // No onTap - display only, no navigation
+            onTap: (){},
+          ),
         );
       },
     );
