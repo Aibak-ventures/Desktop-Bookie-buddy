@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -22,6 +23,8 @@ import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BookingDetailsDrawer extends StatelessWidget {
@@ -138,12 +141,8 @@ class BookingDetailsDrawer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Booking ID
-                _buildBookingId(booking),
-                const SizedBox(height: 16),
-
-                // Delivery Status
-                _buildDeliveryStatus(context, booking),
+                // Booking ID and Delivery Status in one row
+                _buildBookingIdAndDeliveryStatus(context, booking),
                 const SizedBox(height: 24),
 
                 // Dates & time
@@ -172,114 +171,123 @@ class BookingDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildBookingId(BookingDetailsModel booking) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Booking Id',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          '#${booking.invoiceId}',
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDeliveryStatus(
+  Widget _buildBookingIdAndDeliveryStatus(
       BuildContext context, BookingDetailsModel booking) {
     final status = booking.deliveryStatus ?? DeliveryStatus.booked;
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Delivery status',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-            fontWeight: FontWeight.w400,
+        // Booking ID (left side)
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Booking Id',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '#${booking.invoiceId}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 8),
-        PopupMenuButton<DeliveryStatus>(
-          offset: const Offset(0, 40),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          onSelected: (DeliveryStatus newStatus) {
-            context.read<AllBookingBloc>().add(
-                  AllBookingEvent.updateDeliveryStatus(
-                    bookingId: booking.id,
-                    deliveryStatus: newStatus,
-                  ),
-                );
-            // Refresh the booking details
-            context.read<BookingDetailsBloc>().add(
-                  BookingDetailsEvent.fetchBookingDetails(booking.id),
-                );
-          },
-          itemBuilder: (context) => DeliveryStatus.values.map((s) {
-            return PopupMenuItem<DeliveryStatus>(
-              value: s,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: s.color,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    s.name,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: s.color,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+        // Delivery Status (right side)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const Text(
+              'Delivery status',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.w400,
               ),
-            );
-          }).toList(),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: status.color.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(8),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  status.name,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: status.color,
+            const SizedBox(height: 8),
+            PopupMenuButton<DeliveryStatus>(
+              offset: const Offset(0, 40),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              onSelected: (DeliveryStatus newStatus) {
+                context.read<AllBookingBloc>().add(
+                      AllBookingEvent.updateDeliveryStatus(
+                        bookingId: booking.id,
+                        deliveryStatus: newStatus,
+                      ),
+                    );
+                // Refresh the booking details
+                context.read<BookingDetailsBloc>().add(
+                      BookingDetailsEvent.fetchBookingDetails(booking.id),
+                    );
+              },
+              itemBuilder: (context) => DeliveryStatus.values.map((s) {
+                return PopupMenuItem<DeliveryStatus>(
+                  value: s,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: s.color,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        s.name,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: s.color,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
+                );
+              }).toList(),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: status.color.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 16,
-                  color: status.color,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      status.name,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: status.color,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 16,
+                      color: status.color,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
@@ -289,7 +297,7 @@ class BookingDetailsDrawer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
       ),
@@ -380,7 +388,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _formatDate(booking.returnDate),
+                      _formatAvailableFromDate(booking.returnDate),
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.black54,
@@ -603,8 +611,15 @@ class BookingDetailsDrawer extends StatelessWidget {
                   await launchUrl(uri);
                 }
               },
-              child:
-                  Icon(Icons.message, size: 18, color: Colors.green.shade600),
+              child: SvgPicture.asset(
+                AppAssets.whatsAppSvg,
+                width: 18,
+                height: 18,
+                colorFilter: ColorFilter.mode(
+                  Colors.green.shade600,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
           ],
         ),
@@ -724,89 +739,109 @@ class BookingDetailsDrawer extends StatelessWidget {
     }
   }
 
+  String _formatAvailableFromDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return 'N/A';
+    try {
+      final returnDate = dateStr.parseToDateTime();
+      // If the return time is in evening (18:00 or later), product is available next day
+      final availableDate = returnDate.hour >= 18
+          ? returnDate.add(const Duration(days: 1))
+          : returnDate;
+      return availableDate.format();
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   Widget _buildActionButtons(
       BuildContext context, BookingDetailsModel booking) {
+    // Check if booking is completed
+    final isCompleted = booking.bookingStatus == BookingStatus.completed;
+
     return Row(
       children: [
-        // Delete button
-        _buildIconActionButton(
-          context,
-          icon: Icons.delete_outline,
-          color: Colors.red,
-          onTap: () async {
-            final confirm = await showDialog<bool>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Delete Booking'),
-                content: const Text(
-                    'Are you sure you want to delete this booking? This action cannot be undone.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    style: TextButton.styleFrom(foregroundColor: Colors.red),
-                    child: const Text('Delete'),
-                  ),
-                ],
-              ),
-            );
-
-            if (confirm == true && context.mounted) {
-              context.read<AllBookingBloc>().add(
-                    AllBookingEvent.deleteBooking(bookingId: booking.id),
-                  );
-              context.read<BookingDetailsDrawerCubit>().closeDrawer();
-            }
-          },
-        ),
-        const SizedBox(width: 12),
-        // Edit button
-        _buildIconActionButton(
-          context,
-          icon: Icons.edit_outlined,
-          color: AppColors.purple,
-          onTap: () async {
-            // Close the drawer first
-            context.read<BookingDetailsDrawerCubit>().closeDrawer();
-
-            // Navigate to the new edit booking screen with necessary providers
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider(
-                      create: (_) => ServiceBloc(repository: getIt()),
+        // Only show delete and edit buttons if booking is not completed
+        if (!isCompleted) ...[
+          // Delete button
+          _buildIconActionButton(
+            context,
+            icon: Icons.delete_outline,
+            color: Colors.red,
+            onTap: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Delete Booking'),
+                  content: const Text(
+                      'Are you sure you want to delete this booking? This action cannot be undone.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
                     ),
-                    BlocProvider(
-                      create: (_) => ClientCubit(repository: getIt()),
-                    ),
-                    BlocProvider(
-                      create: (_) => StaffSearchCubit(repository: getIt()),
-                    ),
-                    BlocProvider(
-                      create: (_) => SelectedProductsCubit(),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: TextButton.styleFrom(foregroundColor: Colors.red),
+                      child: const Text('Delete'),
                     ),
                   ],
-                  child: EditNewBookingScreen(
-                    bookingDetails: booking,
+                ),
+              );
+
+              if (confirm == true && context.mounted) {
+                context.read<AllBookingBloc>().add(
+                      AllBookingEvent.deleteBooking(bookingId: booking.id),
+                    );
+                context.read<BookingDetailsDrawerCubit>().closeDrawer();
+              }
+            },
+          ),
+          const SizedBox(width: 12),
+          // Edit button
+          _buildIconActionButton(
+            context,
+            icon: Icons.edit_outlined,
+            color: AppColors.purple,
+            onTap: () async {
+              // Close the drawer first
+              context.read<BookingDetailsDrawerCubit>().closeDrawer();
+
+              // Navigate to the new edit booking screen with necessary providers
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (_) => ServiceBloc(repository: getIt()),
+                      ),
+                      BlocProvider(
+                        create: (_) => ClientCubit(repository: getIt()),
+                      ),
+                      BlocProvider(
+                        create: (_) => StaffSearchCubit(repository: getIt()),
+                      ),
+                      BlocProvider(
+                        create: (_) => SelectedProductsCubit(),
+                      ),
+                    ],
+                    child: EditNewBookingScreen(
+                      bookingDetails: booking,
+                    ),
                   ),
                 ),
-              ),
-            );
+              );
 
-            // Refresh booking details if edited
-            if (result == true && context.mounted) {
-              context.read<BookingDetailsBloc>().add(
-                    BookingDetailsEvent.fetchBookingDetails(booking.id),
-                  );
-            }
-          },
-        ),
-        const SizedBox(width: 12),
-        // Download Invoice
+              // Refresh booking details if edited
+              if (result == true && context.mounted) {
+                context.read<BookingDetailsBloc>().add(
+                      BookingDetailsEvent.fetchBookingDetails(booking.id),
+                    );
+              }
+            },
+          ),
+          const SizedBox(width: 12),
+        ],
+        // Download Invoice (always visible)
         _buildIconActionButton(
           context,
           icon: Icons.download_outlined,
@@ -829,55 +864,56 @@ class BookingDetailsDrawer extends StatelessWidget {
           },
         ),
         const Spacer(),
-        // Mark as Completed button
-        ElevatedButton(
-          onPressed: () async {
-            final confirm = await showDialog<bool>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Mark as Completed'),
-                content: const Text(
-                    'Are you sure you want to mark this booking as completed?'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: const Text('Confirm'),
-                  ),
-                ],
-              ),
-            );
-
-            if (confirm == true && context.mounted) {
-              context.read<AllBookingBloc>().add(
-                    AllBookingEvent.markAsCompleted(
-                      bookingId: booking.id,
-                      currentStatus: booking.deliveryStatus,
+        // Mark as Completed button (only show if not completed)
+        if (!isCompleted)
+          ElevatedButton(
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Mark as Completed'),
+                  content: const Text(
+                      'Are you sure you want to mark this booking as completed?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
                     ),
-                  );
-              context.read<BookingDetailsDrawerCubit>().closeDrawer();
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.purple,
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('Confirm'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (confirm == true && context.mounted) {
+                context.read<AllBookingBloc>().add(
+                      AllBookingEvent.markAsCompleted(
+                        bookingId: booking.id,
+                        currentStatus: booking.deliveryStatus,
+                      ),
+                    );
+                context.read<BookingDetailsDrawerCubit>().closeDrawer();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.purple,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 0,
             ),
-            elevation: 0,
-          ),
-          child: const Text(
-            'Mark as Completed',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
+            child: const Text(
+              'Mark as Completed',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
             ),
           ),
-        ),
       ],
     );
   }

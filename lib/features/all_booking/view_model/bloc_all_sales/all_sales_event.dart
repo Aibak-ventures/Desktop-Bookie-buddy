@@ -6,4 +6,5 @@ class AllSalesEvent with _$AllSalesEvent {
     int? page,
     String? searchQuery,
   }) = _LoadSales;
+  const factory AllSalesEvent.loadMoreSales() = _LoadMoreSales;
 }

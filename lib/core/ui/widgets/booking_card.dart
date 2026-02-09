@@ -47,192 +47,148 @@ class BookingCard extends StatelessWidget {
           booking.returnDate!.parseToDateTime().dateOnly.add(1.days()),
         );
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: 16.padding,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: 9.radiusBorder,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-          border: Border.all(color: AppColors.grey200),
-        ),
-        child: Row(
-          children: [
-            // Date Section
-            Container(
-              width: 80.w,
-              height: 80.w,
-              decoration: BoxDecoration(
-                color: isAfterReturnDate
-                    ? AppColors.redLight
-                    : AppColors.purpleLight,
-                borderRadius: 9.radiusBorder,
-              ),
-              child: displayDate != null
-                  ? _buildDateDisplay(displayDate, isAfterReturnDate)
-                  : const Center(child: Text('--/--')),
-            ),
-
-            const SizedBox(width: 16),
-
-            // Content Section
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Client Name
-                  Text(
-                    clientName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 17.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: 9.radiusBorder,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: Border.all(color: AppColors.grey200),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          hoverColor: AppColors.purple.withOpacity(0.08),
+          highlightColor: AppColors.purple.withOpacity(0.05),
+          splashColor: AppColors.purple.withOpacity(0.1),
+          child: Padding(
+            padding: 16.padding,
+            child: Row(
+              children: [
+                // Date Section
+                Container(
+                  width: 80.w,
+                  height: 80.w,
+                  decoration: BoxDecoration(
+                    color: isAfterReturnDate
+                        ? AppColors.redLight
+                        : AppColors.purpleLight,
+                    borderRadius: 9.radiusBorder,
                   ),
-                  Row(
+                  child: displayDate != null
+                      ? _buildDateDisplay(displayDate, isAfterReturnDate)
+                      : const Center(child: Text('--/--')),
+                ),
+
+                const SizedBox(width: 16),
+
+                // Content Section
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        color: AppColors.purple,
-                        size: 20.sp,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Items : ${booking.bookedItems.join(', ')}',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: AppColors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                      // Client Name
+                      Text(
+                        clientName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.black,
                         ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.shopping_cart_outlined,
+                            color: AppColors.purple,
+                            size: 20.sp,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Items : ${booking.bookedItems.join(', ')}',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: AppColors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      4.height,
+                      // Status Badge
+                      Row(
+                        spacing: 5,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  deliveryStatus.color.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color:
+                                    deliveryStatus.color.withValues(alpha: 0.3),
+                              ),
+                            ),
+                            child: Text(
+                              deliveryStatus.name,
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w600,
+                                color: deliveryStatus.color,
+                              ),
+                            ),
+                          ),
+                          if (isAfterReturnDate)
+                            Tooltip(
+                              message: 'Return date has passed',
+                              triggerMode: TooltipTriggerMode.tap,
+                              child: SvgPicture.asset(
+                                AppAssets.infoDangerSvg,
+                                errorBuilder: (context, error, stackTrace) {
+                                  log(error.toString(), stackTrace: stackTrace);
+                                  return const Icon(Icons.info);
+                                },
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),
-                  4.height,
-                  // Status Badge
-                  Row(
-                    spacing: 5,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: deliveryStatus.color.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: deliveryStatus.color.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Text(
-                          deliveryStatus.name,
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w600,
-                            color: deliveryStatus.color,
-                          ),
-                        ),
-                      ),
-                      if (isAfterReturnDate)
-                        Tooltip(
-                          message: 'Return date has passed',
-                          triggerMode: TooltipTriggerMode.tap,
-                          child: SvgPicture.asset(
-                            AppAssets.infoDangerSvg,
-                            errorBuilder: (context, error, stackTrace) {
-                              log(error.toString(), stackTrace: stackTrace);
-                              return const Icon(Icons.info);
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // Arrow Icon
-            Icon(Icons.arrow_forward_ios, color: AppColors.grey, size: 16.sp),
-          ],
+                // Arrow Icon
+                Icon(Icons.arrow_forward_ios,
+                    color: AppColors.grey, size: 16.sp),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  /// Build date display with Today/Tomorrow labels
+  /// Build date display without Today/Tomorrow labels (shown in group headers instead)
   Widget _buildDateDisplay(DateTime displayDate, bool isAfterReturnDate) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final tomorrow = today.add(const Duration(days: 1));
-    final dateOnly =
-        DateTime(displayDate.year, displayDate.month, displayDate.day);
-
     final textColor = isAfterReturnDate ? AppColors.red : AppColors.purple;
 
-    // Check if date is today
-    if (dateOnly == today) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Today',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
-          ),
-          Text(
-            displayDate.day.toString(),
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
-          ),
-        ],
-      );
-    }
-
-    // Check if date is tomorrow
-    if (dateOnly == tomorrow) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Tomorrow',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
-          ),
-          Text(
-            displayDate.day.toString(),
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
-          ),
-        ],
-      );
-    }
-
-    // Default: Show day and month
+    // Always show day and month consistently
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

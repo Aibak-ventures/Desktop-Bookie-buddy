@@ -761,9 +761,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   .read<StockManagementCubit>()
                   .showProductDetails(product.id);
             },
-            hoverColor: AppColors.purple.withOpacity(0.03),
-            splashColor: AppColors.purple.withOpacity(0.08),
-            highlightColor: AppColors.purple.withOpacity(0.05),
+            hoverColor: AppColors.purple.withOpacity(0.08),
+            splashColor: AppColors.purple.withOpacity(0.12),
+            highlightColor: AppColors.purple.withOpacity(0.1),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: Row(

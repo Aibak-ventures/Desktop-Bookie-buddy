@@ -7,6 +7,7 @@ class AllSalesState with _$AllSalesState {
     required List<SaleModel> sales,
     String? nextPageUrl,
     String? searchQuery,
+    @Default(false) bool isPaginating,
   }) = _Loaded;
   const factory AllSalesState.error(String message) = _Error;
 }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
@@ -18,6 +19,7 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_deta
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/stock_management/view/stock_management_screen.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
+import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -277,6 +279,17 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
+                    if (user?.shopDetails.address != null)
+                      Text(
+                        user!.shopDetails.address,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey.shade500,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                   ],
                 ),
               ),
@@ -457,7 +470,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => context.read<UserCubit>().logOut(),
+          onTap: () => _showLogoutConfirmationDialog(context),
           borderRadius: BorderRadius.circular(12),
           child: Container(
             width: double.infinity,
@@ -498,7 +511,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => context.read<UserCubit>().logOut(),
+          onTap: () => _showLogoutConfirmationDialog(context),
           borderRadius: BorderRadius.circular(12),
           child: Container(
             width: double.infinity,
@@ -517,5 +530,85 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ),
       ),
     );
+  }
+
+  /// Show logout confirmation dialog
+  Future<void> _showLogoutConfirmationDialog(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.logout_rounded,
+              color: Colors.red.shade400,
+              size: 28,
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Logout',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        content: const Text(
+          'Are you sure you want to logout?',
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade400,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 12,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Logout',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      // Perform logout
+      await context.read<UserCubit>().logOut();
+
+      // Navigate to login screen immediately
+      if (mounted) {
+        context.pushReplacement(LoginScreen());
+      }
+    }
   }
 }

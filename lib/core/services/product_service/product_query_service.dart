@@ -178,9 +178,18 @@ class ProductQueryService {
                 'event_date': pickupDate.parseToDateTime().format(
                       reverse: true,
                     ),
-                'return_date': returnDate.parseToDateTime().format(
-                      reverse: true,
-                    ),
+                'return_date': (returnTime != null &&
+                        returnTime.hour == 23 &&
+                        returnTime.minute == 59)
+                    ? returnDate
+                        .parseToDateTime()
+                        .add(const Duration(days: 1))
+                        .format(
+                          reverse: true,
+                        )
+                    : returnDate.parseToDateTime().format(
+                          reverse: true,
+                        ),
                 if (pickupTime != null)
                   'event_time': pickupTime.formatToTime(
                     date: pickupDate.parseToDateTime(),

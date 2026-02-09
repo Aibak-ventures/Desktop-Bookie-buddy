@@ -88,10 +88,14 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 28),
         _input('Phone number', phoneController, TextInputType.number,
-            validator: AppInputValidators.phoneNumber),
+            validator: AppInputValidators.phoneNumber,
+            textInputAction: TextInputAction.next),
         const SizedBox(height: 22),
         _input('Password', passwordController, TextInputType.text,
-            obscure: true, validator: AppInputValidators.password),
+            obscure: true,
+            validator: AppInputValidators.password,
+            textInputAction: TextInputAction.done,
+            onFieldSubmitted: (_) => _login()),
         const SizedBox(height: 45),
         BlocConsumer<AuthBloc, AuthState>(
           listener: _authListener,
@@ -126,12 +130,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _input(
       String hint, TextEditingController controller, TextInputType type,
-      {bool obscure = false, String? Function(String?)? validator}) {
+      {bool obscure = false,
+      String? Function(String?)? validator,
+      TextInputAction? textInputAction,
+      void Function(String)? onFieldSubmitted}) {
     return TextFormField(
       controller: controller,
       keyboardType: type,
       obscureText: obscure,
       validator: validator,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
       decoration: InputDecoration(
         hintText: hint,
         contentPadding:

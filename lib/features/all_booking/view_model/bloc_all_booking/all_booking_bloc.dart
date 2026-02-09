@@ -188,11 +188,11 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
       final nextPage = PaginationModel.getPageFromUrl(s.nextPageUrl);
 
       final result = await _repository.loadDesktopBookingsPagination(
-        status: 'pending', // Default status for pagination
+        status: s.status ?? 'pending',
         startDate: s.startDate,
         endDate: s.endDate,
         page: nextPage,
-        searchQuery: s.searchQuery.isNotNullOrEmpty ? s.searchQuery : null,
+        searchQuery: s.searchQuery,
       );
 
       emit(

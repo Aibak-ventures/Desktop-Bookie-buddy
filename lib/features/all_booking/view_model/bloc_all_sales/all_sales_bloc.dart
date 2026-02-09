@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
+import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -18,6 +19,41 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
       : _repository = repository,
         super(const AllSalesState.loading()) {
     on<_LoadSales>(_onFetchSales);
+    on<_LoadMoreSales>(
+      _onLoadMoreSales,
+      transformer: throttleDroppable(),
+    );
+  }
+
+  Future<void> _onLoadMoreSales(
+    _LoadMoreSales event,
+    Emitter<AllSalesState> emit,
+  ) async {
+    if (state is! _Loaded) return;
+    final s = state as _Loaded;
+    if (s.isPaginating || s.nextPageUrl == null) return;
+
+    emit(s.copyWith(isPaginating: true));
+
+    try {
+      final nextPage = PaginationModel.getPageFromUrl(s.nextPageUrl);
+      final result = await _repository.getSalesPagination(
+        page: nextPage,
+        search: s.searchQuery,
+      );
+
+      emit(
+        s.copyWith(
+          sales: [...s.sales, ...result.data],
+          nextPageUrl: result.nextPageUrl,
+          isPaginating: false,
+          searchQuery: s.searchQuery,
+        ),
+      );
+    } catch (e, stack) {
+      log('Error loading more sales: $e', stackTrace: stack);
+      emit(_Error(e.toString()));
+    }
   }
 
   Future<void> _onFetchSales(

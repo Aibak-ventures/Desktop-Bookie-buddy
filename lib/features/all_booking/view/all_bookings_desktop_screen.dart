@@ -33,6 +33,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<DateFilterModel> _dateFilterNotifier =
       ValueNotifier(const DateFilterModel());
+  final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
 
   final List<String> _actionTabs = ['Booking', 'Sales'];
@@ -51,12 +52,27 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     super.initState();
     _loadData();
     _searchController.addListener(_onSearchChanged);
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (_activeActionTab == 1) {
+        context.read<AllSalesBloc>().add(const AllSalesEvent.loadMoreSales());
+      } else {
+        context
+            .read<AllBookingBloc>()
+            .add(const AllBookingEvent.loadNextPageBookings());
+      }
+    }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     _dateFilterNotifier.dispose();
+    _scrollController.dispose();
     _debounce?.cancel();
     super.dispose();
   }
@@ -160,9 +176,9 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const Text(
-          'Bookings list',
-          style: TextStyle(
+        Text(
+          _activeActionTab == 1 ? 'Sales list' : 'Bookings list',
+          style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
             color: Color(0xFF2D3436),
@@ -479,7 +495,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           loading: () => const Center(
             child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
           ),
-          loaded: (sales, _, __) {
+          loaded: (sales, _, __, ___) {
             if (sales.isEmpty) {
               return const Center(child: Text('No sales found'));
             }
@@ -493,22 +509,73 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildSalesTable(List<SaleModel> sales) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        _buildTableHeader(),
-        ...sales.map((sale) => _buildSalesTableRow(sale)),
-      ],
+    return BlocBuilder<AllSalesBloc, AllSalesState>(
+      builder: (context, state) {
+        final isPaginating = state.maybeWhen(
+          loaded: (_, __, ___, isPaginating) => isPaginating,
+          orElse: () => false,
+        );
+
+        return ListView.builder(
+          controller: _scrollController,
+          padding: EdgeInsets.zero,
+          itemCount: sales.length + 1, // +1 for header
+          itemBuilder: (context, index) {
+            if (index == 0) return _buildTableHeader();
+            final itemIndex = index - 1;
+
+            if (itemIndex < sales.length) {
+              return _buildSalesTableRow(sales[itemIndex]);
+            } else {
+              if (isPaginating) {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else {
+                return const SizedBox(height: 20); // Bottom padding
+              }
+            }
+          },
+        );
+      },
     );
   }
 
   Widget _buildTable(List<DesktopBookingItemModel> bookings) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        _buildTableHeader(),
-        ...bookings.map((b) => _buildTableRow(b)),
-      ],
+    return BlocBuilder<AllBookingBloc, AllBookingState>(
+      builder: (context, state) {
+        final isPaginating = state.maybeWhen(
+          loaded: (_, __, isPaginating, ___, ____, _____, ______, _______,
+                  ________) =>
+              isPaginating,
+          orElse: () => false,
+        );
+
+        return ListView.builder(
+          controller: _scrollController,
+          padding: EdgeInsets.zero,
+          itemCount: bookings.length + 1, // +1 for header
+          itemBuilder: (context, index) {
+            if (index == 0) return _buildTableHeader();
+            final itemIndex = index - 1;
+
+            if (itemIndex < bookings.length) {
+              return _buildTableRow(bookings[itemIndex]);
+            } else {
+              // Loading indicator or bottom padding
+              if (isPaginating) {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else {
+                return const SizedBox(height: 20);
+              }
+            }
+          },
+        );
+      },
     );
   }
 
@@ -737,104 +804,113 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildTableRow(DesktopBookingItemModel booking) {
-    return GestureDetector(
-      onTap: () {
-        if (booking.id != null) {
-          // Open drawer
-          context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id);
-          // Fetch booking details
-          context.read<BookingDetailsBloc>().add(
-                BookingDetailsEvent.fetchBookingDetails(booking.id),
-              );
-        }
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-        ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 100,
-              child: Tooltip(
-                message: booking.staffName ?? 'No staff assigned',
-                decoration: BoxDecoration(
-                  color: _parseStaffColor(booking.staffColor),
-                  borderRadius: BorderRadius.circular(4),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            if (booking.id != null) {
+              // Open drawer
+              context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id);
+              // Fetch booking details
+              context.read<BookingDetailsBloc>().add(
+                    BookingDetailsEvent.fetchBookingDetails(booking.id),
+                  );
+            }
+          },
+          hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
+          splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
+          highlightColor: const Color(0xFF8A63FE).withOpacity(0.1),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Tooltip(
+                    message: booking.staffName ?? 'No staff assigned',
+                    decoration: BoxDecoration(
+                      color: _parseStaffColor(booking.staffColor),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    child: Text(
+                      booking.shopBookingId ?? '',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 13),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 105,
+                  child: _buildDeliveryStatusDisplay(booking.deliveryStatus),
                 ),
-                child: Text(
-                  booking.shopBookingId ?? '',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 13),
-                  overflow: TextOverflow.ellipsis,
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 95,
+                  child: Text(
+                    _formatDateWithLabel(booking.pickupDate ?? ''),
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    booking.bookedItems ?? '',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 110,
+                  child: Text(
+                    booking.client ?? '',
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w500),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹${booking.advanceAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹${booking.remainingAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 90,
+                  child: _buildPaymentStatus(booking.paymentStatus),
+                ),
+                const SizedBox(width: 10),
+                const Icon(Icons.chevron_right,
+                    size: 18, color: Colors.blueAccent),
+              ],
             ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 105,
-              child: _buildDeliveryStatusDisplay(booking.deliveryStatus),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 95,
-              child: Text(
-                _formatDateWithLabel(booking.pickupDate ?? ''),
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                booking.bookedItems ?? '',
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 110,
-              child: Text(
-                booking.client ?? '',
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 70,
-              child: Text(
-                '₹${booking.advanceAmount}',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 70,
-              child: Text(
-                '₹${booking.remainingAmount}',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 90,
-              child: _buildPaymentStatus(booking.paymentStatus),
-            ),
-            const SizedBox(width: 10),
-            const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
-          ],
+          ),
         ),
       ),
     );
@@ -950,7 +1026,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10,
-          color: isPaid ? const Color(0xFF20D400) : const Color(0xFFD4B800),
+          color: isPaid ? const Color(0xFF0F9D00) : const Color(0xFFB89600),
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -1003,97 +1079,106 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     final balance = sale.totalAmount - sale.paidAmount;
     final paymentStatus = balance == 0;
 
-    return GestureDetector(
-      onTap: () {
-        context.read<SalesDetailsDrawerCubit>().openDrawer(sale.id);
-        context.read<SalesDetailsBloc>().add(
-              SalesDetailsEvent.fetchSaleDetails(sale.id),
-            );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 11),
-            SizedBox(
-              width: 100,
-              child: Text(
-                '#${sale.id}',
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            context.read<SalesDetailsDrawerCubit>().openDrawer(sale.id);
+            context.read<SalesDetailsBloc>().add(
+                  SalesDetailsEvent.fetchSaleDetails(sale.id),
+                );
+          },
+          hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
+          splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
+          highlightColor: const Color(0xFF8A63FE).withOpacity(0.1),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                const SizedBox(width: 11),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    'SL${sale.id.toString().padLeft(5, '0')}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 95,
+                  child: Text(
+                    sale.saleDate,
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 110,
+                  child: Text(
+                    sale.clientPhone?.toString() ?? 'N/A',
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w500),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    sale.products,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    '₹${sale.totalAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹${sale.paidAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹$balance',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹${sale.discountAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Icon(Icons.chevron_right,
+                    size: 18, color: Colors.blueAccent),
+              ],
             ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 95,
-              child: Text(
-                sale.saleDate,
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 110,
-              child: Text(
-                sale.clientPhone?.toString() ?? 'N/A',
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                sale.products,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 80,
-              child: Text(
-                '₹${sale.totalAmount}',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 70,
-              child: Text(
-                '₹${sale.paidAmount}',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 70,
-              child: Text(
-                '₹$balance',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 70,
-              child: Text(
-                '₹${sale.discountAmount}',
-                style: const TextStyle(fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 10),
-            const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
-          ],
+          ),
         ),
       ),
     );
