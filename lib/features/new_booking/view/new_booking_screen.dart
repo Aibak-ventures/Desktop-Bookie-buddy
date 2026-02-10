@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -179,6 +180,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
       // Load staffs for staff search dropdown
       context.read<StaffSearchCubit>().getAllStaffs();
+
+      // Initialize cooling period based on shop settings (TC-01-03)
+      _initializeCoolingPeriod();
     });
   }
 
@@ -1960,32 +1964,76 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Future<void> _selectDate({required bool isPickup}) async {
-    final initialDate = isPickup ? pickupDate : returnDate;
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      setState(() {
-        if (isPickup) {
+    if (isPickup) {
+      // PICKUP DATE PICKER
+      // Can be past (up to 1 year) or future (up to 1 year)
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: pickupDate,
+        firstDate: DateTime.now().subtract(const Duration(days: 365)),
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (picked != null) {
+        setState(() {
           pickupDate = picked;
-          if (returnDate.isBefore(picked)) {
+
+          // RIPPLE EFFECT: If pickup > return, push return forward
+          if (picked.dateOnly.isAfter(returnDate.dateOnly)) {
             returnDate = picked.add(const Duration(days: 1));
+
+            // Also update cooling period if it exists
+            if (coolingPeriodDate != null) {
+              _updateCoolingPeriod();
+            }
           }
-        } else {
+
+          // If cooling period exists and mode is "before", recalculate
+          // (For now, assuming "after" mode - can add mode toggle later)
+        });
+      }
+    } else {
+      // RETURN DATE PICKER
+      // CRITICAL: Must be today or future, never in the past
+      final today = DateTime.now().dateOnly;
+      final minReturnDate =
+          pickupDate.dateOnly.isAfter(today) ? pickupDate.dateOnly : today;
+
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: minReturnDate.isAfter(returnDate.dateOnly)
+            ? minReturnDate
+            : returnDate,
+        firstDate: minReturnDate, // Cannot be before max(today, pickup)
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (picked != null) {
+        setState(() {
           returnDate = picked;
-        }
-      });
+
+          // RIPPLE EFFECT: Update cooling period if mode is "after"
+          if (coolingPeriodDate != null) {
+            _updateCoolingPeriod();
+          }
+        });
+      }
     }
   }
 
@@ -2005,12 +2053,132 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         );
       },
     );
+
     if (picked != null) {
-      setState(() {
-        if (isPickup) {
+      // VALIDATION: Check if time is in the past for today's date
+      if (isPickup) {
+        // Pickup time validation
+        if (pickupDate.isDateToday && _isTimeInPast(picked)) {
+          _showTimeError('Pickup time cannot be in the past');
+          return;
+        }
+
+        setState(() {
           pickupTime = picked;
-        } else {
+        });
+
+        // VALIDATION: If same day booking, validate return time
+        if (pickupDate.dateOnly.isAtSameMomentAs(returnDate.dateOnly) &&
+            returnTime != null) {
+          if (!_isReturnTimeAfterPickupTime(picked, returnTime!)) {
+            setState(() {
+              returnTime = null; // Clear invalid return time
+            });
+            _showTimeError(
+                'Return time has been cleared as it was before the new pickup time');
+          }
+        }
+      } else {
+        // Return time validation
+        if (returnDate.isDateToday && _isTimeInPast(picked)) {
+          _showTimeError('Return time cannot be in the past');
+          return;
+        }
+
+        // VALIDATION: If same day booking, return must be after pickup
+        if (pickupDate.dateOnly.isAtSameMomentAs(returnDate.dateOnly) &&
+            pickupTime != null) {
+          if (!_isReturnTimeAfterPickupTime(pickupTime!, picked)) {
+            _showTimeError('Return time must be after pickup time');
+            return;
+          }
+        }
+
+        setState(() {
           returnTime = picked;
+        });
+      }
+    }
+  }
+
+  /// Helper: Check if a time is in the past for today
+  bool _isTimeInPast(TimeOfDay time) {
+    final now = TimeOfDay.now();
+    final nowMinutes = now.hour * 60 + now.minute;
+    final timeMinutes = time.hour * 60 + time.minute;
+    return timeMinutes < nowMinutes;
+  }
+
+  /// Helper: Check if return time is after pickup time
+  bool _isReturnTimeAfterPickupTime(
+      TimeOfDay pickupTime, TimeOfDay returnTime) {
+    final pickupMinutes = pickupTime.hour * 60 + pickupTime.minute;
+    final returnMinutes = returnTime.hour * 60 + returnTime.minute;
+    return returnMinutes > pickupMinutes;
+  }
+
+  /// Helper: Show time validation error
+  void _showTimeError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red.shade600,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: Colors.white,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Helper: Initialize cooling period on first load based on shop settings
+  /// Implements TC-01 through TC-03
+  void _initializeCoolingPeriod() {
+    final userCubit = context.read<UserCubit>();
+    final coolingDuration =
+        userCubit.state?.shopSettings.coolingPeriodDuration ?? 0;
+    final coolingMode = userCubit.state?.shopSettings.coolingPeriodMode ??
+        CoolingPeriodMode.after;
+
+    if (coolingDuration > 0) {
+      setState(() {
+        if (coolingMode.isAfter) {
+          // TC-02: After mode - cooling starts after return
+          coolingPeriodDate = returnDate.add(Duration(days: coolingDuration));
+        } else {
+          // TC-03: Before mode - cooling ends before pickup
+          coolingPeriodDate =
+              pickupDate.subtract(Duration(days: coolingDuration));
+        }
+      });
+    }
+  }
+
+  /// Helper: Update cooling period based on pickup/return date changes
+  /// Supports both "before" and "after" modes
+  void _updateCoolingPeriod() {
+    final userCubit = context.read<UserCubit>();
+    final coolingDuration =
+        userCubit.state?.shopSettings.coolingPeriodDuration ?? 0;
+    final coolingMode = userCubit.state?.shopSettings.coolingPeriodMode ??
+        CoolingPeriodMode.after;
+
+    if (coolingDuration > 0) {
+      setState(() {
+        if (coolingMode.isAfter) {
+          // TC-10: After mode (Maintenance) - cooling starts after return
+          // Formula: Cooling Date = Return Date + Duration
+          coolingPeriodDate = returnDate.add(Duration(days: coolingDuration));
+        } else {
+          // TC-15: Before mode (Preparation) - cooling ends before pickup
+          // Formula: Cooling Date = Pickup Date - Duration
+          coolingPeriodDate =
+              pickupDate.subtract(Duration(days: coolingDuration));
         }
       });
     }
@@ -2114,6 +2282,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               isSalesMode: selectedBookingType == BookingType.sales,
               clientNameError: _clientNameError,
               staffNameError: _staffNameError,
+              coolingPeriodMode: context
+                      .read<UserCubit>()
+                      .state
+                      ?.shopSettings
+                      .coolingPeriodMode ??
+                  CoolingPeriodMode.after,
             ),
           ),
           const SizedBox(height: 16),

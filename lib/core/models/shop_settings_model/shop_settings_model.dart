@@ -10,6 +10,12 @@ class ShopSettingsModel with _$ShopSettingsModel {
     @JsonKey(name: 'cooling_days', defaultValue: 0)
     required int coolingPeriodDuration,
     @JsonKey(
+      name: 'cooling_period_mode',
+      fromJson: CoolingPeriodMode.fromJson,
+      defaultValue: CoolingPeriodMode.after,
+    )
+    required CoolingPeriodMode coolingPeriodMode,
+    @JsonKey(
       name: 'default_action',
       fromJson: AddButtonDefaultAction.fromString,
       defaultValue: AddButtonDefaultAction.booking,

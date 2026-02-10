@@ -23,6 +23,11 @@ mixin _$ShopSettingsModel {
   @JsonKey(name: 'cooling_days', defaultValue: 0)
   int get coolingPeriodDuration => throw _privateConstructorUsedError;
   @JsonKey(
+      name: 'cooling_period_mode',
+      fromJson: CoolingPeriodMode.fromJson,
+      defaultValue: CoolingPeriodMode.after)
+  CoolingPeriodMode get coolingPeriodMode => throw _privateConstructorUsedError;
+  @JsonKey(
       name: 'default_action',
       fromJson: AddButtonDefaultAction.fromString,
       defaultValue: AddButtonDefaultAction.booking)
@@ -51,6 +56,11 @@ abstract class $ShopSettingsModelCopyWith<$Res> {
       {@JsonKey(name: 'cooling_days', defaultValue: 0)
       int coolingPeriodDuration,
       @JsonKey(
+          name: 'cooling_period_mode',
+          fromJson: CoolingPeriodMode.fromJson,
+          defaultValue: CoolingPeriodMode.after)
+      CoolingPeriodMode coolingPeriodMode,
+      @JsonKey(
           name: 'default_action',
           fromJson: AddButtonDefaultAction.fromString,
           defaultValue: AddButtonDefaultAction.booking)
@@ -74,6 +84,7 @@ class _$ShopSettingsModelCopyWithImpl<$Res, $Val extends ShopSettingsModel>
   @override
   $Res call({
     Object? coolingPeriodDuration = null,
+    Object? coolingPeriodMode = null,
     Object? addButtonDefaultAction = null,
     Object? searchClient = null,
   }) {
@@ -82,6 +93,10 @@ class _$ShopSettingsModelCopyWithImpl<$Res, $Val extends ShopSettingsModel>
           ? _value.coolingPeriodDuration
           : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
               as int,
+      coolingPeriodMode: null == coolingPeriodMode
+          ? _value.coolingPeriodMode
+          : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
+              as CoolingPeriodMode,
       addButtonDefaultAction: null == addButtonDefaultAction
           ? _value.addButtonDefaultAction
           : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
@@ -106,6 +121,11 @@ abstract class _$$ShopSettingsModelImplCopyWith<$Res>
       {@JsonKey(name: 'cooling_days', defaultValue: 0)
       int coolingPeriodDuration,
       @JsonKey(
+          name: 'cooling_period_mode',
+          fromJson: CoolingPeriodMode.fromJson,
+          defaultValue: CoolingPeriodMode.after)
+      CoolingPeriodMode coolingPeriodMode,
+      @JsonKey(
           name: 'default_action',
           fromJson: AddButtonDefaultAction.fromString,
           defaultValue: AddButtonDefaultAction.booking)
@@ -127,6 +147,7 @@ class __$$ShopSettingsModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? coolingPeriodDuration = null,
+    Object? coolingPeriodMode = null,
     Object? addButtonDefaultAction = null,
     Object? searchClient = null,
   }) {
@@ -135,6 +156,10 @@ class __$$ShopSettingsModelImplCopyWithImpl<$Res>
           ? _value.coolingPeriodDuration
           : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
               as int,
+      coolingPeriodMode: null == coolingPeriodMode
+          ? _value.coolingPeriodMode
+          : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
+              as CoolingPeriodMode,
       addButtonDefaultAction: null == addButtonDefaultAction
           ? _value.addButtonDefaultAction
           : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
@@ -154,6 +179,11 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
       {@JsonKey(name: 'cooling_days', defaultValue: 0)
       required this.coolingPeriodDuration,
       @JsonKey(
+          name: 'cooling_period_mode',
+          fromJson: CoolingPeriodMode.fromJson,
+          defaultValue: CoolingPeriodMode.after)
+      required this.coolingPeriodMode,
+      @JsonKey(
           name: 'default_action',
           fromJson: AddButtonDefaultAction.fromString,
           defaultValue: AddButtonDefaultAction.booking)
@@ -169,6 +199,12 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
   final int coolingPeriodDuration;
   @override
   @JsonKey(
+      name: 'cooling_period_mode',
+      fromJson: CoolingPeriodMode.fromJson,
+      defaultValue: CoolingPeriodMode.after)
+  final CoolingPeriodMode coolingPeriodMode;
+  @override
+  @JsonKey(
       name: 'default_action',
       fromJson: AddButtonDefaultAction.fromString,
       defaultValue: AddButtonDefaultAction.booking)
@@ -179,7 +215,7 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
 
   @override
   String toString() {
-    return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient)';
+    return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient)';
   }
 
   @override
@@ -189,6 +225,8 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
             other is _$ShopSettingsModelImpl &&
             (identical(other.coolingPeriodDuration, coolingPeriodDuration) ||
                 other.coolingPeriodDuration == coolingPeriodDuration) &&
+            (identical(other.coolingPeriodMode, coolingPeriodMode) ||
+                other.coolingPeriodMode == coolingPeriodMode) &&
             (identical(other.addButtonDefaultAction, addButtonDefaultAction) ||
                 other.addButtonDefaultAction == addButtonDefaultAction) &&
             (identical(other.searchClient, searchClient) ||
@@ -197,8 +235,8 @@ class _$ShopSettingsModelImpl implements _ShopSettingsModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, coolingPeriodDuration, addButtonDefaultAction, searchClient);
+  int get hashCode => Object.hash(runtimeType, coolingPeriodDuration,
+      coolingPeriodMode, addButtonDefaultAction, searchClient);
 
   /// Create a copy of ShopSettingsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -222,6 +260,11 @@ abstract class _ShopSettingsModel implements ShopSettingsModel {
       {@JsonKey(name: 'cooling_days', defaultValue: 0)
       required final int coolingPeriodDuration,
       @JsonKey(
+          name: 'cooling_period_mode',
+          fromJson: CoolingPeriodMode.fromJson,
+          defaultValue: CoolingPeriodMode.after)
+      required final CoolingPeriodMode coolingPeriodMode,
+      @JsonKey(
           name: 'default_action',
           fromJson: AddButtonDefaultAction.fromString,
           defaultValue: AddButtonDefaultAction.booking)
@@ -235,6 +278,12 @@ abstract class _ShopSettingsModel implements ShopSettingsModel {
   @override
   @JsonKey(name: 'cooling_days', defaultValue: 0)
   int get coolingPeriodDuration;
+  @override
+  @JsonKey(
+      name: 'cooling_period_mode',
+      fromJson: CoolingPeriodMode.fromJson,
+      defaultValue: CoolingPeriodMode.after)
+  CoolingPeriodMode get coolingPeriodMode;
   @override
   @JsonKey(
       name: 'default_action',

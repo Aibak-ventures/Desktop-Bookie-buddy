@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -40,6 +41,9 @@ class BookingCalendarWidget extends StatefulWidget {
   // Sales mode flag
   final bool isSalesMode;
 
+  // Cooling period mode for date picker constraints
+  final CoolingPeriodMode coolingPeriodMode;
+
   const BookingCalendarWidget({
     super.key,
     required this.pickupDate,
@@ -67,6 +71,7 @@ class BookingCalendarWidget extends StatefulWidget {
     this.isSalesMode = false,
     this.clientNameError,
     this.staffNameError,
+    this.coolingPeriodMode = CoolingPeriodMode.after,
   });
 
   final String? clientNameError;
@@ -511,8 +516,8 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TableCalendar(
-        firstDay: DateTime.now(),
-        lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
+        firstDay: DateTime.now().subtract(const Duration(days: 365)),
+        lastDay: DateTime.now().add(const Duration(days: 365)),
         focusedDay: focusedDay,
         selectedDayPredicate: (day) =>
             isSameDay(day, widget.pickupDate) ||
@@ -780,14 +785,14 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
 
     final initialDate = isPickup ? widget.pickupDate : widget.returnDate;
     final firstDate = isPickup
-        ? DateTime.now().subtract(const Duration(days: 30))
+        ? DateTime.now().subtract(const Duration(days: 365))
         : widget.pickupDate;
 
     final picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,
-      lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -842,14 +847,30 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
   }
 
   void _selectCoolingPeriodDate() async {
-    final initialDate = widget.coolingPeriodDate ??
-        widget.returnDate.add(const Duration(days: 1));
+    // Determine constraints based on cooling period mode
+    DateTime initialDate;
+    DateTime firstDate;
+    DateTime lastDate;
+
+    if (widget.coolingPeriodMode.isAfter) {
+      // TC-11: After mode (Maintenance) - cooling starts after return
+      initialDate = widget.coolingPeriodDate ??
+          widget.returnDate.add(const Duration(days: 1));
+      firstDate = widget.returnDate; // Cannot finish before return
+      lastDate = DateTime.now().add(const Duration(days: 365));
+    } else {
+      // TC-17: Before mode (Preparation) - cooling ends before pickup
+      initialDate = widget.coolingPeriodDate ??
+          widget.pickupDate.subtract(const Duration(days: 1));
+      firstDate = DateTime.now().subtract(const Duration(days: 365));
+      lastDate = widget.pickupDate; // Prep must finish by pickup
+    }
 
     final picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
-      firstDate: widget.returnDate,
-      lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
+      firstDate: firstDate,
+      lastDate: lastDate,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -895,8 +916,8 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     final picked = await showDatePicker(
       context: context,
       initialDate: widget.pickupDate,
-      firstDate: DateTime.now().subtract(const Duration(days: 30)),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

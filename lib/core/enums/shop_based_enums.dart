@@ -107,9 +107,9 @@ enum AppPremiumFeatures {
       return null;
     }
     return AppPremiumFeatures.values.cast<AppPremiumFeatures?>().firstWhere(
-      (e) => e?.name == name,
-      orElse: () => null,
-    );
+          (e) => e?.name == name,
+          orElse: () => null,
+        );
   }
 
   static AppPremiumFeatures? fromJson(String? value) {
@@ -117,9 +117,9 @@ enum AppPremiumFeatures {
       return null;
     }
     return AppPremiumFeatures.values.cast<AppPremiumFeatures?>().firstWhere(
-      (e) => e?.name == value,
-      orElse: () => null,
-    );
+          (e) => e?.name == value,
+          orElse: () => null,
+        );
   }
 
   static String? toJson(AppPremiumFeatures? feature) => feature?.name;
@@ -190,6 +190,42 @@ enum AddButtonDefaultAction {
 //   bool get isCustomWork => this == AddButtonDefaultAction.customWork;
 //   bool get isAsk => this == AddButtonDefaultAction.ask;
 // }
+
+enum CoolingPeriodMode {
+  after('AFTER', 'After Return (Maintenance)'),
+  before('BEFORE', 'Before Pickup (Preparation)');
+
+  const CoolingPeriodMode(this.value, this.label);
+
+  final String value;
+  final String label;
+
+  /// Convert from string to CoolingPeriodMode enum
+  static CoolingPeriodMode fromString(String? value) {
+    if (value == null) {
+      return CoolingPeriodMode.after;
+    }
+    return CoolingPeriodMode.values.firstWhere(
+      (e) => e.value == value.toUpperCase(),
+      orElse: () => CoolingPeriodMode.after,
+    );
+  }
+
+  static CoolingPeriodMode fromJson(String? value) {
+    if (value == null) {
+      return CoolingPeriodMode.after;
+    }
+    return CoolingPeriodMode.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => CoolingPeriodMode.after,
+    );
+  }
+
+  String toJson() => value;
+
+  bool get isAfter => this == CoolingPeriodMode.after;
+  bool get isBefore => this == CoolingPeriodMode.before;
+}
 
 enum AppMainFeatureType {
   bookings('bookings'),
