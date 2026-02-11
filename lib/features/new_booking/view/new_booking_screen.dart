@@ -1880,90 +1880,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   //   );
   // }
 
-  Widget _buildCompactDateField({
-    required String label,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-        ),
-        const SizedBox(height: 4),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(6),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300, width: 1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.calendar_today_outlined,
-                    size: 14, color: AppColors.purple),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 16, color: Colors.grey.shade500),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCompactTimeField({
-    required String label,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-        ),
-        const SizedBox(height: 4),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(6),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300, width: 1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                Icon(Icons.access_time, size: 14, color: Colors.grey.shade500),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Future<void> _selectDate({required bool isPickup}) async {
     if (isPickup) {
       // PICKUP DATE PICKER
@@ -2185,480 +2101,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  Widget _buildSalesDateSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Sale Date',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Single date field for sales
-          InkWell(
-            onTap: () => _selectDate(isPickup: true),
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.calendar_today,
-                      size: 16, color: Colors.grey.shade600),
-                  const SizedBox(width: 8),
-                  Text(
-                    pickupDate.format(),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLeftTopSection() {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      transitionBuilder: (child, animation) {
-        return FadeTransition(opacity: animation, child: child);
-      },
-      child: _bookingStep == 0 ? _buildStepOne() : _buildStepTwo(),
-    );
-  }
-
-  Widget _buildStepOne() {
-    return SizedBox(
-      key: const ValueKey(0),
-      child: Column(
-        children: [
-          // Calendar + date time (already compact)
-          SizedBox(
-            height: selectedBookingType == BookingType.sales ? 460 : 490,
-            child: BookingCalendarWidget(
-              staffNameController: staffNameController,
-              clientNameController: clientNameController,
-              clientPhone1Controller: clientPhone1Controller,
-              clientPhone2Controller: clientPhone2Controller,
-              clientAddressController: clientAddressController,
-              descriptionController: descriptionController,
-              isSearchClientEnabled: isSearchClientEnabled,
-              onSearchClientToggle: (v) =>
-                  setState(() => isSearchClientEnabled = v),
-              onStaffSelected: (id) => setState(() => selectedStaffId = id),
-              onClientSelected: (id) => setState(() => selectedClientId = id),
-              pickupDate: pickupDate,
-              returnDate: returnDate,
-              coolingPeriodDate: coolingPeriodDate,
-              pickupTime: pickupTime,
-              returnTime: returnTime,
-              coolingPeriodTime: coolingPeriodTime,
-              onPickupDateChanged: (d) => setState(() => pickupDate = d),
-              onReturnDateChanged: (d) => setState(() => returnDate = d),
-              onCoolingPeriodDateChanged: (d) =>
-                  setState(() => coolingPeriodDate = d),
-              onPickupTimeChanged: (t) => setState(() => pickupTime = t),
-              onReturnTimeChanged: (t) => setState(() => returnTime = t),
-              onCoolingPeriodTimeChanged: (t) =>
-                  setState(() => coolingPeriodTime = t),
-              isSalesMode: selectedBookingType == BookingType.sales,
-              clientNameError: _clientNameError,
-              staffNameError: _staffNameError,
-              coolingPeriodMode: context
-                      .read<UserCubit>()
-                      .state
-                      ?.shopSettings
-                      .coolingPeriodMode ??
-                  CoolingPeriodMode.after,
-            ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _clientNameError = clientNameController.text.trim().isEmpty
-                      ? 'Client name is required'
-                      : null;
-                  _staffNameError = staffNameController.text.trim().isEmpty
-                      ? 'Staff is required'
-                      : null;
-                });
-
-                final isFormValid = _formKey.currentState?.validate() ?? false;
-                if (isFormValid &&
-                    _clientNameError == null &&
-                    _staffNameError == null) {
-                  setState(() => _bookingStep = 1);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                elevation: 0,
-              ),
-              child: const Text('Continue',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStepTwo() {
-    return Container(
-      key: const ValueKey(1),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Back Button + Header
-          Row(
-            children: [
-              InkWell(
-                onTap: () => setState(() => _bookingStep = 0),
-                borderRadius: BorderRadius.circular(20),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Icon(Icons.arrow_back,
-                      size: 20, color: Colors.grey.shade700),
-                ),
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'Complete Booking',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          // Locations (Optional) - Only for Vehicles
-          ValueListenableBuilder<List<ProductSelectedModel>>(
-            valueListenable: selectedProductsNotifier,
-            builder: (context, products, _) {
-              final hasVehicles = products.any(
-                (p) => p.variant.mainServiceType?.isVehicle ?? false,
-              );
-              if (!hasVehicles) return const SizedBox.shrink();
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildStepSectionHeader('Locations', optional: true),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildSimpleTextField(
-                      startLocationController, 'Start location'),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildSimpleTextField(
-                      pickupLocationController, 'Pickup location'),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildSimpleTextField(
-                      destinationLocationController, 'Destination'),
-                  const SizedBox(height: _fieldSpacing),
-                ],
-              );
-            },
-          ),
-
-          // Payment details (Optional)
-          _buildStepSectionHeader('Payment details', optional: true),
-          const SizedBox(height: 12),
-          BookingTextFieldBuilder.buildSimpleTextField(
-              advanceAmountController, 'Advance amount',
-              isNumber: true),
-          const SizedBox(height: 12),
-          BookingTextFieldBuilder.buildSimpleTextField(
-              securityAmountController, 'Security amount',
-              isNumber: true),
-          const SizedBox(height: 12),
-          BookingTextFieldBuilder.buildSimpleTextField(
-              discountAmountController, 'Discount amount',
-              isNumber: true),
-
-          const SizedBox(height: 24),
-          _buildStepSectionHeader('Payment Method'),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
-              const SizedBox(width: 12),
-              _buildPaymentMethodOption(PaymentMethod.gPay, Icons.qr_code),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
-          // Additional Charges
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Additional charges',
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-              ),
-              InkWell(
-                onTap: _addAdditionalCharge,
-                borderRadius: BorderRadius.circular(4),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child:
-                      const Icon(Icons.add, size: 16, color: Color(0xFF6132E4)),
-                ),
-              ),
-            ],
-          ),
-          // Additional charges list (if any)
-          ValueListenableBuilder<List<AdditionalChargesModel>>(
-            valueListenable: additionalChargesNotifier,
-            builder: (context, charges, _) {
-              if (charges.isEmpty) return const SizedBox();
-              return Column(
-                children: charges
-                    .map((c) => Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Row(
-                            children: [
-                              Text(c.name ?? '',
-                                  style: const TextStyle(fontSize: 12)),
-                              const Spacer(),
-                              Text('₹${c.amount}',
-                                  style: const TextStyle(fontSize: 12)),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () => _removeCharge(c),
-                                child: Icon(Icons.close,
-                                    size: 14, color: Colors.grey.shade500),
-                              ),
-                            ],
-                          ),
-                        ))
-                    .toList(),
-              );
-            },
-          ),
-
-          // const SizedBox(height: 7),
-
-          // Summary Section
-          _buildFinalSummary(),
-
-          const SizedBox(height: 24),
-
-          // Action Buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      showCustomization = true;
-                    });
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.grey.shade300),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child: Text('Add customization',
-                      style:
-                          TextStyle(fontSize: 13, color: Colors.grey.shade700)),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-              child: const Text('Confirm Booking',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStepSectionHeader(String title, {bool optional = false}) {
-    return Row(
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A1A),
-          ),
-        ),
-        if (optional) ...[
-          const SizedBox(width: 4),
-          Text(
-            '(optional)',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Colors.grey.shade500,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildStepTwoSummary() {
-    return ValueListenableBuilder<List<ProductSelectedModel>>(
-      valueListenable: selectedProductsNotifier,
-      builder: (context, products, _) {
-        final productTotal = products.fold<int>(
-            0, (sum, item) => sum + (item.amount * item.quantity));
-        final additional = additionalChargesNotifier.value.fold<double>(
-            0, (sum, item) => sum + (item.amount?.toDouble() ?? 0));
-
-        final advance = double.tryParse(advanceAmountController.text) ?? 0;
-        final discount = double.tryParse(discountAmountController.text) ?? 0;
-
-        final totalPayable = productTotal + additional - advance - discount;
-
-        return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF6F4FF), // Light purple bg
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFEBE5FF)),
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Product total',
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF2D2D2D),
-                          fontWeight: FontWeight.w500)),
-                  Text('₹${productTotal.toCurrency()}',
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A1A1A))),
-                ],
-              ),
-              if (additional > 0) ...[
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Additional charges',
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF2D2D2D),
-                            fontWeight: FontWeight.w500)),
-                    Text('₹${additional.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1A1A1A))),
-                  ],
-                ),
-              ],
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, color: Color(0xFFE0D9FF)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Paid',
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF2D2D2D),
-                          fontWeight: FontWeight.w500)),
-                  Text('₹${advance.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF27AE60))),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Total payable',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Color(0xFF1A1A1A),
-                          fontWeight: FontWeight.w600)),
-                  Text('₹${totalPayable.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFEB5757))),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildServiceSelectionSection() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -2813,30 +2255,78 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey.shade300),
                       ),
-                      child: TextField(
-                        controller: serviceSearchController,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Search products',
-                          hintStyle: const TextStyle(
-                            fontSize: 13,
-                            fontFamily: 'Inter',
-                            color: Color(0xFF8C8C8C),
-                          ),
-                          prefixIcon: const Icon(Icons.search, size: 18),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 14),
-                        ),
-                        onChanged: (value) {
-                          _onSearchChanged();
-                          if (value.isEmpty) {
-                            _removeSearchOverlay();
-                          }
+                      child: ValueListenableBuilder(
+                        valueListenable: _selectedSearchTypeIndex,
+                        builder: (context, searchTypeIndex, _) {
+                          return ValueListenableBuilder(
+                            valueListenable: _isPriceFilterEnabled,
+                            builder: (context, isPriceEnabled, _) {
+                              // Build active filter text
+                              String? filterText;
+                              if (searchTypeIndex != 0) {
+                                filterText = _searchTypes[searchTypeIndex];
+                              }
+                              if (isPriceEnabled) {
+                                if (filterText != null) {
+                                  filterText += ' | Price';
+                                } else {
+                                  filterText = 'Price';
+                                }
+                              }
+
+                              return TextField(
+                                controller: serviceSearchController,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Search products',
+                                  hintStyle: const TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'Inter',
+                                    color: Color(0xFF8C8C8C),
+                                  ),
+                                  prefixIcon:
+                                      const Icon(Icons.search, size: 18),
+                                  suffixIcon: filterText != null
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8),
+                                          child: Chip(
+                                            label: Text(
+                                              filterText,
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(0xFF6132E4),
+                                              ),
+                                            ),
+                                            backgroundColor:
+                                                const Color(0xFF6132E4)
+                                                    .withOpacity(0.1),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4),
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                          ),
+                                        )
+                                      : null,
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 14),
+                                ),
+                                onChanged: (value) {
+                                  _onSearchChanged();
+                                  if (value.isEmpty) {
+                                    _removeSearchOverlay();
+                                  }
+                                },
+                              );
+                            },
+                          );
                         },
                       ),
                     ),
@@ -3523,7 +3013,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 ),
                 const SizedBox(width: 6), // Reduced from 12 to 6
                 _buildQuantityBtn(
-                    icon: Icons.add, onTap: () => _incrementQuantity(product)),
+                    icon: Icons.add,
+                    onTap: () => _incrementQuantity(product),
+                    isDisabled: product.quantity >=
+                        (product.variant.remainingStock ??
+                            product.variant.stock ??
+                            999)),
               ],
             ),
           ),
@@ -3608,19 +3103,26 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Widget _buildQuantityBtn(
-      {required IconData icon, required VoidCallback onTap}) {
+  Widget _buildQuantityBtn({
+    required IconData icon,
+    required VoidCallback onTap,
+    bool isDisabled = false,
+  }) {
     return InkWell(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       borderRadius: BorderRadius.circular(4),
       child: Container(
         width: 27,
         height: 22,
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F0FF), // Light purple bg
+          color: isDisabled
+              ? Colors.grey.shade300
+              : const Color(0xFFF3F0FF), // Light purple bg
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Icon(icon, size: 14, color: const Color(0xFF6132E4)),
+        child: Icon(icon,
+            size: 14,
+            color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4)),
       ),
     );
   }
@@ -3629,14 +3131,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _incrementQuantity(ProductSelectedModel product) {
     // Check available stock using remainingStock with fallback to stock
     final availableStock =
-        product.variant.remainingStock ?? product.variant.stock ?? 0;
+        product.variant.remainingStock ?? product.variant.stock ?? 999;
     final currentQuantity = product.quantity;
 
+    // Silently prevent increment if at max - button should already be disabled
     if (currentQuantity >= availableStock) {
-      context.showSnackBar(
-        'Cannot add more. Only $availableStock items available in stock',
-        isError: true,
-      );
       return;
     }
 
@@ -5453,7 +4952,3 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   //   );
   // }
 }
-
-
-
-

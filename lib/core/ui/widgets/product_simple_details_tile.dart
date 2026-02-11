@@ -74,10 +74,10 @@ class ProductSimpleDetailsTile extends StatelessWidget {
               ),
             if (mainServiceType.isVehicle ||
                 mainServiceType.isOthers ||
-                mainServiceType.isGadgets ||
+                mainServiceType.isGadget ||
                 mainServiceType.isEquipment)
               Text(
-                '${mainServiceType.isVehicle ? 'Brand' : mainServiceType.isGadgets ? 'Serial Number' : 'Category'} : ${category ?? '-'}',
+                '${mainServiceType.isVehicle ? 'Brand' : mainServiceType.isGadget ? 'Serial Number' : 'Category'} : ${category ?? '-'}',
                 style: const TextStyle(color: AppColors.grey, fontSize: 12),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,

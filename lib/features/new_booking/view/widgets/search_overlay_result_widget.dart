@@ -73,7 +73,12 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
   @override
   void initState() {
     super.initState();
-    // Do not auto-select first variant as per user request
+
+    // Debug: Print the mainServiceType to see what's being parsed
+    print(
+        'Product: ${widget.product.name}, MainServiceType: ${widget.product.mainServiceType}, isMultiVariant: ${widget.product.mainServiceType.isMultiVariantProductType}');
+
+    // No default selection - user must explicitly select a variant
     selectedVariant = null;
   }
 
@@ -81,168 +86,225 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
   Widget build(BuildContext context) {
     final price = widget.product.price ?? 0;
     final variants = widget.product.variants;
+    // Define min width preventing squeeze/overflow
+    const double minRowWidth = 700;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(
-        children: [
-          // Product Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: Container(
-              width: 50,
-              height: 40,
-              color: Colors.grey.shade100,
-              child: widget.product.image != null &&
-                      widget.product.image!.isNotEmpty
-                  ? Image.network(
-                      widget.product.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Icon(
-                        Icons.image_outlined,
-                        size: 20,
-                        color: Colors.grey.shade400,
-                      ),
-                    )
-                  : Icon(Icons.image_outlined,
-                      size: 20, color: Colors.grey.shade400),
-            ),
-          ),
-          const SizedBox(width: 10),
+      child: LayoutBuilder(builder: (context, constraints) {
+        final isOverflowing = constraints.maxWidth < minRowWidth;
 
-          // Product Info - Fixed width
-          SizedBox(
-            width: 180,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.product.name,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  widget.product.color ?? 'color',
-                  style: const TextStyle(
-                      color: Color(0xFF707070),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(
-            width: 1,
-            height: 30,
-            color: const Color(0xFFA6A6A6),
-          ),
-          const SizedBox(width: 12),
-
-          // Variants section - Flexible with horizontal scroll
-          Expanded(
-            child: SizedBox(
-              height: 40,
-              child: variants.isNotEmpty
-                  ? SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: variants.map((variant) {
-                          final isSelected = selectedVariant?.id == variant.id;
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 4),
-                            child: SelectableVariantChip(
-                              text: variant.attribute,
-                              isSelected: isSelected,
-                              onTap: () {
-                                setState(() {
-                                  selectedVariant = variant;
-                                });
-                              },
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(
-            width: 1,
-            height: 30,
-            color: const Color(0xFFA6A6A6),
-          ),
-          const SizedBox(width: 12),
-
-          // Price section - Fixed width (equal to button)
-          SizedBox(
-            width: 90,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'rent price',
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey.shade600),
-                ),
-                Text(
-                  '₹$price',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 12),
-          // Add button - Fixed width (equal to price)
-          GestureDetector(
-            onTap: selectedVariant != null
-                ? () => widget.onAddProduct(selectedVariant!)
-                : null,
-            child: Container(
-              width: 90,
-              height: 36,
-              decoration: BoxDecoration(
-                color: selectedVariant != null
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(6),
+        final content = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Product Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Container(
+                width: 50,
+                height: 40,
+                color: Colors.grey.shade100,
+                child: widget.product.image != null &&
+                        widget.product.image!.isNotEmpty
+                    ? Image.network(
+                        widget.product.image!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Icon(
+                          Icons.image_outlined,
+                          size: 20,
+                          color: Colors.grey.shade400,
+                        ),
+                      )
+                    : Icon(Icons.image_outlined,
+                        size: 20, color: Colors.grey.shade400),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.add, size: 18, color: Colors.white),
-                  SizedBox(width: 4),
+            ),
+            const SizedBox(width: 10),
+
+            // Product Info - Fixed width
+            SizedBox(
+              width: 180,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    'Add',
+                    widget.product.name,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    widget.product.color ?? 'color',
+                    style: const TextStyle(
+                        color: Color(0xFF707070),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 12),
+            // Divider
+            Container(
+              width: 1,
+              height: 30,
+              color: const Color(0xFFA6A6A6),
+            ),
+            const SizedBox(width: 12),
+
+            // Variants or Details Section
+            if (widget.product.mainServiceType.isMultiVariantProductType)
+              Expanded(
+                child: SizedBox(
+                  height: 40,
+                  child: variants.isNotEmpty
+                      ? SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: variants.map((variant) {
+                              final isSelected =
+                                  selectedVariant?.id == variant.id;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: SelectableVariantChip(
+                                  text: variant.attribute,
+                                  isSelected: isSelected,
+                                  onTap: () {
+                                    setState(() {
+                                      selectedVariant = variant;
+                                    });
+                                  },
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              )
+            else
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (widget.product.category != null &&
+                        widget.product.category!.isNotEmpty)
+                      Text(
+                        'Category: ${widget.product.category}',
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    if (widget.product.model != null &&
+                        widget.product.model!.isNotEmpty)
+                      Text(
+                        'Model: ${widget.product.mainServiceType.productNameLabel}',
+                        style: TextStyle(
+                            fontSize: 11, color: Colors.grey.shade600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    if ((widget.product.category == null ||
+                            widget.product.category!.isEmpty) &&
+                        (widget.product.model == null ||
+                            widget.product.model!.isEmpty))
+                      Text(
+                        widget.product.description ?? '-',
+                        style: const TextStyle(fontSize: 12),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
+                ),
+              ),
+
+            const SizedBox(width: 12),
+            // Divider
+            Container(
+              width: 1,
+              height: 30,
+              color: const Color(0xFFA6A6A6),
+            ),
+            const SizedBox(width: 12),
+
+            // Price section
+            SizedBox(
+              width: 90,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'rent price',
                     style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey.shade600),
+                  ),
+                  Text(
+                    '₹$price',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
                     ),
                   ),
                 ],
               ),
             ),
+
+            const SizedBox(width: 12),
+            // Add button
+            GestureDetector(
+              onTap: selectedVariant != null
+                  ? () => widget.onAddProduct(selectedVariant!)
+                  : null,
+              child: Container(
+                width: 90,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: selectedVariant != null
+                      ? const Color(0xFF6132E4)
+                      : Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.add, size: 18, color: Colors.white),
+                    SizedBox(width: 4),
+                    Text(
+                      'Add',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: isOverflowing
+              ? const AlwaysScrollableScrollPhysics()
+              : const NeverScrollableScrollPhysics(),
+          child: SizedBox(
+            width: isOverflowing ? minRowWidth : constraints.maxWidth,
+            child: content,
           ),
-        ],
-      ),
+        );
+      }),
     );
   }
 }

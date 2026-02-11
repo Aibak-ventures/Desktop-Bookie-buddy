@@ -442,15 +442,22 @@ class _BookingProductSelectionSectionState
                   ),
                   const SizedBox(width: 4),
                   InkWell(
-                    onTap: () => _incrementQuantity(product),
+                    onTap: product.quantity >= availableQty
+                        ? null
+                        : () => _incrementQuantity(product),
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: AppColors.purple.withOpacity(0.1),
+                        color: product.quantity >= availableQty
+                            ? Colors.grey.shade300
+                            : AppColors.purple.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Icon(Icons.add,
-                          size: 14, color: AppColors.purple),
+                      child: Icon(Icons.add,
+                          size: 14,
+                          color: product.quantity >= availableQty
+                              ? Colors.grey.shade500
+                              : AppColors.purple),
                     ),
                   ),
                 ],

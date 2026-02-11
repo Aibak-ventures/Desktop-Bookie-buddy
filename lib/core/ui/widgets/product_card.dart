@@ -127,7 +127,7 @@ class ProductCard extends StatelessWidget {
     } else if (mainServiceType.isVehicle) {
       title = 'Model';
       type = product.model ?? '-';
-    } else if (mainServiceType.isGadgets) {
+    } else if (mainServiceType.isGadget) {
       title = 'Serial Number';
       type = product.category ?? '-';
     } else {
