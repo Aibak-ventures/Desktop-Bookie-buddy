@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Main application widget
-/// 
+///
 /// This is the root widget of the application, configuring:
 /// - Theme
 /// - Routes
@@ -12,7 +12,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bookie Buddy',
+      title: 'Bookie buddy - Business management software',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

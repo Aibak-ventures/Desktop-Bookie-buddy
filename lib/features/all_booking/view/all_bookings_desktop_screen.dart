@@ -20,7 +20,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
-  const AllBookingsDesktopScreen({super.key});
+  final String?
+      initialStatusTab; // Optional: 'upcoming', 'completed', 'not_returned'
+
+  const AllBookingsDesktopScreen({super.key, this.initialStatusTab});
 
   @override
   State<AllBookingsDesktopScreen> createState() =>
@@ -50,6 +53,10 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   @override
   void initState() {
     super.initState();
+    // Use initialStatusTab if provided, otherwise default to 'upcoming'
+    if (widget.initialStatusTab != null) {
+      _activeStatusTab = widget.initialStatusTab!;
+    }
     _loadData();
     _searchController.addListener(_onSearchChanged);
     _scrollController.addListener(_onScroll);
