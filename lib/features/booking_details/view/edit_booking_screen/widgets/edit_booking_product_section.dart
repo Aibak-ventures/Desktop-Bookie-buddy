@@ -1211,7 +1211,15 @@ class _ProductSearchItemState extends State<_ProductSearchItem> {
   @override
   void initState() {
     super.initState();
-    selectedVariant = null;
+
+    // For non-multi-variant products, auto-select the first variant
+    // For multi-variant products (dress, costume, gadgets), user must explicitly select
+    if (!widget.product.mainServiceType.isMultiVariantProductType &&
+        widget.product.variants.isNotEmpty) {
+      selectedVariant = widget.product.variants.first;
+    } else {
+      selectedVariant = null;
+    }
   }
 
   @override
@@ -1349,14 +1357,26 @@ class _ProductSearchItemState extends State<_ProductSearchItem> {
           const SizedBox(width: 12),
           // Add button - Fixed width
           GestureDetector(
-            onTap: selectedVariant != null
-                ? () => widget.onAddProduct(selectedVariant!)
-                : null,
+            onTap: () {
+              // For multi-variant products, require explicit selection
+              // For non-multi-variant products, use first variant automatically
+              final variantToAdd = selectedVariant ??
+                  (!widget.product.mainServiceType.isMultiVariantProductType &&
+                          widget.product.variants.isNotEmpty
+                      ? widget.product.variants.first
+                      : null);
+
+              if (variantToAdd != null) {
+                widget.onAddProduct(variantToAdd);
+              }
+            },
             child: Container(
               width: 80,
               height: 36,
               decoration: BoxDecoration(
-                color: selectedVariant != null
+                color: (selectedVariant != null ||
+                        !widget
+                            .product.mainServiceType.isMultiVariantProductType)
                     ? const Color(0xFF6132E4)
                     : Colors.grey.shade400,
                 borderRadius: BorderRadius.circular(6),
