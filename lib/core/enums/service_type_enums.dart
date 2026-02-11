@@ -16,9 +16,6 @@ enum MainServiceType {
 
     final name = serviceName.toLowerCase();
 
-    // Debug logging
-    print('fromString input: "$serviceName" -> lowercase: "$name"');
-
     if (name.contains('dress')) return MainServiceType.dress;
     if (name.contains('vehicle')) return MainServiceType.vehicle;
     if (name.contains('equipment')) return MainServiceType.equipment;
@@ -29,7 +26,6 @@ enum MainServiceType {
     if (name.contains('jewellery') || name.contains('jewelry'))
       return MainServiceType.jewellery;
 
-    print('fromString: No match found for "$name", returning others');
     return MainServiceType.others;
   }
 

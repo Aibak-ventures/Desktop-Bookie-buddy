@@ -74,10 +74,6 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
   void initState() {
     super.initState();
 
-    // Debug: Print the mainServiceType to see what's being parsed
-    print(
-        'Product: ${widget.product.name}, MainServiceType: ${widget.product.mainServiceType}, isMultiVariant: ${widget.product.mainServiceType.isMultiVariantProductType}');
-
     // No default selection - user must explicitly select a variant
     selectedVariant = null;
   }

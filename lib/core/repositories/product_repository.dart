@@ -306,12 +306,10 @@ class ProductRepository {
           (json) => ProductModel.fromJson(json as Map<String, dynamic>),
           customJsonParser: (dataJson, itemFromJson) {
             final dataMap = dataJson as Map<String, dynamic>;
-            final mainServiceName = dataMap['main_service_name'] as String?;
+            // Products list is nested: data.products[]
+            // Each product already contains main_service_name, so we don't override it
             final data = (dataMap['products'] as List<dynamic>?)?.map(
-              (item) => itemFromJson(
-                (item as Map<String, dynamic>)
-                  ..['main_service_name'] = mainServiceName,
-              ),
+              (item) => itemFromJson(item as Map<String, dynamic>),
             );
             return data?.toList() ?? [];
           },
