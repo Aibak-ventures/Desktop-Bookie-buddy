@@ -68,10 +68,10 @@ class SalesDetailsDrawer extends StatelessWidget {
                         ),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.close),
+                            icon: const Icon(Icons.chevron_right, size: 28),
                             onPressed: () {
                               context
                                   .read<SalesDetailsDrawerCubit>()

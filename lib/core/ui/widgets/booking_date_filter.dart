@@ -186,9 +186,17 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
                 if (_startDate != null || _endDate != null)
                   TextButton(
                     onPressed: _clearFilter,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      minimumSize: const Size(60, 36),
+                    ),
                     child: Text(
                       'Clear',
-                      style: TextStyle(color: Colors.red, fontSize: 12.sp),
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 if (kIsWeb && !widget.showCheckboxOptions)

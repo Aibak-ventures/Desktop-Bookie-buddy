@@ -722,6 +722,18 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           ),
           const SizedBox(width: 12),
           const SizedBox(
+            width: 80,
+            child: Text(
+              'Staff',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
             width: 105,
             child: Text(
               'Delivery',
@@ -733,7 +745,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 20),
           const SizedBox(
             width: 95,
             child: Text(
@@ -756,7 +768,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           const SizedBox(
             width: 110,
             child: Text(
@@ -825,7 +837,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             context.read<BookingDetailsBloc>().add(
                   BookingDetailsEvent.fetchBookingDetails(booking.id),
                 );
-                    },
+          },
           hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
           splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
           highlightColor: const Color(0xFF8A63FE).withOpacity(0.1),
@@ -856,15 +868,29 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 ),
                 const SizedBox(width: 12),
                 SizedBox(
+                  width: 80,
+                  child: Text(
+                    booking.staffName ?? 'N/A',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                SizedBox(
                   width: 105,
                   child: _buildDeliveryStatusDisplay(booking.deliveryStatus),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 20),
                 SizedBox(
                   width: 95,
                   child: Text(
                     _formatDateWithLabel(booking.pickupDate ?? ''),
-                    style: const TextStyle(fontSize: 13),
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w600),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -872,12 +898,12 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 Expanded(
                   child: Text(
                     booking.bookedItems ?? '',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    style: const TextStyle(fontSize: 12, color: Colors.black87),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 SizedBox(
                   width: 110,
                   child: Text(
@@ -892,7 +918,8 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   width: 70,
                   child: Text(
                     '₹${booking.advanceAmount}',
-                    style: const TextStyle(fontSize: 13),
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w600),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -955,7 +982,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 deliveryStatus: newStatus,
               ),
             );
-            },
+      },
       itemBuilder: (context) => DeliveryStatus.values.map((s) {
         return PopupMenuItem<DeliveryStatus>(
           value: s,

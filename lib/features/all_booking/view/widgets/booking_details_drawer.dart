@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
@@ -18,6 +19,10 @@ import 'package:bookie_buddy_web/features/select_product_booking/view/view_model
 import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/show_booking_details_add_payment_dialog.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/components/booking_payment_history_tile.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -26,6 +31,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BookingDetailsDrawer extends StatelessWidget {
   const BookingDetailsDrawer({super.key});
@@ -68,18 +74,10 @@ class BookingDetailsDrawer extends StatelessWidget {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Text(
-                        //   'Booking Details',
-                        //   style: TextStyle(
-                        //     fontSize: 18,
-                        //     fontWeight: FontWeight.bold,
-                        //     color: Colors.grey.shade800,
-                        //   ),
-                        // ),
                         IconButton(
-                          icon: const Icon(Icons.close),
+                          icon: const Icon(Icons.chevron_right, size: 28),
                           onPressed: () {
                             context
                                 .read<BookingDetailsDrawerCubit>()
@@ -135,51 +133,59 @@ class BookingDetailsDrawer extends StatelessWidget {
               },
             ),
           ),
-          loaded: (booking) => SingleChildScrollView(
+          loaded: (booking) => Column(
             key: ValueKey('booking_${booking.id}_${booking.actualPaidAmount}'),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Booking ID and Delivery Status in one row
-                _buildBookingIdAndDeliveryStatus(context, booking),
-                const SizedBox(height: 24),
+            children: [
+              // Scrollable content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Booking ID, Staff Name and Delivery Status
+                      _buildBookingHeaderSection(context, booking),
+                      const SizedBox(height: 20),
 
-                // Dates & time
-                _buildDatesSection(booking),
-                const SizedBox(height: 24),
+                      // Dates & time
+                      _buildDatesSection(booking),
+                      const SizedBox(height: 20),
 
-                // Item details
-                _buildItemDetails(booking),
-                const SizedBox(height: 24),
+                      // Item details
+                      _buildItemDetails(booking),
+                      const SizedBox(height: 20),
 
-                // Customer details
-                _buildCustomerDetails(booking),
-                const SizedBox(height: 24),
+                      // Customer details
+                      _buildCustomerDetails(booking),
+                      const SizedBox(height: 20),
 
-                // Payment details
-                _buildPaymentDetails(booking),
-                const SizedBox(height: 32),
-
-                // Action buttons
-                _buildActionButtons(context, booking),
-              ],
-            ),
+                      // Payment details
+                      _buildPaymentDetails(booking, context),
+                      const SizedBox(height: 80), // Space for sticky buttons
+                    ],
+                  ),
+                ),
+              ),
+              // Sticky action buttons at bottom
+              _buildStickyActionBar(context, booking),
+            ],
           ),
         );
       },
     );
   }
 
-  Widget _buildBookingIdAndDeliveryStatus(
+  Widget _buildBookingHeaderSection(
       BuildContext context, BookingDetailsModel booking) {
     final status = booking.deliveryStatus ?? DeliveryStatus.booked;
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Booking ID (left side)
+        // LEFT — Booking ID
         Expanded(
+          flex: 2,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -203,91 +209,122 @@ class BookingDetailsDrawer extends StatelessWidget {
             ],
           ),
         ),
-        // Delivery Status (right side)
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            const Text(
-              'Delivery status',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-                fontWeight: FontWeight.w400,
-              ),
+
+        // CENTER — Staff
+        if (booking.staffName != null)
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Staff',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  booking.staffName!,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.purple,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            PopupMenuButton<DeliveryStatus>(
-              offset: const Offset(0, 40),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              onSelected: (DeliveryStatus newStatus) {
-                context.read<AllBookingBloc>().add(
-                      AllBookingEvent.updateDeliveryStatus(
-                        bookingId: booking.id,
-                        deliveryStatus: newStatus,
-                      ),
-                    );
-                // Refresh the booking details
-                context.read<BookingDetailsBloc>().add(
-                      BookingDetailsEvent.fetchBookingDetails(booking.id),
-                    );
-              },
-              itemBuilder: (context) => DeliveryStatus.values.map((s) {
-                return PopupMenuItem<DeliveryStatus>(
-                  value: s,
+          ),
+
+        // RIGHT — Delivery Status
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const Text(
+                'Delivery status',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(height: 8),
+              PopupMenuButton<DeliveryStatus>(
+                offset: const Offset(0, 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                onSelected: (newStatus) {
+                  context.read<AllBookingBloc>().add(
+                        AllBookingEvent.updateDeliveryStatus(
+                          bookingId: booking.id,
+                          deliveryStatus: newStatus,
+                        ),
+                      );
+                  context.read<BookingDetailsBloc>().add(
+                        BookingDetailsEvent.fetchBookingDetails(booking.id),
+                      );
+                },
+                itemBuilder: (context) => DeliveryStatus.values.map((s) {
+                  return PopupMenuItem(
+                    value: s,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: s.color,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          s.name,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: s.color,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: status.color.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: s.color,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
                       Text(
-                        s.name,
+                        status.name,
                         style: TextStyle(
                           fontSize: 13,
-                          color: s.color,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
+                          color: status.color,
                         ),
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 16,
+                        color: status.color,
                       ),
                     ],
                   ),
-                );
-              }).toList(),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: status.color.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      status.name,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: status.color,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 16,
-                      color: status.color,
-                    ),
-                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -350,7 +387,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                       _formatDate(booking.bookedDate),
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -391,7 +428,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                       _formatAvailableFromDate(booking.returnDate),
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -425,89 +462,213 @@ class BookingDetailsDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ...booking.bookedItems.map((item) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
+            // Determine specifications label based on mainServiceType
+            String specsLabel = item.mainServiceType.quantityFieldLabel;
+            // if (item.mainServiceType != null) {
+            //   switch (item.mainServiceType) {
+            //     case MainServiceType.tailoring:
+            //       specsLabel = 'Measurements';
+            //       break;
+            //     case MainServiceType.laundry:
+            //       specsLabel = 'Specifications';
+            //       break;
+            //     case MainServiceType.rental:
+            //       specsLabel = 'Size';
+            //       break;
+            //     default:
+            //       specsLabel = 'Size';
+            //   }
+            // }
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Product image
-                  Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: item.image != null && item.image!.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              item.image!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.image,
-                                      color: Colors.grey.shade400),
-                            ),
-                          )
-                        : Icon(Icons.image, color: Colors.grey.shade400),
-                  ),
-                  const SizedBox(width: 12),
-                  // Product details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.name,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        if (item.variantAttribute != null)
-                          Text(
-                            'Size : ${item.variantAttribute}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                        if (item.color != null)
-                          Text(
-                            'colour : ${item.color}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  // Quantity and Price
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Qty : ${item.quantity}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black54,
+                      // Product image
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey.shade200),
+                        ),
+                        child: item.image != null && item.image!.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  item.image!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.image,
+                                          color: Colors.grey.shade400),
+                                ),
+                              )
+                            : Icon(Icons.image, color: Colors.grey.shade400),
+                      ),
+                      const SizedBox(width: 12),
+                      // Product details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.name,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            if (item.variantAttribute != null)
+                              Text(
+                                '$specsLabel : ${item.variantAttribute}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            if (item.color != null)
+                              Text(
+                                'Colour : ${item.color}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '₹ ${item.amount}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
+                      // Quantity and Price
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Qty : ${item.quantity}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '₹ ${item.amount}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
+                  // Show measurements if they exist
+                  if (item.measurements != null &&
+                      item.measurements!.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Customization Measurements:',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: item.measurements!.map((measurement) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Text(
+                            '${measurement.name}: ${measurement.value}',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                  // Show location details for vehicles
+                  if (booking.otherDetails != null &&
+                      (booking.otherDetails!.locationStart != null ||
+                          booking.otherDetails!.locationFrom != null ||
+                          booking.otherDetails!.locationTo != null)) ...[
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Location Details:',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      [
+                        if (booking.otherDetails!.locationStart != null)
+                          'Start: ${booking.otherDetails!.locationStart}',
+                        if (booking.otherDetails!.locationFrom != null)
+                          'From: ${booking.otherDetails!.locationFrom}',
+                        if (booking.otherDetails!.locationTo != null)
+                          'To: ${booking.otherDetails!.locationTo}',
+                      ].join(' • '),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                  // Show notes if they exist
+                  if (booking.description != null &&
+                      booking.description!.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Notes:',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      booking.description!,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             );
@@ -537,12 +698,169 @@ class BookingDetailsDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildDetailRow('Name', booking.client.name),
-          const SizedBox(height: 12),
-          _buildPhoneRow('Phone 1', booking.client.phone1.toString()),
+          // First row: Name and Phone 1
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Name',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      booking.client.name,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Phone 1',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            booking.client.phone1.toString(),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            LucideIcons.phone,
+                            size: 16,
+                            color: AppColors.purple,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () async {
+                            final uri = Uri.parse(
+                                'tel:${booking.client.phone1.toString()}');
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            }
+                          },
+                        ),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          onTap: () async {
+                            final uri = Uri.parse(
+                                'https://wa.me/${booking.client.phone1.toString()}');
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            }
+                          },
+                          child: SvgPicture.asset(
+                            AppAssets.whatsAppSvg,
+                            width: 18,
+                            height: 18,
+                            colorFilter: ColorFilter.mode(
+                              Colors.green.shade600,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Second row: Phone 2 if exists
           if (booking.client.phone2 != null) ...[
             const SizedBox(height: 12),
-            _buildPhoneRow('Phone 2', booking.client.phone2!.toString()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: const SizedBox()), // Empty space for alignment
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Phone 2',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              booking.client.phone2!.toString(),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              LucideIcons.phone,
+                              size: 16,
+                              color: AppColors.purple,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            onPressed: () async {
+                              final uri = Uri.parse(
+                                  'tel:${booking.client.phone2!.toString()}');
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              }
+                            },
+                          ),
+                          const SizedBox(width: 4),
+                          IconButton(
+                            icon: const Icon(
+                              LucideIcons.messageCircle,
+                              size: 16,
+                              color: Colors.green,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            onPressed: () async {
+                              final uri = Uri.parse(
+                                  'https://wa.me/${booking.client.phone2!.toString()}');
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ],
         ],
       ),
@@ -625,57 +943,213 @@ class BookingDetailsDrawer extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Widget _buildPaymentDetails(BookingDetailsModel booking) {
-    final productTotal = booking.bookedItems.fold<int>(
-      0,
-      (sum, item) => sum + (item.amount ?? 0),
-    );
-    final additionalTotal = booking.additionalCharges.fold<int>(
-          0,
-          (sum, charge) => sum + (charge.amount ?? 0),
-        ) ??
-        0;
-    final totalAmount = booking.totalAmount;
+} Widget _buildPaymentDetails(BookingDetailsModel booking, BuildContext context) { final productTotal = booking.bookedItems.fold<int>( 0, (sum, item) => sum + (item.amount ?? 0), ); final additionalTotal = booking.additionalCharges.fold<int>( 0, (sum, charge) => sum + (charge.amount ?? 0), ) ?? 0; final totalAmount = booking.totalAmount;
     final paid = booking.actualPaidAmount;
-    final balance = totalAmount - paid;
+    final discount = booking.discountAmount ?? 0;
+    final balance = totalAmount - paid - discount;
+    final securityAmount = booking.paidAmount ?? 0;
+    final isPaymentCompleted = balance <= 0;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Payment details',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade200),
           ),
-          const SizedBox(height: 16),
-          _buildPaymentRow('Security amount', '₹${booking.paidAmount}'),
-          const SizedBox(height: 8),
-          _buildPaymentRow('Product total', '₹$productTotal'),
-          const SizedBox(height: 8),
-          _buildPaymentRow('Additional amount', '₹$additionalTotal'),
-          const Divider(height: 24),
-          _buildPaymentRow('Total amount', '₹$totalAmount',
-              isBold: true, fontSize: 15),
-          const SizedBox(height: 8),
-          _buildPaymentRow('Paid', '₹$paid',
-              valueColor: Colors.green.shade600, fontSize: 14),
-          const SizedBox(height: 8),
-          _buildPaymentRow('Balance', '₹$balance',
-              valueColor: Colors.red.shade600, isBold: true, fontSize: 15),
-        ],
-      ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Payment details',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: isPaymentCompleted
+                        ? null
+                        : () {
+                            performSecureActionDialog(
+                              context,
+                              SecretPasswordLocations.bookingPayment,
+                              onSuccess: () {
+                                showBookingDetailsAddPaymentDialog(
+                                  context: context,
+                                  id: booking.id,
+                                  balanceAmount: balance,
+                                );
+                              },
+                            );
+                          },
+                    icon: Icon(
+                      isPaymentCompleted
+                          ? Icons.check_circle
+                          : LucideIcons.plus,
+                      size: 16,
+                    ),
+                    label:
+                        Text(isPaymentCompleted ? 'Completed' : 'Add Payment'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isPaymentCompleted
+                          ? Colors.green.shade100
+                          : AppColors.purple,
+                      foregroundColor: isPaymentCompleted
+                          ? Colors.green.shade700
+                          : Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      textStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildPaymentRow('Product total', '₹$productTotal'),
+              const SizedBox(height: 8),
+              // Only show if discount exists
+              if (discount > 0) ...[
+                _buildPaymentRow('Discount', '- ₹$discount',
+                    valueColor: Colors.green.shade600),
+                const SizedBox(height: 8),
+              ],
+              // Only show security amount if it exists
+              if (securityAmount > 0) ...[
+                _buildPaymentRow('Security amount', '₹$securityAmount'),
+                const SizedBox(height: 8),
+              ],
+              // Expandable additional amount if it exists
+              if (additionalTotal > 0) ...[
+                Theme(
+                  data: ThemeData(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    childrenPadding: const EdgeInsets.only(left: 16, bottom: 8),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Additional amount',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Text(
+                          '₹$additionalTotal',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    children: booking.additionalCharges.map((charge) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              charge.name ?? 'Charge',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            Text(
+                              '₹${charge.amount ?? 0}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+              const Divider(height: 24),
+              _buildPaymentRow('Total amount', '₹$totalAmount',
+                  isBold: true, fontSize: 15),
+              const SizedBox(height: 8),
+              _buildPaymentRow('Paid', '₹$paid',
+                  valueColor: Colors.green.shade600,
+                  isBold: true,
+                  fontSize: 14),
+              const SizedBox(height: 8),
+              _buildPaymentRow('Balance', '₹$balance',
+                  valueColor:
+                      balance > 0 ? Colors.red.shade600 : Colors.green.shade600,
+                  isBold: true,
+                  fontSize: 15),
+              const SizedBox(height: 12),
+              // Payment history toggle
+              TextButton.icon(
+                onPressed: () {
+                  final paymentHistoryCubit =
+                      context.read<BookingDetailsPaymentHistoryCubit>();
+                  if (paymentHistoryCubit.isExpanded) {
+                    paymentHistoryCubit.collapsePaymentHistory();
+                  } else {
+                    paymentHistoryCubit.showPaymentHistory(booking.id);
+                  }
+                },
+                label: const Text('Payment history'),
+                iconAlignment: IconAlignment.end,
+                icon: BlocBuilder<BookingDetailsPaymentHistoryCubit,
+                    BookingDetailsPaymentHistoryState>(
+                  builder: (context, state) {
+                    final bool showExpandedIcon = state.maybeWhen(
+                      orElse: () => false,
+                      expanded: (_) => true,
+                      loading: () => true,
+                    );
+                    return Icon(
+                      showExpandedIcon
+                          ? Icons.arrow_drop_up_outlined
+                          : Icons.arrow_drop_down_outlined,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        // Payment history display
+        BlocConsumer<BookingDetailsPaymentHistoryCubit,
+            BookingDetailsPaymentHistoryState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              orElse: () {},
+              error: (error) => context.showSnackBar(error, isError: true),
+            );
+          },
+          builder: (context, state) => state.maybeWhen(
+            orElse: () => const SizedBox.shrink(),
+            loading: () => const BookingPaymentHistoryTile(
+              paymentHistory: [],
+              isLoading: true,
+            ),
+            expanded: (paymentHistory) =>
+                BookingPaymentHistoryTile(paymentHistory: paymentHistory),
+          ),
+        ),
+      ],
     );
   }
 
@@ -713,6 +1187,10 @@ class BookingDetailsDrawer extends StatelessWidget {
       final tomorrow = today.add(const Duration(days: 1));
       final dateOnly = DateTime(date.year, date.month, date.day);
 
+      // Check if time is 23:59 or 00:00 - if so, don't show time
+      final isEndOfDay = (date.hour == 23 && date.minute == 59);
+      final isStartOfDay = (date.hour == 0 && date.minute == 0);
+
       String dateLabel;
       if (dateOnly == today) {
         dateLabel = 'Today';
@@ -720,6 +1198,11 @@ class BookingDetailsDrawer extends StatelessWidget {
         dateLabel = 'Tomorrow';
       } else {
         dateLabel = dateStr.formatToUiDate();
+      }
+
+      // Don't show time if it's 23:59 or 00:00
+      if (isEndOfDay || isStartOfDay) {
+        return dateLabel;
       }
 
       final time =
@@ -915,6 +1398,28 @@ class BookingDetailsDrawer extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+
+  // Sticky action bar at the bottom
+  Widget _buildStickyActionBar(
+      BuildContext context, BookingDetailsModel booking) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Colors.grey.shade200, width: 1),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: _buildActionButtons(context, booking),
     );
   }
 
