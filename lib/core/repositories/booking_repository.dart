@@ -30,7 +30,7 @@ class BookingRepository {
         return BookingDetailsModel.fromJson(response.data);
       }
       log('Error fetching booking: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to fetch booking';
     } catch (e, stack) {
       log('Error fetching booking: $e', stackTrace: stack);
       rethrow;
@@ -54,7 +54,7 @@ class BookingRepository {
         return 0; // Or handle error
       }
       log('Error adding booking: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to add booking';
     } catch (e, stack) {
       log('Error adding booking: $e', stackTrace: stack);
       rethrow;
@@ -77,7 +77,7 @@ class BookingRepository {
         return 0;
       }
       log('Error creating sale: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to create sale';
     } catch (e, stack) {
       log('Error creating sale: $e', stackTrace: stack);
       rethrow;
@@ -94,7 +94,7 @@ class BookingRepository {
         return;
       }
       log('Error creating old booking: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to create old booking';
     } catch (e, stack) {
       log('Error creating old booking: $e', stackTrace: stack);
       rethrow;
@@ -119,7 +119,7 @@ class BookingRepository {
         return;
       }
       log('Error updating payment: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to update payment';
     } catch (e, stack) {
       log('Error updating payment: $e', stackTrace: stack);
       rethrow;
@@ -139,7 +139,7 @@ class BookingRepository {
         return response;
       }
       log('Error updating booking: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to update booking';
     } catch (e, stack) {
       log('Error updating booking: $e', stackTrace: stack);
       rethrow;
@@ -156,7 +156,7 @@ class BookingRepository {
         return;
       }
       log('Error deleting booking: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to delete booking';
     } catch (e, stack) {
       log('Error deleting booking: $e', stackTrace: stack);
       rethrow;
@@ -183,7 +183,7 @@ class BookingRepository {
         return;
       }
       log('Error cancelling booking: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to cancel booking';
     } catch (e, stack) {
       log('Error cancelling booking: $e', stackTrace: stack);
       rethrow;
@@ -206,7 +206,7 @@ class BookingRepository {
         return;
       }
       log('Error updating booking status: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to update booking status';
     } catch (e, stack) {
       log('Error updating booking status: $e', stackTrace: stack);
       rethrow;
@@ -230,7 +230,7 @@ class BookingRepository {
         return;
       }
       log('Error updating delivery status: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to update delivery status';
     } catch (e, stack) {
       log('Error updating delivery status: $e', stackTrace: stack);
       rethrow;
@@ -267,7 +267,7 @@ class BookingRepository {
         );
       }
       log('Error fetching bookings pagination: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to fetch bookings';
     } catch (e, stack) {
       log('Error fetching bookings pagination: $e', stackTrace: stack);
       rethrow;
@@ -321,7 +321,7 @@ class BookingRepository {
         return (pagination: pagination, statusCounts: statusCounts);
       }
       log('Error fetching desktop bookings pagination: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to fetch desktop bookings';
     } catch (e, stack) {
       log('Error fetching desktop bookings pagination: $e', stackTrace: stack);
       rethrow;
@@ -353,7 +353,7 @@ class BookingRepository {
       );
       if (response != null) {
         log('Download Booking Invoice Error: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to download invoice';
       }
       return filePath;
     } catch (e, stack) {
@@ -391,7 +391,7 @@ class BookingRepository {
   //       );
   //     }
   //     log('Error searching bookings: ${response.devMessage}');
-  //     throw response.message;
+  //     throw response.message ?? 'Failed to complete operation';
   //   } catch (e, stack) {
   //     log('Error searching bookings: $e', stackTrace: stack);
   //     rethrow;
@@ -413,7 +413,7 @@ class BookingRepository {
             .toList();
       }
       log('Error fetching payment history: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to fetch payment history';
     } catch (e, stack) {
       log('Error fetching payment history: $e', stackTrace: stack);
       rethrow;
@@ -433,7 +433,7 @@ class BookingRepository {
         return;
       }
       log('Error sending invoice: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to send invoice';
     } catch (e, stack) {
       log('Error sending invoice: $e', stackTrace: stack);
       rethrow;

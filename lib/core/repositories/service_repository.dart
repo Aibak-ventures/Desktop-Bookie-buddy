@@ -22,7 +22,7 @@ class ServiceRepository {
         throw 'You do not have permission to access these services. Please contact your administrator.';
       }
       log('Failed to fetch services: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stackTrace) {
       log(e.toString(), stackTrace: stackTrace);
       rethrow;

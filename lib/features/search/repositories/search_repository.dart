@@ -36,7 +36,7 @@ class SearchRepository {
       }
 
       log('Error fetching global search: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to fetch search results';
     } catch (e, stack) {
       log('Error fetching global search: $e', stackTrace: stack);
       rethrow;

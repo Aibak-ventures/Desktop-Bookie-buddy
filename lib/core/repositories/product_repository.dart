@@ -33,7 +33,7 @@ class ProductRepository {
         return;
       }
       log('Save product failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error saving product: $e', stackTrace: stack);
       rethrow;
@@ -53,7 +53,7 @@ class ProductRepository {
         return;
       }
       log('Save product expense failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error saving product expense: $e', stackTrace: stack);
       rethrow;
@@ -71,7 +71,7 @@ class ProductRepository {
   //       return;
   //     }
   //     log('Delete expense failed: ${response.devMessage}');
-  //     throw response.message;
+  //     throw response.message ?? 'Failed to complete operation';
   //   } catch (e, stack) {
   //     log('Error deleting expense: $e', stackTrace: stack);
   //     rethrow;
@@ -92,7 +92,7 @@ class ProductRepository {
         return;
       }
       log('Delete product failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error deleting product: $e', stackTrace: stack);
       rethrow;
@@ -118,7 +118,7 @@ class ProductRepository {
         return;
       }
       log('Error updating variant: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error updating variant: $e', stackTrace: stack);
       rethrow;
@@ -142,7 +142,7 @@ class ProductRepository {
         return;
       }
       log('Error adding product variants: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error adding product variants: $e', stackTrace: stack);
       rethrow;
@@ -160,7 +160,7 @@ class ProductRepository {
         return ProductModel.fromJson(response.data);
       }
       log('Fetch product info failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching product info: $e', stackTrace: stack);
       rethrow;
@@ -206,7 +206,7 @@ class ProductRepository {
         );
       }
       log('Search and filter products failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching products: $e', stackTrace: stack);
       rethrow;
@@ -234,7 +234,7 @@ class ProductRepository {
         );
       }
       log('Fetch product bookings failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching product bookings: $e', stackTrace: stack);
       rethrow;
@@ -263,7 +263,7 @@ class ProductRepository {
         );
       }
       log('Fetch products failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching products: $e', stackTrace: stack);
       rethrow;
@@ -316,7 +316,7 @@ class ProductRepository {
         );
       }
       log('Fetch available products failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching available products: $e', stackTrace: stack);
       rethrow;
@@ -350,7 +350,7 @@ class ProductRepository {
             .toList();
       }
       log('Fetch product growth data failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching product growth data: $e', stackTrace: stack);
       rethrow;
@@ -375,7 +375,7 @@ class ProductRepository {
         );
       }
       log('Fetch all products failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error searching all products: $e', stackTrace: stack);
       rethrow;
@@ -403,7 +403,7 @@ class ProductRepository {
         );
       }
       log('Fetch matching products failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching matching products: $e', stackTrace: stack);
       rethrow;
@@ -429,7 +429,7 @@ class ProductRepository {
         return;
       }
       log('Error transferring product: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error transferring product: $e', stackTrace: stack);
       rethrow;
@@ -456,7 +456,7 @@ class ProductRepository {
         );
       }
       log('Fetch transfer product history failed: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error fetching transfer product history: $e', stackTrace: stack);
       rethrow;

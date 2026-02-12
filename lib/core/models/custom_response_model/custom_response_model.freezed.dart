@@ -25,7 +25,8 @@ mixin _$CustomResponseModel {
       fromJson: CustomResponseStatus.fromString,
       toJson: CustomResponseStatus.toJson)
   CustomResponseStatus get status => throw _privateConstructorUsedError;
-  String get message => throw _privateConstructorUsedError;
+  @JsonKey(defaultValue: '')
+  String? get message => throw _privateConstructorUsedError;
   @JsonKey(name: 'dev_message', defaultValue: '')
   dynamic get devMessage => throw _privateConstructorUsedError;
   @JsonKey(name: 'meta', includeIfNull: false)
@@ -54,7 +55,7 @@ abstract class $CustomResponseModelCopyWith<$Res> {
           fromJson: CustomResponseStatus.fromString,
           toJson: CustomResponseStatus.toJson)
       CustomResponseStatus status,
-      String message,
+      @JsonKey(defaultValue: '') String? message,
       @JsonKey(name: 'dev_message', defaultValue: '') dynamic devMessage,
       @JsonKey(name: 'meta', includeIfNull: false) dynamic meta,
       dynamic data});
@@ -76,7 +77,7 @@ class _$CustomResponseModelCopyWithImpl<$Res, $Val extends CustomResponseModel>
   @override
   $Res call({
     Object? status = null,
-    Object? message = null,
+    Object? message = freezed,
     Object? devMessage = freezed,
     Object? meta = freezed,
     Object? data = freezed,
@@ -86,10 +87,10 @@ class _$CustomResponseModelCopyWithImpl<$Res, $Val extends CustomResponseModel>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as CustomResponseStatus,
-      message: null == message
+      message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       devMessage: freezed == devMessage
           ? _value.devMessage
           : devMessage // ignore: cast_nullable_to_non_nullable
@@ -120,7 +121,7 @@ abstract class _$$CustomResponseModelImplCopyWith<$Res>
           fromJson: CustomResponseStatus.fromString,
           toJson: CustomResponseStatus.toJson)
       CustomResponseStatus status,
-      String message,
+      @JsonKey(defaultValue: '') String? message,
       @JsonKey(name: 'dev_message', defaultValue: '') dynamic devMessage,
       @JsonKey(name: 'meta', includeIfNull: false) dynamic meta,
       dynamic data});
@@ -140,7 +141,7 @@ class __$$CustomResponseModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = null,
-    Object? message = null,
+    Object? message = freezed,
     Object? devMessage = freezed,
     Object? meta = freezed,
     Object? data = freezed,
@@ -150,10 +151,10 @@ class __$$CustomResponseModelImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as CustomResponseStatus,
-      message: null == message
+      message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       devMessage: freezed == devMessage
           ? _value.devMessage
           : devMessage // ignore: cast_nullable_to_non_nullable
@@ -180,7 +181,7 @@ class _$CustomResponseModelImpl implements _CustomResponseModel {
           fromJson: CustomResponseStatus.fromString,
           toJson: CustomResponseStatus.toJson)
       required this.status,
-      required this.message,
+      @JsonKey(defaultValue: '') this.message,
       @JsonKey(name: 'dev_message', defaultValue: '') required this.devMessage,
       @JsonKey(name: 'meta', includeIfNull: false) required this.meta,
       required this.data});
@@ -195,7 +196,8 @@ class _$CustomResponseModelImpl implements _CustomResponseModel {
       toJson: CustomResponseStatus.toJson)
   final CustomResponseStatus status;
   @override
-  final String message;
+  @JsonKey(defaultValue: '')
+  final String? message;
   @override
   @JsonKey(name: 'dev_message', defaultValue: '')
   final dynamic devMessage;
@@ -257,7 +259,7 @@ abstract class _CustomResponseModel implements CustomResponseModel {
           fromJson: CustomResponseStatus.fromString,
           toJson: CustomResponseStatus.toJson)
       required final CustomResponseStatus status,
-      required final String message,
+      @JsonKey(defaultValue: '') final String? message,
       @JsonKey(name: 'dev_message', defaultValue: '')
       required final dynamic devMessage,
       @JsonKey(name: 'meta', includeIfNull: false) required final dynamic meta,
@@ -273,7 +275,8 @@ abstract class _CustomResponseModel implements CustomResponseModel {
       toJson: CustomResponseStatus.toJson)
   CustomResponseStatus get status;
   @override
-  String get message;
+  @JsonKey(defaultValue: '')
+  String? get message;
   @override
   @JsonKey(name: 'dev_message', defaultValue: '')
   dynamic get devMessage;

@@ -28,7 +28,7 @@ class StaffRepository {
         );
       }
       log('Error in getStaffs: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get staff list';
     } catch (e, stack) {
       log('Error in getStaffs: $e', stackTrace: stack);
       rethrow;
@@ -47,7 +47,7 @@ class StaffRepository {
         );
       }
       log('Error in getStaffDetails: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get staff details';
     } catch (e, stack) {
       log('Error in getStaffDetails: $e', stackTrace: stack);
       rethrow;
@@ -62,7 +62,7 @@ class StaffRepository {
         return StaffModel.fromJson(response.data as Map<String, dynamic>);
       }
       log('Error in addStaff: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to add staff';
     } catch (e, stack) {
       log('Error in addStaff: $e', stackTrace: stack);
       rethrow;
@@ -77,7 +77,7 @@ class StaffRepository {
         return;
       }
       log('Error in deleteStaff: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to delete staff';
     } catch (e, stack) {
       log('Error in deleteStaff: $e', stackTrace: stack);
       rethrow;
@@ -92,7 +92,7 @@ class StaffRepository {
         return StaffModel.fromJson(response.data as Map<String, dynamic>);
       }
       log('Error in editStaff: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to edit staff';
     } catch (e, stack) {
       log('Error in editStaff: $e', stackTrace: stack);
       rethrow;
@@ -118,7 +118,7 @@ class StaffRepository {
         );
       }
       log('Error in fetchStaffAnalyticsReport: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get staff analytics report';
     } catch (e, stack) {
       log('Error in fetchStaffAnalyticsReport: $e', stackTrace: stack);
       rethrow;
@@ -150,7 +150,7 @@ class StaffRepository {
       log(
         'Error in fetchStaffMonthlyBookingsPagination: ${response.devMessage}',
       );
-      throw response.message;
+      throw response.message ?? 'Failed to get staff monthly bookings';
     } catch (e, stack) {
       log(
         'Error in fetchStaffMonthlyBookingsPagination: $e',
@@ -183,7 +183,7 @@ class StaffRepository {
         );
       }
       log('Error in fetchStaffMonthlySalesPagination: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get staff monthly sales';
     } catch (e, stack) {
       log('Error in fetchStaffMonthlySalesPagination: $e', stackTrace: stack);
       rethrow;

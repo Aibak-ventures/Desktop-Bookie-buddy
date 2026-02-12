@@ -35,7 +35,7 @@ class SalesRepository {
         );
       }
       log('Failed to get sales pagination: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error getting sales pagination: $e', stackTrace: stack);
       rethrow;
@@ -51,7 +51,7 @@ class SalesRepository {
       }
 
       log('Failed to get sale: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error getting sale: $e', stackTrace: stack);
       rethrow;
@@ -66,7 +66,7 @@ class SalesRepository {
 
       if (!response.status.isSuccess) {
         log('Failed to create sale: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to complete operation';
       }
     } catch (e, stack) {
       log('Error creating sale: $e', stackTrace: stack);
@@ -86,7 +86,7 @@ class SalesRepository {
 
       if (!response.status.isSuccess) {
         log('Failed to update sale: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to complete operation';
       }
     } catch (e, stack) {
       log('Error updating sale: $e', stackTrace: stack);
@@ -100,7 +100,7 @@ class SalesRepository {
 
       if (!response.status.isSuccess) {
         log('Failed to delete sale: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to complete operation';
       }
     } catch (e, stack) {
       log('Error deleting sale: $e', stackTrace: stack);

@@ -28,7 +28,7 @@ class UserRepository {
         return UserModel.fromJson(res.data);
       }
       log('Failed to fetch user: ${res.devMessage}');
-      throw res.message;
+      throw res.message ?? 'Failed to fetch user data';
     } catch (e, stack) {
       log('Error fetching user data: $e', stackTrace: stack);
       rethrow;
@@ -77,7 +77,7 @@ class UserRepository {
         return;
       }
       log('Failed to register FCM token: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to register FCM token';
     } catch (e, stack) {
       log('Error registering FCM token: $e', stackTrace: stack);
     }
@@ -94,7 +94,7 @@ class UserRepository {
         return;
       }
       log('Failed to remove FCM token: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to remove FCM token';
     } catch (e, stack) {
       log('Error removing FCM token: $e', stackTrace: stack);
     }
@@ -113,13 +113,13 @@ class UserRepository {
       );
 
       if (response.status.isSuccess) {
-        log(response.message);
+        // log(response.message);
         return;
       }
       log(
         'Failed to update FCM token: ${response.devMessage ?? response.message}',
       );
-      throw response.message;
+      throw response.message ?? 'Failed to update FCM token';
     } catch (e, stack) {
       log('Error updating FCM token: $e', stackTrace: stack);
     }
@@ -133,7 +133,7 @@ class UserRepository {
         return response.data as List<dynamic>;
       }
       log('Failed to fetch available shops: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to fetch available shops';
     } catch (e, stack) {
       log('Error fetching available shops: $e', stackTrace: stack);
       rethrow;

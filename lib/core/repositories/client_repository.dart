@@ -31,7 +31,7 @@ class ClientRepository {
         );
       }
       log('Failed to fetch clients: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stackTrace) {
       log('Error fetching clients: $e', stackTrace: stackTrace);
       rethrow;
@@ -59,7 +59,7 @@ class ClientRepository {
         }
       }
       log('Failed to add client: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stackTrace) {
       log('Error adding client: $e', stackTrace: stackTrace);
       rethrow;
@@ -73,7 +73,7 @@ class ClientRepository {
         return ClientModel.fromJson(response.data as Map<String, dynamic>);
       }
       log('Failed to update client: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stackTrace) {
       log('Error updating client: $e', stackTrace: stackTrace);
       rethrow;
@@ -85,7 +85,7 @@ class ClientRepository {
       final response = await safeApiCall(() => _service.deleteClient(clientId));
       if (!response.status.isSuccess) {
         log('Failed to delete client: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to complete operation';
       }
     } catch (e, stackTrace) {
       log('Error deleting client: $e', stackTrace: stackTrace);

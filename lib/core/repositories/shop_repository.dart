@@ -22,7 +22,7 @@ class ShopRepository {
             .toList();
       }
       log('Get Shops Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get shops';
     } catch (e, stack) {
       log('Get Shops Exception: $e', stackTrace: stack);
       rethrow;
@@ -41,7 +41,7 @@ class ShopRepository {
         return;
       }
       log('Update Shop Privacy Settings Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to update shop privacy settings';
     } catch (e, stack) {
       log('Update Shop Privacy Settings Exception: $e', stackTrace: stack);
       rethrow;
@@ -68,7 +68,7 @@ class ShopRepository {
         );
       }
       log('Get All Shop Summary Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get shop summary';
     } catch (e, stack) {
       log('Get All Shop Summary Exception: $e', stackTrace: stack);
       rethrow;
@@ -91,7 +91,7 @@ class ShopRepository {
         return;
       }
       log('Update Shop Privacy Settings Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to update shop settings';
     } catch (e, stack) {
       log('Update Shop Privacy Settings Exception: $e', stackTrace: stack);
       rethrow;

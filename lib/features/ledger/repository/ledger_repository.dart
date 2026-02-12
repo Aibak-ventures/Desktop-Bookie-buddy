@@ -52,7 +52,7 @@ class LedgerRepository {
         );
       }
       log('Get Security Amounts Pagination Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get security amounts';
     } catch (e, stack) {
       log('Get Security Amounts Pagination Error: $e', stackTrace: stack);
       rethrow;
@@ -84,7 +84,7 @@ class LedgerRepository {
         );
       }
       log('Get Pending Pagination Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get pending pagination';
     } catch (e, stack) {
       log('Get Pending Pagination Error: $e', stackTrace: stack);
       rethrow;
@@ -114,7 +114,7 @@ class LedgerRepository {
         );
       }
       log('Get Payments Pagination Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get payments pagination';
     } catch (e, stack) {
       log('Get Payments Pagination Error: $e', stackTrace: stack);
       rethrow;
@@ -144,7 +144,7 @@ class LedgerRepository {
         );
       }
       log('Get ledger Bookings Pagination Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get bookings pagination';
     } catch (e, stack) {
       log('Get ledger Bookings Pagination Error: $e', stackTrace: stack);
       rethrow;
@@ -171,7 +171,7 @@ class LedgerRepository {
         );
       }
       log('Get ledger Sales Pagination Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get sales pagination';
     } catch (e, stack) {
       log('Get ledger Sales Pagination Error: $e', stackTrace: stack);
       rethrow;
@@ -193,7 +193,7 @@ class LedgerRepository {
         return DailySummaryModel.fromJson(response.data);
       }
       log('Error fetching ledger day-wise summary: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to fetch ledger summary';
     } catch (e, stack) {
       log('Error fetching ledger day-wise summary: $e', stackTrace: stack);
       rethrow;
@@ -225,7 +225,7 @@ class LedgerRepository {
             .toList();
       }
       log('Get Ledger Invoice Data Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get ledger invoice data';
     } catch (e, stack) {
       log('Get Ledger Invoice Data Error: $e', stackTrace: stack);
       rethrow;
@@ -255,7 +255,7 @@ class LedgerRepository {
       );
       if (response != null) {
         log('Download Ledger Invoice Error: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to download ledger invoice';
       }
       return filePath;
     } catch (e, stack) {

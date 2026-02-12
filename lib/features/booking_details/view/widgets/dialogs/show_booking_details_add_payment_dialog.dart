@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
@@ -179,7 +181,7 @@ void showBookingDetailsAddPaymentDialog({
         ),
         ValueListenableBuilder<bool>(
           valueListenable: isLoading,
-          builder: (context, loading, child) => ElevatedButton(
+          builder: (btnContext, loading, child) => ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: loading ? Colors.grey : null,
             ),
@@ -209,39 +211,58 @@ void showBookingDetailsAddPaymentDialog({
                     isLoading.value = true; // Start loading
 
                     try {
+                      // Get the bloc from the correct context
+                      final bloc = context.read<BookingDetailsBloc>();
+                      
                       // Dispatch the update payment event
-                      context.read<BookingDetailsBloc>().add(
-                            BookingDetailsEvent.updatePayment(
-                              bookingId: id,
-                              amount: amount,
-                              paymentMethod: paymentMethodNotifier.value,
-                            ),
-                          );
-
-                      // Wait for the bloc to emit the loaded state with updated data
-                      await context
-                          .read<BookingDetailsBloc>()
-                          .stream
-                          .firstWhere(
-                            (state) => state.maybeWhen(
-                              loaded: (_) => true,
-                              failed: (_) => true,
-                              orElse: () => false,
-                            ),
-                          );
-
-                      // Close the dialog after update completes
-                      if (context.mounted) {
-                        context.pop();
-                        // Show success message
-                        context.showSnackBar('Payment added successfully');
-                      }
-                    } catch (e) {
-                      CustomSnackBar(
-                        message: 'Failed to update booking. Please try again.',
+                      bloc.add(
+                        BookingDetailsEvent.updatePayment(
+                          bookingId: id,
+                          amount: amount,
+                          paymentMethod: paymentMethodNotifier.value,
+                        ),
                       );
-                    } finally {
-                      isLoading.value = false; // End loading
+
+                      // Wait for the bloc to emit the loaded or failed state with a timeout
+                      final state = await bloc.stream.firstWhere(
+                        (state) => state.maybeWhen(
+                          loaded: (_) => true,
+                          failed: (_) => true,
+                          orElse: () => false,
+                        ),
+                      ).timeout(
+                        const Duration(seconds: 30),
+                        onTimeout: () {
+                          throw TimeoutException('Request timed out');
+                        },
+                      );
+
+                      // Check if the operation was successful
+                      state.maybeWhen(
+                        loaded: (_) {
+                          // Close the dialog after update completes
+                          if (dialogCtx.mounted) {
+                            dialogCtx.pop();
+                            // Show success message
+                            context.showSnackBar('Payment added successfully');
+                          }
+                        },
+                        failed: (error) {
+                          CustomSnackBar(
+                            title: 'Error',
+                            message: error,
+                          );
+                          isLoading.value = false;
+                        },
+                        orElse: () {},
+                      );
+                    } catch (e) {
+                      if (dialogCtx.mounted) {
+                        CustomSnackBar(
+                          message: 'Failed to update payment. Please try again.',
+                        );
+                        isLoading.value = false;
+                      }
                     }
                   },
             // style: ElevatedButton.styleFrom(

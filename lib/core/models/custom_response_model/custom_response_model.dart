@@ -13,7 +13,7 @@ class CustomResponseModel with _$CustomResponseModel {
       toJson: CustomResponseStatus.toJson,
     )
     required CustomResponseStatus status,
-    required String message,
+    @JsonKey(defaultValue: '') String? message,
     @JsonKey(name: 'dev_message', defaultValue: '') required dynamic devMessage,
     @JsonKey(name: 'meta', includeIfNull: false) required dynamic meta,
     required dynamic data,

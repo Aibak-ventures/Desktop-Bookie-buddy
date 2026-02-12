@@ -15,7 +15,7 @@ class BookingDetailsPaymentHistoryModel
       fromJson: PaymentMethod.fromJson,
     )
     required PaymentMethod paymentMethod,
-    @JsonKey(name: 'datetime') required String dateTime,
+    @JsonKey(name: 'created_at') required String dateTime,
   }) = _BookingDetailsPaymentHistoryModel;
 
   factory BookingDetailsPaymentHistoryModel.fromJson(

@@ -26,7 +26,7 @@ class DashboardRepository {
         return DashboardModel.fromJson(response.data);
       }
       log('Failed to load dashboard data: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error loading dashboard data: $e', stackTrace: stack);
       rethrow;

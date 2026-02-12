@@ -33,7 +33,7 @@ class ExpenseRepository {
         );
       }
       log('Get Expense Pagination Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to get expense pagination';
     } catch (e, stack) {
       log('Get Expense Pagination Error: $e', stackTrace: stack);
       rethrow;
@@ -49,7 +49,7 @@ class ExpenseRepository {
       );
       if (response.status.isSuccess) return;
       log('Add Expense Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to add expense';
     } catch (e, stack) {
       log('Add Expense Error: $e', stackTrace: stack);
       rethrow;
@@ -65,7 +65,7 @@ class ExpenseRepository {
       );
       if (response.status.isSuccess) return;
       log('Update Expense Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to update expense';
     } catch (e, stack) {
       log('Update Expense Error: $e', stackTrace: stack);
       rethrow;
@@ -85,7 +85,7 @@ class ExpenseRepository {
       );
       if (response.status.isSuccess) return;
       log('Delete Expense Error: ${response.devMessage}');
-      throw response.message;
+      throw response.message ?? 'Failed to delete expense';
     } catch (e, stack) {
       log('Delete Expense Error: $e', stackTrace: stack);
       rethrow;

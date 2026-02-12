@@ -35,7 +35,7 @@ class AuthRepository {
         log('Login successful, ${response.devMessage}');
       } else {
         log('Login failed: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to complete operation';
       }
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
@@ -51,7 +51,7 @@ class AuthRepository {
       log('Secret login response: ${response.toJson()}');
       if (!response.status.isSuccess) {
         log('Secret login failed: ${response.devMessage}');
-        throw response.message;
+        throw response.message ?? 'Failed to complete operation';
       }
       log('Secret login successful');
     } catch (e, stack) {
