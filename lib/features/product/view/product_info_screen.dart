@@ -774,18 +774,24 @@ class ProductInfoScreen extends StatelessWidget {
   }
 
   void _showEditDialog(BuildContext context, ProductModel product) async {
-    final result = await context.push(
-      AddOrEditProductScreen(
-        serviceId: serviceId,
-        product: product,
-      ),
-    );
+    performSecureActionDialog(
+      context,
+      SecretPasswordLocations.productEdit,
+      onSuccess: () async {
+        final result = await context.push(
+          AddOrEditProductScreen(
+            serviceId: serviceId,
+            product: product,
+          ),
+        );
 
-    if (result is bool && result) {
-      context
-          .read<ProductInfoBloc>()
-          .add(ProductInfoEvent.loadProductInfo(productId));
-    }
+        if (result is bool && result) {
+          context
+              .read<ProductInfoBloc>()
+              .add(ProductInfoEvent.loadProductInfo(productId));
+        }
+      },
+    );
   }
 
   void _showDeleteDialog(BuildContext context, ProductModel product) async {

@@ -882,7 +882,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 const SizedBox(width: 12),
                 SizedBox(
                   width: 105,
-                  child: _buildDeliveryStatusDisplay(booking.deliveryStatus),
+                  child: _buildDeliveryStatus(booking),
                 ),
                 const SizedBox(width: 20),
                 SizedBox(
@@ -948,97 +948,11 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     );
   }
 
-  Widget _buildDeliveryStatusDisplay(DeliveryStatus? status) {
-    final effectiveStatus = status ?? DeliveryStatus.booked;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: effectiveStatus.color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: effectiveStatus.color.withOpacity(0.2)),
-      ),
-      child: Text(
-        effectiveStatus.name,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 11,
-          color: effectiveStatus.color,
-          fontWeight: FontWeight.w600,
-        ),
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-
   Widget _buildDeliveryStatus(DesktopBookingItemModel booking) {
-    final status = booking.deliveryStatus ?? DeliveryStatus.booked;
-    return PopupMenuButton<DeliveryStatus>(
-      offset: const Offset(0, 40),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      onSelected: (DeliveryStatus newStatus) {
-        context.read<AllBookingBloc>().add(
-              AllBookingEvent.updateDeliveryStatus(
-                bookingId: booking.id,
-                deliveryStatus: newStatus,
-              ),
-            );
-      },
-      itemBuilder: (context) => DeliveryStatus.values.map((s) {
-        return PopupMenuItem<DeliveryStatus>(
-          value: s,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: s.color,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                s.name,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: s.color,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-        decoration: BoxDecoration(
-          color: status.color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: status.color.withOpacity(0.2)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-              child: Text(
-                status.name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: status.color,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 2),
-            Icon(Icons.keyboard_arrow_down, size: 12, color: status.color),
-          ],
-        ),
-      ),
+    return _DeliveryStatusDropdown(
+
+      // key: ValueKey('delivery_status_${booking.id}'),
+      booking: booking,
     );
   }
 
@@ -1209,6 +1123,113 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// Stateful widget for delivery status dropdown with instant color update
+class _DeliveryStatusDropdown extends StatefulWidget {
+  final DesktopBookingItemModel booking;
+
+  const _DeliveryStatusDropdown({required this.booking});
+
+  @override
+  State<_DeliveryStatusDropdown> createState() =>
+      _DeliveryStatusDropdownState();
+}
+
+class _DeliveryStatusDropdownState extends State<_DeliveryStatusDropdown> {
+  DeliveryStatus? _optimisticStatus;
+
+  @override
+  void didUpdateWidget(_DeliveryStatusDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reset optimistic status when booking data actually updates from bloc
+    if (oldWidget.booking.deliveryStatus != widget.booking.deliveryStatus) {
+      _optimisticStatus = null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveStatus = _optimisticStatus ??
+        widget.booking.deliveryStatus ??
+        DeliveryStatus.booked;
+
+    return PopupMenuButton<DeliveryStatus>(
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      onSelected: (DeliveryStatus newStatus) {
+        // Instant UI update
+        setState(() {
+          _optimisticStatus = newStatus;
+        });
+
+        // Update via bloc
+        context.read<AllBookingBloc>().add(
+              AllBookingEvent.updateDeliveryStatus(
+                bookingId: widget.booking.id,
+                deliveryStatus: newStatus,
+              ),
+            );
+      },
+      itemBuilder: (context) => DeliveryStatus.values.map((s) {
+        return PopupMenuItem<DeliveryStatus>(
+          value: s,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: s.color,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                s.name,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: s.color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+        decoration: BoxDecoration(
+          color: effectiveStatus.color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: effectiveStatus.color.withOpacity(0.2)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Text(
+                effectiveStatus.name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: effectiveStatus.color,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 2),
+            Icon(Icons.keyboard_arrow_down,
+                size: 12, color: effectiveStatus.color),
+          ],
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
@@ -226,11 +227,14 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                   child: ElevatedButton.icon(
                     key: _paymentButtonKey,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          isPaymentCompleted ? AppColors.greenLight : null,
+                      backgroundColor: booking.bookingStatus ==
+                              BookingStatus.cancelled
+                          ? Colors.red.shade100
+                          : (isPaymentCompleted ? AppColors.greenLight : null),
                     ),
-                    onPressed: isPaymentCompleted
-                        ? () {}
+                    onPressed: (isPaymentCompleted ||
+                            booking.bookingStatus == BookingStatus.cancelled)
+                        ? null
                         : () {
                             performSecureActionDialog(
                               context,
@@ -248,18 +252,23 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                             );
                           },
                     label: Text(
-                      isPaymentCompleted ? 'Completed' : 'Add payment',
+                      booking.bookingStatus == BookingStatus.cancelled
+                          ? 'Cancelled'
+                          : (isPaymentCompleted ? 'Completed' : 'Add payment'),
                       style: TextStyle(
-                        color: isPaymentCompleted
-                            ? AppColors.green2
-                            : AppColors.white,
+                        color: booking.bookingStatus == BookingStatus.cancelled
+                            ? Colors.red.shade700
+                            : (isPaymentCompleted
+                                ? AppColors.green2
+                                : AppColors.white),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     // ignore: use_decorated_box
                     icon: Container(
-                      decoration: isPaymentCompleted
-                          ? const ShapeDecoration(
+                      decoration: (isPaymentCompleted ||
+                              booking.bookingStatus == BookingStatus.cancelled)
+                          ? ShapeDecoration(
                               shape: CircleBorder(
                                 side: BorderSide(
                                   color: AppColors.white,
@@ -269,8 +278,14 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                             )
                           : null,
                       child: Icon(
-                        isPaymentCompleted ? Icons.check_circle : Icons.add,
-                        color: isPaymentCompleted ? AppColors.green2 : null,
+                        booking.bookingStatus == BookingStatus.cancelled
+                            ? Icons.cancel
+                            : (isPaymentCompleted
+                                ? Icons.check_circle
+                                : Icons.add),
+                        color: booking.bookingStatus == BookingStatus.cancelled
+                            ? Colors.red.shade700
+                            : (isPaymentCompleted ? AppColors.green2 : null),
                         size: 24,
                       ),
                     ),
@@ -289,12 +304,15 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
               },
               builder: (context, state) => state.maybeWhen(
                 orElse: () => const SizedBox.shrink(),
-                loading: () => const BookingPaymentHistoryTile(
-                  paymentHistory: [],
+                loading: () => BookingPaymentHistoryTile(
+                  paymentHistory: const [],
+                  refunds: booking.refunds,
                   isLoading: true,
                 ),
-                expanded: (paymentHistory) =>
-                    BookingPaymentHistoryTile(paymentHistory: paymentHistory),
+                expanded: (paymentHistory) => BookingPaymentHistoryTile(
+                  paymentHistory: paymentHistory,
+                  refunds: booking.refunds,
+                ),
               ),
             ),
           ],

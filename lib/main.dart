@@ -13,6 +13,19 @@ import 'package:window_manager/window_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Suppress known Flutter keyboard errors on Windows
+  FlutterError.onError = (FlutterErrorDetails details) {
+    // Filter out the RawKeyboard assertion error which is a known framework issue
+    final isKeyboardError = details.exception.toString().contains('RawKeyDownEvent') ||
+        details.exception.toString().contains('_keysPressed.isNotEmpty');
+    
+    if (!isKeyboardError) {
+      // Report all other errors normally
+      FlutterError.presentError(details);
+    }
+    // Silently ignore keyboard errors as they don't affect functionality
+  };
+
   // Initialize window manager for Windows desktop
   if (!kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.windows ||

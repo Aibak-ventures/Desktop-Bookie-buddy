@@ -943,7 +943,20 @@ class BookingDetailsDrawer extends StatelessWidget {
         ),
       ],
     );
-} Widget _buildPaymentDetails(BookingDetailsModel booking, BuildContext context) { final productTotal = booking.bookedItems.fold<int>( 0, (sum, item) => sum + (item.amount ?? 0), ); final additionalTotal = booking.additionalCharges.fold<int>( 0, (sum, charge) => sum + (charge.amount ?? 0), ) ?? 0; final totalAmount = booking.totalAmount;
+  }
+
+  Widget _buildPaymentDetails(
+      BookingDetailsModel booking, BuildContext context) {
+    final productTotal = booking.bookedItems.fold<int>(
+      0,
+      (sum, item) => sum + (item.amount ?? 0),
+    );
+    final additionalTotal = booking.additionalCharges.fold<int>(
+          0,
+          (sum, charge) => sum + (charge.amount ?? 0),
+        ) ??
+        0;
+    final totalAmount = booking.totalAmount;
     final paid = booking.actualPaidAmount;
     final discount = booking.discountAmount ?? 0;
     final balance = totalAmount - paid - discount;
@@ -1141,12 +1154,15 @@ class BookingDetailsDrawer extends StatelessWidget {
           },
           builder: (context, state) => state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
-            loading: () => const BookingPaymentHistoryTile(
-              paymentHistory: [],
+            loading: () => BookingPaymentHistoryTile(
+              paymentHistory: const [],
+              refunds: booking.refunds,
               isLoading: true,
             ),
-            expanded: (paymentHistory) =>
-                BookingPaymentHistoryTile(paymentHistory: paymentHistory),
+            expanded: (paymentHistory) => BookingPaymentHistoryTile(
+              paymentHistory: paymentHistory,
+              refunds: booking.refunds,
+            ),
           ),
         ),
       ],
@@ -1238,45 +1254,53 @@ class BookingDetailsDrawer extends StatelessWidget {
 
   Widget _buildActionButtons(
       BuildContext context, BookingDetailsModel booking) {
-    // Check if booking is completed
+    // Check if booking is completed or cancelled
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
+    final isCancelled = booking.bookingStatus == BookingStatus.cancelled;
 
     return Row(
       children: [
-        // Only show delete and edit buttons if booking is not completed
-        if (!isCompleted) ...[
+        // Only show delete and edit buttons if booking is not completed or cancelled
+        if (!isCompleted && !isCancelled) ...[
           // Delete button
           _buildIconActionButton(
             context,
             icon: Icons.delete_outline,
             color: Colors.red,
             onTap: () async {
-              final confirm = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Delete Booking'),
-                  content: const Text(
-                      'Are you sure you want to delete this booking? This action cannot be undone.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text('Cancel'),
+              performSecureActionDialog(
+                context,
+                SecretPasswordLocations.bookingDelete,
+                onSuccess: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete Booking'),
+                      content: const Text(
+                          'Are you sure you want to delete this booking? This action cannot be undone.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style:
+                              TextButton.styleFrom(foregroundColor: Colors.red),
+                          child: const Text('Delete'),
+                        ),
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      style: TextButton.styleFrom(foregroundColor: Colors.red),
-                      child: const Text('Delete'),
-                    ),
-                  ],
-                ),
-              );
+                  );
 
-              if (confirm == true && context.mounted) {
-                context.read<AllBookingBloc>().add(
-                      AllBookingEvent.deleteBooking(bookingId: booking.id),
-                    );
-                context.read<BookingDetailsDrawerCubit>().closeDrawer();
-              }
+                  if (confirm == true && context.mounted) {
+                    context.read<AllBookingBloc>().add(
+                          AllBookingEvent.deleteBooking(bookingId: booking.id),
+                        );
+                    context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                  }
+                },
+              );
             },
           ),
           const SizedBox(width: 12),
@@ -1286,40 +1310,47 @@ class BookingDetailsDrawer extends StatelessWidget {
             icon: Icons.edit_outlined,
             color: AppColors.purple,
             onTap: () async {
-              // Close the drawer first
-              context.read<BookingDetailsDrawerCubit>().closeDrawer();
+              performSecureActionDialog(
+                context,
+                SecretPasswordLocations.bookingEdit,
+                onSuccess: () async {
+                  // Close the drawer first
+                  context.read<BookingDetailsDrawerCubit>().closeDrawer();
 
-              // Navigate to the new edit booking screen with necessary providers
-              final result = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (_) => ServiceBloc(repository: getIt()),
+                  // Navigate to the new edit booking screen with necessary providers
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (_) => ServiceBloc(repository: getIt()),
+                          ),
+                          BlocProvider(
+                            create: (_) => ClientCubit(repository: getIt()),
+                          ),
+                          BlocProvider(
+                            create: (_) =>
+                                StaffSearchCubit(repository: getIt()),
+                          ),
+                          BlocProvider(
+                            create: (_) => SelectedProductsCubit(),
+                          ),
+                        ],
+                        child: EditNewBookingScreen(
+                          bookingDetails: booking,
+                        ),
                       ),
-                      BlocProvider(
-                        create: (_) => ClientCubit(repository: getIt()),
-                      ),
-                      BlocProvider(
-                        create: (_) => StaffSearchCubit(repository: getIt()),
-                      ),
-                      BlocProvider(
-                        create: (_) => SelectedProductsCubit(),
-                      ),
-                    ],
-                    child: EditNewBookingScreen(
-                      bookingDetails: booking,
                     ),
-                  ),
-                ),
-              );
+                  );
 
-              // Refresh booking details if edited
-              if (result == true && context.mounted) {
-                context.read<BookingDetailsBloc>().add(
-                      BookingDetailsEvent.fetchBookingDetails(booking.id),
-                    );
-              }
+                  // Refresh booking details if edited
+                  if (result == true && context.mounted) {
+                    context.read<BookingDetailsBloc>().add(
+                          BookingDetailsEvent.fetchBookingDetails(booking.id),
+                        );
+                  }
+                },
+              );
             },
           ),
           const SizedBox(width: 12),

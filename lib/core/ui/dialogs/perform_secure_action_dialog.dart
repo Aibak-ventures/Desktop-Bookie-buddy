@@ -92,9 +92,11 @@ void _verifyPasswordThenPerformActionDialog(
   BuildContext context,
   VoidCallback onSuccessfulPasswordVerification,
 ) {
-  // skip the password verification if in debug mode or already authenticated for 1 min
+  // skip the password verification if already authenticated within grace period
+  // NOTE: Debug mode bypass is DISABLED - password now required in development too
 
-  if (kDebugMode || SecureActionAuthSessionManager.isWithinGracePeriod) {
+  // if (kDebugMode || SecureActionAuthSessionManager.isWithinGracePeriod) {
+  if (SecureActionAuthSessionManager.isWithinGracePeriod) {
     onSuccessfulPasswordVerification();
     return;
   }
@@ -134,87 +136,152 @@ void _verifyPasswordThenPerformActionDialog(
             }
           }
 
-          return AlertDialog(
-            insetPadding: const EdgeInsets.symmetric(vertical: 24.0),
-            title: SizedBox(
-              width: context.screenWidth < 600
-                  ? context.mediaQueryWidth(0.68)
-                  : context.mediaQueryWidth(0.45),
-              child: Column(
-                spacing: 2,
-                children: [
-                  Container(
-                    padding: 18.padding,
-                    decoration: BoxDecoration(
-                      color: AppColors.purple.lighten(0.75),
-                      shape: BoxShape.circle,
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: context.screenWidth < 600 ? 400 : 450,
+                minWidth: 350,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Icon
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.purple.lighten(0.75),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.lock_outline,
+                        size: 48,
+                        color: AppColors.purple,
+                      ),
                     ),
-                    child: const Icon(
-                      Icons.lock,
-                      size: 40,
-                      color: AppColors.purple,
+                    const SizedBox(height: 24),
+                    
+                    // Title
+                    Text(
+                      'Secret Password',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  Text(
-                    'Secret Password',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
+                    const SizedBox(height: 8),
+                    
+                    // Subtitle
+                    Text(
+                      'Enter your password to continue',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 32),
+                    
+                    // Password Field
+                    CustomTextField(
+                      hintText: 'Enter Password',
+                      controller: textController,
+                      autofocus: true,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: AppColors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                      ),
+                      obscureText: obscurePassword,
+                      validator: (value) =>
+                          AppInputValidators.onEmpty(value, 'Password'),
+                      onFieldSubmit: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          onSubmit();
+                        } else {
+                          CustomSnackBar(message: 'Password cannot be empty');
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    
+                    // Action Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: isLoading ? null : () => context.pop(),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              side: BorderSide(color: Colors.grey[300]!),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: isLoading ? null : onSubmit,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: AppColors.purple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: isLoading
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    'Confirm',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomTextField(
-                  hintText: 'Enter Password',
-                  controller: textController,
-                  autofocus: true,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscurePassword ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        obscurePassword = !obscurePassword;
-                      });
-                    },
-                  ),
-                  obscureText: obscurePassword,
-                  validator: (value) =>
-                      AppInputValidators.onEmpty(value, 'Password'),
-                  onFieldSubmit: (value) {
-                    if (value != null && value.isNotEmpty) {
-                      onSubmit();
-                    } else {
-                      CustomSnackBar(message: 'Password cannot be empty');
-                    }
-                  },
-                ),
-              ],
-            ),
-            actions: [
-              // Cancel button
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text('Cancel'),
-              ),
-
-              // Confirm button
-              ElevatedButton(
-                onPressed: onSubmit,
-                child: Text(
-                  isLoading ? 'Loading' : 'Confirm',
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
           );
         },
       );

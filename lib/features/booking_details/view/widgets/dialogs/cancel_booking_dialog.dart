@@ -17,6 +17,8 @@ class CancelBookingDialog extends StatefulWidget {
     super.key,
   });
 
+  bool get hasRefundAmount => maxRefundAmount > 0;
+
   @override
   State<CancelBookingDialog> createState() => _CancelBookingDialogState();
 }
@@ -39,8 +41,12 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
   @override
   void initState() {
     super.initState();
-    // Set default refund amount to max (full refund)
-    _refundAmountController.text = widget.maxRefundAmount.toString();
+    // Set default refund amount to max (full refund) if there's any
+    if (widget.hasRefundAmount) {
+      _refundAmountController.text = widget.maxRefundAmount.toString();
+    } else {
+      _refundAmountController.text = '0';
+    }
   }
 
   @override
@@ -71,140 +77,173 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              // Header
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade50,
+                // Header
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.cancel_outlined,
+                        color: Colors.red.shade700,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Cancel Booking',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey.shade900,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            widget.hasRefundAmount
+                                ? 'Process refund for cancelled booking'
+                                : 'Cancel booking without refund',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+                const Divider(),
+                const SizedBox(height: 24),
+
+                // Show refund section only if there's paid amount
+                if (widget.hasRefundAmount) ...[
+                // Refund Amount
+                Text(
+                  'Refund Amount',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _refundAmountController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    prefixText: '₹ ',
+                    hintText: 'Enter refund amount',
+                    suffixText: '/ ₹${widget.maxRefundAmount}',
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      Icons.cancel_outlined,
-                      color: Colors.red.shade700,
-                      size: 28,
-                    ),
+                    filled: true,
+                    fillColor: Colors.grey.shade50,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter refund amount';
+                    }
+                    final amount = int.tryParse(value);
+                    if (amount == null || amount < 0) {
+                      return 'Please enter valid amount';
+                    }
+                    if (amount > widget.maxRefundAmount) {
+                      return 'Amount cannot exceed ₹${widget.maxRefundAmount}';
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                // Payment Method
+                Text(
+                  'Refund Method',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildPaymentMethodOption(
+                        PaymentMethod.cash,
+                        Icons.money,
+                        'Cash',
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildPaymentMethodOption(
+                        PaymentMethod.gPay,
+                        Icons.account_balance_wallet,
+                        'UPI',
+                      ),
+                    ),
+                  ],
+                ),
+
+                  const SizedBox(height: 20),
+                ] else ...[
+                  // No refund info
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.blue.shade200),
+                    ),
+                    child: Row(
                       children: [
-                        Text(
-                          'Cancel Booking',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Process refund for cancelled booking',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade600,
+                        Icon(Icons.info_outline, color: Colors.blue.shade700),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'No payment has been made for this booking. Cancellation will proceed without refund.',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.blue.shade900,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close),
-                  ),
+                  const SizedBox(height: 20),
                 ],
-              ),
 
-              const SizedBox(height: 24),
-              const Divider(),
-              const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
-              // Refund Amount
-              Text(
-                'Refund Amount',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _refundAmountController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  prefixText: '₹ ',
-                  hintText: 'Enter refund amount',
-                  suffixText: '/ ₹${widget.maxRefundAmount}',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                // Refund Reason
+                Text(
+                  'Cancellation Reason',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
                   ),
-                  filled: true,
-                  fillColor: Colors.grey.shade50,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter refund amount';
-                  }
-                  final amount = int.tryParse(value);
-                  if (amount == null || amount <= 0) {
-                    return 'Please enter valid amount';
-                  }
-                  if (amount > widget.maxRefundAmount) {
-                    return 'Amount cannot exceed ₹${widget.maxRefundAmount}';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // Payment Method
-              Text(
-                'Refund Method',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildPaymentMethodOption(
-                      PaymentMethod.cash,
-                      Icons.money,
-                      'Cash',
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildPaymentMethodOption(
-                      PaymentMethod.gPay,
-                      Icons.account_balance_wallet,
-                      'UPI',
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Refund Reason
-              Text(
-                'Cancellation Reason',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
                 initialValue: _selectedReason,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -226,70 +265,73 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                 },
               ),
 
-              const SizedBox(height: 24),
-              const Divider(),
-              const SizedBox(height: 16),
+                const SizedBox(height: 24),
+                const Divider(),
+                const SizedBox(height: 16),
 
-              // Warning message
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.orange.shade200),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.warning_amber, color: Colors.orange.shade700),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'This action cannot be undone. The booking will be cancelled permanently.',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.orange.shade900,
+                // Warning message
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.orange.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.warning_amber, color: Colors.orange.shade700),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'This action cannot be undone. The booking will be cancelled permanently.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.orange.shade900,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // Action Buttons
-              Row(
+                // Action Buttons
+                Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: widget.onCancel,
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
+                        child: const Text('Keep Booking'),
                       ),
-                      child: const Text('Keep Booking'),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _handleConfirm,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _handleConfirm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                      ),
-                      child: const Text('Cancel & Refund'),
+                        child: Text(
+                          widget.hasRefundAmount
+                              ? 'Cancel & Refund'
+                              : 'Cancel Booking',
                     ),
-                  ),
-                ],
-              ),
-            ],
+                        ),
+                    ),
+                  ],)
+              ],
             ),
           ),
         ),

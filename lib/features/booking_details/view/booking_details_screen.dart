@@ -1,9 +1,11 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
@@ -414,22 +416,25 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   Widget _buildSecondaryActionButtons(BuildContext context, dynamic booking) {
     final isBookingCompleted = booking.bookingStatus == BookingStatus.completed;
+    final isBookingCancelled = booking.bookingStatus == BookingStatus.cancelled;
 
     return Column(
       children: [
-        // ✅ Disable "Edit Booking" if completed
+        // ✅ Disable "Edit Booking" if completed or cancelled
         ElevatedButton.icon(
-          onPressed: isBookingCompleted
+          onPressed: (isBookingCompleted || isBookingCancelled)
               ? null
               : () => _handleEditBooking(context, booking),
           icon: const Icon(Icons.edit, color: Colors.white),
           label: Text(
-            isBookingCompleted ? 'Edit Disabled' : 'Edit Booking',
+            (isBookingCompleted || isBookingCancelled)
+                ? 'Edit Disabled'
+                : 'Edit Booking',
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w600),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: isBookingCompleted
+            backgroundColor: (isBookingCompleted || isBookingCancelled)
                 ? Colors.grey.shade400
                 : Colors.blue.shade600,
             minimumSize: const Size(double.infinity, 48),
@@ -441,8 +446,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
         const SizedBox(height: 12),
 
-        // Cancel Booking button (only if not completed)
-        if (!isBookingCompleted) ...[
+        // Cancel Booking button (only if not completed or cancelled)
+        if (!isBookingCompleted && !isBookingCancelled) ...[
           ElevatedButton.icon(
             onPressed: () => _handleCancelBooking(context, booking),
             icon: const Icon(Icons.cancel, color: Colors.white),
@@ -532,16 +537,6 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     // Calculate refundable amount (total paid - already refunded if any)
     final maxRefundAmount = booking.actualPaidAmount;
 
-    if (maxRefundAmount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No refundable amount available for this booking.'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      return;
-    }
-
     showDialog(
       context: context,
       builder: (context) => CancelBookingDialog(
@@ -562,75 +557,88 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   }
 
   void _handleDeleteBooking(BuildContext context, dynamic booking) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Booking'),
-        content: const Text(
-            'Are you sure you want to delete this booking? This action cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // Add delete booking logic here
-              context.read<BookingDetailsBloc>().add(
-                    BookingDetailsEvent.deleteBooking(booking.id),
+    performSecureActionDialog(
+      context,
+      SecretPasswordLocations.bookingDelete,
+      onSuccess: () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Delete Booking'),
+            content: const Text(
+                'Are you sure you want to delete this booking? This action cannot be undone.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Add delete booking logic here
+                  context.read<BookingDetailsBloc>().add(
+                        BookingDetailsEvent.deleteBooking(booking.id),
+                      );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Booking deleted successfully!'),
+                      backgroundColor: Colors.red,
+                    ),
                   );
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Booking deleted successfully!'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Delete'),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   void _handleEditBooking(BuildContext context, dynamic booking) {
-    try {
-      StaffModel? existingStaff;
-      if (booking.staffId != null) {
-        existingStaff = StaffModel(
-          id: booking.staffId!,
-          name: booking.staffName ?? 'Staff Name',
-          phoneNumber: '',
-        );
-      }
-      context
-        ..read<StaffSearchCubit>().clearSelectedStaff()
-        ..read<StaffSearchCubit>().getAllStaffs(
-          booking.staffId,
-          existingStaff,
-        )
-        ..read<ClientCubit>().clearSelected();
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => UpdateBookingCubit(
-              bookingRepository: getIt.get(),
-              clientRepository: getIt.get(),
+    performSecureActionDialog(
+      context,
+      SecretPasswordLocations.bookingEdit,
+      onSuccess: () {
+        try {
+          StaffModel? existingStaff;
+          if (booking.staffId != null) {
+            existingStaff = StaffModel(
+              id: booking.staffId!,
+              name: booking.staffName ?? 'Staff Name',
+              phoneNumber: '',
+            );
+          }
+          context
+            ..read<StaffSearchCubit>().clearSelectedStaff()
+            ..read<StaffSearchCubit>().getAllStaffs(
+              booking.staffId,
+              existingStaff,
+            )
+            ..read<ClientCubit>().clearSelected();
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => UpdateBookingCubit(
+                  bookingRepository: getIt.get(),
+                  clientRepository: getIt.get(),
+                ),
+                child: EditBookingScreen(booking: booking),
+              ),
             ),
-            child: EditBookingScreen(booking: booking),
-          ),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Edit booking feature is not available at the moment.'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-    }
+          );
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+                  Text('Edit booking feature is not available at the moment.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      },
+    );
   }
 
   void _handleShareDetails(BuildContext context, dynamic booking) async {
