@@ -4,6 +4,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'booking_details_payment_history_model.freezed.dart';
 part 'booking_details_payment_history_model.g.dart';
 
+// Custom reader to support both 'datetime' and 'created_at' field names
+String _readDateTime(Map json, String key) {
+  return json['datetime'] ?? json['created_at'] ?? '';
+}
+
 @freezed
 class BookingDetailsPaymentHistoryModel
     with _$BookingDetailsPaymentHistoryModel {
@@ -15,7 +20,8 @@ class BookingDetailsPaymentHistoryModel
       fromJson: PaymentMethod.fromJson,
     )
     required PaymentMethod paymentMethod,
-    @JsonKey(name: 'created_at') required String dateTime,
+    @JsonKey(name: 'datetime', readValue: _readDateTime)
+    required String dateTime,
   }) = _BookingDetailsPaymentHistoryModel;
 
   factory BookingDetailsPaymentHistoryModel.fromJson(
