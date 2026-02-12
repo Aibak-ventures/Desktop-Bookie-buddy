@@ -950,8 +950,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
   Widget _buildDeliveryStatus(DesktopBookingItemModel booking) {
     return _DeliveryStatusDropdown(
-
-      // key: ValueKey('delivery_status_${booking.id}'),
+      key: ValueKey('delivery_status_${booking.id}'),
       booking: booking,
     );
   }
@@ -1133,7 +1132,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 class _DeliveryStatusDropdown extends StatefulWidget {
   final DesktopBookingItemModel booking;
 
-  const _DeliveryStatusDropdown({required this.booking});
+  const _DeliveryStatusDropdown({super.key, required this.booking});
 
   @override
   State<_DeliveryStatusDropdown> createState() =>

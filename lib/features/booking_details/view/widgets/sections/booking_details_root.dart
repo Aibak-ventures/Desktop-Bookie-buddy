@@ -15,6 +15,7 @@ import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_scre
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/painters/custom_payment_details_rectangle_painter.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_client_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_date_section.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_documents_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_invoice_and_delivery_status_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_location_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_other_details_section.dart';
@@ -632,6 +633,15 @@ class BookingDetailsRoot extends StatelessWidget {
                     'Other Details',
                     BookingDetailsOtherDetailsSection(booking: booking),
                   ),
+                  if (booking.documents.isNotEmpty) ...[
+                    const SizedBox(height: 24),
+                    _buildWebCard(
+                      'Documents',
+                      BookingDetailsDocumentsSection(
+                        documents: booking.documents,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                 ],
               ),
@@ -688,6 +698,12 @@ class BookingDetailsRoot extends StatelessWidget {
 
         // Other details section
         BookingDetailsOtherDetailsSection(booking: booking),
+
+        // Documents section
+        if (booking.documents.isNotEmpty) ...[
+          15.height,
+          BookingDetailsDocumentsSection(documents: booking.documents),
+        ],
 
         15.height,
       ],
