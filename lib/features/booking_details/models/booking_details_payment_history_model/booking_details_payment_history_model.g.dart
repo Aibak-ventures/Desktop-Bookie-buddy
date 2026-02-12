@@ -14,7 +14,7 @@ _$BookingDetailsPaymentHistoryModelImpl
           paymentMethod: json['payment_method'] == null
               ? PaymentMethod.cash
               : PaymentMethod.fromJson(json['payment_method'] as String?),
-          dateTime: json['created_at'] as String,
+          dateTime: json['datetime'] as String,
         );
 
 Map<String, dynamic> _$$BookingDetailsPaymentHistoryModelImplToJson(
@@ -22,5 +22,5 @@ Map<String, dynamic> _$$BookingDetailsPaymentHistoryModelImplToJson(
     <String, dynamic>{
       'amount': instance.amount,
       'payment_method': instance.paymentMethod,
-      'created_at': instance.dateTime,
+      'datetime': instance.dateTime,
     };

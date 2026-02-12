@@ -25,42 +25,72 @@ void showBookingDetailsAddPaymentDialog({
   );
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (dialogCtx) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Column(
-        spacing: 2,
+        spacing: 8,
         children: [
           Container(
-            padding: 18.padding,
+            padding: 20.padding,
             decoration: BoxDecoration(
               color: AppColors.purple.lighten(0.75),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.currency_rupee,
-              size: 40,
+              size: 48,
               color: AppColors.purple,
             ),
           ),
           Text(
-            'Add amount',
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
+            'Add Payment',
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700),
+          ),
+          Text(
+            'Balance: ${balanceAmount.toCurrency()}',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
-      contentPadding: 16.padding,
+      contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       content: SizedBox(
-        width: context.isMobile ? null : 0.5.widthR,
+        width: context.isMobile ? null : 450,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Amount',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
             CustomTextField(
               hintText: 'Enter amount',
               controller: textController,
-              // fillColor: AppColors.purple.lighten(0.75),
               autofocus: true,
-              validator: AppInputValidators.amount, // For password security
+              validator: AppInputValidators.amount,
               keyboardType: TextInputType.number,
             ),
+            const SizedBox(height: 20),
+            Text(
+              'Payment Method',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const SizedBox(height: 8),
             ValueListenableBuilder(
               valueListenable: paymentMethodNotifier,
               builder: (context, paymentMethod, child) => RadioGroup(
@@ -68,54 +98,84 @@ void showBookingDetailsAddPaymentDialog({
                   if (value != null) paymentMethodNotifier.value = value;
                 },
                 groupValue: paymentMethod,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: RadioListTile(
-                        title: Text(
-                          PaymentMethod.gPay.name,
-                          maxLines: 1,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 14.sp),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.phone_android,
+                                  size: 18, color: AppColors.purple),
+                              const SizedBox(width: 4),
+                              Text(
+                                PaymentMethod.gPay.name,
+                                style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 8),
+                          visualDensity: VisualDensity.compact,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: PaymentMethod.gPay,
+                          activeColor: AppColors.purple,
                         ),
-                        contentPadding: EdgeInsets.zero,
-                        visualDensity: VisualDensity.compact,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        value: PaymentMethod.gPay,
-                        activeColor: AppColors.purple,
                       ),
-                    ),
-                    Expanded(
-                      child: RadioListTile(
-                        title: Text(
-                          PaymentMethod.cash.name,
-                          maxLines: 1,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 14.sp),
+                      Container(
+                          width: 1, height: 40, color: Colors.grey.shade300),
+                      Expanded(
+                        child: RadioListTile(
+                          title: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.money,
+                                  size: 18, color: Colors.green),
+                              const SizedBox(width: 4),
+                              Text(
+                                PaymentMethod.cash.name,
+                                style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 8),
+                          visualDensity: VisualDensity.compact,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: PaymentMethod.cash,
+                          activeColor: AppColors.purple,
                         ),
-                        contentPadding: EdgeInsets.zero,
-                        visualDensity: VisualDensity.compact,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        value: PaymentMethod.cash,
-                        activeColor: AppColors.purple,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+      actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
       actions: [
-        TextButton(
+        OutlinedButton(
           onPressed: () {
             dialogCtx.pop();
           },
-          child: const Text('Cancel'),
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            side: BorderSide(color: Colors.grey.shade400),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          child: const Text('Cancel', style: TextStyle(color: Colors.black87)),
         ),
         ValueListenableBuilder<bool>(
           valueListenable: isLoading,
@@ -173,6 +233,8 @@ void showBookingDetailsAddPaymentDialog({
                       // Close the dialog after update completes
                       if (context.mounted) {
                         context.pop();
+                        // Show success message
+                        context.showSnackBar('Payment added successfully');
                       }
                     } catch (e) {
                       CustomSnackBar(
@@ -182,10 +244,36 @@ void showBookingDetailsAddPaymentDialog({
                       isLoading.value = false; // End loading
                     }
                   },
-            child: Text(
-              loading ? 'Loading..' : 'Update',
-              style: const TextStyle(color: AppColors.white),
-            ),
+            // style: ElevatedButton.styleFrom(
+            //   backgroundColor: loading ? Colors.grey : AppColors.purple,
+            //   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(8)),
+            // ),
+            child: loading
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Processing...',
+                        style: TextStyle(color: AppColors.white),
+                      ),
+                    ],
+                  )
+                : const Text(
+                    'Add Payment',
+                    style: TextStyle(
+                        color: AppColors.white, fontWeight: FontWeight.w600),
+                  ),
           ),
         ),
       ],
