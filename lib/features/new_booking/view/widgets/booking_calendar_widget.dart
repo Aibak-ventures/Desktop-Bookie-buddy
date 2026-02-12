@@ -229,7 +229,7 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
             child: Switch(
               value: widget.isSearchClientEnabled,
               onChanged: widget.onSearchClientToggle,
-              activeColor: AppColors.purple,
+              activeThumbColor: AppColors.purple,
             ),
           ),
         ],

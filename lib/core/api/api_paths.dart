@@ -109,6 +109,8 @@ class _BookingsNamespace {
   String get availableProducts => BookingsApiPaths.availableProducts;
   String get dashboard => BookingsApiPaths.dashboard;
   String deletePayment(int id) => BookingsApiPaths.deletePayment(id);
+  String sendBookingInvoice(int bookingId) =>
+      BookingsApiPaths.sendBookingInvoice(bookingId);
   String downloadBookingInvoice(int bookingId) =>
       BookingsApiPaths.downloadBookingInvoice(bookingId);
   String clientById(int id) => BookingsApiPaths.clientById(id); // Added

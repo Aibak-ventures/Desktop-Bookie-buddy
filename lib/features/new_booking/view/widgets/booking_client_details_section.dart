@@ -101,7 +101,7 @@ class _BookingClientDetailsSectionState
             child: Switch(
               value: widget.isSearchClientEnabled,
               onChanged: widget.onSearchClientToggle,
-              activeColor: AppColors.purple,
+              activeThumbColor: AppColors.purple,
             ),
           ),
         ],
@@ -120,7 +120,9 @@ class _BookingClientDetailsSectionState
             SizedBox(
               height: 34,
               child: CustomTextField(
-                validator: (value) {},
+                validator: (value) {
+                  return null;
+                },
                 controller: widget.clientNameController,
                 hintText: 'Search clients',
                 prefixIcon: const Icon(Icons.search, size: 16),

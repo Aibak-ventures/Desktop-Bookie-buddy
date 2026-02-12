@@ -124,7 +124,7 @@ class _CheckAvailabilityScreenState extends State<CheckAvailabilityScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: DropdownButtonFormField<int>(
-                          value: serviceId,
+                          initialValue: serviceId,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                               horizontal: 16,

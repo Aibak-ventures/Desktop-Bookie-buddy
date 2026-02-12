@@ -13,7 +13,6 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/widgets/calender_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_product_screen.dart';

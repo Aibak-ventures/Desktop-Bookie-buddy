@@ -22,7 +22,9 @@ class BookingsApiPaths {
 
   // Dynamic methods
   static String deletePayment(int id) => '${bookingsV5}delete-payment/$id/';
+  static String sendBookingInvoice(int bookingId) =>
+      '${bookingsV5}send-invoice/$bookingId/'; // Send invoice endpoint (returns PDF)
   static String downloadBookingInvoice(int bookingId) =>
-      '${bookingsV5}$bookingId/send-invoice/'; // Fixed: was download-invoice
+      '${bookingsV5}send-invoice/$bookingId/'; // Same endpoint for download
   static String clientById(int id) => '${clients}$id/'; // Added missing method
 }

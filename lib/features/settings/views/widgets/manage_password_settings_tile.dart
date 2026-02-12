@@ -35,7 +35,7 @@ class ManagePasswordSettingsTile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          setting.location?.name ?? '' + ':',
+          setting.location.name ?? '' + ':',
           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.sp),
         ),
         DropdownButton<String>(

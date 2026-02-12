@@ -228,7 +228,7 @@ class SaleDetailsScreen extends StatelessWidget {
                   // if (saleDetails.address.isNotNullOrEmpty)
                   SaleDetailsDetailsColumn(
                     label: 'Place',
-                    value: saleDetails?.address?? 'N/A',
+                    value: saleDetails.address?? 'N/A',
                   ),
                 ],
               ),

@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
@@ -58,6 +60,8 @@ import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_
 
 import 'package:bookie_buddy_web/features/sale_details/view/widgets/generate_sale_details_pdf.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
+import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 
@@ -412,6 +416,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       documentsCount: documentsNotifier.value.length,
       selectedStaffId: selectedStaff?.id,
       staffName: staffNameController.text,
+      isSalesMode: selectedBookingType == BookingType.sales,
     );
 
     if (validationResult.isValid) {
@@ -829,7 +834,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                   isPriceFilterEnabledWidgetNotifier.value =
                                       value;
                                 },
-                                activeColor: const Color(0xFF6132E4),
+                                activeThumbColor: const Color(0xFF6132E4),
                                 activeTrackColor:
                                     const Color(0xFF6132E4).withOpacity(0.3),
                                 inactiveThumbColor: Colors.grey.shade400,
@@ -2664,6 +2669,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildOverlaySearchItem(ProductModel product) {
     return OverlaySearchItem(
       product: product,
+      isSales: selectedBookingType == BookingType.sales,
       onAddProduct: (selectedVariant) {
         _removeSearchOverlay();
         serviceSearchController.clear();
@@ -3372,9 +3378,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (_editingVariantId == null) return;
 
     final newPrice = int.tryParse(_inlinePriceController.text);
-    if (newPrice != null) {
-      _updateProductPrice(product, newPrice);
+
+    // Validate that price is not zero
+    if (newPrice == null || newPrice <= 0) {
+      context.showSnackBar(
+        'Product price cannot be zero or empty',
+        isError: true,
+      );
+      // Keep the field in edit mode
+      return;
     }
+
+    _updateProductPrice(product, newPrice);
 
     setState(() {
       _editingVariantId = null;
@@ -3866,9 +3881,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Confirm Booking',
-                style: TextStyle(
+              child: Text(
+                selectedBookingType == BookingType.sales
+                    ? 'Confirm Sales'
+                    : 'Confirm Booking',
+                style: const TextStyle(
                   fontSize: 14,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
@@ -4091,6 +4108,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final products = selectedProductsNotifier.value;
     if (products.isEmpty) {
       context.showSnackBar('Please select at least one item', isError: true);
+      return;
+    }
+
+    // Validate that at least one product has a price greater than zero
+    final hasProductWithPrice = products.any((product) => product.amount > 0);
+    if (!hasProductWithPrice) {
+      context.showSnackBar(
+        'Product price cant be zero. At least one product should have a price.',
+        isError: true,
+      );
       return;
     }
 
@@ -4513,6 +4540,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildRightSidePanel() {
+    // For sales mode, show a single simplified panel
+    if (selectedBookingType == BookingType.sales) {
+      return _buildSalesSinglePanel();
+    }
+
+    // For bookings, keep the two-step process
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       transitionBuilder: (child, animation) {
@@ -4529,6 +4562,157 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       child: _bookingStep == 0
           ? _buildClientDetailsPanel()
           : _buildPaymentSummaryPanel(),
+    );
+  }
+
+  /// Single panel for sales mode with all necessary fields
+  Widget _buildSalesSinglePanel() {
+    return Container(
+      key: const ValueKey(2),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Client Phone
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: clientPhone1Controller,
+                    hint: 'Client Phone (WP)',
+                    isNumber: true,
+                    errorText: _phoneError,
+                    prefixIcon: Icons.phone,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Place
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: clientAddressController,
+                    hint: 'Place',
+                    prefixIcon: Icons.location_on,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Staff Details
+                  const Text(
+                    'Staff',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  StaffSearchNameField(
+                    nameController: staffNameController,
+                    errorText: _staffNameError,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Notes
+                  Container(
+                    height: 80,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextField(
+                      controller: descriptionController,
+                      maxLines: null,
+                      expands: true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Notes',
+                        hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+                      ),
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Discount
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: discountAmountController,
+                    hint: 'Discount amount',
+                    isNumber: true,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Payment Method
+                  _buildPaymentMethodSection(),
+                  const SizedBox(height: 16),
+
+                  // WhatsApp Checkbox
+                  if (context
+                      .read<UserCubit>()
+                      .hasFeature(AppPremiumFeatures.whatsappMessage))
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Checkbox(
+                            value: sendPdfToWhatsApp,
+                            onChanged: (v) =>
+                                setState(() => sendPdfToWhatsApp = v ?? false),
+                            activeColor: Colors.black87,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Send invoice to whatsapp',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+
+          // Fixed Bottom Section with Summary
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Summary',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildSummarySection(),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -4555,39 +4739,42 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: _fieldSpacing),
 
-                  // Name
-                  // ClientName with Search
-                  BlocListener<ClientCubit, ClientState>(
-                    listener: (context, state) {
-                      if (state.selectedClient != null) {
-                        final client = state.selectedClient!;
-                        // Auto-fill fields
-                        clientNameController.text = client.name;
-                        clientPhone1Controller.text = client.phone1.toString();
-                        if (client.phone2 != null) {
-                          clientPhone2Controller.text =
-                              client.phone2.toString();
+                  // Name - Only show for bookings
+                  if (selectedBookingType != BookingType.sales) ...[
+                    // ClientName with Search
+                    BlocListener<ClientCubit, ClientState>(
+                      listener: (context, state) {
+                        if (state.selectedClient != null) {
+                          final client = state.selectedClient!;
+                          // Auto-fill fields
+                          clientNameController.text = client.name;
+                          clientPhone1Controller.text =
+                              client.phone1.toString();
+                          if (client.phone2 != null) {
+                            clientPhone2Controller.text =
+                                client.phone2.toString();
+                          }
+                          // Store selected client ID
+                          selectedClientId = client.id;
                         }
-                        // Store selected client ID
-                        selectedClientId = client.id;
-                      }
-                    },
-                    child: ClientSearchNameField(
-                      nameController: clientNameController,
-                      focusNode: _clientNameFocusNode,
-                      hitText: 'Search client by name',
-                      onClear: () {
-                        // Clear all client fields when search is cleared
-                        clientNameController.clear();
-                        clientPhone1Controller.clear();
-                        clientPhone2Controller.clear();
-                        clientAddressController.clear();
-                        selectedClientId = null;
                       },
-                      errorText: _clientNameError,
+                      child: ClientSearchNameField(
+                        nameController: clientNameController,
+                        focusNode: _clientNameFocusNode,
+                        hitText: 'Search client by name',
+                        onClear: () {
+                          // Clear all client fields when search is cleared
+                          clientNameController.clear();
+                          clientPhone1Controller.clear();
+                          clientPhone2Controller.clear();
+                          clientAddressController.clear();
+                          selectedClientId = null;
+                        },
+                        errorText: _clientNameError,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: _fieldSpacing),
+                    const SizedBox(height: _fieldSpacing),
+                  ], // End of name section for bookings only
                   // Phone - Disabled if client is selected
                   BlocBuilder<ClientCubit, ClientState>(
                     builder: (context, state) {
@@ -4605,21 +4792,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     },
                   ),
                   const SizedBox(height: _fieldSpacing),
-                  // Phone 2 - Disabled if client is selected
-                  BlocBuilder<ClientCubit, ClientState>(
-                    builder: (context, state) {
-                      final isClientSelected = state.selectedClient != null;
-                      return BookingTextFieldBuilder.buildRightPanelTextField(
-                        controller: clientPhone2Controller,
-                        hint: 'Phone 2',
-                        isNumber: true,
-                        focusNode: _clientPhone2FocusNode,
-                        nextFocusNode: _clientAddressFocusNode,
-                        enabled: !isClientSelected,
-                        prefixIcon: Icons.phone,
-                      );
-                    },
-                  ),
+                  // Phone 2 - Only show for bookings, disabled if client is selected
+                  if (selectedBookingType != BookingType.sales)
+                    BlocBuilder<ClientCubit, ClientState>(
+                      builder: (context, state) {
+                        final isClientSelected = state.selectedClient != null;
+                        return BookingTextFieldBuilder.buildRightPanelTextField(
+                          controller: clientPhone2Controller,
+                          hint: 'Phone 2',
+                          isNumber: true,
+                          focusNode: _clientPhone2FocusNode,
+                          nextFocusNode: _clientAddressFocusNode,
+                          enabled: !isClientSelected,
+                          prefixIcon: Icons.phone,
+                        );
+                      },
+                    ),
                   const SizedBox(height: _fieldSpacing),
                   // Place
                   BookingTextFieldBuilder.buildRightPanelTextField(
@@ -4774,139 +4962,192 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _showSuccessDialog(int id, BookingType type) {
     final isSale = type == BookingType.sales;
+
+    // Call send-invoice API after showing success
+    Future.delayed(Duration.zero, () async {
+      try {
+        final repo = getIt<BookingRepository>();
+        await repo.sendInvoice(id, sendPdfToWhatsApp);
+      } catch (e) {
+        log('Error sending invoice: $e');
+      }
+    });
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.check_circle_rounded,
-                color: Colors.green, size: 64),
-            const SizedBox(height: 16),
-            const Text(
-              'Successful!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              isSale
-                  ? 'Sale has been successfully created.'
-                  : 'Booking has been successfully created.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop(); // Close dialog
-                      if (widget.onClose != null) {
-                        widget.onClose!();
-                      } else {
-                        Navigator.of(context).pop(); // Close screen
-                      }
-                    },
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      side: BorderSide(color: Colors.grey.shade300),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Text(
-                      'Close',
-                      style: TextStyle(color: Colors.grey.shade700),
-                    ),
-                  ),
+      builder: (dialogContext) {
+        // Auto-close after 10 seconds and navigate to dashboard
+        Future.delayed(const Duration(seconds: 10), () {
+          if (mounted) {
+            // First close the dialog
+            Navigator.of(dialogContext).pop();
+            // Then close the booking screen and navigate to dashboard
+            if (widget.onClose != null) {
+              widget.onClose!();
+            } else {
+              Navigator.of(context).pop();
+            }
+          }
+        });
+
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.check_circle_rounded,
+                  color: Colors.green, size: 64),
+              const SizedBox(height: 16),
+              const Text(
+                'Successful!',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        GlobalLoadingOverlay.show(context);
-                        final userShop =
-                            context.read<UserCubit>().state?.shopDetails;
-
-                        if (userShop == null) {
-                          throw 'Shop details not found';
-                        }
-
-                        if (isSale) {
-                          final repo = getIt<SalesRepository>();
-                          final sale = await repo.getSaleDetails(id);
-
-                          // Close loading before showing dialog
-                          GlobalLoadingOverlay.hide();
-
-                          if (mounted) {
-                            await GenerateSaleDetailsPdf.shareInvoice(
-                              context: context,
-                              saleDetails: sale,
-                              shopDetails: userShop,
-                            );
-                          }
+              ),
+              const SizedBox(height: 8),
+              Text(
+                isSale
+                    ? 'Sale has been successfully created.'
+                    : 'Booking has been successfully created.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Auto-closing in 10 seconds...',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade500,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(); // Close dialog
+                        if (widget.onClose != null) {
+                          widget.onClose!();
                         } else {
-                          final repo = getIt<BookingRepository>();
-                          final booking = await repo.getBooking(id);
-
-                          // Close loading before showing dialog
-                          GlobalLoadingOverlay.hide();
-
-                          if (mounted) {
-                            await GenerateBookingPdf.printInvoice(
-                              context: context,
-                              bookingDetails: booking,
-                              shopDetails: userShop,
-                            );
-                          }
+                          Navigator.of(context).pop(); // Close screen
                         }
-
-                        // Close dialog and screen
-                        if (mounted) {
-                          Navigator.of(dialogContext).pop();
-                          if (widget.onClose != null) {
-                            widget.onClose!();
-                          } else {
-                            Navigator.of(context).pop();
-                          }
-                        }
-                      } catch (e) {
-                        GlobalLoadingOverlay.hide();
-                        log('Error generating PDF: $e');
-                        if (mounted) {
-                          context.showSnackBar('Failed to generate invoice: $e',
-                              isError: true);
-                        }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Text(
-                      isSale ? 'View Sale' : 'View Invoice',
-                      style: const TextStyle(color: Colors.white),
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: BorderSide(color: Colors.grey.shade300),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      child: Text(
+                        'Close',
+                        style: TextStyle(color: Colors.grey.shade700),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          GlobalLoadingOverlay.show(context,
+                              text: 'Loading invoice...');
+
+                          if (isSale) {
+                            // For sales, use sales API endpoint
+                            final repo = getIt<SalesRepository>();
+                            final pdfBytes = await repo.getInvoicePdfBytes(id);
+
+                            GlobalLoadingOverlay.hide();
+
+                            if (mounted) {
+                              if (kIsWeb) {
+                                // Open PDF in new tab for web
+                                openPdfInNewTab(
+                                    pdfBytes, 'sale_invoice_$id.pdf');
+                              } else {
+                                // For desktop, save and open
+                                final downloadsDir = Directory(
+                                    '${Platform.environment['USERPROFILE']}\\Downloads');
+                                if (!downloadsDir.existsSync()) {
+                                  downloadsDir.createSync(recursive: true);
+                                }
+                                final fileName = 'sale_invoice_$id.pdf';
+                                final filePath =
+                                    '${downloadsDir.path}\\$fileName';
+                                final file = File(filePath);
+                                await file.writeAsBytes(pdfBytes);
+                                await launchUrl(Uri.file(filePath));
+                                context.showSnackBar(
+                                    'Invoice saved to Downloads\\$fileName');
+                              }
+                            }
+                          } else {
+                            // For bookings, use booking API endpoint
+                            final repo = getIt<BookingRepository>();
+                            final pdfBytes = await repo.getInvoicePdfBytes(id);
+
+                            GlobalLoadingOverlay.hide();
+
+                            if (mounted) {
+                              if (kIsWeb) {
+                                // Open PDF in new tab for web
+                                openPdfInNewTab(
+                                    pdfBytes, 'booking_invoice_$id.pdf');
+                              } else {
+                                // For desktop, save and open
+                                final downloadsDir = Directory(
+                                    '${Platform.environment['USERPROFILE']}\\Downloads');
+                                if (!downloadsDir.existsSync()) {
+                                  downloadsDir.createSync(recursive: true);
+                                }
+                                final fileName = 'booking_invoice_$id.pdf';
+                                final filePath =
+                                    '${downloadsDir.path}\\$fileName';
+                                final file = File(filePath);
+                                await file.writeAsBytes(pdfBytes);
+                                await launchUrl(Uri.file(filePath));
+                                context.showSnackBar(
+                                    'Invoice saved to Downloads\\$fileName');
+                              }
+                            }
+                          }
+                        } catch (e) {
+                          GlobalLoadingOverlay.hide();
+                          log('Error loading invoice: $e');
+                          if (mounted) {
+                            context.showSnackBar('Failed to load invoice: $e',
+                                isError: true);
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6132E4),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      child: Text(
+                        isSale ? 'View Sale' : 'View Invoice',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

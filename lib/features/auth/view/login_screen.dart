@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';

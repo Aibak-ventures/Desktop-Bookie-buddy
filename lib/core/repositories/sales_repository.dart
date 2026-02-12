@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
@@ -103,6 +104,16 @@ class SalesRepository {
       }
     } catch (e, stack) {
       log('Error deleting sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  /// Get invoice PDF bytes for viewing/downloading
+  Future<Uint8List> getInvoicePdfBytes(int saleId) async {
+    try {
+      return await _service.getInvoicePdfBytes(saleId);
+    } catch (e, stack) {
+      log('Error getting invoice PDF: $e', stackTrace: stack);
       rethrow;
     }
   }

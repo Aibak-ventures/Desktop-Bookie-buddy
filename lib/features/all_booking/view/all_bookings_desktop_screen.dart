@@ -819,15 +819,13 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            if (booking.id != null) {
-              // Open drawer
-              context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id);
-              // Fetch booking details
-              context.read<BookingDetailsBloc>().add(
-                    BookingDetailsEvent.fetchBookingDetails(booking.id),
-                  );
-            }
-          },
+            // Open drawer
+            context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id);
+            // Fetch booking details
+            context.read<BookingDetailsBloc>().add(
+                  BookingDetailsEvent.fetchBookingDetails(booking.id),
+                );
+                    },
           hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
           splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
           highlightColor: const Color(0xFF8A63FE).withOpacity(0.1),
@@ -951,15 +949,13 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       offset: const Offset(0, 40),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       onSelected: (DeliveryStatus newStatus) {
-        if (booking.id != null) {
-          context.read<AllBookingBloc>().add(
-                AllBookingEvent.updateDeliveryStatus(
-                  bookingId: booking.id,
-                  deliveryStatus: newStatus,
-                ),
-              );
-        }
-      },
+        context.read<AllBookingBloc>().add(
+              AllBookingEvent.updateDeliveryStatus(
+                bookingId: booking.id,
+                deliveryStatus: newStatus,
+              ),
+            );
+            },
       itemBuilder: (context) => DeliveryStatus.values.map((s) {
         return PopupMenuItem<DeliveryStatus>(
           value: s,

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
@@ -6,7 +5,6 @@ import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';

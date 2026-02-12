@@ -1,10 +1,8 @@
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 // import 'package:bookie_buddy_web/features/add_booking/view_model/cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';

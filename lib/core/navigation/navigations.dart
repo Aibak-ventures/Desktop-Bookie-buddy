@@ -29,7 +29,6 @@ import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.da
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
-import 'package:bookie_buddy_web/features/all_shop_summary/view/all_shop_summary_shop_details_screen.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/view/onboarding_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
@@ -70,7 +69,6 @@ import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_deta
 import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
 import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
 import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.dart';
-import 'package:bookie_buddy_web/features/search_old/view/search_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';

@@ -3,7 +3,6 @@ import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';

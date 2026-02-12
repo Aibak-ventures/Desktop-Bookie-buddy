@@ -1,66 +1,23 @@
-import 'dart:developer';
-import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
-import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
-    show ServicesModel;
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/product_customization_widget.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';
-import 'package:bookie_buddy_web/features/new_booking/helpers/booking_validation_helper.dart';
-import 'package:bookie_buddy_web/features/new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/new_booking_app_bar.dart';
-import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
 
-import 'package:bookie_buddy_web/features/sale_details/view/widgets/generate_sale_details_pdf.dart';
-import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 // import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 
 // Stateful widget for overlay search item with variant selection
 class OverlaySearchItem extends StatefulWidget {
   final ProductModel product;
   final Function(ProductVariantModel) onAddProduct;
+  final bool isSales;
 
   const OverlaySearchItem({
     required this.product,
     required this.onAddProduct,
+    this.isSales = false,
   });
 
   @override
@@ -243,7 +200,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'rent price',
+                    widget.isSales ? 'sale price' : 'rent price',
                     style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w400,

@@ -632,7 +632,7 @@ class BookingDetailsDrawer extends StatelessWidget {
       0,
       (sum, item) => sum + (item.amount ?? 0),
     );
-    final additionalTotal = booking.additionalCharges?.fold<int>(
+    final additionalTotal = booking.additionalCharges.fold<int>(
           0,
           (sum, charge) => sum + (charge.amount ?? 0),
         ) ??

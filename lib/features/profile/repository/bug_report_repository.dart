@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/models/bug_report_model/bug_report_model.dart';

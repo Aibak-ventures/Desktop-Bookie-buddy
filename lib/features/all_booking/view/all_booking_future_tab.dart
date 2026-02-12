@@ -98,7 +98,7 @@ class AllBookingFutureTab extends StatelessWidget {
                               booking: booking.toBookingsModel(),
                               onTap: () async {
                                 final result = await context.push(
-                                  BookingDetailsScreen(bookingId: booking.id!),
+                                  BookingDetailsScreen(bookingId: booking.id),
                                 );
                                 // If deleted or modified, refresh the entire list
                                 if (result == true) {
@@ -125,7 +125,7 @@ class AllBookingFutureTab extends StatelessWidget {
                               booking: booking.toBookingsModel(),
                               onTap: () async {
                                 final result = await context.push(
-                                  BookingDetailsScreen(bookingId: booking.id!),
+                                  BookingDetailsScreen(bookingId: booking.id),
                                 );
                                 // If deleted or modified, refresh the entire list
                                 if (result == true) {

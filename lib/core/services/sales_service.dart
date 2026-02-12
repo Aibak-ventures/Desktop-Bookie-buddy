@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/api/api_paths.dart';
@@ -106,6 +107,34 @@ class SalesService {
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error deleting sale: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  /// Get invoice PDF bytes for viewing/downloading
+  Future<Uint8List> getInvoicePdfBytes(int saleId) async {
+    try {
+      final url = ApiPaths.sales.downloadInvoice(saleId);
+      log('Fetching sale invoice PDF from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) => status! < 500,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        log('Invoice PDF fetched successfully, size: ${response.data.length} bytes');
+        return response.data;
+      } else {
+        log('Error fetching invoice PDF: ${response.statusCode}');
+        throw 'Failed to fetch invoice: HTTP ${response.statusCode}';
+      }
+    } catch (e, stack) {
+      log('Error fetching sale invoice PDF: $e', stackTrace: stack);
       rethrow;
     }
   }

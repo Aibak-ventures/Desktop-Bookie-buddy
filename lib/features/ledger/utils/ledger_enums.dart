@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 
 /// Helper enum to represent different types of ledger list items which can be
 /// associated with bookings, sales, or custom work.

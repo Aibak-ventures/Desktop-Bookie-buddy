@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';

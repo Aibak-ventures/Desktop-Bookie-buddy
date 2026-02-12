@@ -224,7 +224,7 @@ void showSearchTypeBottomSheet({
                                 isPriceFilterEnabledWidgetNotifier.value =
                                     value;
                               },
-                              activeColor: const Color(0xFF6132E4),
+                              activeThumbColor: const Color(0xFF6132E4),
                               activeTrackColor:
                                   const Color(0xFF6132E4).withOpacity(0.3),
                               inactiveThumbColor: Colors.grey.shade400,

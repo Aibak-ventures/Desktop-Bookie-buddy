@@ -291,10 +291,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     selectedProductsNotifier.value = products;
 
     // Set additional charges
-    if (booking.additionalCharges != null) {
-      additionalChargesNotifier.value = booking.additionalCharges!;
+    additionalChargesNotifier.value = booking.additionalCharges!;
     }
-  }
 
   /// Initialize form from existing sale
   void _initializeFromSale(SaleDetailsModel sale) {
@@ -305,8 +303,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Set client details
     clientPhone1Controller.text = sale.clientPhone.toString();
-    if (sale.address != null && sale.address!.isNotEmpty) {
-      clientAddressController.text = sale.address!;
+    if (sale.address.isNotEmpty) {
+      clientAddressController.text = sale.address;
     }
 
     // Set staff details
@@ -316,14 +314,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Set payment details
     advanceAmountController.text = sale.paidAmount.toString();
-    if (sale.discountAmount != null) {
-      discountAmountController.text = sale.discountAmount.toString();
-    }
-    paymentMethod = sale.paymentMethod;
+    discountAmountController.text = sale.discountAmount.toString();
+      paymentMethod = sale.paymentMethod;
 
     // Set description
-    if (sale.description != null && sale.description!.isNotEmpty) {
-      descriptionController.text = sale.description!;
+    if (sale.description.isNotEmpty) {
+      descriptionController.text = sale.description;
     }
 
     // Set products
@@ -864,7 +860,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                   isPriceFilterEnabledWidgetNotifier.value =
                                       value;
                                 },
-                                activeColor: const Color(0xFF6132E4),
+                                activeThumbColor: const Color(0xFF6132E4),
                                 activeTrackColor:
                                     const Color(0xFF6132E4).withOpacity(0.3),
                                 inactiveThumbColor: Colors.grey.shade400,

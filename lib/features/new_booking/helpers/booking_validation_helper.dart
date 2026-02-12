@@ -34,7 +34,7 @@ class BookingValidationResult {
 /// Helper class for validating booking form fields
 class BookingValidationHelper {
   /// Validates the client details panel (Step 0)
-  /// Required: Client name, Phone 1, Staff
+  /// Required: Client name (only for bookings), Phone 1, Staff
   /// Optional: Phone 2, Place, Documents, Notes
   static BookingValidationResult validateClientDetailsPanel({
     required String clientName,
@@ -44,12 +44,13 @@ class BookingValidationHelper {
     required int documentsCount,
     required int? selectedStaffId,
     required String staffName,
+    bool isSalesMode = false,
   }) {
     final errors = <String>[];
     String? firstErrorField;
 
-    // Validate client name
-    if (clientName.trim().isEmpty) {
+    // Validate client name - only required for booking mode
+    if (!isSalesMode && clientName.trim().isEmpty) {
       errors.add('Client name is required');
       firstErrorField ??= 'clientName';
     }
@@ -83,7 +84,7 @@ class BookingValidationHelper {
 
     // Construct field errors map
     final fieldErrors = <String, String>{};
-    if (clientName.trim().isEmpty) {
+    if (!isSalesMode && clientName.trim().isEmpty) {
       fieldErrors['clientName'] = 'Name is required';
     }
     if (phone1.trim().isEmpty) {

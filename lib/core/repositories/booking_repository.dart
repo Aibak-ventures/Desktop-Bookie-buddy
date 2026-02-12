@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
@@ -415,6 +416,36 @@ class BookingRepository {
       throw response.message;
     } catch (e, stack) {
       log('Error fetching payment history: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  /// Send invoice to WhatsApp and return the response
+  Future<void> sendInvoice(int bookingId, bool sendWhatsApp) async {
+    try {
+      final response = await safeApiCall(
+        () => _bookingService.sendInvoice(
+          bookingId: bookingId,
+          sendWhatsApp: sendWhatsApp,
+        ),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error sending invoice: ${response.devMessage}');
+      throw response.message;
+    } catch (e, stack) {
+      log('Error sending invoice: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  /// Get invoice PDF bytes for viewing/downloading
+  Future<Uint8List> getInvoicePdfBytes(int bookingId) async {
+    try {
+      return await _bookingService.getInvoicePdfBytes(bookingId);
+    } catch (e, stack) {
+      log('Error getting invoice PDF: $e', stackTrace: stack);
       rethrow;
     }
   }

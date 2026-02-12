@@ -38,7 +38,7 @@ class ShopActivityLogCubit extends Cubit<ShopActivityLogState> {
     
     // Only load if we're in loaded state and have a next page URL and not already paginating
     if (currentState is! _Loaded) return;
-    final loadedState = currentState as _Loaded;
+    final loadedState = currentState;
     
     if (loadedState.nextPageUrl == null || loadedState.isPaginating) return;
 

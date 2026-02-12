@@ -416,9 +416,9 @@ class _EditBookingModalState extends State<EditBookingModal> {
                 const SizedBox(height: 12),
                 _buildSummaryRow(
                   'Status',
-                  widget.booking.deliveryStatus?.name ?? 'N/A',
+                  widget.booking.deliveryStatus.name ?? 'N/A',
                   valueColor:
-                      _getStatusColor(widget.booking.deliveryStatus?.name),
+                      _getStatusColor(widget.booking.deliveryStatus.name),
                 ),
                 const Divider(height: 16),
                 _buildSummaryRow(

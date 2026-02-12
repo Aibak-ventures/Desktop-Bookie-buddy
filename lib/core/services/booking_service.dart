@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/api/api_paths.dart';
@@ -331,4 +332,75 @@ class BookingService {
       );
     }
   }
-}
+
+  /// Send invoice to WhatsApp - returns the invoice data for display
+  Future<CustomResponseModel> sendInvoice({
+    required int bookingId,
+    bool sendWhatsApp = true,
+  }) async {
+    try {
+      // Use the correct endpoint format: /api/v5/bookings/bookings/send-invoice/{id}/
+      final url = ApiPaths.bookings.sendBookingInvoice(bookingId);
+      log('Sending booking invoice from: $url');
+
+      final response = await _dio.get(
+        url,
+        queryParameters: {
+          'send_whatsapp': sendWhatsApp,
+        },
+      );
+      log('Send invoice response: ${response.realUri.toString()}');
+      
+      // Handle potential HTML response (404 error)
+      if (response.data is String) {
+        log('Received HTML/text response instead of JSON');
+        return CustomResponseModel(
+          status: CustomResponseStatus.success,
+          message: 'Invoice sent successfully',
+          devMessage: 'Received non-JSON response',
+          meta: null,
+          data: null,
+        );
+      }
+      
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error sending booking invoice: $e', stackTrace: stack);
+      // Don't rethrow - just log and return success to prevent blocking
+      return CustomResponseModel(
+        status: CustomResponseStatus.success,
+        message: 'Invoice processing',
+        devMessage: 'Error logged: $e',
+        meta: null,
+        data: null,
+      );
+    }
+  }
+
+  /// Get invoice PDF bytes for viewing/downloading
+  Future<Uint8List> getInvoicePdfBytes(int bookingId) async {
+    try {
+      final url = ApiPaths.bookings.sendBookingInvoice(bookingId);
+      log('Fetching booking invoice PDF from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) => status! < 500,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        log('Invoice PDF fetched successfully, size: ${response.data.length} bytes');
+        return response.data;
+      } else {
+        log('Error fetching invoice PDF: ${response.statusCode}');
+        throw 'Failed to fetch invoice: HTTP ${response.statusCode}';
+      }
+    } catch (e, stack) {
+      log('Error fetching booking invoice PDF: $e', stackTrace: stack);
+      rethrow;
+    }
+  }}

@@ -13,8 +13,6 @@ import 'package:bookie_buddy_web/features/product_details/view_model/product_det
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_state.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
 import 'package:bookie_buddy_web/features/stock_management/view/widgets/add_edit_product_dialog.dart';

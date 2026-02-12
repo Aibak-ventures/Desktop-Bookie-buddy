@@ -142,7 +142,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     // This prevents the counts from showing zero during tab switches
     final currentState = state;
     final shouldShowLoading = currentState is! _Loaded ||
-        (currentState is _Loaded && currentState.status != event.status);
+        (currentState.status != event.status);
 
     if (shouldShowLoading) {
       emit(const _Loading());

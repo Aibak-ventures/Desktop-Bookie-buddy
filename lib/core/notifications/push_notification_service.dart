@@ -8,7 +8,6 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_bookin
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

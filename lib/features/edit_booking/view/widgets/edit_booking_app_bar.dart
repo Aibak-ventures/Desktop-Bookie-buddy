@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class EditBookingAppBar extends StatelessWidget {
   final String bookingType;

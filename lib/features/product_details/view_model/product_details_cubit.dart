@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
-import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

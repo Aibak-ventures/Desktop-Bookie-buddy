@@ -15,11 +15,17 @@ class ProductQueryService {
   Future<CustomResponseModel> searchAllProducts({
     required String? query,
     required int page,
+    bool includeInStockOnly = false,
   }) async {
     try {
       final response = await _dio.get(
         ApiPaths.service.productSearch,
-        queryParameters: {'page': page, 'search_by': 'name', 'search': query},
+        queryParameters: {
+          'page': page,
+          'search_by': 'name',
+          'search': query,
+          'in_stock_only': includeInStockOnly,
+        },
       );
       log('Search all product url: ${response.realUri.toString()}');
       // log('Search all products response: ${response.realUri.toString()}, data: ${response.data}');
@@ -51,18 +57,24 @@ class ProductQueryService {
     required bool includeInStockOnly,
   }) async {
     try {
+      // Use product-search endpoint when "All Services" is selected
+      final useProductSearchEndpoint = serviceId == null || serviceId == -1;
+
       final response = await _dio.get(
-        ApiPaths.service.productsRoot,
+        useProductSearchEndpoint
+            ? ApiPaths.service.productSearch
+            : ApiPaths.service.productsRoot,
         queryParameters: {
           'page': page,
           if (query != null && query.isNotEmpty) 'search': query,
-          if (serviceId != null && serviceId != -1)
+          if (!useProductSearchEndpoint && serviceId != -1)
             'shop_service_id': serviceId,
           if (query != null && query.isNotEmpty)
             'search_by': type, // "name","color","size","category","model"
           if (startPrice != null && endPrice != null) 'min_price': startPrice,
           if (endPrice != null) 'max_price': endPrice,
-          'in_stock_only': includeInStockOnly,
+          // Only send in_stock_only if using products endpoint with specific service
+          if (!useProductSearchEndpoint) 'in_stock_only': includeInStockOnly,
         },
       );
       // log('Fetch products paginated response: ${response.realUri.toString()}, data: ${response.data}');
@@ -143,7 +155,9 @@ class ProductQueryService {
           'page': page,
           if (serviceId != null && serviceId != -1)
             'shop_service_id': serviceId,
-          'in_stock_only': includeInStockOnly,
+          // Only send in_stock_only if a specific service is selected
+          if (serviceId != null && serviceId != -1)
+            'in_stock_only': includeInStockOnly,
         },
       );
       // log('Fetch products paginated response: ${response.realUri.toString()}, data: ${response.data}');

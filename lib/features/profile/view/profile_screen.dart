@@ -40,8 +40,6 @@ import 'package:bookie_buddy_web/features/profile/view/check_availability_screen
 import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/help_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/report_history_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view/report_problem_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view/shop_performance_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_expansion_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/profile_shop_details_card.dart';

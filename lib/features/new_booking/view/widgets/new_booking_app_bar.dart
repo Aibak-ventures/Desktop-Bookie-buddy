@@ -198,7 +198,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
           final shouldProceed = await widget.onBeforeShopSwitch!();
           if (!shouldProceed) return;
         }
-        _switchShop(selectedShopId as int);
+        _switchShop(selectedShopId);
       }
     });
   }

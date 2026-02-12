@@ -37,7 +37,7 @@ class EditBookingClientDetailsSection extends StatelessWidget {
                 child: Switch(
                   value: isEnabled,
                   onChanged: (v) => isClientSearchEnabledNotifier.value = v,
-                  activeColor: AppColors.purple,
+                  activeThumbColor: AppColors.purple,
                 ),
               ),
             ],

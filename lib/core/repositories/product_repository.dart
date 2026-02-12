@@ -360,10 +360,12 @@ class ProductRepository {
   Future<PaginationModel<ProductModel>> searchAllProducts({
     required String? query,
     required int page,
+    bool includeInStockOnly = false,
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.searchAllProducts(page: page, query: query),
+        () => _queryService.searchAllProducts(
+            page: page, query: query, includeInStockOnly: includeInStockOnly),
       );
 
       if (response.status.isSuccess) {

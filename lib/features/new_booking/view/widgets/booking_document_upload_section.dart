@@ -319,8 +319,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
           'Compressed ${fileName}: ${imageBytes.length} -> ${result.length} bytes');
       return result;
     } catch (e) {
-      debugPrint('Compression failed for $fileName: $e');
-      // Return original if compression fails
+      // Silently return original if compression fails
       return imageBytes;
     }
   }
