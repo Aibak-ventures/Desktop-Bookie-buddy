@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';

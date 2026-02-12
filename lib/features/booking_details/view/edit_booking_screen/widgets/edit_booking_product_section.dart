@@ -1,11 +1,9 @@
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_vehicle_customization_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/show_search_type_bottom_sheet.dart';
@@ -13,7 +11,6 @@ import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart'
 import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_customization_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/controller/edit_booking_form_state_controller.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/components/edit_booking_product_list_tile.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';

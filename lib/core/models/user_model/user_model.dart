@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart'
     show SecretPasswordLocations, UserPasswordSettingRole;
 import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
@@ -70,9 +71,21 @@ class UserSubscriptionModel with _$UserSubscriptionModel {
   const factory UserSubscriptionModel({
     required String plan,
     required String status,
-    required List<String> features,
-    @JsonKey(name: 'expiry_date') String? expiryDate,
-    @JsonKey(name: 'days_remaining') int? daysRemaining,
+    @JsonKey(name: 'expiry_date', defaultValue: '') required String expiryDate,
+    @JsonKey(
+      name: 'features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList,
+    )
+    required Set<AppPremiumFeatures> features,
+    @JsonKey(
+      name: 'user_features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList,
+    )
+    required Set<AppPremiumFeatures> userSpecificFeatures,
   }) = _UserSubscriptionModel;
 
   factory UserSubscriptionModel.fromJson(Map<String, dynamic> json) =>

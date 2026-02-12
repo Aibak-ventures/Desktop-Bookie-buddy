@@ -50,10 +50,13 @@ _$UserSubscriptionModelImpl _$$UserSubscriptionModelImplFromJson(
     _$UserSubscriptionModelImpl(
       plan: json['plan'] as String,
       status: json['status'] as String,
-      features:
-          (json['features'] as List<dynamic>).map((e) => e as String).toList(),
-      expiryDate: json['expiry_date'] as String?,
-      daysRemaining: (json['days_remaining'] as num?)?.toInt(),
+      expiryDate: json['expiry_date'] as String? ?? '',
+      features: json['features'] == null
+          ? {}
+          : AppPremiumFeatures.fromList(json['features'] as List?),
+      userSpecificFeatures: json['user_features'] == null
+          ? {}
+          : AppPremiumFeatures.fromList(json['user_features'] as List?),
     );
 
 Map<String, dynamic> _$$UserSubscriptionModelImplToJson(
@@ -61,9 +64,10 @@ Map<String, dynamic> _$$UserSubscriptionModelImplToJson(
     <String, dynamic>{
       'plan': instance.plan,
       'status': instance.status,
-      'features': instance.features,
       'expiry_date': instance.expiryDate,
-      'days_remaining': instance.daysRemaining,
+      'features': AppPremiumFeatures.toJsonList(instance.features),
+      'user_features':
+          AppPremiumFeatures.toJsonList(instance.userSpecificFeatures),
     };
 
 _$UserPasswordSettingsModelImpl _$$UserPasswordSettingsModelImplFromJson(

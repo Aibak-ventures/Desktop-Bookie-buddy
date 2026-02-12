@@ -102,17 +102,30 @@ class BookingValidationHelper {
     );
   }
 
+  static String? phoneNumber(String? value, {bool isRequired = true}) {
+    // If not required and empty, return null
+    if (!isRequired && (value == null || value.trim().isEmpty)) {
+      return null;
+    }
+
+    if (value == null || value.trim().isEmpty) {
+      return 'Phone number is required';
+    }
+    // Allow optional leading '+' and digits only, any length
+    final phoneRegex = RegExp(r'^\+?\d+$');
+
+    if (!phoneRegex.hasMatch(value.trim())) {
+      return 'Enter a valid phone number';
+    }
+
+    return null;
+  }
+
   /// Validates phone number format
   static bool _isValidPhoneNumber(String phone) {
-    // Remove any spaces or special characters
-    final cleanPhone = phone.replaceAll(RegExp(r'[\s\-\(\)]'), '');
-
-    // Check if it's numeric and has valid length (10-15 digits)
-    if (cleanPhone.isEmpty) return false;
-    if (!RegExp(r'^\d+$').hasMatch(cleanPhone)) return false;
-    if (cleanPhone.length < 10 || cleanPhone.length > 15) return false;
-
-    return true;
+    // Allow optional leading '+' and digits only, any length
+    final phoneRegex = RegExp(r'^\+?\d+$');
+    return phoneRegex.hasMatch(phone.trim());
   }
 
   /// Shows a validation error using the same toast as confirm button

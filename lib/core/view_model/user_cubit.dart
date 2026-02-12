@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/notifications/firebase_notification_manager.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
@@ -86,4 +88,20 @@ class UserCubit extends Cubit<UserModel?> {
       rethrow;
     }
   }
+
+    // UserShopModel? get shopDetails => state?.shopDetails;
+
+  /// Returns the list of premium features available to the shop.
+  Set<AppPremiumFeatures> get shopPremiumFeatures =>
+      state?.subscription?.features ?? {};
+
+  /// Returns the list of user-specific premium features available to the user.
+  Set<AppPremiumFeatures> get userSpecificPremiumFeatures =>
+      state?.subscription?.userSpecificFeatures ?? {};
+
+
+   bool hasFeature(AppPremiumFeatures feature, {bool isUserSpecific = false}) =>
+      isUserSpecific
+      ? userSpecificPremiumFeatures.contains(feature)
+      : shopPremiumFeatures.contains(feature);
 }

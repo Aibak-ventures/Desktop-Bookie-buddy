@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class BookingDocumentUploadSection extends StatelessWidget {
   final ValueNotifier<List<DocumentFile>> documentsNotifier;
@@ -216,17 +217,59 @@ class BookingDocumentUploadSection extends StatelessWidget {
       );
 
       if (result != null && result.files.isNotEmpty) {
-        final newDocs = result.files.map((file) {
-          return DocumentFile(
-            name: file.name,
-            path: file.path ?? '',
-            bytes: file.bytes,
-          );
-        }).toList();
+        final newDocs = <DocumentFile>[];
 
-        final currentDocs = List<DocumentFile>.from(documentsNotifier.value);
-        currentDocs.addAll(newDocs);
-        documentsNotifier.value = currentDocs;
+        for (final file in result.files) {
+          // Validate file size (max 10MB)
+          if (file.bytes != null && file.bytes!.length > 10 * 1024 * 1024) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${file.name} is too large. Max size is 10MB.'),
+                  backgroundColor: Colors.orange,
+                ),
+              );
+            }
+            continue; // Skip this file
+          }
+
+          // Check if file is an image
+          final isImage = _isImageFile(file.name);
+
+          if (isImage && file.bytes != null) {
+            // Compress the image (skip on web to avoid UnimplementedError)
+            try {
+              final compressedBytes =
+                  await _compressImage(file.bytes!, file.name);
+              newDocs.add(DocumentFile(
+                name: file.name,
+                path: file.path ?? '',
+                bytes: compressedBytes,
+              ));
+            } catch (e) {
+              debugPrint('Error compressing image ${file.name}: $e');
+              // If compression fails, use original
+              newDocs.add(DocumentFile(
+                name: file.name,
+                path: file.path ?? '',
+                bytes: file.bytes,
+              ));
+            }
+          } else {
+            // For non-image files (PDF, DOC, etc.), add directly
+            newDocs.add(DocumentFile(
+              name: file.name,
+              path: file.path ?? '',
+              bytes: file.bytes,
+            ));
+          }
+        }
+
+        if (newDocs.isNotEmpty) {
+          final currentDocs = List<DocumentFile>.from(documentsNotifier.value);
+          currentDocs.addAll(newDocs);
+          documentsNotifier.value = currentDocs;
+        }
       }
     } on Exception catch (e) {
       debugPrint('File picker error: $e');
@@ -248,6 +291,37 @@ class BookingDocumentUploadSection extends StatelessWidget {
           ),
         );
       }
+    }
+  }
+
+  /// Compress image bytes to reduce file size
+  Future<List<int>> _compressImage(
+      List<int> imageBytes, String fileName) async {
+    try {
+      // Skip compression on web platform to avoid UnimplementedError
+      // Web images are already compressed by browser
+      const isWeb = identical(0, 0.0); // Simple web check
+      if (isWeb) {
+        debugPrint('Skipping compression on web platform for $fileName');
+        return imageBytes;
+      }
+
+      // Compress with quality 85 and auto-resize if image is too large
+      final result = await FlutterImageCompress.compressWithList(
+        Uint8List.fromList(imageBytes),
+        minWidth: 1920,
+        minHeight: 1080,
+        quality: 85,
+        format: CompressFormat.jpeg,
+      );
+
+      debugPrint(
+          'Compressed ${fileName}: ${imageBytes.length} -> ${result.length} bytes');
+      return result;
+    } catch (e) {
+      debugPrint('Compression failed for $fileName: $e');
+      // Return original if compression fails
+      return imageBytes;
     }
   }
 

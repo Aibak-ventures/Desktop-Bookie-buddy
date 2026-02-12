@@ -91,47 +91,47 @@ enum ShopRole {
 //   bool get isOwner => this == ShopRole.owner;
 // }
 
-enum AppPremiumFeatures {
-  analytics('ANALYTICS'),
-  customizationWork('CUSTOMIZATION_WORK'),
-  transferProduct('TRANSFER'),
-  allShopSummary('SHOPS_REVENUE_TRACKER');
+// enum AppPremiumFeatures {
+//   analytics('ANALYTICS'),
+//   customizationWork('CUSTOMIZATION_WORK'),
+//   transferProduct('TRANSFER'),
+//   allShopSummary('SHOPS_REVENUE_TRACKER');
 
-  const AppPremiumFeatures(this.name);
+//   const AppPremiumFeatures(this.name);
 
-  final String name;
+//   final String name;
 
-  /// Convert from string to AppPremiumFeatures enum
-  static AppPremiumFeatures? fromString(String? name) {
-    if (name == null) {
-      return null;
-    }
-    return AppPremiumFeatures.values.cast<AppPremiumFeatures?>().firstWhere(
-          (e) => e?.name == name,
-          orElse: () => null,
-        );
-  }
+//   /// Convert from string to AppPremiumFeatures enum
+//   static AppPremiumFeatures? fromString(String? name) {
+//     if (name == null) {
+//       return null;
+//     }
+//     return AppPremiumFeatures.values.cast<AppPremiumFeatures?>().firstWhere(
+//           (e) => e?.name == name,
+//           orElse: () => null,
+//         );
+//   }
 
-  static AppPremiumFeatures? fromJson(String? value) {
-    if (value == null) {
-      return null;
-    }
-    return AppPremiumFeatures.values.cast<AppPremiumFeatures?>().firstWhere(
-          (e) => e?.name == value,
-          orElse: () => null,
-        );
-  }
+//   static AppPremiumFeatures? fromJson(String? value) {
+//     if (value == null) {
+//       return null;
+//     }
+//     return AppPremiumFeatures.values.cast<AppPremiumFeatures?>().firstWhere(
+//           (e) => e?.name == value,
+//           orElse: () => null,
+//         );
+//   }
 
-  static String? toJson(AppPremiumFeatures? feature) => feature?.name;
+//   static String? toJson(AppPremiumFeatures? feature) => feature?.name;
 
-  bool containsFeature(Set<String>? features) =>
-      features?.contains(name) ?? false;
+//   bool containsFeature(Set<String>? features) =>
+//       features?.contains(name) ?? false;
 
-  bool get isAnalytics => this == AppPremiumFeatures.analytics;
-  bool get isCustomizationWork => this == AppPremiumFeatures.customizationWork;
-  bool get isTransferProduct => this == AppPremiumFeatures.transferProduct;
-  bool get isAllShopSummary => this == AppPremiumFeatures.allShopSummary;
-}
+//   bool get isAnalytics => this == AppPremiumFeatures.analytics;
+//   bool get isCustomizationWork => this == AppPremiumFeatures.customizationWork;
+//   bool get isTransferProduct => this == AppPremiumFeatures.transferProduct;
+//   bool get isAllShopSummary => this == AppPremiumFeatures.allShopSummary;
+// }
 
 /// Extension methods for nullable AppPremiumFeatures enum
 // extension AppPremiumFeaturesX on AppPremiumFeatures? {

@@ -543,11 +543,21 @@ UserSubscriptionModel _$UserSubscriptionModelFromJson(
 mixin _$UserSubscriptionModel {
   String get plan => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  List<String> get features => throw _privateConstructorUsedError;
-  @JsonKey(name: 'expiry_date')
-  String? get expiryDate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'days_remaining')
-  int? get daysRemaining => throw _privateConstructorUsedError;
+  @JsonKey(name: 'expiry_date', defaultValue: '')
+  String get expiryDate => throw _privateConstructorUsedError;
+  @JsonKey(
+      name: 'features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList)
+  Set<AppPremiumFeatures> get features => throw _privateConstructorUsedError;
+  @JsonKey(
+      name: 'user_features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList)
+  Set<AppPremiumFeatures> get userSpecificFeatures =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this UserSubscriptionModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -568,9 +578,19 @@ abstract class $UserSubscriptionModelCopyWith<$Res> {
   $Res call(
       {String plan,
       String status,
-      List<String> features,
-      @JsonKey(name: 'expiry_date') String? expiryDate,
-      @JsonKey(name: 'days_remaining') int? daysRemaining});
+      @JsonKey(name: 'expiry_date', defaultValue: '') String expiryDate,
+      @JsonKey(
+          name: 'features',
+          defaultValue: const {},
+          fromJson: AppPremiumFeatures.fromList,
+          toJson: AppPremiumFeatures.toJsonList)
+      Set<AppPremiumFeatures> features,
+      @JsonKey(
+          name: 'user_features',
+          defaultValue: const {},
+          fromJson: AppPremiumFeatures.fromList,
+          toJson: AppPremiumFeatures.toJsonList)
+      Set<AppPremiumFeatures> userSpecificFeatures});
 }
 
 /// @nodoc
@@ -591,9 +611,9 @@ class _$UserSubscriptionModelCopyWithImpl<$Res,
   $Res call({
     Object? plan = null,
     Object? status = null,
+    Object? expiryDate = null,
     Object? features = null,
-    Object? expiryDate = freezed,
-    Object? daysRemaining = freezed,
+    Object? userSpecificFeatures = null,
   }) {
     return _then(_value.copyWith(
       plan: null == plan
@@ -604,18 +624,18 @@ class _$UserSubscriptionModelCopyWithImpl<$Res,
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      expiryDate: null == expiryDate
+          ? _value.expiryDate
+          : expiryDate // ignore: cast_nullable_to_non_nullable
+              as String,
       features: null == features
           ? _value.features
           : features // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      expiryDate: freezed == expiryDate
-          ? _value.expiryDate
-          : expiryDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      daysRemaining: freezed == daysRemaining
-          ? _value.daysRemaining
-          : daysRemaining // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as Set<AppPremiumFeatures>,
+      userSpecificFeatures: null == userSpecificFeatures
+          ? _value.userSpecificFeatures
+          : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
+              as Set<AppPremiumFeatures>,
     ) as $Val);
   }
 }
@@ -632,9 +652,19 @@ abstract class _$$UserSubscriptionModelImplCopyWith<$Res>
   $Res call(
       {String plan,
       String status,
-      List<String> features,
-      @JsonKey(name: 'expiry_date') String? expiryDate,
-      @JsonKey(name: 'days_remaining') int? daysRemaining});
+      @JsonKey(name: 'expiry_date', defaultValue: '') String expiryDate,
+      @JsonKey(
+          name: 'features',
+          defaultValue: const {},
+          fromJson: AppPremiumFeatures.fromList,
+          toJson: AppPremiumFeatures.toJsonList)
+      Set<AppPremiumFeatures> features,
+      @JsonKey(
+          name: 'user_features',
+          defaultValue: const {},
+          fromJson: AppPremiumFeatures.fromList,
+          toJson: AppPremiumFeatures.toJsonList)
+      Set<AppPremiumFeatures> userSpecificFeatures});
 }
 
 /// @nodoc
@@ -653,9 +683,9 @@ class __$$UserSubscriptionModelImplCopyWithImpl<$Res>
   $Res call({
     Object? plan = null,
     Object? status = null,
+    Object? expiryDate = null,
     Object? features = null,
-    Object? expiryDate = freezed,
-    Object? daysRemaining = freezed,
+    Object? userSpecificFeatures = null,
   }) {
     return _then(_$UserSubscriptionModelImpl(
       plan: null == plan
@@ -666,18 +696,18 @@ class __$$UserSubscriptionModelImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      expiryDate: null == expiryDate
+          ? _value.expiryDate
+          : expiryDate // ignore: cast_nullable_to_non_nullable
+              as String,
       features: null == features
           ? _value._features
           : features // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      expiryDate: freezed == expiryDate
-          ? _value.expiryDate
-          : expiryDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      daysRemaining: freezed == daysRemaining
-          ? _value.daysRemaining
-          : daysRemaining // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as Set<AppPremiumFeatures>,
+      userSpecificFeatures: null == userSpecificFeatures
+          ? _value._userSpecificFeatures
+          : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
+              as Set<AppPremiumFeatures>,
     ));
   }
 }
@@ -688,10 +718,21 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
   const _$UserSubscriptionModelImpl(
       {required this.plan,
       required this.status,
-      required final List<String> features,
-      @JsonKey(name: 'expiry_date') this.expiryDate,
-      @JsonKey(name: 'days_remaining') this.daysRemaining})
-      : _features = features;
+      @JsonKey(name: 'expiry_date', defaultValue: '') required this.expiryDate,
+      @JsonKey(
+          name: 'features',
+          defaultValue: const {},
+          fromJson: AppPremiumFeatures.fromList,
+          toJson: AppPremiumFeatures.toJsonList)
+      required final Set<AppPremiumFeatures> features,
+      @JsonKey(
+          name: 'user_features',
+          defaultValue: const {},
+          fromJson: AppPremiumFeatures.fromList,
+          toJson: AppPremiumFeatures.toJsonList)
+      required final Set<AppPremiumFeatures> userSpecificFeatures})
+      : _features = features,
+        _userSpecificFeatures = userSpecificFeatures;
 
   factory _$UserSubscriptionModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserSubscriptionModelImplFromJson(json);
@@ -700,24 +741,39 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
   final String plan;
   @override
   final String status;
-  final List<String> _features;
   @override
-  List<String> get features {
-    if (_features is EqualUnmodifiableListView) return _features;
+  @JsonKey(name: 'expiry_date', defaultValue: '')
+  final String expiryDate;
+  final Set<AppPremiumFeatures> _features;
+  @override
+  @JsonKey(
+      name: 'features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList)
+  Set<AppPremiumFeatures> get features {
+    if (_features is EqualUnmodifiableSetView) return _features;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_features);
+    return EqualUnmodifiableSetView(_features);
+  }
+
+  final Set<AppPremiumFeatures> _userSpecificFeatures;
+  @override
+  @JsonKey(
+      name: 'user_features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList)
+  Set<AppPremiumFeatures> get userSpecificFeatures {
+    if (_userSpecificFeatures is EqualUnmodifiableSetView)
+      return _userSpecificFeatures;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_userSpecificFeatures);
   }
 
   @override
-  @JsonKey(name: 'expiry_date')
-  final String? expiryDate;
-  @override
-  @JsonKey(name: 'days_remaining')
-  final int? daysRemaining;
-
-  @override
   String toString() {
-    return 'UserSubscriptionModel(plan: $plan, status: $status, features: $features, expiryDate: $expiryDate, daysRemaining: $daysRemaining)';
+    return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, features: $features, userSpecificFeatures: $userSpecificFeatures)';
   }
 
   @override
@@ -727,11 +783,11 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
             other is _$UserSubscriptionModelImpl &&
             (identical(other.plan, plan) || other.plan == plan) &&
             (identical(other.status, status) || other.status == status) &&
-            const DeepCollectionEquality().equals(other._features, _features) &&
             (identical(other.expiryDate, expiryDate) ||
                 other.expiryDate == expiryDate) &&
-            (identical(other.daysRemaining, daysRemaining) ||
-                other.daysRemaining == daysRemaining));
+            const DeepCollectionEquality().equals(other._features, _features) &&
+            const DeepCollectionEquality()
+                .equals(other._userSpecificFeatures, _userSpecificFeatures));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -740,9 +796,9 @@ class _$UserSubscriptionModelImpl implements _UserSubscriptionModel {
       runtimeType,
       plan,
       status,
-      const DeepCollectionEquality().hash(_features),
       expiryDate,
-      daysRemaining);
+      const DeepCollectionEquality().hash(_features),
+      const DeepCollectionEquality().hash(_userSpecificFeatures));
 
   /// Create a copy of UserSubscriptionModel
   /// with the given fields replaced by the non-null parameter values.
@@ -765,9 +821,20 @@ abstract class _UserSubscriptionModel implements UserSubscriptionModel {
   const factory _UserSubscriptionModel(
           {required final String plan,
           required final String status,
-          required final List<String> features,
-          @JsonKey(name: 'expiry_date') final String? expiryDate,
-          @JsonKey(name: 'days_remaining') final int? daysRemaining}) =
+          @JsonKey(name: 'expiry_date', defaultValue: '')
+          required final String expiryDate,
+          @JsonKey(
+              name: 'features',
+              defaultValue: const {},
+              fromJson: AppPremiumFeatures.fromList,
+              toJson: AppPremiumFeatures.toJsonList)
+          required final Set<AppPremiumFeatures> features,
+          @JsonKey(
+              name: 'user_features',
+              defaultValue: const {},
+              fromJson: AppPremiumFeatures.fromList,
+              toJson: AppPremiumFeatures.toJsonList)
+          required final Set<AppPremiumFeatures> userSpecificFeatures}) =
       _$UserSubscriptionModelImpl;
 
   factory _UserSubscriptionModel.fromJson(Map<String, dynamic> json) =
@@ -778,13 +845,22 @@ abstract class _UserSubscriptionModel implements UserSubscriptionModel {
   @override
   String get status;
   @override
-  List<String> get features;
+  @JsonKey(name: 'expiry_date', defaultValue: '')
+  String get expiryDate;
   @override
-  @JsonKey(name: 'expiry_date')
-  String? get expiryDate;
+  @JsonKey(
+      name: 'features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList)
+  Set<AppPremiumFeatures> get features;
   @override
-  @JsonKey(name: 'days_remaining')
-  int? get daysRemaining;
+  @JsonKey(
+      name: 'user_features',
+      defaultValue: const {},
+      fromJson: AppPremiumFeatures.fromList,
+      toJson: AppPremiumFeatures.toJsonList)
+  Set<AppPremiumFeatures> get userSpecificFeatures;
 
   /// Create a copy of UserSubscriptionModel
   /// with the given fields replaced by the non-null parameter values.

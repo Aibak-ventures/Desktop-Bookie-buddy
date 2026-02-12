@@ -12,6 +12,7 @@ class BookingTextFieldBuilder {
     FocusNode? focusNode,
     FocusNode? nextFocusNode,
     String? errorText,
+    IconData? prefixIcon,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,32 +30,53 @@ class BookingTextFieldBuilder {
             color: enabled ? Colors.white : Colors.grey.shade100,
           ),
           alignment: Alignment.centerLeft,
-          child: TextField(
-            controller: controller,
-            focusNode: focusNode,
-            enabled: enabled,
-            keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-            textInputAction: nextFocusNode != null
-                ? TextInputAction.next
-                : TextInputAction.done,
-            onEditingComplete: () {
-              if (nextFocusNode != null) {
-                nextFocusNode.requestFocus();
-              } else {
-                focusNode?.unfocus();
-              }
-            },
-            style: TextStyle(
-              fontSize: 13,
-              color: enabled ? Colors.black87 : Colors.grey.shade500,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: hint,
-              hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-            ),
+          child: Row(
+            children: [
+              if (prefixIcon != null) ...[
+                Icon(
+                  prefixIcon,
+                  size: 16,
+                  color: errorText != null ? Colors.red.shade400 : Colors.grey,
+                ),
+                const SizedBox(width: 8),
+              ],
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  enabled: enabled,
+                  keyboardType:
+                      isNumber ? TextInputType.number : TextInputType.text,
+                  inputFormatters: isNumber
+                      ? [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ]
+                      : null,
+                  textInputAction: nextFocusNode != null
+                      ? TextInputAction.next
+                      : TextInputAction.done,
+                  onEditingComplete: () {
+                    if (nextFocusNode != null) {
+                      nextFocusNode.requestFocus();
+                    } else {
+                      focusNode?.unfocus();
+                    }
+                  },
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: enabled ? Colors.black87 : Colors.grey.shade500,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: hint,
+                    hintStyle:
+                        TextStyle(fontSize: 13, color: Colors.grey.shade400),
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         if (errorText != null) ...[

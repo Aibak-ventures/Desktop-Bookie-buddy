@@ -262,6 +262,45 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
             ),
 
             const SizedBox(width: 12),
+            // Divider
+            Container(
+              width: 1,
+              height: 30,
+              color: const Color(0xFFA6A6A6),
+            ),
+            const SizedBox(width: 12),
+
+            // Available Quantity section
+            SizedBox(
+              width: 80,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'avl qty',
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey.shade600),
+                  ),
+                  Text(
+                    selectedVariant != null
+                        ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock}'
+                        : (variants.isNotEmpty
+                            ? '${variants.first.remainingStock ?? variants.first.stock}'
+                            : '0'),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 12),
             // Add button
             GestureDetector(
               onTap: () {

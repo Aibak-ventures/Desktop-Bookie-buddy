@@ -27,17 +27,23 @@ class AppInputValidators {
   }
 
 static String? phoneNumber(String? value, {bool isRequired = true}) {
-  if (!isRequired && (value == null || value.trim().isEmpty)) {
+    // If not required and empty, return null
+    if (!isRequired && (value == null || value.trim().isEmpty)) {
+      return null;
+    }
+
+    if (value == null || value.trim().isEmpty) {
+      return 'Phone number is required';
+    }
+    // Allow optional leading '+' and digits only, any length
+    final phoneRegex = RegExp(r'^\+?\d+$');
+
+    if (!phoneRegex.hasMatch(value.trim())) {
+      return 'Enter a valid phone number';
+    }
+
     return null;
   }
-
-  if (value == null || value.trim().isEmpty) {
-    return 'Phone number is required';
-  }
-
-  return null; // no validation at all
-}
-
 
 
   static String? numberOnly(String? value) {
