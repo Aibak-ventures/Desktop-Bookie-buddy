@@ -8,6 +8,7 @@ part 'sale_model.g.dart';
 class SaleModel with _$SaleModel {
   const factory SaleModel({
     @JsonKey(name: 'id') required int id,
+    @JsonKey(name: 'shop_sale_id') String? shopSaleId,
     @JsonKey(name: 'client_name') String? clientName,
     @JsonKey(name: 'client_phone') dynamic clientPhone, // Can be String or int
     @JsonKey(name: 'total_amount') required int totalAmount,

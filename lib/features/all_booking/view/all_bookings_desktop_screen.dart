@@ -252,8 +252,8 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     if (_activeActionTab == 1) {
       return Row(
         children: [
-          const Spacer(),
           _buildSearchBar(),
+          const Spacer(),
         ],
       );
     }
@@ -637,7 +637,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             const SizedBox(width: 12),
             const Expanded(
               child: Text(
-                'Products',
+                'Items',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -669,18 +669,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
-            const SizedBox(
-              width: 70,
-              child: Text(
-                'Balance',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-            ),
+
             const SizedBox(width: 12),
             const SizedBox(
               width: 70,
@@ -1046,7 +1035,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    'SL${sale.id.toString().padLeft(5, '0')}',
+                    sale. ?? 'SL${sale.id.toString().padLeft(5, '0')}',
                     style: const TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 13),
                     overflow: TextOverflow.ellipsis,
@@ -1075,7 +1064,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 Expanded(
                   child: Text(
                     sale.products,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    style: const TextStyle(fontSize: 12, color: Colors.black),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -1098,15 +1087,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 12),
-                SizedBox(
-                  width: 70,
-                  child: Text(
-                    '₹$balance',
-                    style: const TextStyle(fontSize: 13),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+
                 const SizedBox(width: 12),
                 SizedBox(
                   width: 70,
