@@ -27,5 +27,5 @@ class SaleModel with _$SaleModel {
   }
   return _$SaleModelFromJson(json);
 }
-
-}
+ 
+} 
