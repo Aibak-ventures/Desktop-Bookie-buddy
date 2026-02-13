@@ -162,6 +162,10 @@ class BookingDetailsDrawer extends StatelessWidget {
 
                       // Payment details
                       _buildPaymentDetails(booking, context),
+                      const SizedBox(height: 12),
+
+                      // Completion Status (green button for completed bookings)
+                      _buildCompletionStatusSection(booking),
                       const SizedBox(height: 80), // Space for sticky buttons
                     ],
                   ),
@@ -1473,5 +1477,67 @@ class BookingDetailsDrawer extends StatelessWidget {
         child: Icon(icon, color: color, size: 24),
       ),
     );
+  }
+
+  Widget _buildCompletionStatusSection(BookingDetailsModel booking) {
+    final isCompleted = booking.deliveryStatus == DeliveryStatus.returned;
+    
+    if (!isCompleted) {
+      return const SizedBox.shrink(); // Don't show anything for non-completed bookings
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF4CAF50),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4CAF50).withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+            size: 18,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Completed on ${_formatCompletionDate(booking.returnDate)}',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatCompletionDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return 'Unknown date';
+    
+    try {
+      final date = dateStr.parseToDateTime();
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final dateOnly = DateTime(date.year, date.month, date.day);
+      
+      if (dateOnly == today) {
+        return 'Today';
+      } else {
+        return dateStr.formatToUiDate();
+      }
+    } catch (e) {
+      return dateStr.formatToUiDate();
+    }
   }
 }
