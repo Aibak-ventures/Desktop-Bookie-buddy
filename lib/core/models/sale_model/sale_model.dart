@@ -18,6 +18,7 @@ class SaleModel with _$SaleModel {
     @JsonKey(name: 'created_at') required String createdAt,
     @JsonKey(name: 'products') required String products, // Changed from List<String> to String
     @JsonKey(name: 'staff_color', unknownEnumValue: null) String? staffColor, // Note: API sometimes returns "staff_col lor" with space - handled by fromJson
+    @JsonKey(name: 'staff_name') String? staffName, // Added staff name field
   }) = _SaleModel;
 
  factory SaleModel.fromJson(Map<String, dynamic> json) {

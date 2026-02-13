@@ -805,6 +805,18 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               ),
             ),
           ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 120,
+            child: Text(
+              'Completed',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
           const SizedBox(width: 28), // Match chevron icon width + spacing
         ],
       ),
@@ -926,6 +938,9 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   width: 90,
                   child: _buildPaymentStatus(booking.paymentStatus),
                 ),
+                const SizedBox(width: 12),
+                // Completion status button (green button for completed bookings)
+                _buildCompletionStatus(booking),
                 const SizedBox(width: 10),
                 const Icon(Icons.chevron_right,
                     size: 18, color: Colors.blueAccent),
@@ -963,6 +978,73 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildCompletionStatus(DesktopBookingItemModel booking) {
+    final isCompleted = booking.deliveryStatus == DeliveryStatus.returned || 
+                       _activeStatusTab == 'completed';
+    
+    if (!isCompleted) {
+      return const SizedBox(width: 120); // Empty space for non-completed bookings
+    }
+
+    return Container(
+      width: 120,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFF4CAF50), // Green background
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4CAF50).withOpacity(0.3),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+            size: 14,
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              _formatCompletionDate(booking.returnDate),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatCompletionDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return 'Completed';
+    
+    try {
+      final date = dateStr.parseToDateTime();
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final dateOnly = DateTime(date.year, date.month, date.day);
+      
+      if (dateOnly == today) {
+        return 'Today';
+      } else {
+        return dateStr.formatToUiDate();
+      }
+    } catch (e) {
+      return 'Completed';
+    }
   }
 
   /// Format date with Today/Tomorrow labels
@@ -1035,7 +1117,7 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    sale. ?? 'SL${sale.id.toString().padLeft(5, '0')}',
+                    sale.shopSaleId?? 'SL${sale.id.toString().padLeft(5, '0')}',
                     style: const TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 13),
                     overflow: TextOverflow.ellipsis,

@@ -220,15 +220,22 @@ class SaleDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 10.h,
                 children: [
+                  if (saleDetails.client?.name != null)
+                    SaleDetailsDetailsColumn(
+                      label: 'Client Name',
+                      value: saleDetails.client!.name,
+                    ),
                   SaleDetailsDetailsColumn(
                     label: 'Phone number',
-                    value: saleDetails.clientPhone??'N/A',
+                    value: saleDetails.clientPhone?.toString() ?? 'N/A',
                   ),
 
                   // if (saleDetails.address.isNotNullOrEmpty)
                   SaleDetailsDetailsColumn(
                     label: 'Place',
-                    value: saleDetails.address?? 'N/A',
+                    value: saleDetails.address.isNotEmpty 
+                        ? saleDetails.address 
+                        : 'N/A',
                   ),
                 ],
               ),

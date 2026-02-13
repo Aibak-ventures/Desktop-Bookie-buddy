@@ -39,7 +39,7 @@ class SalesCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Date Section
+            // Time Section
             Container(
               width: 80.w,
               height: 80.w,
@@ -51,18 +51,20 @@ class SalesCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    sale.saleDate.isEmpty
+                    sale.createdAt.isEmpty
                         ? '--'
-                        : sale.saleDate.split('-').last,
+                        : sale.createdAt.formatToUiTime().split(' ').first,
                     style: TextStyle(
-                      fontSize: 24.sp,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w700,
                       color: AppColors.purple,
                     ),
                   ),
-                  if (sale.saleDate.isNotEmpty)
+                  if (sale.createdAt.isNotEmpty)
                     Text(
-                      _getMonthShortName(sale.saleDate),
+                      sale.createdAt.formatToUiTime().split(' ').length > 1
+                          ? sale.createdAt.formatToUiTime().split(' ').last
+                          : '',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
@@ -129,18 +131,45 @@ class SalesCard extends StatelessWidget {
                     ],
                   ),
                   4.height,
-                  // Status Badge
+                  // Staff name if available
+                  if (sale.staffName != null) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person_outline,
+                          color: AppColors.purple,
+                          size: 16.sp,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Staff: ${sale.staffName}',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: AppColors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    4.height,
+                  ],
+                  // Date and Client info
                   Row(
                     spacing: 5,
                     children: [
-                      Text(
-                        'Date: ${date ?? '--'}',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w500,
+                      Expanded(
+                        child: Text(
+                          '${date ?? '--'}${sale.clientName != null ? ' • ${sale.clientName}' : ''}',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppColors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),

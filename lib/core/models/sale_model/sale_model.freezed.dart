@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SaleModel {
   @JsonKey(name: 'id')
   int get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'shop_sale_id')
+  String? get shopSaleId => throw _privateConstructorUsedError;
   @JsonKey(name: 'client_name')
   String? get clientName => throw _privateConstructorUsedError;
   @JsonKey(name: 'client_phone')
@@ -37,7 +39,10 @@ mixin _$SaleModel {
   String get products =>
       throw _privateConstructorUsedError; // Changed from List<String> to String
   @JsonKey(name: 'staff_color', unknownEnumValue: null)
-  String? get staffColor => throw _privateConstructorUsedError;
+  String? get staffColor =>
+      throw _privateConstructorUsedError; // Note: API sometimes returns "staff_col lor" with space - handled by fromJson
+  @JsonKey(name: 'staff_name')
+  String? get staffName => throw _privateConstructorUsedError;
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -53,6 +58,7 @@ abstract class $SaleModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'shop_sale_id') String? shopSaleId,
       @JsonKey(name: 'client_name') String? clientName,
       @JsonKey(name: 'client_phone') dynamic clientPhone,
       @JsonKey(name: 'total_amount') int totalAmount,
@@ -61,8 +67,8 @@ abstract class $SaleModelCopyWith<$Res> {
       @JsonKey(name: 'sale_date') String saleDate,
       @JsonKey(name: 'created_at') String createdAt,
       @JsonKey(name: 'products') String products,
-      @JsonKey(name: 'staff_color', unknownEnumValue: null)
-      String? staffColor});
+      @JsonKey(name: 'staff_color', unknownEnumValue: null) String? staffColor,
+      @JsonKey(name: 'staff_name') String? staffName});
 }
 
 /// @nodoc
@@ -81,6 +87,7 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
   @override
   $Res call({
     Object? id = null,
+    Object? shopSaleId = freezed,
     Object? clientName = freezed,
     Object? clientPhone = freezed,
     Object? totalAmount = null,
@@ -90,12 +97,17 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
     Object? createdAt = null,
     Object? products = null,
     Object? staffColor = freezed,
+    Object? staffName = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      shopSaleId: freezed == shopSaleId
+          ? _value.shopSaleId
+          : shopSaleId // ignore: cast_nullable_to_non_nullable
+              as String?,
       clientName: freezed == clientName
           ? _value.clientName
           : clientName // ignore: cast_nullable_to_non_nullable
@@ -132,6 +144,10 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
           ? _value.staffColor
           : staffColor // ignore: cast_nullable_to_non_nullable
               as String?,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -146,6 +162,7 @@ abstract class _$$SaleModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'shop_sale_id') String? shopSaleId,
       @JsonKey(name: 'client_name') String? clientName,
       @JsonKey(name: 'client_phone') dynamic clientPhone,
       @JsonKey(name: 'total_amount') int totalAmount,
@@ -154,8 +171,8 @@ abstract class _$$SaleModelImplCopyWith<$Res>
       @JsonKey(name: 'sale_date') String saleDate,
       @JsonKey(name: 'created_at') String createdAt,
       @JsonKey(name: 'products') String products,
-      @JsonKey(name: 'staff_color', unknownEnumValue: null)
-      String? staffColor});
+      @JsonKey(name: 'staff_color', unknownEnumValue: null) String? staffColor,
+      @JsonKey(name: 'staff_name') String? staffName});
 }
 
 /// @nodoc
@@ -172,6 +189,7 @@ class __$$SaleModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? shopSaleId = freezed,
     Object? clientName = freezed,
     Object? clientPhone = freezed,
     Object? totalAmount = null,
@@ -181,12 +199,17 @@ class __$$SaleModelImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? products = null,
     Object? staffColor = freezed,
+    Object? staffName = freezed,
   }) {
     return _then(_$SaleModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      shopSaleId: freezed == shopSaleId
+          ? _value.shopSaleId
+          : shopSaleId // ignore: cast_nullable_to_non_nullable
+              as String?,
       clientName: freezed == clientName
           ? _value.clientName
           : clientName // ignore: cast_nullable_to_non_nullable
@@ -223,6 +246,10 @@ class __$$SaleModelImplCopyWithImpl<$Res>
           ? _value.staffColor
           : staffColor // ignore: cast_nullable_to_non_nullable
               as String?,
+      staffName: freezed == staffName
+          ? _value.staffName
+          : staffName // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -232,6 +259,7 @@ class __$$SaleModelImplCopyWithImpl<$Res>
 class _$SaleModelImpl implements _SaleModel {
   const _$SaleModelImpl(
       {@JsonKey(name: 'id') required this.id,
+      @JsonKey(name: 'shop_sale_id') this.shopSaleId,
       @JsonKey(name: 'client_name') this.clientName,
       @JsonKey(name: 'client_phone') this.clientPhone,
       @JsonKey(name: 'total_amount') required this.totalAmount,
@@ -240,11 +268,15 @@ class _$SaleModelImpl implements _SaleModel {
       @JsonKey(name: 'sale_date') required this.saleDate,
       @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'products') required this.products,
-      @JsonKey(name: 'staff_color', unknownEnumValue: null) this.staffColor});
+      @JsonKey(name: 'staff_color', unknownEnumValue: null) this.staffColor,
+      @JsonKey(name: 'staff_name') this.staffName});
 
   @override
   @JsonKey(name: 'id')
   final int id;
+  @override
+  @JsonKey(name: 'shop_sale_id')
+  final String? shopSaleId;
   @override
   @JsonKey(name: 'client_name')
   final String? clientName;
@@ -274,10 +306,14 @@ class _$SaleModelImpl implements _SaleModel {
   @override
   @JsonKey(name: 'staff_color', unknownEnumValue: null)
   final String? staffColor;
+// Note: API sometimes returns "staff_col lor" with space - handled by fromJson
+  @override
+  @JsonKey(name: 'staff_name')
+  final String? staffName;
 
   @override
   String toString() {
-    return 'SaleModel(id: $id, clientName: $clientName, clientPhone: $clientPhone, totalAmount: $totalAmount, paidAmount: $paidAmount, discountAmount: $discountAmount, saleDate: $saleDate, createdAt: $createdAt, products: $products, staffColor: $staffColor)';
+    return 'SaleModel(id: $id, shopSaleId: $shopSaleId, clientName: $clientName, clientPhone: $clientPhone, totalAmount: $totalAmount, paidAmount: $paidAmount, discountAmount: $discountAmount, saleDate: $saleDate, createdAt: $createdAt, products: $products, staffColor: $staffColor, staffName: $staffName)';
   }
 
   @override
@@ -286,6 +322,8 @@ class _$SaleModelImpl implements _SaleModel {
         (other.runtimeType == runtimeType &&
             other is _$SaleModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.shopSaleId, shopSaleId) ||
+                other.shopSaleId == shopSaleId) &&
             (identical(other.clientName, clientName) ||
                 other.clientName == clientName) &&
             const DeepCollectionEquality()
@@ -303,13 +341,16 @@ class _$SaleModelImpl implements _SaleModel {
             (identical(other.products, products) ||
                 other.products == products) &&
             (identical(other.staffColor, staffColor) ||
-                other.staffColor == staffColor));
+                other.staffColor == staffColor) &&
+            (identical(other.staffName, staffName) ||
+                other.staffName == staffName));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       id,
+      shopSaleId,
       clientName,
       const DeepCollectionEquality().hash(clientPhone),
       totalAmount,
@@ -318,7 +359,8 @@ class _$SaleModelImpl implements _SaleModel {
       saleDate,
       createdAt,
       products,
-      staffColor);
+      staffColor,
+      staffName);
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -332,6 +374,7 @@ class _$SaleModelImpl implements _SaleModel {
 abstract class _SaleModel implements SaleModel {
   const factory _SaleModel(
       {@JsonKey(name: 'id') required final int id,
+      @JsonKey(name: 'shop_sale_id') final String? shopSaleId,
       @JsonKey(name: 'client_name') final String? clientName,
       @JsonKey(name: 'client_phone') final dynamic clientPhone,
       @JsonKey(name: 'total_amount') required final int totalAmount,
@@ -341,11 +384,15 @@ abstract class _SaleModel implements SaleModel {
       @JsonKey(name: 'created_at') required final String createdAt,
       @JsonKey(name: 'products') required final String products,
       @JsonKey(name: 'staff_color', unknownEnumValue: null)
-      final String? staffColor}) = _$SaleModelImpl;
+      final String? staffColor,
+      @JsonKey(name: 'staff_name') final String? staffName}) = _$SaleModelImpl;
 
   @override
   @JsonKey(name: 'id')
   int get id;
+  @override
+  @JsonKey(name: 'shop_sale_id')
+  String? get shopSaleId;
   @override
   @JsonKey(name: 'client_name')
   String? get clientName;
@@ -372,7 +419,11 @@ abstract class _SaleModel implements SaleModel {
   String get products; // Changed from List<String> to String
   @override
   @JsonKey(name: 'staff_color', unknownEnumValue: null)
-  String? get staffColor;
+  String?
+      get staffColor; // Note: API sometimes returns "staff_col lor" with space - handled by fromJson
+  @override
+  @JsonKey(name: 'staff_name')
+  String? get staffName;
 
   /// Create a copy of SaleModel
   /// with the given fields replaced by the non-null parameter values.
