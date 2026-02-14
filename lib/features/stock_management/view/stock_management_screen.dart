@@ -29,7 +29,7 @@ class StockManagementScreen extends StatefulWidget {
 class _StockManagementScreenState extends State<StockManagementScreen> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   // Filter state variables (matching new_booking_screen pattern)
   final _selectedSearchTypeIndex = ValueNotifier<int>(0);
   final _priceRange = ValueNotifier<RangeValues>(const RangeValues(0, 50000));
@@ -39,6 +39,11 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
   @override
   void initState() {
     super.initState();
+    // Force reload services when entering stock screen
+    context
+        .read<ServiceBloc>()
+        .add(const ServiceEvent.loadServices(force: true));
+
     // Load initial data
     context.read<StockManagementCubit>().loadProducts();
 
@@ -94,8 +99,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
     // Refresh the product list if a product was added/edited
     if (result == true && mounted) {
+      // For new products, reload without service filter to ensure visibility
+      // For edited products, keep the current filter
       context.read<StockManagementCubit>().loadProducts(
-            serviceId: selectedServiceId,
+            serviceId: product != null ? selectedServiceId : null,
             searchQuery: _searchController.text,
             page: 1,
           );
@@ -812,11 +819,13 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                               width: 1,
                             ),
                           ),
-                          child: product.thumbnailImage != null
+                          child: (product.thumbnailImage != null ||
+                                  product.image != null)
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: CustomNetworkImage(
-                                    imageUrl: product.thumbnailImage!,
+                                    imageUrl: product.thumbnailImage ??
+                                        product.image!,
                                     width: 60,
                                     height: 60,
                                     fit: BoxFit.cover,
@@ -1131,9 +1140,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       SecretPasswordLocations.productDeletion,
       onSuccess: () async {
         try {
-          await context
-              .read<StockManagementCubit>()
-              .deleteProduct(product.id);
+          await context.read<StockManagementCubit>().deleteProduct(product.id);
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Product deleted successfully')),
@@ -1190,7 +1197,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
     // Get current selected service ID from state
     final selectedServiceId = currentState.maybeWhen(
-      loaded: (_, __, ___, ____, _____, serviceId, ______, _______) => serviceId,
+      loaded: (_, __, ___, ____, _____, serviceId, ______, _______) =>
+          serviceId,
       orElse: () => -1,
     );
 
@@ -1411,7 +1419,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                           return Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: List.generate(searchTypes.length, (index) {
+                            children:
+                                List.generate(searchTypes.length, (index) {
                               final isSelected = index == selectedIndex;
                               return GestureDetector(
                                 onTap: () {
@@ -1424,7 +1433,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? const Color(0xFF6132E4).withOpacity(0.1)
+                                        ? const Color(0xFF6132E4)
+                                            .withOpacity(0.1)
                                         : Colors.grey.shade50,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(

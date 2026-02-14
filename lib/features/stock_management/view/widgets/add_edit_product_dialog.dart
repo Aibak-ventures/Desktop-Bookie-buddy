@@ -58,40 +58,74 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _variantSizeController = TextEditingController();
   final _variantStockController = TextEditingController();
   final _variantBarcodeController = TextEditingController();
+  final _variantQrCodeController = TextEditingController();
   final _isAddingVariant = ValueNotifier<bool>(false);
   ProductVariantModel? _editingVariant;
 
-  late MainServiceType mainServiceType;
+  MainServiceType? mainServiceType;
   int? selectedServiceId;
+  bool _servicesLoaded = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeServices();
+  }
+
+  void _initializeServices() {
     // Force reload services to get latest services for current shop
     context
         .read<ServiceBloc>()
         .add(const ServiceEvent.loadServices(force: true));
 
-    final services = context.read<ServiceBloc>().getServices();
-    selectedServiceId = widget.serviceId;
-    mainServiceType = MainServiceType.fromServiceList(
-      services,
-      widget.serviceId,
-    );
-
     final product = widget.product;
-    if (product != null) {
-      _nameController.text = product.name;
-      if (!mainServiceType.isDress) {
-        _stockController.text = product.variants.first.stock.toString();
+
+    // Use addPostFrameCallback to ensure state is updated after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final services = context.read<ServiceBloc>().getServices();
+      if (services.isNotEmpty && !_servicesLoaded) {
+        setState(() {
+          // For edit mode, use product's service type
+          selectedServiceId = product?.mainServiceType != null
+              ? services
+                  .firstWhere(
+                    (s) =>
+                        MainServiceType.fromString(s.mainServiceName) ==
+                        product!.mainServiceType,
+                    orElse: () => services.first,
+                  )
+                  .id
+              : widget.serviceId;
+
+          mainServiceType = MainServiceType.fromServiceList(
+            services,
+            selectedServiceId,
+          );
+          _servicesLoaded = true;
+
+          // Initialize product fields after mainServiceType is set
+          if (product != null) {
+            _nameController.text = product.name;
+            // Set stock/unit field based on service type
+            if (mainServiceType != null && !mainServiceType!.isDress) {
+              _stockController.text = product.variants.first.stock.toString();
+            }
+            _modelController.text = product.model ?? '';
+            _categoryController.text = product.category ?? '';
+            _colorController.text = product.color ?? '';
+            _priceController.text = product.price?.toString() ?? '';
+            _purchaseAmountController.text =
+                product.purchaseAmount?.toString() ?? '';
+            _descriptionController.text = product.description ?? '';
+
+            // Load existing variants for edit mode
+            if (mainServiceType!.isDress && product.variants.isNotEmpty) {
+              variantsNotifier.value = List.from(product.variants);
+            }
+          }
+        });
       }
-      _modelController.text = product.model ?? '';
-      _categoryController.text = product.category ?? '';
-      _colorController.text = product.color ?? '';
-      _priceController.text = product.price?.toString() ?? '';
-      _purchaseAmountController.text = product.purchaseAmount?.toString() ?? '';
-      _descriptionController.text = product.description ?? '';
-    }
+    });
   }
 
   @override
@@ -193,7 +227,26 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                BlocBuilder<ServiceBloc, ServiceState>(
+                BlocConsumer<ServiceBloc, ServiceState>(
+                  listener: (context, state) {
+                    state.maybeWhen(
+                      loaded: (services) {
+                        if (services.isNotEmpty && !_servicesLoaded) {
+                          setState(() {
+                            if (selectedServiceId == null) {
+                              selectedServiceId = widget.serviceId;
+                            }
+                            mainServiceType = MainServiceType.fromServiceList(
+                              services,
+                              selectedServiceId,
+                            );
+                            _servicesLoaded = true;
+                          });
+                        }
+                      },
+                      orElse: () {},
+                    );
+                  },
                   builder: (context, state) {
                     return state.maybeWhen(
                       loaded: (services) {
@@ -318,6 +371,11 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
 
   /// Build dynamic fields based on selected service type
   Widget _buildDynamicFields() {
+    // Return empty until mainServiceType is loaded
+    if (mainServiceType == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     // Common fields for all types: Image, Product Name, Purchase Price, Rent Price, Sale Price
     final commonFields = <Widget>[
       // Product Name
@@ -325,7 +383,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         width: 280,
         child: CustomTextField(
           label:
-              '${mainServiceType.isVehicle ? 'Vehicle' : mainServiceType.isMaterial ? 'Material' : 'Product'} Name *',
+              '${mainServiceType!.isVehicle ? 'Vehicle' : mainServiceType!.isMaterial ? 'Material' : 'Product'} Name *',
           controller: _nameController,
           validator: AppInputValidators.productName,
         ),
@@ -333,7 +391,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     ];
 
     // Service-specific fields
-    if (mainServiceType.isDress || mainServiceType.isCostume) {
+    if (mainServiceType!.isDress || mainServiceType!.isCostume) {
       // DRESSES/COSTUME: Size (via variants), Purchase, Rent, Sale, Category, Color, Model, Description
       commonFields.addAll([
         SizedBox(
@@ -401,7 +459,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           ),
         ),
       ]);
-    } else if (mainServiceType.isJewellery) {
+    } else if (mainServiceType!.isJewellery) {
       // JEWELLERY: Quantity, Purchase Price, Rent Price, Sale, Category, Color, Model, Description
       commonFields.addAll([
         SizedBox(
@@ -479,7 +537,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           ),
         ),
       ]);
-    } else if (mainServiceType.isMaterial) {
+    } else if (mainServiceType!.isMaterial) {
       // MATERIAL: Length, Purchase Price, Rent Price, Sale, Fabric Type, Color, Model (Optional), Description (Optional)
       commonFields.addAll([
         SizedBox(
@@ -560,7 +618,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         SizedBox(
           width: 280,
           child: CustomTextField(
-            label: mainServiceType.isVehicle ? 'Unit' : 'Quantity',
+            label: mainServiceType!.isVehicle ? 'Unit' : 'Quantity',
             controller: _stockController,
             keyboardType: TextInputType.number,
             validator: (value) =>
@@ -593,13 +651,14 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           width: 280,
           child: CustomTextField(
             label:
-                '${mainServiceType.isVehicle ? 'Brand' : 'Category'} (Optional)',
+                '${mainServiceType!.isVehicle ? 'Brand' : 'Category'} (Optional)',
             controller: _categoryController,
             validator: (value) => AppInputValidators.isEmpty(value)
                 ? null
                 : AppInputValidators.category(
                     value,
-                    fieldName: mainServiceType.isVehicle ? 'Brand' : 'Category',
+                    fieldName:
+                        mainServiceType!.isVehicle ? 'Brand' : 'Category',
                     isRequired: false,
                   ),
           ),
@@ -719,7 +778,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                             size: 48, color: Colors.grey.shade400),
                         const SizedBox(height: 12),
                         Text(
-                          mainServiceType.isDress
+                          mainServiceType?.isDress == true
                               ? 'No variants added yet. Add sizes for this dress.'
                               : 'No variants added. Product will use default quantity.',
                           style: TextStyle(
@@ -863,6 +922,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     _variantSizeController.text = variant.attribute;
     _variantStockController.text = variant.stock.toString();
     _variantBarcodeController.clear();
+    _variantQrCodeController.text = variant.externalQrCode ?? '';
     _editingVariant = variant;
     _isAddingVariant.value = true;
 
@@ -880,6 +940,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     _variantSizeController.clear();
     _variantStockController.clear();
     _variantBarcodeController.clear();
+    _variantQrCodeController.clear();
     _editingVariant = null;
     _isAddingVariant.value = false;
   }
@@ -910,6 +971,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     final updatedVariants =
         List<ProductVariantModel>.from(variantsNotifier.value);
 
+    final externalQrCode = _variantQrCodeController.text.trim();
+
     if (_editingVariant != null) {
       // Update existing variant
       final index =
@@ -920,6 +983,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           attribute: _variantSizeController.text.trim(),
           stock: stock,
           remainingStock: _editingVariant!.remainingStock,
+          externalQrCode: externalQrCode.isEmpty ? null : externalQrCode,
         );
       }
     } else {
@@ -930,6 +994,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           attribute: _variantSizeController.text.trim(),
           stock: stock,
           remainingStock: stock,
+          externalQrCode: externalQrCode.isEmpty ? null : externalQrCode,
         ),
       );
     }
@@ -995,8 +1060,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
               Expanded(
                 flex: 2,
                 child: CustomTextField(
-                  controller: _variantBarcodeController,
-                  label: 'Barcode (Optional)',
+                  controller: _variantQrCodeController,
+                  label: 'External QR Code (Optional)',
                   validator: null,
                 ),
               ),
@@ -1102,22 +1167,34 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   }
 
   void _submit() async {
+    print('\n🚀 === SUBMIT STARTED ===');
+    print('🔍 Form valid: ${_formKey.currentState?.validate()}');
+    print('🔍 Is edit mode: ${widget.product != null}');
+    print('🔍 Image available: ${_imageNotifier.value != null}');
+    print('🔍 Product has existing image: ${widget.product?.image != null}');
+
     if (_formKey.currentState!.validate()) {
       // Validate service selection for new products
       if (widget.product == null && selectedServiceId == null) {
+        print('❌ No service selected');
         context.showSnackBar("Please select a service category", isError: true);
         return;
       }
 
-      if (widget.product?.image == null && _imageNotifier.value == null) {
+      // Image is required for NEW products, optional for EDIT (can keep existing)
+      if (widget.product == null && _imageNotifier.value == null) {
+        print('❌ No image provided for new product');
         context.showSnackBar("Please select an image", isError: true);
         return;
       }
 
+      print('✅ All validations passed');
+
       // For dress/costume, variants are required
-      if (mainServiceType.isDress &&
+      if (mainServiceType?.isDress == true &&
           variantsNotifier.value.isEmpty &&
           widget.product == null) {
+        print('❌ No variants for dress');
         context.showSnackBar(
             "Please add at least one size variant for this dress",
             isError: true);
@@ -1148,8 +1225,29 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
       final saveCubit = context.read<SaveProductCubit>();
 
       if (widget.product != null) {
+        // Edit mode: update existing product
+        // For edit, we need to create a variant from the stock field if it's not a dress type
+        List<ProductVariantModel>? editVariants;
+        if (mainServiceType?.isDress == true) {
+          // Dress type: variants already loaded
+          editVariants = variantList.isEmpty ? null : variantList;
+        } else {
+          // Other types: create variant from stock field
+          if (_stockController.text.trim().isNotEmpty) {
+            final existingVariant = widget.product!.variants.first;
+            editVariants = [
+              ProductVariantModel(
+                id: existingVariant.id,
+                attribute: _nameController.text.trim(),
+                stock: _stockController.text.trim().toInt(),
+                remainingStock: existingVariant.remainingStock,
+              ),
+            ];
+          }
+        }
+
         final product = ProductRequestModel(
-          productId: widget.product?.id,
+          productId: widget.product!.id, // Use ! since we're in the null check
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
           color: _colorController.text.trim(),
@@ -1157,7 +1255,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           price: _priceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
-          variants: variantList.isEmpty ? null : variantList,
+          variants: editVariants,
           image: _imageNotifier.value,
         );
         saveCubit.saveProduct(product: product);
@@ -1181,98 +1279,120 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
 
   Future<void> _pickProductImage() async {
     try {
+      print('📷 Starting image picker...');
       final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
         allowMultiple: false,
         dialogTitle: 'Select Product Image',
-        withData: true, // Crucial for Web to get bytes
+        withData: true, // Get bytes for all platforms
       );
 
       if (result != null && result.files.isNotEmpty) {
+        print('📷 File picked: ${result.files.first.name}');
         Uint8List? imageBytes;
         String fileName;
 
-        if (kIsWeb) {
-          if (result.files.first.bytes != null) {
-            imageBytes = result.files.first.bytes!;
-            fileName = result.files.first.name;
-          } else {
-            return;
-          }
+        // Get image bytes
+        if (result.files.first.bytes != null) {
+          imageBytes = result.files.first.bytes!;
+          fileName = result.files.first.name;
+          print('📷 Got image bytes from web: ${imageBytes.length} bytes');
+        } else if (result.files.first.path != null) {
+          imageBytes = await XFile(result.files.first.path!).readAsBytes();
+          fileName = result.files.first.name;
+          print('📷 Got image bytes from path: ${imageBytes.length} bytes');
         } else {
-          if (result.files.single.path != null) {
-            final file = result.files.single;
-            imageBytes = await XFile(file.path!).readAsBytes();
-            fileName = file.name;
-          } else {
-            return;
-          }
+          print('❌ No bytes or path available');
+          return;
         }
 
-        if (imageBytes != null) {
-          // Process image: crop to 1:1 and compress
-          final processedBytes = await _processImage(imageBytes);
+        // Use custom crop dialog for all platforms
+        // (image_cropper doesn't support Windows/macOS/Linux)
+        print('📷 Opening crop dialog...');
+        final croppedBytes = await _showImageCropDialog(imageBytes, fileName);
+        if (croppedBytes != null) {
+          print('📷 Image cropped: ${croppedBytes.length} bytes');
+          final processedBytes = await _compressImage(croppedBytes);
           if (processedBytes != null) {
+            print('📷 Image compressed: ${processedBytes.length} bytes');
+
+            // Ensure filename has .jpg extension (since we compress to JPEG)
+            String finalFileName = fileName;
+            if (!fileName.toLowerCase().endsWith('.jpg') &&
+                !fileName.toLowerCase().endsWith('.jpeg')) {
+              // Replace extension with .jpg
+              final nameParts = fileName.split('.');
+              if (nameParts.length > 1) {
+                nameParts.removeLast();
+                finalFileName = '${nameParts.join('.')}.jpg';
+              } else {
+                finalFileName = '$fileName.jpg';
+              }
+            }
+
+            print('📷 Final filename: $finalFileName');
             _imageNotifier.value = XFile.fromData(
               processedBytes,
-              name: fileName,
+              name: finalFileName,
+              mimeType: 'image/jpeg',
             );
+            print(
+                '✅ Image set successfully with name: ${_imageNotifier.value?.name}');
+          } else {
+            print('❌ Failed to compress image');
           }
+        } else {
+          print('⚠️ Crop cancelled');
         }
+      } else {
+        print('⚠️ No file selected');
       }
     } catch (e) {
-      debugPrint('Error picking image: $e');
+      debugPrint('❌ Error picking image: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to select image. Please try again.'),
+          SnackBar(
+            content: Text('Failed to select image: $e'),
+            backgroundColor: Colors.red,
           ),
         );
       }
     }
   }
 
-  /// Process image: crop to 1:1 aspect ratio and compress
-  Future<Uint8List?> _processImage(Uint8List imageBytes) async {
+  /// Show custom crop dialog (works on all platforms)
+  Future<Uint8List?> _showImageCropDialog(
+      Uint8List imageBytes, String fileName) async {
+    final image = img.decodeImage(imageBytes);
+    if (image == null) return null;
+
+    return await showDialog<Uint8List>(
+      context: context,
+      builder: (context) => _ImageCropDialog(
+        imageBytes: imageBytes,
+        image: image,
+      ),
+    );
+  }
+
+  /// Compress image after cropping
+  Future<Uint8List?> _compressImage(Uint8List imageBytes) async {
     try {
       // Decode the image
       img.Image? image = img.decodeImage(imageBytes);
       if (image == null) return null;
 
-      // Crop to 1:1 (square) aspect ratio
-      final size = image.width < image.height ? image.width : image.height;
-      final xOffset = (image.width - size) ~/ 2;
-      final yOffset = (image.height - size) ~/ 2;
-
-      img.Image cropped = img.copyCrop(
-        image,
-        x: xOffset,
-        y: yOffset,
-        width: size,
-        height: size,
-      );
-
       // Resize if too large (max 1024x1024 for good quality)
-      if (cropped.width > 1024) {
-        cropped = img.copyResize(cropped, width: 1024, height: 1024);
+      if (image.width > 1024 || image.height > 1024) {
+        image = img.copyResize(image, width: 1024, height: 1024);
       }
 
-      // Encode to JPEG with compression
-      final jpegBytes = img.encodeJpg(cropped, quality: 85);
-
-      // Further compress using flutter_image_compress
-      final compressedBytes = await FlutterImageCompress.compressWithList(
-        Uint8List.fromList(jpegBytes),
-        minWidth: 1024,
-        minHeight: 1024,
-        quality: 85,
-        format: CompressFormat.jpeg,
-      );
-
-      return compressedBytes;
+      // Encode to JPEG with compression (flutter_image_compress doesn't work on Windows)
+      final jpegBytes = img.encodeJpg(image, quality: 85);
+      return Uint8List.fromList(jpegBytes);
     } catch (e) {
-      debugPrint('Error processing image: $e');
-      return imageBytes; // Return original if processing fails
+      debugPrint('Error compressing image: $e');
+      return imageBytes; // Return original if compression fails
     }
   }
 
@@ -1291,9 +1411,341 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     _variantSizeController.dispose();
     _variantStockController.dispose();
     _variantBarcodeController.dispose();
+    _variantQrCodeController.dispose();
     variantsNotifier.dispose();
     _imageNotifier.dispose();
     _isAddingVariant.dispose();
     super.dispose();
   }
+}
+
+/// Custom image crop dialog for web
+class _ImageCropDialog extends StatefulWidget {
+  final Uint8List imageBytes;
+  final img.Image image;
+
+  const _ImageCropDialog({
+    required this.imageBytes,
+    required this.image,
+  });
+
+  @override
+  State<_ImageCropDialog> createState() => _ImageCropDialogState();
+}
+
+class _ImageCropDialogState extends State<_ImageCropDialog> {
+  Rect? _cropRect;
+  Offset _dragStart = Offset.zero;
+  double _scale = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with center square crop
+    final size = widget.image.width < widget.image.height
+        ? widget.image.width
+        : widget.image.height;
+    final left = (widget.image.width - size) / 2;
+    final top = (widget.image.height - size) / 2;
+    _cropRect = Rect.fromLTWH(left, top, size.toDouble(), size.toDouble());
+  }
+
+  void _cropAndReturn() async {
+    if (_cropRect == null) return;
+
+    final cropped = img.copyCrop(
+      widget.image,
+      x: _cropRect!.left.toInt(),
+      y: _cropRect!.top.toInt(),
+      width: _cropRect!.width.toInt(),
+      height: _cropRect!.height.toInt(),
+    );
+
+    final jpegBytes = img.encodeJpg(cropped, quality: 90);
+    Navigator.of(context).pop(Uint8List.fromList(jpegBytes));
+  }
+
+  void _onPanUpdate(DragUpdateDetails details, double displaySize) {
+    if (_cropRect == null) return;
+
+    setState(() {
+      // Calculate scale to fit image in display
+      final scaleX = displaySize / widget.image.width;
+      final scaleY = displaySize / widget.image.height;
+      final scale = scaleX < scaleY ? scaleX : scaleY;
+
+      // Convert display delta to image coordinates
+      final dx = details.delta.dx / scale;
+      final dy = details.delta.dy / scale;
+
+      // Calculate new position
+      var newLeft = _cropRect!.left + dx;
+      var newTop = _cropRect!.top + dy;
+
+      // Keep crop rect within image bounds
+      newLeft = newLeft.clamp(0.0, widget.image.width - _cropRect!.width);
+      newTop = newTop.clamp(0.0, widget.image.height - _cropRect!.height);
+
+      _cropRect = Rect.fromLTWH(
+        newLeft,
+        newTop,
+        _cropRect!.width,
+        _cropRect!.height,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    // Calculate max size that fits the screen (leave space for header, text, buttons)
+    final reservedHeight = 300; // Space for header, text, buttons, padding
+    final availableHeight = screenSize.height * 0.8 - reservedHeight;
+    final availableWidth = screenSize.width * 0.7;
+
+    // Use the smaller dimension to ensure it fits
+    final maxDisplaySize =
+        availableWidth < availableHeight ? availableWidth : availableHeight;
+
+    // Ensure minimum size
+    final displaySize = maxDisplaySize < 300 ? 300.0 : maxDisplaySize;
+
+    return Dialog(
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: displaySize + 100,
+          maxHeight: screenSize.height * 0.85,
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Crop Image (1:1)',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.purple,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Drag the purple square to adjust the crop area.',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 16),
+
+                // Image with crop overlay
+                MouseRegion(
+                  cursor: SystemMouseCursors.move,
+                  child: GestureDetector(
+                    onPanUpdate: (details) =>
+                        _onPanUpdate(details, displaySize),
+                    child: Container(
+                      width: displaySize,
+                      height: displaySize,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Stack(
+                          children: [
+                            // Background image
+                            Positioned.fill(
+                              child: Image.memory(
+                                widget.imageBytes,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            // Crop overlay
+                            if (_cropRect != null)
+                              CustomPaint(
+                                size: Size(displaySize, displaySize),
+                                painter: _CropOverlayPainter(
+                                  cropRect: _cropRect!,
+                                  imageSize: Size(
+                                    widget.image.width.toDouble(),
+                                    widget.image.height.toDouble(),
+                                  ),
+                                  displaySize: Size(displaySize, displaySize),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Action buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton.icon(
+                      onPressed: _cropAndReturn,
+                      icon: const Icon(Icons.crop, size: 18),
+                      label: const Text('Crop & Continue'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.purple,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Custom painter for crop overlay
+class _CropOverlayPainter extends CustomPainter {
+  final Rect cropRect;
+  final Size imageSize;
+  final Size displaySize;
+
+  _CropOverlayPainter({
+    required this.cropRect,
+    required this.imageSize,
+    required this.displaySize,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Calculate scale to fit image in display
+    final scaleX = displaySize.width / imageSize.width;
+    final scaleY = displaySize.height / imageSize.height;
+    final scale = scaleX < scaleY ? scaleX : scaleY;
+
+    // Calculate scaled image position
+    final scaledWidth = imageSize.width * scale;
+    final scaledHeight = imageSize.height * scale;
+    final offsetX = (displaySize.width - scaledWidth) / 2;
+    final offsetY = (displaySize.height - scaledHeight) / 2;
+
+    // Scale crop rect to display size
+    final displayCropRect = Rect.fromLTWH(
+      cropRect.left * scale + offsetX,
+      cropRect.top * scale + offsetY,
+      cropRect.width * scale,
+      cropRect.height * scale,
+    );
+
+    // Draw dark overlay outside crop area
+    final overlayPaint = Paint()
+      ..color = Colors.black.withOpacity(0.5)
+      ..style = PaintingStyle.fill;
+
+    // Top
+    canvas.drawRect(
+      Rect.fromLTWH(0, 0, displaySize.width, displayCropRect.top),
+      overlayPaint,
+    );
+    // Bottom
+    canvas.drawRect(
+      Rect.fromLTWH(
+        0,
+        displayCropRect.bottom,
+        displaySize.width,
+        displaySize.height - displayCropRect.bottom,
+      ),
+      overlayPaint,
+    );
+    // Left
+    canvas.drawRect(
+      Rect.fromLTWH(
+        0,
+        displayCropRect.top,
+        displayCropRect.left,
+        displayCropRect.height,
+      ),
+      overlayPaint,
+    );
+    // Right
+    canvas.drawRect(
+      Rect.fromLTWH(
+        displayCropRect.right,
+        displayCropRect.top,
+        displaySize.width - displayCropRect.right,
+        displayCropRect.height,
+      ),
+      overlayPaint,
+    );
+
+    // Draw crop border
+    final borderPaint = Paint()
+      ..color = AppColors.purple
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+
+    canvas.drawRect(displayCropRect, borderPaint);
+
+    // Draw grid lines
+    final gridPaint = Paint()
+      ..color = Colors.white.withOpacity(0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
+    // Vertical lines
+    canvas.drawLine(
+      Offset(displayCropRect.left + displayCropRect.width / 3,
+          displayCropRect.top),
+      Offset(displayCropRect.left + displayCropRect.width / 3,
+          displayCropRect.bottom),
+      gridPaint,
+    );
+    canvas.drawLine(
+      Offset(displayCropRect.left + displayCropRect.width * 2 / 3,
+          displayCropRect.top),
+      Offset(displayCropRect.left + displayCropRect.width * 2 / 3,
+          displayCropRect.bottom),
+      gridPaint,
+    );
+
+    // Horizontal lines
+    canvas.drawLine(
+      Offset(displayCropRect.left,
+          displayCropRect.top + displayCropRect.height / 3),
+      Offset(displayCropRect.right,
+          displayCropRect.top + displayCropRect.height / 3),
+      gridPaint,
+    );
+    canvas.drawLine(
+      Offset(displayCropRect.left,
+          displayCropRect.top + displayCropRect.height * 2 / 3),
+      Offset(displayCropRect.right,
+          displayCropRect.top + displayCropRect.height * 2 / 3),
+      gridPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

@@ -40,14 +40,43 @@ class ProductRequestModel with _$ProductRequestModel {
 extension ProductRequestModelExtension on ProductRequestModel {
   Future<Map<String, dynamic>> toFormJson([bool isAdding = true]) async {
     final json = toJson(); // generated JSON without image
+
+    print('🔧 toFormJson - isAdding: $isAdding');
+    print('🔧 toFormJson - productId: $productId');
+    print('🔧 toFormJson - image is null: ${image == null}');
+
     if (image != null) {
-      final bytes = await image!.readAsBytes();
-      json['image'] = MultipartFile.fromBytes(
-        bytes,
-        filename: image!.name,
-      );
+      try {
+        final bytes = await image!.readAsBytes();
+        print('🔧 toFormJson - Image bytes length: ${bytes.length}');
+        print('🔧 toFormJson - Image filename: ${image!.name}');
+
+        // Ensure we have a valid filename, fallback to timestamp if empty
+        String filename = image!.name;
+        if (filename.isEmpty || filename.trim().isEmpty) {
+          filename = 'product_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          print('⚠️ toFormJson - Empty filename, using: $filename');
+        }
+
+        json['image'] = MultipartFile.fromBytes(
+          bytes,
+          filename: filename,
+        );
+        print(
+            '✅ toFormJson - Image added to FormData with filename: $filename');
+      } catch (e) {
+        print('❌ toFormJson - Error reading image: $e');
+      }
+    } else {
+      print('⚠️ toFormJson - No image provided');
     }
-    if (!isAdding) json.remove('variants');
+
+    if (!isAdding) {
+      json.remove('variants');
+      print('🔧 toFormJson - Removed variants (edit mode)');
+    }
+
+    print('🔧 toFormJson - Final JSON keys: ${json.keys.join(", ")}');
     return json;
   }
 }

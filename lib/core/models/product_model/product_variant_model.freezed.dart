@@ -29,6 +29,8 @@ mixin _$ProductVariantModel {
   int? get remainingStock => throw _privateConstructorUsedError;
   @JsonKey(name: 'price')
   int? get price => throw _privateConstructorUsedError;
+  @JsonKey(name: 'external_qr_code')
+  String? get externalQrCode => throw _privateConstructorUsedError;
 
   /// Serializes this ProductVariantModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +53,8 @@ abstract class $ProductVariantModelCopyWith<$Res> {
       String attribute,
       int stock,
       @JsonKey(name: 'remaining_stock') int? remainingStock,
-      @JsonKey(name: 'price') int? price});
+      @JsonKey(name: 'price') int? price,
+      @JsonKey(name: 'external_qr_code') String? externalQrCode});
 }
 
 /// @nodoc
@@ -74,6 +77,7 @@ class _$ProductVariantModelCopyWithImpl<$Res, $Val extends ProductVariantModel>
     Object? stock = null,
     Object? remainingStock = freezed,
     Object? price = freezed,
+    Object? externalQrCode = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -96,6 +100,10 @@ class _$ProductVariantModelCopyWithImpl<$Res, $Val extends ProductVariantModel>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      externalQrCode: freezed == externalQrCode
+          ? _value.externalQrCode
+          : externalQrCode // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -113,7 +121,8 @@ abstract class _$$ProductVariantModelImplCopyWith<$Res>
       String attribute,
       int stock,
       @JsonKey(name: 'remaining_stock') int? remainingStock,
-      @JsonKey(name: 'price') int? price});
+      @JsonKey(name: 'price') int? price,
+      @JsonKey(name: 'external_qr_code') String? externalQrCode});
 }
 
 /// @nodoc
@@ -134,6 +143,7 @@ class __$$ProductVariantModelImplCopyWithImpl<$Res>
     Object? stock = null,
     Object? remainingStock = freezed,
     Object? price = freezed,
+    Object? externalQrCode = freezed,
   }) {
     return _then(_$ProductVariantModelImpl(
       id: null == id
@@ -156,6 +166,10 @@ class __$$ProductVariantModelImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      externalQrCode: freezed == externalQrCode
+          ? _value.externalQrCode
+          : externalQrCode // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -168,7 +182,8 @@ class _$ProductVariantModelImpl implements _ProductVariantModel {
       required this.attribute,
       required this.stock,
       @JsonKey(name: 'remaining_stock') this.remainingStock,
-      @JsonKey(name: 'price') this.price});
+      @JsonKey(name: 'price') this.price,
+      @JsonKey(name: 'external_qr_code') this.externalQrCode});
 
   factory _$ProductVariantModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductVariantModelImplFromJson(json);
@@ -187,10 +202,13 @@ class _$ProductVariantModelImpl implements _ProductVariantModel {
   @override
   @JsonKey(name: 'price')
   final int? price;
+  @override
+  @JsonKey(name: 'external_qr_code')
+  final String? externalQrCode;
 
   @override
   String toString() {
-    return 'ProductVariantModel(id: $id, attribute: $attribute, stock: $stock, remainingStock: $remainingStock, price: $price)';
+    return 'ProductVariantModel(id: $id, attribute: $attribute, stock: $stock, remainingStock: $remainingStock, price: $price, externalQrCode: $externalQrCode)';
   }
 
   @override
@@ -204,13 +222,15 @@ class _$ProductVariantModelImpl implements _ProductVariantModel {
             (identical(other.stock, stock) || other.stock == stock) &&
             (identical(other.remainingStock, remainingStock) ||
                 other.remainingStock == remainingStock) &&
-            (identical(other.price, price) || other.price == price));
+            (identical(other.price, price) || other.price == price) &&
+            (identical(other.externalQrCode, externalQrCode) ||
+                other.externalQrCode == externalQrCode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, attribute, stock, remainingStock, price);
+  int get hashCode => Object.hash(
+      runtimeType, id, attribute, stock, remainingStock, price, externalQrCode);
 
   /// Create a copy of ProductVariantModel
   /// with the given fields replaced by the non-null parameter values.
@@ -231,11 +251,13 @@ class _$ProductVariantModelImpl implements _ProductVariantModel {
 
 abstract class _ProductVariantModel implements ProductVariantModel {
   const factory _ProductVariantModel(
-      {required final int id,
-      required final String attribute,
-      required final int stock,
-      @JsonKey(name: 'remaining_stock') final int? remainingStock,
-      @JsonKey(name: 'price') final int? price}) = _$ProductVariantModelImpl;
+          {required final int id,
+          required final String attribute,
+          required final int stock,
+          @JsonKey(name: 'remaining_stock') final int? remainingStock,
+          @JsonKey(name: 'price') final int? price,
+          @JsonKey(name: 'external_qr_code') final String? externalQrCode}) =
+      _$ProductVariantModelImpl;
 
   factory _ProductVariantModel.fromJson(Map<String, dynamic> json) =
       _$ProductVariantModelImpl.fromJson;
@@ -254,6 +276,9 @@ abstract class _ProductVariantModel implements ProductVariantModel {
   @override
   @JsonKey(name: 'price')
   int? get price;
+  @override
+  @JsonKey(name: 'external_qr_code')
+  String? get externalQrCode;
 
   /// Create a copy of ProductVariantModel
   /// with the given fields replaced by the non-null parameter values.

@@ -115,6 +115,28 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
+  /// Update an existing variant
+  Future<void> updateProductVariant({
+    required int productId,
+    required int variantId,
+    required String attribute,
+    required int stock,
+  }) async {
+    try {
+      await _repository.updateVariant(
+        productId: productId,
+        variantId: variantId,
+        updatedAttribute: attribute,
+        updatedStock: stock,
+      );
+      // Reload product details to show the updated variant
+      await loadProductDetails(productId);
+    } catch (e) {
+      log('Error updating product variant: $e');
+      rethrow;
+    }
+  }
+
   /// Delete a variant from the product
   Future<void> deleteProductVariant(
       {required int productId, required int variantId}) async {

@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
@@ -341,16 +342,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                         ),
                       ),
                       const SizedBox(height: 8),
-                      // Purchase Price below name
-                      Text(
-                        'Purchase: ₹${NumberFormat('#,###').format(product.purchaseAmount ?? 0)}',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
+                      // Purchase Price below name (hide if 0)
+                      if (product.purchaseAmount != null && product.purchaseAmount! > 0)
+                        Text(
+                          'Purchase: ₹${NumberFormat('#,###').format(product.purchaseAmount)}',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -402,41 +404,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
             // Divider
             Container(
               height: 1,
               color: Colors.grey.shade300,
             ),
-            const SizedBox(height: 16),
-
-            // Available Variants
-            const Text(
-              'Available variants',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
-              ),
-            ),
             const SizedBox(height: 12),
 
-            // Variants with specific styling
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  ...product.variants.map((variant) => Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: _variantCard(variant),
-                      )),
-                  _addVariantButton(),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
+            // Available Serial Numbers (hide for non-variant service products)
+            if (product.variants.length > 1 ||
+                (product.variants.length == 1 &&
+                    product.variants.first.attribute != product.name))
+              ..._buildVariantsSection(product),
 
             // Product Specifications
             if (product.category != null ||
@@ -531,22 +512,61 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Sales Growth Section
+          // Monthly Growth Section
           Row(
             children: [
               const Icon(Icons.bar_chart, size: 20),
               const SizedBox(width: 8),
               const Text(
-                'Sales Growth',
+                'Monthly Growth',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF1F2937),
                 ),
               ),
+              const Spacer(),
+              // Earned & Expense indicators in the same row
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF8B5CF6),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Text(
+                    'Earned',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF6B6B),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Text(
+                    'Expense',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
           // Monthly summary bar chart
           SizedBox(
@@ -576,7 +596,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           //   ],
           // ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
 
           // Bookings Section with Tabs
           const Text(
@@ -587,7 +607,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               color: Color(0xFF1F2937),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           // Tab Bar
           Container(
@@ -734,62 +754,99 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             ],
           ),
         ),
-        // Positioned(
-        //   top: -5,
-        //   right: -5,
-        //   child: InkWell(
-        //     onTap: () {
-        //       _showDeleteVariantDialog(variant);
-        //     },
-        //     child: Container(
-        //       padding: const EdgeInsets.all(2),
-        //       decoration: const BoxDecoration(
-        //         color: Colors.red,
-        //         shape: BoxShape.circle,
-        //       ),
-        //       child: const Icon(
-        //         Icons.close,
-        //         size: 10,
-        //         color: Colors.white,
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        // Edit icon at top-right for editing variant
+        Positioned(
+          top: -5,
+          right: -5,
+          child: InkWell(
+            onTap: () {
+              _showEditVariantDialog(variant);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: AppColors.purple,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.edit,
+                size: 12,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 
   void _showDeleteProductDialog(ProductModel product) {
+    final passwordController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Product'),
-        content: Text(
-            'Are you sure you want to delete product "${product.name}"? This action cannot be undone.'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Are you sure you want to delete product "${product.name}"? This action cannot be undone.',
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Enter your password to confirm',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock_outline),
+                ),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password is required';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () async {
-              Navigator.pop(dialogContext);
-              try {
-                await context
-                    .read<ProductDetailsCubit>()
-                    .deleteProduct(product.id);
-                if (mounted) {
-                  context.read<StockManagementCubit>().hideProductDetails();
-                  context.showSnackBar('Product deleted successfully');
-                }
-              } catch (e) {
-                if (mounted) {
-                  context.showSnackBar('Failed to delete product: $e',
-                      isError: true);
+              if (formKey.currentState!.validate()) {
+                Navigator.pop(dialogContext);
+                try {
+                  await context
+                      .read<ProductDetailsCubit>()
+                      .deleteProduct(product.id);
+                  if (mounted) {
+                    context.read<StockManagementCubit>().hideProductDetails();
+                    context.showSnackBar('Product deleted successfully');
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    context.showSnackBar('Failed to delete product: $e',
+                        isError: true);
+                  }
                 }
               }
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete'),
           ),
         ],
       ),
@@ -821,6 +878,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         ],
       ),
     );
+  }
+
+  // Helper method to build variants section (only if product has variants)
+  List<Widget> _buildVariantsSection(ProductModel product) {
+    return [
+      const Text(
+        'Available Serial Numbers',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF1F2937),
+        ),
+      ),
+      const SizedBox(height: 12),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            ...product.variants.map((variant) => Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: _variantCard(variant),
+                )),
+            _addVariantButton(),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+    ];
   }
 
   Widget _addVariantButton() {
@@ -939,6 +1024,112 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
+  void _showEditVariantDialog(ProductVariantModel variant) {
+    final variantAttributeController = TextEditingController(text: variant.attribute);
+    final variantQuantityController = TextEditingController(text: variant.stock.toString());
+    final formKey = GlobalKey<FormState>();
+
+    // Get current product from state to initialize variantsNotifier (excluding current variant)
+    final currentState = context.read<ProductDetailsCubit>().state;
+    List<ProductVariantModel> currentVariants = [];
+    currentState.maybeWhen(
+      loaded: (product, _, __, ___, ____) => currentVariants = product.variants.where((v) => v.id != variant.id).toList(),
+      orElse: () {},
+    );
+
+    final variantsNotifier =
+        ValueNotifier<List<ProductVariantModel>>(List.from(currentVariants));
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text(
+          'Edit Variant',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              VariantSizeTypeTextField(
+                variantAttributeController: variantAttributeController,
+                variantsNotifier: variantsNotifier,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: variantQuantityController,
+                decoration: InputDecoration(
+                  labelText: 'Quantity',
+                  hintText: 'Enter quantity',
+                  border: const OutlineInputBorder(),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                validator: AppInputValidators.quantity,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          // Delete button
+          TextButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              _showDeleteVariantDialog(variant);
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+          const Spacer(),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                final attribute = variantAttributeController.text.trim();
+                final quantity =
+                    int.tryParse(variantQuantityController.text.trim()) ?? 0;
+
+                try {
+                  // Update variant
+                  await context.read<ProductDetailsCubit>().updateProductVariant(
+                        productId: widget.productId,
+                        variantId: variant.id,
+                        attribute: attribute,
+                        stock: quantity,
+                      );
+
+                  if (context.mounted) {
+                    Navigator.of(dialogContext).pop();
+                    context.showSnackBar('Variant updated successfully');
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to update variant: $e',
+                        isError: true);
+                  }
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.purple,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBookingsList(List<BookingsModel> bookings, String emptyMessage,
       {bool isOngoing = false}) {
     if (bookings.isEmpty) {
@@ -974,17 +1165,185 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       itemBuilder: (context, index) {
         final booking = bookings[index];
 
-        // Display booking card without navigation
+        // Display booking card with side drawer on tap
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: BookingCard(
             booking: booking,
             useReturnDate: isOngoing,
-            // No onTap - display only, no navigation
-            onTap: () {},
+            onTap: () => _showBookingDetailsDrawer(booking),
           ),
         );
       },
+    );
+  }
+
+  void _showBookingDetailsDrawer(BookingsModel booking) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Booking Details',
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Align(
+          alignment: Alignment.centerRight,
+          child: Material(
+            elevation: 16,
+            child: Container(
+              width: 450,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: AppColors.purple,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_today,
+                            color: Colors.white, size: 24),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Booking Details',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.close, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Content
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDetailRow('Customer', booking.clientName),
+                          _buildDetailRow('Booking ID', booking.id?.toString() ?? 'N/A'),
+                          _buildDetailRow('Status', booking.bookingStatus.name),
+                          _buildDetailRow('Delivery Status', booking.deliveryStatus.name),
+                          _buildDetailRow('Payment Status', booking.paymentStatus.name),
+                          if (booking.bookedDate != null)
+                            _buildDetailRow(
+                                'Booking Date',
+                                DateFormat('MMM dd, yyyy')
+                                    .format(booking.bookedDate!.parseToDateTime())),
+                          if (booking.pickupDate != null)
+                            _buildDetailRow(
+                                'Pickup Date',
+                                DateFormat('MMM dd, yyyy')
+                                    .format(booking.pickupDate!.parseToDateTime())),
+                          if (booking.returnDate != null)
+                            _buildDetailRow(
+                                'Return Date',
+                                DateFormat('MMM dd, yyyy')
+                                    .format(booking.returnDate!.parseToDateTime())),
+                          if (booking.shopBookingId != null && booking.shopBookingId!.isNotEmpty)
+                            _buildDetailRow('Shop Booking ID', booking.shopBookingId!),
+                          if (booking.staffName != null && booking.staffName!.isNotEmpty)
+                            _buildDetailRow('Staff', booking.staffName!),
+                          if (booking.bookedItems.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Booked Items',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF6B7280),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  ...booking.bookedItems.map((item) => Padding(
+                                        padding: const EdgeInsets.only(bottom: 4),
+                                        child: Text(
+                                          '• $item',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xFF1F2937),
+                                          ),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1, 0),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInOut,
+          )),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 130,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF6B7280),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF1F2937),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

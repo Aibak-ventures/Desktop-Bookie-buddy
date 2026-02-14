@@ -20,26 +20,39 @@ class ProductActionService {
       final int? productId = product.productId;
       final bool isAdding = productId == null;
 
+      print('\n🌐 === API CALL START ===');
+      print('📍 Product ID: $productId');
+      print('📍 Is Adding: $isAdding');
+      print('📍 Product Name: ${product.name}');
+      print('📍 Has Image: ${product.image != null}');
+
       final String url =
           "${ApiPaths.service.productsRoot}${isAdding ? '' : '$productId/'}";
+      print('📍 URL: $url');
+      print('📍 Method: ${isAdding ? 'POST' : 'PATCH'}');
 
       if (isAdding && product.variants == null) {
         throw 'Please add at least one variant';
       }
 
       // Prepare FormData
+      print('📦 Preparing FormData...');
       final formData = FormData.fromMap(await product.toFormJson(isAdding));
 
       /// Log form data
+      print('\n📋 Form Fields:');
       formData.fields.forEach((field) {
-        log('Form field: ${field.key} = ${field.value}');
+        log('   ${field.key} = ${field.value}');
       });
 
+      print('\n📋 Form Files:');
       formData.files.forEach((file) {
-        log('File field: ${file.key}, File name: ${file.value.filename}');
+        log('   ${file.key}: ${file.value.filename} (${file.value.length} bytes)');
       });
+
       final variant = product.variants?.firstOrNull;
-      if (!isAdding && product.variants != null && variant != null)
+      if (!isAdding && product.variants != null && variant != null) {
+        print('🔄 Updating variant: ${variant.id}');
         await safeApiCall(
           () => updateVariant(
             productId: productId,
@@ -48,10 +61,17 @@ class ProductActionService {
             updatedStock: variant.stock,
           ),
         );
+      }
 
+      print('🚀 Sending ${isAdding ? 'POST' : 'PATCH'} request...');
       final res = isAdding
           ? await _dio.post(url, data: formData)
           : await _dio.patch(url, data: formData);
+      
+      print('✅ Response Status: ${res.statusCode}');
+      print('✅ Response Data: ${res.data}');
+      print('🌐 === API CALL END ===\n');
+      
       if (res.statusCode == 413) throw UnknownAppException('Image too large');
       return CustomResponseModel.fromJson(res.data);
 

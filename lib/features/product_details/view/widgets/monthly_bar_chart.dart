@@ -145,20 +145,20 @@ class MonthlyBarChart extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        if (value > 0)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Text(
-              value >= 1000
-                  ? '${(value / 1000).toStringAsFixed(1)}k'
-                  : value.toInt().toString(),
-              style: TextStyle(
-                fontSize: 9,
-                color: color.withOpacity(0.8),
-                fontWeight: FontWeight.bold,
-              ),
+        // Always show value, including 0
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Text(
+            value >= 1000
+                ? '${(value / 1000).toStringAsFixed(1)}k'
+                : value.toInt().toString(),
+            style: TextStyle(
+              fontSize: 9,
+              color: color.withOpacity(0.8),
+              fontWeight: FontWeight.bold,
             ),
           ),
+        ),
         Container(
           width: 24,
           height: height,

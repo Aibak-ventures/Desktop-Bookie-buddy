@@ -19,13 +19,17 @@ class SaveProductCubit extends Cubit<SaveProductState> {
   }) async {
     emit(const _Submitted());
     try {
+      log('SaveProductCubit: Saving product with ID: ${product.productId}');
+      log('SaveProductCubit: Product name: ${product.name}');
+      log('SaveProductCubit: Is editing: ${product.productId != null}');
+      
       await _repository.saveProduct(
         product: product,
       );
 
       emit(const _Success());
     } catch (e, stackTrace) {
-      log(e.toString(), stackTrace: stackTrace);
+      log('SaveProductCubit: Error - $e', stackTrace: stackTrace);
       emit(_Error(e.toString()));
     }
   }

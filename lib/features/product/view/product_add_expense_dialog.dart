@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/expense_categories.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
@@ -48,18 +49,16 @@ class _ProductAddExpenseDialogState extends State<ProductAddExpenseDialog> {
 
   ProductVariantModel? selectedVariant;
 
-  final List<String> _categories = [
-    "Salary",
-    "Service",
-    "Miscellaneous",
-    'Other'
-  ];
+  late List<String> _categories;
   String? _selectedCategory;
   bool _showCustomCategoryField = false;
 
   @override
   void initState() {
     super.initState();
+    // Load categories based on service type
+    _categories = ExpenseCategories.forService(widget.mainServiceType);
+    
     if (widget.id != null) {
       dateController.text = widget.existingDate?.formatToUiDate() ?? '';
       expenseController.text = widget.existingAmount?.toString() ?? '';
