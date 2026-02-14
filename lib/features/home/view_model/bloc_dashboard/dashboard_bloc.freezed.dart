@@ -18,31 +18,33 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$DashboardEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(bool isOngoing, bool useOldState)
+    required TResult Function(UserModel? activeShop, bool useOldState)
         loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
     required TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
         updateData,
     required TResult Function() loadIfNot,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult? Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
     TResult? Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult? Function()? loadIfNot,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
     TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
@@ -105,7 +107,9 @@ abstract class _$$LoadDashboardDataImplCopyWith<$Res> {
           $Res Function(_$LoadDashboardDataImpl) then) =
       __$$LoadDashboardDataImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({bool isOngoing, bool useOldState});
+  $Res call({UserModel? activeShop, bool useOldState});
+
+  $UserModelCopyWith<$Res>? get activeShop;
 }
 
 /// @nodoc
@@ -121,38 +125,50 @@ class __$$LoadDashboardDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isOngoing = null,
+    Object? activeShop = freezed,
     Object? useOldState = null,
   }) {
     return _then(_$LoadDashboardDataImpl(
-      isOngoing: null == isOngoing
-          ? _value.isOngoing
-          : isOngoing // ignore: cast_nullable_to_non_nullable
-              as bool,
+      activeShop: freezed == activeShop
+          ? _value.activeShop
+          : activeShop // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
       useOldState: null == useOldState
           ? _value.useOldState
           : useOldState // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
+
+  /// Create a copy of DashboardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res>? get activeShop {
+    if (_value.activeShop == null) {
+      return null;
+    }
+
+    return $UserModelCopyWith<$Res>(_value.activeShop!, (value) {
+      return _then(_value.copyWith(activeShop: value));
+    });
+  }
 }
 
 /// @nodoc
 
 class _$LoadDashboardDataImpl implements _LoadDashboardData {
-  const _$LoadDashboardDataImpl(
-      {this.isOngoing = false, this.useOldState = false});
+  const _$LoadDashboardDataImpl({this.activeShop, this.useOldState = false});
 
   @override
-  @JsonKey()
-  final bool isOngoing;
+  final UserModel? activeShop;
   @override
   @JsonKey()
   final bool useOldState;
 
   @override
   String toString() {
-    return 'DashboardEvent.loadDashboardData(isOngoing: $isOngoing, useOldState: $useOldState)';
+    return 'DashboardEvent.loadDashboardData(activeShop: $activeShop, useOldState: $useOldState)';
   }
 
   @override
@@ -160,14 +176,14 @@ class _$LoadDashboardDataImpl implements _LoadDashboardData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadDashboardDataImpl &&
-            (identical(other.isOngoing, isOngoing) ||
-                other.isOngoing == isOngoing) &&
+            (identical(other.activeShop, activeShop) ||
+                other.activeShop == activeShop) &&
             (identical(other.useOldState, useOldState) ||
                 other.useOldState == useOldState));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isOngoing, useOldState);
+  int get hashCode => Object.hash(runtimeType, activeShop, useOldState);
 
   /// Create a copy of DashboardEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -181,43 +197,45 @@ class _$LoadDashboardDataImpl implements _LoadDashboardData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(bool isOngoing, bool useOldState)
+    required TResult Function(UserModel? activeShop, bool useOldState)
         loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
     required TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
         updateData,
     required TResult Function() loadIfNot,
   }) {
-    return loadDashboardData(isOngoing, useOldState);
+    return loadDashboardData(activeShop, useOldState);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult? Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
     TResult? Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult? Function()? loadIfNot,
   }) {
-    return loadDashboardData?.call(isOngoing, useOldState);
+    return loadDashboardData?.call(activeShop, useOldState);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
     TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
   }) {
     if (loadDashboardData != null) {
-      return loadDashboardData(isOngoing, useOldState);
+      return loadDashboardData(activeShop, useOldState);
     }
     return orElse();
   }
@@ -265,9 +283,10 @@ class _$LoadDashboardDataImpl implements _LoadDashboardData {
 
 abstract class _LoadDashboardData implements DashboardEvent {
   const factory _LoadDashboardData(
-      {final bool isOngoing, final bool useOldState}) = _$LoadDashboardDataImpl;
+      {final UserModel? activeShop,
+      final bool useOldState}) = _$LoadDashboardDataImpl;
 
-  bool get isOngoing;
+  UserModel? get activeShop;
   bool get useOldState;
 
   /// Create a copy of DashboardEvent
@@ -321,11 +340,11 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(bool isOngoing, bool useOldState)
+    required TResult Function(UserModel? activeShop, bool useOldState)
         loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
     required TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
         updateData,
     required TResult Function() loadIfNot,
   }) {
@@ -335,10 +354,11 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult? Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
     TResult? Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult? Function()? loadIfNot,
   }) {
@@ -348,10 +368,11 @@ class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
     TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
@@ -413,8 +434,9 @@ abstract class _$$UpdateDataImplCopyWith<$Res> {
           _$UpdateDataImpl value, $Res Function(_$UpdateDataImpl) then) =
       __$$UpdateDataImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {DashboardListModel? updateData, bool shouldRefresh, bool isDeleted});
+  $Res call({BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted});
+
+  $BookingsModelCopyWith<$Res>? get updateBooking;
 }
 
 /// @nodoc
@@ -430,15 +452,15 @@ class __$$UpdateDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? updateData = freezed,
+    Object? updateBooking = freezed,
     Object? shouldRefresh = null,
     Object? isDeleted = null,
   }) {
     return _then(_$UpdateDataImpl(
-      freezed == updateData
-          ? _value.updateData
-          : updateData // ignore: cast_nullable_to_non_nullable
-              as DashboardListModel?,
+      freezed == updateBooking
+          ? _value.updateBooking
+          : updateBooking // ignore: cast_nullable_to_non_nullable
+              as BookingsModel?,
       shouldRefresh: null == shouldRefresh
           ? _value.shouldRefresh
           : shouldRefresh // ignore: cast_nullable_to_non_nullable
@@ -449,16 +471,30 @@ class __$$UpdateDataImplCopyWithImpl<$Res>
               as bool,
     ));
   }
+
+  /// Create a copy of DashboardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $BookingsModelCopyWith<$Res>? get updateBooking {
+    if (_value.updateBooking == null) {
+      return null;
+    }
+
+    return $BookingsModelCopyWith<$Res>(_value.updateBooking!, (value) {
+      return _then(_value.copyWith(updateBooking: value));
+    });
+  }
 }
 
 /// @nodoc
 
 class _$UpdateDataImpl implements _UpdateData {
-  const _$UpdateDataImpl(this.updateData,
+  const _$UpdateDataImpl(this.updateBooking,
       {this.shouldRefresh = false, this.isDeleted = false});
 
   @override
-  final DashboardListModel? updateData;
+  final BookingsModel? updateBooking;
   @override
   @JsonKey()
   final bool shouldRefresh;
@@ -468,7 +504,7 @@ class _$UpdateDataImpl implements _UpdateData {
 
   @override
   String toString() {
-    return 'DashboardEvent.updateData(updateData: $updateData, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
+    return 'DashboardEvent.updateData(updateBooking: $updateBooking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
   }
 
   @override
@@ -476,8 +512,8 @@ class _$UpdateDataImpl implements _UpdateData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UpdateDataImpl &&
-            (identical(other.updateData, updateData) ||
-                other.updateData == updateData) &&
+            (identical(other.updateBooking, updateBooking) ||
+                other.updateBooking == updateBooking) &&
             (identical(other.shouldRefresh, shouldRefresh) ||
                 other.shouldRefresh == shouldRefresh) &&
             (identical(other.isDeleted, isDeleted) ||
@@ -486,7 +522,7 @@ class _$UpdateDataImpl implements _UpdateData {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, updateData, shouldRefresh, isDeleted);
+      Object.hash(runtimeType, updateBooking, shouldRefresh, isDeleted);
 
   /// Create a copy of DashboardEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -499,43 +535,45 @@ class _$UpdateDataImpl implements _UpdateData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(bool isOngoing, bool useOldState)
+    required TResult Function(UserModel? activeShop, bool useOldState)
         loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
     required TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
         updateData,
     required TResult Function() loadIfNot,
   }) {
-    return updateData(this.updateData, shouldRefresh, isDeleted);
+    return updateData(updateBooking, shouldRefresh, isDeleted);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult? Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
     TResult? Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult? Function()? loadIfNot,
   }) {
-    return updateData?.call(this.updateData, shouldRefresh, isDeleted);
+    return updateData?.call(updateBooking, shouldRefresh, isDeleted);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
     TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
   }) {
     if (updateData != null) {
-      return updateData(this.updateData, shouldRefresh, isDeleted);
+      return updateData(updateBooking, shouldRefresh, isDeleted);
     }
     return orElse();
   }
@@ -582,10 +620,10 @@ class _$UpdateDataImpl implements _UpdateData {
 }
 
 abstract class _UpdateData implements DashboardEvent {
-  const factory _UpdateData(final DashboardListModel? updateData,
+  const factory _UpdateData(final BookingsModel? updateBooking,
       {final bool shouldRefresh, final bool isDeleted}) = _$UpdateDataImpl;
 
-  DashboardListModel? get updateData;
+  BookingsModel? get updateBooking;
   bool get shouldRefresh;
   bool get isDeleted;
 
@@ -637,11 +675,11 @@ class _$LoadIfNotImpl implements _LoadIfNot {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(bool isOngoing, bool useOldState)
+    required TResult Function(UserModel? activeShop, bool useOldState)
         loadDashboardData,
     required TResult Function() loadDashboardNextPageData,
     required TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
         updateData,
     required TResult Function() loadIfNot,
   }) {
@@ -651,10 +689,11 @@ class _$LoadIfNotImpl implements _LoadIfNot {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult? Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult? Function()? loadDashboardNextPageData,
     TResult? Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult? Function()? loadIfNot,
   }) {
@@ -664,10 +703,11 @@ class _$LoadIfNotImpl implements _LoadIfNot {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(bool isOngoing, bool useOldState)? loadDashboardData,
+    TResult Function(UserModel? activeShop, bool useOldState)?
+        loadDashboardData,
     TResult Function()? loadDashboardNextPageData,
     TResult Function(
-            DashboardListModel? updateData, bool shouldRefresh, bool isDeleted)?
+            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
         updateData,
     TResult Function()? loadIfNot,
     required TResult orElse(),
@@ -729,11 +769,13 @@ mixin _$DashboardState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)
+            int currentPage,
+            int totalPages,
+            bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) =>
@@ -742,11 +784,13 @@ mixin _$DashboardState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
   }) =>
@@ -755,11 +799,13 @@ mixin _$DashboardState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
@@ -853,11 +899,13 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)
+            int currentPage,
+            int totalPages,
+            bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -869,11 +917,13 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
   }) {
@@ -885,11 +935,13 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
@@ -946,13 +998,15 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {Map<String, List<DashboardListModel>> dataGrouped,
-      CarouselDataModel carouselData,
+      {Map<String, List<BookingsModel>> upcomingGrouped,
+      Map<String, List<BookingsModel>> returnsGrouped,
+      DesktopDashboardCarouselData carouselData,
       String? nextPageUrl,
-      bool isPaginating,
-      bool isOngoing});
+      int currentPage,
+      int totalPages,
+      bool isPaginating});
 
-  $CarouselDataModelCopyWith<$Res> get carouselData;
+  $DesktopDashboardCarouselDataCopyWith<$Res> get carouselData;
 }
 
 /// @nodoc
@@ -968,32 +1022,42 @@ class __$$LoadedImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? dataGrouped = null,
+    Object? upcomingGrouped = null,
+    Object? returnsGrouped = null,
     Object? carouselData = null,
     Object? nextPageUrl = freezed,
+    Object? currentPage = null,
+    Object? totalPages = null,
     Object? isPaginating = null,
-    Object? isOngoing = null,
   }) {
     return _then(_$LoadedImpl(
-      dataGrouped: null == dataGrouped
-          ? _value._dataGrouped
-          : dataGrouped // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<DashboardListModel>>,
+      upcomingGrouped: null == upcomingGrouped
+          ? _value._upcomingGrouped
+          : upcomingGrouped // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<BookingsModel>>,
+      returnsGrouped: null == returnsGrouped
+          ? _value._returnsGrouped
+          : returnsGrouped // ignore: cast_nullable_to_non_nullable
+              as Map<String, List<BookingsModel>>,
       carouselData: null == carouselData
           ? _value.carouselData
           : carouselData // ignore: cast_nullable_to_non_nullable
-              as CarouselDataModel,
+              as DesktopDashboardCarouselData,
       nextPageUrl: freezed == nextPageUrl
           ? _value.nextPageUrl
           : nextPageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      currentPage: null == currentPage
+          ? _value.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
       isPaginating: null == isPaginating
           ? _value.isPaginating
           : isPaginating // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isOngoing: null == isOngoing
-          ? _value.isOngoing
-          : isOngoing // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -1002,8 +1066,9 @@ class __$$LoadedImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $CarouselDataModelCopyWith<$Res> get carouselData {
-    return $CarouselDataModelCopyWith<$Res>(_value.carouselData, (value) {
+  $DesktopDashboardCarouselDataCopyWith<$Res> get carouselData {
+    return $DesktopDashboardCarouselDataCopyWith<$Res>(_value.carouselData,
+        (value) {
       return _then(_value.copyWith(carouselData: value));
     });
   }
@@ -1013,35 +1078,47 @@ class __$$LoadedImplCopyWithImpl<$Res>
 
 class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl(
-      {required final Map<String, List<DashboardListModel>> dataGrouped,
+      {required final Map<String, List<BookingsModel>> upcomingGrouped,
+      required final Map<String, List<BookingsModel>> returnsGrouped,
       required this.carouselData,
       required this.nextPageUrl,
-      this.isPaginating = false,
-      this.isOngoing = false})
-      : _dataGrouped = dataGrouped;
+      required this.currentPage,
+      required this.totalPages,
+      this.isPaginating = false})
+      : _upcomingGrouped = upcomingGrouped,
+        _returnsGrouped = returnsGrouped;
 
-  final Map<String, List<DashboardListModel>> _dataGrouped;
+  final Map<String, List<BookingsModel>> _upcomingGrouped;
   @override
-  Map<String, List<DashboardListModel>> get dataGrouped {
-    if (_dataGrouped is EqualUnmodifiableMapView) return _dataGrouped;
+  Map<String, List<BookingsModel>> get upcomingGrouped {
+    if (_upcomingGrouped is EqualUnmodifiableMapView) return _upcomingGrouped;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_dataGrouped);
+    return EqualUnmodifiableMapView(_upcomingGrouped);
+  }
+
+  final Map<String, List<BookingsModel>> _returnsGrouped;
+  @override
+  Map<String, List<BookingsModel>> get returnsGrouped {
+    if (_returnsGrouped is EqualUnmodifiableMapView) return _returnsGrouped;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_returnsGrouped);
   }
 
   @override
-  final CarouselDataModel carouselData;
+  final DesktopDashboardCarouselData carouselData;
   @override
   final String? nextPageUrl;
   @override
-  @JsonKey()
-  final bool isPaginating;
+  final int currentPage;
+  @override
+  final int totalPages;
   @override
   @JsonKey()
-  final bool isOngoing;
+  final bool isPaginating;
 
   @override
   String toString() {
-    return 'DashboardState.loaded(dataGrouped: $dataGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, isOngoing: $isOngoing)';
+    return 'DashboardState.loaded(upcomingGrouped: $upcomingGrouped, returnsGrouped: $returnsGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages, isPaginating: $isPaginating)';
   }
 
   @override
@@ -1050,25 +1127,31 @@ class _$LoadedImpl implements _Loaded {
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
             const DeepCollectionEquality()
-                .equals(other._dataGrouped, _dataGrouped) &&
+                .equals(other._upcomingGrouped, _upcomingGrouped) &&
+            const DeepCollectionEquality()
+                .equals(other._returnsGrouped, _returnsGrouped) &&
             (identical(other.carouselData, carouselData) ||
                 other.carouselData == carouselData) &&
             (identical(other.nextPageUrl, nextPageUrl) ||
                 other.nextPageUrl == nextPageUrl) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
+            (identical(other.totalPages, totalPages) ||
+                other.totalPages == totalPages) &&
             (identical(other.isPaginating, isPaginating) ||
-                other.isPaginating == isPaginating) &&
-            (identical(other.isOngoing, isOngoing) ||
-                other.isOngoing == isOngoing));
+                other.isPaginating == isPaginating));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_dataGrouped),
+      const DeepCollectionEquality().hash(_upcomingGrouped),
+      const DeepCollectionEquality().hash(_returnsGrouped),
       carouselData,
       nextPageUrl,
-      isPaginating,
-      isOngoing);
+      currentPage,
+      totalPages,
+      isPaginating);
 
   /// Create a copy of DashboardState
   /// with the given fields replaced by the non-null parameter values.
@@ -1083,16 +1166,18 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)
+            int currentPage,
+            int totalPages,
+            bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) {
-    return loaded(
-        dataGrouped, carouselData, nextPageUrl, isPaginating, isOngoing);
+    return loaded(upcomingGrouped, returnsGrouped, carouselData, nextPageUrl,
+        currentPage, totalPages, isPaginating);
   }
 
   @override
@@ -1100,16 +1185,18 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
   }) {
-    return loaded?.call(
-        dataGrouped, carouselData, nextPageUrl, isPaginating, isOngoing);
+    return loaded?.call(upcomingGrouped, returnsGrouped, carouselData,
+        nextPageUrl, currentPage, totalPages, isPaginating);
   }
 
   @override
@@ -1117,18 +1204,20 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(
-          dataGrouped, carouselData, nextPageUrl, isPaginating, isOngoing);
+      return loaded(upcomingGrouped, returnsGrouped, carouselData, nextPageUrl,
+          currentPage, totalPages, isPaginating);
     }
     return orElse();
   }
@@ -1170,17 +1259,21 @@ class _$LoadedImpl implements _Loaded {
 
 abstract class _Loaded implements DashboardState {
   const factory _Loaded(
-      {required final Map<String, List<DashboardListModel>> dataGrouped,
-      required final CarouselDataModel carouselData,
+      {required final Map<String, List<BookingsModel>> upcomingGrouped,
+      required final Map<String, List<BookingsModel>> returnsGrouped,
+      required final DesktopDashboardCarouselData carouselData,
       required final String? nextPageUrl,
-      final bool isPaginating,
-      final bool isOngoing}) = _$LoadedImpl;
+      required final int currentPage,
+      required final int totalPages,
+      final bool isPaginating}) = _$LoadedImpl;
 
-  Map<String, List<DashboardListModel>> get dataGrouped;
-  CarouselDataModel get carouselData;
+  Map<String, List<BookingsModel>> get upcomingGrouped;
+  Map<String, List<BookingsModel>> get returnsGrouped;
+  DesktopDashboardCarouselData get carouselData;
   String? get nextPageUrl;
+  int get currentPage;
+  int get totalPages;
   bool get isPaginating;
-  bool get isOngoing;
 
   /// Create a copy of DashboardState
   /// with the given fields replaced by the non-null parameter values.
@@ -1259,11 +1352,13 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)
+            int currentPage,
+            int totalPages,
+            bool isPaginating)
         loaded,
     required TResult Function(String error) error,
   }) {
@@ -1275,11 +1370,13 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult? Function(String error)? error,
   }) {
@@ -1291,11 +1388,13 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(
-            Map<String, List<DashboardListModel>> dataGrouped,
-            CarouselDataModel carouselData,
+            Map<String, List<BookingsModel>> upcomingGrouped,
+            Map<String, List<BookingsModel>> returnsGrouped,
+            DesktopDashboardCarouselData carouselData,
             String? nextPageUrl,
-            bool isPaginating,
-            bool isOngoing)?
+            int currentPage,
+            int totalPages,
+            bool isPaginating)?
         loaded,
     TResult Function(String error)? error,
     required TResult orElse(),

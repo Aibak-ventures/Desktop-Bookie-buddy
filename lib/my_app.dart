@@ -65,8 +65,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => SelectedProductsCubit()),
         BlocProvider(
-          create: (context) => DashboardBloc(repository: getIt.get<DashboardRepository>())
-            ..add(
+          create: (context) => DashboardBloc(
+            repository: getIt.get<DashboardRepository>(),
+            userCubit: context.read<UserCubit>(),
+          )..add(
               const DashboardEvent.loadDashboardData(),
             ),
         ),

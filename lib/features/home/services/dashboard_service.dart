@@ -7,10 +7,47 @@ import 'package:bookie_buddy_web/core/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/network_exceptions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
-// import 'package:bookie_buddy_web/core/models/pagination_model.dart';
+import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
 import 'package:dio/dio.dart';
 
 class DashboardService {
+  /// Fetches dashboard data from the new desktop-dashboard v4 API endpoint
+  Future<DesktopDashboardResponse> fetchDesktopDashboardData({
+    int page = 1,
+    String? activeShopId,
+  }) async {
+    try {
+      // Use the new desktop-dashboard endpoint
+      final response = await DioClient.dio.get(
+        '/api/v4/bookings/desktop-dashboard/',
+        queryParameters: {
+          'page': page,
+        },
+        options: Options(
+          headers: {
+            if (activeShopId != null && activeShopId.isNotEmpty)
+              'X-Active-Shop-ID': activeShopId,
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        log('status code: ${response.statusCode}, data: ${response.data}');
+      }
+
+      _validateResponse(response);
+
+      return DesktopDashboardResponse.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  /// Legacy method for backward compatibility - will be removed once migration is complete
+  @Deprecated('Use fetchDesktopDashboardData instead')
   Future<CustomResponseModel> fetchDashboardData(
     int page, {
     bool isOngoing = false,
@@ -80,5 +117,3 @@ class DashboardService {
     }
   }
 }
-
-

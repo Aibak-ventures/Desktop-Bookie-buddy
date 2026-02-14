@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
 import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
+import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.dart';
-// import 'package:booking_applica/features/home/repository/dashboard_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -15,40 +18,54 @@ part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final DashboardRepository _repository;
-  DashboardBloc({required DashboardRepository repository})
-    : _repository = repository,
-      super(const _Loading()) {
+  final UserCubit? _userCubit;
+
+  DashboardBloc({
+    required DashboardRepository repository,
+    UserCubit? userCubit,
+  })  : _repository = repository,
+        _userCubit = userCubit,
+        super(const _Loading()) {
     on<_LoadDashboardData>(_onLoadDashboardData);
     on<_LoadDashboardNextPageData>(_onLoadDashboardNextPageData);
     on<_UpdateData>(_onUpdateData);
     on<_LoadIfNot>(_loadIfNot);
   }
-  CarouselDataModel? previousCarousel;
-  CarouselDataModel carouselResponse = CarouselDataModel.initial();
+
+  DesktopDashboardCarouselData? previousCarousel;
+  DesktopDashboardCarouselData carouselResponse =
+      DesktopDashboardCarouselData.empty();
 
   // Groups bookings into 'today', 'tomorrow', and 'upcoming' based on their pickup or return dates.
-  Map<String, List<DashboardListModel>> _groupData(
-    List<DashboardListModel> dashboardData, {
-    bool isOngoing = false,
+  Map<String, List<BookingsModel>> _groupData(
+    List<BookingsModel> bookings, {
+    required bool useReturnDate,
   }) {
-    final todayList = <DashboardListModel>[];
-    final tomorrowList = <DashboardListModel>[];
-    final upcomingList = <DashboardListModel>[];
+    final todayList = <BookingsModel>[];
+    final tomorrowList = <BookingsModel>[];
+    final upcomingList = <BookingsModel>[];
 
-    for (final data in dashboardData) {
-      // when using pickup date for grouping we need to check both booking and custom work
-      // and use the available one that means that data could be either booking or custom work
-      final pickupDate =
-          data.booking?.pickupDate ?? data.customWork?.pickupDate;
-      // Determine the relevant date based on whether it's ongoing or not
-      // For ongoing bookings, use the return date; otherwise, use the pickup date for bookings or custom work.
-      final date = isOngoing ? data.booking!.returnDate : pickupDate;
-      if (date!.isDateToday) {
-        todayList.add(data);
-      } else if (date.isDateTomorrow) {
-        tomorrowList.add(data);
+    final today = DateTime.now();
+    final tomorrow = today.add(const Duration(days: 1));
+
+    for (final booking in bookings) {
+      // Determine the relevant date based on whether it's for returns or upcoming
+      final date = useReturnDate ? booking.returnDate : booking.pickupDate;
+
+      if (date == null) continue;
+
+      // Reset time to compare dates only
+      final bookingDate = DateTime(date.year, date.month, date.day);
+      final todayDate = DateTime(today.year, today.month, today.day);
+      final tomorrowDate =
+          DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
+
+      if (bookingDate == todayDate) {
+        todayList.add(booking);
+      } else if (bookingDate == tomorrowDate) {
+        tomorrowList.add(booking);
       } else {
-        upcomingList.add(data);
+        upcomingList.add(booking);
       }
     }
 
@@ -59,34 +76,44 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     };
   }
 
-  /// Loads the first page of dashboard data.
-  ///
-  /// If the user is not loaded, it will trigger the user loading process.
+  /// Loads the first page of desktop dashboard data using the new v4 API.
   ///
   /// If the loading succeeds, it will emit [DashboardState.loaded] with the
-  /// loaded bookings, next page url, and carousel response.
+  /// loaded bookings grouped by Today/Tomorrow/Upcoming and carousel response.
   ///
   /// If the loading fails, it will emit [DashboardState.error] with the error.
   Future<void> _onLoadDashboardData(
     _LoadDashboardData event,
     Emitter<DashboardState> emit,
   ) async {
-    final s = state is _Loaded && event.useOldState ? state as _Loaded : null;
     emit(const _Loading());
     previousCarousel = carouselResponse;
 
     try {
-      final isOngoing = s?.isOngoing ?? event.isOngoing;
-      final result = await _repository.loadDashboardData(isOngoing: isOngoing);
-      final data = result.data;
-      final nextPage = data.nextPageUrl;
-      carouselResponse = result.carousel;
+      final activeShop = event.activeShop ?? _userCubit?.state;
+      final response = await _repository.loadDesktopDashboardData(
+        page: 1,
+        activeShop: activeShop,
+      );
+
+      // Group data for UI display
+      final upcomingGrouped =
+          _groupData(response.upcoming, useReturnDate: false);
+      final returnsGrouped =
+          _groupData(response.ongoingBookings, useReturnDate: true);
+
+      // Update carousel data
+      carouselResponse = response.carouselData;
+
       emit(
         _Loaded(
-          dataGrouped: _groupData(data.data, isOngoing: isOngoing),
-          nextPageUrl: nextPage,
+          upcomingGrouped: upcomingGrouped,
+          returnsGrouped: returnsGrouped,
+          nextPageUrl: response.nextPageUrl,
           carouselData: carouselResponse,
-          isOngoing: isOngoing,
+          currentPage: response.currentPage,
+          totalPages: response.totalPages,
+          isPaginating: false,
         ),
       );
     } catch (e) {
@@ -94,15 +121,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  /// Loads the next page of dashboard data.
+  /// Loads the next page of dashboard data using the new v4 API.
   ///
   /// If the state is not [_Loaded], it will do nothing.
   ///
   /// If the next page url is null or the state is already paginating, it will do
   /// nothing.
   ///
-  /// It will emit [_Loaded] with the new bookings, next page url, and carousel
-  /// response.
+  /// It will emit [_Loaded] with the new bookings merged with existing data.
   ///
   /// If the loading fails, it will emit [_Error] with the error.
   Future<void> _onLoadDashboardNextPageData(
@@ -118,30 +144,49 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
-      final result = await _repository.loadDashboardData(
+      final activeShop = _userCubit?.state;
+      final response = await _repository.loadDesktopDashboardData(
         page: page,
-        isOngoing: s.isOngoing,
+        activeShop: activeShop,
       );
-      final newData = result.data;
-      final nextPage = newData.nextPageUrl;
-      final newGrouped = _groupData(newData.data, isOngoing: s.isOngoing);
 
-      /// Merge the existing groups with the new groups
-      final mergedGrouped = {...s.dataGrouped};
+      // Group the new data
+      final newUpcomingGrouped =
+          _groupData(response.upcoming, useReturnDate: false);
+      final newReturnsGrouped =
+          _groupData(response.ongoingBookings, useReturnDate: true);
 
-      newGrouped.forEach((key, value) {
-        if (mergedGrouped.containsKey(key)) {
-          mergedGrouped[key] = [...mergedGrouped[key]!, ...value];
+      // Merge the existing groups with the new groups
+      final mergedUpcomingGrouped = {...s.upcomingGrouped};
+      final mergedReturnsGrouped = {...s.returnsGrouped};
+
+      newUpcomingGrouped.forEach((key, value) {
+        if (mergedUpcomingGrouped.containsKey(key)) {
+          mergedUpcomingGrouped[key] = [
+            ...mergedUpcomingGrouped[key]!,
+            ...value
+          ];
         } else {
-          mergedGrouped[key] = value;
+          mergedUpcomingGrouped[key] = value;
+        }
+      });
+
+      newReturnsGrouped.forEach((key, value) {
+        if (mergedReturnsGrouped.containsKey(key)) {
+          mergedReturnsGrouped[key] = [...mergedReturnsGrouped[key]!, ...value];
+        } else {
+          mergedReturnsGrouped[key] = value;
         }
       });
 
       emit(
         s.copyWith(
-          dataGrouped: mergedGrouped,
-          nextPageUrl: nextPage,
-          carouselData: result.carousel,
+          upcomingGrouped: mergedUpcomingGrouped,
+          returnsGrouped: mergedReturnsGrouped,
+          nextPageUrl: response.nextPageUrl,
+          carouselData: response.carouselData,
+          currentPage: response.currentPage,
+          totalPages: response.totalPages,
           isPaginating: false,
         ),
       );
@@ -154,54 +199,69 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _UpdateData event,
     Emitter<DashboardState> emit,
   ) async {
-    if (event.shouldRefresh && !event.isDeleted) {
-      log('refreshing');
-      add(const DashboardEvent.loadDashboardData());
+    if (event.shouldRefresh) {
+      log('refreshing dashboard data');
+      add(DashboardEvent.loadDashboardData(activeShop: _userCubit?.state));
       return;
     }
 
-    if (event.updateData == null) {
+    if (event.updateBooking == null) {
       log('booking is null, cancelling update');
       return;
     }
 
     final s = state as _Loaded;
 
-    final updatedGrouped = {
-      for (final entry in s.dataGrouped.entries)
-        entry.key: List<DashboardListModel>.from(entry.value),
+    // Create deep copies of the grouped data
+    final updatedUpcomingGrouped = {
+      for (final entry in s.upcomingGrouped.entries)
+        entry.key: List<BookingsModel>.from(entry.value),
     };
-    final eventId =
-        event.updateData?.booking?.id ?? event.updateData?.customWork?.id;
+    final updatedReturnsGrouped = {
+      for (final entry in s.returnsGrouped.entries)
+        entry.key: List<BookingsModel>.from(entry.value),
+    };
+
+    final eventId = event.updateBooking?.id;
 
     if (event.isDeleted) {
-      updatedGrouped.forEach((key, dataList) {
-        dataList.removeWhere((b) {
-          final leftId = b.booking?.id ?? b.customWork?.id;
-          return leftId == eventId;
-        });
+      // Remove from both upcoming and returns groups
+      updatedUpcomingGrouped.forEach((key, bookingList) {
+        bookingList.removeWhere((b) => b.id == eventId);
+      });
+      updatedReturnsGrouped.forEach((key, bookingList) {
+        bookingList.removeWhere((b) => b.id == eventId);
       });
     } else {
-      updatedGrouped.forEach((key, dataList) {
-        final index = dataList.indexWhere((b) {
-          final leftId = b.booking?.id ?? b.customWork?.id;
-          return leftId == eventId;
-        });
+      // Update in both groups if found
+      updatedUpcomingGrouped.forEach((key, bookingList) {
+        final index = bookingList.indexWhere((b) => b.id == eventId);
         if (index != -1) {
-          dataList[index] = event.updateData!;
+          bookingList[index] = event.updateBooking!;
+        }
+      });
+      updatedReturnsGrouped.forEach((key, bookingList) {
+        final index = bookingList.indexWhere((b) => b.id == eventId);
+        if (index != -1) {
+          bookingList[index] = event.updateBooking!;
         }
       });
     }
 
-    emit(s.copyWith(dataGrouped: updatedGrouped));
+    emit(s.copyWith(
+      upcomingGrouped: updatedUpcomingGrouped,
+      returnsGrouped: updatedReturnsGrouped,
+    ));
   }
 
   void _loadIfNot(_LoadIfNot event, Emitter<DashboardState> emit) {
-    if (state is! _Loaded) add(const DashboardEvent.loadDashboardData());
+    if (state is! _Loaded) {
+      add(DashboardEvent.loadDashboardData(activeShop: _userCubit?.state));
+    }
   }
 
   void reset() {
     previousCarousel = null;
-    carouselResponse = CarouselDataModel.initial();
+    carouselResponse = DesktopDashboardCarouselData.empty();
   }
 }

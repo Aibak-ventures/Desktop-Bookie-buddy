@@ -2,9 +2,9 @@ part of 'dashboard_bloc.dart';
 
 @freezed
 class DashboardEvent with _$DashboardEvent {
-  /// Load initial dashboard data
+  /// Load initial desktop dashboard data using v4 API
   const factory DashboardEvent.loadDashboardData({
-    @Default(false) bool isOngoing,
+    UserModel? activeShop,
     @Default(false) bool useOldState,
   }) = _LoadDashboardData;
 
@@ -13,13 +13,10 @@ class DashboardEvent with _$DashboardEvent {
       _LoadDashboardNextPageData;
 
   const factory DashboardEvent.updateData(
-    DashboardListModel? updateData, {
+    BookingsModel? updateBooking, {
     @Default(false) bool shouldRefresh,
     @Default(false) bool isDeleted,
   }) = _UpdateData;
-
-  /// Search by query
-  // const factory DashboardEvent.search(String query) = _Search;
 
   const factory DashboardEvent.loadIfNot() = _LoadIfNot;
 }

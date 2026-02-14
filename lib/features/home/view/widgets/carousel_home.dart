@@ -10,12 +10,12 @@ import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_bookin
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
-import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
+import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarouselHome extends StatelessWidget {
-  final CarouselDataModel data;
+  final DesktopDashboardCarouselData data;
 
   const CarouselHome({
     required this.data,
@@ -27,14 +27,14 @@ class CarouselHome extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 750),
+        constraints: const BoxConstraints(maxWidth: 900),
         child: Row(
           children: [
             Expanded(
               child: _buildCard(
                 context,
                 title: 'Upcoming',
-                value: data.upComingCount.toString(),
+                value: data.totalUpcoming.toString(),
                 gradient: const [
                   Color(0xFF4C0FFF),
                   Color(0xFF8A63FE),
@@ -47,8 +47,22 @@ class CarouselHome extends StatelessWidget {
             Expanded(
               child: _buildCard(
                 context,
+                title: 'Returns',
+                value: data.totalOngoing.toString(),
+                gradient: const [
+                  Color(0xFFFF8A00),
+                  Color(0xFFFFB347),
+                ],
+                icon: Icons.assignment_return,
+                onTap: () => _openAllBookingsWithTab(context, 'ongoing'),
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: _buildCard(
+                context,
                 title: 'Completed',
-                value: data.completedCount.toString(),
+                value: data.totalCompleted.toString(),
                 gradient: const [
                   Color(0xFF015DFF),
                   Color(0xFF05ADFF),
@@ -62,7 +76,7 @@ class CarouselHome extends StatelessWidget {
               child: _buildCard(
                 context,
                 title: 'Expired',
-                value: data.expiredCount.toString(),
+                value: data.totalExpired.toString(),
                 gradient: const [
                   Color(0xFFFF4757),
                   Color(0xFFFF6B7A),

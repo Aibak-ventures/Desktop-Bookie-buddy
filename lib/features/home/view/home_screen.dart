@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widge
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
-import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
+import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/home/view/widgets/carousel_home.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:flutter/material.dart';
@@ -69,21 +69,17 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // Two column layout without tabs
-                        SizedBox(
-                          height: 600, // Fixed height for scrollable columns
-                          child: BlocBuilder<DashboardBloc, DashboardState>(
-                            builder: (context, state) {
-                              return state.maybeWhen(
-                                loaded: (dataGrouped, _, __, ___, ____) {
-                                  return _buildTwoColumnBookings(
-                                      context, dataGrouped, bloc);
-                                },
-                                orElse: () => const SizedBox.shrink(),
-                              );
-                            },
+                        const Text(
+                          'Recent Bookings',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1F2937),
                           ),
                         ),
+                        const SizedBox(
+                            height: 16), // Two column layout without tabs
+                        _buildTwoColumnBookings(context, bloc),
                         const SizedBox(height: 50),
                       ],
                     ),
@@ -185,50 +181,60 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// Two column layout showing Upcoming and Ongoing bookings
+  /// Two column layout showing Upcoming and Returns bookings with Today/Tomorrow/Upcoming grouping
   Widget _buildTwoColumnBookings(
     BuildContext context,
-    Map<String, List<DashboardListModel>> dataGrouped,
     DashboardBloc bloc,
   ) {
-    final upcomingBookings = dataGrouped['upcoming']
-            ?.where((item) => item.isBooking && item.booking != null)
-            .toList() ??
-        [];
-    final ongoingBookings = dataGrouped['ongoing']
-            ?.where((item) => item.isBooking && item.booking != null)
-            .toList() ??
-        [];
+    return SizedBox(
+      height: 600, // Fixed height for scrollable columns
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            loaded: (upcomingGrouped, returnsGrouped, _, __, ___, ____, _____) {
+              // Calculate total counts
+              final upcomingCount = upcomingGrouped.values
+                  .fold<int>(0, (sum, list) => sum + list.length);
+              final returnsCount = returnsGrouped.values
+                  .fold<int>(0, (sum, list) => sum + list.length);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Upcoming Column
-        Expanded(
-          child: _buildBookingColumn(
-            context,
-            title: 'Upcoming Bookings',
-            icon: Icons.schedule,
-            bookings: upcomingBookings,
-            color: const Color(0xFF667eea),
-            useReturnDate: false,
-            bloc: bloc,
-          ),
-        ),
-        const SizedBox(width: 24),
-        // Ongoing Column
-        Expanded(
-          child: _buildBookingColumn(
-            context,
-            title: 'Ongoing Bookings',
-            icon: Icons.access_time,
-            bookings: ongoingBookings,
-            color: const Color(0xFF06b6d4),
-            useReturnDate: true,
-            bloc: bloc,
-          ),
-        ),
-      ],
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Upcoming Column
+                  Expanded(
+                    child: _buildBookingColumn(
+                      context,
+                      title: 'Upcoming Bookings',
+                      icon: Icons.schedule,
+                      groupedBookings: upcomingGrouped,
+                      totalCount: upcomingCount,
+                      color: const Color(0xFF667eea),
+                      useReturnDate: false,
+                      bloc: bloc,
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  // Returns Column (renamed from Ongoing)
+                  Expanded(
+                    child: _buildBookingColumn(
+                      context,
+                      title: 'Returns Booking',
+                      icon: Icons.assignment_return,
+                      groupedBookings: returnsGrouped,
+                      totalCount: returnsCount,
+                      color: const Color(0xFFff8a00),
+                      useReturnDate: true,
+                      bloc: bloc,
+                    ),
+                  ),
+                ],
+              );
+            },
+            orElse: () => const SizedBox.shrink(),
+          );
+        },
+      ),
     );
   }
 
@@ -236,7 +242,8 @@ class HomeScreen extends StatelessWidget {
     BuildContext context, {
     required String title,
     required IconData icon,
-    required List<DashboardListModel> bookings,
+    required Map<String, List<BookingsModel>> groupedBookings,
+    required int totalCount,
     required Color color,
     required bool useReturnDate,
     required DashboardBloc bloc,
@@ -250,7 +257,7 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          // Header with total count
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -281,7 +288,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${bookings.length}',
+                    '$totalCount',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -292,8 +299,8 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          // Booking List
-          if (bookings.isEmpty)
+          // Booking List with Today/Tomorrow/Upcoming sections
+          if (totalCount == 0)
             const Expanded(
               child: Center(
                 child: NoResultFoundAnimationWidget(isScrollable: false),
@@ -301,48 +308,132 @@ class HomeScreen extends StatelessWidget {
             )
           else
             Expanded(
-              child: ListView.builder(
+              child: ListView(
                 padding: const EdgeInsets.all(16),
-                itemCount: bookings.length,
-                itemBuilder: (context, index) {
-                  final booking = bookings[index].booking!;
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: BookingCard(
-                      booking: booking,
+                children: [
+                  // Today Section
+                  if (groupedBookings['today']?.isNotEmpty == true) ...[
+                    _buildDateSection(
+                      context,
+                      title: 'Today',
+                      bookings: groupedBookings['today']!,
+                      color: Colors.red,
                       useReturnDate: useReturnDate,
-                      onTap: () async {
-                        final bookingCubit =
-                            context.read<BookingSelectionCubit>();
-                        bookingCubit.selectBooking(booking);
-
-                        await context.push(
-                          BookingDetailsScreen(bookingId: booking.id!),
-                        );
-
-                        if (bookingCubit.state.isModified) {
-                          final updated = bookingCubit.state.selectedBooking;
-
-                          bloc.add(
-                            DashboardEvent.updateData(
-                              DashboardListModel(
-                                isBooking: true,
-                                booking: updated,
-                              ),
-                              shouldRefresh: bookingCubit.state.shouldRefresh,
-                            ),
-                          );
-
-                          bookingCubit.reset();
-                        }
-                      },
+                      bloc: bloc,
                     ),
-                  );
-                },
+                    const SizedBox(height: 16),
+                  ],
+                  // Tomorrow Section
+                  if (groupedBookings['tomorrow']?.isNotEmpty == true) ...[
+                    _buildDateSection(
+                      context,
+                      title: 'Tomorrow',
+                      bookings: groupedBookings['tomorrow']!,
+                      color: Colors.orange,
+                      useReturnDate: useReturnDate,
+                      bloc: bloc,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  // Upcoming Section
+                  if (groupedBookings['upcoming']?.isNotEmpty == true) ...[
+                    _buildDateSection(
+                      context,
+                      title: 'Upcoming',
+                      bookings: groupedBookings['upcoming']!,
+                      color: Colors.blue,
+                      useReturnDate: useReturnDate,
+                      bloc: bloc,
+                    ),
+                  ],
+                ],
               ),
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDateSection(
+    BuildContext context, {
+    required String title,
+    required List<BookingsModel> bookings,
+    required Color color,
+    required bool useReturnDate,
+    required DashboardBloc bloc,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section header
+        Row(
+          children: [
+            Container(
+              width: 4,
+              height: 16,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '${bookings.length}',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: color,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        // Bookings list
+        ...bookings.map((booking) => Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: BookingCard(
+                booking: booking,
+                useReturnDate: useReturnDate,
+                onTap: () async {
+                  final bookingCubit = context.read<BookingSelectionCubit>();
+                  bookingCubit.selectBooking(booking);
+
+                  await context.push(
+                    BookingDetailsScreen(bookingId: booking.id!),
+                  );
+
+                  if (bookingCubit.state.isModified) {
+                    final updated = bookingCubit.state.selectedBooking;
+
+                    bloc.add(
+                      DashboardEvent.updateData(
+                        updated,
+                        shouldRefresh: bookingCubit.state.shouldRefresh,
+                      ),
+                    );
+
+                    bookingCubit.reset();
+                  }
+                },
+              ),
+            )),
+      ],
     );
   }
 }
