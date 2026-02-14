@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// Helper class for building common text field widgets in new booking screen
 class BookingTextFieldBuilder {
@@ -13,6 +14,7 @@ class BookingTextFieldBuilder {
     FocusNode? nextFocusNode,
     String? errorText,
     IconData? prefixIcon,
+    String? prefixSvgAsset,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,16 +42,30 @@ class BookingTextFieldBuilder {
                 ),
                 const SizedBox(width: 8),
               ],
+              if (prefixSvgAsset != null) ...[
+                SvgPicture.asset(
+                  prefixSvgAsset,
+                  width: 16,
+                  height: 16,
+                  colorFilter: ColorFilter.mode(
+                    errorText != null
+                        ? Colors.red.shade400
+                        : const Color.fromARGB(255, 33, 192, 92),
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
               Expanded(
                 child: TextField(
                   controller: controller,
                   focusNode: focusNode,
                   enabled: enabled,
                   keyboardType:
-                      isNumber ? TextInputType.number : TextInputType.text,
+                      isNumber ? TextInputType.phone : TextInputType.text,
                   inputFormatters: isNumber
                       ? [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
                         ]
                       : null,
                   textInputAction: nextFocusNode != null

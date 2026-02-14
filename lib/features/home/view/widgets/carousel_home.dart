@@ -24,50 +24,56 @@ class CarouselHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildCard(
-            context,
-            title: 'Upcoming',
-            value: data.upComingCount.toString(),
-            gradient: const [
-              Color(0xFF4C0FFF),
-              Color(0xFF8A63FE),
-            ],
-            icon: Icons.schedule,
-            onTap: () => _openAllBookingsWithTab(context, 'upcoming'),
-          ),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 750),
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildCard(
+                context,
+                title: 'Upcoming',
+                value: data.upComingCount.toString(),
+                gradient: const [
+                  Color(0xFF4C0FFF),
+                  Color(0xFF8A63FE),
+                ],
+                icon: Icons.schedule,
+                onTap: () => _openAllBookingsWithTab(context, 'upcoming'),
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: _buildCard(
+                context,
+                title: 'Completed',
+                value: data.completedCount.toString(),
+                gradient: const [
+                  Color(0xFF015DFF),
+                  Color(0xFF05ADFF),
+                ],
+                icon: Icons.check_circle,
+                onTap: () => _openAllBookingsWithTab(context, 'completed'),
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: _buildCard(
+                context,
+                title: 'Expired',
+                value: data.expiredCount.toString(),
+                gradient: const [
+                  Color(0xFFFF4757),
+                  Color(0xFFFF6B7A),
+                ],
+                icon: Icons.event_busy,
+                onTap: () => _openAllBookingsWithTab(context, 'not_returned'),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: _buildCard(
-            context,
-            title: 'Completed',
-            value: data.completedCount.toString(),
-            gradient: const [
-              Color(0xFF015DFF),
-              Color(0xFF05ADFF),
-            ],
-            icon: Icons.check_circle,
-            onTap: () => _openAllBookingsWithTab(context, 'completed'),
-          ),
-        ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: _buildCard(
-            context,
-            title: 'Expired',
-            value: data.expiredCount.toString(),
-            gradient: const [
-              Color(0xFFFF4757),
-              Color(0xFFFF6B7A),
-            ],
-            icon: Icons.event_busy,
-            onTap: () => _openAllBookingsWithTab(context, 'not_returned'),
-          ),
-        ),
-      ],
+      ),
     );
   }
 

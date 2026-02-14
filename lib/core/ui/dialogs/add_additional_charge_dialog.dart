@@ -63,12 +63,6 @@ class _AddAdditionalChargeDialogState extends State<AddAdditionalChargeDialog> {
   }
 
   void _submit([bool closeAfterAdd = true]) {
-    if (closeAfterAdd &&
-        titleController.text.trim().isEmpty &&
-        amountController.text.trim().isEmpty) {
-      context.pop(); // Close the dialog
-      return;
-    }
     if (_formKey.currentState?.validate() != true) return;
     final title = titleController.text.trim();
     final amount = amountController.text.trim().toIntOrNull() ?? 0;

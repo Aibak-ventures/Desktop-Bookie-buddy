@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
@@ -86,6 +87,167 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   void initState() {
     pageController = PageController();
     super.initState();
+  }
+
+  /// Switch to a different shop
+  Future<void> _switchShop(int shopId) async {
+    // Show loading dialog
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    try {
+      await context.read<UserCubit>().switchShop(shopId, null);
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        context.showSnackBar('Shop switched successfully');
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        context.showSnackBar(
+          'Failed to switch shop: $e',
+          isError: true,
+        );
+      }
+    }
+  }
+
+  /// Show shop selector dropdown menu
+  Future<void> _showShopSelector(BuildContext context, UserModel user) async {
+    // Fetch available shops on demand
+    List<AvailableShopModel> availableShops = [];
+
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      final shops = await context.read<UserCubit>().fetchAvailableShops();
+      availableShops = shops
+          .map((e) => AvailableShopModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        context.showSnackBar(
+          'Failed to load shops: $e',
+          isError: true,
+        );
+      }
+      return;
+    }
+
+    if (availableShops.isEmpty) {
+      if (mounted) {
+        context.showSnackBar('No shops available');
+      }
+      return;
+    }
+
+    // Get button position
+    final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+
+    final selectedShopId = await showMenu<int>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy + size.height + 8,
+        position.dx + 300,
+        position.dy,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      items: availableShops.map((shop) {
+        final isCurrentShop = shop.id == user.shopDetails.id;
+        return PopupMenuItem<int>(
+          value: shop.id,
+          child: Row(
+            children: [
+              // Shop image
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey.shade200,
+                  image: shop.img != null
+                      ? DecorationImage(
+                          image: NetworkImage(shop.img!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+                child: shop.img == null
+                    ? Icon(Icons.store, color: Colors.grey.shade400, size: 20)
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              // Shop details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      shop.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (shop.address.isNotEmpty)
+                      Text(
+                        shop.address,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
+                ),
+              ),
+              // Current shop indicator
+              if (isCurrentShop)
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green.shade600,
+                  size: 20,
+                ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+
+    if (selectedShopId != null && selectedShopId != user.shopDetails.id) {
+      await _switchShop(selectedShopId);
+    }
   }
 
   /// Check for unsaved changes before navigating away from NewBookingScreen
@@ -183,7 +345,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       children: [
         const SizedBox(height: 24),
         _profileHeaderExpanded(),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 22),
           child: Divider(color: Colors.grey, thickness: 1),
@@ -202,6 +364,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
         ),
+        _shopSwitcherButtonExpanded(),
+        const SizedBox(height: 12),
         _logoutButtonExpanded(),
         const SizedBox(height: 20),
       ],
@@ -232,6 +396,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
         ),
+        _shopSwitcherButtonCollapsed(),
+        const SizedBox(height: 12),
         _logoutButtonCollapsed(),
         const SizedBox(height: 20),
       ],
@@ -241,12 +407,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget _profileHeaderExpanded() {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
-        final userName = user?.userFullName ?? 'User';
+        final shopName = user?.shopDetails.name ?? 'Shop';
         final firstLetter =
-            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+            shopName.isNotEmpty ? shopName[0].toUpperCase() : 'S';
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Row(
             children: [
               _buildAvatar(firstLetter, 48),
@@ -256,7 +422,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      userName,
+                      shopName,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -266,28 +432,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (user?.shopDetails.name != null)
-                      Text(
-                        user!.shopDetails.name,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    if (user?.shopDetails.address != null)
-                      Text(
-                        user!.shopDetails.address,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.shade500,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                   ],
                 ),
               ),
@@ -301,9 +445,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget _profileHeaderCollapsed() {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
-        final userName = user?.userFullName ?? 'User';
+        final shopName = user?.shopDetails.name ?? 'Shop';
         final firstLetter =
-            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+            shopName.isNotEmpty ? shopName[0].toUpperCase() : 'S';
+
         return _buildAvatar(firstLetter, 40);
       },
     );
@@ -342,6 +487,138 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  /// Shop switcher button for expanded sidebar - styled like logout button
+  Widget _shopSwitcherButtonExpanded() {
+    return BlocBuilder<UserCubit, UserModel?>(
+      builder: (context, user) {
+        if (user == null) return const SizedBox.shrink();
+        final hasMultipleShops = user.haveMultipleShops ?? false;
+        if (!hasMultipleShops) return const SizedBox.shrink();
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _showShopSelector(context, user),
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF6C5CE7).withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    // Shop logo
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.grey.shade200,
+                        image: user.shopDetails.image != null
+                            ? DecorationImage(
+                                image: NetworkImage(user.shopDetails.image!),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: user.shopDetails.image == null
+                          ? Icon(Icons.store,
+                              color: Colors.grey.shade400, size: 18)
+                          : null,
+                    ),
+                    const SizedBox(width: 12),
+                    // Shop name and location
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            user.shopDetails.name,
+                            style: const TextStyle(
+                              color: Color(0xFF6C5CE7),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            user.shopDetails.place ?? user.shopDetails.address,
+                            style: TextStyle(
+                              color: const Color(0xFF6C5CE7).withOpacity(0.7),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.swap_horiz_rounded,
+                      color: const Color(0xFF6C5CE7),
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Shop switcher button for collapsed sidebar
+  Widget _shopSwitcherButtonCollapsed() {
+    return BlocBuilder<UserCubit, UserModel?>(
+      builder: (context, user) {
+        if (user == null) return const SizedBox.shrink();
+        final hasMultipleShops = user.haveMultipleShops ?? false;
+        if (!hasMultipleShops) return const SizedBox.shrink();
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _showShopSelector(context, user),
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF6C5CE7).withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Icon(
+                  Icons.swap_horiz_rounded,
+                  color: const Color(0xFF6C5CE7),
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

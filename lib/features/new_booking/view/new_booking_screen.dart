@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
@@ -159,14 +160,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       );
       _currentServiceType = MainServiceType.fromString(service.mainServiceName);
 
-      // Update search types based on whether the service has variants or not
+      // Update search types based on service-specific field labels
+      final categoryLabel = _currentServiceType
+          .categoryFieldLabel; // e.g., "Brand" for vehicle, "Fabric Type" for material
+      final secondaryLabel = _currentServiceType.secondaryAttributeLabel ??
+          'Color'; // e.g., "Model" for vehicle, "Color" for dress
+
       if (_currentServiceType.isMultiVariantProductType) {
         // For multi-variant types (Dress, Costume, Gadgets): show variant-specific label
         final variantLabel = _currentServiceType.variantAttributeLabel;
-        _searchTypes = ['Name', 'Category', 'Model', variantLabel];
+        _searchTypes = ['Name', categoryLabel, secondaryLabel, variantLabel];
       } else {
-        // For non-multi-variant types (Vehicle, Jewellery, etc.): show Color
-        _searchTypes = ['Name', 'Category', 'Model', 'Color'];
+        // For non-multi-variant types (Vehicle, Jewellery, etc.): use service-specific labels
+        _searchTypes = ['Name', categoryLabel, secondaryLabel, 'Color'];
       }
     }
   }
@@ -219,6 +225,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // Add listener to client name controller to detect manual changes
     clientNameController.addListener(_onClientNameChanged);
+    clientPhone1Controller.addListener(_onClientPhoneChanged);
+    clientPhone2Controller.addListener(_onClientPhoneChanged);
 
     // Set up web beforeunload listener to prevent accidental browser close
     if (kIsWeb) {
@@ -245,6 +253,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     _removeSearchOverlay();
     clientNameController.removeListener(_onClientNameChanged);
+    clientPhone1Controller.removeListener(_onClientPhoneChanged);
+    clientPhone2Controller.removeListener(_onClientPhoneChanged);
     clientNameController.dispose();
     clientPhone1Controller.dispose();
     clientPhone2Controller.dispose();
@@ -396,6 +406,29 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
+  /// Listener for phone changes to detect manual editing
+  void _onClientPhoneChanged() {
+    // Get the current selected client from the cubit
+    final selectedClient = context.read<ClientCubit>().state.selectedClient;
+
+    // If a client is selected but phone has been manually changed
+    if (selectedClient != null && selectedClientId != null) {
+      final currentPhone1 = clientPhone1Controller.text.trim();
+      final currentPhone2 = clientPhone2Controller.text.trim();
+      final selectedPhone1 = selectedClient.phone1.toString().trim();
+      final selectedPhone2 = selectedClient.phone2?.toString().trim() ?? '';
+
+      // If phones don't match, user has manually edited - treat as new client
+      if (currentPhone1 != selectedPhone1 || currentPhone2 != selectedPhone2) {
+        setState(() {
+          selectedClientId = null;
+        });
+        // Clear the selected client in the cubit
+        context.read<ClientCubit>().clearSelected();
+      }
+    }
+  }
+
   /// Validates client details and continues to next step if valid
   void _validateAndContinue() {
     setState(() {
@@ -403,6 +436,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       _phoneError = null;
       _staffNameError = null;
     });
+
+    // Validate at least one product has price > 0
+    final selectedProducts = selectedProductsNotifier.value;
+    if (selectedProducts.isNotEmpty) {
+      final hasProductWithPrice = selectedProducts.any((p) => p.amount > 0);
+      if (!hasProductWithPrice) {
+        context.showSnackBar(
+          'At least one product must have a price greater than 0',
+          isError: true,
+        );
+        return;
+      }
+    }
 
     // Get the selected staff from cubit
     final staffState = context.read<StaffSearchCubit>().state;
@@ -431,7 +477,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         _phoneError = validationResult.fieldErrors['phone1'];
         _staffNameError = validationResult.fieldErrors['staff'];
       });
-      BookingValidationHelper.showValidationErrors(context, validationResult);
+      // Field errors are already shown via errorText parameters
     }
   }
 
@@ -486,14 +532,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     List<ServicesModel> services = [];
     servicesState.whenOrNull(loaded: (s) => services = s);
 
+    // Filter out material services for booking/sales (only show in stock listing)
+    services = services
+        .where((s) => !s.mainServiceName.toLowerCase().contains('material'))
+        .toList();
+
     // Setup local state for dialog
-    final TextEditingController maxPriceController = TextEditingController();
     final isPriceFilterEnabledWidgetNotifier =
         ValueNotifier(_isPriceFilterEnabled.value);
     final tempSelectedServiceId = ValueNotifier<int?>(selectedServiceId);
     final tempSelectedSearchTypeIndex =
         ValueNotifier<int>(_selectedSearchTypeIndex.value);
     final tempPriceRange = ValueNotifier<RangeValues>(_priceRange.value);
+    final tempMaxPriceNotifier = ValueNotifier<double>(_maxPriceNotifier.value);
+    final maxPriceController = TextEditingController(
+      text: _maxPriceNotifier.value.toInt().toString(),
+    );
 
     showDialog(
       context: context,
@@ -635,6 +689,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                           MainServiceType.fromString(
                                               service.mainServiceName);
 
+                                      // Update search types based on service-specific field labels
+                                      final categoryLabel = _currentServiceType
+                                          .categoryFieldLabel; // e.g., "Brand" for vehicle, "Fabric Type" for material
+                                      final secondaryLabel = _currentServiceType
+                                              .secondaryAttributeLabel ??
+                                          'Color'; // e.g., "Model" for vehicle, "Color" for dress
+
                                       // Update search types based on whether the service has variants
                                       if (_currentServiceType
                                           .isMultiVariantProductType) {
@@ -643,16 +704,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                             .variantAttributeLabel;
                                         _searchTypes = [
                                           'Name',
-                                          'Category',
-                                          'Model',
+                                          categoryLabel,
+                                          secondaryLabel,
                                           variantLabel
                                         ];
                                       } else {
-                                        // For non-multi-variant types: show Color
+                                        // For non-multi-variant types: use service-specific labels
                                         _searchTypes = [
                                           'Name',
-                                          'Category',
-                                          'Model',
+                                          categoryLabel,
+                                          secondaryLabel,
                                           'Color'
                                         ];
                                       }
@@ -805,7 +866,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           );
                         },
                       ),
-
                       const SizedBox(height: 28),
                       const Divider(height: 1),
                       const SizedBox(height: 24),
@@ -869,83 +929,65 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                           ),
                                         ),
                                         const Spacer(),
-                                        ValueListenableBuilder<double>(
-                                          valueListenable: _maxPriceNotifier,
-                                          builder: (context, currentMaxPrice,
-                                              child) {
-                                            maxPriceController.text =
-                                                currentMaxPrice
-                                                    .toInt()
-                                                    .toString();
-                                            return Container(
-                                              width: 130,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 14,
-                                                vertical: 10,
+                                        Container(
+                                          width: 130,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFF8F9FA),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: Colors.grey.shade300,
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: TextField(
+                                            controller: maxPriceController,
+                                            keyboardType: TextInputType.number,
+                                            onTapOutside: (_) {
+                                              FocusScope.of(context).unfocus();
+                                            },
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Inter',
+                                            ),
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              contentPadding: EdgeInsets.zero,
+                                              isDense: true,
+                                              prefixText: '₹ ',
+                                              prefixStyle: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(0xFF6132E4),
                                               ),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFFF8F9FA),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: Colors.grey.shade300,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: TextField(
-                                                controller: maxPriceController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                onTapOutside: (_) {
-                                                  FocusScope.of(context)
-                                                      .unfocus();
-                                                },
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
-                                                ),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.zero,
-                                                  isDense: true,
-                                                  prefixText: '₹ ',
-                                                  prefixStyle: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Color(0xFF6132E4),
-                                                  ),
-                                                ),
-                                                onChanged: (value) {
-                                                  if (value.isNotEmpty) {
-                                                    final newMaxPrice =
-                                                        double.tryParse(
-                                                                value) ??
-                                                            currentMaxPrice;
-                                                    _maxPriceNotifier.value =
-                                                        newMaxPrice;
-                                                    if (tempPriceRange
-                                                            .value.end >
-                                                        newMaxPrice) {
-                                                      tempPriceRange.value =
-                                                          RangeValues(
-                                                              tempPriceRange
-                                                                          .value
-                                                                          .start >
-                                                                      newMaxPrice
-                                                                  ? 0
-                                                                  : tempPriceRange
-                                                                      .value
-                                                                      .start,
-                                                              newMaxPrice);
-                                                    }
-                                                  }
-                                                },
-                                              ),
-                                            );
-                                          },
+                                            ),
+                                            onChanged: (value) {
+                                              if (value.isNotEmpty) {
+                                                final newMaxPrice =
+                                                    double.tryParse(value) ??
+                                                        tempMaxPriceNotifier
+                                                            .value;
+                                                tempMaxPriceNotifier.value =
+                                                    newMaxPrice;
+                                                if (tempPriceRange.value.end >
+                                                    newMaxPrice) {
+                                                  tempPriceRange.value =
+                                                      RangeValues(
+                                                          tempPriceRange.value
+                                                                      .start >
+                                                                  newMaxPrice
+                                                              ? 0
+                                                              : tempPriceRange
+                                                                  .value.start,
+                                                          newMaxPrice);
+                                                }
+                                              }
+                                            },
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1041,7 +1083,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                       valueListenable: tempPriceRange,
                                       builder: (context, range, child) =>
                                           ValueListenableBuilder<double>(
-                                        valueListenable: _maxPriceNotifier,
+                                        valueListenable: tempMaxPriceNotifier,
                                         builder:
                                             (context, currentMaxPrice, child) =>
                                                 SliderTheme(
@@ -1092,7 +1134,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                     const SizedBox(height: 12),
 
                                     ValueListenableBuilder<double>(
-                                      valueListenable: _maxPriceNotifier,
+                                      valueListenable: tempMaxPriceNotifier,
                                       builder:
                                           (context, currentMaxPrice, child) {
                                         final quickFilters =
@@ -1146,8 +1188,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         onPressed: () {
                           tempSelectedSearchTypeIndex.value = 0;
                           tempSelectedServiceId.value = -1;
+                          tempMaxPriceNotifier.value = _maxPriceNotifier.value;
+                          maxPriceController.text =
+                              _maxPriceNotifier.value.toInt().toString();
                           tempPriceRange.value =
-                              RangeValues(0, _maxPriceNotifier.value);
+                              RangeValues(0, tempMaxPriceNotifier.value);
                           isPriceFilterEnabledWidgetNotifier.value = false;
                         },
                         style: OutlinedButton.styleFrom(
@@ -1182,6 +1227,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             _selectedSearchTypeIndex.value =
                                 tempSelectedSearchTypeIndex.value;
                             _priceRange.value = tempPriceRange.value;
+                            _maxPriceNotifier.value =
+                                tempMaxPriceNotifier.value;
                             _isPriceFilterEnabled.value =
                                 isPriceFilterEnabledWidgetNotifier.value;
                             // Update search types based on the selected service
@@ -1545,8 +1592,40 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           : '-';
     }
 
-    // For non-multi-variant products, show \"No Variant\"
-    return 'No Variant';
+    // For non-multi-variant products, keep it blank
+    return '';
+  }
+
+  /// Calculate number of days between pickup and return dates
+  int _calculateRentalDays() {
+    final difference = returnDate.difference(pickupDate).inDays;
+    return difference > 0 ? difference : 1; // Minimum 1 day
+  }
+
+  /// Get service-specific specification text for product
+  String _getProductSpecifications(ProductSelectedModel product) {
+    final mainServiceType = product.variant.mainServiceType;
+    final List<String> specs = [];
+
+    // Add category (with service-specific label)
+    if (product.variant.category != null &&
+        product.variant.category!.isNotEmpty) {
+      specs.add(product.variant.category!);
+    }
+
+    // Add model/secondary attribute if available
+    if (product.variant.model != null && product.variant.model!.isNotEmpty) {
+      specs.add(product.variant.model!);
+    }
+
+    // Add color if not already shown
+    if (product.variant.color != null && product.variant.color!.isNotEmpty) {
+      if (!specs.contains(product.variant.color)) {
+        specs.add(product.variant.color!);
+      }
+    }
+
+    return specs.isNotEmpty ? specs.join(' • ') : '-';
   }
 
   void _loadProductsForService(int? serviceId) {
@@ -2254,6 +2333,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     if (coolingDuration > 0) {
       setState(() {
+        // Set the cooling period days from user profile
+        coolingPeriodDays = coolingDuration;
+
         if (coolingMode.isAfter) {
           // TC-02: After mode - cooling starts after return
           coolingPeriodDate = returnDate.add(Duration(days: coolingDuration));
@@ -2554,111 +2636,130 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _removeSearchOverlay();
 
     _searchOverlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        width: 1000,
-        child: CompositedTransformFollower(
-          link: _searchLayerLink,
-          showWhenUnlinked: false,
-          offset: const Offset(0, 44),
-          child: Material(
-            elevation: 8,
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              constraints: const BoxConstraints(maxHeight: 320),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey.shade200),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Header with close button
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Search Results (${products.length})',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            serviceSearchController.clear();
-                            _removeSearchOverlay();
-                          },
-                          child: Icon(
-                            Icons.close,
-                            size: 18,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Product list
-                  products.isEmpty
-                      ? Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 32, horizontal: 16),
-                          alignment: Alignment.center,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.search_off_rounded,
-                                  size: 48, color: Colors.grey.shade300),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No results found',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Try adjusting your search or filters',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Flexible(
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            itemCount: products.length,
-                            separatorBuilder: (_, __) => Divider(
-                              height: 1,
-                              color: Colors.grey.shade200,
-                            ),
-                            itemBuilder: (_, i) =>
-                                _buildOverlaySearchItem(products[i]),
-                          ),
-                        ),
-                ],
+      builder: (context) => Stack(
+        children: [
+          // Transparent barrier to close overlay when clicking outside
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () {
+                serviceSearchController.clear();
+                _removeSearchOverlay();
+              },
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                color: Colors.transparent,
               ),
             ),
           ),
-        ),
+          // The actual search overlay
+          Positioned(
+            width: 1000,
+            child: CompositedTransformFollower(
+              link: _searchLayerLink,
+              showWhenUnlinked: false,
+              offset: const Offset(0, 44),
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  constraints: const BoxConstraints(maxHeight: 450),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.grey.shade200),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Header with close button
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Search Results (${products.length})',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                serviceSearchController.clear();
+                                _removeSearchOverlay();
+                              },
+                              child: Icon(
+                                Icons.close,
+                                size: 18,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Product list
+                      products.isEmpty
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 32, horizontal: 16),
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.search_off_rounded,
+                                      size: 48, color: Colors.grey.shade300),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'No results found',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Try adjusting your search or filters',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Flexible(
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
+                                itemCount: products.length,
+                                separatorBuilder: (_, __) => Divider(
+                                  height: 1,
+                                  color: Colors.grey.shade200,
+                                ),
+                                itemBuilder: (_, i) =>
+                                    _buildOverlaySearchItem(products[i]),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
 
@@ -2960,6 +3061,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildProductListHeader() {
+    final isSales = selectedBookingType == BookingType.sales;
+    final hasVariants = _hasAnyProductWithVariants();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -2969,8 +3073,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             child: _buildHeaderCell('items', alignLeft: true),
           ),
           const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Variants')),
+          Expanded(
+            flex: 2,
+            child: _buildHeaderCell('Specifications'),
+          ),
           const SizedBox(width: 4),
+          if (hasVariants) ...[
+            Expanded(child: _buildHeaderCell('Variants')),
+            const SizedBox(width: 4),
+          ],
+          if (!isSales) ...[
+            Expanded(child: _buildHeaderCell('Days')),
+            const SizedBox(width: 4),
+          ],
           Expanded(child: _buildHeaderCell('Available')),
           const SizedBox(width: 4),
           Expanded(child: _buildHeaderCell('Quantity')),
@@ -2982,6 +3097,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         ],
       ),
     );
+  }
+
+  /// Check if any selected product has variant attributes to display
+  bool _hasAnyProductWithVariants() {
+    final products = selectedProductsNotifier.value;
+    return products.any((product) {
+      final mainServiceType = product.variant.mainServiceType;
+      // Only show variants column if product is multi-variant type and has variant attribute
+      return mainServiceType.isMultiVariantProductType &&
+          (product.variant.variantAttribute?.isNotEmpty ?? false);
+    });
   }
 
   Widget _buildHeaderCell(String title, {bool alignLeft = false}) {
@@ -3058,6 +3184,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildProductRow(ProductSelectedModel product) {
+    final isSales = selectedBookingType == BookingType.sales;
+    final rentalDays = !isSales ? _calculateRentalDays() : 0;
+    final hasVariants = _hasAnyProductWithVariants();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -3073,7 +3203,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               children: [
                 // Image
                 Container(
-                  width: 48, // Slightly larger looking in image
+                  width: 48,
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
@@ -3096,55 +3226,79 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 const SizedBox(width: 16),
                 // Text
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        product.variant.name ?? '',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D3436),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        [
-                          product.variant.color,
-                          product.variant.category,
-                        ].where((e) => e != null && e.isNotEmpty).join(', '),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                          height: 1.1,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  child: Text(
+                    product.variant.name ?? '',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2D3436),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 4),
-          // Variant
+          // Specifications (service-specific)
           Expanded(
+            flex: 2,
             child: Center(
               child: Text(
-                _getVariantDisplayText(product),
+                _getProductSpecifications(product),
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: Colors.grey.shade700,
                 ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
           const SizedBox(width: 4),
+          // Variant (only for multi-variant products)
+          if (hasVariants) ...[
+            Expanded(
+              child: Center(
+                child: Text(
+                  _getVariantDisplayText(product),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+          ],
+          // Days (only for bookings)
+          if (!isSales) ...[
+            Expanded(
+              child: Center(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6132E4).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '$rentalDays',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF6132E4),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+          ],
           // Available Badge
           Expanded(
             child: Center(
@@ -3833,36 +3987,41 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 (p) => p.variant.mainServiceType?.isDress ?? false,
               );
               if (!hasDresses) return const SizedBox.shrink();
-              return SizedBox(
-                width: double.infinity,
-                height: 39,
-                child: OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      showCustomization = true;
-                    });
-                  },
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF6132E4),
-                    side: const BorderSide(
-                      color: Color(0xFF6132E4),
-                      width: 1.5,
+              return Column(
+                children: [
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 36,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        setState(() {
+                          showCustomization = true;
+                        });
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.grey.shade600,
+                        side: BorderSide(
+                          color: Colors.grey.shade300,
+                          width: 1,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      child: const Text(
+                        'Add customization (Optional)',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    elevation: 0,
                   ),
-                  child: const Text(
-                    'Add customization',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                ],
               );
             },
           ),
@@ -4348,7 +4507,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     onTap: () => _selectTime(isPickup: true),
                   ),
                 ),
-                const SizedBox(width: 24),
+                const SizedBox(width: 16),
+
+                // Divider between Pickup and Return
+                Container(
+                  height: 50,
+                  width: 2,
+                  margin: const EdgeInsets.only(bottom: 0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+                const SizedBox(width: 16),
 
                 // Return Date
                 Expanded(
@@ -4370,7 +4540,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                 ),
 
-                const SizedBox(width: 24),
+                const SizedBox(width: 16),
+
+                // Divider between Return and Cooling Period
+                Container(
+                  height: 50,
+                  width: 2,
+                  margin: const EdgeInsets.only(bottom: 0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+                const SizedBox(width: 16),
 
                 // Cooling Period (Days)
                 Expanded(
@@ -4761,7 +4942,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       child: ClientSearchNameField(
                         nameController: clientNameController,
                         focusNode: _clientNameFocusNode,
-                        hitText: 'Search client by name',
+                        hitText: 'Type or Search name',
                         onClear: () {
                           // Clear all client fields when search is cleared
                           clientNameController.clear();
@@ -4775,41 +4956,29 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ),
                     const SizedBox(height: _fieldSpacing),
                   ], // End of name section for bookings only
-                  // Phone - Disabled if client is selected
-                  BlocBuilder<ClientCubit, ClientState>(
-                    builder: (context, state) {
-                      final isClientSelected = state.selectedClient != null;
-                      return BookingTextFieldBuilder.buildRightPanelTextField(
-                        controller: clientPhone1Controller,
-                        hint: 'Phone (WP)',
-                        isNumber: true,
-                        focusNode: _clientPhone1FocusNode,
-                        nextFocusNode: _clientPhone2FocusNode,
-                        enabled: !isClientSelected,
-                        errorText: _phoneError,
-                        prefixIcon: Icons.phone,
-                      );
-                    },
+                  // Phone 1 (WhatsApp) - Always enabled
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: clientPhone1Controller,
+                    hint: 'Whatsapp number',
+                    isNumber: true,
+                    focusNode: _clientPhone1FocusNode,
+                    nextFocusNode: _clientPhone2FocusNode,
+                    errorText: _phoneError,
+                    prefixSvgAsset: AppAssets.whatsAppSvg,
                   ),
                   const SizedBox(height: _fieldSpacing),
-                  // Phone 2 - Only show for bookings, disabled if client is selected
+                  // Phone 2 - Optional, only show for bookings, always enabled
                   if (selectedBookingType != BookingType.sales)
-                    BlocBuilder<ClientCubit, ClientState>(
-                      builder: (context, state) {
-                        final isClientSelected = state.selectedClient != null;
-                        return BookingTextFieldBuilder.buildRightPanelTextField(
-                          controller: clientPhone2Controller,
-                          hint: 'Phone 2',
-                          isNumber: true,
-                          focusNode: _clientPhone2FocusNode,
-                          nextFocusNode: _clientAddressFocusNode,
-                          enabled: !isClientSelected,
-                          prefixIcon: Icons.phone,
-                        );
-                      },
+                    BookingTextFieldBuilder.buildRightPanelTextField(
+                      controller: clientPhone2Controller,
+                      hint: 'Phone 2',
+                      isNumber: true,
+                      focusNode: _clientPhone2FocusNode,
+                      nextFocusNode: _clientAddressFocusNode,
+                      prefixIcon: Icons.phone,
                     ),
                   const SizedBox(height: _fieldSpacing),
-                  // Place
+                  // Place - Optional
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: clientAddressController,
                     hint: 'place',
@@ -4820,41 +4989,39 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   const SizedBox(height: _fieldSpacing),
                   const SizedBox(height: 16),
-                  // WhatsApp Checkbox
-
-                  context
-                          .watch<UserCubit>()
-                          .hasFeature(AppPremiumFeatures.whatsappMessage)
-                      ? Row(
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: Checkbox(
-                                value: sendPdfToWhatsApp,
-                                onChanged: (v) => setState(
-                                    () => sendPdfToWhatsApp = v ?? false),
-                                activeColor: Colors.black87,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'Send invoice to whatsapp',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
-                        )
-                      : SizedBox.shrink(),
+                  // WhatsApp Checkbox - Only if feature enabled
+                  if (context
+                      .read<UserCubit>()
+                      .hasFeature(AppPremiumFeatures.whatsappMessage))
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Checkbox(
+                            value: sendPdfToWhatsApp,
+                            onChanged: (v) =>
+                                setState(() => sendPdfToWhatsApp = v ?? false),
+                            activeColor: Colors.black87,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Send invoice to whatsapp',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ],
+                    ),
 
                   const SizedBox(height: 7),
 
-                  // Upload documents - Only for Booking mode
+                  // Upload documents - Optional, Only for Booking mode
                   if (selectedBookingType == BookingType.booking) ...[
                     const SizedBox(height: 8),
                     BookingDocumentUploadSection(
@@ -4863,14 +5030,27 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     const SizedBox(height: 7),
                   ],
 
-                  // Staff Details
-                  const Text(
-                    'Staff details',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
+                  // Staff Details - Required
+                  Row(
+                    children: [
+                      const Text(
+                        'Staff details',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '*',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red.shade600,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 7),
 
@@ -4881,7 +5061,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   const SizedBox(height: 7),
 
-                  // Notes
+                  // Notes - Optional
                   Container(
                     height: 80,
                     padding:
@@ -4913,15 +5093,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         (p) => p.variant.mainServiceType?.isVehicle ?? false,
                       );
                       if (!hasVehicles) return const SizedBox.shrink();
-                      return Column(
-                        children: [
-                          BookingTextFieldBuilder.buildRightPanelTextField(
-                            controller: runningKilometersController,
-                            hint: 'Running Kilometers',
-                            isNumber: true,
-                          ),
-                          const SizedBox(height: 7),
-                        ],
+                      return BookingTextFieldBuilder.buildRightPanelTextField(
+                        controller: runningKilometersController,
+                        hint: 'Running Kilometers',
+                        isNumber: true,
                       );
                     },
                   ),

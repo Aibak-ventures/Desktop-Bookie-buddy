@@ -154,7 +154,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                     if (widget.product.category != null &&
                         widget.product.category!.isNotEmpty)
                       Text(
-                        'Category: ${widget.product.category}',
+                        '${widget.product.mainServiceType.categoryFieldLabel}: ${widget.product.category}',
                         style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w500),
                         maxLines: 1,
@@ -163,7 +163,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                     if (widget.product.model != null &&
                         widget.product.model!.isNotEmpty)
                       Text(
-                        'Model: ${widget.product.mainServiceType.productNameLabel}',
+                        '${widget.product.mainServiceType.secondaryAttributeLabel ?? "Model"}: ${widget.product.model}',
                         style: TextStyle(
                             fontSize: 11, color: Colors.grey.shade600),
                         maxLines: 1,

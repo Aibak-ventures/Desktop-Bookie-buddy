@@ -531,10 +531,11 @@ class _BookingCustomizationSectionState
             const Text(" : ",
                 style: TextStyle(fontSize: 13, color: Colors.black87)),
             const SizedBox(width: 10),
-            Expanded(
+            SizedBox(
+              width: 140,
               child: Container(
-                height: 40,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                height: 36,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 237, 237, 237),
                   borderRadius: BorderRadius.circular(4),
@@ -544,12 +545,12 @@ class _BookingCustomizationSectionState
                   child: DropdownButton<GenderType>(
                     value: gender,
                     isExpanded: true,
-                    icon: const Icon(Icons.keyboard_arrow_down),
+                    icon: const Icon(Icons.keyboard_arrow_down, size: 18),
                     items: GenderType.values
                         .map((g) => DropdownMenuItem(
                               value: g,
                               child: Text(g.name.toUpperCase(),
-                                  style: const TextStyle(fontSize: 13)),
+                                  style: const TextStyle(fontSize: 12)),
                             ))
                         .toList(),
                     onChanged: (val) {
