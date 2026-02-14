@@ -137,10 +137,11 @@ class CustomTextField extends StatelessWidget {
           borderRadius: borderRadius.radiusBorder,
         ),
         errorStyle: const TextStyle(
-          fontSize: 0, // Hide error text
-          height: 0, // Remove the space for error text
+          fontSize: 11,
+          color: AppColors.redTomato,
+          height: 1.0,
         ),
-        errorMaxLines: 1,
+        errorMaxLines: 2,
         counterText: '',
         labelText: label,
         hintText: hintText,

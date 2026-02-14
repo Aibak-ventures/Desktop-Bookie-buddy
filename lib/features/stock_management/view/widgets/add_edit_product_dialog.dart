@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -17,6 +19,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 
 /// Modal dialog for adding or editing products
@@ -45,14 +49,19 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _purchaseAmountController = TextEditingController();
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _lengthController = TextEditingController(); // For materials
+  final _fabricTypeController = TextEditingController(); // For materials
   final _imageNotifier = ValueNotifier<XFile?>(null);
   final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
-  late final MainServiceType mainServiceType;
+
+  late MainServiceType mainServiceType;
+  int? selectedServiceId;
 
   @override
   void initState() {
     super.initState();
     final services = context.read<ServiceBloc>().getServices();
+    selectedServiceId = widget.serviceId;
     mainServiceType = MainServiceType.fromServiceList(
       services,
       widget.serviceId,
@@ -158,6 +167,71 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Service Type Dropdown (only for new products)
+          if (!isEditMode)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Select Service Category *',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                BlocBuilder<ServiceBloc, ServiceState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      loaded: (services) {
+                        // Ensure selectedServiceId is valid or null
+                        final validServiceId = selectedServiceId != null &&
+                                services.any((s) => s.id == selectedServiceId)
+                            ? selectedServiceId
+                            : null;
+
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<int>(
+                              isExpanded: true,
+                              value: validServiceId,
+                              hint: const Text('Choose a service category'),
+                              items: services.map((service) {
+                                return DropdownMenuItem<int>(
+                                  value: service.id,
+                                  child: Text(service.name),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                if (value != null) {
+                                  setState(() {
+                                    selectedServiceId = value;
+                                    mainServiceType =
+                                        MainServiceType.fromServiceList(
+                                      services,
+                                      value,
+                                    );
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      orElse: () => const CircularProgressIndicator(),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+
           // Two-column layout: Image on left, form fields on right
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,118 +240,15 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
               _buildImagePicker(context),
               const SizedBox(width: 24),
 
-              // Right column - Form fields
+              // Right column - Dynamic form fields based on service type
               Expanded(
-                child: Wrap(
-                  runSpacing: 16,
-                  spacing: 16,
-                  children: [
-                    SizedBox(
-                      width: 280,
-                      child: CustomTextField(
-                        label:
-                            '${mainServiceType.isVehicle ? 'Vehicle' : 'Product'} name',
-                        controller: _nameController,
-                        validator: AppInputValidators.productName,
-                      ),
-                    ),
-                    if (!mainServiceType.isDress)
-                      SizedBox(
-                        width: 280,
-                        child: CustomTextField(
-                          label:
-                              mainServiceType.isVehicle ? 'Unit' : 'Quantity',
-                          controller: _stockController,
-                          keyboardType: TextInputType.number,
-                          validator: (value) => mainServiceType.isDress
-                              ? null
-                              : AppInputValidators.quantity(value,
-                                  allowZero: true),
-                        ),
-                      ),
-                    SizedBox(
-                      width: 280,
-                      child: CustomTextField(
-                        label: 'Purchase Amount (Optional)',
-                        controller: _purchaseAmountController,
-                        keyboardType: TextInputType.number,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.amount(value, allowZero: true),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 280,
-                      child: CustomTextField(
-                        label: 'Selling Price (Optional)',
-                        controller: _priceController,
-                        keyboardType: TextInputType.number,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.amount(value, allowZero: true),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 280,
-                      child: CustomTextField(
-                        label:
-                            '${mainServiceType.isVehicle ? 'Brand' : 'Category'} (Optional)',
-                        controller: _categoryController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.category(
-                                value,
-                                fieldName: mainServiceType.isVehicle
-                                    ? 'Brand'
-                                    : 'Category',
-                                isRequired: false,
-                              ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 280,
-                      child: CustomTextField(
-                        label: 'Color (Optional)',
-                        controller: _colorController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.color(value),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 280,
-                      child: CustomTextField(
-                        label: 'Model (Optional)',
-                        controller: _modelController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.model(value),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 280,
-                      child: CustomTextField(
-                        label: 'Description (Optional)',
-                        maxLines: 2,
-                        // minLines: 2,
-                        controller: _descriptionController,
-                        validator: (value) => AppInputValidators.isEmpty(value)
-                            ? null
-                            : AppInputValidators.description(value),
-                      ),
-                    ),
-                  ],
-                ),
+                child: _buildDynamicFields(),
               ),
             ],
           ),
           const SizedBox(height: 20),
 
-          // Description field - full width but smaller
-
-          const SizedBox(height: 20),
-
-          // Variants section (for dress type)
+          // Variants section (for dress/costume type)
           if (mainServiceType.isDress && widget.product == null)
             Container(
               padding: const EdgeInsets.all(16),
@@ -353,6 +324,335 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     );
   }
 
+  /// Build dynamic fields based on selected service type
+  Widget _buildDynamicFields() {
+    // Common fields for all types: Image, Product Name, Purchase Price, Rent Price, Sale Price
+    final commonFields = <Widget>[
+      // Product Name
+      SizedBox(
+        width: 280,
+        child: CustomTextField(
+          label:
+              '${mainServiceType.isVehicle ? 'Vehicle' : mainServiceType.isMaterial ? 'Material' : 'Product'} Name *',
+          controller: _nameController,
+          validator: AppInputValidators.productName,
+        ),
+      ),
+    ];
+
+    // Service-specific fields
+    if (mainServiceType.isDress || mainServiceType.isCostume) {
+      // DRESSES/COSTUME: Size (via variants), Purchase, Rent, Sale, Category, Color, Model, Description
+      commonFields.addAll([
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Purchase Amount (Optional)',
+            controller: _purchaseAmountController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Rent Price (Optional)',
+            controller: _priceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Category (Optional)',
+            controller: _categoryController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.category(value,
+                    fieldName: 'Category', isRequired: false),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Color (Optional)',
+            controller: _colorController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.color(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Model (Optional)',
+            controller: _modelController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.model(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Description (Optional)',
+            maxLines: 2,
+            controller: _descriptionController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.description(value),
+          ),
+        ),
+      ]);
+    } else if (mainServiceType.isJewellery) {
+      // JEWELLERY: Quantity, Purchase Price, Rent Price, Sale, Category, Color, Model, Description
+      commonFields.addAll([
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Quantity',
+            controller: _stockController,
+            keyboardType: TextInputType.number,
+            validator: (value) =>
+                AppInputValidators.quantity(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Purchase Price (Optional)',
+            controller: _purchaseAmountController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Rent Price (Optional)',
+            controller: _priceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Category (Optional)',
+            controller: _categoryController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.category(value,
+                    fieldName: 'Category', isRequired: false),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Color (Optional)',
+            controller: _colorController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.color(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Model (Optional)',
+            controller: _modelController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.model(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Description (Optional)',
+            maxLines: 2,
+            controller: _descriptionController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.description(value),
+          ),
+        ),
+      ]);
+    } else if (mainServiceType.isMaterial) {
+      // MATERIAL: Length, Purchase Price, Rent Price, Sale, Fabric Type, Color, Model (Optional), Description (Optional)
+      commonFields.addAll([
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Length',
+            controller: _lengthController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.onEmpty(value, 'Length'),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Purchase Price (Optional)',
+            controller: _purchaseAmountController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Rent Price (Optional)',
+            controller: _priceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Fabric Type',
+            controller: _fabricTypeController,
+            validator: (value) =>
+                AppInputValidators.onEmpty(value, 'Fabric Type'),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Color (Optional)',
+            controller: _colorController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.color(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Model (Optional)',
+            controller: _modelController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.model(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Description (Optional)',
+            maxLines: 2,
+            controller: _descriptionController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.description(value),
+          ),
+        ),
+      ]);
+    } else {
+      // DEFAULT (Vehicles, Gadgets, Equipment, etc.): Quantity/Unit, Purchase, Rent, Sale, Brand/Category, Color, Model, Description
+      commonFields.addAll([
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: mainServiceType.isVehicle ? 'Unit' : 'Quantity',
+            controller: _stockController,
+            keyboardType: TextInputType.number,
+            validator: (value) =>
+                AppInputValidators.quantity(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Purchase Amount (Optional)',
+            controller: _purchaseAmountController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Selling Price (Optional)',
+            controller: _priceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label:
+                '${mainServiceType.isVehicle ? 'Brand' : 'Category'} (Optional)',
+            controller: _categoryController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.category(
+                    value,
+                    fieldName: mainServiceType.isVehicle ? 'Brand' : 'Category',
+                    isRequired: false,
+                  ),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Color (Optional)',
+            controller: _colorController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.color(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Model (Optional)',
+            controller: _modelController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.model(value),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Description (Optional)',
+            maxLines: 2,
+            controller: _descriptionController,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.description(value),
+          ),
+        ),
+      ]);
+    }
+
+    return Wrap(
+      runSpacing: 16,
+      spacing: 16,
+      children: commonFields,
+    );
+  }
+
   Widget _buildImagePicker(BuildContext context) {
     return ValueListenableBuilder<XFile?>(
       valueListenable: _imageNotifier,
@@ -421,6 +721,12 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
+      // Validate service selection for new products
+      if (widget.product == null && selectedServiceId == null) {
+        CustomSnackBar(message: "Please select a service category");
+        return;
+      }
+
       if (widget.product?.image == null && _imageNotifier.value == null) {
         CustomSnackBar(message: "Please select an image");
         return;
@@ -466,7 +772,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         saveCubit.saveProduct(product: product);
       } else {
         final product = ProductRequestModel(
-          serviceId: widget.serviceId,
+          serviceId: selectedServiceId,
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
           color: _colorController.text.trim(),
@@ -492,16 +798,34 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
       );
 
       if (result != null && result.files.isNotEmpty) {
+        Uint8List? imageBytes;
+        String fileName;
+
         if (kIsWeb) {
           if (result.files.first.bytes != null) {
-            _imageNotifier.value = XFile.fromData(
-              result.files.first.bytes!,
-              name: result.files.first.name,
-            );
+            imageBytes = result.files.first.bytes!;
+            fileName = result.files.first.name;
+          } else {
+            return;
           }
         } else {
           if (result.files.single.path != null) {
-            _imageNotifier.value = XFile(result.files.single.path!);
+            final file = result.files.single;
+            imageBytes = await XFile(file.path!).readAsBytes();
+            fileName = file.name;
+          } else {
+            return;
+          }
+        }
+
+        if (imageBytes != null) {
+          // Process image: crop to 1:1 and compress
+          final processedBytes = await _processImage(imageBytes);
+          if (processedBytes != null) {
+            _imageNotifier.value = XFile.fromData(
+              processedBytes,
+              name: fileName,
+            );
           }
         }
       }
@@ -514,6 +838,50 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           ),
         );
       }
+    }
+  }
+
+  /// Process image: crop to 1:1 aspect ratio and compress
+  Future<Uint8List?> _processImage(Uint8List imageBytes) async {
+    try {
+      // Decode the image
+      img.Image? image = img.decodeImage(imageBytes);
+      if (image == null) return null;
+
+      // Crop to 1:1 (square) aspect ratio
+      final size = image.width < image.height ? image.width : image.height;
+      final xOffset = (image.width - size) ~/ 2;
+      final yOffset = (image.height - size) ~/ 2;
+
+      img.Image cropped = img.copyCrop(
+        image,
+        x: xOffset,
+        y: yOffset,
+        width: size,
+        height: size,
+      );
+
+      // Resize if too large (max 1024x1024 for good quality)
+      if (cropped.width > 1024) {
+        cropped = img.copyResize(cropped, width: 1024, height: 1024);
+      }
+
+      // Encode to JPEG with compression
+      final jpegBytes = img.encodeJpg(cropped, quality: 85);
+
+      // Further compress using flutter_image_compress
+      final compressedBytes = await FlutterImageCompress.compressWithList(
+        Uint8List.fromList(jpegBytes),
+        minWidth: 1024,
+        minHeight: 1024,
+        quality: 85,
+        format: CompressFormat.jpeg,
+      );
+
+      return compressedBytes;
+    } catch (e) {
+      debugPrint('Error processing image: $e');
+      return imageBytes; // Return original if processing fails
     }
   }
 

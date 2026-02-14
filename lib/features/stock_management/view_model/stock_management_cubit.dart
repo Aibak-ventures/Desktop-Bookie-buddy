@@ -15,6 +15,9 @@ class StockManagementCubit extends Cubit<StockManagementState> {
   Future<void> loadProducts({
     int? serviceId, // null or -1 means "All Services"
     String searchQuery = '',
+    String? searchType,
+    int? startPrice,
+    int? endPrice,
     int page = 1,
   }) async {
     try {
@@ -55,7 +58,7 @@ class StockManagementCubit extends Cubit<StockManagementState> {
               query: searchQuery,
               page: page,
             )
-          : (searchQuery.isEmpty)
+          : (searchQuery.isEmpty && startPrice == null && endPrice == null)
               ? await _repository.getProductsPaginated(
                   serviceId: apiServiceId,
                   page: page,
@@ -64,9 +67,9 @@ class StockManagementCubit extends Cubit<StockManagementState> {
               : await _repository.searchAndFilterProducts(
                   serviceId: apiServiceId,
                   query: searchQuery,
-                  type: 'name',
-                  startPrice: null,
-                  endPrice: null,
+                  type: searchType ?? 'name',
+                  startPrice: startPrice,
+                  endPrice: endPrice,
                   page: page,
                   includeInStockOnly: false,
                 );
