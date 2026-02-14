@@ -54,12 +54,24 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _imageNotifier = ValueNotifier<XFile?>(null);
   final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
 
+  // Variant form controllers
+  final _variantSizeController = TextEditingController();
+  final _variantStockController = TextEditingController();
+  final _variantBarcodeController = TextEditingController();
+  final _isAddingVariant = ValueNotifier<bool>(false);
+  ProductVariantModel? _editingVariant;
+
   late MainServiceType mainServiceType;
   int? selectedServiceId;
 
   @override
   void initState() {
     super.initState();
+    // Force reload services to get latest services for current shop
+    context
+        .read<ServiceBloc>()
+        .add(const ServiceEvent.loadServices(force: true));
+
     final services = context.read<ServiceBloc>().getServices();
     selectedServiceId = widget.serviceId;
     mainServiceType = MainServiceType.fromServiceList(
@@ -88,7 +100,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final dialogWidth = screenWidth > 1200 ? 1100.0 : screenWidth * 0.9;
-    final dialogHeight = screenHeight * 0.65;
+    final dialogHeight = screenHeight * 0.80; // Increased for variants section
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -151,7 +163,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             // Body
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(32, 20, 32, 24),
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
                 child: _buildForm(context, isEditMode),
               ),
             ),
@@ -248,21 +260,10 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           ),
           const SizedBox(height: 20),
 
-          // Variants section (for dress/costume type)
-          if (mainServiceType.isDress && widget.product == null)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: VariantsWidget(
-                variantsNotifier: variantsNotifier,
-              ),
-            ),
+          // Variants section (for all service types when adding new product)
+          if (widget.product == null) _buildVariantsSection(),
 
-          if (mainServiceType.isDress && widget.product == null)
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // Action buttons
           BlocConsumer<SaveProductCubit, SaveProductState>(
@@ -288,32 +289,23 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                 orElse: () => false,
               );
               return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed:
-                          isLoading ? null : () => Navigator.of(context).pop(),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
+                  CustomElevatedButton(
+                    text: 'Cancel',
+                    onPressed:
+                        isLoading ? () {} : () => Navigator.of(context).pop(),
+                    width: 140,
+                    height: 45,
+                    backgroundColor: Colors.grey.shade300,
+                    textColor: Colors.black87,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: CustomElevatedButton(
-                      onPressed: _submit,
-                      text: isEditMode ? 'Update Product' : 'Add Product',
-                      isLoading: isLoading,
-                      loadingText: 'Saving...',
-                    ),
+                  const SizedBox(width: 12),
+                  CustomElevatedButton(
+                    text: isEditMode ? 'Update Product' : 'Add Product',
+                    onPressed: isLoading ? () {} : _submit,
+                    width: 160,
+                    height: 45,
                   ),
                 ],
               );
@@ -653,6 +645,396 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     );
   }
 
+  /// Build variants section for managing product variants
+  Widget _buildVariantsSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Product Variants',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              ValueListenableBuilder<bool>(
+                valueListenable: _isAddingVariant,
+                builder: (context, isAdding, child) {
+                  return ElevatedButton.icon(
+                    onPressed: isAdding ? null : () => _startAddingVariant(),
+                    icon: const Icon(Icons.add, size: 18),
+                    label: const Text('Add Variant'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.purple,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Inline variant form
+          ValueListenableBuilder<bool>(
+            valueListenable: _isAddingVariant,
+            builder: (context, isAdding, child) {
+              if (!isAdding) return const SizedBox.shrink();
+              return _buildVariantForm();
+            },
+          ),
+
+          // Variants list
+          ValueListenableBuilder<List<ProductVariantModel>>(
+            valueListenable: variantsNotifier,
+            builder: (context, variants, child) {
+              if (variants.isEmpty) {
+                return Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Icon(Icons.inventory_2_outlined,
+                            size: 48, color: Colors.grey.shade400),
+                        const SizedBox(height: 12),
+                        Text(
+                          mainServiceType.isDress
+                              ? 'No variants added yet. Add sizes for this dress.'
+                              : 'No variants added. Product will use default quantity.',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Column(
+                  children: [
+                    // Header row
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(8),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              'Size/Variant',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade700,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Stock',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade700,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 80),
+                        ],
+                      ),
+                    ),
+
+                    // Variant rows
+                    ...variants.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final variant = entry.value;
+                      final isLast = index == variants.length - 1;
+
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: isLast
+                                ? BorderSide.none
+                                : BorderSide(color: Colors.grey.shade200),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                variant.attribute,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                variant.stock.toString(),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () =>
+                                      _startEditingVariant(variant),
+                                  icon:
+                                      const Icon(Icons.edit_outlined, size: 18),
+                                  tooltip: 'Edit',
+                                  color: AppColors.purple,
+                                ),
+                                IconButton(
+                                  onPressed: () => _deleteVariant(variant.id),
+                                  icon: const Icon(Icons.delete_outline,
+                                      size: 18),
+                                  tooltip: 'Delete',
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _startAddingVariant() {
+    _variantSizeController.clear();
+    _variantStockController.clear();
+    _variantBarcodeController.clear();
+    _editingVariant = null;
+    _isAddingVariant.value = true;
+  }
+
+  void _startEditingVariant(ProductVariantModel variant) {
+    _variantSizeController.text = variant.attribute;
+    _variantStockController.text = variant.stock.toString();
+    _variantBarcodeController.clear();
+    _editingVariant = variant;
+    _isAddingVariant.value = true;
+
+    // Scroll to the form
+    Future.delayed(const Duration(milliseconds: 100), () {
+      Scrollable.ensureVisible(
+        context,
+        alignment: 0.0,
+        duration: const Duration(milliseconds: 300),
+      );
+    });
+  }
+
+  void _cancelVariantForm() {
+    _variantSizeController.clear();
+    _variantStockController.clear();
+    _variantBarcodeController.clear();
+    _editingVariant = null;
+    _isAddingVariant.value = false;
+  }
+
+  void _saveVariant() {
+    if (_variantSizeController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter variant name/size')),
+      );
+      return;
+    }
+
+    if (_variantStockController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter stock quantity')),
+      );
+      return;
+    }
+
+    final stock = int.tryParse(_variantStockController.text.trim());
+    if (stock == null || stock < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid stock quantity')),
+      );
+      return;
+    }
+
+    final updatedVariants =
+        List<ProductVariantModel>.from(variantsNotifier.value);
+
+    if (_editingVariant != null) {
+      // Update existing variant
+      final index =
+          updatedVariants.indexWhere((v) => v.id == _editingVariant!.id);
+      if (index != -1) {
+        updatedVariants[index] = ProductVariantModel(
+          id: _editingVariant!.id,
+          attribute: _variantSizeController.text.trim(),
+          stock: stock,
+          remainingStock: _editingVariant!.remainingStock,
+        );
+      }
+    } else {
+      // Add new variant
+      updatedVariants.add(
+        ProductVariantModel(
+          id: DateTime.now().millisecondsSinceEpoch,
+          attribute: _variantSizeController.text.trim(),
+          stock: stock,
+          remainingStock: stock,
+        ),
+      );
+    }
+
+    variantsNotifier.value = updatedVariants;
+    _cancelVariantForm();
+  }
+
+  Widget _buildVariantForm() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.purple.withOpacity(0.3), width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                _editingVariant != null ? Icons.edit : Icons.add_circle_outline,
+                color: AppColors.purple,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                _editingVariant != null ? 'Edit Variant' : 'Add New Variant',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.purple,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: CustomTextField(
+                  controller: _variantSizeController,
+                  label: 'Size / Variant Name *',
+                  validator: (value) =>
+                      AppInputValidators.onEmpty(value, 'Size'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: CustomTextField(
+                  controller: _variantStockController,
+                  label: 'Stock Quantity *',
+                  keyboardType: TextInputType.number,
+                  validator: (value) =>
+                      AppInputValidators.quantity(value, allowZero: false),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: CustomTextField(
+                  controller: _variantBarcodeController,
+                  label: 'Barcode (Optional)',
+                  validator: null,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: _cancelVariantForm,
+                child: const Text('Cancel'),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton.icon(
+                onPressed: _saveVariant,
+                icon: Icon(
+                  _editingVariant != null ? Icons.check : Icons.add,
+                  size: 18,
+                ),
+                label: Text(_editingVariant != null ? 'Update' : 'Add'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.purple,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteVariant(int variantId) {
+    variantsNotifier.value =
+        variantsNotifier.value.where((v) => v.id != variantId).toList();
+  }
+
   Widget _buildImagePicker(BuildContext context) {
     return ValueListenableBuilder<XFile?>(
       valueListenable: _imageNotifier,
@@ -723,30 +1105,39 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     if (_formKey.currentState!.validate()) {
       // Validate service selection for new products
       if (widget.product == null && selectedServiceId == null) {
-        CustomSnackBar(message: "Please select a service category");
+        context.showSnackBar("Please select a service category", isError: true);
         return;
       }
 
       if (widget.product?.image == null && _imageNotifier.value == null) {
-        CustomSnackBar(message: "Please select an image");
+        context.showSnackBar("Please select an image", isError: true);
         return;
       }
 
+      // For dress/costume, variants are required
       if (mainServiceType.isDress &&
           variantsNotifier.value.isEmpty &&
           widget.product == null) {
-        CustomSnackBar(message: "Please add at least one variant");
+        context.showSnackBar(
+            "Please add at least one size variant for this dress",
+            isError: true);
         return;
       }
 
+      // For new products: use variants if added, otherwise create default variant from stock
       final variantList =
           List<ProductVariantModel>.from(variantsNotifier.value);
 
-      if (!mainServiceType.isDress) {
-        variantList.clear();
+      if (variantList.isEmpty && widget.product == null) {
+        // If no variants added, create a default variant using stock quantity
+        if (_stockController.text.trim().isEmpty) {
+          context.showSnackBar("Please enter stock quantity or add variants",
+              isError: true);
+          return;
+        }
         variantList.add(
           ProductVariantModel(
-            id: widget.product?.variants.firstOrNull?.id ?? 0,
+            id: DateTime.now().millisecondsSinceEpoch,
             attribute: _nameController.text.trim(),
             stock: _stockController.text.trim().toInt(),
             remainingStock: _stockController.text.trim().toInt(),
@@ -780,7 +1171,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           price: _priceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
-          variants: variantList.isEmpty ? null : variantList,
+          variants: variantList,
           image: _imageNotifier.value,
         );
         saveCubit.saveProduct(product: product);
@@ -895,8 +1286,14 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     _purchaseAmountController.dispose();
     _priceController.dispose();
     _descriptionController.dispose();
+    _lengthController.dispose();
+    _fabricTypeController.dispose();
+    _variantSizeController.dispose();
+    _variantStockController.dispose();
+    _variantBarcodeController.dispose();
     variantsNotifier.dispose();
     _imageNotifier.dispose();
+    _isAddingVariant.dispose();
     super.dispose();
   }
 }

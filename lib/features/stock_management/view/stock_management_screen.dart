@@ -80,8 +80,11 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => BlocProvider(
-        create: (context) => SaveProductCubit(),
+      builder: (dialogContext) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => SaveProductCubit()),
+          BlocProvider.value(value: context.read<ServiceBloc>()),
+        ],
         child: AddEditProductDialog(
           serviceId: selectedServiceId,
           product: product,

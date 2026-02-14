@@ -1,11 +1,11 @@
 {
-    "name": "bookie_buddy_web",
-    "short_name": "bookie_buddy_web",
+   "name": "Bookie Buddy",
+  "short_name": "BookieBuddy",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Rental business management app",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
