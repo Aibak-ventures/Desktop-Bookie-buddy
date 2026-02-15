@@ -10,16 +10,12 @@ class DesktopDashboardResponse with _$DesktopDashboardResponse {
     @JsonKey(name: 'upcoming') required List<BookingsModel> upcoming,
     @JsonKey(name: 'ongoing_bookings')
     required List<BookingsModel> ongoingBookings,
-    @JsonKey(name: 'total_upcoming') required int totalUpcoming,
-    @JsonKey(name: 'total_ongoing') required int totalOngoing,
-    @JsonKey(name: 'total_completed') required int totalCompleted,
-    @JsonKey(name: 'total_expired') required int totalExpired,
-    @JsonKey(name: 'current_page') required int currentPage,
-    @JsonKey(name: 'per_page') required int perPage,
-    @JsonKey(name: 'total_pages') required int totalPages,
-    @JsonKey(name: 'total_records') required int totalRecords,
-    @JsonKey(name: 'prev_page_url') String? prevPageUrl,
-    @JsonKey(name: 'next_page_url') String? nextPageUrl,
+    @JsonKey(name: 'upcoming_count') required int upcomingCount,
+    @JsonKey(name: 'alteration_booking_count')
+    required int alterationBookingCount,
+    @JsonKey(name: 'completed_count') required int completedCount,
+    @JsonKey(name: 'expired_count') required int expiredCount,
+    @JsonKey(name: 'pagination') required DesktopDashboardPagination pagination,
   }) = _DesktopDashboardResponse;
 
   factory DesktopDashboardResponse.fromJson(Map<String, dynamic> json) =>
@@ -29,10 +25,10 @@ class DesktopDashboardResponse with _$DesktopDashboardResponse {
 @freezed
 class DesktopDashboardCarouselData with _$DesktopDashboardCarouselData {
   const factory DesktopDashboardCarouselData({
-    @JsonKey(name: 'total_upcoming') required int totalUpcoming,
-    @JsonKey(name: 'total_ongoing') required int totalOngoing,
-    @JsonKey(name: 'total_completed') required int totalCompleted,
-    @JsonKey(name: 'total_expired') required int totalExpired,
+    required int upcomingCount,
+    required int alterationBookingCount,
+    required int completedCount,
+    required int expiredCount,
   }) = _DesktopDashboardCarouselData;
 
   factory DesktopDashboardCarouselData.fromJson(Map<String, dynamic> json) =>
@@ -40,11 +36,39 @@ class DesktopDashboardCarouselData with _$DesktopDashboardCarouselData {
 
   factory DesktopDashboardCarouselData.empty() =>
       const DesktopDashboardCarouselData(
-        totalUpcoming: 0,
-        totalOngoing: 0,
-        totalCompleted: 0,
-        totalExpired: 0,
+        upcomingCount: 0,
+        alterationBookingCount: 0,
+        completedCount: 0,
+        expiredCount: 0,
       );
+}
+
+@freezed
+class DesktopDashboardPagination with _$DesktopDashboardPagination {
+  const factory DesktopDashboardPagination({
+    @JsonKey(name: 'upcoming') required PaginationInfo upcoming,
+    @JsonKey(name: 'ongoing') required PaginationInfo ongoing,
+  }) = _DesktopDashboardPagination;
+
+  factory DesktopDashboardPagination.fromJson(Map<String, dynamic> json) =>
+      _$DesktopDashboardPaginationFromJson(json);
+}
+
+@freezed
+class PaginationInfo with _$PaginationInfo {
+  const factory PaginationInfo({
+    String? next,
+    String? previous,
+    required int count,
+    @JsonKey(name: 'page_size') required int pageSize,
+    @JsonKey(name: 'current_page') required int currentPage,
+    @JsonKey(name: 'total_pages') required int totalPages,
+    @JsonKey(name: 'start_index') required int startIndex,
+    @JsonKey(name: 'end_index') required int endIndex,
+  }) = _PaginationInfo;
+
+  factory PaginationInfo.fromJson(Map<String, dynamic> json) =>
+      _$PaginationInfoFromJson(json);
 }
 
 /// Extension to provide grouped data by Today/Tomorrow/Upcoming for UI presentation
@@ -61,11 +85,16 @@ extension DesktopDashboardResponseExtensions on DesktopDashboardResponse {
 
   /// Converts to carousel data for overview cards
   DesktopDashboardCarouselData get carouselData => DesktopDashboardCarouselData(
-        totalUpcoming: totalUpcoming,
-        totalOngoing: totalOngoing,
-        totalCompleted: totalCompleted,
-        totalExpired: totalExpired,
+        upcomingCount: upcomingCount,
+        alterationBookingCount: alterationBookingCount,
+        completedCount: completedCount,
+        expiredCount: expiredCount,
       );
+
+  /// Pagination accessors for ongoing bookings (main paginated data)
+  String? get nextPageUrl => pagination.ongoing.next;
+  int get currentPage => pagination.ongoing.currentPage;
+  int get totalPages => pagination.ongoing.totalPages;
 }
 
 /// Helper function to group bookings by date
@@ -90,8 +119,28 @@ Map<String, List<BookingsModel>> _groupBookingsByDate(
     if (targetDateString == null || targetDateString.isEmpty) continue;
 
     try {
-      // Parse the string date to DateTime
-      final targetDate = DateTime.parse(targetDateString);
+      // Parse the string date - handle DD-MM-YYYY HH:mm:ss format
+      DateTime targetDate;
+
+      if (targetDateString.contains('-') &&
+          targetDateString.split('-').length == 3) {
+        // Handle DD-MM-YYYY HH:mm:ss format from API
+        final parts = targetDateString.split(' ');
+        final datePart = parts[0];
+        final dateComponents = datePart.split('-');
+
+        if (dateComponents.length == 3) {
+          final day = int.parse(dateComponents[0]);
+          final month = int.parse(dateComponents[1]);
+          final year = int.parse(dateComponents[2]);
+          targetDate = DateTime(year, month, day);
+        } else {
+          continue; // Skip invalid date format
+        }
+      } else {
+        // Try to parse as ISO format (fallback)
+        targetDate = DateTime.parse(targetDateString);
+      }
 
       // Reset time to compare dates only
       final bookingDate =

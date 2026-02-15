@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/home/view/widgets/carousel_home.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:flutter/material.dart';
@@ -54,9 +55,24 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         _buildCard(
                           title: 'Overview',
-                          child: SizedBox(
-                            height: 120, // Reduced from 160
-                            child: CarouselHome(data: bloc.carouselResponse),
+                          child: BlocBuilder<DashboardBloc, DashboardState>(
+                            builder: (context, state) {
+                              return state.maybeWhen(
+                                loaded: (_, __, carouselData, ___, ____, _____,
+                                    ______) {
+                                  return SizedBox(
+                                    height: 120,
+                                    child: CarouselHome(data: carouselData),
+                                  );
+                                },
+                                orElse: () => SizedBox(
+                                  height: 120,
+                                  child: CarouselHome(
+                                      data:
+                                          DesktopDashboardCarouselData.empty()),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -69,17 +85,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Recent Bookings',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1F2937),
-                          ),
-                        ),
-                        const SizedBox(
-                            height: 16), // Two column layout without tabs
-                        _buildTwoColumnBookings(context, bloc),
+                        // Two column layout without tabs
+                        _buildTwoColumnBookings(context),
                         const SizedBox(height: 50),
                       ],
                     ),
@@ -184,7 +191,6 @@ class HomeScreen extends StatelessWidget {
   /// Two column layout showing Upcoming and Returns bookings with Today/Tomorrow/Upcoming grouping
   Widget _buildTwoColumnBookings(
     BuildContext context,
-    DashboardBloc bloc,
   ) {
     return SizedBox(
       height: 600, // Fixed height for scrollable columns
@@ -211,7 +217,6 @@ class HomeScreen extends StatelessWidget {
                       totalCount: upcomingCount,
                       color: const Color(0xFF667eea),
                       useReturnDate: false,
-                      bloc: bloc,
                     ),
                   ),
                   const SizedBox(width: 24),
@@ -225,7 +230,6 @@ class HomeScreen extends StatelessWidget {
                       totalCount: returnsCount,
                       color: const Color(0xFFff8a00),
                       useReturnDate: true,
-                      bloc: bloc,
                     ),
                   ),
                 ],
@@ -246,7 +250,6 @@ class HomeScreen extends StatelessWidget {
     required int totalCount,
     required Color color,
     required bool useReturnDate,
-    required DashboardBloc bloc,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -319,7 +322,6 @@ class HomeScreen extends StatelessWidget {
                       bookings: groupedBookings['today']!,
                       color: Colors.red,
                       useReturnDate: useReturnDate,
-                      bloc: bloc,
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -331,7 +333,6 @@ class HomeScreen extends StatelessWidget {
                       bookings: groupedBookings['tomorrow']!,
                       color: Colors.orange,
                       useReturnDate: useReturnDate,
-                      bloc: bloc,
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -343,7 +344,6 @@ class HomeScreen extends StatelessWidget {
                       bookings: groupedBookings['upcoming']!,
                       color: Colors.blue,
                       useReturnDate: useReturnDate,
-                      bloc: bloc,
                     ),
                   ],
                 ],
@@ -360,7 +360,6 @@ class HomeScreen extends StatelessWidget {
     required List<BookingsModel> bookings,
     required Color color,
     required bool useReturnDate,
-    required DashboardBloc bloc,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,12 +420,12 @@ class HomeScreen extends StatelessWidget {
                   if (bookingCubit.state.isModified) {
                     final updated = bookingCubit.state.selectedBooking;
 
-                    bloc.add(
-                      DashboardEvent.updateData(
-                        updated,
-                        shouldRefresh: bookingCubit.state.shouldRefresh,
-                      ),
-                    );
+                    context.read<DashboardBloc>().add(
+                          DashboardEvent.updateData(
+                            updated,
+                            shouldRefresh: bookingCubit.state.shouldRefresh,
+                          ),
+                        );
 
                     bookingCubit.reset();
                   }

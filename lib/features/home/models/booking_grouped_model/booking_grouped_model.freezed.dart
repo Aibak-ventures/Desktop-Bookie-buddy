@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$BookingGroupedModel {
   String get date => throw _privateConstructorUsedError;
-  List<DashboardListModel> get bookings => throw _privateConstructorUsedError;
+  List<BookingsModel> get bookings => throw _privateConstructorUsedError;
 
   /// Create a copy of BookingGroupedModel
   /// with the given fields replaced by the non-null parameter values.
@@ -32,7 +32,7 @@ abstract class $BookingGroupedModelCopyWith<$Res> {
           BookingGroupedModel value, $Res Function(BookingGroupedModel) then) =
       _$BookingGroupedModelCopyWithImpl<$Res, BookingGroupedModel>;
   @useResult
-  $Res call({String date, List<DashboardListModel> bookings});
+  $Res call({String date, List<BookingsModel> bookings});
 }
 
 /// @nodoc
@@ -61,7 +61,7 @@ class _$BookingGroupedModelCopyWithImpl<$Res, $Val extends BookingGroupedModel>
       bookings: null == bookings
           ? _value.bookings
           : bookings // ignore: cast_nullable_to_non_nullable
-              as List<DashboardListModel>,
+              as List<BookingsModel>,
     ) as $Val);
   }
 }
@@ -74,7 +74,7 @@ abstract class _$$BookingGroupedModelImplCopyWith<$Res>
       __$$BookingGroupedModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String date, List<DashboardListModel> bookings});
+  $Res call({String date, List<BookingsModel> bookings});
 }
 
 /// @nodoc
@@ -101,7 +101,7 @@ class __$$BookingGroupedModelImplCopyWithImpl<$Res>
       bookings: null == bookings
           ? _value._bookings
           : bookings // ignore: cast_nullable_to_non_nullable
-              as List<DashboardListModel>,
+              as List<BookingsModel>,
     ));
   }
 }
@@ -110,14 +110,14 @@ class __$$BookingGroupedModelImplCopyWithImpl<$Res>
 
 class _$BookingGroupedModelImpl implements _BookingGroupedModel {
   const _$BookingGroupedModelImpl(
-      {required this.date, required final List<DashboardListModel> bookings})
+      {required this.date, required final List<BookingsModel> bookings})
       : _bookings = bookings;
 
   @override
   final String date;
-  final List<DashboardListModel> _bookings;
+  final List<BookingsModel> _bookings;
   @override
-  List<DashboardListModel> get bookings {
+  List<BookingsModel> get bookings {
     if (_bookings is EqualUnmodifiableListView) return _bookings;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_bookings);
@@ -153,14 +153,13 @@ class _$BookingGroupedModelImpl implements _BookingGroupedModel {
 
 abstract class _BookingGroupedModel implements BookingGroupedModel {
   const factory _BookingGroupedModel(
-          {required final String date,
-          required final List<DashboardListModel> bookings}) =
-      _$BookingGroupedModelImpl;
+      {required final String date,
+      required final List<BookingsModel> bookings}) = _$BookingGroupedModelImpl;
 
   @override
   String get date;
   @override
-  List<DashboardListModel> get bookings;
+  List<BookingsModel> get bookings;
 
   /// Create a copy of BookingGroupedModel
   /// with the given fields replaced by the non-null parameter values.

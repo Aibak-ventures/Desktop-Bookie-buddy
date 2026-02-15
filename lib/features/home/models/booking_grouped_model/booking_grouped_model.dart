@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
+import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_grouped_model.freezed.dart';
@@ -7,6 +7,6 @@ part 'booking_grouped_model.freezed.dart';
 class BookingGroupedModel with _$BookingGroupedModel {
   const factory BookingGroupedModel({
     required String date,
-    required List<DashboardListModel> bookings,
+    required List<BookingsModel> bookings,
   }) = _BookingGroupedModel;
 }

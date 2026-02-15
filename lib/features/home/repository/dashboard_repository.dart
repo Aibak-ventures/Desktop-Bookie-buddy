@@ -15,7 +15,7 @@ class DashboardRepository {
   Future<DesktopDashboardResponse> loadDesktopDashboardData({
     int page = 1,
     UserModel? activeShop,
-  }) async {
+  }) async { 
     try {
       return await _dashboardService.fetchDesktopDashboardData(
         page: page,

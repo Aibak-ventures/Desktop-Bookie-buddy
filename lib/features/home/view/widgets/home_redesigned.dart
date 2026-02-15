@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
-import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
+import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +15,7 @@ class HomeBookingTwoColumnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
-        return state.when(
+        return state.maybeWhen(
           loading: () => const Row(
             children: [
               Expanded(child: BookingListShimmer(itemCount: 6)),
@@ -26,16 +26,12 @@ class HomeBookingTwoColumnWidget extends StatelessWidget {
           error: (error) => Center(
             child: Text('Error: $error'),
           ),
-          loaded: (dataGrouped, _, __, ___, ____) {
-            // Separate upcoming and ongoing bookings
-            final upcomingBookings = dataGrouped['upcoming']
-                    ?.where((item) => item.isBooking && item.booking != null)
-                    .toList() ??
-                [];
-            final ongoingBookings = dataGrouped['ongoing']
-                    ?.where((item) => item.isBooking && item.booking != null)
-                    .toList() ??
-                [];
+          loaded: (upcomingGrouped, returnsGrouped, _, __, ___, ____, _____) {
+            // Get all bookings from groups
+            final upcomingBookings =
+                upcomingGrouped.values.expand((bookings) => bookings).toList();
+            final ongoingBookings =
+                returnsGrouped.values.expand((bookings) => bookings).toList();
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,6 +62,7 @@ class HomeBookingTwoColumnWidget extends StatelessWidget {
               ],
             );
           },
+          orElse: () => const SizedBox.shrink(),
         );
       },
     );
@@ -75,7 +72,7 @@ class HomeBookingTwoColumnWidget extends StatelessWidget {
     BuildContext context, {
     required String title,
     required IconData icon,
-    required List<DashboardListModel> bookings,
+    required List<BookingsModel> bookings,
     required Color color,
     required bool useReturnDate,
   }) {
@@ -143,7 +140,7 @@ class HomeBookingTwoColumnWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
-                  final booking = bookings[index].booking!;
+                  final booking = bookings[index];
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12),
                     child: BookingCard(
@@ -167,10 +164,7 @@ class HomeBookingTwoColumnWidget extends StatelessWidget {
 
                           context.read<DashboardBloc>().add(
                                 DashboardEvent.updateData(
-                                  DashboardListModel(
-                                    isBooking: true,
-                                    booking: updated,
-                                  ),
+                                  updated,
                                   shouldRefresh:
                                       bookingCubit.state.shouldRefresh,
                                 ),

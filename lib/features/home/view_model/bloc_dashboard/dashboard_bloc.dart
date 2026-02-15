@@ -50,22 +50,51 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     for (final booking in bookings) {
       // Determine the relevant date based on whether it's for returns or upcoming
-      final date = useReturnDate ? booking.returnDate : booking.pickupDate;
+      final dateString =
+          useReturnDate ? booking.returnDate : booking.pickupDate;
 
-      if (date == null) continue;
+      if (dateString == null || dateString.isEmpty) continue;
 
-      // Reset time to compare dates only
-      final bookingDate = DateTime(date.year, date.month, date.day);
-      final todayDate = DateTime(today.year, today.month, today.day);
-      final tomorrowDate =
-          DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
+      try {
+        // Parse the string date - handle DD-MM-YYYY HH:mm:ss format from API
+        DateTime date;
 
-      if (bookingDate == todayDate) {
-        todayList.add(booking);
-      } else if (bookingDate == tomorrowDate) {
-        tomorrowList.add(booking);
-      } else {
-        upcomingList.add(booking);
+        if (dateString.contains('-') && dateString.split('-').length == 3) {
+          // Handle DD-MM-YYYY HH:mm:ss format from API
+          final parts = dateString.split(' ');
+          final datePart = parts[0];
+          final dateComponents = datePart.split('-');
+
+          if (dateComponents.length == 3) {
+            final day = int.parse(dateComponents[0]);
+            final month = int.parse(dateComponents[1]);
+            final year = int.parse(dateComponents[2]);
+            date = DateTime(year, month, day);
+          } else {
+            continue; // Skip invalid date format
+          }
+        } else {
+          // Try to parse as ISO format (fallback)
+          date = DateTime.parse(dateString);
+        }
+
+        // Reset time to compare dates only
+        final bookingDate = DateTime(date.year, date.month, date.day);
+        final todayDate = DateTime(today.year, today.month, today.day);
+        final tomorrowDate =
+            DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
+
+        if (bookingDate == todayDate) {
+          todayList.add(booking);
+        } else if (bookingDate == tomorrowDate) {
+          tomorrowList.add(booking);
+        } else {
+          upcomingList.add(booking);
+        }
+      } catch (e) {
+        // Skip bookings with invalid date formats
+        log('Error parsing date: $dateString - $e');
+        continue;
       }
     }
 

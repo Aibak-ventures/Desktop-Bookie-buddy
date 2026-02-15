@@ -34,7 +34,7 @@ class CarouselHome extends StatelessWidget {
               child: _buildCard(
                 context,
                 title: 'Upcoming',
-                value: data.totalUpcoming.toString(),
+                value: data.upcomingCount.toString(),
                 gradient: const [
                   Color(0xFF4C0FFF),
                   Color(0xFF8A63FE),
@@ -48,7 +48,7 @@ class CarouselHome extends StatelessWidget {
               child: _buildCard(
                 context,
                 title: 'Returns',
-                value: data.totalOngoing.toString(),
+                value: data.alterationBookingCount.toString(),
                 gradient: const [
                   Color(0xFFFF8A00),
                   Color(0xFFFFB347),
@@ -62,7 +62,7 @@ class CarouselHome extends StatelessWidget {
               child: _buildCard(
                 context,
                 title: 'Completed',
-                value: data.totalCompleted.toString(),
+                value: data.completedCount.toString(),
                 gradient: const [
                   Color(0xFF015DFF),
                   Color(0xFF05ADFF),
@@ -76,7 +76,7 @@ class CarouselHome extends StatelessWidget {
               child: _buildCard(
                 context,
                 title: 'Expired',
-                value: data.totalExpired.toString(),
+                value: data.expiredCount.toString(),
                 gradient: const [
                   Color(0xFFFF4757),
                   Color(0xFFFF6B7A),

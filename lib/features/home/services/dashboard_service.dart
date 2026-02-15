@@ -37,9 +37,11 @@ class DashboardService {
 
       _validateResponse(response);
 
-      return DesktopDashboardResponse.fromJson(
-        response.data as Map<String, dynamic>,
-      );
+      // API returns {status, message, data} - extract the inner 'data' object
+      final responseData = response.data as Map<String, dynamic>;
+      final innerData = responseData['data'] as Map<String, dynamic>;
+
+      return DesktopDashboardResponse.fromJson(innerData);
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       throw ErrorHandler.handle(e);

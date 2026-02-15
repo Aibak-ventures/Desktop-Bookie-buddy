@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widge
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/home/models/booking_grouped_model/booking_grouped_model.dart';
-import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
+import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +44,8 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
   void _onTabChanged() {
     if (!_tabController.indexIsChanging) {
       final bloc = context.read<DashboardBloc>();
-      if (_tabController.index == 0) {
-        bloc.add(const DashboardEvent.loadDashboardData());
-      } else {
-        bloc.add(const DashboardEvent.loadDashboardData(isOngoing: true));
-      }
+      // Refresh data when tab changes
+      bloc.add(const DashboardEvent.loadDashboardData());
     }
   }
 
@@ -74,7 +71,7 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
 
         BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
-            return state.when(
+            return state.maybeWhen(
               loading: () => const BookingListShimmer(
                 itemCount: 12,
                 alwaysScrollable: false,
@@ -84,37 +81,26 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
                 child: CustomErrorWidget(
                   errorText: error,
                   onRetry: () => bloc.add(
-                    DashboardEvent.loadDashboardData(
-                      isOngoing: _tabController.index == 1,
+                    const DashboardEvent.loadDashboardData(
                       useOldState: true,
                     ),
                   ),
                 ),
               ),
-              loaded: (dataGrouped, _, nextPageUrl, isPaginating, isOngoing) {
-                // Sync tab controller with state
-                if (_tabController.index != (isOngoing ? 1 : 0)) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (mounted) {
-                      _tabController.index = isOngoing ? 1 : 0;
-                    }
-                  });
-                }
+              loaded:
+                  (upcomingGrouped, returnsGrouped, _, __, ___, ____, _____) {
+                // Determine current data based on tab
+                final isOngoing = _tabController.index == 1;
+                final currentGrouped =
+                    isOngoing ? returnsGrouped : upcomingGrouped;
 
-                // Filter: Only show bookings (not custom work) and only non-empty groups
-                final group = dataGrouped.entries
-                    .map((e) {
-                      // Filter out custom work - only keep bookings
-                      final bookingsOnly = e.value
-                          .where((item) => item.isBooking && item.booking != null)
-                          .toList();
-                      
-                      return BookingGroupedModel(
-                        date: e.key,
-                        bookings: bookingsOnly,
-                      );
-                    })
-                    .where((group) => group.bookings.isNotEmpty) // Hide empty groups
+                // Convert to BookingGroupedModel format for display
+                final group = currentGrouped.entries
+                    .map((e) => BookingGroupedModel(
+                          date: e.key,
+                          bookings: e.value,
+                        ))
+                    .where((group) => group.bookings.isNotEmpty)
                     .toList();
 
                 return group.isEmpty
@@ -123,10 +109,11 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
                       )
                     : isDesktop
                         ? _buildDesktopBookingList(
-                            context, group, isPaginating, bloc, isOngoing)
+                            context, group, false, bloc, false)
                         : _buildMobileBookingList(
-                            context, group, isPaginating, bloc, isOngoing);
+                            context, group, false, bloc, false);
               },
+              orElse: () => const SizedBox.shrink(),
             );
           },
         ),
@@ -206,19 +193,19 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
                   ),
                 ),
                 // Booking Cards - Desktop Layout
-                ...sub.bookings.map(
-                  (booking) => Container(
+                ...sub.bookings.map<Widget>(
+                  (BookingsModel booking) => Container(
                     margin: const EdgeInsets.only(bottom: 8),
                     child: BookingCard(
-                      booking: booking.booking!,
+                      booking: booking,
                       useReturnDate: isOngoing,
                       onTap: () async {
                         final bookingCubit =
                             context.read<BookingSelectionCubit>();
-                        bookingCubit.selectBooking(booking.booking!);
+                        bookingCubit.selectBooking(booking);
 
                         await context.push(
-                          BookingDetailsScreen(bookingId: booking.booking!.id!),
+                          BookingDetailsScreen(bookingId: booking.id!),
                         );
 
                         if (bookingCubit.state.isModified) {
@@ -226,10 +213,7 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
 
                           context.read<DashboardBloc>().add(
                                 DashboardEvent.updateData(
-                                  DashboardListModel(
-                                    isBooking: true,
-                                    booking: updated,
-                                  ),
+                                  updated,
                                   shouldRefresh:
                                       bookingCubit.state.shouldRefresh,
                                 ),
@@ -283,16 +267,16 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
               ),
             ),
             // Booking List
-            ...sub.bookings.map(
-              (booking) => BookingCard(
-                booking: booking.booking!,
+            ...sub.bookings.map<Widget>((BookingsModel booking) {
+              return BookingCard(
+                booking: booking,
                 useReturnDate: isOngoing == true,
                 onTap: () async {
                   final bookingCubit = context.read<BookingSelectionCubit>();
-                  bookingCubit.selectBooking(booking.booking!);
+                  bookingCubit.selectBooking(booking);
 
                   await context.push(
-                    BookingDetailsScreen(bookingId: booking.booking!.id!),
+                    BookingDetailsScreen(bookingId: booking.id!),
                   );
 
                   if (bookingCubit.state.isModified) {
@@ -300,10 +284,7 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
 
                     context.read<DashboardBloc>().add(
                           DashboardEvent.updateData(
-                            DashboardListModel(
-                              isBooking: true,
-                              booking: updated,
-                            ),
+                            updated,
                             shouldRefresh: bookingCubit.state.shouldRefresh,
                           ),
                         );
@@ -313,8 +294,8 @@ class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
                     bookingCubit.reset();
                   }
                 },
-              ),
-            ),
+              );
+            }),
           ],
         );
       },
