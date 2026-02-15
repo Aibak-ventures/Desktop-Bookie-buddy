@@ -719,21 +719,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           ),
           const SizedBox(width: 12),
           const SizedBox(
-            width: 80,
-            child: Text(
-              'Staff',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          const SizedBox(
             width: 105,
             child: Text(
-              'Delivery',
+              'Delivery Status',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -805,7 +793,19 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           const SizedBox(
             width: 90,
             child: Text(
-              'Payment',
+              'Payment Status',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const SizedBox(
+            width: 80,
+            child: Text(
+              'Staff',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -865,21 +865,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 ),
                 const SizedBox(width: 12),
                 SizedBox(
-                  width: 80,
-                  child: Text(
-                    booking.staffName ?? 'N/A',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                SizedBox(
                   width: 105,
-                  child: _buildDeliveryStatus(booking),
+                  child: _buildDeliveryStatusDisplay(booking),
                 ),
                 const SizedBox(width: 20),
                 SizedBox(
@@ -934,6 +921,19 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   width: 90,
                   child: _buildPaymentStatus(booking.paymentStatus),
                 ),
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    booking.staffName ?? 'N/A',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(width: 10),
                 const Icon(Icons.chevron_right,
                     size: 18, color: Colors.blueAccent),
@@ -949,6 +949,28 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     return _DeliveryStatusDropdown(
       key: ValueKey('delivery_status_${booking.id}'),
       booking: booking,
+    );
+  }
+
+  /// Display-only delivery status (no dropdown action)
+  Widget _buildDeliveryStatusDisplay(DesktopBookingItemModel booking) {
+    final status = booking.deliveryStatus ?? DeliveryStatus.booked;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: status.color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        status.name,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 10,
+          color: status.color,
+          fontWeight: FontWeight.w600,
+        ),
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 

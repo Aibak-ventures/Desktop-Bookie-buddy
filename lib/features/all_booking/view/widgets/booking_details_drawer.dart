@@ -14,6 +14,7 @@ import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/edit_booking/view/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
@@ -152,6 +153,11 @@ class BookingDetailsDrawer extends StatelessWidget {
                       _buildDatesSection(booking),
                       const SizedBox(height: 20),
 
+                      // Documents
+                      _buildDocumentsSection(booking),
+                      if (booking.documents.isNotEmpty)
+                        const SizedBox(height: 20),
+
                       // Item details
                       _buildItemDetails(booking),
                       const SizedBox(height: 20),
@@ -262,16 +268,120 @@ class BookingDetailsDrawer extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                onSelected: (newStatus) {
-                  context.read<AllBookingBloc>().add(
-                        AllBookingEvent.updateDeliveryStatus(
-                          bookingId: booking.id,
-                          deliveryStatus: newStatus,
+                onSelected: (newStatus) async {
+                  // Show different dialog for cancellation with paid amount
+                  if (newStatus == DeliveryStatus.cancelled &&
+                      booking.actualPaidAmount > 0) {
+                    showDialog(
+                      context: context,
+                      builder: (dialogContext) => CancelBookingDialog(
+                        maxRefundAmount: booking.actualPaidAmount,
+                        onCancel: () => Navigator.of(dialogContext).pop(),
+                        onConfirm: (refundAmount, paymentMethod, reason) {
+                          context.read<BookingDetailsBloc>().add(
+                                BookingDetailsEvent.cancelBooking(
+                                  bookingId: booking.id,
+                                  refundAmount: refundAmount,
+                                  paymentMethod: paymentMethod,
+                                  refundReason: reason,
+                                ),
+                              );
+                          // Refresh the booking list after cancellation
+                          context.read<AllBookingBloc>().add(
+                                const AllBookingEvent.loadBookings(),
+                              );
+                          // Close the drawer
+                          context
+                              .read<BookingDetailsDrawerCubit>()
+                              .closeDrawer();
+                        },
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Show different confirmation for cancellation without paid amount
+                  if (newStatus == DeliveryStatus.cancelled) {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Cancel Booking'),
+                        content: const Text(
+                          'Are you sure you want to cancel this booking? This action cannot be undone.',
                         ),
-                      );
-                  context.read<BookingDetailsBloc>().add(
-                        BookingDetailsEvent.fetchBookingDetails(booking.id),
-                      );
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('Keep Booking'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            style: TextButton.styleFrom(
+                                foregroundColor: Colors.red),
+                            child: const Text('Cancel Booking'),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (confirm == true && context.mounted) {
+                      // Update via BookingDetailsBloc for optimistic UI update
+                      context.read<BookingDetailsBloc>().add(
+                            BookingDetailsEvent.updateDeliveryStatus(
+                              bookingId: booking.id,
+                              deliveryStatus: newStatus,
+                            ),
+                          );
+                      // Also update the booking list
+                      context.read<AllBookingBloc>().add(
+                            AllBookingEvent.updateDeliveryStatus(
+                              bookingId: booking.id,
+                              deliveryStatus: newStatus,
+                            ),
+                          );
+                      // Close the drawer
+                      context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                    }
+                    return;
+                  }
+
+                  // Show confirmation dialog for all other status changes
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Change Delivery Status'),
+                      content: Text(
+                        'Are you sure you want to change delivery status to "${newStatus.name}"?',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Confirm'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirm == true && context.mounted) {
+                    // Update via BookingDetailsBloc for optimistic UI update
+                    context.read<BookingDetailsBloc>().add(
+                          BookingDetailsEvent.updateDeliveryStatus(
+                            bookingId: booking.id,
+                            deliveryStatus: newStatus,
+                          ),
+                        );
+                    // Also update the booking list
+                    context.read<AllBookingBloc>().add(
+                          AllBookingEvent.updateDeliveryStatus(
+                            bookingId: booking.id,
+                            deliveryStatus: newStatus,
+                          ),
+                        );
+                  }
                 },
                 itemBuilder: (context) => DeliveryStatus.values.map((s) {
                   return PopupMenuItem(
@@ -445,6 +555,95 @@ class BookingDetailsDrawer extends StatelessWidget {
     );
   }
 
+  Widget _buildDocumentsSection(BookingDetailsModel booking) {
+    if (booking.documents.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.attach_file, size: 16, color: Colors.grey.shade700),
+              const SizedBox(width: 8),
+              const Text(
+                'Documents',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: booking.documents.map((doc) {
+              final docMap = doc is Map<String, dynamic> ? doc : {};
+              final docUrl = docMap['url'] ?? docMap['file'] ?? '';
+              final docName = docMap['name'] ?? 'Document';
+
+              return InkWell(
+                onTap: () async {
+                  if (docUrl.isNotEmpty) {
+                    final uri = Uri.parse(docUrl);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri,
+                          mode: LaunchMode.externalApplication);
+                    }
+                  }
+                },
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        docUrl.toLowerCase().endsWith('.pdf')
+                            ? Icons.picture_as_pdf
+                            : Icons.image,
+                        size: 32,
+                        color: Colors.grey.shade600,
+                      ),
+                      const SizedBox(height: 4),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(
+                          docName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildItemDetails(BookingDetailsModel booking) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -551,6 +750,15 @@ class BookingDetailsDrawer extends StatelessWidget {
                                   color: Colors.grey.shade600,
                                 ),
                               ),
+                            if (item.category != null &&
+                                item.category!.isNotEmpty)
+                              Text(
+                                'Category : ${item.category}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -618,8 +826,9 @@ class BookingDetailsDrawer extends StatelessWidget {
                       }).toList(),
                     ),
                   ],
-                  // Show location details for vehicles
-                  if (booking.otherDetails != null &&
+                  // Show location details ONLY for vehicles
+                  if (item.mainServiceType.isVehicle &&
+                      booking.otherDetails != null &&
                       (booking.otherDetails!.locationStart != null ||
                           booking.otherDetails!.locationFrom != null ||
                           booking.otherDetails!.locationTo != null)) ...[
@@ -627,56 +836,137 @@ class BookingDetailsDrawer extends StatelessWidget {
                     const Divider(height: 1),
                     const SizedBox(height: 8),
                     Text(
-                      'Location Details:',
+                      'Location Details',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey.shade700,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      [
-                        if (booking.otherDetails!.locationStart != null)
-                          'Start: ${booking.otherDetails!.locationStart}',
-                        if (booking.otherDetails!.locationFrom != null)
-                          'From: ${booking.otherDetails!.locationFrom}',
-                        if (booking.otherDetails!.locationTo != null)
-                          'To: ${booking.otherDetails!.locationTo}',
-                      ].join(' • '),
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                  // Show notes if they exist
-                  if (booking.description != null &&
-                      booking.description!.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    const Divider(height: 1),
                     const SizedBox(height: 8),
-                    Text(
-                      'Notes:',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w600,
+                    if (booking.otherDetails!.locationStart != null) ...[
+                      Row(
+                        children: [
+                          Text(
+                            'Start',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              booking.otherDetails!.locationStart!,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      booking.description!,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black87,
+                      const SizedBox(height: 6),
+                    ],
+                    if (booking.otherDetails!.locationFrom != null) ...[
+                      Row(
+                        children: [
+                          Text(
+                            'From',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              booking.otherDetails!.locationFrom!,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
+                      const SizedBox(height: 6),
+                    ],
+                    if (booking.otherDetails!.locationTo != null) ...[
+                      Row(
+                        children: [
+                          Text(
+                            'To',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              booking.otherDetails!.locationTo!,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ],
               ),
             );
           }).toList(),
+          // Show notes if they exist - only once at the end
+          if (booking.description != null &&
+              booking.description!.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.amber.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.amber.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.note_alt_outlined,
+                        size: 16,
+                        color: Colors.amber.shade700,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Notes',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.amber.shade800,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    booking.description!,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -768,7 +1058,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                             }
                           },
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 8),
                         InkWell(
                           onTap: () async {
                             final uri = Uri.parse(
@@ -841,24 +1131,56 @@ class BookingDetailsDrawer extends StatelessWidget {
                               }
                             },
                           ),
-                          const SizedBox(width: 4),
-                          IconButton(
-                            icon: const Icon(
-                              LucideIcons.messageCircle,
-                              size: 16,
-                              color: Colors.green,
-                            ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            onPressed: () async {
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: () async {
                               final uri = Uri.parse(
                                   'https://wa.me/${booking.client.phone2!.toString()}');
                               if (await canLaunchUrl(uri)) {
                                 await launchUrl(uri);
                               }
                             },
+                            child: SvgPicture.asset(
+                              AppAssets.whatsAppSvg,
+                              width: 18,
+                              height: 18,
+                              colorFilter: ColorFilter.mode(
+                                Colors.green.shade600,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                           ),
                         ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+          // Address if exists
+          if (booking.address != null && booking.address!.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Address',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        booking.address!,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -964,7 +1286,7 @@ class BookingDetailsDrawer extends StatelessWidget {
     final paid = booking.actualPaidAmount;
     final discount = booking.discountAmount ?? 0;
     final balance = totalAmount - paid - discount;
-    final securityAmount = booking.paidAmount ?? 0;
+    final securityAmount = booking.securityAmount ?? 0;
     final isPaymentCompleted = balance <= 0;
 
     return Column(
@@ -1016,11 +1338,9 @@ class BookingDetailsDrawer extends StatelessWidget {
                         Text(isPaymentCompleted ? 'Completed' : 'Add Payment'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isPaymentCompleted
-                          ? Colors.green.shade100
+                          ? Colors.green.shade600
                           : AppColors.purple,
-                      foregroundColor: isPaymentCompleted
-                          ? Colors.green.shade700
-                          : Colors.white,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       textStyle: const TextStyle(
@@ -1225,8 +1545,12 @@ class BookingDetailsDrawer extends StatelessWidget {
         return dateLabel;
       }
 
+      // Convert to 12-hour format
+      final hour12 =
+          date.hour == 0 ? 12 : (date.hour > 12 ? date.hour - 12 : date.hour);
+      final period = date.hour >= 12 ? 'PM' : 'AM';
       final time =
-          '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} ${date.hour >= 12 ? 'pm' : 'am'}';
+          '${hour12.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} $period';
       return '$dateLabel, $time';
     } catch (e) {
       return dateStr;
@@ -1481,9 +1805,10 @@ class BookingDetailsDrawer extends StatelessWidget {
 
   Widget _buildCompletionStatusSection(BookingDetailsModel booking) {
     final isCompleted = booking.deliveryStatus == DeliveryStatus.returned;
-    
+
     if (!isCompleted) {
-      return const SizedBox.shrink(); // Don't show anything for non-completed bookings
+      return const SizedBox
+          .shrink(); // Don't show anything for non-completed bookings
     }
 
     return Container(
@@ -1524,13 +1849,13 @@ class BookingDetailsDrawer extends StatelessWidget {
 
   String _formatCompletionDate(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return 'Unknown date';
-    
+
     try {
       final date = dateStr.parseToDateTime();
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final dateOnly = DateTime(date.year, date.month, date.day);
-      
+
       if (dateOnly == today) {
         return 'Today';
       } else {

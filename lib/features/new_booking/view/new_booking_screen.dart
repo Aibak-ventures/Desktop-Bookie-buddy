@@ -2150,14 +2150,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // }
 
   Future<void> _selectDate({required bool isPickup}) async {
+    final isSales = selectedBookingType == BookingType.sales;
+    
     if (isPickup) {
-      // PICKUP DATE PICKER
-      // Can be past (up to 1 year) or future (up to 1 year)
+      // PICKUP DATE PICKER (or SALE DATE for sales mode)
+      // For sales: only today or past dates (up to 1 year)
+      // For bookings: can be past (up to 1 year) or future (up to 1 year)
       final picked = await showDatePicker(
         context: context,
         initialDate: pickupDate,
         firstDate: DateTime.now().subtract(const Duration(days: 365)),
-        lastDate: DateTime.now().add(const Duration(days: 365)),
+        lastDate: isSales ? DateTime.now() : DateTime.now().add(const Duration(days: 365)),
         builder: (context, child) {
           return Theme(
             data: Theme.of(context).copyWith(
@@ -2784,8 +2787,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       ProductModel product, ProductVariantModel variant) {
     log('_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}');
 
-    final price = variant.price ?? product.price ?? 0;
-    log('Adding variant: ${variant.attribute}, price: $price');
+    // For sales mode, use sale_price if available, otherwise fall back to price
+    final isSales = selectedBookingType == BookingType.sales;
+    final price = isSales 
+        ? (variant.salePrice ?? variant.price ?? product.price ?? 0)
+        : (variant.price ?? product.price ?? 0);
+    log('Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)');
 
     final products =
         List<ProductSelectedModel>.from(selectedProductsNotifier.value);
@@ -2833,161 +2840,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     setState(() {}); // Refresh to update UI
   }
 
-  /// Builds individual search result item - tapping opens variant selection dialog
-  Widget _buildSearchResultItem(ProductModel product) {
-    // Check if product is already in selected list
-    final selectedProducts = selectedProductsNotifier.value;
-    final isAdded = selectedProducts.any(
-      (p) => p.variant.productId == product.id,
-    );
 
-    // Get the quantity if already added
-    int currentQty = 0;
-    if (isAdded) {
-      for (final p in selectedProducts) {
-        if (p.variant.productId == product.id) {
-          currentQty += p.quantity;
-        }
-      }
-    }
-
-    // Get variant names
-    final variants = product.variants;
-    final variantNames = variants
-        .map((v) => v.attribute)
-        .where((attr) => attr.isNotEmpty)
-        .toList();
-    final variantText =
-        variantNames.isNotEmpty ? variantNames.join(', ') : 'No variants';
-
-    // Get price
-    final price = product.price ?? 0;
-
-    return InkWell(
-      onTap: () {
-        log('Product tapped: ${product.name}');
-        // Close search overlay first
-        serviceSearchController.clear();
-        // Open variant selection dialog
-        _showVariantSelectionDialog(product);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Row(
-          children: [
-            // Product Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Container(
-                width: 72,
-                height: 72,
-                color: Colors.grey.shade100,
-                child: product.image != null && product.image!.isNotEmpty
-                    ? Image.network(
-                        product.image!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Icon(
-                          Icons.image_outlined,
-                          size: 32,
-                          color: Colors.grey.shade400,
-                        ),
-                      )
-                    : Icon(
-                        Icons.image_outlined,
-                        size: 32,
-                        color: Colors.grey.shade400,
-                      ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Product Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  if (variantNames.isNotEmpty)
-                    Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: variantNames.map((variant) {
-                        return variantChip(variant);
-                      }).toList(),
-                    ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '₹$price',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF6132E4),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            // Status indicator
-            if (isAdded)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.green.shade300),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.check, size: 12, color: Colors.green.shade700),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Added ($currentQty)',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green.shade700,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else
-              GestureDetector(
-                onTap: () => _showVariantSelectionDialog(product),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Text(
-                    'Add',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
 
   void _showVariantSelectionDialog(dynamic product) {
     final variants = product.variants ?? [];
@@ -3562,68 +3415,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     selectedProductsNotifier.value = products;
   }
 
-  /// Show dialog to edit product price
-  void _showPriceEditDialog(ProductSelectedModel product) {
-    final priceController = TextEditingController(
-      text: product.amount.toString(),
-    );
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          'Edit Price',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              product.variant.name,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: priceController,
-              keyboardType: TextInputType.number,
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'Price',
-                prefixText: '₹ ',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final newPrice =
-                  int.tryParse(priceController.text) ?? product.amount;
-              _updateProductPrice(product, newPrice);
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
-            ),
-            child: const Text('Update', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Update the price of a product
   void _updateProductPrice(ProductSelectedModel product, int newPrice) {
     final products =
@@ -3637,285 +3428,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  Widget _buildRightSection() {
-    final isSalesMode = selectedBookingType == BookingType.sales;
-    return Column(
-      children: [
-        // Payment section - compact
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Payment Details',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
-                  // Hide advance amount in sales mode
-                  if (!isSalesMode) ...[
-                    BookingTextFieldBuilder.buildCompactAmountField(
-                      controller: advanceAmountController,
-                      label: 'Advance Amount (optional)',
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  if (!isSalesMode) ...[
-                    BookingTextFieldBuilder.buildCompactAmountField(
-                      controller: securityAmountController,
-                      label: 'Security Amount (optional)',
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  BookingTextFieldBuilder.buildCompactAmountField(
-                    controller: discountAmountController,
-                    label: 'Discount Amount (optional)',
-                  ),
-                  const SizedBox(height: 10),
-                  // Additional charges - hide in sales mode
-                  if (!isSalesMode) ...[
-                    _buildAdditionalChargesSection(),
-                    const SizedBox(height: 10),
-                  ],
-                  // Payment method - only show if advance amount has value
-                  ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: advanceAmountController,
-                    builder: (context, value, child) {
-                      final hasAdvanceAmount = value.text.trim().isNotEmpty &&
-                          (int.tryParse(value.text.trim()) ?? 0) > 0;
-                      if (hasAdvanceAmount) {
-                        return Column(
-                          children: [
-                            _buildPaymentMethodSection(),
-                            const SizedBox(height: 3),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  // Delivery status
-                  if (!isSalesMode) _buildDeliveryStatusSection(),
-                  const SizedBox(height: 3),
-                  // _buildPaymentMethodSection(),
-                  const SizedBox(height: 3),
-                  if (!isSalesMode) ...[
-                    BookingDocumentUploadSection(
-                      documentsNotifier: documentsNotifier,
-                    ),
-                    // const SizedBox(height: 20),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        // Summary section
-        // Row(
-        //   children: [
-        //     const SizedBox(width: 6),
-        //     const Text(
-        //       'Summary',
-        //       style: TextStyle(
-        //         fontSize: 14,
-        //         fontFamily: 'Inter',
-        //         fontWeight: FontWeight.w500,
-        //         color: Color(0xFF3E3E3E),
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        _buildSummarySection(),
-      ],
-    );
-  }
 
-  Widget _buildAdditionalChargesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Additional Charges',
-              style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
-            ),
-            InkWell(
-              onTap: _addAdditionalCharge,
-              child: Container(
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6132E4).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child:
-                    const Icon(Icons.add, size: 14, color: Color(0xFF6132E4)),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        ValueListenableBuilder<List<AdditionalChargesModel>>(
-          valueListenable: additionalChargesNotifier,
-          builder: (context, charges, _) {
-            if (charges.isEmpty) {
-              return Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Center(
-                  child: Text(
-                    'No additional charges',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-                  ),
-                ),
-              );
-            }
-            return Column(
-              children: charges.map((charge) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8F9FA),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: const Color(0xFF6132E4).withOpacity(0.2),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          charge.name ?? 'Charge',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF2D2D2D),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF6132E4).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              '₹${charge.amount ?? 0}',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF6132E4),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          InkWell(
-                            onTap: () => _removeCharge(charge),
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.red.shade50,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.close,
-                                size: 14,
-                                color: Colors.red.shade600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDeliveryStatusSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Delivery Status',
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-        ),
-        const SizedBox(height: 4),
-        Container(
-          height: 42,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.grey.shade300, width: 1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<DeliveryStatus>(
-              value: deliveryStatus,
-              isExpanded: true,
-              icon: Icon(Icons.keyboard_arrow_down,
-                  size: 18, color: Colors.grey.shade600),
-              style: const TextStyle(
-                fontSize: 13,
-                color: Colors.black87,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-              ),
-              items: DeliveryStatus.values
-                  .map((status) => DropdownMenuItem(
-                        value: status,
-                        child: Text(status.name,
-                            style: const TextStyle(fontSize: 12)),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) setState(() => deliveryStatus = value);
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildSummarySection() {
     return Container(
@@ -3979,10 +3492,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           // const SizedBox(height: 3),
 
           // const SizedBox(height: 3),
-          // Add customization button - Only for Dresses
+          // Add customization button - Only for Dresses (not for sales)
           ValueListenableBuilder<List<ProductSelectedModel>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
+              // Hide customization button for sales mode
+              if (selectedBookingType == BookingType.sales) {
+                return const SizedBox.shrink();
+              }
               final hasDresses = products.any(
                 (p) => p.variant.mainServiceType?.isDress ?? false,
               );
@@ -4363,6 +3880,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final products = selectedProductsNotifier.value;
     final additionalCharges = additionalChargesNotifier.value;
 
+    // Get staff ID from cubit
+    final staffState = context.read<StaffSearchCubit>().state;
+    final staffId = staffState.selectedStaff?.id;
+
     // If there's no client ID, we need to send client data
     ClientRequestModel? clientData;
     if (selectedClientId == null) {
@@ -4381,7 +3902,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     return RequestBookingModel(
       clientId: selectedClientId,
-      staffId: selectedStaffId,
+      staffId: staffId,
       client: clientData,
       address: clientAddressController.text.trim(),
       pickupDate: pickupDate.format().appendTimeToDate(time: pickupTime),
@@ -4423,11 +3944,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       };
     }).toList();
 
+    // Get staff ID from cubit
+    final staffState = context.read<StaffSearchCubit>().state;
+    final staffId = staffState.selectedStaff?.id;
+
     // Use phone1 as client_phone
     final clientPhone = clientPhone1Controller.text.trim();
 
     return RequestSalesModel(
-      staffId: selectedStaffId,
+      staffId: staffId,
       clientPhone: clientPhone.isEmpty ? null : clientPhone,
       clientAddress: clientAddressController.text.trim().isEmpty
           ? null
@@ -5138,15 +4663,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _showSuccessDialog(int id, BookingType type) {
     final isSale = type == BookingType.sales;
 
-    // Call send-invoice API after showing success
-    Future.delayed(Duration.zero, () async {
-      try {
-        final repo = getIt<BookingRepository>();
-        await repo.sendInvoice(id, sendPdfToWhatsApp);
-      } catch (e) {
-        log('Error sending invoice: $e');
-      }
-    });
+    // Call send-invoice API after showing success (only for bookings)
+    // For sales, the invoice is sent via the sales API automatically
+    if (!isSale) {
+      Future.delayed(Duration.zero, () async {
+        try {
+          final repo = getIt<BookingRepository>();
+          await repo.sendInvoice(id, sendPdfToWhatsApp);
+        } catch (e) {
+          log('Error sending invoice: $e');
+        }
+      });
+    }
 
     showDialog(
       context: context,

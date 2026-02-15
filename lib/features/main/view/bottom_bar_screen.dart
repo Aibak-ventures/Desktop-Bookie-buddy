@@ -8,6 +8,7 @@ import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
+import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
@@ -99,8 +100,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       currentIndex = 2; // All Bookings is index 2 in sidebar (Dashboard=1, All Bookings=2)
     });
     pageController.jumpToPage(1); // All Bookings is page index 1 in PageView
-    // Change the status tab in the All Bookings screen
-    _allBookingsKey.currentState?.changeStatusTab(statusTab);
+    // Change the status tab in the All Bookings screen after frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _allBookingsKey.currentState?.changeStatusTab(statusTab);
+    });
   }
 
   /// Switch to a different shop
@@ -292,6 +295,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                         newOrderActive = false;
                         currentIndex = 1; // Back to Dashboard
                       });
+                      // Refresh dashboard data after closing new booking
+                      _refreshDashboard();
                     },
                   )
                 : PageView(
@@ -750,7 +755,18 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           pageController.jumpToPage(index - 1);
         }
       });
+      // Refresh dashboard when navigating to Dashboard (index 1)
+      if (index == 1) {
+        _refreshDashboard();
+      }
     }
+  }
+
+  /// Refresh dashboard data
+  void _refreshDashboard() {
+    context.read<DashboardBloc>().add(
+      const DashboardEvent.loadDashboardData(useOldState: true),
+    );
   }
 
   Widget _logoutButtonExpanded() {

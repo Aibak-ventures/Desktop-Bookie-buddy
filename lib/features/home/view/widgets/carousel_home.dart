@@ -56,7 +56,7 @@ class CarouselHome extends StatelessWidget {
                   Color(0xFFFFB347),
                 ],
                 icon: Icons.assignment_return,
-                onTap: () => _openAllBookingsWithTab(context, 'ongoing'),
+                onTap: () => _openAllBookingsWithTab(context, 'returns'),
               ),
             ),
             const SizedBox(width: 20),

@@ -73,8 +73,8 @@ class ProductQueryService {
             'search_by': type, // "name","color","size","category","model"
           if (startPrice != null && endPrice != null) 'min_price': startPrice,
           if (endPrice != null) 'max_price': endPrice,
-          // Only send in_stock_only if using products endpoint with specific service
-          if (!useProductSearchEndpoint) 'in_stock_only': includeInStockOnly,
+          // Always send in_stock_only param
+          'in_stock_only': includeInStockOnly,
         },
       );
       // log('Fetch products paginated response: ${response.realUri.toString()}, data: ${response.data}');

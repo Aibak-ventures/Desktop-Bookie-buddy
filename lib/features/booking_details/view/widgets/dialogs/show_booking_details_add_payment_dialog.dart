@@ -47,12 +47,12 @@ void showBookingDetailsAddPaymentDialog({
           ),
           Text(
             'Add Payment',
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           Text(
             'Balance: ${balanceAmount.toCurrency()}',
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 14,
               color: Colors.grey.shade600,
               fontWeight: FontWeight.w500,
             ),
@@ -69,7 +69,7 @@ void showBookingDetailsAddPaymentDialog({
             Text(
               'Amount',
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -86,7 +86,7 @@ void showBookingDetailsAddPaymentDialog({
             Text(
               'Payment Method',
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -118,8 +118,7 @@ void showBookingDetailsAddPaymentDialog({
                               Text(
                                 PaymentMethod.gPay.name,
                                 style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500),
+                                    fontSize: 14, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -144,8 +143,7 @@ void showBookingDetailsAddPaymentDialog({
                               Text(
                                 PaymentMethod.cash.name,
                                 style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500),
+                                    fontSize: 14, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -177,7 +175,8 @@ void showBookingDetailsAddPaymentDialog({
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          child: const Text('Cancel', style: TextStyle(color: Colors.black87)),
+          child: const Text('Cancel',
+              style: TextStyle(fontSize: 14, color: Colors.black87)),
         ),
         ValueListenableBuilder<bool>(
           valueListenable: isLoading,
@@ -213,7 +212,7 @@ void showBookingDetailsAddPaymentDialog({
                     try {
                       // Get the bloc from the correct context
                       final bloc = context.read<BookingDetailsBloc>();
-                      
+
                       // Dispatch the update payment event
                       bloc.add(
                         BookingDetailsEvent.updatePayment(
@@ -224,13 +223,15 @@ void showBookingDetailsAddPaymentDialog({
                       );
 
                       // Wait for the bloc to emit the loaded or failed state with a timeout
-                      final state = await bloc.stream.firstWhere(
+                      final state = await bloc.stream
+                          .firstWhere(
                         (state) => state.maybeWhen(
                           loaded: (_) => true,
                           failed: (_) => true,
                           orElse: () => false,
                         ),
-                      ).timeout(
+                      )
+                          .timeout(
                         const Duration(seconds: 30),
                         onTimeout: () {
                           throw TimeoutException('Request timed out');
@@ -259,7 +260,8 @@ void showBookingDetailsAddPaymentDialog({
                     } catch (e) {
                       if (dialogCtx.mounted) {
                         CustomSnackBar(
-                          message: 'Failed to update payment. Please try again.',
+                          message:
+                              'Failed to update payment. Please try again.',
                         );
                         isLoading.value = false;
                       }
@@ -286,14 +288,16 @@ void showBookingDetailsAddPaymentDialog({
                       const SizedBox(width: 8),
                       const Text(
                         'Processing...',
-                        style: TextStyle(color: AppColors.white),
+                        style: TextStyle(fontSize: 14, color: AppColors.white),
                       ),
                     ],
                   )
                 : const Text(
                     'Add Payment',
                     style: TextStyle(
-                        color: AppColors.white, fontWeight: FontWeight.w600),
+                        fontSize: 14,
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w600),
                   ),
           ),
         ),

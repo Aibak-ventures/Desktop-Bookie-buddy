@@ -46,19 +46,30 @@ class BookingDetailsBloc
     _UpdateDeliveryStatus event,
     Emitter<BookingDetailsState> emit,
   ) async {
+    // Store old state for rollback on error
+    final oldState = state;
+    
+    // Optimistic update - update UI immediately
+    if (oldState is _Loaded) {
+      final updatedBooking = oldState.booking.copyWith(
+        deliveryStatus: event.deliveryStatus,
+      );
+      emit(BookingDetailsState.loaded(booking: updatedBooking));
+    }
+    
     try {
       await _repository.updateDeliveryStatus(
         event.bookingId,
         event.deliveryStatus,
       );
 
-      // Refetch booking details to get updated delivery status
+      // Refetch booking details to get updated delivery status from server
       final booking = await _repository.getBooking(event.bookingId);
       emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
-      final oldState = state;
       emit(BookingDetailsState.failed(e.toString()));
+      // Rollback to old state on error
       if (oldState is _Loaded) {
         emit(oldState);
       }

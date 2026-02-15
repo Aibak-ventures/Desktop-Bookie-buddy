@@ -87,7 +87,7 @@ class DioClient {
         dio.interceptors.add(
           LogInterceptor(
             requestBody: true,
-            responseBody: true,
+            responseBody: false, // Disabled to prevent printing binary PDF data
             error: true,
             requestHeader: true,
             responseHeader: false,

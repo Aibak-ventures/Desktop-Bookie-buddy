@@ -171,18 +171,32 @@ class BookingService {
     required String refundReason,
   }) async {
     try {
-      final response = await _dio.post(
-        '${ApiPaths.bookings.addPayment}$bookingId/',
-        data: {
-          'refund_amount': refundAmount,
-          'payment_method': paymentMethod,
-          'refund_reason': refundReason,
-        },
+      // First, update delivery status to cancelled
+      final statusResponse = await _dio.patch(
+        '${ApiPaths.bookings.updateDeliveryStatus}$bookingId/',
+        data: {'delivery_status': 'cancelled'},
       );
       log(
-        'cancel booking response: ${response.realUri.toString()}, data: ${response.data}',
+        'cancel booking (update status) response: ${statusResponse.realUri.toString()}, data: ${statusResponse.data}',
       );
-      return CustomResponseModel.fromJson(response.data);
+      
+      // If there's a refund amount, process the refund
+      if (refundAmount > 0) {
+        final refundResponse = await _dio.post(
+          '${ApiPaths.bookings.addRefund}$bookingId/',
+          data: {
+            'refund_amount': refundAmount,
+            'payment_method': paymentMethod,
+            'refund_reason': refundReason,
+          },
+        );
+        log(
+          'cancel booking (refund) response: ${refundResponse.realUri.toString()}, data: ${refundResponse.data}',
+        );
+        return CustomResponseModel.fromJson(refundResponse.data);
+      }
+      
+      return CustomResponseModel.fromJson(statusResponse.data);
     } catch (e, stack) {
       log('Error cancelling booking: $e', stackTrace: stack);
       rethrow;

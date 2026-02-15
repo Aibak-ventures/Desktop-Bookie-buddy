@@ -14,6 +14,7 @@ _$ProductVariantModelImpl _$$ProductVariantModelImplFromJson(
       stock: (json['stock'] as num).toInt(),
       remainingStock: (json['remaining_stock'] as num?)?.toInt(),
       price: (json['price'] as num?)?.toInt(),
+      salePrice: (json['sale_price'] as num?)?.toInt(),
       externalQrCode: json['external_qr_code'] as String?,
     );
 
@@ -25,5 +26,6 @@ Map<String, dynamic> _$$ProductVariantModelImplToJson(
       'stock': instance.stock,
       'remaining_stock': instance.remainingStock,
       'price': instance.price,
+      'sale_price': instance.salePrice,
       'external_qr_code': instance.externalQrCode,
     };

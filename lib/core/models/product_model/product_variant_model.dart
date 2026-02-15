@@ -16,6 +16,7 @@ class ProductVariantModel with _$ProductVariantModel {
       name: 'price',
     )
     int? price,
+    @JsonKey(name: 'sale_price') int? salePrice,
     @JsonKey(name: 'external_qr_code') String? externalQrCode,
   }) = _ProductVariantModel;
 
