@@ -107,6 +107,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final discountAmountController = TextEditingController();
   PaymentMethod paymentMethod = PaymentMethod.gPay;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
+  BookingStatus? bookingStatus; // Track booking status
+  String? bookingCompletedDate; // Store completed date
   bool sendPdfToWhatsApp = true;
 
   // Products/Services
@@ -175,6 +177,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
+  ProductSelectedModel? _selectedProductForCustomization;
 
   @override
   void initState() {
@@ -233,6 +236,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     if (booking.staffName != null) {
       staffNameController.text = booking.staffName!;
     }
+    if (booking.staffId != null) {
+      selectedStaffId = booking.staffId;
+    }
 
     // Set payment details
     advanceAmountController.text = booking.paidAmount.toString();
@@ -244,6 +250,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
     // paymentMethod = booking.p;
     deliveryStatus = booking.deliveryStatus;
+    bookingStatus = booking.bookingStatus; // Load booking status
+    bookingCompletedDate = booking.bookingCompletedDate; // Load completed date
 
     // Set description
     if (booking.description != null) {
@@ -265,7 +273,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
 
     // Set products
+    log('🔧 Loading ${booking.bookedItems.length} products from booking');
     final products = booking.bookedItems.map((item) {
+      log('📦 Product: ${item.name}, Measurements: ${item.measurements.length}');
       return ProductSelectedModel(
         variant: ProductInfoModel(
           id: item.id,
@@ -284,15 +294,60 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           stock: null,
           remainingStock: null,
         ),
+        measurements: item
+            .measurements, // CRITICAL: Copy measurements to ProductSelectedModel
         quantity: item.quantity,
         amount: item.amount,
       );
     }).toList();
+    log('✅ Loaded ${products.length} products. Products with measurements: ${products.where((p) => p.measurements.isNotEmpty).length}');
     selectedProductsNotifier.value = products;
 
     // Set additional charges
     additionalChargesNotifier.value = booking.additionalCharges!;
+
+    // Load existing documents for preview
+    log('📄 Loading documents from booking. Total documents: ${booking.documents.length}');
+    if (booking.documents.isNotEmpty) {
+      log('📄 Raw documents data: ${booking.documents}');
+      final docs = booking.documents
+          .map((doc) {
+            if (doc is Map<String, dynamic>) {
+              final url = doc['url'] ?? doc['file'] ?? '';
+              final name = doc['name'] ?? _extractFilenameFromUrl(url);
+              log('📄 Parsed document - Name: $name, URL: $url');
+              return DocumentFile(name: name, path: url);
+            } else if (doc is String) {
+              log('📄 Simple string document: $doc');
+              final filename = _extractFilenameFromUrl(doc);
+              log('📄 Extracted filename: $filename');
+              return DocumentFile(name: filename, path: doc);
+            }
+            log('⚠️ Unknown document format: $doc');
+            return null;
+          })
+          .whereType<DocumentFile>()
+          .toList();
+      log('✅ Loaded ${docs.length} documents for preview');
+      documentsNotifier.value = docs;
+    } else {
+      log('ℹ️ No documents found in booking');
     }
+  }
+
+  /// Extract filename from URL
+  String _extractFilenameFromUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      final segments = uri.pathSegments;
+      if (segments.isNotEmpty) {
+        return segments.last;
+      }
+    } catch (e) {
+      log('⚠️ Error parsing URL: $e');
+    }
+    return 'Document';
+  }
 
   /// Initialize form from existing sale
   void _initializeFromSale(SaleDetailsModel sale) {
@@ -315,7 +370,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Set payment details
     advanceAmountController.text = sale.paidAmount.toString();
     discountAmountController.text = sale.discountAmount.toString();
-      paymentMethod = sale.paymentMethod;
+    paymentMethod = sale.paymentMethod;
 
     // Set description
     if (sale.description.isNotEmpty) {
@@ -3257,7 +3312,28 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
   }
 
+  /// Check if any selected product has variant attributes to display
+  bool _hasAnyProductWithVariants() {
+    final products = selectedProductsNotifier.value;
+    return products.any((product) {
+      final mainServiceType = product.variant.mainServiceType;
+      // Only show variants column if product is multi-variant type and has variant attribute
+      return mainServiceType.isMultiVariantProductType &&
+          (product.variant.variantAttribute?.isNotEmpty ?? false);
+    });
+  }
+
+  /// Calculate rental days between booking and return dates
+  int _calculateRentalDays() {
+    if (pickupDate == returnDate) return 1;
+    final difference = returnDate.difference(pickupDate).inDays;
+    return difference > 0 ? difference : 1;
+  }
+
   Widget _buildProductListHeader() {
+    final isSales = selectedBookingType == BookingType.sales;
+    final hasVariants = _hasAnyProductWithVariants();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -3267,8 +3343,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             child: _buildHeaderCell('items', alignLeft: true),
           ),
           const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Variants')),
+          Expanded(
+            flex: 2,
+            child: _buildHeaderCell('Specifications'),
+          ),
           const SizedBox(width: 4),
+          if (hasVariants) ...[
+            Expanded(child: _buildHeaderCell('Variants')),
+            const SizedBox(width: 4),
+          ],
+          if (!isSales) ...[
+            Expanded(child: _buildHeaderCell('Days')),
+            const SizedBox(width: 4),
+          ],
           Expanded(child: _buildHeaderCell('Available')),
           const SizedBox(width: 4),
           Expanded(child: _buildHeaderCell('Quantity')),
@@ -3356,6 +3443,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   Widget _buildProductRow(ProductSelectedModel product) {
+    final isSales = selectedBookingType == BookingType.sales;
+    final rentalDays = !isSales ? _calculateRentalDays() : 0;
+    final hasVariants = _hasAnyProductWithVariants();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -3371,7 +3462,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               children: [
                 // Image
                 Container(
-                  width: 48, // Slightly larger looking in image
+                  width: 48,
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
@@ -3392,69 +3483,86 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       : null,
                 ),
                 const SizedBox(width: 16),
-                // Text
+                // Product Name only
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        product.variant.name ?? '',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D3436),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        [
-                          product.variant.color,
-                          product.variant.category,
-                        ].where((e) => e != null && e.isNotEmpty).join(', '),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                          height: 1.1,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  child: Text(
+                    product.variant.name ?? '',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2D3436),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 4),
-          // Variant
+          // Specifications (color, category, model)
           Expanded(
+            flex: 2,
             child: Center(
               child: Text(
-                (product.variant.variantAttribute?.isNotEmpty ?? false)
-                    ? product.variant.variantAttribute!
-                    : product.variant.model ?? '-',
-                style: const TextStyle(
+                [
+                  product.variant.color,
+                  product.variant.category,
+                  product.variant.model,
+                ].where((e) => e != null && e.isNotEmpty).take(2).join(', '),
+                style: TextStyle(
                   fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: Colors.grey.shade600,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
           ),
           const SizedBox(width: 4),
+          // Variants - Only shown if any product has variants
+          if (hasVariants) ...[
+            Expanded(
+              child: Center(
+                child: Text(
+                  (product.variant.variantAttribute?.isNotEmpty ?? false)
+                      ? product.variant.variantAttribute!
+                      : '-',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+          ],
+          // Days - Only for rentals (not sales)
+          if (!isSales) ...[
+            Expanded(
+              child: Center(
+                child: Text(
+                  '$rentalDays',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+          ],
           // Available Badge
           Expanded(
             child: Center(
               child: Container(
-                //  width: 58,
-                // height: 21,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0x1C1FD300), // Light green bg
+                  color: const Color(0x1C1FD300),
                   borderRadius: BorderRadius.circular(3),
                 ),
                 child: Row(
@@ -3464,7 +3572,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       width: 6,
                       height: 6,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF27AE60), // Green dot
+                        color: Color(0xFF27AE60),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -3472,7 +3580,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     Text(
                       '${product.variant.remainingStock ?? product.variant.stock} left',
                       style: const TextStyle(
-                        fontSize: 12, // Slightly larger font 12
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF27AE60),
                       ),
@@ -3491,7 +3599,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 _buildQuantityBtn(
                     icon: Icons.remove,
                     onTap: () => _decrementQuantity(product)),
-                const SizedBox(width: 6), // Reduced from 12 to 6
+                const SizedBox(width: 6),
                 Text(
                   '${product.quantity}',
                   style: const TextStyle(
@@ -3500,7 +3608,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(width: 6), // Reduced from 12 to 6
+                const SizedBox(width: 6),
                 _buildQuantityBtn(
                     icon: Icons.add, onTap: () => _incrementQuantity(product)),
               ],
@@ -3546,7 +3654,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '${product.amount}', // format currency if needed
+                          '${product.amount}',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Color(0xFF2D3436),
@@ -3568,7 +3676,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 '${product.amount * product.quantity}',
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w700, // Bold
+                  fontWeight: FontWeight.w700,
                   color: Color(0xFF2D3436),
                 ),
               ),
@@ -3789,14 +3897,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   ),
                   const SizedBox(height: 10),
                   // Order: Advance, Security, Discount, Additional Charges, Payment Method, Delivery Status
-                  // Hide advance amount in sales mode
-                  if (!isSalesMode) ...[
-                    BookingTextFieldBuilder.buildCompactAmountField(
-                      controller: advanceAmountController,
-                      label: 'Advance Amount (optional)',
-                    ),
-                    const SizedBox(height: 8),
-                  ],
+                  // Hide advance amount in edit mode
+                  // if (!isSalesMode) ...[
+                  //   BookingTextFieldBuilder.buildCompactAmountField(
+                  //     controller: advanceAmountController,
+                  //     label: 'Advance Amount (optional)',
+                  //   ),
+                  //   const SizedBox(height: 8),
+                  // ],
                   if (!isSalesMode) ...[
                     BookingTextFieldBuilder.buildCompactAmountField(
                       controller: securityAmountController,
@@ -3814,9 +3922,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     _buildAdditionalChargesSection(),
                     const SizedBox(height: 10),
                   ],
-                  // Payment method
-                  _buildPaymentMethodSection(),
-                  const SizedBox(height: 3),
+                  // Payment method - Hidden in edit mode
+                  // _buildPaymentMethodSection(),
+                  // const SizedBox(height: 3),
                   // Delivery status
                   if (!isSalesMode) _buildDeliveryStatusSection(),
                   const SizedBox(height: 3),
@@ -3951,6 +4059,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   Widget _buildDeliveryStatusSection() {
+    // Check if booking is completed or cancelled - disable editing
+    final isBookingFinalized = bookingStatus == BookingStatus.completed ||
+        bookingStatus == BookingStatus.cancelled;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -3963,7 +4075,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           height: 42,
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isBookingFinalized ? Colors.grey.shade100 : Colors.white,
             border: Border.all(color: Colors.grey.shade300, width: 1),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -3972,10 +4084,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               value: deliveryStatus,
               isExpanded: true,
               icon: Icon(Icons.keyboard_arrow_down,
-                  size: 18, color: Colors.grey.shade600),
-              style: const TextStyle(
+                  size: 18,
+                  color: isBookingFinalized
+                      ? Colors.grey.shade400
+                      : Colors.grey.shade600),
+              style: TextStyle(
                 fontSize: 13,
-                color: Colors.black87,
+                color:
+                    isBookingFinalized ? Colors.grey.shade500 : Colors.black87,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
               ),
@@ -3986,9 +4102,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                             style: const TextStyle(fontSize: 12)),
                       ))
                   .toList(),
-              onChanged: (value) {
-                if (value != null) setState(() => deliveryStatus = value);
-              },
+              onChanged: isBookingFinalized
+                  ? null
+                  : (value) {
+                      if (value != null) setState(() => deliveryStatus = value);
+                    },
             ),
           ),
         ),
@@ -4058,14 +4176,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           // const SizedBox(height: 3),
 
           // const SizedBox(height: 3),
-          // Add customization button - Only for Dresses
+          // Edit customization button - Only for Dresses with measurements
           ValueListenableBuilder<List<ProductSelectedModel>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
-              final hasDresses = products.any(
-                (p) => p.variant.mainServiceType?.isDress ?? false,
+              final hasDressesWithMeasurements = products.any(
+                (p) =>
+                    (p.variant.mainServiceType?.isDress ?? false) &&
+                    (p.measurements
+                        .isNotEmpty), // Check ProductSelectedModel.measurements
               );
-              if (!hasDresses) return const SizedBox.shrink();
+              if (!hasDressesWithMeasurements) return const SizedBox.shrink();
               return SizedBox(
                 width: double.infinity,
                 height: 39,
@@ -4076,11 +4197,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     });
                   },
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF6132E4),
-                    side: const BorderSide(
-                      color: Color(0xFF6132E4),
-                      width: 1.5,
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.grey.shade700,
+                    side: BorderSide(
+                      color: Colors.grey.shade600,
+                      width: 1,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -4088,11 +4209,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     elevation: 0,
                   ),
                   child: const Text(
-                    'Add customization',
+                    'Edit customization',
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -4100,30 +4221,98 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             },
           ),
           const SizedBox(height: 8),
-          // Confirm button - Color #6132E4
-          SizedBox(
-            width: double.infinity,
-            height: 39, // Balanced height
-            child: ElevatedButton(
-              onPressed: _handleSaveBooking,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
+          // Show completed/cancelled status info
+          if (bookingStatus == BookingStatus.completed &&
+              bookingCompletedDate != null)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8F5E9),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF4CAF50)),
               ),
-              child: const Text(
-                'Save Changes',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
+              child: Row(
+                children: [
+                  const Icon(Icons.check_circle,
+                      color: Color(0xFF4CAF50), size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Booking Completed',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF2E7D32),
+                          ),
+                        ),
+                        Text(
+                          'Completed on: $bookingCompletedDate',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (bookingStatus == BookingStatus.cancelled)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFEBEE),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFF44336)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.cancel, color: Color(0xFFF44336), size: 20),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Booking Cancelled',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFC62828),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            // Confirm button - Only show for non-completed/cancelled bookings
+            SizedBox(
+              width: double.infinity,
+              height: 39,
+              child: ElevatedButton(
+                onPressed: _handleSaveBooking,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6132E4),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Save Changes',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -4907,34 +5096,34 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
                   const SizedBox(height: _fieldSpacing),
                   const SizedBox(height: 16),
-                  // WhatsApp Checkbox
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Checkbox(
-                          value: sendPdfToWhatsApp,
-                          onChanged: (v) =>
-                              setState(() => sendPdfToWhatsApp = v ?? false),
-                          activeColor: Colors.black87,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Send invoice to whatsapp',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ],
-                  ),
+                  // WhatsApp Checkbox - Hidden in edit mode
+                  // Row(
+                  //   children: [
+                  //     SizedBox(
+                  //       width: 24,
+                  //       height: 24,
+                  //       child: Checkbox(
+                  //         value: sendPdfToWhatsApp,
+                  //         onChanged: (v) =>
+                  //             setState(() => sendPdfToWhatsApp = v ?? false),
+                  //         activeColor: Colors.black87,
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(4)),
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 8),
+                  //     Text(
+                  //       'Send invoice to whatsapp',
+                  //       style: TextStyle(
+                  //         fontSize: 13,
+                  //         color: Colors.grey.shade600,
+                  //         fontFamily: 'Inter',
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
 
-                  const SizedBox(height: 7),
+                  // const SizedBox(height: 7),
 
                   // Upload documents - Only for Booking mode
                   if (selectedBookingType == BookingType.booking) ...[
@@ -5249,11 +5438,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   BookingTextFieldBuilder.buildSectionHeader('Payment details',
                       optional: true),
                   const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: advanceAmountController,
-                      hint: 'Advance amount',
-                      isNumber: true),
-                  const SizedBox(height: _fieldSpacing),
+                  // Hide advance amount in edit mode
+                  // BookingTextFieldBuilder.buildRightPanelTextField(
+                  //     controller: advanceAmountController,
+                  //     hint: 'Advance amount',
+                  //     isNumber: true),
+                  // const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
                       controller: securityAmountController,
                       hint: 'Security amount',
@@ -5265,9 +5455,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       isNumber: true),
 
                   const SizedBox(height: 14),
-                  // Payment Method Selection
-                  _buildPaymentMethodSection(),
-                  const SizedBox(height: 14),
+                  // Payment Method Selection - Hidden in edit mode
+                  // _buildPaymentMethodSection(),
+                  // const SizedBox(height: 14),
 
                   // Additional Charges
                   Row(

@@ -168,10 +168,6 @@ class BookingDetailsDrawer extends StatelessWidget {
 
                       // Payment details
                       _buildPaymentDetails(booking, context),
-                      const SizedBox(height: 12),
-
-                      // Completion Status (green button for completed bookings)
-                      _buildCompletionStatusSection(booking),
                       const SizedBox(height: 80), // Space for sticky buttons
                     ],
                   ),
@@ -189,6 +185,10 @@ class BookingDetailsDrawer extends StatelessWidget {
   Widget _buildBookingHeaderSection(
       BuildContext context, BookingDetailsModel booking) {
     final status = booking.deliveryStatus ?? DeliveryStatus.booked;
+    // Check if booking is completed or cancelled - disable delivery status editing
+    final isCompleted = booking.bookingStatus == BookingStatus.completed;
+    final isCancelled = booking.bookingStatus == BookingStatus.cancelled;
+    final isBookingFinalized = isCompleted || isCancelled;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,62 +263,128 @@ class BookingDetailsDrawer extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              PopupMenuButton<DeliveryStatus>(
-                offset: const Offset(0, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                onSelected: (newStatus) async {
-                  // Show different dialog for cancellation with paid amount
-                  if (newStatus == DeliveryStatus.cancelled &&
-                      booking.actualPaidAmount > 0) {
-                    showDialog(
-                      context: context,
-                      builder: (dialogContext) => CancelBookingDialog(
-                        maxRefundAmount: booking.actualPaidAmount,
-                        onCancel: () => Navigator.of(dialogContext).pop(),
-                        onConfirm: (refundAmount, paymentMethod, reason) {
-                          context.read<BookingDetailsBloc>().add(
-                                BookingDetailsEvent.cancelBooking(
-                                  bookingId: booking.id,
-                                  refundAmount: refundAmount,
-                                  paymentMethod: paymentMethod,
-                                  refundReason: reason,
-                                ),
-                              );
-                          // Refresh the booking list after cancellation
-                          context.read<AllBookingBloc>().add(
-                                const AllBookingEvent.loadBookings(),
-                              );
-                          // Close the drawer
-                          context
-                              .read<BookingDetailsDrawerCubit>()
-                              .closeDrawer();
-                        },
+              // Show non-interactive status badge for completed/cancelled bookings
+              if (isBookingFinalized)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: status.color.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        status.name,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: status.color,
+                        ),
                       ),
-                    );
-                    return;
-                  }
+                    ],
+                  ),
+                )
+              else
+                PopupMenuButton<DeliveryStatus>(
+                  offset: const Offset(0, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  onSelected: (newStatus) async {
+                    // Show different dialog for cancellation with paid amount
+                    if (newStatus == DeliveryStatus.cancelled &&
+                        booking.actualPaidAmount > 0) {
+                      showDialog(
+                        context: context,
+                        builder: (dialogContext) => CancelBookingDialog(
+                          maxRefundAmount: booking.actualPaidAmount,
+                          onCancel: () => Navigator.of(dialogContext).pop(),
+                          onConfirm: (refundAmount, paymentMethod, reason) {
+                            context.read<BookingDetailsBloc>().add(
+                                  BookingDetailsEvent.cancelBooking(
+                                    bookingId: booking.id,
+                                    refundAmount: refundAmount,
+                                    paymentMethod: paymentMethod,
+                                    refundReason: reason,
+                                  ),
+                                );
+                            // Refresh the booking list after cancellation
+                            context.read<AllBookingBloc>().add(
+                                  const AllBookingEvent.loadBookings(),
+                                );
+                            // Close the drawer
+                            context
+                                .read<BookingDetailsDrawerCubit>()
+                                .closeDrawer();
+                          },
+                        ),
+                      );
+                      return;
+                    }
 
-                  // Show different confirmation for cancellation without paid amount
-                  if (newStatus == DeliveryStatus.cancelled) {
+                    // Show different confirmation for cancellation without paid amount
+                    if (newStatus == DeliveryStatus.cancelled) {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Cancel Booking'),
+                          content: const Text(
+                            'Are you sure you want to cancel this booking? This action cannot be undone.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Keep Booking'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              style: TextButton.styleFrom(
+                                  foregroundColor: Colors.red),
+                              child: const Text('Cancel Booking'),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (confirm == true && context.mounted) {
+                        // Update via BookingDetailsBloc for optimistic UI update
+                        context.read<BookingDetailsBloc>().add(
+                              BookingDetailsEvent.updateDeliveryStatus(
+                                bookingId: booking.id,
+                                deliveryStatus: newStatus,
+                              ),
+                            );
+                        // Also update the booking list
+                        context.read<AllBookingBloc>().add(
+                              AllBookingEvent.updateDeliveryStatus(
+                                bookingId: booking.id,
+                                deliveryStatus: newStatus,
+                              ),
+                            );
+                        // Close the drawer
+                        context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                      }
+                      return;
+                    }
+
+                    // Show confirmation dialog for all other status changes
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Cancel Booking'),
-                        content: const Text(
-                          'Are you sure you want to cancel this booking? This action cannot be undone.',
+                        title: const Text('Change Delivery Status'),
+                        content: Text(
+                          'Are you sure you want to change delivery status to "${newStatus.name}"?',
                         ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
-                            child: const Text('Keep Booking'),
+                            child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(context, true),
-                            style: TextButton.styleFrom(
-                                foregroundColor: Colors.red),
-                            child: const Text('Cancel Booking'),
+                            child: const Text('Confirm'),
                           ),
                         ],
                       ),
@@ -339,104 +405,62 @@ class BookingDetailsDrawer extends StatelessWidget {
                               deliveryStatus: newStatus,
                             ),
                           );
-                      // Close the drawer
-                      context.read<BookingDetailsDrawerCubit>().closeDrawer();
                     }
-                    return;
-                  }
-
-                  // Show confirmation dialog for all other status changes
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Change Delivery Status'),
-                      content: Text(
-                        'Are you sure you want to change delivery status to "${newStatus.name}"?',
+                  },
+                  itemBuilder: (context) => DeliveryStatus.values.map((s) {
+                    return PopupMenuItem(
+                      value: s,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: s.color,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            s.name,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: s.color,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text('Confirm'),
-                        ),
-                      ],
+                    );
+                  }).toList(),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: status.color.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  );
-
-                  if (confirm == true && context.mounted) {
-                    // Update via BookingDetailsBloc for optimistic UI update
-                    context.read<BookingDetailsBloc>().add(
-                          BookingDetailsEvent.updateDeliveryStatus(
-                            bookingId: booking.id,
-                            deliveryStatus: newStatus,
-                          ),
-                        );
-                    // Also update the booking list
-                    context.read<AllBookingBloc>().add(
-                          AllBookingEvent.updateDeliveryStatus(
-                            bookingId: booking.id,
-                            deliveryStatus: newStatus,
-                          ),
-                        );
-                  }
-                },
-                itemBuilder: (context) => DeliveryStatus.values.map((s) {
-                  return PopupMenuItem(
-                    value: s,
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: s.color,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
                         Text(
-                          s.name,
+                          status.name,
                           style: TextStyle(
                             fontSize: 13,
-                            color: s.color,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
+                            color: status.color,
                           ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 16,
+                          color: status.color,
                         ),
                       ],
                     ),
-                  );
-                }).toList(),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: status.color.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        status.name,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: status.color,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 16,
-                        color: status.color,
-                      ),
-                    ],
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -826,7 +850,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                       }).toList(),
                     ),
                   ],
-                  // Show location details ONLY for vehicles
+                  // Show location details for vehicles
                   if (item.mainServiceType.isVehicle &&
                       booking.otherDetails != null &&
                       (booking.otherDetails!.locationStart != null ||
@@ -1705,6 +1729,71 @@ class BookingDetailsDrawer extends StatelessWidget {
             );
           },
         ),
+        const SizedBox(width: 12),
+        // Show Completed or Cancelled status indicator with date
+        if (isCompleted)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F5E9),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF4CAF50)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.check_circle,
+                    color: Color(0xFF4CAF50), size: 20),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Completed',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF2E7D32),
+                      ),
+                    ),
+                    Text(
+                      'on ${_formatCompletionDate(booking.returnDate)}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        else if (isCancelled)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFEBEE),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFF44336)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.cancel, color: Color(0xFFF44336), size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Cancelled',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFFC62828),
+                  ),
+                ),
+              ],
+            ),
+          ),
         const Spacer(),
         // Mark as Completed button (only show if not completed)
         if (!isCompleted)

@@ -131,13 +131,30 @@ class BookingDocumentUploadSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.grey.shade200),
           ),
-          child: isImage && document.bytes != null
+          child: isImage
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(7),
-                  child: Image.memory(
-                    Uint8List.fromList(document.bytes!),
-                    fit: BoxFit.cover,
-                  ),
+                  child: document.bytes != null
+                      ? Image.memory(
+                          Uint8List.fromList(document.bytes!),
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(
+                          document.path,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey.shade500,
+                                  size: 24,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                 )
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
