@@ -14,7 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final void Function(String statusTab)? onNavigateToBookings;
+
+  const HomeScreen({super.key, this.onNavigateToBookings});
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +64,18 @@ class HomeScreen extends StatelessWidget {
                                     ______) {
                                   return SizedBox(
                                     height: 120,
-                                    child: CarouselHome(data: carouselData),
+                                    child: CarouselHome(
+                                      data: carouselData,
+                                      onNavigateToBookings: onNavigateToBookings,
+                                    ),
                                   );
                                 },
                                 orElse: () => SizedBox(
                                   height: 120,
                                   child: CarouselHome(
-                                      data:
-                                          DesktopDashboardCarouselData.empty()),
+                                    data: DesktopDashboardCarouselData.empty(),
+                                    onNavigateToBookings: onNavigateToBookings,
+                                  ),
                                 ),
                               );
                             },

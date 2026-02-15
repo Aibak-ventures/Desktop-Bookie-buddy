@@ -16,9 +16,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarouselHome extends StatelessWidget {
   final DesktopDashboardCarouselData data;
+  final void Function(String statusTab)? onNavigateToBookings;
 
   const CarouselHome({
     required this.data,
+    this.onNavigateToBookings,
     super.key,
   });
 
@@ -162,6 +164,13 @@ class CarouselHome extends StatelessWidget {
 
   /// Navigate to AllBookingsDesktopScreen with specific tab
   void _openAllBookingsWithTab(BuildContext context, String statusTab) {
+    // Use callback if available (navigates within bottom bar)
+    if (onNavigateToBookings != null) {
+      onNavigateToBookings!(statusTab);
+      return;
+    }
+
+    // Fallback to pushing a new route
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => MultiBlocProvider(

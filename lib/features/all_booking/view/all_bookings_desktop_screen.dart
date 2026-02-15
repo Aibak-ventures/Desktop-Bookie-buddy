@@ -17,7 +17,7 @@ import 'package:bookie_buddy_web/features/all_booking/view/widgets/sales_details
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
   final String?
@@ -27,10 +27,10 @@ class AllBookingsDesktopScreen extends StatefulWidget {
 
   @override
   State<AllBookingsDesktopScreen> createState() =>
-      _AllBookingsDesktopScreenState();
+      AllBookingsDesktopScreenState();
 }
 
-class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
+class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   int _activeActionTab = 0; // 0: Booking, 1: Sales, 2: Custom work
   String _activeStatusTab = 'upcoming'; // API status value
   final TextEditingController _searchController = TextEditingController();
@@ -49,6 +49,14 @@ class _AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     'Not Returned': 'not_returned',
     'Completed': 'completed',
   };
+
+  /// Public method to change the active status tab from outside (via GlobalKey)
+  void changeStatusTab(String statusTab) {
+    if (mounted) {
+      setState(() => _activeStatusTab = statusTab);
+      _loadData();
+    }
+  }
 
   @override
   void initState() {

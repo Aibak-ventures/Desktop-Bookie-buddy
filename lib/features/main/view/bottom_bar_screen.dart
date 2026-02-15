@@ -39,54 +39,68 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   // GlobalKey to access NewBookingScreen state
   final GlobalKey<NewBookingScreenState> _newBookingKey = GlobalKey();
 
-  final List<Widget> screens = [
-    const HomeScreen(),
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => BookingDetailsDrawerCubit(),
-        ),
-        BlocProvider(
-          create: (context) => BookingDetailsBloc(
-            repository: getIt.get<BookingRepository>(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => BookingDetailsPaymentHistoryCubit(
-            repository: getIt.get<BookingRepository>(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => AllSalesBloc(
-            repository: getIt.get<SalesRepository>(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => SalesDetailsDrawerCubit(),
-        ),
-        BlocProvider(
-          create: (context) => SalesDetailsBloc(
-            repository: getIt.get<SalesRepository>(),
-          ),
-        ),
-      ],
-      child: const AllBookingsDesktopScreen(),
-    ),
-    RepositoryProvider(
-      create: (context) => getIt.get<ProductRepository>(),
-      child: BlocProvider(
-        create: (context) => StockManagementCubit(
-          repository: getIt.get(),
-        ),
-        child: const StockManagementScreen(),
-      ),
-    ),
-  ];
+  // GlobalKey to access AllBookingsDesktopScreen state
+  final GlobalKey<AllBookingsDesktopScreenState> _allBookingsKey = GlobalKey();
+
+  late final List<Widget> screens;
 
   @override
   void initState() {
     pageController = PageController();
+    screens = [
+      HomeScreen(onNavigateToBookings: _navigateToBookingsTab),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => BookingDetailsDrawerCubit(),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsBloc(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsPaymentHistoryCubit(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => AllSalesBloc(
+              repository: getIt.get<SalesRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => SalesDetailsDrawerCubit(),
+          ),
+          BlocProvider(
+            create: (context) => SalesDetailsBloc(
+              repository: getIt.get<SalesRepository>(),
+            ),
+          ),
+        ],
+        child: AllBookingsDesktopScreen(key: _allBookingsKey),
+      ),
+      RepositoryProvider(
+        create: (context) => getIt.get<ProductRepository>(),
+        child: BlocProvider(
+          create: (context) => StockManagementCubit(
+            repository: getIt.get(),
+          ),
+          child: const StockManagementScreen(),
+        ),
+      ),
+    ];
     super.initState();
+  }
+
+  /// Navigate to All Bookings tab with a specific status filter
+  void _navigateToBookingsTab(String statusTab) {
+    setState(() {
+      currentIndex = 2; // All Bookings is index 2 in sidebar (Dashboard=1, All Bookings=2)
+    });
+    pageController.jumpToPage(1); // All Bookings is page index 1 in PageView
+    // Change the status tab in the All Bookings screen
+    _allBookingsKey.currentState?.changeStatusTab(statusTab);
   }
 
   /// Switch to a different shop
