@@ -182,15 +182,15 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
         ),
-        const SizedBox(width: 12),
-        const Text(
-          'All Orders > ',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.grey,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        // const SizedBox(width: 12),
+        // const Text(
+        //   'All Orders > ',
+        //   style: TextStyle(
+        //     fontSize: 18,
+        //     color: Colors.grey,
+        //     fontWeight: FontWeight.w500,
+        //   ),
+        // ),
         Text(
           _activeActionTab == 1 ? 'Sales list' : 'Bookings list',
           style: const TextStyle(

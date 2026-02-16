@@ -944,7 +944,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                               width: 1,
                                             ),
                                           ),
-                                          child: TextField(
+                                          child: TextFormField(
                                             controller: maxPriceController,
                                             keyboardType: TextInputType.number,
                                             onTapOutside: (_) {
@@ -968,22 +968,23 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                             onChanged: (value) {
                                               if (value.isNotEmpty) {
                                                 final newMaxPrice =
-                                                    double.tryParse(value) ??
-                                                        tempMaxPriceNotifier
-                                                            .value;
-                                                tempMaxPriceNotifier.value =
-                                                    newMaxPrice;
-                                                if (tempPriceRange.value.end >
-                                                    newMaxPrice) {
-                                                  tempPriceRange.value =
-                                                      RangeValues(
-                                                          tempPriceRange.value
-                                                                      .start >
-                                                                  newMaxPrice
-                                                              ? 0
-                                                              : tempPriceRange
-                                                                  .value.start,
-                                                          newMaxPrice);
+                                                    double.tryParse(value);
+                                                if (newMaxPrice != null) {
+                                                  tempMaxPriceNotifier.value =
+                                                      newMaxPrice;
+                                                  if (tempPriceRange.value.end >
+                                                      newMaxPrice) {
+                                                    tempPriceRange.value =
+                                                        RangeValues(
+                                                            tempPriceRange.value
+                                                                        .start >
+                                                                    newMaxPrice
+                                                                ? 0
+                                                                : tempPriceRange
+                                                                    .value
+                                                                    .start,
+                                                            newMaxPrice);
+                                                  }
                                                 }
                                               }
                                             },
@@ -1461,16 +1462,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
 
     // Check if any filter is applied
-    final hasAnyFilter =
-        searchTerm.isNotEmpty || isPriceEnabled || searchTypeIndex != 0;
+    final hasSearchQuery = searchTerm.isNotEmpty;
+    final hasAnyFilter = hasSearchQuery || isPriceEnabled;
 
     // Trigger search with filters
     if (hasAnyFilter) {
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: selectedServiceId == -1 ? null : selectedServiceId,
-          query: searchTerm.isEmpty ? null : searchTerm,
-          type: searchType,
+          query: hasSearchQuery ? searchTerm : null,
+          type: hasSearchQuery ? searchType : null,
           startPrice: isPriceEnabled ? priceRange.start.round() : null,
           endPrice: isPriceEnabled ? priceRange.end.round() : null,
           pickupDate: pickupDate.format(),
@@ -1507,10 +1508,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             ? null
             : selectedServiceId;
 
-    final hasFilters =
-        _isPriceFilterEnabled.value || _selectedSearchTypeIndex.value != 0;
+    final hasSearchQuery = query.isNotEmpty;
+    final hasPriceFilter = _isPriceFilterEnabled.value;
+    final hasAnyFilter = hasSearchQuery || hasPriceFilter;
 
-    if (query.isEmpty && !hasFilters) {
+    if (!hasAnyFilter) {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: serviceIdToUse,
@@ -1561,14 +1563,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: serviceIdToUse,
-          query: query.isEmpty ? null : query,
-          type: searchType,
-          startPrice: _isPriceFilterEnabled.value
-              ? _priceRange.value.start.round()
-              : null,
-          endPrice: _isPriceFilterEnabled.value
-              ? _priceRange.value.end.round()
-              : null,
+          query: hasSearchQuery ? query : null,
+          type: hasSearchQuery ? searchType : null,
+          startPrice: hasPriceFilter ? _priceRange.value.start.round() : null,
+          endPrice: hasPriceFilter ? _priceRange.value.end.round() : null,
           pickupDate: pickupDate.format(),
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
@@ -1671,23 +1669,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   _handleTabSwitch(_convertTabTypeToBookingType(tabType));
                 },
                 onBack: _handleBackNavigation,
-                onBeforeShopSwitch: () async {
-                  // Always ask for confirmation when switching shops from new booking screen
-                  final shouldSwitch =
-                      await _showShopSwitchConfirmation(context);
-                  return shouldSwitch ?? false;
-                },
-                onShopSwitchSuccess: () {
-                  if (mounted) {
-                    // Call the onClose callback provided by the parent (BottomBarScreen)
-                    // This will update the parent state to hide NewBookingScreen and show Dashboard
-                    if (widget.onClose != null) {
-                      widget.onClose!();
-                    } else {
-                      Navigator.of(context).pop();
-                    }
-                  }
-                },
               ),
               // Main content - no scrolling
               Expanded(
@@ -1930,156 +1911,156 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Shows a confirmation dialog specifically for shop switching
-  Future<bool?> _showShopSwitchConfirmation(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.5),
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: Container(
-          width: 450,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 40,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
-                  ),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2196F3).withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.store_rounded,
-                        color: Color(0xFF1976D2),
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Switch Shop?',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Current progress will be lost',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF1565C0),
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+  // Future<bool?> _showShopSwitchConfirmation(BuildContext context) {
+  //   return showDialog<bool>(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     barrierColor: Colors.black.withOpacity(0.5),
+  //     builder: (context) => Dialog(
+  //       backgroundColor: Colors.transparent,
+  //       elevation: 0,
+  //       child: Container(
+  //         width: 450,
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           borderRadius: BorderRadius.circular(20),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: Colors.black.withOpacity(0.15),
+  //               blurRadius: 40,
+  //               offset: const Offset(0, 10),
+  //             ),
+  //           ],
+  //         ),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             // Header
+  //             Container(
+  //               padding: const EdgeInsets.all(24),
+  //               decoration: const BoxDecoration(
+  //                 gradient: LinearGradient(
+  //                   colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
+  //                 ),
+  //                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //               ),
+  //               child: Row(
+  //                 children: [
+  //                   Container(
+  //                     padding: const EdgeInsets.all(12),
+  //                     decoration: BoxDecoration(
+  //                       color: const Color(0xFF2196F3).withOpacity(0.2),
+  //                       borderRadius: BorderRadius.circular(12),
+  //                     ),
+  //                     child: const Icon(
+  //                       Icons.store_rounded,
+  //                       color: Color(0xFF1976D2),
+  //                       size: 28,
+  //                     ),
+  //                   ),
+  //                   const SizedBox(width: 16),
+  //                   const Expanded(
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           'Switch Shop?',
+  //                           style: TextStyle(
+  //                             fontSize: 20,
+  //                             fontWeight: FontWeight.w700,
+  //                             color: Color(0xFF1A1A1A),
+  //                             fontFamily: 'Inter',
+  //                           ),
+  //                         ),
+  //                         SizedBox(height: 4),
+  //                         Text(
+  //                           'Current progress will be lost',
+  //                           style: TextStyle(
+  //                             fontSize: 13,
+  //                             fontWeight: FontWeight.w500,
+  //                             color: Color(0xFF1565C0),
+  //                             fontFamily: 'Inter',
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
 
-              // Content
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Are you sure you want to switch your shop? All selected products, measurements, and started booking details will be discarded.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.6,
-                        color: Color(0xFF4A4A4A),
-                        fontFamily: 'Inter',
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
+  //             // Content
+  //             Padding(
+  //               padding: const EdgeInsets.all(24),
+  //               child: Column(
+  //                 children: [
+  //                   const Text(
+  //                     'Are you sure you want to switch your shop? All selected products, measurements, and started booking details will be discarded.',
+  //                     style: TextStyle(
+  //                       fontSize: 14,
+  //                       height: 1.6,
+  //                       color: Color(0xFF4A4A4A),
+  //                       fontFamily: 'Inter',
+  //                     ),
+  //                     textAlign: TextAlign.center,
+  //                   ),
+  //                   const SizedBox(height: 24),
 
-                    // Action Buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              side: BorderSide(
-                                  color: Colors.grey.shade300, width: 1.5),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: const Text(
-                              'Cancel',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF1A1A1A),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () => Navigator.pop(context, true),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              backgroundColor: const Color(0xFF2196F3),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: const Text(
-                              'Switch & Discard',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  //                   // Action Buttons
+  //                   Row(
+  //                     children: [
+  //                       Expanded(
+  //                         child: OutlinedButton(
+  //                           onPressed: () => Navigator.pop(context, false),
+  //                           style: OutlinedButton.styleFrom(
+  //                             padding: const EdgeInsets.symmetric(vertical: 14),
+  //                             side: BorderSide(
+  //                                 color: Colors.grey.shade300, width: 1.5),
+  //                             shape: RoundedRectangleBorder(
+  //                                 borderRadius: BorderRadius.circular(12)),
+  //                           ),
+  //                           child: const Text(
+  //                             'Cancel',
+  //                             style: TextStyle(
+  //                               fontSize: 15,
+  //                               fontWeight: FontWeight.w600,
+  //                               color: Color(0xFF1A1A1A),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       const SizedBox(width: 12),
+  //                       Expanded(
+  //                         child: ElevatedButton(
+  //                           onPressed: () => Navigator.pop(context, true),
+  //                           style: ElevatedButton.styleFrom(
+  //                             padding: const EdgeInsets.symmetric(vertical: 14),
+  //                             backgroundColor: const Color(0xFF2196F3),
+  //                             foregroundColor: Colors.white,
+  //                             elevation: 0,
+  //                             shape: RoundedRectangleBorder(
+  //                                 borderRadius: BorderRadius.circular(12)),
+  //                           ),
+  //                           child: const Text(
+  //                             'Switch & Discard',
+  //                             style: TextStyle(
+  //                               fontSize: 15,
+  //                               fontWeight: FontWeight.w600,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Widget _buildCompactDateTimeSection() {
   //   return Container(
@@ -2151,7 +2132,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   Future<void> _selectDate({required bool isPickup}) async {
     final isSales = selectedBookingType == BookingType.sales;
-    
+
     if (isPickup) {
       // PICKUP DATE PICKER (or SALE DATE for sales mode)
       // For sales: only today or past dates (up to 1 year)
@@ -2160,7 +2141,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         context: context,
         initialDate: pickupDate,
         firstDate: DateTime.now().subtract(const Duration(days: 365)),
-        lastDate: isSales ? DateTime.now() : DateTime.now().add(const Duration(days: 365)),
+        lastDate: isSales
+            ? DateTime.now()
+            : DateTime.now().add(const Duration(days: 365)),
         builder: (context, child) {
           return Theme(
             data: Theme.of(context).copyWith(
@@ -2789,7 +2772,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // For sales mode, use sale_price if available, otherwise fall back to price
     final isSales = selectedBookingType == BookingType.sales;
-    final price = isSales 
+    final price = isSales
         ? (variant.salePrice ?? variant.price ?? product.price ?? 0)
         : (variant.price ?? product.price ?? 0);
     log('Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)');
@@ -2839,8 +2822,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     log('Product added. Total selected: ${products.length}');
     setState(() {}); // Refresh to update UI
   }
-
-
 
   void _showVariantSelectionDialog(dynamic product) {
     final variants = product.variants ?? [];
@@ -3427,8 +3408,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       selectedProductsNotifier.value = products;
     }
   }
-
-
 
   Widget _buildSummarySection() {
     return Container(

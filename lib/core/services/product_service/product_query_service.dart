@@ -66,12 +66,15 @@ class ProductQueryService {
             : ApiPaths.service.productsRoot,
         queryParameters: {
           'page': page,
-          if (query != null && query.isNotEmpty) 'search': query,
+          if (query != null && query.isNotEmpty) ...{
+            'search': query,
+            'search_by':
+                type, // Only send search_by when there's actual search text
+          },
           if (!useProductSearchEndpoint && serviceId != -1)
             'shop_service_id': serviceId,
-          if (query != null && query.isNotEmpty)
-            'search_by': type, // "name","color","size","category","model"
-          if (startPrice != null && endPrice != null) 'min_price': startPrice,
+          // Send price range when specified
+          if (startPrice != null) 'min_price': startPrice,
           if (endPrice != null) 'max_price': endPrice,
           // Always send in_stock_only param
           'in_stock_only': includeInStockOnly,
@@ -212,12 +215,12 @@ class ProductQueryService {
                   'return_time': returnTime.formatToTime(
                     date: returnDate.parseToDateTime(),
                   ),
-                if (query != null && type != null)
+                if (query != null && query.isNotEmpty) ...{
+                  'search_value': query,
                   'search_field':
                       type, // "name","color","size","category","model"
-                if (query != null) 'search_value': query,
-                if (startPrice != null && endPrice != null)
-                  'min_price': startPrice,
+                },
+                if (startPrice != null) 'min_price': startPrice,
                 if (endPrice != null) 'max_price': endPrice,
               },
       );

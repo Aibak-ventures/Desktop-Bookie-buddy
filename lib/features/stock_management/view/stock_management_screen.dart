@@ -224,20 +224,20 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     return Row(
       children: [
         IconButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {},
           icon: const Icon(Icons.arrow_back, size: 20),
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
         ),
-        const SizedBox(width: 12),
-        const Text(
-          'All Orders > ',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.grey,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        // const SizedBox(width: 12),
+        // const Text(
+        //   'All Orders > ',
+        //   style: TextStyle(
+        //     fontSize: 18,
+        //     color: Colors.grey,
+        //     fontWeight: FontWeight.w500,
+        //   ),
+        // ),
         const Text(
           'Stock Management',
           style: TextStyle(
@@ -863,7 +863,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                   if (product.color != null &&
                                       product.color!.isNotEmpty)
                                     Text(
-                                      'Color: ${product.color}',
+                                      '${product.color}',
                                       style: TextStyle(
                                         fontSize: 10,
                                         // color: Colors.orange.shade700,
@@ -873,7 +873,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                   if (product.category != null &&
                                       product.category!.isNotEmpty)
                                     Text(
-                                      'Cat: ${product.category}',
+                                      '${product.category}',
                                       style: TextStyle(
                                         fontSize: 10,
                                         // color: Colors.blue.shade700,
@@ -883,7 +883,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                   if (product.model != null &&
                                       product.model!.isNotEmpty)
                                     Text(
-                                      'Model: ${product.model}',
+                                      '${product.model}',
                                       style: TextStyle(
                                         fontSize: 10,
                                         // color: Colors.purple.shade700,
@@ -892,20 +892,6 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                     ),
                                 ],
                               ),
-                              if (product.description != null &&
-                                  product.description!.isNotEmpty) ...[
-                                // const SizedBox(height: 4),
-                                Text(
-                                  product.description!,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey.shade600,
-                                    height: 1.3,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
                             ],
                           ),
                         ),
@@ -913,43 +899,40 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  // Category column with modern badge (only show if category exists)
+                  // Category column showing main service name
                   Expanded(
                     flex: 2,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: product.category != null &&
-                              product.category!.isNotEmpty
-                          ? Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppColors.purple.withOpacity(0.12),
-                                    AppColors.purple.withOpacity(0.08),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(
-                                  color: AppColors.purple.withOpacity(0.2),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Text(
-                                product.mainServiceType.productNameLabel,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.purple.withOpacity(0.95),
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
-                          : const SizedBox.shrink(), // Hide if no category
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.purple.withOpacity(0.12),
+                              AppColors.purple.withOpacity(0.08),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: AppColors.purple.withOpacity(0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          product.mainServiceType.productNameLabel,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.purple.withOpacity(0.95),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -1296,111 +1279,6 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Service Filter Section
-                      const Text(
-                        'Select Service',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D2D2D),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      ValueListenableBuilder<int?>(
-                        valueListenable: tempSelectedServiceId,
-                        builder: (context, selectedId, child) {
-                          return Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: [
-                              // "All Services" option
-                              GestureDetector(
-                                onTap: () {
-                                  tempSelectedServiceId.value = -1;
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: selectedId == -1
-                                        ? const Color(0xFF6132E4)
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: selectedId == -1
-                                          ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade300,
-                                      width: selectedId == -1 ? 2 : 1,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'All Services',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: selectedId == -1
-                                          ? FontWeight.w600
-                                          : FontWeight.normal,
-                                      color: selectedId == -1
-                                          ? Colors.white
-                                          : Colors.grey.shade700,
-                                      fontFamily: 'Inter',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // Individual services
-                              ...services.map((service) {
-                                final isSelected = service.id == selectedId;
-                                return GestureDetector(
-                                  onTap: () {
-                                    tempSelectedServiceId.value = service.id;
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: isSelected
-                                          ? const Color(0xFF6132E4)
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? const Color(0xFF6132E4)
-                                            : Colors.grey.shade300,
-                                        width: isSelected ? 2 : 1,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      service.name,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: isSelected
-                                            ? FontWeight.w600
-                                            : FontWeight.normal,
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
-                                        fontFamily: 'Inter',
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ],
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 28),
-                      const Divider(height: 1),
-                      const SizedBox(height: 24),
-
                       // Search Type Section
                       const Text(
                         'Search By',
