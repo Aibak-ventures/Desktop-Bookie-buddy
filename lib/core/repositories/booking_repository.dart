@@ -163,20 +163,14 @@ class BookingRepository {
     }
   }
 
-  // Cancel booking and process refund
+  // Cancel booking by updating delivery status
   Future<void> cancelBooking({
     required int bookingId,
-    required int refundAmount,
-    required PaymentMethod paymentMethod,
-    required String refundReason,
   }) async {
     try {
       final response = await safeApiCall(
         () => _bookingService.cancelBooking(
           bookingId: bookingId,
-          refundAmount: refundAmount,
-          paymentMethod: paymentMethod.value,
-          refundReason: refundReason,
         ),
       );
       if (response.status.isSuccess) {

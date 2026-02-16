@@ -133,13 +133,10 @@ class BookingDetailsBloc
     try {
       await _repository.cancelBooking(
         bookingId: event.bookingId,
-        refundAmount: event.refundAmount,
-        paymentMethod: event.paymentMethod,
-        refundReason: event.refundReason,
       );
       emit(
         const _Success(
-          'Booking cancelled and refund processed successfully',
+          'Booking cancelled successfully',
           needRefresh: true,
         ),
       );

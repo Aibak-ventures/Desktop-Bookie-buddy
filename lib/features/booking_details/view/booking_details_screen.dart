@@ -534,21 +534,15 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   }
 
   void _handleCancelBooking(BuildContext context, dynamic booking) {
-    // Calculate refundable amount (total paid - already refunded if any)
-    final maxRefundAmount = booking.actualPaidAmount;
-
     showDialog(
       context: context,
       builder: (context) => CancelBookingDialog(
-        maxRefundAmount: maxRefundAmount,
         onCancel: () => Navigator.of(context).pop(),
-        onConfirm: (refundAmount, paymentMethod, reason) {
+        onConfirm: () {
+          Navigator.of(context).pop();
           context.read<BookingDetailsBloc>().add(
                 BookingDetailsEvent.cancelBooking(
                   bookingId: booking.id,
-                  refundAmount: refundAmount,
-                  paymentMethod: paymentMethod,
-                  refundReason: reason,
                 ),
               );
         },

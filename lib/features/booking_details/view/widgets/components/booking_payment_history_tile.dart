@@ -74,23 +74,22 @@ class BookingPaymentHistoryTile extends StatelessWidget {
     final transactions = _getMergedTransactions();
 
     return Container(
-      padding: 12.padding,
-      decoration: BoxDecoration(
-        color: AppColors.purpleLight,
-        borderRadius: 5.radiusBorder,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.grey200,
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Skeletonizer(
-        enabled: isLoading, // control shimmer automatically
+        enabled: isLoading,
         child: transactions.isEmpty
-            ? const Center(child: Text('No Payment History'))
+            ? const Padding(
+                padding: EdgeInsets.all(12),
+                child: Center(
+                  child: Text(
+                    'No Payment History',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              )
             : ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -98,80 +97,88 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final transaction = transactions[index];
 
-                  return Row(
-                    children: [
-                      // Type indicator (Payment/Refund)
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: transaction.isRefund
-                                ? Colors.red.shade50
-                                : Colors.green.shade50,
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: transaction.isRefund
-                                  ? Colors.red.shade200
-                                  : Colors.green.shade200,
-                            ),
-                          ),
+                  return Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: transaction.isRefund
+                          ? Colors.red.shade50.withOpacity(0.3)
+                          : Colors.transparent,
+                    ),
+                    child: Row(
+                      children: [
+                        // Date
+                        Expanded(
+                          flex: 3,
                           child: Text(
-                            transaction.isRefund ? 'Refund' : 'Payment',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: transaction.isRefund
-                                  ? Colors.red.shade700
-                                  : Colors.green.shade700,
+                            transaction.dateTime.formatToUiDate(),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87,
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        flex: 4,
-                        child: Text(
-                          transaction.dateTime.formatToUiDate(),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Text(
-                          transaction.dateTime.formatToUiTime(),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Align(
-                          child: transaction.paymentMethod == PaymentMethod.cash
-                              ? AppAssets.cash
-                              : AppAssets.upi,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          transaction.isRefund
-                              ? '- ${transaction.amount.toCurrency()}'
-                              : transaction.amount.toCurrency(),
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: transaction.isRefund
-                                ? Colors.red.shade700
-                                : Colors.black,
+                        // Time
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            transaction.dateTime.formatToUiTime(),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        // Payment Icon
+                        Expanded(
+                          flex: 2,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child:
+                                transaction.paymentMethod == PaymentMethod.cash
+                                    ? AppAssets.cash
+                                    : AppAssets.upi,
+                          ),
+                        ),
+                        // Amount
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              if (transaction.isRefund)
+                                Text(
+                                  'Refunded',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.red.shade700,
+                                  ),
+                                ),
+                              Text(
+                                transaction.isRefund
+                                    ? '-${transaction.amount.toCurrency()}'
+                                    : transaction.amount.toCurrency(),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: transaction.isRefund
+                                      ? Colors.red.shade700
+                                      : Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
-                separatorBuilder: (context, index) => const Divider(),
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  thickness: 0.5,
+                  color: Colors.grey.shade300,
+                ),
               ),
       ),
     );

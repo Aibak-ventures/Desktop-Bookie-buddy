@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
@@ -109,76 +110,115 @@ class BookingDetailsDrawer extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
-      builder: (context, state) {
-        return state.maybeWhen(
-          orElse: () => const SizedBox.shrink(),
-          loading: () => SizedBox(
-            height: context.mediaQueryHeight(0.8),
-            child: const Center(
-              child: SpinKitFadingCircle(color: AppColors.purple),
-            ),
-          ),
-          error: (error) => Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: CustomErrorWidget(
-              errorText: error,
-              onRetry: () {
-                if (drawerState.selectedBookingId != null) {
-                  context.read<BookingDetailsBloc>().add(
-                        BookingDetailsEvent.fetchBookingDetails(
-                          drawerState.selectedBookingId!,
-                        ),
-                      );
-                }
-              },
-            ),
-          ),
-          loaded: (booking) => Column(
-            key: ValueKey('booking_${booking.id}_${booking.actualPaidAmount}'),
-            children: [
-              // Scrollable content
-              Expanded(
-                child: SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Booking ID, Staff Name and Delivery Status
-                      _buildBookingHeaderSection(context, booking),
-                      const SizedBox(height: 20),
-
-                      // Dates & time
-                      _buildDatesSection(booking),
-                      const SizedBox(height: 20),
-
-                      // Documents
-                      _buildDocumentsSection(booking),
-                      if (booking.documents.isNotEmpty)
-                        const SizedBox(height: 20),
-
-                      // Item details
-                      _buildItemDetails(booking),
-                      const SizedBox(height: 20),
-
-                      // Customer details
-                      _buildCustomerDetails(booking),
-                      const SizedBox(height: 20),
-
-                      // Payment details
-                      _buildPaymentDetails(booking, context),
-                      const SizedBox(height: 80), // Space for sticky buttons
-                    ],
-                  ),
-                ),
+    return BlocListener<BookingDetailsBloc, BookingDetailsState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          orElse: () {},
+          success: (message, didPop, needRefresh) {
+            // Show success message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.green,
               ),
-              // Sticky action buttons at bottom
-              _buildStickyActionBar(context, booking),
-            ],
-          ),
+            );
+
+            // Reload booking details to show updated status without closing drawer
+            if (needRefresh && drawerState.selectedBookingId != null) {
+              context.read<BookingDetailsBloc>().add(
+                    BookingDetailsEvent.fetchBookingDetails(
+                      drawerState.selectedBookingId!,
+                    ),
+                  );
+
+              // Also refresh the main booking list in background
+              context.read<AllBookingBloc>().add(
+                    const AllBookingEvent.loadBookings(),
+                  );
+            }
+          },
+          failed: (error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
         );
       },
+      child: BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            orElse: () => const SizedBox.shrink(),
+            loading: () => SizedBox(
+              height: context.mediaQueryHeight(0.8),
+              child: const Center(
+                child: SpinKitFadingCircle(color: AppColors.purple),
+              ),
+            ),
+            error: (error) => Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CustomErrorWidget(
+                errorText: error,
+                onRetry: () {
+                  if (drawerState.selectedBookingId != null) {
+                    context.read<BookingDetailsBloc>().add(
+                          BookingDetailsEvent.fetchBookingDetails(
+                            drawerState.selectedBookingId!,
+                          ),
+                        );
+                  }
+                },
+              ),
+            ),
+            loaded: (booking) => Column(
+              key:
+                  ValueKey('booking_${booking.id}_${booking.actualPaidAmount}'),
+              children: [
+                // Scrollable content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Booking ID, Staff Name and Delivery Status
+                        _buildBookingHeaderSection(context, booking),
+                        const SizedBox(height: 20),
+
+                        // Dates & time
+                        _buildDatesSection(booking),
+                        const SizedBox(height: 20),
+
+                        // Documents
+                        _buildDocumentsSection(booking),
+                        if (booking.documents.isNotEmpty)
+                          const SizedBox(height: 20),
+
+                        // Item details
+                        _buildItemDetails(booking),
+                        const SizedBox(height: 20),
+
+                        // Customer details
+                        _buildCustomerDetails(booking),
+                        const SizedBox(height: 20),
+
+                        // Payment details
+                        _buildPaymentDetails(booking, context),
+                        const SizedBox(height: 80), // Space for sticky buttons
+                      ],
+                    ),
+                  ),
+                ),
+                // Sticky action buttons at bottom
+                _buildStickyActionBar(context, booking),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -293,79 +333,22 @@ class BookingDetailsDrawer extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   onSelected: (newStatus) async {
-                    // Show different dialog for cancellation with paid amount
-                    if (newStatus == DeliveryStatus.cancelled &&
-                        booking.actualPaidAmount > 0) {
+                    // Show confirmation dialog for cancellation
+                    if (newStatus == DeliveryStatus.cancelled) {
                       showDialog(
                         context: context,
                         builder: (dialogContext) => CancelBookingDialog(
-                          maxRefundAmount: booking.actualPaidAmount,
                           onCancel: () => Navigator.of(dialogContext).pop(),
-                          onConfirm: (refundAmount, paymentMethod, reason) {
+                          onConfirm: () {
+                            Navigator.of(dialogContext).pop();
                             context.read<BookingDetailsBloc>().add(
                                   BookingDetailsEvent.cancelBooking(
                                     bookingId: booking.id,
-                                    refundAmount: refundAmount,
-                                    paymentMethod: paymentMethod,
-                                    refundReason: reason,
                                   ),
                                 );
-                            // Refresh the booking list after cancellation
-                            context.read<AllBookingBloc>().add(
-                                  const AllBookingEvent.loadBookings(),
-                                );
-                            // Close the drawer
-                            context
-                                .read<BookingDetailsDrawerCubit>()
-                                .closeDrawer();
                           },
                         ),
                       );
-                      return;
-                    }
-
-                    // Show different confirmation for cancellation without paid amount
-                    if (newStatus == DeliveryStatus.cancelled) {
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Cancel Booking'),
-                          content: const Text(
-                            'Are you sure you want to cancel this booking? This action cannot be undone.',
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text('Keep Booking'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              style: TextButton.styleFrom(
-                                  foregroundColor: Colors.red),
-                              child: const Text('Cancel Booking'),
-                            ),
-                          ],
-                        ),
-                      );
-
-                      if (confirm == true && context.mounted) {
-                        // Update via BookingDetailsBloc for optimistic UI update
-                        context.read<BookingDetailsBloc>().add(
-                              BookingDetailsEvent.updateDeliveryStatus(
-                                bookingId: booking.id,
-                                deliveryStatus: newStatus,
-                              ),
-                            );
-                        // Also update the booking list
-                        context.read<AllBookingBloc>().add(
-                              AllBookingEvent.updateDeliveryStatus(
-                                bookingId: booking.id,
-                                deliveryStatus: newStatus,
-                              ),
-                            );
-                        // Close the drawer
-                        context.read<BookingDetailsDrawerCubit>().closeDrawer();
-                      }
                       return;
                     }
 
@@ -1313,6 +1296,11 @@ class BookingDetailsDrawer extends StatelessWidget {
     final securityAmount = booking.securityAmount ?? 0;
     final isPaymentCompleted = balance <= 0;
 
+    // Check if booking is cancelled or completed
+    final isCancelled = booking.bookingStatus == BookingStatus.cancelled;
+    final isCompleted = booking.bookingStatus == BookingStatus.completed;
+    final isBookingFinalized = isCancelled || isCompleted;
+
     return Column(
       children: [
         Container(
@@ -1336,41 +1324,95 @@ class BookingDetailsDrawer extends StatelessWidget {
                       color: Colors.black87,
                     ),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: isPaymentCompleted
-                        ? null
-                        : () {
-                            performSecureActionDialog(
-                              context,
-                              SecretPasswordLocations.bookingPayment,
-                              onSuccess: () {
-                                showBookingDetailsAddPaymentDialog(
-                                  context: context,
-                                  id: booking.id,
-                                  balanceAmount: balance,
-                                );
-                              },
-                            );
-                          },
-                    icon: Icon(
-                      isPaymentCompleted
-                          ? Icons.check_circle
-                          : LucideIcons.plus,
-                      size: 16,
-                    ),
-                    label:
-                        Text(isPaymentCompleted ? 'Completed' : 'Add Payment'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isPaymentCompleted
-                          ? Colors.green.shade600
-                          : AppColors.purple,
-                      foregroundColor: Colors.white,
+                  // Show status badge or payment button
+                  if (isCancelled)
+                    Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      textStyle: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w500),
+                          horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        border: Border.all(color: Colors.red.shade200),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.cancel,
+                              color: Colors.red.shade700, size: 16),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Booking cancelled',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (isCompleted)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        border: Border.all(color: Colors.green.shade200),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle,
+                              color: Colors.green.shade700, size: 16),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Completed',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.green.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ElevatedButton.icon(
+                      onPressed: isPaymentCompleted
+                          ? null
+                          : () {
+                              performSecureActionDialog(
+                                context,
+                                SecretPasswordLocations.bookingPayment,
+                                onSuccess: () {
+                                  showBookingDetailsAddPaymentDialog(
+                                    context: context,
+                                    id: booking.id,
+                                    balanceAmount: balance,
+                                  );
+                                },
+                              );
+                            },
+                      icon: Icon(
+                        isPaymentCompleted
+                            ? Icons.check_circle
+                            : LucideIcons.plus,
+                        size: 16,
+                      ),
+                      label: Text(
+                          isPaymentCompleted ? 'Completed' : 'Add Payment'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isPaymentCompleted
+                            ? Colors.green.shade600
+                            : AppColors.purple,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        textStyle: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500),
+                      ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 16),
