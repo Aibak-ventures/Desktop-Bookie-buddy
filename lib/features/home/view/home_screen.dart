@@ -10,22 +10,71 @@ import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/home/view/widgets/carousel_home.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
+import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart'
+    as all_booking;
+import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final void Function(String statusTab)? onNavigateToBookings;
 
   const HomeScreen({super.key, this.onNavigateToBookings});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Listen for booking updates and refresh dashboard
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Listen to AllBookingBloc for booking status changes
+      context.read<all_booking.AllBookingBloc>().stream.listen((state) {
+        state.maybeWhen(
+          loaded:
+              (_, __, ___, ____, _____, ______, _______, ________, _________) {
+            // Refresh dashboard when bookings are updated
+            context.read<DashboardBloc>().add(
+                  const DashboardEvent.loadDashboardData(useOldState: true),
+                );
+          },
+          orElse: () {},
+        );
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     print('Current used domain: $baseUrl ✅');
     final bloc = context.read<DashboardBloc>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      body: _buildDesktopLayout(context, bloc),
+    return BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
+      listener: (context, drawerState) {
+        // When drawer opens with a booking ID, fetch the booking details
+        if (drawerState.isOpen && drawerState.selectedBookingId != null) {
+          context.read<BookingDetailsBloc>().add(
+                BookingDetailsEvent.fetchBookingDetails(
+                  drawerState.selectedBookingId!,
+                ),
+              );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        body: Stack(
+          children: [
+            _buildDesktopLayout(context, bloc),
+            // Drawer overlay
+            const BookingDetailsDrawer(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -66,7 +115,8 @@ class HomeScreen extends StatelessWidget {
                                     height: 120,
                                     child: CarouselHome(
                                       data: carouselData,
-                                      onNavigateToBookings: onNavigateToBookings,
+                                      onNavigateToBookings:
+                                          widget.onNavigateToBookings,
                                     ),
                                   );
                                 },
@@ -74,7 +124,8 @@ class HomeScreen extends StatelessWidget {
                                   height: 120,
                                   child: CarouselHome(
                                     data: DesktopDashboardCarouselData.empty(),
-                                    onNavigateToBookings: onNavigateToBookings,
+                                    onNavigateToBookings:
+                                        widget.onNavigateToBookings,
                                   ),
                                 ),
                               );
@@ -415,26 +466,11 @@ class HomeScreen extends StatelessWidget {
               child: BookingCard(
                 booking: booking,
                 useReturnDate: useReturnDate,
-                onTap: () async {
-                  final bookingCubit = context.read<BookingSelectionCubit>();
-                  bookingCubit.selectBooking(booking);
-
-                  await context.push(
-                    BookingDetailsScreen(bookingId: booking.id!),
-                  );
-
-                  if (bookingCubit.state.isModified) {
-                    final updated = bookingCubit.state.selectedBooking;
-
-                    context.read<DashboardBloc>().add(
-                          DashboardEvent.updateData(
-                            updated,
-                            shouldRefresh: bookingCubit.state.shouldRefresh,
-                          ),
-                        );
-
-                    bookingCubit.reset();
-                  }
+                onTap: () {
+                  // Open booking details drawer
+                  context
+                      .read<BookingDetailsDrawerCubit>()
+                      .openDrawer(booking.id!);
                 },
               ),
             )),

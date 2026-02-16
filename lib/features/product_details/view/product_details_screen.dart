@@ -16,6 +16,9 @@ import 'package:bookie_buddy_web/features/stock_management/view_model/stock_mana
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
+import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/stock_management/view/widgets/add_edit_product_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,47 +57,59 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      body: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-        builder: (context, state) {
-          return state.when(
-            initial: () => const Center(child: Text('Initializing...')),
-            loading: () => const Center(
-              child: CircularProgressIndicator(color: AppColors.purple),
-            ),
-            loaded: (product, bookings, monthlySummary, nextPageUrl,
-                    isPaginatingBookings) =>
-                _buildContent(context, product, bookings, monthlySummary),
-            error: (message) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline,
-                      size: 64, color: Colors.red.shade300),
-                  const SizedBox(height: 16),
-                  Text(
-                    message,
-                    style: TextStyle(fontSize: 16, color: Colors.red.shade600),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
+      ],
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        body: Stack(
+          children: [
+            BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+              builder: (context, state) {
+                return state.when(
+                  initial: () => const Center(child: Text('Initializing...')),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: AppColors.purple),
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context
-                          .read<ProductDetailsCubit>()
-                          .loadProductDetails(widget.productId);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.purple,
-                      foregroundColor: Colors.white,
+                  loaded: (product, bookings, monthlySummary, nextPageUrl,
+                          isPaginatingBookings) =>
+                      _buildContent(context, product, bookings, monthlySummary),
+                  error: (message) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error_outline,
+                            size: 64, color: Colors.red.shade300),
+                        const SizedBox(height: 16),
+                        Text(
+                          message,
+                          style: TextStyle(
+                              fontSize: 16, color: Colors.red.shade600),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            context
+                                .read<ProductDetailsCubit>()
+                                .loadProductDetails(widget.productId);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.purple,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Retry'),
+                        ),
+                      ],
                     ),
-                    child: const Text('Retry'),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
+            // Drawer overlay
+            const BookingDetailsDrawer(),
+          ],
+        ),
       ),
     );
   }
@@ -343,7 +358,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                       ),
                       const SizedBox(height: 8),
                       // Purchase Price below name (hide if 0)
-                      if (product.purchaseAmount != null && product.purchaseAmount! > 0)
+                      if (product.purchaseAmount != null &&
+                          product.purchaseAmount! > 0)
                         Text(
                           'Purchase: ₹${NumberFormat('#,###').format(product.purchaseAmount)}',
                           style: const TextStyle(
@@ -1025,15 +1041,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   }
 
   void _showEditVariantDialog(ProductVariantModel variant) {
-    final variantAttributeController = TextEditingController(text: variant.attribute);
-    final variantQuantityController = TextEditingController(text: variant.stock.toString());
+    final variantAttributeController =
+        TextEditingController(text: variant.attribute);
+    final variantQuantityController =
+        TextEditingController(text: variant.stock.toString());
     final formKey = GlobalKey<FormState>();
 
     // Get current product from state to initialize variantsNotifier (excluding current variant)
     final currentState = context.read<ProductDetailsCubit>().state;
     List<ProductVariantModel> currentVariants = [];
     currentState.maybeWhen(
-      loaded: (product, _, __, ___, ____) => currentVariants = product.variants.where((v) => v.id != variant.id).toList(),
+      loaded: (product, _, __, ___, ____) => currentVariants =
+          product.variants.where((v) => v.id != variant.id).toList(),
       orElse: () {},
     );
 
@@ -1100,7 +1119,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
                 try {
                   // Update variant
-                  await context.read<ProductDetailsCubit>().updateProductVariant(
+                  await context
+                      .read<ProductDetailsCubit>()
+                      .updateProductVariant(
                         productId: widget.productId,
                         variantId: variant.id,
                         attribute: attribute,
@@ -1179,6 +1200,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   }
 
   void _showBookingDetailsDrawer(BookingsModel booking) {
+    // Open booking details drawer using the cubit
+    context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id!);
+  }
+
+  void _showBookingDetailsDrawerOLD(BookingsModel booking) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -1239,28 +1265,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildDetailRow('Customer', booking.clientName),
-                          _buildDetailRow('Booking ID', booking.id?.toString() ?? 'N/A'),
+                          _buildDetailRow(
+                              'Booking ID', booking.id?.toString() ?? 'N/A'),
                           _buildDetailRow('Status', booking.bookingStatus.name),
-                          _buildDetailRow('Delivery Status', booking.deliveryStatus.name),
-                          _buildDetailRow('Payment Status', booking.paymentStatus.name),
+                          _buildDetailRow(
+                              'Delivery Status', booking.deliveryStatus.name),
+                          _buildDetailRow(
+                              'Payment Status', booking.paymentStatus.name),
                           if (booking.bookedDate != null)
                             _buildDetailRow(
                                 'Booking Date',
-                                DateFormat('MMM dd, yyyy')
-                                    .format(booking.bookedDate!.parseToDateTime())),
+                                DateFormat('MMM dd, yyyy').format(
+                                    booking.bookedDate!.parseToDateTime())),
                           if (booking.pickupDate != null)
                             _buildDetailRow(
                                 'Pickup Date',
-                                DateFormat('MMM dd, yyyy')
-                                    .format(booking.pickupDate!.parseToDateTime())),
+                                DateFormat('MMM dd, yyyy').format(
+                                    booking.pickupDate!.parseToDateTime())),
                           if (booking.returnDate != null)
                             _buildDetailRow(
                                 'Return Date',
-                                DateFormat('MMM dd, yyyy')
-                                    .format(booking.returnDate!.parseToDateTime())),
-                          if (booking.shopBookingId != null && booking.shopBookingId!.isNotEmpty)
-                            _buildDetailRow('Shop Booking ID', booking.shopBookingId!),
-                          if (booking.staffName != null && booking.staffName!.isNotEmpty)
+                                DateFormat('MMM dd, yyyy').format(
+                                    booking.returnDate!.parseToDateTime())),
+                          if (booking.shopBookingId != null &&
+                              booking.shopBookingId!.isNotEmpty)
+                            _buildDetailRow(
+                                'Shop Booking ID', booking.shopBookingId!),
+                          if (booking.staffName != null &&
+                              booking.staffName!.isNotEmpty)
                             _buildDetailRow('Staff', booking.staffName!),
                           if (booking.bookedItems.isNotEmpty)
                             Padding(
@@ -1278,7 +1310,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                                   ),
                                   const SizedBox(height: 8),
                                   ...booking.bookedItems.map((item) => Padding(
-                                        padding: const EdgeInsets.only(bottom: 4),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 4),
                                         child: Text(
                                           '• $item',
                                           style: const TextStyle(

@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
@@ -49,7 +50,29 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   void initState() {
     pageController = PageController();
     screens = [
-      HomeScreen(onNavigateToBookings: _navigateToBookingsTab),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => BookingDetailsDrawerCubit(),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsBloc(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsPaymentHistoryCubit(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => AllBookingBloc(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+        ],
+        child: HomeScreen(onNavigateToBookings: _navigateToBookingsTab),
+      ),
       MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -81,12 +104,34 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ],
         child: AllBookingsDesktopScreen(key: _allBookingsKey),
       ),
-      RepositoryProvider(
-        create: (context) => getIt.get<ProductRepository>(),
-        child: BlocProvider(
-          create: (context) => StockManagementCubit(
-            repository: getIt.get(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => BookingDetailsDrawerCubit(),
           ),
+          BlocProvider(
+            create: (context) => BookingDetailsBloc(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsPaymentHistoryCubit(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => AllBookingBloc(
+              repository: getIt.get<BookingRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => StockManagementCubit(
+              repository: getIt.get(),
+            ),
+          ),
+        ],
+        child: RepositoryProvider(
+          create: (context) => getIt.get<ProductRepository>(),
           child: const StockManagementScreen(),
         ),
       ),
@@ -97,7 +142,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   /// Navigate to All Bookings tab with a specific status filter
   void _navigateToBookingsTab(String statusTab) {
     setState(() {
-      currentIndex = 2; // All Bookings is index 2 in sidebar (Dashboard=1, All Bookings=2)
+      currentIndex =
+          2; // All Bookings is index 2 in sidebar (Dashboard=1, All Bookings=2)
     });
     pageController.jumpToPage(1); // All Bookings is page index 1 in PageView
     // Change the status tab in the All Bookings screen after frame is rendered
@@ -765,8 +811,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   /// Refresh dashboard data
   void _refreshDashboard() {
     context.read<DashboardBloc>().add(
-      const DashboardEvent.loadDashboardData(useOldState: true),
-    );
+          const DashboardEvent.loadDashboardData(useOldState: true),
+        );
   }
 
   Widget _logoutButtonExpanded() {
