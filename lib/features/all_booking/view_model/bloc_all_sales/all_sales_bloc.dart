@@ -40,6 +40,8 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
       final result = await _repository.getSalesPagination(
         page: nextPage,
         search: s.searchQuery,
+        fromDate: s.fromDate,
+        toDate: s.toDate,
       );
 
       emit(
@@ -48,6 +50,8 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
           nextPageUrl: result.nextPageUrl,
           isPaginating: false,
           searchQuery: s.searchQuery,
+          fromDate: s.fromDate,
+          toDate: s.toDate,
         ),
       );
     } catch (e, stack) {
@@ -66,6 +70,8 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
       final result = await _repository.getSalesPagination(
         page: event.page ?? 1,
         search: event.searchQuery,
+        fromDate: event.fromDate,
+        toDate: event.toDate,
       );
 
       emit(
@@ -73,6 +79,8 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
           sales: result.data,
           nextPageUrl: result.nextPageUrl,
           searchQuery: event.searchQuery,
+          fromDate: event.fromDate,
+          toDate: event.toDate,
         ),
       );
     } catch (e, stack) {

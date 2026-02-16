@@ -107,6 +107,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               searchQuery: _searchController.text.trim().isEmpty
                   ? null
                   : _searchController.text.trim(),
+              fromDate:
+                  _dateFilterNotifier.value.startDate?.format(reverse: true),
+              toDate: _dateFilterNotifier.value.endDate?.format(reverse: true),
             ),
           );
     } else {
@@ -510,7 +513,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           loading: () => const Center(
             child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
           ),
-          loaded: (sales, _, __, ___) {
+          loaded: (sales, _, __, ___, ____, _____) {
             if (sales.isEmpty) {
               return const Center(child: Text('No sales found'));
             }
@@ -527,7 +530,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     return BlocBuilder<AllSalesBloc, AllSalesState>(
       builder: (context, state) {
         final isPaginating = state.maybeWhen(
-          loaded: (_, __, ___, isPaginating) => isPaginating,
+          loaded: (_, __, ___, isPaginating, ____, _____) => isPaginating,
           orElse: () => false,
         );
 
@@ -1065,7 +1068,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    sale.shopSaleId?? 'SL${sale.id.toString().padLeft(5, '0')}',
+                    sale.shopSaleId ??
+                        'SL${sale.id.toString().padLeft(5, '0')}',
                     style: const TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 13),
                     overflow: TextOverflow.ellipsis,
@@ -1117,7 +1121,6 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-
                 const SizedBox(width: 12),
                 SizedBox(
                   width: 70,

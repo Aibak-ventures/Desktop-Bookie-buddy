@@ -8,6 +8,8 @@ class AllSalesState with _$AllSalesState {
     String? nextPageUrl,
     String? searchQuery,
     @Default(false) bool isPaginating,
+    String? fromDate,
+    String? toDate,
   }) = _Loaded;
   const factory AllSalesState.error(String message) = _Error;
 }

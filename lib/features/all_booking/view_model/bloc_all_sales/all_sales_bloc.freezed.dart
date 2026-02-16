@@ -18,19 +18,25 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AllSalesEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int? page, String? searchQuery) loadSales,
+    required TResult Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)
+        loadSales,
     required TResult Function() loadMoreSales,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int? page, String? searchQuery)? loadSales,
+    TResult? Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)?
+        loadSales,
     TResult? Function()? loadMoreSales,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int? page, String? searchQuery)? loadSales,
+    TResult Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)?
+        loadSales,
     TResult Function()? loadMoreSales,
     required TResult orElse(),
   }) =>
@@ -83,7 +89,7 @@ abstract class _$$LoadSalesImplCopyWith<$Res> {
           _$LoadSalesImpl value, $Res Function(_$LoadSalesImpl) then) =
       __$$LoadSalesImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int? page, String? searchQuery});
+  $Res call({int? page, String? searchQuery, String? fromDate, String? toDate});
 }
 
 /// @nodoc
@@ -101,6 +107,8 @@ class __$$LoadSalesImplCopyWithImpl<$Res>
   $Res call({
     Object? page = freezed,
     Object? searchQuery = freezed,
+    Object? fromDate = freezed,
+    Object? toDate = freezed,
   }) {
     return _then(_$LoadSalesImpl(
       page: freezed == page
@@ -111,6 +119,14 @@ class __$$LoadSalesImplCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
+      fromDate: freezed == fromDate
+          ? _value.fromDate
+          : fromDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      toDate: freezed == toDate
+          ? _value.toDate
+          : toDate // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -118,16 +134,21 @@ class __$$LoadSalesImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadSalesImpl implements _LoadSales {
-  const _$LoadSalesImpl({this.page, this.searchQuery});
+  const _$LoadSalesImpl(
+      {this.page, this.searchQuery, this.fromDate, this.toDate});
 
   @override
   final int? page;
   @override
   final String? searchQuery;
+  @override
+  final String? fromDate;
+  @override
+  final String? toDate;
 
   @override
   String toString() {
-    return 'AllSalesEvent.loadSales(page: $page, searchQuery: $searchQuery)';
+    return 'AllSalesEvent.loadSales(page: $page, searchQuery: $searchQuery, fromDate: $fromDate, toDate: $toDate)';
   }
 
   @override
@@ -137,11 +158,15 @@ class _$LoadSalesImpl implements _LoadSales {
             other is _$LoadSalesImpl &&
             (identical(other.page, page) || other.page == page) &&
             (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery));
+                other.searchQuery == searchQuery) &&
+            (identical(other.fromDate, fromDate) ||
+                other.fromDate == fromDate) &&
+            (identical(other.toDate, toDate) || other.toDate == toDate));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, page, searchQuery);
+  int get hashCode =>
+      Object.hash(runtimeType, page, searchQuery, fromDate, toDate);
 
   /// Create a copy of AllSalesEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -154,30 +179,36 @@ class _$LoadSalesImpl implements _LoadSales {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int? page, String? searchQuery) loadSales,
+    required TResult Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)
+        loadSales,
     required TResult Function() loadMoreSales,
   }) {
-    return loadSales(page, searchQuery);
+    return loadSales(page, searchQuery, fromDate, toDate);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int? page, String? searchQuery)? loadSales,
+    TResult? Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)?
+        loadSales,
     TResult? Function()? loadMoreSales,
   }) {
-    return loadSales?.call(page, searchQuery);
+    return loadSales?.call(page, searchQuery, fromDate, toDate);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int? page, String? searchQuery)? loadSales,
+    TResult Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)?
+        loadSales,
     TResult Function()? loadMoreSales,
     required TResult orElse(),
   }) {
     if (loadSales != null) {
-      return loadSales(page, searchQuery);
+      return loadSales(page, searchQuery, fromDate, toDate);
     }
     return orElse();
   }
@@ -215,11 +246,16 @@ class _$LoadSalesImpl implements _LoadSales {
 }
 
 abstract class _LoadSales implements AllSalesEvent {
-  const factory _LoadSales({final int? page, final String? searchQuery}) =
-      _$LoadSalesImpl;
+  const factory _LoadSales(
+      {final int? page,
+      final String? searchQuery,
+      final String? fromDate,
+      final String? toDate}) = _$LoadSalesImpl;
 
   int? get page;
   String? get searchQuery;
+  String? get fromDate;
+  String? get toDate;
 
   /// Create a copy of AllSalesEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -269,7 +305,9 @@ class _$LoadMoreSalesImpl implements _LoadMoreSales {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int? page, String? searchQuery) loadSales,
+    required TResult Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)
+        loadSales,
     required TResult Function() loadMoreSales,
   }) {
     return loadMoreSales();
@@ -278,7 +316,9 @@ class _$LoadMoreSalesImpl implements _LoadMoreSales {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int? page, String? searchQuery)? loadSales,
+    TResult? Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)?
+        loadSales,
     TResult? Function()? loadMoreSales,
   }) {
     return loadMoreSales?.call();
@@ -287,7 +327,9 @@ class _$LoadMoreSalesImpl implements _LoadMoreSales {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int? page, String? searchQuery)? loadSales,
+    TResult Function(
+            int? page, String? searchQuery, String? fromDate, String? toDate)?
+        loadSales,
     TResult Function()? loadMoreSales,
     required TResult orElse(),
   }) {
@@ -338,8 +380,13 @@ mixin _$AllSalesState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)
+    required TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)
         loaded,
     required TResult Function(String message) error,
   }) =>
@@ -347,8 +394,13 @@ mixin _$AllSalesState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult? Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult? Function(String message)? error,
   }) =>
@@ -356,8 +408,13 @@ mixin _$AllSalesState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -450,8 +507,13 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)
+    required TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)
         loaded,
     required TResult Function(String message) error,
   }) {
@@ -462,8 +524,13 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult? Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult? Function(String message)? error,
   }) {
@@ -474,8 +541,13 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -535,7 +607,9 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       {List<SaleModel> sales,
       String? nextPageUrl,
       String? searchQuery,
-      bool isPaginating});
+      bool isPaginating,
+      String? fromDate,
+      String? toDate});
 }
 
 /// @nodoc
@@ -555,6 +629,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? nextPageUrl = freezed,
     Object? searchQuery = freezed,
     Object? isPaginating = null,
+    Object? fromDate = freezed,
+    Object? toDate = freezed,
   }) {
     return _then(_$LoadedImpl(
       sales: null == sales
@@ -573,6 +649,14 @@ class __$$LoadedImplCopyWithImpl<$Res>
           ? _value.isPaginating
           : isPaginating // ignore: cast_nullable_to_non_nullable
               as bool,
+      fromDate: freezed == fromDate
+          ? _value.fromDate
+          : fromDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      toDate: freezed == toDate
+          ? _value.toDate
+          : toDate // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -584,7 +668,9 @@ class _$LoadedImpl implements _Loaded {
       {required final List<SaleModel> sales,
       this.nextPageUrl,
       this.searchQuery,
-      this.isPaginating = false})
+      this.isPaginating = false,
+      this.fromDate,
+      this.toDate})
       : _sales = sales;
 
   final List<SaleModel> _sales;
@@ -602,10 +688,14 @@ class _$LoadedImpl implements _Loaded {
   @override
   @JsonKey()
   final bool isPaginating;
+  @override
+  final String? fromDate;
+  @override
+  final String? toDate;
 
   @override
   String toString() {
-    return 'AllSalesState.loaded(sales: $sales, nextPageUrl: $nextPageUrl, searchQuery: $searchQuery, isPaginating: $isPaginating)';
+    return 'AllSalesState.loaded(sales: $sales, nextPageUrl: $nextPageUrl, searchQuery: $searchQuery, isPaginating: $isPaginating, fromDate: $fromDate, toDate: $toDate)';
   }
 
   @override
@@ -619,7 +709,10 @@ class _$LoadedImpl implements _Loaded {
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
             (identical(other.isPaginating, isPaginating) ||
-                other.isPaginating == isPaginating));
+                other.isPaginating == isPaginating) &&
+            (identical(other.fromDate, fromDate) ||
+                other.fromDate == fromDate) &&
+            (identical(other.toDate, toDate) || other.toDate == toDate));
   }
 
   @override
@@ -628,7 +721,9 @@ class _$LoadedImpl implements _Loaded {
       const DeepCollectionEquality().hash(_sales),
       nextPageUrl,
       searchQuery,
-      isPaginating);
+      isPaginating,
+      fromDate,
+      toDate);
 
   /// Create a copy of AllSalesState
   /// with the given fields replaced by the non-null parameter values.
@@ -642,38 +737,56 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)
+    required TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)
         loaded,
     required TResult Function(String message) error,
   }) {
-    return loaded(sales, nextPageUrl, searchQuery, isPaginating);
+    return loaded(
+        sales, nextPageUrl, searchQuery, isPaginating, fromDate, toDate);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult? Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult? Function(String message)? error,
   }) {
-    return loaded?.call(sales, nextPageUrl, searchQuery, isPaginating);
+    return loaded?.call(
+        sales, nextPageUrl, searchQuery, isPaginating, fromDate, toDate);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(sales, nextPageUrl, searchQuery, isPaginating);
+      return loaded(
+          sales, nextPageUrl, searchQuery, isPaginating, fromDate, toDate);
     }
     return orElse();
   }
@@ -718,12 +831,16 @@ abstract class _Loaded implements AllSalesState {
       {required final List<SaleModel> sales,
       final String? nextPageUrl,
       final String? searchQuery,
-      final bool isPaginating}) = _$LoadedImpl;
+      final bool isPaginating,
+      final String? fromDate,
+      final String? toDate}) = _$LoadedImpl;
 
   List<SaleModel> get sales;
   String? get nextPageUrl;
   String? get searchQuery;
   bool get isPaginating;
+  String? get fromDate;
+  String? get toDate;
 
   /// Create a copy of AllSalesState
   /// with the given fields replaced by the non-null parameter values.
@@ -801,8 +918,13 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)
+    required TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)
         loaded,
     required TResult Function(String message) error,
   }) {
@@ -813,8 +935,13 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult? Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult? Function(String message)? error,
   }) {
@@ -825,8 +952,13 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<SaleModel> sales, String? nextPageUrl,
-            String? searchQuery, bool isPaginating)?
+    TResult Function(
+            List<SaleModel> sales,
+            String? nextPageUrl,
+            String? searchQuery,
+            bool isPaginating,
+            String? fromDate,
+            String? toDate)?
         loaded,
     TResult Function(String message)? error,
     required TResult orElse(),

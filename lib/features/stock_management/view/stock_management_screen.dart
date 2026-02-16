@@ -342,75 +342,96 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
   }
 
   Widget _buildSearchBar() {
-    return Row(
-      children: [
-        Container(
-          width: 269,
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.search, color: Colors.grey.shade500, size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Search by name or id',
-                    hintStyle: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade400,
+    return BlocBuilder<StockManagementCubit, StockManagementState>(
+      builder: (context, state) {
+        final selectedServiceId = state.maybeWhen(
+          loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
+              selected,
+          orElse: () => -1,
+        );
+
+        return Row(
+          children: [
+            Container(
+              width: 269,
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.search, color: Colors.grey.shade500, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search by name or id',
+                        hintStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade400,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        isDense: true,
+                      ),
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      onChanged: (value) {
+                        // Debounce search
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          if (_searchController.text == value) {
+                            context
+                                .read<StockManagementCubit>()
+                                .searchProducts(value);
+                          }
+                        });
+                      },
                     ),
-                    border: InputBorder.none,
                   ),
-                  onChanged: (value) {
-                    // Debounce search
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      if (_searchController.text == value) {
-                        context
-                            .read<StockManagementCubit>()
-                            .searchProducts(value);
-                      }
-                    });
-                  },
-                ),
+                  // Only show filter button when not "All Services"
+                  if (selectedServiceId != -1)
+                    IconButton(
+                      onPressed: () {
+                        _showProductFilterBottomSheet();
+                      },
+                      icon: Icon(Icons.tune,
+                          color: Colors.grey.shade600, size: 20),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                ],
               ),
-              IconButton(
-                onPressed: () {
-                  _showProductFilterBottomSheet();
-                },
-                icon: Icon(Icons.tune, color: Colors.grey.shade600, size: 20),
-              ),
-            ],
-          ),
-        ),
-        const Spacer(),
-        // Add Product Button
-        ElevatedButton.icon(
-          onPressed: () {
-            _showAddEditProductDialog(context);
-          },
-          icon: const Icon(Icons.add, size: 18),
-          label: const Text(
-            'Add Product',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.purple,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
             ),
-            elevation: 0,
-          ),
-        ),
-      ],
+            const Spacer(),
+            // Add Product Button
+            ElevatedButton.icon(
+              onPressed: () {
+                _showAddEditProductDialog(context);
+              },
+              icon: const Icon(Icons.add, size: 18),
+              label: const Text(
+                'Add Product',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.purple,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -1392,101 +1413,6 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(height: 16),
-                                    // Max Price Editor
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'Maximum Price',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xFF6B6B6B),
-                                            fontFamily: 'Inter',
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        ValueListenableBuilder<double>(
-                                          valueListenable: _maxPriceNotifier,
-                                          builder: (context, currentMaxPrice,
-                                              child) {
-                                            maxPriceController.text =
-                                                currentMaxPrice
-                                                    .toInt()
-                                                    .toString();
-                                            return Container(
-                                              width: 130,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 14,
-                                                vertical: 10,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFFF8F9FA),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: Colors.grey.shade300,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: TextField(
-                                                controller: maxPriceController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                onTapOutside: (_) {
-                                                  FocusScope.of(context)
-                                                      .unfocus();
-                                                },
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
-                                                ),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.zero,
-                                                  isDense: true,
-                                                  prefixText: '₹ ',
-                                                  prefixStyle: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Color(0xFF6132E4),
-                                                  ),
-                                                ),
-                                                onChanged: (value) {
-                                                  if (value.isNotEmpty) {
-                                                    final newMaxPrice =
-                                                        double.tryParse(
-                                                                value) ??
-                                                            currentMaxPrice;
-                                                    _maxPriceNotifier.value =
-                                                        newMaxPrice;
-                                                    if (tempPriceRange
-                                                            .value.end >
-                                                        newMaxPrice) {
-                                                      tempPriceRange.value =
-                                                          RangeValues(
-                                                              tempPriceRange
-                                                                          .value
-                                                                          .start >
-                                                                      newMaxPrice
-                                                                  ? 0
-                                                                  : tempPriceRange
-                                                                      .value
-                                                                      .start,
-                                                              newMaxPrice);
-                                                    }
-                                                  }
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-
-                                    const SizedBox(height: 20),
 
                                     // Price Range Display
                                     ValueListenableBuilder<RangeValues>(
@@ -1941,15 +1867,6 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           page: 1,
         );
 
-    // Show feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Filters applied: ${searchType ?? 'all'}'
-          '${isPriceEnabled ? ', price: ${priceRange.start.toCurrency()} - ${priceRange.end.toCurrency()}' : ''}',
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+   
   }
 }

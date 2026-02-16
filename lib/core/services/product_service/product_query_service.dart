@@ -156,11 +156,10 @@ class ProductQueryService {
         ApiPaths.service.productsRoot,
         queryParameters: {
           'page': page,
-          if (serviceId != null && serviceId != -1)
-            'shop_service_id': serviceId,
-          // Only send in_stock_only if a specific service is selected
-          if (serviceId != null && serviceId != -1)
-            'in_stock_only': includeInStockOnly,
+          // Don't send shop_service_id for "All Services" (-1 or null)
+          if (serviceId != null && serviceId > 0) 'shop_service_id': serviceId,
+          // Send in_stock_only when filtering
+          'in_stock_only': includeInStockOnly,
         },
       );
       // log('Fetch products paginated response: ${response.realUri.toString()}, data: ${response.data}');
