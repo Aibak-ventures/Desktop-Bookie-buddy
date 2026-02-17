@@ -766,7 +766,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          // const SizedBox(width: 8),
           const SizedBox(
             width: 110,
             child: Text(
@@ -802,13 +802,13 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 5),
           const SizedBox(
             width: 90,
             child: Text(
               'Payment Status',
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
@@ -929,7 +929,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 4),
                 SizedBox(
                   width: 90,
                   child: _buildPaymentStatus(booking.paymentStatus),

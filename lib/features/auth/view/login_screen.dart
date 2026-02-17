@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -91,10 +92,21 @@ class _LoginScreenState extends State<LoginScreen> {
             textInputAction: TextInputAction.next),
         const SizedBox(height: 22),
         _input('Password', passwordController, TextInputType.text,
-            obscure: true,
+            obscure: !_isPasswordVisible,
             validator: AppInputValidators.password,
             textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) => _login()),
+            onFieldSubmitted: (_) => _login(),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              },
+            )),
         const SizedBox(height: 45),
         BlocConsumer<AuthBloc, AuthState>(
           listener: _authListener,
@@ -132,7 +144,8 @@ class _LoginScreenState extends State<LoginScreen> {
       {bool obscure = false,
       String? Function(String?)? validator,
       TextInputAction? textInputAction,
-      void Function(String)? onFieldSubmitted}) {
+      void Function(String)? onFieldSubmitted,
+      Widget? suffixIcon}) {
     return TextFormField(
       controller: controller,
       keyboardType: type,
@@ -142,6 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onFieldSubmitted: onFieldSubmitted,
       decoration: InputDecoration(
         hintText: hint,
+        suffixIcon: suffixIcon,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         enabledBorder: OutlineInputBorder(
