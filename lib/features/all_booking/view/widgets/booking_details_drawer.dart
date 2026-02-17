@@ -114,6 +114,14 @@ class BookingDetailsDrawer extends StatelessWidget {
       listener: (context, state) {
         state.maybeWhen(
           orElse: () {},
+          loaded: (booking) {
+            // Collapse payment history when a new booking is loaded
+            final paymentHistoryCubit =
+                context.read<BookingDetailsPaymentHistoryCubit>();
+            if (paymentHistoryCubit.isExpanded) {
+              paymentHistoryCubit.collapsePaymentHistory();
+            }
+          },
           success: (message, didPop, needRefresh) {
             // Show success message using context extension
             context.showSnackBar(message);
@@ -189,13 +197,12 @@ class BookingDetailsDrawer extends StatelessWidget {
                         _buildCustomerDetails(booking),
                         const SizedBox(height: 20),
 
-                        // Documents (after customer details)
-                        _buildDocumentsSection(booking),
-                        if (booking.documents.isNotEmpty)
-                          const SizedBox(height: 20),
-
                         // Payment details
                         _buildPaymentDetails(booking, context),
+                        const SizedBox(height: 20),
+
+                        // Documents (moved below payments)
+                        _buildDocumentsSection(booking),
                         const SizedBox(height: 80), // Space for sticky buttons
                       ],
                     ),
@@ -304,12 +311,15 @@ class BookingDetailsDrawer extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        status.name,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: status.color,
+                      Flexible(
+                        child: Text(
+                          status.name,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: status.color,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -425,12 +435,15 @@ class BookingDetailsDrawer extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          status.name,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: status.color,
+                        Flexible(
+                          child: Text(
+                            status.name,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: status.color,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(width: 6),
@@ -564,6 +577,16 @@ class BookingDetailsDrawer extends StatelessWidget {
   Widget _buildDocumentsSection(BookingDetailsModel booking) {
     if (booking.documents.isEmpty) return const SizedBox.shrink();
 
+    // Count uploaded documents (non-empty URLs)
+    int uploadedCount = 0;
+    for (var doc in booking.documents) {
+      final docUrl = doc is String
+          ? doc
+          : (doc is Map ? (doc['url'] ?? doc['file'] ?? '') : '');
+      if (docUrl.isNotEmpty) uploadedCount++;
+    }
+    final totalCount = booking.documents.length;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -578,9 +601,9 @@ class BookingDetailsDrawer extends StatelessWidget {
             children: [
               Icon(Icons.attach_file, size: 16, color: Colors.grey.shade700),
               const SizedBox(width: 8),
-              const Text(
-                'Documents',
-                style: TextStyle(
+              Text(
+                'Documents ($uploadedCount/$totalCount)',
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.black87,
@@ -951,103 +974,125 @@ class BookingDetailsDrawer extends StatelessWidget {
                       }).toList(),
                     ),
                   ],
-                  // Show location details for vehicles
-                  if (item.mainServiceType.isVehicle &&
-                      booking.otherDetails != null &&
-                      (booking.otherDetails!.locationStart != null ||
-                          booking.otherDetails!.locationFrom != null ||
-                          booking.otherDetails!.locationTo != null)) ...[
-                    const SizedBox(height: 12),
-                    const Divider(height: 1),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Location Details',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    if (booking.otherDetails!.locationStart != null) ...[
-                      Row(
-                        children: [
-                          Text(
-                            'Start',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              booking.otherDetails!.locationStart!,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                    ],
-                    if (booking.otherDetails!.locationFrom != null) ...[
-                      Row(
-                        children: [
-                          Text(
-                            'From',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              booking.otherDetails!.locationFrom!,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                    ],
-                    if (booking.otherDetails!.locationTo != null) ...[
-                      Row(
-                        children: [
-                          Text(
-                            'To',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              booking.otherDetails!.locationTo!,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ],
                 ],
               ),
             );
           }).toList(),
+          // Show location details once if ANY item is a vehicle (MOVED OUTSIDE LOOP)
+          if (booking.bookedItems
+                  .any((item) => item.mainServiceType.isVehicle) &&
+              booking.otherDetails != null &&
+              (booking.otherDetails!.locationStart != null ||
+                  booking.otherDetails!.locationFrom != null ||
+                  booking.otherDetails!.locationTo != null)) ...[
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 16,
+                        color: Colors.blue.shade700,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Location Details',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.blue.shade800,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  if (booking.otherDetails!.locationStart != null) ...[
+                    Row(
+                      children: [
+                        Text(
+                          'Start',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            booking.otherDetails!.locationStart!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                  ],
+                  if (booking.otherDetails!.locationFrom != null) ...[
+                    Row(
+                      children: [
+                        Text(
+                          'From',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            booking.otherDetails!.locationFrom!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                  ],
+                  if (booking.otherDetails!.locationTo != null) ...[
+                    Row(
+                      children: [
+                        Text(
+                          'To',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            booking.otherDetails!.locationTo!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
           // Show notes if they exist - only once at the end
           if (booking.description != null &&
               booking.description!.isNotEmpty) ...[
@@ -1532,7 +1577,7 @@ class BookingDetailsDrawer extends StatelessWidget {
               // Only show if discount exists
               if (discount > 0) ...[
                 _buildPaymentRow('Discount', '- ₹$discount',
-                    valueColor: Colors.green.shade600),
+                    valueColor: Colors.black87),
                 const SizedBox(height: 8),
               ],
               // Only show security amount if it exists
@@ -1994,6 +2039,29 @@ class BookingDetailsDrawer extends StatelessWidget {
         if (!isCompleted && !isCancelled)
           ElevatedButton(
             onPressed: () async {
+              // Calculate balance to check payment status
+              final balance = booking.totalAmount -
+                  booking.actualPaidAmount -
+                  (booking.discountAmount ?? 0);
+
+              // Validation 1: Check if payment is pending
+              if (balance > 0) {
+                context.showSnackBar(
+                  'Cannot mark as completed. Payment is still pending (Balance: ₹$balance).',
+                  isError: true,
+                );
+                return;
+              }
+
+              // Validation 2: Check if delivery status is "Returned"
+              if (booking.deliveryStatus != DeliveryStatus.returned) {
+                context.showSnackBar(
+                  'Cannot mark as completed. Booking must be marked as "Returned" first.',
+                  isError: true,
+                );
+                return;
+              }
+
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(

@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -189,50 +190,24 @@ class SalesDetailsDrawer extends StatelessWidget {
   }
 
   Widget _buildSaleHeader(SaleDetailsModel sale) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Invoice ID',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '#${sale.invoiceId}',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ],
-        ),
-        // Payment Status Badge
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: sale.balanceDueAmount > 0
-                ? Colors.orange.withOpacity(0.1)
-                : Colors.green.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: sale.balanceDueAmount > 0 ? Colors.orange : Colors.green,
-            ),
+        const Text(
+          'Invoice ID',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+            fontWeight: FontWeight.w400,
           ),
-          child: Text(
-            sale.balanceDueAmount > 0 ? 'Pending' : 'Completed',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: sale.balanceDueAmount > 0 ? Colors.orange : Colors.green,
-            ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          '#${sale.invoiceId}',
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
           ),
         ),
       ],
@@ -379,26 +354,42 @@ class SalesDetailsDrawer extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        if (item.variantAttribute != null &&
-                            item.variantAttribute!.isNotEmpty)
-                          Text(
-                            'Variant : ${item.variantAttribute}', // Use dynamic label
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
+                        // Show variant for multi-variant products, or category/model for others
+                        if (item.mainServiceType.isMultiVariantProductType) ...[
+                          // For multi-variant products (dresses, costumes, gadgets), show variant
+                          if (item.variantAttribute != null &&
+                              item.variantAttribute!.isNotEmpty)
+                            Text(
+                              '$specsLabel : ${item.variantAttribute}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
-                          ),
+                        ] else ...[
+                          // For non-multi-variant products (vehicles, equipment), show category and model
+                          if (item.category != null &&
+                              item.category!.isNotEmpty)
+                            Text(
+                              'Category : ${item.category}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          if (item.model != null && item.model!.isNotEmpty)
+                            Text(
+                              'Model : ${item.model}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                        ],
+                        // Always show color if it exists
                         if (item.color != null && item.color!.isNotEmpty)
                           Text(
                             'Colour : ${item.color}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                        if (item.category != null && item.category!.isNotEmpty)
-                          Text(
-                            'Category : ${item.category}',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
@@ -443,7 +434,7 @@ class SalesDetailsDrawer extends StatelessWidget {
     final phone1 =
         sale.client?.phone1?.toString() ?? sale.clientPhone.toString();
     final phone2 = sale.client?.phone2?.toString();
-    final name = sale.client?.name ?? 'Walk-in Customer';
+    final name = sale.client?.name;
 
     if (phone1.isEmpty) return const SizedBox.shrink();
 
@@ -466,8 +457,11 @@ class SalesDetailsDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildDetailRow('Name', name),
-          const SizedBox(height: 12),
+          // Only show name if it exists (not walk-in customer)
+          if (name != null && name.isNotEmpty) ...[
+            _buildDetailRow('Name', name),
+            const SizedBox(height: 12),
+          ],
           _buildPhoneRow('Phone 1', phone1),
           if (phone2 != null && phone2.isNotEmpty && phone2 != '0') ...[
             const SizedBox(height: 12),
@@ -649,6 +643,29 @@ class SalesDetailsDrawer extends StatelessWidget {
               color: Colors.black87,
             ),
           ),
+          const SizedBox(height: 12),
+          // Payment Method row
+          Row(
+            children: [
+              Text(
+                'Payment method: ',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                sale.paymentMethod.name.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
           // Subtotal from items
           _buildPaymentRow('Subtotal', '₹$subtotal'),
@@ -729,6 +746,37 @@ class SalesDetailsDrawer extends StatelessWidget {
           style: IconButton.styleFrom(
             side: BorderSide(color: Colors.grey.shade300),
             padding: const EdgeInsets.all(12),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Edit button
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () async {
+              // Navigate to AddOrEditSalesScreen with sale details
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddOrEditSalesScreen(
+                    saleDetails: sale,
+                  ),
+                ),
+              );
+
+              // If sale was updated, refresh the sales list
+              if (result == true && context.mounted) {
+                context
+                    .read<AllSalesBloc>()
+                    .add(const AllSalesEvent.loadSales());
+              }
+            },
+            icon: const Icon(Icons.edit),
+            label: const Text('Edit'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange.shade600,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
           ),
         ),
         const SizedBox(width: 12),

@@ -38,21 +38,21 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         child: Row(
           children: [
             // Back button
-            if (widget.onBack != null) ...[
-              InkWell(
-                onTap: widget.onBack,
-                borderRadius: BorderRadius.circular(4),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-            ],
+            // if (widget.onBack != null) ...[
+            //   InkWell(
+            //     onTap: widget.onBack,
+            //     borderRadius: BorderRadius.circular(4),
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(8),
+            //       child: Icon(
+            //         Icons.arrow_back_ios,
+            //         size: 16,
+            //         color: Colors.grey.shade600,
+            //       ),
+            //     ),
+            //   ),
+            //   const SizedBox(width: 8),
+            // ],
             // Tabs
             _buildTabs(),
           ],

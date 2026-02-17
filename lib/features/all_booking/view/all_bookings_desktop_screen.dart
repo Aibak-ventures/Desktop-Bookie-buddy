@@ -190,12 +190,12 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   Widget _buildTopHeader() {
     return Row(
       children: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.arrow_back, size: 20),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-        ),
+        // IconButton(
+        //   onPressed: () {},
+        //   icon: const Icon(Icons.arrow_back, size: 20),
+        //   padding: EdgeInsets.zero,
+        //   constraints: const BoxConstraints(),
+        // ),
         // const SizedBox(width: 12),
         // const Text(
         //   'All Orders > ',
