@@ -115,13 +115,8 @@ class BookingDetailsDrawer extends StatelessWidget {
         state.maybeWhen(
           orElse: () {},
           success: (message, didPop, needRefresh) {
-            // Show success message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(message),
-                backgroundColor: Colors.green,
-              ),
-            );
+            // Show success message using context extension
+            context.showSnackBar(message);
 
             // Reload booking details to show updated status without closing drawer
             if (needRefresh && drawerState.selectedBookingId != null) {
@@ -131,19 +126,13 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ),
                   );
 
-              // Also refresh the main booking list in background
-              context.read<AllBookingBloc>().add(
-                    const AllBookingEvent.loadBookings(),
-                  );
+              // Only refresh the main booking list if not a cancellation
+              // (to prevent tab switching)
+              // The list will be refreshed when drawer is closed or user manually refreshes
             }
           },
           failed: (error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(error),
-                backgroundColor: Colors.red,
-              ),
-            );
+            context.showSnackBar(error, isError: true);
           },
         );
       },
@@ -192,11 +181,6 @@ class BookingDetailsDrawer extends StatelessWidget {
                         _buildDatesSection(booking),
                         const SizedBox(height: 20),
 
-                        // Documents
-                        _buildDocumentsSection(booking),
-                        if (booking.documents.isNotEmpty)
-                          const SizedBox(height: 20),
-
                         // Item details
                         _buildItemDetails(booking),
                         const SizedBox(height: 20),
@@ -204,6 +188,11 @@ class BookingDetailsDrawer extends StatelessWidget {
                         // Customer details
                         _buildCustomerDetails(booking),
                         const SizedBox(height: 20),
+
+                        // Documents (after customer details)
+                        _buildDocumentsSection(booking),
+                        if (booking.documents.isNotEmpty)
+                          const SizedBox(height: 20),
 
                         // Payment details
                         _buildPaymentDetails(booking, context),
@@ -225,10 +214,9 @@ class BookingDetailsDrawer extends StatelessWidget {
   Widget _buildBookingHeaderSection(
       BuildContext context, BookingDetailsModel booking) {
     final status = booking.deliveryStatus ?? DeliveryStatus.booked;
-    // Check if booking is completed or cancelled - disable delivery status editing
+    // Check if booking is completed - disable delivery status editing
+    // Cancelled bookings can still change delivery status
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
-    final isCancelled = booking.bookingStatus == BookingStatus.cancelled;
-    final isBookingFinalized = isCompleted || isCancelled;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,8 +291,9 @@ class BookingDetailsDrawer extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              // Show non-interactive status badge for completed/cancelled bookings
-              if (isBookingFinalized)
+              // Show non-interactive status badge only for completed bookings
+              // Cancelled bookings can still change delivery status
+              if (isCompleted)
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -335,21 +324,29 @@ class BookingDetailsDrawer extends StatelessWidget {
                   onSelected: (newStatus) async {
                     // Show confirmation dialog for cancellation
                     if (newStatus == DeliveryStatus.cancelled) {
-                      showDialog(
-                        context: context,
-                        builder: (dialogContext) => CancelBookingDialog(
-                          maxRefundAmount: booking.actualPaidAmount,
-                          onCancel: () => Navigator.of(dialogContext).pop(),
-                          onConfirm: (refundAmount, paymentMethod) {
-                            context.read<BookingDetailsBloc>().add(
-                                  BookingDetailsEvent.cancelBooking(
-                                    bookingId: booking.id,
-                                    refundAmount: refundAmount,
-                                    paymentMethod: paymentMethod,
-                                  ),
-                                );
-                          },
-                        ),
+                      // Check security password before allowing cancellation
+                      performSecureActionDialog(
+                        context,
+                        SecretPasswordLocations.bookingDelete,
+                        onSuccess: () {
+                          showDialog(
+                            context: context,
+                            builder: (dialogContext) => CancelBookingDialog(
+                              maxRefundAmount: booking.actualPaidAmount,
+                              onCancel: () => Navigator.of(dialogContext).pop(),
+                              onConfirm: (refundAmount, paymentMethod) {
+                                Navigator.of(dialogContext).pop();
+                                context.read<BookingDetailsBloc>().add(
+                                      BookingDetailsEvent.cancelBooking(
+                                        bookingId: booking.id,
+                                        refundAmount: refundAmount,
+                                        paymentMethod: paymentMethod,
+                                      ),
+                                    );
+                              },
+                            ),
+                          );
+                        },
                       );
                       return;
                     }
@@ -592,63 +589,182 @@ class BookingDetailsDrawer extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: booking.documents.map((doc) {
-              final docMap = doc is Map<String, dynamic> ? doc : {};
-              final docUrl = docMap['url'] ?? docMap['file'] ?? '';
-              final docName = docMap['name'] ?? 'Document';
+          // Horizontal scrollable list of document images
+          SizedBox(
+            height: 100,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: booking.documents.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                final doc = booking.documents[index];
+                // Documents can be either strings (URLs) or maps
+                final docUrl = doc is String
+                    ? doc
+                    : (doc is Map ? (doc['url'] ?? doc['file'] ?? '') : '');
 
-              return InkWell(
-                onTap: () async {
-                  if (docUrl.isNotEmpty) {
-                    final uri = Uri.parse(docUrl);
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri,
-                          mode: LaunchMode.externalApplication);
-                    }
-                  }
-                },
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade300),
+                if (docUrl.isEmpty) return const SizedBox.shrink();
+
+                final isPdf = docUrl.toLowerCase().endsWith('.pdf');
+
+                return InkWell(
+                  onTap: () => _showDocumentModal(context, docUrl, index + 1),
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: isPdf
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.picture_as_pdf,
+                                    size: 40, color: Colors.red.shade400),
+                                const SizedBox(height: 4),
+                                Text('PDF ${index + 1}',
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey.shade700)),
+                              ],
+                            )
+                          : Image.network(
+                              docUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.image,
+                                      size: 32, color: Colors.grey.shade400),
+                                  const SizedBox(height: 4),
+                                  Text('Doc ${index + 1}',
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey.shade600)),
+                                ],
+                              ),
+                            ),
+                    ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        docUrl.toLowerCase().endsWith('.pdf')
-                            ? Icons.picture_as_pdf
-                            : Icons.image,
-                        size: 32,
-                        color: Colors.grey.shade600,
-                      ),
-                      const SizedBox(height: 4),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: Text(
-                          docName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey.shade700,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDocumentModal(BuildContext context, String docUrl, int docNumber) {
+    final isPdf = docUrl.toLowerCase().endsWith('.pdf');
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.black87,
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.8,
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+          ),
+          child: Stack(
+            children: [
+              // Document content
+              Center(
+                child: isPdf
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.picture_as_pdf,
+                              size: 100, color: Colors.red.shade400),
+                          const SizedBox(height: 16),
+                          Text(
+                            'PDF Document $docNumber',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 18),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Click download to view',
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ],
+                      )
+                    : InkWell(
+                        onTap: () async {
+                          // Download image when clicked
+                          final uri = Uri.parse(docUrl);
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri,
+                                mode: LaunchMode.externalApplication);
+                          }
+                        },
+                        child: InteractiveViewer(
+                          child: Image.network(
+                            docUrl,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.error,
+                                      size: 64, color: Colors.white54),
+                                  SizedBox(height: 16),
+                                  Text('Failed to load image',
+                                      style: TextStyle(color: Colors.white70)),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+              ),
+              // Top action buttons
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Download button
+                    IconButton(
+                      onPressed: () async {
+                        final uri = Uri.parse(docUrl);
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri,
+                              mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      icon: const Icon(Icons.download,
+                          color: Colors.white, size: 28),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.black45,
+                        padding: const EdgeInsets.all(12),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Close button
+                    IconButton(
+                      onPressed: () => Navigator.of(dialogContext).pop(),
+                      icon: const Icon(Icons.close,
+                          color: Colors.white, size: 28),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.black45,
+                        padding: const EdgeInsets.all(12),
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            }).toList(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -1299,7 +1415,7 @@ class BookingDetailsDrawer extends StatelessWidget {
     final isPaymentCompleted = balance <= 0;
 
     // Check if booking is cancelled or completed
-    final isCancelled = booking.bookingStatus == BookingStatus.cancelled;
+    final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
     final isBookingFinalized = isCancelled || isCompleted;
 
@@ -1328,12 +1444,14 @@ class BookingDetailsDrawer extends StatelessWidget {
                   ),
                   // Show status badge or payment button
                   if (isCancelled)
+                    // Cancelled button style
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50,
-                        border: Border.all(color: Colors.red.shade200),
+                        color: Colors.white,
+                        border:
+                            Border.all(color: Colors.red.shade400, width: 2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -1343,7 +1461,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                               color: Colors.red.shade700, size: 16),
                           const SizedBox(width: 6),
                           Text(
-                            'Booking cancelled',
+                            'Cancelled',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -1353,7 +1471,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                         ],
                       ),
                     )
-                  else if (isCompleted)
+                  else if (isCompleted || isPaymentCompleted)
+                    // Completed button style
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
@@ -1381,33 +1500,23 @@ class BookingDetailsDrawer extends StatelessWidget {
                     )
                   else
                     ElevatedButton.icon(
-                      onPressed: isPaymentCompleted
-                          ? null
-                          : () {
-                              performSecureActionDialog(
-                                context,
-                                SecretPasswordLocations.bookingPayment,
-                                onSuccess: () {
-                                  showBookingDetailsAddPaymentDialog(
-                                    context: context,
-                                    id: booking.id,
-                                    balanceAmount: balance,
-                                  );
-                                },
-                              );
-                            },
-                      icon: Icon(
-                        isPaymentCompleted
-                            ? Icons.check_circle
-                            : LucideIcons.plus,
-                        size: 16,
-                      ),
-                      label: Text(
-                          isPaymentCompleted ? 'Completed' : 'Add Payment'),
+                      onPressed: () {
+                        performSecureActionDialog(
+                          context,
+                          SecretPasswordLocations.bookingPayment,
+                          onSuccess: () {
+                            showBookingDetailsAddPaymentDialog(
+                              context: context,
+                              id: booking.id,
+                              balanceAmount: balance,
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(LucideIcons.plus, size: 16),
+                      label: const Text('Add Payment'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isPaymentCompleted
-                            ? Colors.green.shade600
-                            : AppColors.purple,
+                        backgroundColor: AppColors.purple,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 8),
@@ -1652,7 +1761,9 @@ class BookingDetailsDrawer extends StatelessWidget {
       BuildContext context, BookingDetailsModel booking) {
     // Check if booking is completed or cancelled
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
-    final isCancelled = booking.bookingStatus == BookingStatus.cancelled;
+    final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
+    // Check if completed but delivery status is cancelled
+    final isCompletedButCancelled = isCompleted && isCancelled;
 
     return Row(
       children: [
@@ -1774,73 +1885,113 @@ class BookingDetailsDrawer extends StatelessWidget {
           },
         ),
         const SizedBox(width: 12),
-        // Show Completed or Cancelled status indicator with date
+        // Delete button for completed bookings (icon style, on left side)
         if (isCompleted)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8F5E9),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF4CAF50)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.check_circle,
-                    color: Color(0xFF4CAF50), size: 20),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Completed',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF2E7D32),
-                      ),
+          _buildIconActionButton(
+            context,
+            icon: Icons.delete_outline,
+            color: Colors.red,
+            onTap: () async {
+              performSecureActionDialog(
+                context,
+                SecretPasswordLocations.bookingDelete,
+                onSuccess: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete Booking'),
+                      content: const Text(
+                          'Are you sure you want to delete this booking? This action cannot be undone.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style:
+                              TextButton.styleFrom(foregroundColor: Colors.red),
+                          child: const Text('Delete'),
+                        ),
+                      ],
                     ),
-                    Text(
-                      'on ${_formatCompletionDate(booking.returnDate)}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
-        else if (isCancelled)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFEBEE),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFF44336)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.cancel, color: Color(0xFFF44336), size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Cancelled',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFC62828),
+                  );
+
+                  if (confirm == true && context.mounted) {
+                    context.read<AllBookingBloc>().add(
+                          AllBookingEvent.deleteBooking(bookingId: booking.id),
+                        );
+                    context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                  }
+                },
+              );
+            },
+          ),
+        if (isCompleted) const SizedBox(width: 12),
+        // Status bar - show red "Booking Cancelled" if completed but delivery cancelled
+        // Use Expanded to take remaining space
+        if (isCompleted || isCancelled)
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                // If completed but cancelled delivery, show red. Otherwise green for completed, red for cancelled
+                color: isCompletedButCancelled || isCancelled
+                    ? const Color(0xFFFFEBEE)
+                    : const Color(0xFFE8F5E9),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                    color: isCompletedButCancelled || isCancelled
+                        ? const Color(0xFFF44336)
+                        : const Color(0xFF4CAF50)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    isCompletedButCancelled || isCancelled
+                        ? Icons.cancel
+                        : Icons.check_circle,
+                    color: isCompletedButCancelled || isCancelled
+                        ? const Color(0xFFF44336)
+                        : const Color(0xFF4CAF50),
+                    size: 20,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        isCompletedButCancelled
+                            ? 'Booking Cancelled'
+                            : (isCompleted ? 'Completed' : 'Cancelled'),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: isCompletedButCancelled || isCancelled
+                              ? const Color(0xFFC62828)
+                              : const Color(0xFF2E7D32),
+                        ),
+                      ),
+                      if (booking.bookingCompletedDate != null)
+                        Text(
+                          'on ${_formatCompletionDate(booking.bookingCompletedDate)}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        const Spacer(),
-        // Mark as Completed button (only show if not completed)
-        if (!isCompleted)
+        if (!isCompleted && !isCancelled) const Spacer(),
+        // Mark as Completed button (only show if not completed or cancelled)
+        if (!isCompleted && !isCancelled)
           ElevatedButton(
             onPressed: () async {
               final confirm = await showDialog<bool>(

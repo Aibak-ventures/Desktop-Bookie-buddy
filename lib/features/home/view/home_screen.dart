@@ -54,25 +54,33 @@ class _HomeScreenState extends State<HomeScreen> {
     print('Current used domain: $baseUrl ✅');
     final bloc = context.read<DashboardBloc>();
 
-    return BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
-      listener: (context, drawerState) {
-        // When drawer opens with a booking ID, fetch the booking details
-        if (drawerState.isOpen && drawerState.selectedBookingId != null) {
-          context.read<BookingDetailsBloc>().add(
-                BookingDetailsEvent.fetchBookingDetails(
-                  drawerState.selectedBookingId!,
-                ),
-              );
+    return BlocListener<UserCubit, UserModel?>(
+      listener: (context, userState) {
+        // When shop changes, reload dashboard data
+        if (userState != null) {
+          bloc.add(const DashboardEvent.loadDashboardData(useOldState: true));
         }
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
-        body: Stack(
-          children: [
-            _buildDesktopLayout(context, bloc),
-            // Drawer overlay
-            const BookingDetailsDrawer(),
-          ],
+      child: BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
+        listener: (context, drawerState) {
+          // When drawer opens with a booking ID, fetch the booking details
+          if (drawerState.isOpen && drawerState.selectedBookingId != null) {
+            context.read<BookingDetailsBloc>().add(
+                  BookingDetailsEvent.fetchBookingDetails(
+                    drawerState.selectedBookingId!,
+                  ),
+                );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF5F7FA),
+          body: Stack(
+            children: [
+              _buildDesktopLayout(context, bloc),
+              // Drawer overlay
+              const BookingDetailsDrawer(),
+            ],
+          ),
         ),
       ),
     );

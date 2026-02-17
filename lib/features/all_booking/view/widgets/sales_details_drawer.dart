@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -153,9 +154,23 @@ class SalesDetailsDrawer extends StatelessWidget {
                 _buildItemDetails(sale),
                 const SizedBox(height: 24),
 
-                // Customer details
-                if (sale.client != null) ...[
+                // Customer details - show if client exists OR if client_phone exists
+                if (sale.client != null ||
+                    (sale.clientPhone != null &&
+                        sale.clientPhone.toString().isNotEmpty)) ...[
                   _buildCustomerDetails(sale),
+                  const SizedBox(height: 24),
+                ],
+
+                // Notes section (if description exists)
+                if (sale.description.isNotEmpty) ...[
+                  _buildNotesSection(sale),
+                  const SizedBox(height: 24),
+                ],
+
+                // Staff name section (if staff exists)
+                if (sale.staffName != null && sale.staffName!.isNotEmpty) ...[
+                  _buildStaffSection(sale),
                   const SizedBox(height: 24),
                 ],
 
@@ -247,7 +262,7 @@ class SalesDetailsDrawer extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    sale.saleDate, // Assuming formatted string
+                    sale.saleDate,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ],
@@ -257,12 +272,12 @@ class SalesDetailsDrawer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Text(
-                      'Created At',
+                      'Time', // Changed from 'Created At' to 'Time'
                       style: TextStyle(fontSize: 11, color: Colors.grey),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      sale.createdAt, // Assuming formatted string or format it
+                      _extractTime(sale.createdAt),
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -272,6 +287,29 @@ class SalesDetailsDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Helper method to extract time from datetime string
+  String _extractTime(String dateTimeStr) {
+    try {
+      // Assuming format like "31-12-2025 17:30:45" or similar
+      final parts = dateTimeStr.split(' ');
+      if (parts.length >= 2) {
+        final timePart = parts[1];
+        final timeComponents = timePart.split(':');
+        if (timeComponents.length >= 2) {
+          final hour = int.tryParse(timeComponents[0]) ?? 0;
+          final minute = timeComponents[1];
+          // Convert to 12-hour format
+          final hour12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+          final period = hour >= 12 ? 'PM' : 'AM';
+          return '${hour12.toString().padLeft(2, '0')}:$minute $period';
+        }
+      }
+      return dateTimeStr;
+    } catch (e) {
+      return dateTimeStr;
+    }
   }
 
   Widget _buildItemDetails(SaleDetailsModel sale) {
@@ -295,6 +333,10 @@ class SalesDetailsDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ...sale.products.map((item) {
+            // Determine specifications label based on mainServiceType (same as booking details)
+            String specsLabel =
+                item.mainServiceType?.quantityFieldLabel ?? 'Specifications';
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
@@ -337,15 +379,24 @@ class SalesDetailsDrawer extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        if (item.variantAttribute != null)
+                        if (item.variantAttribute != null &&
+                            item.variantAttribute!.isNotEmpty)
                           Text(
-                            'Size : ${item.variantAttribute}',
+                            'Variant : ${item.variantAttribute}', // Use dynamic label
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade600,
                             ),
                           ),
-                        if (item.category != null)
+                        if (item.color != null && item.color!.isNotEmpty)
+                          Text(
+                            'Colour : ${item.color}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        if (item.category != null && item.category!.isNotEmpty)
                           Text(
                             'Category : ${item.category}',
                             style: TextStyle(
@@ -388,7 +439,14 @@ class SalesDetailsDrawer extends StatelessWidget {
   }
 
   Widget _buildCustomerDetails(SaleDetailsModel sale) {
-    if (sale.client == null) return const SizedBox.shrink();
+    // Get phone number from client or clientPhone field
+    final phone1 =
+        sale.client?.phone1?.toString() ?? (sale.clientPhone?.toString() ?? '');
+    final phone2 = sale.client?.phone2?.toString();
+    final name = sale.client?.name ?? 'Walk-in Customer';
+
+    if (phone1.isEmpty) return const SizedBox.shrink();
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -408,12 +466,12 @@ class SalesDetailsDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildDetailRow('Name', sale.client!.name),
+          _buildDetailRow('Name', name),
           const SizedBox(height: 12),
-          _buildPhoneRow('Phone 1', sale.client!.phone1.toString()),
-          if (sale.client!.phone2 != null && sale.client!.phone2 != 0) ...[
+          _buildPhoneRow('Phone 1', phone1),
+          if (phone2 != null && phone2.isNotEmpty && phone2 != '0') ...[
             const SizedBox(height: 12),
-            _buildPhoneRow('Phone 2', sale.client!.phone2!.toString()),
+            _buildPhoneRow('Phone 2', phone2),
           ],
         ],
       ),
@@ -491,7 +549,88 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
+  Widget _buildNotesSection(SaleDetailsModel sale) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.note_outlined, size: 16, color: Colors.grey.shade700),
+              const SizedBox(width: 8),
+              const Text(
+                'Notes',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            sale.description,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey.shade800,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStaffSection(SaleDetailsModel sale) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.person_outline, size: 20, color: Colors.grey.shade700),
+              const SizedBox(width: 12),
+              const Text(
+                'Staff',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            sale.staffName!,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildPaymentDetails(SaleDetailsModel sale) {
+    // Calculate subtotal from items
+    final subtotal =
+        sale.products.fold<int>(0, (sum, item) => sum + item.subtotal);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -511,17 +650,19 @@ class SalesDetailsDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildPaymentRow('Discount', '₹${sale.discountAmount}'),
+          // Subtotal from items
+          _buildPaymentRow('Subtotal', '₹$subtotal'),
           const SizedBox(height: 8),
+          // Discount
+          if (sale.discountAmount > 0) ...[
+            _buildPaymentRow('Discount', '- ₹${sale.discountAmount}',
+                valueColor: Colors.red.shade600),
+            const SizedBox(height: 8),
+          ],
           const Divider(height: 24),
-          _buildPaymentRow('Total amount', '₹${sale.totalAmount}',
+          _buildPaymentRow('Grand Total', '₹${sale.totalAmount}',
               isBold: true, fontSize: 15),
-          const SizedBox(height: 8),
-          _buildPaymentRow('Paid', '₹${sale.paidAmount}',
-              valueColor: Colors.green.shade600, fontSize: 14),
-          const SizedBox(height: 8),
-          _buildPaymentRow('Balance', '₹${sale.balanceDueAmount}',
-              valueColor: Colors.red.shade600, isBold: true, fontSize: 15),
+          // Note: Balance row removed as requested
         ],
       ),
     );

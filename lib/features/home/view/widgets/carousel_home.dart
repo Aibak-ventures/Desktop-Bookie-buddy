@@ -49,20 +49,6 @@ class CarouselHome extends StatelessWidget {
             Expanded(
               child: _buildCard(
                 context,
-                title: 'Returns',
-                value: data.alterationBookingCount.toString(),
-                gradient: const [
-                  Color(0xFFFF8A00),
-                  Color(0xFFFFB347),
-                ],
-                icon: Icons.assignment_return,
-                onTap: () => _openAllBookingsWithTab(context, 'returns'),
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: _buildCard(
-                context,
                 title: 'Completed',
                 value: data.completedCount.toString(),
                 gradient: const [

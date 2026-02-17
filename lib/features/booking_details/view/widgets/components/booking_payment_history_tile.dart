@@ -102,8 +102,9 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                     decoration: BoxDecoration(
                       color: transaction.isRefund
-                          ? Colors.red.shade50.withOpacity(0.3)
-                          : Colors.transparent,
+                          ? Colors.transparent // No background for refunds
+                          : AppColors.purple
+                              .withOpacity(0.05), // Light purple for payments
                     ),
                     child: Row(
                       children: [
@@ -112,9 +113,11 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                           flex: 3,
                           child: Text(
                             transaction.dateTime.formatToUiDate(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: Colors.black87,
+                              color: transaction.isRefund
+                                  ? Colors.red.shade700 // Red for refunds
+                                  : Colors.black87,
                             ),
                           ),
                         ),
@@ -123,9 +126,11 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                           flex: 3,
                           child: Text(
                             transaction.dateTime.formatToUiTime(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: Colors.black87,
+                              color: transaction.isRefund
+                                  ? Colors.red.shade700 // Red for refunds
+                                  : Colors.black87,
                             ),
                           ),
                         ),
@@ -143,31 +148,18 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                         // Amount
                         Expanded(
                           flex: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              if (transaction.isRefund)
-                                Text(
-                                  'Refunded',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.red.shade700,
-                                  ),
-                                ),
-                              Text(
-                                transaction.isRefund
-                                    ? '-${transaction.amount.toCurrency()}'
-                                    : transaction.amount.toCurrency(),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: transaction.isRefund
-                                      ? Colors.red.shade700
-                                      : Colors.black87,
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            transaction.isRefund
+                                ? '-${transaction.amount.toCurrency()}'
+                                : transaction.amount.toCurrency(),
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: transaction.isRefund
+                                  ? Colors.red.shade700 // Red for refunds
+                                  : Colors.black87,
+                            ),
                           ),
                         ),
                       ],

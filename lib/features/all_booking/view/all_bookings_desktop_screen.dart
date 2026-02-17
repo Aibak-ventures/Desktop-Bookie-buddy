@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/sales_details_drawer.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -138,39 +140,47 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: BlocListener<AllBookingBloc, AllBookingState>(
-        listener: (context, state) {
-          state.mapOrNull(
-            loaded: (s) {
-              if (s.actionError != null) {
-                // Show SnackBar
-                context.showSnackBar(s.actionError!, isError: true);
-              }
-            },
-          );
-        },
-        child: Stack(
-          children: [
-            // Main content
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTopHeader(),
-                  const SizedBox(height: 24),
-                  _buildFilterRow(),
-                  const SizedBox(height: 16),
-                  Expanded(child: _buildMainContent()),
-                ],
+    return BlocListener<UserCubit, UserModel?>(
+      listener: (context, userState) {
+        // When shop changes, reload data
+        if (userState != null) {
+          _loadData();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: BlocListener<AllBookingBloc, AllBookingState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              loaded: (s) {
+                if (s.actionError != null) {
+                  // Show SnackBar
+                  context.showSnackBar(s.actionError!, isError: true);
+                }
+              },
+            );
+          },
+          child: Stack(
+            children: [
+              // Main content
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTopHeader(),
+                    const SizedBox(height: 24),
+                    _buildFilterRow(),
+                    const SizedBox(height: 16),
+                    Expanded(child: _buildMainContent()),
+                  ],
+                ),
               ),
-            ),
-            // Drawer overlay
-            const BookingDetailsDrawer(),
-            const SalesDetailsDrawer(),
-          ],
+              // Drawer overlay
+              const BookingDetailsDrawer(),
+              const SalesDetailsDrawer(),
+            ],
+          ),
         ),
       ),
     );

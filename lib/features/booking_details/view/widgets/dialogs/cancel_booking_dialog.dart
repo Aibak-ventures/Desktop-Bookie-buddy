@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,22 +46,15 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
   void _handleConfirm() {
     if (_formKey.currentState!.validate()) {
       if (!_noRefund && _selectedPaymentMethod == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select refund method'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        // Use context extension for snackbar
+        context.showSnackBar('Please select refund method', isError: true);
         return;
       }
 
       final refundAmount =
           _noRefund ? 0 : (int.tryParse(_refundAmountController.text) ?? 0);
 
-      // Close dialog first to prevent black screen
-      Navigator.of(context).pop();
-
-      // Then call the callback
+      // Call the callback - the calling code will handle dialog closure
       widget.onConfirm(refundAmount, _selectedPaymentMethod);
     }
   }
