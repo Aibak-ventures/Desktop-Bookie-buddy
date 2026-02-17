@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_mod
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/add_or_edit_sales/views/new_sales_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/generate_sales_pdf.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
@@ -757,9 +758,9 @@ class SalesDetailsDrawer extends StatelessWidget {
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddOrEditSalesScreen(
-                    saleDetails: sale,
-                  ),
+                  builder: (context) => NewSalesScreen(
+                      // saleDetails: sale,
+                      ),
                 ),
               );
 
