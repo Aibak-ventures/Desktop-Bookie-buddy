@@ -131,6 +131,114 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
 
                   20.height,
 
+                  // ---- WhatsApp & Stock Checkboxes ----
+                  ValueListenableBuilder(
+                    valueListenable: _formController.isSharingPdfToWhatsAppNotifier,
+                    builder: (context, isSharingPdf, __) => Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.purple.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.white),
+                      ),
+                      child: Column(
+                        children: [
+                          // WhatsApp checkbox
+                          CheckboxListTile(
+                            value: isSharingPdf,
+                            onChanged: (value) {
+                              _formController.isSharingPdfToWhatsAppNotifier.value = value ?? false;
+                            },
+                            activeColor: AppColors.purple,
+                            title: const Text(
+                              'Send PDF to WhatsApp',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                            ),
+                            contentPadding: EdgeInsets.zero,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                          
+                          // Decrease Stock checkbox - only show for past dates
+                          ValueListenableBuilder(
+                            valueListenable: _formController.stockCountDecreaseNotifier,
+                            builder: (context, stockCountDecrease, __) {
+                              // Check if selected date is in the past
+                              final saleDateText = _formController.saleDateController.text;
+                              bool isPastDate = false;
+                              if (saleDateText.isNotEmpty) {
+                                try {
+                                  final saleDate = saleDateText.formatToUiDate().parseToDateTime();
+                                  final today = DateTime.now();
+                                  final todayDate = DateTime(today.year, today.month, today.day);
+                                  final selectedDate = DateTime(saleDate.year, saleDate.month, saleDate.day);
+                                  isPastDate = selectedDate.isBefore(todayDate);
+                                } catch (e) {
+                                  isPastDate = false;
+                                }
+                              }
+
+                              if (!isPastDate) return const SizedBox.shrink();
+
+                              return Column(
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF5F2FE),
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: Colors.white),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.info_outline,
+                                          color: AppColors.purple,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              CheckboxListTile(
+                                                value: stockCountDecrease,
+                                                onChanged: (value) {
+                                                  _formController.stockCountDecreaseNotifier.value = value ?? true;
+                                                },
+                                                activeColor: AppColors.purple,
+                                                title: const Text(
+                                                  'Decrease Stock quantity',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: const Text(
+                                                  'If unchecked, the stock quantity will not be decreased from the inventory',
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                                contentPadding: EdgeInsets.zero,
+                                                controlAffinity: ListTileControlAffinity.leading,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  20.height,
+
                   // ---- Description ----
                   Stack(
                     children: [

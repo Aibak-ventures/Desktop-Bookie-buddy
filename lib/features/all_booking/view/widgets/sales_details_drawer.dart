@@ -2,14 +2,18 @@ import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/new_sales_screen.dart';
+import 'package:bookie_buddy_web/features/add_or_edit_sales/view_model/cubit_save_sales/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/generate_sales_pdf.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/sale_details/view/edit_sales_screen/edit_sales_screen.dart';
+import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -754,13 +758,17 @@ class SalesDetailsDrawer extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             onPressed: () async {
-              // Navigate to AddOrEditSalesScreen with sale details
+              // Navigate to EditSalesScreen with sale details
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NewSalesScreen(
-                      // saleDetails: sale,
-                      ),
+                  builder: (context) => BlocProvider(
+                    create: (_) =>
+                        SaveSalesCubit(repository: getIt<SalesRepository>()),
+                    child: EditSalesScreen(
+                      saleDetails: sale,
+                    ),
+                  ),
                 ),
               );
 

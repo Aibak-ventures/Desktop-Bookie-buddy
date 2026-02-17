@@ -109,6 +109,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   PaymentMethod paymentMethod = PaymentMethod.gPay;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   bool sendPdfToWhatsApp = true;
+  bool decreaseStockForPastDate = false; // Checkbox for past dates in sales
 
   // Products/Services
   final selectedProductsNotifier =
@@ -387,6 +388,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Listener for client name changes to detect manual editing
   void _onClientNameChanged() {
+    // Clear validation error when user types
+    if (_clientNameError != null &&
+        clientNameController.text.trim().isNotEmpty) {
+      setState(() {
+        _clientNameError = null;
+      });
+    }
+
     // Get the current selected client from the cubit
     final selectedClient = context.read<ClientCubit>().state.selectedClient;
 
@@ -408,6 +417,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Listener for phone changes to detect manual editing
   void _onClientPhoneChanged() {
+    // Clear validation error when user types
+    if (_phoneError != null &&
+        (clientPhone1Controller.text.trim().isNotEmpty ||
+            clientPhone2Controller.text.trim().isNotEmpty)) {
+      setState(() {
+        _phoneError = null;
+      });
+    }
+
     // Get the current selected client from the cubit
     final selectedClient = context.read<ClientCubit>().state.selectedClient;
 
@@ -1645,6 +1663,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
+  /// Helper method to check if current pickup date (sale date) is in the past
+  bool _isPastDate() {
+    final today = DateTime.now().dateOnly;
+    return pickupDate.dateOnly.isBefore(today);
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -2157,6 +2181,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       if (picked != null) {
         setState(() {
           pickupDate = picked;
+
+          // Check if past date for sales mode
+          if (isSales) {
+            final today = DateTime.now().dateOnly;
+            final isPastDate = picked.dateOnly.isBefore(today);
+            // Show checkbox only for past dates
+            decreaseStockForPastDate =
+                false; // Reset checkbox when date changes
+          }
 
           // RIPPLE EFFECT: If pickup > return, push return forward
           if (picked.dateOnly.isAfter(returnDate.dateOnly)) {
@@ -2786,10 +2819,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     if (existingIndex != -1) {
-      // Increment quantity
+      // Check if incrementing would exceed available stock
       final existing = products[existingIndex];
-      products[existingIndex] =
-          existing.copyWith(quantity: existing.quantity + 1);
+      final newQuantity = existing.quantity + 1;
+      final availableStock = variant.remainingStock ?? variant.stock ?? 0;
+
+      if (newQuantity > availableStock) {
+        context.showSnackBar(
+          'Cannot add more. Available stock: $availableStock',
+          isError: true,
+        );
+        return; // Don't add the product
+      }
+
+      // Increment quantity
+      products[existingIndex] = existing.copyWith(quantity: newQuantity);
     } else {
       // Add new product with selected variant
       final attribute =
@@ -3885,8 +3929,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       client: clientData,
       address: clientAddressController.text.trim(),
       pickupDate: pickupDate.format().appendTimeToDate(time: pickupTime),
-      returnDate: returnDate.format().appendTimeToDate(time: returnTime),
-      // Calculate cooling period date from return date + days
+      // Add cooling period to return date before passing to backend
+      returnDate: returnDate
+          .add(Duration(days: coolingPeriodDays))
+          .format()
+          .appendTimeToDate(time: returnTime),
+      // Cooling period date is same as adjusted return date
       coolingPeriodDate: returnDate
           .add(Duration(days: coolingPeriodDays))
           .format()
@@ -3945,7 +3993,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
       paymentMethod: paymentMethod,
       discount: discountAmountController.text.trim().toIntOrNull() ?? 0,
-      decreaseStock: false,
+      // Default to true, or use checkbox value if past date
+      decreaseStock: decreaseStockForPastDate || !_isPastDate(),
     );
   }
 
@@ -4360,6 +4409,62 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           ),
                         ),
                       ],
+                    ),
+
+                  // Past Date Checkbox - Only show for sales with past dates
+                  if (selectedBookingType == BookingType.sales && _isPastDate())
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F2FE),
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: Checkbox(
+                                value: decreaseStockForPastDate,
+                                onChanged: (v) => setState(() =>
+                                    decreaseStockForPastDate = v ?? false),
+                                activeColor: Colors.black87,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4)),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Decrease Stock quantity',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'If unchecked, the stock quantity will not be decreased from the inventory',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey.shade600,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   const SizedBox(height: 16),
                 ],
