@@ -18,9 +18,9 @@ class BookingsApiPaths {
   static const availableProducts = '${bookingsV3}desktop-available-products/';
   static const dashboard = '${_rootV4}dashboard/';
   static const cancelBooking = '${bookingsV5}cancel-booking/';
-  static const addRefund = '${bookingsV5}add-refund/';
 
   // Dynamic methods
+  static String addRefund(int bookingId) => '${bookingsV5}refund/$bookingId/';
   static String deletePayment(int id) => '${bookingsV5}delete-payment/$id/';
   static String sendBookingInvoice(int bookingId) =>
       '${bookingsV5}send-invoice/$bookingId/'; // Send invoice endpoint (returns PDF)

@@ -537,12 +537,14 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     showDialog(
       context: context,
       builder: (context) => CancelBookingDialog(
+        maxRefundAmount: booking.actualPaidAmount,
         onCancel: () => Navigator.of(context).pop(),
-        onConfirm: () {
-          Navigator.of(context).pop();
+        onConfirm: (refundAmount, paymentMethod) {
           context.read<BookingDetailsBloc>().add(
                 BookingDetailsEvent.cancelBooking(
                   bookingId: booking.id,
+                  refundAmount: refundAmount,
+                  paymentMethod: paymentMethod,
                 ),
               );
         },

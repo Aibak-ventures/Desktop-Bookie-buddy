@@ -163,21 +163,39 @@ class BookingRepository {
     }
   }
 
-  // Cancel booking by updating delivery status
+  // Cancel booking by updating delivery status and optionally adding refund
   Future<void> cancelBooking({
     required int bookingId,
+    int? refundAmount,
+    PaymentMethod? paymentMethod,
   }) async {
     try {
-      final response = await safeApiCall(
-        () => _bookingService.cancelBooking(
-          bookingId: bookingId,
-        ),
+      // First, update delivery status to cancelled
+      final cancelResponse = await safeApiCall(
+        () => _bookingService.cancelBooking(bookingId: bookingId),
       );
-      if (response.status.isSuccess) {
-        return;
+      if (!cancelResponse.status.isSuccess) {
+        log('Error cancelling booking: ${cancelResponse.devMessage}');
+        throw cancelResponse.message ?? 'Failed to cancel booking';
       }
-      log('Error cancelling booking: ${response.devMessage}');
-      throw response.message ?? 'Failed to cancel booking';
+
+      // If there's a refund amount, add the refund
+      if (refundAmount != null && refundAmount > 0 && paymentMethod != null) {
+        final refundResponse = await safeApiCall(
+          () => _bookingService.addRefund(
+            bookingId: bookingId,
+            amount: refundAmount,
+            paymentMethod: paymentMethod == PaymentMethod.gPay 
+                ? 'upi' 
+                : paymentMethod.value,
+            refundReason: 'Booking cancelled',
+          ),
+        );
+        if (!refundResponse.status.isSuccess) {
+          log('Error adding refund: ${refundResponse.devMessage}');
+          throw refundResponse.message ?? 'Failed to add refund';
+        }
+      }
     } catch (e, stack) {
       log('Error cancelling booking: $e', stackTrace: stack);
       rethrow;

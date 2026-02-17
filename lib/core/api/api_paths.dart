@@ -101,7 +101,7 @@ class _BookingsNamespace {
   String get bookingsV5 => BookingsApiPaths.bookingsV5;
   String get desktopList => BookingsApiPaths.desktopList;
   String get addPayment => BookingsApiPaths.addPayment;
-  String get addRefund => BookingsApiPaths.addRefund;
+  String addRefund(int bookingId) => BookingsApiPaths.addRefund(bookingId);
   String get updateDetails => BookingsApiPaths.updateDetails;
   String get updateDeliveryStatus => BookingsApiPaths.updateDeliveryStatus;
   String get updateBookingStatus => BookingsApiPaths.updateBookingStatus;

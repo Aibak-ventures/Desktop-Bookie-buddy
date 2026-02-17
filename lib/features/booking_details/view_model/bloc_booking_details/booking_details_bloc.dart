@@ -133,6 +133,8 @@ class BookingDetailsBloc
     try {
       await _repository.cancelBooking(
         bookingId: event.bookingId,
+        refundAmount: event.refundAmount,
+        paymentMethod: event.paymentMethod,
       );
       emit(
         const _Success(

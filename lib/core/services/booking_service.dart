@@ -184,6 +184,32 @@ class BookingService {
     }
   }
 
+  Future<CustomResponseModel> addRefund({
+    required int bookingId,
+    required int amount,
+    required String paymentMethod,
+    String? refundReason,
+  }) async {
+    try {
+      final response = await _dio.post(
+        ApiPaths.bookings.addRefund(bookingId),
+        data: {
+          'amount': amount,
+          'refund_method': paymentMethod,
+          if (refundReason != null) 'refund_reason': refundReason,
+        },
+      );
+
+      log(
+        'add refund response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error adding refund: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   Future<CustomResponseModel> fetchBookingsPagination({
     required LoadBookingType status,
     required int page,

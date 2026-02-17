@@ -338,12 +338,14 @@ class BookingDetailsDrawer extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (dialogContext) => CancelBookingDialog(
+                          maxRefundAmount: booking.actualPaidAmount,
                           onCancel: () => Navigator.of(dialogContext).pop(),
-                          onConfirm: () {
-                            Navigator.of(dialogContext).pop();
+                          onConfirm: (refundAmount, paymentMethod) {
                             context.read<BookingDetailsBloc>().add(
                                   BookingDetailsEvent.cancelBooking(
                                     bookingId: booking.id,
+                                    refundAmount: refundAmount,
+                                    paymentMethod: paymentMethod,
                                   ),
                                 );
                           },
