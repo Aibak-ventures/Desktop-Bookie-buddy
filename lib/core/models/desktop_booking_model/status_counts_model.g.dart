@@ -14,6 +14,7 @@ _$StatusCountsModelImpl _$$StatusCountsModelImplFromJson(
       returns: (json['returns'] as num?)?.toInt() ?? 0,
       pending: (json['pending'] as num?)?.toInt() ?? 0,
       notReturned: (json['not_returned'] as num?)?.toInt() ?? 0,
+      cancelled: (json['cancelled'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$StatusCountsModelImplToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$StatusCountsModelImplToJson(
       'returns': instance.returns,
       'pending': instance.pending,
       'not_returned': instance.notReturned,
+      'cancelled': instance.cancelled,
     };

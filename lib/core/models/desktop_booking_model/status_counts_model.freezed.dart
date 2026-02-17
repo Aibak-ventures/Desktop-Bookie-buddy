@@ -26,6 +26,7 @@ mixin _$StatusCountsModel {
   int get pending => throw _privateConstructorUsedError;
   @JsonKey(name: 'not_returned')
   int get notReturned => throw _privateConstructorUsedError;
+  int get cancelled => throw _privateConstructorUsedError;
 
   /// Serializes this StatusCountsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,7 +49,8 @@ abstract class $StatusCountsModelCopyWith<$Res> {
       int upcoming,
       int returns,
       int pending,
-      @JsonKey(name: 'not_returned') int notReturned});
+      @JsonKey(name: 'not_returned') int notReturned,
+      int cancelled});
 }
 
 /// @nodoc
@@ -71,6 +73,7 @@ class _$StatusCountsModelCopyWithImpl<$Res, $Val extends StatusCountsModel>
     Object? returns = null,
     Object? pending = null,
     Object? notReturned = null,
+    Object? cancelled = null,
   }) {
     return _then(_value.copyWith(
       completed: null == completed
@@ -93,6 +96,10 @@ class _$StatusCountsModelCopyWithImpl<$Res, $Val extends StatusCountsModel>
           ? _value.notReturned
           : notReturned // ignore: cast_nullable_to_non_nullable
               as int,
+      cancelled: null == cancelled
+          ? _value.cancelled
+          : cancelled // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -110,7 +117,8 @@ abstract class _$$StatusCountsModelImplCopyWith<$Res>
       int upcoming,
       int returns,
       int pending,
-      @JsonKey(name: 'not_returned') int notReturned});
+      @JsonKey(name: 'not_returned') int notReturned,
+      int cancelled});
 }
 
 /// @nodoc
@@ -131,6 +139,7 @@ class __$$StatusCountsModelImplCopyWithImpl<$Res>
     Object? returns = null,
     Object? pending = null,
     Object? notReturned = null,
+    Object? cancelled = null,
   }) {
     return _then(_$StatusCountsModelImpl(
       completed: null == completed
@@ -153,6 +162,10 @@ class __$$StatusCountsModelImplCopyWithImpl<$Res>
           ? _value.notReturned
           : notReturned // ignore: cast_nullable_to_non_nullable
               as int,
+      cancelled: null == cancelled
+          ? _value.cancelled
+          : cancelled // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -165,7 +178,8 @@ class _$StatusCountsModelImpl implements _StatusCountsModel {
       this.upcoming = 0,
       this.returns = 0,
       this.pending = 0,
-      @JsonKey(name: 'not_returned') this.notReturned = 0});
+      @JsonKey(name: 'not_returned') this.notReturned = 0,
+      this.cancelled = 0});
 
   factory _$StatusCountsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StatusCountsModelImplFromJson(json);
@@ -185,10 +199,13 @@ class _$StatusCountsModelImpl implements _StatusCountsModel {
   @override
   @JsonKey(name: 'not_returned')
   final int notReturned;
+  @override
+  @JsonKey()
+  final int cancelled;
 
   @override
   String toString() {
-    return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned)';
+    return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled)';
   }
 
   @override
@@ -203,13 +220,15 @@ class _$StatusCountsModelImpl implements _StatusCountsModel {
             (identical(other.returns, returns) || other.returns == returns) &&
             (identical(other.pending, pending) || other.pending == pending) &&
             (identical(other.notReturned, notReturned) ||
-                other.notReturned == notReturned));
+                other.notReturned == notReturned) &&
+            (identical(other.cancelled, cancelled) ||
+                other.cancelled == cancelled));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, completed, upcoming, returns, pending, notReturned);
+  int get hashCode => Object.hash(runtimeType, completed, upcoming, returns,
+      pending, notReturned, cancelled);
 
   /// Create a copy of StatusCountsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -230,12 +249,12 @@ class _$StatusCountsModelImpl implements _StatusCountsModel {
 
 abstract class _StatusCountsModel implements StatusCountsModel {
   const factory _StatusCountsModel(
-          {final int completed,
-          final int upcoming,
-          final int returns,
-          final int pending,
-          @JsonKey(name: 'not_returned') final int notReturned}) =
-      _$StatusCountsModelImpl;
+      {final int completed,
+      final int upcoming,
+      final int returns,
+      final int pending,
+      @JsonKey(name: 'not_returned') final int notReturned,
+      final int cancelled}) = _$StatusCountsModelImpl;
 
   factory _StatusCountsModel.fromJson(Map<String, dynamic> json) =
       _$StatusCountsModelImpl.fromJson;
@@ -251,6 +270,8 @@ abstract class _StatusCountsModel implements StatusCountsModel {
   @override
   @JsonKey(name: 'not_returned')
   int get notReturned;
+  @override
+  int get cancelled;
 
   /// Create a copy of StatusCountsModel
   /// with the given fields replaced by the non-null parameter values.

@@ -13,6 +13,7 @@ class StatusCountsModel with _$StatusCountsModel {
     @Default(0) int returns,
     @Default(0) int pending,
     @JsonKey(name: 'not_returned') @Default(0) int notReturned,
+    @Default(0) int cancelled,
   }) = _StatusCountsModel;
 
   factory StatusCountsModel.fromJson(Map<String, dynamic> json) =>

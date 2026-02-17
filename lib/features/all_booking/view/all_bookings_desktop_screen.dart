@@ -50,6 +50,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     'Pending': 'pending',
     'Not Returned': 'not_returned',
     'Completed': 'completed',
+    'Cancelled': 'cancelled',
   };
 
   /// Public method to change the active status tab from outside (via GlobalKey)
@@ -315,6 +316,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                           break;
                         case 'completed':
                           count = statusCounts.completed;
+                          break;
+                        case 'cancelled':
+                          count = statusCounts.cancelled;
                           break;
                       }
                     }

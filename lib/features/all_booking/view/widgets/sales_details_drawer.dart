@@ -441,7 +441,7 @@ class SalesDetailsDrawer extends StatelessWidget {
   Widget _buildCustomerDetails(SaleDetailsModel sale) {
     // Get phone number from client or clientPhone field
     final phone1 =
-        sale.client?.phone1?.toString() ?? (sale.clientPhone?.toString() ?? '');
+        sale.client?.phone1?.toString() ?? sale.clientPhone.toString();
     final phone2 = sale.client?.phone2?.toString();
     final name = sale.client?.name ?? 'Walk-in Customer';
 
