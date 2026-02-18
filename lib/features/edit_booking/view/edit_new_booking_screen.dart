@@ -202,6 +202,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
       // Load staffs for staff search dropdown
       context.read<StaffSearchCubit>().getAllStaffs();
+
+      // 🔄 Load available products immediately using check-availability API
+      // This ensures only products available for the booking dates are shown
+      _loadAvailableProducts();
     });
   }
 
@@ -2195,6 +2199,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           returnDate = picked;
         }
       });
+      // 🔄 Reload available products for the new date range
+      _loadAvailableProducts();
     }
   }
 
@@ -2222,7 +2228,30 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           returnTime = picked;
         }
       });
+      // 🔄 Reload available products for the new time
+      _loadAvailableProducts();
     }
+  }
+
+  /// Load available products using the check-availability API.
+  /// Called on screen entry and whenever pickup/return date or time changes.
+  void _loadAvailableProducts() {
+    final isSales = selectedBookingType == BookingType.sales;
+    final serviceIdToUse =
+        (selectedServiceId == null || selectedServiceId == -1)
+            ? null
+            : selectedServiceId;
+    _selectProductBloc.add(
+      SelectProductEvent.loadProducts(
+        serviceId: serviceIdToUse,
+        pickupDate: pickupDate.format(),
+        returnDate: returnDate.format(),
+        pickupTime: pickupTime,
+        returnTime: returnTime,
+        useAvailableProductsApi: !isSales,
+        isSales: isSales,
+      ),
+    );
   }
 
   Widget _buildSalesDateSection() {
@@ -4176,17 +4205,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           // const SizedBox(height: 3),
 
           // const SizedBox(height: 3),
-          // Edit customization button - Only for Dresses with measurements
+          // Add/Edit customization button - Only for Dresses
           ValueListenableBuilder<List<ProductSelectedModel>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
-              final hasDressesWithMeasurements = products.any(
+              final hasDresses = products.any(
+                (p) => p.variant.mainServiceType?.isDress ?? false,
+              );
+              if (!hasDresses) return const SizedBox.shrink();
+
+              // Check if any dress product already has measurements (customizations)
+              final hasCustomizations = products.any(
                 (p) =>
                     (p.variant.mainServiceType?.isDress ?? false) &&
-                    (p.measurements
-                        .isNotEmpty), // Check ProductSelectedModel.measurements
+                    p.measurements.isNotEmpty,
               );
-              if (!hasDressesWithMeasurements) return const SizedBox.shrink();
+
               return SizedBox(
                 width: double.infinity,
                 height: 39,
@@ -4197,10 +4231,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     });
                   },
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: Colors.grey.shade700,
+                    backgroundColor: hasCustomizations
+                        ? const Color(0xFFF3F0FF)
+                        : Colors.transparent,
+                    foregroundColor: hasCustomizations
+                        ? const Color(0xFF6132E4)
+                        : Colors.grey.shade700,
                     side: BorderSide(
-                      color: Colors.grey.shade600,
+                      color: hasCustomizations
+                          ? const Color(0xFF6132E4)
+                          : Colors.grey.shade600,
                       width: 1,
                     ),
                     shape: RoundedRectangleBorder(
@@ -4208,13 +4248,25 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Edit customization',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        hasCustomizations ? Icons.edit_outlined : Icons.add,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        hasCustomizations
+                            ? 'Edit customisation'
+                            : 'Add customization (Optional)',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );

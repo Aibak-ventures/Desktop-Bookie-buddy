@@ -52,7 +52,11 @@ class ProductSimpleDetailsTile extends StatelessWidget {
                   ),
           ),
         ),
-        title: Text(name),
+        title: Text(
+          name,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -60,17 +64,23 @@ class ProductSimpleDetailsTile extends StatelessWidget {
               Text(
                 'Size: ${variantAttribute ?? '-'}',
                 style: const TextStyle(color: AppColors.grey, fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             if (needColor &&
                 (mainServiceType.isDress || mainServiceType.isOthers))
               Text(
                 'Color: ${color ?? '-'}',
                 style: const TextStyle(color: AppColors.grey, fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             if (mainServiceType.isVehicle)
               Text(
                 'Model: ${model ?? '-'}',
                 style: const TextStyle(color: AppColors.grey, fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             if (mainServiceType.isVehicle ||
                 mainServiceType.isOthers ||
@@ -83,12 +93,18 @@ class ProductSimpleDetailsTile extends StatelessWidget {
                 maxLines: 1,
               ),
             Text(
-              'Quantity: ${quantity}',
+              'Quantity: $quantity',
               style: const TextStyle(color: AppColors.grey, fontSize: 12),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
             if (extraField != null)
-              Text(extraField!,
-                  style: const TextStyle(color: AppColors.grey, fontSize: 12)),
+              Text(
+                extraField!,
+                style: const TextStyle(color: AppColors.grey, fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
           ],
         ),
         trailing: trailing != null
@@ -97,8 +113,12 @@ class ProductSimpleDetailsTile extends StatelessWidget {
                 ? null
                 : Text(
                     amount!.toCurrency(),
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 19.sp),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 19.sp,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
       );
 

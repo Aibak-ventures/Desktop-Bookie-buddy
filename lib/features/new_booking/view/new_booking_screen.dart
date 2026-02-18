@@ -3554,11 +3554,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               );
               if (!hasDresses) return const SizedBox.shrink();
 
-              // Check if any dress product has measurements
+              // Check if any dress product has measurements (customizations saved)
               final hasCustomizations = products.any(
                 (p) =>
                     (p.variant.mainServiceType?.isDress ?? false) &&
-                    p.variant.measurements.isNotEmpty,
+                    p.measurements.isNotEmpty,
               );
 
               return Column(
