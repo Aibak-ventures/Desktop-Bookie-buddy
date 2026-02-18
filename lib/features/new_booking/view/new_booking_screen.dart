@@ -108,7 +108,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final discountAmountController = TextEditingController();
   PaymentMethod paymentMethod = PaymentMethod.gPay;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
-  bool sendPdfToWhatsApp = true;
+  bool sendPdfToWhatsApp = false; // Unchecked by default
   bool decreaseStockForPastDate = false; // Checkbox for past dates in sales
 
   // Products/Services
@@ -1613,9 +1613,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Calculate number of days between pickup and return dates
+  /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
   int _calculateRentalDays() {
-    final difference = returnDate.difference(pickupDate).inDays;
-    return difference > 0 ? difference : 1; // Minimum 1 day
+    final difference = returnDate.difference(pickupDate);
+    final hours = difference.inHours;
+
+    // Below 24 hours = 1 day, above = days based on hours
+    if (hours < 24) {
+      return 1;
+    } else {
+      // Calculate days based on hours: 24-48 hours = 2 days, etc.
+      return (hours / 24).ceil();
+    }
   }
 
   /// Get service-specific specification text for product
@@ -1650,11 +1659,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final serviceIdToUse =
         (serviceId == null || serviceId == -1) ? null : serviceId;
 
+    // For bookings, add cooling period to return date when calling API
+    final effectiveReturnDate = isSales
+        ? returnDate.format()
+        : returnDate.add(Duration(days: coolingPeriodDays)).format();
+
     _selectProductBloc.add(
       SelectProductEvent.loadProducts(
         serviceId: serviceIdToUse,
         pickupDate: pickupDate.format(),
-        returnDate: returnDate.format(),
+        returnDate: effectiveReturnDate,
         pickupTime: pickupTime,
         returnTime: returnTime,
         useAvailableProductsApi: !isSales,
@@ -2204,6 +2218,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           // If cooling period exists and mode is "before", recalculate
           // (For now, assuming "after" mode - can add mode toggle later)
         });
+
+        // Reload products with new date
+        _loadProductsForService(selectedServiceId);
       }
     } else {
       // RETURN DATE PICKER
@@ -2238,6 +2255,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             _updateCoolingPeriod();
           }
         });
+
+        // Reload products with new date
+        _loadProductsForService(selectedServiceId);
       }
     }
   }
@@ -2283,6 +2303,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 'Return time has been cleared as it was before the new pickup time');
           }
         }
+
+        // Reload products with new time
+        _loadProductsForService(selectedServiceId);
       } else {
         // Return time validation
         if (returnDate.isDateToday && _isTimeInPast(picked)) {
@@ -2302,6 +2325,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         setState(() {
           returnTime = picked;
         });
+
+        // Reload products with new time
+        _loadProductsForService(selectedServiceId);
       }
     }
   }
@@ -3527,6 +3553,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 (p) => p.variant.mainServiceType?.isDress ?? false,
               );
               if (!hasDresses) return const SizedBox.shrink();
+
+              // Check if any dress product has measurements
+              final hasCustomizations = products.any(
+                (p) =>
+                    (p.variant.mainServiceType?.isDress ?? false) &&
+                    p.variant.measurements.isNotEmpty,
+              );
+
               return Column(
                 children: [
                   const SizedBox(height: 16),
@@ -3540,10 +3574,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         });
                       },
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.grey.shade600,
+                        backgroundColor: hasCustomizations
+                            ? const Color(0xFFF3F0FF)
+                            : Colors.transparent,
+                        foregroundColor: hasCustomizations
+                            ? const Color(0xFF6132E4)
+                            : Colors.grey.shade600,
                         side: BorderSide(
-                          color: Colors.grey.shade300,
+                          color: hasCustomizations
+                              ? const Color(0xFF6132E4)
+                              : Colors.grey.shade300,
                           width: 1,
                         ),
                         shape: RoundedRectangleBorder(
@@ -3551,13 +3591,25 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                       ),
-                      child: const Text(
-                        'Add customization (Optional)',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            hasCustomizations ? Icons.edit_outlined : Icons.add,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            hasCustomizations
+                                ? 'Edit customisation'
+                                : 'Add customization (Optional)',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -4151,6 +4203,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             onChanged: (val) {
                               if (val != null) {
                                 setState(() => coolingPeriodDays = val);
+                                // Reload products with new cooling period
+                                _loadProductsForService(selectedServiceId);
                               }
                             },
                           ),

@@ -479,7 +479,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9F9F9),
+        color: Colors
+            .grey.shade50, // Changed from 0xFFF9F9F9 to avoid any highlight
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: Colors.grey.shade200),
       ),
@@ -490,11 +491,11 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
             : const EdgeInsets.symmetric(horizontal: 4),
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
+            color: Colors.grey.shade800, // Changed to standard grey
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -626,17 +627,21 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildQuantityBtn(
                     icon: Icons.remove,
                     onTap: () => _decrementQuantity(product)),
                 const SizedBox(width: 6),
-                Text(
-                  '${product.quantity}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                Flexible(
+                  child: Text(
+                    '${product.quantity}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -648,12 +653,13 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
           const SizedBox(width: 4),
           // Price / item
           Expanded(
-            child: _editingVariantId == product.variant.variantId
-                ? Center(
-                    child: SizedBox(
-                      width: 80,
-                      height: 32,
-                      child: TextField(
+            child: Center(
+              child: _editingVariantId == product.variant.variantId
+                  ? ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 80),
+                      child: SizedBox(
+                        height: 32,
+                        child: TextField(
                         controller: _inlinePriceController,
                         focusNode: _inlinePriceFocusNode,
                         keyboardType: TextInputType.number,
@@ -680,27 +686,32 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                         ),
                         onSubmitted: (_) => _saveEditingPrice(product),
                       ),
-                    ),
-                  )
-                : GestureDetector(
-                    onTap: () => _startEditingPrice(product),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${product.amount}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF2D3436),
-                            fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () => _startEditingPrice(product),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              '${product.amount}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF2D3436),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.edit_outlined,
-                            size: 16, color: Color(0xFF6132E4)),
-                      ],
+                          const SizedBox(width: 8),
+                          const Icon(Icons.edit_outlined,
+                              size: 16, color: Color(0xFF6132E4)),
+                        ],
+                      ),
                     ),
-                  ),
+            ),
           ),
           const SizedBox(width: 4),
           // Total
@@ -713,6 +724,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF2D3436),
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ),

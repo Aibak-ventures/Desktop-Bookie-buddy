@@ -226,6 +226,18 @@ class BookingDocumentUploadSection extends StatelessWidget {
 
   void _pickDocuments(BuildContext context) async {
     try {
+      // Check current document count
+      final currentDocCount = documentsNotifier.value.length;
+      if (currentDocCount >= 4) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Maximum 4 documents allowed'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        return;
+      }
+
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
@@ -284,7 +296,28 @@ class BookingDocumentUploadSection extends StatelessWidget {
 
         if (newDocs.isNotEmpty) {
           final currentDocs = List<DocumentFile>.from(documentsNotifier.value);
-          currentDocs.addAll(newDocs);
+
+          // Check if adding new docs would exceed limit
+          final totalDocs = currentDocs.length + newDocs.length;
+          if (totalDocs > 4) {
+            // Only add documents up to the limit
+            final availableSlots = 4 - currentDocs.length;
+            if (availableSlots > 0) {
+              currentDocs.addAll(newDocs.take(availableSlots));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        'Only $availableSlots document(s) added. Maximum 4 documents allowed.'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              }
+            }
+          } else {
+            currentDocs.addAll(newDocs);
+          }
+
           documentsNotifier.value = currentDocs;
         }
       }
