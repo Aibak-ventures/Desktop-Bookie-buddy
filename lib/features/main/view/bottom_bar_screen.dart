@@ -472,9 +472,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget _profileHeaderExpanded() {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
-        final shopName = user?.shopDetails.name ?? 'Shop';
+        final userName = user?.firstName ?? 'User';
         final firstLetter =
-            shopName.isNotEmpty ? shopName[0].toUpperCase() : 'S';
+            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -487,7 +487,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      shopName,
+                      userName,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -510,9 +510,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   Widget _profileHeaderCollapsed() {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
-        final shopName = user?.shopDetails.name ?? 'Shop';
+        final userName = user?.firstName ?? 'User';
         final firstLetter =
-            shopName.isNotEmpty ? shopName[0].toUpperCase() : 'S';
+            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
 
         return _buildAvatar(firstLetter, 40);
       },

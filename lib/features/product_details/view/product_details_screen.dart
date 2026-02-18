@@ -204,7 +204,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 onPressed: () {
                   _showDeleteProductDialog(product);
                 },
-                icon: const Icon(Icons.delete_outline, size: 16),
+                icon: Icon(Icons.delete_outline,
+                    size: 16, color: Colors.red.shade600),
                 label: const Text('Delete',
                     style:
                         TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
@@ -261,39 +262,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              ElevatedButton.icon(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => BlocProvider(
-                      create: (context) =>
-                          AddExpenseCubit(repository: getIt.get()),
-                      child: ProductAddExpenseDialog(
-                        variantId: product.variants.first.id,
-                        mainServiceType:
-                            product.mainServiceType ?? MainServiceType.others,
-                        variants: product.variants,
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Add Expense',
-                    style:
-                        TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.purple,
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  elevation: 0,
-                  shadowColor: AppColors.purple.withOpacity(0.3),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
+              // Removed Add Expense button - no longer needed
             ],
           ),
         ],
@@ -388,32 +357,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                       ),
                     ),
                     const SizedBox(height: 8),
-                    // Sale price below main price (right aligned)
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: 'Sale:',
-                            style: TextStyle(
-                              color: Color(0xFF8E8E8E),
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                    // Sale price below main price (right aligned) - show actual salePrice from first variant
+                    Builder(
+                      builder: (context) {
+                        int? salePrice;
+                        if (product.variants.isNotEmpty) {
+                          salePrice = product.variants.first.salePrice;
+                        }
+                        return Text.rich(
                           TextSpan(
-                            text:
-                                ' ₹${NumberFormat('#,###').format(product.price ?? 0)}',
-                            style: const TextStyle(
-                              color: Color(0xFFFFA93A),
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                            ),
+                            children: [
+                              const TextSpan(
+                                text: 'Sale:',
+                                style: TextStyle(
+                                  color: Color(0xFF8E8E8E),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              TextSpan(
+                                text: salePrice != null
+                                    ? ' ₹${NumberFormat('#,###').format(salePrice)}'
+                                    : ' -',
+                                style: const TextStyle(
+                                  color: Color(0xFFFFA93A),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      textAlign: TextAlign.right,
+                          textAlign: TextAlign.right,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -1045,6 +1023,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         TextEditingController(text: variant.attribute);
     final variantQuantityController =
         TextEditingController(text: variant.stock.toString());
+    final externalBarcodeController =
+        TextEditingController(text: variant.externalQrCode ?? '');
     final formKey = GlobalKey<FormState>();
 
     // Get current product from state to initialize variantsNotifier (excluding current variant)
@@ -1093,6 +1073,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 keyboardType: TextInputType.number,
                 validator: AppInputValidators.quantity,
               ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: externalBarcodeController,
+                decoration: InputDecoration(
+                  labelText: 'External Barcode (Optional)',
+                  hintText: 'Enter external QR code or barcode',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.qr_code),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -1116,6 +1110,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 final attribute = variantAttributeController.text.trim();
                 final quantity =
                     int.tryParse(variantQuantityController.text.trim()) ?? 0;
+                final externalBarcode = externalBarcodeController.text.trim();
 
                 try {
                   // Update variant
@@ -1126,6 +1121,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                         variantId: variant.id,
                         attribute: attribute,
                         stock: quantity,
+                        externalQrCode:
+                            externalBarcode.isEmpty ? null : externalBarcode,
                       );
 
                   if (context.mounted) {

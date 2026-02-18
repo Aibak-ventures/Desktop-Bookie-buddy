@@ -127,6 +127,7 @@ class ProductActionService {
     required int variantId,
     required String? updatedAttribute,
     required int? updatedStock,
+    String? externalQrCode,
   }) async {
     try {
       final res = await _dio.patch(
@@ -135,6 +136,7 @@ class ProductActionService {
           if (updatedAttribute != null) 'attribute': updatedAttribute,
           // "price": 250001,
           if (updatedStock != null) 'stock': updatedStock,
+          if (externalQrCode != null) 'external_qr_code': externalQrCode,
         },
       );
       log(

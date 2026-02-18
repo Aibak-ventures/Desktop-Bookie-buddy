@@ -4,11 +4,13 @@ import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 // import 'package:bookie_buddy_web/core/models/service_model.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
+import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/product_details/view/product_details_screen.dart';
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_cubit.dart';
@@ -111,69 +113,82 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1400),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Only show header when on product list, not on product details
-                BlocBuilder<StockManagementCubit, StockManagementState>(
-                  builder: (context, state) {
-                    final showingProductDetails = state.maybeWhen(
-                      loaded: (_, __, ___, ____, _____, ______, _______,
-                          selectedProductId) {
-                        return selectedProductId != null;
-                      },
-                      orElse: () => false,
-                    );
-
-                    if (!showingProductDetails) {
-                      return Column(
-                        children: [
-                          _buildHeader(),
-                          const SizedBox(height: 16),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-                Expanded(
-                  child:
-                      BlocBuilder<StockManagementCubit, StockManagementState>(
+    return BlocListener<UserCubit, UserModel?>(
+      listener: (context, user) {
+        // Reload products and services when shop switches
+        if (user != null) {
+          // Force reload services
+          context
+              .read<ServiceBloc>()
+              .add(const ServiceEvent.loadServices(force: true));
+          // Reload products
+          context.read<StockManagementCubit>().loadProducts();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1400),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Only show header when on product list, not on product details
+                  BlocBuilder<StockManagementCubit, StockManagementState>(
                     builder: (context, state) {
-                      // Check if we should show product details
-                      return state.maybeWhen(
+                      final showingProductDetails = state.maybeWhen(
                         loaded: (_, __, ___, ____, _____, ______, _______,
                             selectedProductId) {
-                          if (selectedProductId != null) {
-                            // Show product details
-                            return RepositoryProvider.value(
-                              value: context.read<ProductRepository>(),
-                              child: BlocProvider(
-                                create: (context) => ProductDetailsCubit(
-                                  context.read<ProductRepository>(),
-                                )..loadProductDetails(selectedProductId),
-                                child: ProductDetailsScreen(
-                                    productId: selectedProductId),
-                              ),
-                            );
-                          } else {
-                            // Show product list
-                            return _buildProductList();
-                          }
+                          return selectedProductId != null;
                         },
-                        orElse: () => _buildProductList(),
+                        orElse: () => false,
                       );
+
+                      if (!showingProductDetails) {
+                        return Column(
+                          children: [
+                            _buildHeader(),
+                            const SizedBox(height: 16),
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
                     },
                   ),
-                ),
-              ],
+                  Expanded(
+                    child:
+                        BlocBuilder<StockManagementCubit, StockManagementState>(
+                      builder: (context, state) {
+                        // Check if we should show product details
+                        return state.maybeWhen(
+                          loaded: (_, __, ___, ____, _____, ______, _______,
+                              selectedProductId) {
+                            if (selectedProductId != null) {
+                              // Show product details
+                              return RepositoryProvider.value(
+                                value: context.read<ProductRepository>(),
+                                child: BlocProvider(
+                                  create: (context) => ProductDetailsCubit(
+                                    context.read<ProductRepository>(),
+                                  )..loadProductDetails(selectedProductId),
+                                  child: ProductDetailsScreen(
+                                      productId: selectedProductId),
+                                ),
+                              );
+                            } else {
+                              // Show product list
+                              return _buildProductList();
+                            }
+                          },
+                          orElse: () => _buildProductList(),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -366,30 +381,43 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   Icon(Icons.search, color: Colors.grey.shade500, size: 20),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search by name or id',
-                        hintStyle: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade400,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                        isDense: true,
-                      ),
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                      onChanged: (value) {
-                        // Debounce search
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          if (_searchController.text == value) {
-                            context
-                                .read<StockManagementCubit>()
-                                .searchProducts(value);
-                          }
-                        });
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: _selectedSearchTypeIndex,
+                      builder: (context, searchTypeIndex, child) {
+                        final searchTypes = [
+                          'name',
+                          'category',
+                          'model',
+                          'color'
+                        ];
+                        final searchType = searchTypes[searchTypeIndex];
+                        return TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Search by $searchType',
+                            hintStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade400,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                          ),
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                          onChanged: (value) {
+                            // Debounce search
+                            Future.delayed(const Duration(milliseconds: 500),
+                                () {
+                              if (_searchController.text == value) {
+                                context
+                                    .read<StockManagementCubit>()
+                                    .searchProducts(value);
+                              }
+                            });
+                          },
+                        );
                       },
                     ),
                   ),
@@ -875,43 +903,39 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              // const SizedBox(height: 4),
-                              // Show color, category, and model under product name
-                              Wrap(
-                                spacing: 6,
-                                runSpacing: 4,
-                                children: [
+                              const SizedBox(height: 4),
+                              // Show color, category, and model under product name separated by dots
+                              Builder(
+                                builder: (context) {
+                                  final specs = <String>[];
                                   if (product.color != null &&
-                                      product.color!.isNotEmpty)
-                                    Text(
-                                      '${product.color}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        // color: Colors.orange.shade700,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                      product.color!.isNotEmpty) {
+                                    specs.add(product.color!);
+                                  }
                                   if (product.category != null &&
-                                      product.category!.isNotEmpty)
-                                    Text(
-                                      '${product.category}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        // color: Colors.blue.shade700,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                      product.category!.isNotEmpty) {
+                                    specs.add(product.category!);
+                                  }
                                   if (product.model != null &&
-                                      product.model!.isNotEmpty)
-                                    Text(
-                                      '${product.model}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        // color: Colors.purple.shade700,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      product.model!.isNotEmpty) {
+                                    specs.add(product.model!);
+                                  }
+
+                                  if (specs.isEmpty) {
+                                    return const SizedBox.shrink();
+                                  }
+
+                                  return Text(
+                                    specs.join(' • '),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey.shade600,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                ],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -957,19 +981,28 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  // Sale Price column
+                  // Sale Price column - show actual sale_price from variants
                   Expanded(
                     flex: 2,
-                    child: Text(
-                      product.price != null
-                          ? '₹ ${NumberFormat('#,###').format(product.price)}'
-                          : '-',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1F2937),
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    child: Builder(
+                      builder: (context) {
+                        // Get the sale price from variants (use first variant's sale price)
+                        int? salePrice;
+                        if (product.variants.isNotEmpty) {
+                          salePrice = product.variants.first.salePrice;
+                        }
+                        return Text(
+                          salePrice != null
+                              ? '₹ ${NumberFormat('#,###').format(salePrice)}'
+                              : '-',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1F2937),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -1539,6 +1572,94 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                       ),
                                     ),
 
+                                    const SizedBox(height: 16),
+
+                                    // Manual Max Price Input
+                                    const Text(
+                                      'Set Max Price',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF2D2D2D),
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            height: 42,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                color: Colors.grey.shade300,
+                                              ),
+                                            ),
+                                            child: TextField(
+                                              controller: maxPriceController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                hintText: 'Enter max price',
+                                                prefixText: '₹ ',
+                                                border: InputBorder.none,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                  vertical: 12,
+                                                ),
+                                              ),
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontFamily: 'Inter',
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            final newMax = double.tryParse(
+                                              maxPriceController.text.trim(),
+                                            );
+                                            if (newMax != null && newMax > 0) {
+                                              _maxPriceNotifier.value = newMax;
+                                              tempPriceRange.value =
+                                                  RangeValues(
+                                                0,
+                                                newMax,
+                                              );
+                                              maxPriceController.clear();
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 12,
+                                            ),
+                                            backgroundColor:
+                                                const Color(0xFF6132E4),
+                                            foregroundColor: Colors.white,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Set',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
                                     const SizedBox(height: 20),
 
                                     // Quick Filters
@@ -1866,7 +1987,5 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           endPrice: isPriceEnabled ? priceRange.end.toInt() : null,
           page: 1,
         );
-
-   
   }
 }

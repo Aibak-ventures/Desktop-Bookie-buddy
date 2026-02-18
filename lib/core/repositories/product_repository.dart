@@ -104,6 +104,7 @@ class ProductRepository {
     required int variantId,
     required String? updatedAttribute,
     required int? updatedStock,
+    String? externalQrCode,
   }) async {
     try {
       final response = await safeApiCall(
@@ -112,6 +113,7 @@ class ProductRepository {
           variantId: variantId,
           updatedAttribute: updatedAttribute,
           updatedStock: updatedStock,
+          externalQrCode: externalQrCode,
         ),
       );
       if (response.status.isSuccess) {

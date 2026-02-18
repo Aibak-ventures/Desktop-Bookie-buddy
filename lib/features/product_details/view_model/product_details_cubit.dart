@@ -121,6 +121,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     required int variantId,
     required String attribute,
     required int stock,
+    String? externalQrCode,
   }) async {
     try {
       await _repository.updateVariant(
@@ -128,6 +129,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
         variantId: variantId,
         updatedAttribute: attribute,
         updatedStock: stock,
+        externalQrCode: externalQrCode,
       );
       // Reload product details to show the updated variant
       await loadProductDetails(productId);

@@ -78,8 +78,14 @@ class StockManagementCubit extends Cubit<StockManagementState> {
       final nextPageUrl = paginationModel.nextPageUrl;
       final totalProducts = paginationModel.totalData;
 
-      // Calculate total categories (dummy for now as requested)
-      final totalCategories = 5;
+      // Calculate total unique categories from all products
+      final uniqueCategories = <String>{};
+      for (final product in productList) {
+        if (product.category != null && product.category!.isNotEmpty) {
+          uniqueCategories.add(product.category!);
+        }
+      }
+      final totalCategories = uniqueCategories.length;
 
       if (page == 1) {
         emit(StockManagementState.loaded(
