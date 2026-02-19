@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -8,18 +7,20 @@ part 'booking_details_payment_history_cubit.freezed.dart';
 
 class BookingDetailsPaymentHistoryCubit
     extends Cubit<BookingDetailsPaymentHistoryState> {
-  final BookingRepository _repository;
+  BookingDetailsPaymentHistoryCubit()
+      : super(const _Collapsed());
 
-  BookingDetailsPaymentHistoryCubit({required BookingRepository repository})
-      : _repository = repository,
-        super(const _Collapsed());
-
-  void showPaymentHistory(int bookingId) async {
+  /// Show payment history using data from booking details API
+  /// No separate API call needed - data comes from booking.payments and booking.refunds
+  void showPaymentHistory(
+    List<BookingDetailsPaymentHistoryModel> payments,
+    List<dynamic> refunds,
+  ) {
     emit(const _Loading());
 
     try {
-      final paymentHistory = await _repository.getPaymentHistory(bookingId);
-      emit(_Expanded(paymentHistory));
+      // Use the payments data directly from booking details
+      emit(_Expanded(payments));
     } catch (e) {
       emit(_Error(e.toString()));
     }

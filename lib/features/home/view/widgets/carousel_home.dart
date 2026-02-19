@@ -173,9 +173,7 @@ class CarouselHome extends StatelessWidget {
               ),
             ),
             BlocProvider(
-              create: (_) => BookingDetailsPaymentHistoryCubit(
-                repository: getIt.get<BookingRepository>(),
-              ),
+              create: (_) => BookingDetailsPaymentHistoryCubit(),
             ),
             BlocProvider(
               create: (_) => AllSalesBloc(

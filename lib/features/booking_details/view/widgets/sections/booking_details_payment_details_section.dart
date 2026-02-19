@@ -180,6 +180,38 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                 booking.actualPaidAmount -
                                 (booking.discountAmount ?? 0),
                           ),
+
+                          // Show refund details for cancelled bookings
+                          if (booking.bookingStatus == BookingStatus.cancelled) ...[
+                            const Divider(),
+                            
+                            // Show refunded amount
+                            if (booking.totalRefunded > 0)
+                              _PaymentDetailsRow(
+                                title: 'Refunded',
+                                amount: booking.totalRefunded.toInt(),
+                                color: Colors.green.shade600,
+                              ),
+                            
+                            // Calculate deducted amount: what was paid but not refunded
+                            if (booking.totalRefunded < booking.actualPaidAmount) ...[
+                              _PaymentDetailsRow(
+                                title: 'Deducted',
+                                amount: (booking.actualPaidAmount - booking.totalRefunded.toInt()),
+                                color: Colors.red.shade600,
+                              ),
+                            ],
+                            
+                            // Show remaining refundable balance
+                            if (booking.refundableBalance > 0)
+                              _PaymentDetailsRow(
+                                title: 'Remaining balance',
+                                amount: booking.refundableBalance.toInt(),
+                                color: AppColors.purple,
+                                fontSize: 15,
+                              ),
+                          ],
+                          
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -189,8 +221,10 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                     paymentHistoryCubit
                                         .collapsePaymentHistory();
                                   } else {
+                                    // Use payments data from booking details API (no separate API call)
                                     paymentHistoryCubit.showPaymentHistory(
-                                      booking.id,
+                                      booking.payments,
+                                      booking.refunds,
                                     );
                                   }
                                 },

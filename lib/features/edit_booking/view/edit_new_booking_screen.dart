@@ -175,6 +175,24 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final _clientPhone2FocusNode = FocusNode();
   final _clientAddressFocusNode = FocusNode();
 
+  // Original values for change tracking (incremental updates)
+  BookingDetailsModel? _originalBooking;
+  DateTime? _originalPickupDate;
+  DateTime? _originalReturnDate;
+  TimeOfDay? _originalPickupTime;
+  TimeOfDay? _originalReturnTime;
+  String? _originalClientName;
+  String? _originalClientPhone1;
+  String? _originalClientPhone2;
+  String? _originalClientAddress;
+  int? _originalStaffId;
+  int? _originalAdvanceAmount;
+  int? _originalSecurityAmount;
+  int? _originalDiscountAmount;
+  List<ProductSelectedModel>? _originalProducts;
+  List<AdditionalChargesModel>? _originalAdditionalCharges;
+  List<DocumentFile>? _originalDocuments; // Track original documents for removal detection
+
   // Customization state
   bool showCustomization = false;
   ProductSelectedModel? _selectedProductForCustomization;
@@ -337,6 +355,241 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     } else {
       log('ℹ️ No documents found in booking');
     }
+
+    // Store original values for change tracking (incremental updates)
+    _storeOriginalValues(booking);
+  }
+
+  /// Store original values to track changes for incremental updates
+  void _storeOriginalValues(BookingDetailsModel booking) {
+    _originalBooking = booking;
+    _originalPickupDate = booking.pickupDate?.parseToDateTime();
+    _originalReturnDate = booking.returnDate.parseToDateTime();
+    _originalPickupTime = booking.pickupDate != null
+        ? TimeOfDay.fromDateTime(booking.pickupDate!.parseToDateTime())
+        : null;
+    _originalReturnTime = TimeOfDay.fromDateTime(booking.returnDate.parseToDateTime());
+    
+    _originalClientName = booking.client.name;
+    _originalClientPhone1 = booking.client.phone1?.toString();
+    _originalClientPhone2 = booking.client.phone2?.toString();
+    _originalClientAddress = booking.address;
+    
+    _originalStaffId = booking.staffId;
+    
+    _originalAdvanceAmount = booking.paidAmount;
+    _originalSecurityAmount = booking.securityAmount;
+    _originalDiscountAmount = booking.discountAmount;
+    
+    // Store deep copy of products
+    _originalProducts = selectedProductsNotifier.value.map((p) => ProductSelectedModel(
+      variant: p.variant,
+      measurements: List.from(p.measurements),
+      quantity: p.quantity,
+      amount: p.amount,
+    )).toList();
+    
+    // Store deep copy of additional charges
+    _originalAdditionalCharges = additionalChargesNotifier.value.map((c) => AdditionalChargesModel(
+      id: c.id,
+      name: c.name,
+      amount: c.amount,
+    )).toList();
+
+    // Store deep copy of documents
+    _originalDocuments = documentsNotifier.value.map((d) => DocumentFile(
+      name: d.name,
+      path: d.path,
+      bytes: d.bytes != null ? List<int>.from(d.bytes!) : null,
+    )).toList();
+
+    log('✅ Original values stored for incremental update tracking');
+  }
+
+  /// Check if dates have changed
+  bool _haveDatesChanged() {
+    if (_originalBooking == null) return true; // New booking, send all
+    
+    final currentPickupDate = pickupDate.format().appendTimeToDate(time: pickupTime);
+    final currentReturnDate = returnDate.format().appendTimeToDate(time: returnTime);
+    final originalPickupDateStr = _originalPickupDate?.format().appendTimeToDate(time: _originalPickupTime);
+    final originalReturnDateStr = _originalReturnDate?.format().appendTimeToDate(time: _originalReturnTime);
+    
+    return currentPickupDate != originalPickupDateStr || 
+           currentReturnDate != originalReturnDateStr;
+  }
+
+  /// Check if client details have changed
+  bool _hasClientChanged() {
+    if (_originalBooking == null) return true;
+    
+    final currentClientName = clientNameController.text.trim();
+    final currentClientPhone1 = clientPhone1Controller.text.trim();
+    final currentClientPhone2 = clientPhone2Controller.text.trim();
+    final currentClientAddress = clientAddressController.text.trim();
+    
+    return currentClientName != (_originalClientName ?? '') ||
+           currentClientPhone1 != (_originalClientPhone1 ?? '') ||
+           currentClientPhone2 != (_originalClientPhone2 ?? '') ||
+           currentClientAddress != (_originalClientAddress ?? '');
+  }
+
+  /// Check if staff has changed
+  bool _hasStaffChanged() {
+    if (_originalBooking == null) return true;
+    return selectedStaffId != _originalStaffId;
+  }
+
+  /// Check if amounts have changed
+  bool _haveAmountsChanged() {
+    if (_originalBooking == null) return true;
+    
+    final currentAdvance = advanceAmountController.text.trim().toIntOrNull() ?? 0;
+    final currentSecurity = securityAmountController.text.trim().toIntOrNull() ?? 0;
+    final currentDiscount = discountAmountController.text.trim().toIntOrNull() ?? 0;
+    
+    return currentAdvance != (_originalAdvanceAmount ?? 0) ||
+           currentSecurity != (_originalSecurityAmount ?? 0) ||
+           currentDiscount != (_originalDiscountAmount ?? 0);
+  }
+
+  /// Check if products have changed (added, removed, or modified)
+  bool _haveProductsChanged() {
+    if (_originalBooking == null) return true;
+    if (_originalProducts == null) return true;
+    
+    final currentProducts = selectedProductsNotifier.value;
+    
+    // Check if count changed
+    if (currentProducts.length != _originalProducts!.length) return true;
+    
+    // Check if any product changed
+    for (int i = 0; i < currentProducts.length; i++) {
+      final current = currentProducts[i];
+      final original = _originalProducts![i];
+      
+      if (current.variant.id != original.variant.id ||
+          current.quantity != original.quantity ||
+          current.amount != original.amount ||
+          current.measurements.length != original.measurements.length) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /// Check if additional charges have changed
+  bool _haveAdditionalChargesChanged() {
+    if (_originalBooking == null) return true;
+    if (_originalAdditionalCharges == null) return true;
+    
+    final currentCharges = additionalChargesNotifier.value;
+    
+    // Check if count changed
+    if (currentCharges.length != _originalAdditionalCharges!.length) return true;
+    
+    // Check if any charge changed
+    for (int i = 0; i < currentCharges.length; i++) {
+      final current = currentCharges[i];
+      final original = _originalAdditionalCharges![i];
+      
+      if (current.name != original.name ||
+          current.amount != original.amount) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /// Build partial update request with only changed fields
+  Map<String, dynamic> _buildPartialUpdateRequest() {
+    final updates = <String, dynamic>{};
+    
+    // Only include dates if changed
+    if (_haveDatesChanged()) {
+      updates['pickup_date'] = pickupDate.format().appendTimeToDate(time: pickupTime);
+      updates['return_date'] = returnDate.format().appendTimeToDate(time: returnTime);
+      updates['cooling_period_date'] = returnDate
+          .add(Duration(days: coolingPeriodDays))
+          .format()
+          .appendTimeToDate(time: returnTime);
+    }
+    
+    // Include client entirely if any client field changed
+    if (_hasClientChanged()) {
+      if (selectedClientId != null) {
+        updates['client_id'] = selectedClientId;
+      } else {
+        // New client
+        final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
+        final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
+        updates['client'] = {
+          'name': clientNameController.text.trim().isEmpty
+              ? null
+              : clientNameController.text.trim(),
+          'phone1': phone1,
+          'phone2': phone2,
+        };
+      }
+      updates['address'] = clientAddressController.text.trim();
+    }
+    
+    // Include staff if changed
+    if (_hasStaffChanged()) {
+      updates['staff_id'] = selectedStaffId;
+    }
+    
+    // Include amounts if changed
+    if (_haveAmountsChanged()) {
+      updates['advance_amount'] = advanceAmountController.text.trim().toIntOrNull();
+      updates['security_amount'] = securityAmountController.text.trim().toIntOrNull();
+      updates['discount_amount'] = discountAmountController.text.trim().toIntOrNull();
+    }
+    
+    // Include products (variants) if changed
+    // Note: API expects 'variants' not 'products'
+    if (_haveProductsChanged()) {
+      final products = selectedProductsNotifier.value;
+      updates['variants'] = products.map((p) => {
+        'variant_id': p.variant.variantId,
+        'quantity': p.quantity,
+        'amount': p.amount,
+        'measurements': p.measurements.isNotEmpty ? p.measurements : null,
+      }).toList();
+    }
+
+    // Include additional charges if changed
+    if (_haveAdditionalChargesChanged()) {
+      final charges = additionalChargesNotifier.value;
+      updates['additional_charges'] = charges.map((c) => {
+        'name': c.name,
+        'amount': c.amount,
+      }).toList();
+    }
+
+    // Always include other metadata
+    updates['purchase_mode'] = 'normal';
+    updates['payment_method'] = paymentMethod.toJson();
+    updates['delivery_status'] = deliveryStatus.toValue();
+    
+    // Include description if present
+    final description = descriptionController.text.trim();
+    if (description.isNotEmpty) {
+      updates['description'] = description;
+    }
+    
+    // Include other details
+    updates['other_details'] = {
+      'location_start': startLocationController.text.trim().nullIfEmpty,
+      'location_from': pickupLocationController.text.trim().nullIfEmpty,
+      'location_to': destinationLocationController.text.trim().nullIfEmpty,
+      'end': runningKilometersController.text.trim().nullIfEmpty,
+    };
+    
+    log('📝 Partial update payload: $updates');
+    return updates;
   }
 
   /// Extract filename from URL
@@ -4567,11 +4820,27 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       final repository = getIt<BookingRepository>();
 
       if (widget.bookingDetails != null) {
-        // Update existing booking
-        final bookingRequest = _buildBookingRequest();
-        await repository.updateBooking(
+        // Update existing booking with incremental changes only
+        final partialUpdate = _buildPartialUpdateRequest();
+        
+        // Detect document changes
+        final currentDocs = documentsNotifier.value;
+        final originalDocPaths = _originalDocuments?.map((d) => d.path).toSet() ?? {};
+        final currentDocPaths = currentDocs.map((d) => d.path).toSet();
+        
+        // Find removed documents (were in original but not in current)
+        final removedUrls = originalDocPaths.difference(currentDocPaths).toList();
+        
+        // Find new documents (have bytes = newly uploaded)
+        final newDocs = currentDocs.where((d) => d.bytes != null).toList();
+        
+        log('📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}');
+        
+        await repository.updateBookingPartial(
           widget.bookingDetails!.id,
-          bookingRequest,
+          partialUpdate,
+          newDocuments: newDocs.isNotEmpty ? newDocs : null,
+          removedDocumentUrls: removedUrls.isNotEmpty ? removedUrls : null,
         );
         GlobalLoadingOverlay.hide();
         if (mounted) {

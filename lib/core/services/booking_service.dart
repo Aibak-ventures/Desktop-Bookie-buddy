@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -9,8 +10,10 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/utils/download_file.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:http_parser/http_parser.dart';
 
 class BookingService {
   final _dio = DioClient.dio;
@@ -147,6 +150,82 @@ class BookingService {
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error updating booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  /// Update booking with partial data (only changed fields)
+  /// Used for incremental updates in edit mode
+  /// Supports FormData for file uploads
+  Future<CustomResponseModel> updateBookingPartial(
+    int bookingId,
+    Map<String, dynamic> partialData, {
+    List<DocumentFile>? newDocuments,
+    List<String>? removedDocumentUrls,
+  }) async {
+    try {
+      // Use FormData for file uploads and complex nested data
+      final formData = FormData();
+      
+      // Add regular fields as JSON strings (as per API requirement)
+      partialData.forEach((key, value) {
+        if (value != null) {
+          if (value is List || value is Map) {
+            // Complex objects need to be JSON encoded
+            formData.fields.add(MapEntry(key, jsonEncode(value)));
+          } else {
+            // Simple values
+            formData.fields.add(MapEntry(key, value.toString()));
+          }
+        }
+      });
+      
+      // Add new documents if any
+      if (newDocuments != null && newDocuments.isNotEmpty) {
+        for (int i = 0; i < newDocuments.length; i++) {
+          final doc = newDocuments[i];
+          // Check if it's a new file: has bytes (web upload) or path is not a URL (local file)
+          final isNewFile = doc.bytes != null || 
+              (doc.path.isNotEmpty && !doc.path.startsWith('http'));
+          
+          if (isNewFile && (doc.bytes != null || doc.path.isNotEmpty)) {
+            // New file upload from web or mobile
+            if (doc.bytes != null) {
+              // Web: upload from bytes
+              formData.files.add(MapEntry(
+                'documents[${i + 1}]',
+                MultipartFile.fromBytes(
+                  doc.bytes!,
+                  filename: doc.name,
+                  contentType: MediaType('image', 'jpeg'),
+                ),
+              ));
+            }
+            // Note: Mobile file upload from path would need different handling
+            // For now, web uploads via bytes are supported
+          }
+        }
+      }
+      
+      // Add removed document URLs
+      if (removedDocumentUrls != null && removedDocumentUrls.isNotEmpty) {
+        formData.fields.add(MapEntry('remove_documents', jsonEncode(removedDocumentUrls)));
+      }
+      
+      final response = await _dio.patch(
+        '${ApiPaths.bookings.updateDetails}$bookingId/',
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
+
+      log(
+        'update booking partial response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error updating booking partial: $e', stackTrace: stack);
       rethrow;
     }
   }

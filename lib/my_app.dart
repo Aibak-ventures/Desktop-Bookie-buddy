@@ -77,8 +77,7 @@ class MyApp extends StatelessWidget {
             ..add(const StaffListEvent.loadStaffs()),
         ),
         BlocProvider(
-            create: (context) =>
-                BookingDetailsPaymentHistoryCubit(repository: getIt.get())),
+            create: (context) => BookingDetailsPaymentHistoryCubit()),
         BlocProvider(create: (context) => ProductBloc()),
         BlocProvider(
             create: (context) => StaffSearchCubit(repository: getIt.get())),

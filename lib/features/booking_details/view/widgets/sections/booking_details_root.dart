@@ -246,7 +246,7 @@ class BookingDetailsRoot extends StatelessWidget {
                         ),
                         SizedBox(height: 5.h),
                         Text(
-                          booking.returnDate.formatToUiDate(),
+                          _formatAvailableFromDate(booking),
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -735,6 +735,30 @@ class BookingDetailsRoot extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatAvailableFromDate(BookingDetailsModel booking) {
+    final coolingDateStr = booking.coolingPeriodDate;
+    if (coolingDateStr == null || coolingDateStr.isEmpty) {
+      // Fallback to return date if no cooling period
+      if (booking.returnDate.isNotEmpty) {
+        try {
+          final returnDate = booking.returnDate.parseToDateTime();
+          return returnDate.add(const Duration(days: 1)).format();
+        } catch (e) {
+          return 'N/A';
+        }
+      }
+      return 'N/A';
+    }
+    try {
+      final coolingDate = coolingDateStr.parseToDateTime();
+      // Available from next day of cooling date
+      final availableDate = coolingDate.add(const Duration(days: 1));
+      return availableDate.format();
+    } catch (e) {
+      return coolingDateStr;
+    }
   }
 }
 

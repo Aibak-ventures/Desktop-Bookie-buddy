@@ -13,6 +13,7 @@ import 'package:bookie_buddy_web/core/services/booking_service.dart';
 import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 
@@ -142,6 +143,35 @@ class BookingRepository {
       throw response.message ?? 'Failed to update booking';
     } catch (e, stack) {
       log('Error updating booking: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  // Update booking with partial data (only changed fields)
+  // Used for incremental updates in edit mode
+  // Supports FormData for file uploads and document management
+  Future<CustomResponseModel> updateBookingPartial(
+    int bookingId,
+    Map<String, dynamic> partialData, {
+    List<DocumentFile>? newDocuments,
+    List<String>? removedDocumentUrls,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _bookingService.updateBookingPartial(
+          bookingId,
+          partialData,
+          newDocuments: newDocuments,
+          removedDocumentUrls: removedDocumentUrls,
+        ),
+      );
+      if (response.status.isSuccess || response.status.isInsufficientStock) {
+        return response;
+      }
+      log('Error updating booking partial: ${response.devMessage}');
+      throw response.message ?? 'Failed to update booking';
+    } catch (e, stack) {
+      log('Error updating booking partial: $e', stackTrace: stack);
       rethrow;
     }
   }

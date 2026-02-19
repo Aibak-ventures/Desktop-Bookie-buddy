@@ -59,6 +59,10 @@ _$BookingDetailsModelImpl _$$BookingDetailsModelImplFromJson(
       totalRefunded: (json['total_refunded'] as num?)?.toDouble() ?? 0.0,
       refundableBalance:
           (json['refundable_balance'] as num?)?.toDouble() ?? 0.0,
+      securitySummary: json['security_summary'] == null
+          ? SecuritySummaryModel.empty
+          : SecuritySummaryModel.fromJson(
+              json['security_summary'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$BookingDetailsModelImplToJson(
@@ -92,6 +96,7 @@ Map<String, dynamic> _$$BookingDetailsModelImplToJson(
       'refunds': instance.refunds,
       'total_refunded': instance.totalRefunded,
       'refundable_balance': instance.refundableBalance,
+      'security_summary': instance.securitySummary,
     };
 
 const _$PurchaseModeEnumMap = {

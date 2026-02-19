@@ -136,16 +136,27 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     if (apiStatus != null) {
       setState(() => _activeStatusTab = apiStatus);
       _loadData();
+      // Close the booking details drawer when switching status tabs
+      context.read<BookingDetailsDrawerCubit>().closeDrawer();
+      context.read<SalesDetailsDrawerCubit>().closeDrawer();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserCubit, UserModel?>(
+      listenWhen: (previous, current) {
+        // Only trigger when shop actually changes
+        if (previous == null || current == null) return false;
+        return previous.shopDetails.id != current.shopDetails.id;
+      },
       listener: (context, userState) {
-        // When shop changes, reload data
+        // When shop changes, reload data and close drawers
         if (userState != null) {
           _loadData();
+          // Close drawers when shop changes
+          context.read<BookingDetailsDrawerCubit>().closeDrawer();
+          context.read<SalesDetailsDrawerCubit>().closeDrawer();
         }
       },
       child: Scaffold(
@@ -177,7 +188,10 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   ],
                 ),
               ),
-              // Drawer overlay
+              // Drawer overlay - drawers stay open unless:
+              // 1. User explicitly closes via X button
+              // 2. Tab is switched (handled in _onStatusTabChanged and action tabs)
+              // 3. Shop is switched (handled in UserCubit listener)
               const BookingDetailsDrawer(),
               const SalesDetailsDrawer(),
             ],
@@ -234,6 +248,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             onTap: () {
               setState(() => _activeActionTab = index);
               _loadData();
+              // Close the booking details drawer when switching tabs
+              context.read<BookingDetailsDrawerCubit>().closeDrawer();
+              context.read<SalesDetailsDrawerCubit>().closeDrawer();
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

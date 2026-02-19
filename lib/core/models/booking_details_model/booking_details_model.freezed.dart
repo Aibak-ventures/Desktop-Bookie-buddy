@@ -77,6 +77,9 @@ mixin _$BookingDetailsModel {
   double get totalRefunded => throw _privateConstructorUsedError;
   @JsonKey(name: 'refundable_balance')
   double get refundableBalance => throw _privateConstructorUsedError;
+  @JsonKey(name: 'security_summary')
+  SecuritySummaryModel get securitySummary =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this BookingDetailsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -139,10 +142,12 @@ abstract class $BookingDetailsModelCopyWith<$Res> {
       List<BookingDetailsPaymentHistoryModel> payments,
       List<dynamic> refunds,
       @JsonKey(name: 'total_refunded') double totalRefunded,
-      @JsonKey(name: 'refundable_balance') double refundableBalance});
+      @JsonKey(name: 'refundable_balance') double refundableBalance,
+      @JsonKey(name: 'security_summary') SecuritySummaryModel securitySummary});
 
   $BookingOtherDetailsModelCopyWith<$Res> get otherDetails;
   $ClientModelCopyWith<$Res> get client;
+  $SecuritySummaryModelCopyWith<$Res> get securitySummary;
 }
 
 /// @nodoc
@@ -188,6 +193,7 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
     Object? refunds = null,
     Object? totalRefunded = null,
     Object? refundableBalance = null,
+    Object? securitySummary = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -302,6 +308,10 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
           ? _value.refundableBalance
           : refundableBalance // ignore: cast_nullable_to_non_nullable
               as double,
+      securitySummary: null == securitySummary
+          ? _value.securitySummary
+          : securitySummary // ignore: cast_nullable_to_non_nullable
+              as SecuritySummaryModel,
     ) as $Val);
   }
 
@@ -323,6 +333,16 @@ class _$BookingDetailsModelCopyWithImpl<$Res, $Val extends BookingDetailsModel>
   $ClientModelCopyWith<$Res> get client {
     return $ClientModelCopyWith<$Res>(_value.client, (value) {
       return _then(_value.copyWith(client: value) as $Val);
+    });
+  }
+
+  /// Create a copy of BookingDetailsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SecuritySummaryModelCopyWith<$Res> get securitySummary {
+    return $SecuritySummaryModelCopyWith<$Res>(_value.securitySummary, (value) {
+      return _then(_value.copyWith(securitySummary: value) as $Val);
     });
   }
 }
@@ -380,12 +400,15 @@ abstract class _$$BookingDetailsModelImplCopyWith<$Res>
       List<BookingDetailsPaymentHistoryModel> payments,
       List<dynamic> refunds,
       @JsonKey(name: 'total_refunded') double totalRefunded,
-      @JsonKey(name: 'refundable_balance') double refundableBalance});
+      @JsonKey(name: 'refundable_balance') double refundableBalance,
+      @JsonKey(name: 'security_summary') SecuritySummaryModel securitySummary});
 
   @override
   $BookingOtherDetailsModelCopyWith<$Res> get otherDetails;
   @override
   $ClientModelCopyWith<$Res> get client;
+  @override
+  $SecuritySummaryModelCopyWith<$Res> get securitySummary;
 }
 
 /// @nodoc
@@ -429,6 +452,7 @@ class __$$BookingDetailsModelImplCopyWithImpl<$Res>
     Object? refunds = null,
     Object? totalRefunded = null,
     Object? refundableBalance = null,
+    Object? securitySummary = null,
   }) {
     return _then(_$BookingDetailsModelImpl(
       id: null == id
@@ -543,6 +567,10 @@ class __$$BookingDetailsModelImplCopyWithImpl<$Res>
           ? _value.refundableBalance
           : refundableBalance // ignore: cast_nullable_to_non_nullable
               as double,
+      securitySummary: null == securitySummary
+          ? _value.securitySummary
+          : securitySummary // ignore: cast_nullable_to_non_nullable
+              as SecuritySummaryModel,
     ));
   }
 }
@@ -596,7 +624,9 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
       final List<BookingDetailsPaymentHistoryModel> payments = const [],
       final List<dynamic> refunds = const [],
       @JsonKey(name: 'total_refunded') this.totalRefunded = 0.0,
-      @JsonKey(name: 'refundable_balance') this.refundableBalance = 0.0})
+      @JsonKey(name: 'refundable_balance') this.refundableBalance = 0.0,
+      @JsonKey(name: 'security_summary')
+      this.securitySummary = SecuritySummaryModel.empty})
       : _documents = documents,
         _bookedItems = bookedItems,
         _additionalCharges = additionalCharges,
@@ -721,10 +751,13 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
   @override
   @JsonKey(name: 'refundable_balance')
   final double refundableBalance;
+  @override
+  @JsonKey(name: 'security_summary')
+  final SecuritySummaryModel securitySummary;
 
   @override
   String toString() {
-    return 'BookingDetailsModel(id: $id, invoiceId: $invoiceId, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, securityAmount: $securityAmount, purchaseMode: $purchaseMode, bookingStatus: $bookingStatus, paymentStatus: $paymentStatus, deliveryStatus: $deliveryStatus, staffName: $staffName, staffId: $staffId, otherDetails: $otherDetails, bookedDate: $bookedDate, bookingCompletedDate: $bookingCompletedDate, address: $address, client: $client, description: $description, documents: $documents, bookedItems: $bookedItems, additionalCharges: $additionalCharges, payments: $payments, refunds: $refunds, totalRefunded: $totalRefunded, refundableBalance: $refundableBalance)';
+    return 'BookingDetailsModel(id: $id, invoiceId: $invoiceId, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, securityAmount: $securityAmount, purchaseMode: $purchaseMode, bookingStatus: $bookingStatus, paymentStatus: $paymentStatus, deliveryStatus: $deliveryStatus, staffName: $staffName, staffId: $staffId, otherDetails: $otherDetails, bookedDate: $bookedDate, bookingCompletedDate: $bookingCompletedDate, address: $address, client: $client, description: $description, documents: $documents, bookedItems: $bookedItems, additionalCharges: $additionalCharges, payments: $payments, refunds: $refunds, totalRefunded: $totalRefunded, refundableBalance: $refundableBalance, securitySummary: $securitySummary)';
   }
 
   @override
@@ -781,7 +814,9 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
             (identical(other.totalRefunded, totalRefunded) ||
                 other.totalRefunded == totalRefunded) &&
             (identical(other.refundableBalance, refundableBalance) ||
-                other.refundableBalance == refundableBalance));
+                other.refundableBalance == refundableBalance) &&
+            (identical(other.securitySummary, securitySummary) ||
+                other.securitySummary == securitySummary));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -815,7 +850,8 @@ class _$BookingDetailsModelImpl implements _BookingDetailsModel {
         const DeepCollectionEquality().hash(_payments),
         const DeepCollectionEquality().hash(_refunds),
         totalRefunded,
-        refundableBalance
+        refundableBalance,
+        securitySummary
       ]);
 
   /// Create a copy of BookingDetailsModel
@@ -881,8 +917,9 @@ abstract class _BookingDetailsModel implements BookingDetailsModel {
       final List<BookingDetailsPaymentHistoryModel> payments,
       final List<dynamic> refunds,
       @JsonKey(name: 'total_refunded') final double totalRefunded,
-      @JsonKey(name: 'refundable_balance')
-      final double refundableBalance}) = _$BookingDetailsModelImpl;
+      @JsonKey(name: 'refundable_balance') final double refundableBalance,
+      @JsonKey(name: 'security_summary')
+      final SecuritySummaryModel securitySummary}) = _$BookingDetailsModelImpl;
 
   factory _BookingDetailsModel.fromJson(Map<String, dynamic> json) =
       _$BookingDetailsModelImpl.fromJson;
@@ -969,6 +1006,9 @@ abstract class _BookingDetailsModel implements BookingDetailsModel {
   @override
   @JsonKey(name: 'refundable_balance')
   double get refundableBalance;
+  @override
+  @JsonKey(name: 'security_summary')
+  SecuritySummaryModel get securitySummary;
 
   /// Create a copy of BookingDetailsModel
   /// with the given fields replaced by the non-null parameter values.

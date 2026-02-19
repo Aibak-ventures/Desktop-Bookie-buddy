@@ -2,6 +2,7 @@ import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/core/models/security_summary_model/security_summary_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
@@ -66,6 +67,9 @@ class BookingDetailsModel with _$BookingDetailsModel {
     @Default([]) List<dynamic> refunds,
     @JsonKey(name: 'total_refunded') @Default(0.0) double totalRefunded,
     @JsonKey(name: 'refundable_balance') @Default(0.0) double refundableBalance,
+    @JsonKey(name: 'security_summary')
+    @Default(SecuritySummaryModel.empty)
+    SecuritySummaryModel securitySummary,
   }) = _BookingDetailsModel;
 
   factory BookingDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -124,5 +128,26 @@ extension BookingDetailsModelX on BookingDetailsModel {
   int get actualPaidAmount {
     if (payments.isEmpty) return paidAmount;
     return payments.fold<int>(0, (sum, payment) => sum + payment.amount);
+  }
+
+  /// Get the remaining balance after partial refunds from security summary
+  /// This shows the deducted amount if not fully refunded
+  double get remainingSecurityBalance => securitySummary.remainingBalance;
+
+  /// Get the total amount deducted from security
+  double get totalSecurityDeducted => securitySummary.totalDeducted;
+
+  /// Get the total amount refunded from security
+  double get totalSecurityRefunded => securitySummary.totalRefunded;
+
+  /// Check if security was partially refunded (deducted amount exists)
+  bool get hasPartialSecurityRefund => securitySummary.totalDeducted > 0;
+
+  /// Calculate the net balance considering refunds and deductions
+  /// This is used to show the actual balance after cancellations
+  int get netBalance {
+    final baseBalance = totalAmount - actualPaidAmount - (discountAmount ?? 0);
+    // If there's a security deduction, it affects the balance
+    return baseBalance;
   }
 }

@@ -1,5 +1,4 @@
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
@@ -9,12 +8,9 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_root.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_payment_details_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/edit_booking/view/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
@@ -28,6 +24,7 @@ import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -40,67 +37,85 @@ class BookingDetailsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
-      builder: (context, drawerState) {
-        return AnimatedPositioned(
+    return BlocListener<UserCubit, UserModel?>(
+      listenWhen: (previous, current) {
+        // Listen when shop changes (user switches shop)
+        if (previous == null || current == null) return false;
+        return previous.shopDetails.id != current.shopDetails.id;
+      },
+      listener: (context, user) {
+        // Close the drawer when shop is switched
+        context.read<BookingDetailsDrawerCubit>().closeDrawer();
+      },
+      child: BlocBuilder<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
+        builder: (context, drawerState) {
+          return AnimatedPositioned(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           right: drawerState.isOpen ? 0 : -650,
           top: 0,
           bottom: 0,
           width: 470,
-          child: Material(
-            elevation: 16,
-            shadowColor: Colors.black.withOpacity(0.3),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(-4, 0),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Close button header
-                  Container(
-                    // padding: const EdgeInsets.symmetric(
-                    //     horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey.shade200),
+          child: GestureDetector(
+            // Consume all taps inside the drawer to prevent closing
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              // Do nothing - just consume the tap
+            },
+            child: Material(
+              elevation: 16,
+              shadowColor: Colors.black.withOpacity(0.3),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(-4, 0),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    // Close button header
+                    Container(
+                      // padding: const EdgeInsets.symmetric(
+                      //     horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey.shade200),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.chevron_right, size: 28),
+                            onPressed: () {
+                              context
+                                  .read<BookingDetailsDrawerCubit>()
+                                  .closeDrawer();
+                            },
+                            tooltip: 'Close',
+                            color: Colors.grey.shade600,
+                            hoverColor: Colors.grey.shade100,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.chevron_right, size: 28),
-                          onPressed: () {
-                            context
-                                .read<BookingDetailsDrawerCubit>()
-                                .closeDrawer();
-                          },
-                          tooltip: 'Close',
-                          color: Colors.grey.shade600,
-                          hoverColor: Colors.grey.shade100,
-                        ),
-                      ],
+                    Expanded(
+                      child: _buildContent(context, drawerState),
                     ),
-                  ),
-                  Expanded(
-                    child: _buildContent(context, drawerState),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
+    ),
     );
   }
 
@@ -222,8 +237,11 @@ class BookingDetailsDrawer extends StatelessWidget {
       BuildContext context, BookingDetailsModel booking) {
     final status = booking.deliveryStatus ?? DeliveryStatus.booked;
     // Check if booking is completed - disable delivery status editing
-    // Cancelled bookings can still change delivery status
+    // Cancelled bookings can still change delivery status ONLY if no refunds exist
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
+    final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
+    // Check if booking has refund amounts - if yes, don't allow status change from cancelled
+    final hasRefundAmounts = booking.totalRefunded > 0 || booking.refunds.isNotEmpty;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,9 +316,9 @@ class BookingDetailsDrawer extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              // Show non-interactive status badge only for completed bookings
-              // Cancelled bookings can still change delivery status
-              if (isCompleted)
+              // Show non-interactive status badge for completed bookings
+              // OR for cancelled bookings that have refund amounts
+              if (isCompleted || (isCancelled && hasRefundAmounts))
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -558,7 +576,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _formatAvailableFromDate(booking.returnDate),
+                      _formatAvailableFromDate(booking),
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.black,
@@ -577,14 +595,6 @@ class BookingDetailsDrawer extends StatelessWidget {
   Widget _buildDocumentsSection(BookingDetailsModel booking) {
     if (booking.documents.isEmpty) return const SizedBox.shrink();
 
-    // Count uploaded documents (non-empty URLs)
-    int uploadedCount = 0;
-    for (var doc in booking.documents) {
-      final docUrl = doc is String
-          ? doc
-          : (doc is Map ? (doc['url'] ?? doc['file'] ?? '') : '');
-      if (docUrl.isNotEmpty) uploadedCount++;
-    }
     final totalCount = booking.documents.length;
 
     return Container(
@@ -602,7 +612,7 @@ class BookingDetailsDrawer extends StatelessWidget {
               Icon(Icons.attach_file, size: 16, color: Colors.grey.shade700),
               const SizedBox(width: 8),
               Text(
-                'Documents ($uploadedCount/$totalCount)',
+                'Documents ($totalCount)',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -1655,6 +1665,47 @@ class BookingDetailsDrawer extends StatelessWidget {
                       balance > 0 ? Colors.red.shade600 : Colors.green.shade600,
                   isBold: true,
                   fontSize: 15),
+              
+              // Show refund details for cancelled bookings
+              if (isCancelled) ...[
+                const SizedBox(height: 12),
+                const Divider(height: 24),
+                const SizedBox(height: 8),
+                
+                // Show refunded amount if any
+                if (booking.totalRefunded > 0)
+                  _buildPaymentRow(
+                    'Refunded',
+                    '₹${booking.totalRefunded.toInt()}',
+                    valueColor: Colors.green.shade600,
+                    fontSize: 13,
+                  ),
+                
+                // Calculate deducted amount: what was paid but not refunded
+                // This is the penalty/cancellation charge
+                if (booking.totalRefunded < paid) ...[
+                  if (booking.totalRefunded > 0) const SizedBox(height: 6),
+                  _buildPaymentRow(
+                    'Deducted',
+                    '₹${(paid - booking.totalRefunded.toInt())}',
+                    valueColor: Colors.red.shade600,
+                    fontSize: 13,
+                  ),
+                ],
+                
+                // Show remaining refundable balance
+                // if (booking.refundableBalance > 0) ...[
+                //   const SizedBox(height: 6),
+                //   _buildPaymentRow(
+                //     'Remaining balance',
+                //     '₹${booking.refundableBalance.toInt()}',
+                //     valueColor: AppColors.purple,
+                //     isBold: true,
+                //     fontSize: 14,
+                //   ),
+                // ],
+              ],
+              
               const SizedBox(height: 12),
               // Payment history toggle
               TextButton.icon(
@@ -1664,7 +1715,11 @@ class BookingDetailsDrawer extends StatelessWidget {
                   if (paymentHistoryCubit.isExpanded) {
                     paymentHistoryCubit.collapsePaymentHistory();
                   } else {
-                    paymentHistoryCubit.showPaymentHistory(booking.id);
+                    // Use payments data from booking details API (no separate API call)
+                    paymentHistoryCubit.showPaymentHistory(
+                      booking.payments,
+                      booking.refunds,
+                    );
                   }
                 },
                 label: const Text('Payment history'),
@@ -1788,17 +1843,27 @@ class BookingDetailsDrawer extends StatelessWidget {
     }
   }
 
-  String _formatAvailableFromDate(String? dateStr) {
-    if (dateStr == null || dateStr.isEmpty) return 'N/A';
+  String _formatAvailableFromDate(BookingDetailsModel booking) {
+    final coolingDateStr = booking.coolingPeriodDate;
+    if (coolingDateStr == null || coolingDateStr.isEmpty) {
+      // Fallback to return date if no cooling period
+      if (booking.returnDate.isNotEmpty) {
+        try {
+          final returnDate = booking.returnDate.parseToDateTime();
+          return returnDate.add(const Duration(days: 1)).format();
+        } catch (e) {
+          return 'N/A';
+        }
+      }
+      return 'N/A';
+    }
     try {
-      final returnDate = dateStr.parseToDateTime();
-      // If the return time is in evening (18:00 or later), product is available next day
-      final availableDate = returnDate.hour >= 18
-          ? returnDate.add(const Duration(days: 1))
-          : returnDate;
+      final coolingDate = coolingDateStr.parseToDateTime();
+      // Available from next day of cooling date
+      final availableDate = coolingDate.add(const Duration(days: 1));
       return availableDate.format();
     } catch (e) {
-      return dateStr;
+      return coolingDateStr;
     }
   }
 
@@ -2035,39 +2100,45 @@ class BookingDetailsDrawer extends StatelessWidget {
             ),
           ),
         if (!isCompleted && !isCancelled) const Spacer(),
-        // Mark as Completed button (only show if not completed or cancelled)
-        if (!isCompleted && !isCancelled)
+        // Mark as Completed button for active bookings
+        // OR Complete cancelled work button for cancelled bookings
+        if (!isCompleted)
           ElevatedButton(
             onPressed: () async {
-              // Calculate balance to check payment status
-              final balance = booking.totalAmount -
-                  booking.actualPaidAmount -
-                  (booking.discountAmount ?? 0);
+              // For cancelled bookings, no validation needed - just complete
+              if (!isCancelled) {
+                // Calculate balance to check payment status
+                final balance = booking.totalAmount -
+                    booking.actualPaidAmount -
+                    (booking.discountAmount ?? 0);
 
-              // Validation 1: Check if payment is pending
-              if (balance > 0) {
-                context.showSnackBar(
-                  'Cannot mark as completed. Payment is still pending (Balance: ₹$balance).',
-                  isError: true,
-                );
-                return;
-              }
+                // Validation 1: Check if payment is pending
+                if (balance > 0) {
+                  context.showSnackBar(
+                    'Cannot mark as completed. Payment is still pending (Balance: ₹$balance).',
+                    isError: true,
+                  );
+                  return;
+                }
 
-              // Validation 2: Check if delivery status is "Returned"
-              if (booking.deliveryStatus != DeliveryStatus.returned) {
-                context.showSnackBar(
-                  'Cannot mark as completed. Booking must be marked as "Returned" first.',
-                  isError: true,
-                );
-                return;
+                // Validation 2: Check if delivery status is "Returned"
+                if (booking.deliveryStatus != DeliveryStatus.returned) {
+                  context.showSnackBar(
+                    'Cannot mark as completed. Booking must be marked as "Returned" first.',
+                    isError: true,
+                  );
+                  return;
+                }
               }
 
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Mark as Completed'),
-                  content: const Text(
-                      'Are you sure you want to mark this booking as completed?'),
+                  title: Text(isCancelled ? 'Complete Cancelled Work' : 'Mark as Completed'),
+                  content: Text(
+                    isCancelled 
+                      ? 'Are you sure you want to complete this cancelled booking?'
+                      : 'Are you sure you want to mark this booking as completed?'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
@@ -2092,16 +2163,16 @@ class BookingDetailsDrawer extends StatelessWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.purple,
+              backgroundColor: isCancelled ? Colors.red.shade600 : AppColors.purple,
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               elevation: 0,
             ),
-            child: const Text(
-              'Mark as Completed',
-              style: TextStyle(
+            child: Text(
+              isCancelled ? 'Complete cancelled work' : 'Mark as Completed',
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,

@@ -2,6 +2,7 @@ import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
@@ -24,82 +25,100 @@ class SalesDetailsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SalesDetailsBloc, SalesDetailsState>(
-      listener: (context, state) {
-        state.whenOrNull(
-          success: (message, didPop, needRefresh) {
-            context.showSnackBar(message);
-            if (needRefresh) {
-              context.read<AllSalesBloc>().add(const AllSalesEvent.loadSales());
-            }
-            if (didPop) {
-              context.read<SalesDetailsDrawerCubit>().closeDrawer();
-            }
-          },
-          error: (message) {
-            context.showSnackBar(message, isError: true);
-          },
-        );
+    return BlocListener<UserCubit, UserModel?>(
+      listenWhen: (previous, current) {
+        // Only trigger when shop actually changes
+        if (previous == null || current == null) return false;
+        return previous.shopDetails.id != current.shopDetails.id;
       },
-      child: BlocBuilder<SalesDetailsDrawerCubit, SalesDetailsDrawerState>(
-        builder: (context, drawerState) {
-          return AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            right: drawerState.isOpen ? 0 : -650,
-            top: 0,
-            bottom: 0,
-            width: 470,
-            child: Material(
-              elevation: 16,
-              shadowColor: Colors.black.withOpacity(0.3),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(-4, 0),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Close button header
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey.shade200),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.chevron_right, size: 28),
-                            onPressed: () {
-                              context
-                                  .read<SalesDetailsDrawerCubit>()
-                                  .closeDrawer();
-                            },
-                            tooltip: 'Close',
-                            color: Colors.grey.shade600,
-                            hoverColor: Colors.grey.shade100,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildContent(context, drawerState),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+      listener: (context, user) {
+        // Close the drawer when shop is switched
+        context.read<SalesDetailsDrawerCubit>().closeDrawer();
+      },
+      child: BlocListener<SalesDetailsBloc, SalesDetailsState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            success: (message, didPop, needRefresh) {
+              context.showSnackBar(message);
+              if (needRefresh) {
+                context.read<AllSalesBloc>().add(const AllSalesEvent.loadSales());
+              }
+              if (didPop) {
+                context.read<SalesDetailsDrawerCubit>().closeDrawer();
+              }
+            },
+            error: (message) {
+              context.showSnackBar(message, isError: true);
+            },
           );
         },
+        child: BlocBuilder<SalesDetailsDrawerCubit, SalesDetailsDrawerState>(
+          builder: (context, drawerState) {
+            return AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              right: drawerState.isOpen ? 0 : -650,
+              top: 0,
+              bottom: 0,
+              width: 470,
+              child: GestureDetector(
+                // Consume all taps inside the drawer to prevent closing
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  // Do nothing - just consume the tap
+                },
+                child: Material(
+                  elevation: 16,
+                  shadowColor: Colors.black.withOpacity(0.3),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(-4, 0),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Close button header
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              bottom: BorderSide(color: Colors.grey.shade200),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.chevron_right, size: 28),
+                                onPressed: () {
+                                  context
+                                      .read<SalesDetailsDrawerCubit>()
+                                      .closeDrawer();
+                                },
+                                tooltip: 'Close',
+                                color: Colors.grey.shade600,
+                                hoverColor: Colors.grey.shade100,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildContent(context, drawerState),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -47,17 +47,20 @@ class BookingPaymentHistoryTile extends StatelessWidget {
       ));
     }
 
-    // Add refunds (assuming refunds have same structure as payments)
+    // Add refunds - API uses 'refunded_amount' field
     for (final refund in refunds) {
       if (refund is Map<String, dynamic>) {
-        final amount = refund['amount'] as int? ?? 0;
-        final paymentMethodStr = refund['payment_method'] as String? ?? 'cash';
-        final dateTime = refund['datetime'] ?? refund['created_at'] ?? '';
+        // Try 'refunded_amount' first (from API), then fallback to 'amount'
+        final dynamic refundAmountRaw = refund['refunded_amount'] ?? refund['amount'] ?? 0;
+        final int amount = refundAmountRaw is num ? refundAmountRaw.toInt() : 0;
+        // API uses 'refund_method' for refunds
+        final paymentMethodStr = refund['refund_method'] ?? refund['payment_method'] ?? 'cash';
+        final dateTime = refund['created_at'] ?? refund['datetime'] ?? '';
 
         transactions.add(TransactionEntry(
           amount: amount,
-          paymentMethod: PaymentMethod.fromJson(paymentMethodStr),
-          dateTime: dateTime,
+          paymentMethod: PaymentMethod.fromJson(paymentMethodStr.toString()),
+          dateTime: dateTime.toString(),
           isRefund: true,
         ));
       }

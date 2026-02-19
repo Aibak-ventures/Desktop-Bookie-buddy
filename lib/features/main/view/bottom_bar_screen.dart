@@ -61,9 +61,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
           BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit(
-              repository: getIt.get<BookingRepository>(),
-            ),
+            create: (context) => BookingDetailsPaymentHistoryCubit(),
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
@@ -84,9 +82,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
           BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit(
-              repository: getIt.get<BookingRepository>(),
-            ),
+            create: (context) => BookingDetailsPaymentHistoryCubit(),
           ),
           BlocProvider(
             create: (context) => AllSalesBloc(
@@ -115,9 +111,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
           BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit(
-              repository: getIt.get<BookingRepository>(),
-            ),
+            create: (context) => BookingDetailsPaymentHistoryCubit(),
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
