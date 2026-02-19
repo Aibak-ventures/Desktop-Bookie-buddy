@@ -161,52 +161,58 @@ class SalesDetailsDrawer extends StatelessWidget {
               },
             ),
           ),
-          loaded: (sale) => SingleChildScrollView(
+          loaded: (sale) => Column(
             key: ValueKey('sale_${sale.id}'),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Sale ID & Status
-                _buildSaleHeader(sale),
-                const SizedBox(height: 16),
+            children: [
+              // Scrollable content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Sale ID & Status
+                      _buildSaleHeader(sale),
+                      const SizedBox(height: 16),
 
-                // Dates
-                _buildDatesSection(sale),
-                const SizedBox(height: 24),
+                      // Dates
+                      _buildDatesSection(sale),
+                      const SizedBox(height: 24),
 
-                // Item details
-                _buildItemDetails(sale),
-                const SizedBox(height: 24),
+                      // Item details
+                      _buildItemDetails(sale),
+                      const SizedBox(height: 24),
 
-                // Customer details - show if client exists OR if client_phone exists
-                if (sale.client != null ||
-                    (sale.clientPhone != null &&
-                        sale.clientPhone.toString().isNotEmpty)) ...[
-                  _buildCustomerDetails(sale),
-                  const SizedBox(height: 24),
-                ],
+                      // Customer details - show if client exists OR if client_phone exists
+                      if (sale.client != null ||
+                          (sale.clientPhone != null &&
+                              sale.clientPhone.toString().isNotEmpty)) ...[
+                        _buildCustomerDetails(sale),
+                        const SizedBox(height: 24),
+                      ],
 
-                // Notes section (if description exists)
-                if (sale.description.isNotEmpty) ...[
-                  _buildNotesSection(sale),
-                  const SizedBox(height: 24),
-                ],
+                      // Notes section (if description exists)
+                      if (sale.description.isNotEmpty) ...[
+                        _buildNotesSection(sale),
+                        const SizedBox(height: 24),
+                      ],
 
-                // Staff name section (if staff exists)
-                if (sale.staffName != null && sale.staffName!.isNotEmpty) ...[
-                  _buildStaffSection(sale),
-                  const SizedBox(height: 24),
-                ],
+                      // Staff name section (if staff exists)
+                      if (sale.staffName != null && sale.staffName!.isNotEmpty) ...[
+                        _buildStaffSection(sale),
+                        const SizedBox(height: 24),
+                      ],
 
-                // Payment details
-                _buildPaymentDetails(sale),
-                const SizedBox(height: 32),
-
-                // Action buttons
-                _buildActionButtons(context, sale),
-              ],
-            ),
+                      // Payment details
+                      _buildPaymentDetails(sale),
+                      const SizedBox(height: 80), // Space for sticky buttons
+                    ],
+                  ),
+                ),
+              ),
+              // Sticky action buttons at bottom
+              _buildStickyActionBar(context, sale),
+            ],
           ),
         );
       },
@@ -378,29 +384,28 @@ class SalesDetailsDrawer extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        // Show variant for multi-variant products, or category/model for others
-                        if (item.mainServiceType.isMultiVariantProductType) ...[
-                          // For multi-variant products (dresses, costumes, gadgets), show variant
+                        // Show specifications based on main service type
+                        if (item.mainServiceType == MainServiceType.dress) ...[
+                          // For dress: show Size and Color
                           if (item.variantAttribute != null &&
                               item.variantAttribute!.isNotEmpty)
                             Text(
-                              '$specsLabel : ${item.variantAttribute}',
+                              'Size : ${item.variantAttribute}',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey.shade600,
                               ),
                             ),
-                        ] else ...[
-                          // For non-multi-variant products (vehicles, equipment), show category and model
-                          if (item.category != null &&
-                              item.category!.isNotEmpty)
+                          if (item.color != null && item.color!.isNotEmpty)
                             Text(
-                              'Category : ${item.category}',
+                              'Colour : ${item.color}',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey.shade600,
                               ),
                             ),
+                        ] else if (item.mainServiceType == MainServiceType.vehicle) ...[
+                          // For vehicle: show Model and Category (Brand)
                           if (item.model != null && item.model!.isNotEmpty)
                             Text(
                               'Model : ${item.model}',
@@ -409,16 +414,62 @@ class SalesDetailsDrawer extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                             ),
-                        ],
-                        // Always show color if it exists
-                        if (item.color != null && item.color!.isNotEmpty)
-                          Text(
-                            'Colour : ${item.color}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
+                          if (item.category != null && item.category!.isNotEmpty)
+                            Text(
+                              'Brand : ${item.category}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
-                          ),
+                        ] else if (item.mainServiceType == MainServiceType.gadgets) ...[
+                          // For gadget: show Serial Number (variant) and Color
+                          if (item.variantAttribute != null &&
+                              item.variantAttribute!.isNotEmpty)
+                            Text(
+                              'Serial Number : ${item.variantAttribute}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          if (item.color != null && item.color!.isNotEmpty)
+                            Text(
+                              'Colour : ${item.color}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                        ] else if (item.mainServiceType == MainServiceType.equipment) ...[
+                          // For equipment: show Category
+                          if (item.category != null && item.category!.isNotEmpty)
+                            Text(
+                              'Category : ${item.category}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                        ] else ...[
+                          // For others: show Category and Color
+                          if (item.category != null && item.category!.isNotEmpty)
+                            Text(
+                              'Category : ${item.category}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          if (item.color != null && item.color!.isNotEmpty)
+                            Text(
+                              'Colour : ${item.color}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                        ],
                       ],
                     ),
                   ),
@@ -734,49 +785,64 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, SaleDetailsModel sale) {
-    return Row(
-      children: [
-        // Delete button
-        IconButton.outlined(
-          onPressed: () async {
-            final confirm = await showDialog<bool>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Delete Sale'),
-                content: const Text(
-                    'Are you sure you want to delete this sale? This action cannot be undone.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    style: TextButton.styleFrom(foregroundColor: Colors.red),
-                    child: const Text('Delete'),
-                  ),
-                ],
-              ),
-            );
-
-            if (confirm == true && context.mounted) {
-              context.read<SalesDetailsBloc>().add(
-                    SalesDetailsEvent.deleteSale(sale.id),
-                  );
-            }
-          },
-          icon: const Icon(Icons.delete_outline, color: Colors.red),
-          style: IconButton.styleFrom(
-            side: BorderSide(color: Colors.grey.shade300),
-            padding: const EdgeInsets.all(12),
-          ),
+  Widget _buildStickyActionBar(BuildContext context, SaleDetailsModel sale) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Colors.grey.shade200, width: 1),
         ),
-        const SizedBox(width: 12),
-        // Edit button
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () async {
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Delete button
+          _buildIconActionButton(
+            context,
+            icon: Icons.delete_outline,
+            color: Colors.red,
+            onTap: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Delete Sale'),
+                  content: const Text(
+                      'Are you sure you want to delete this sale? This action cannot be undone.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: TextButton.styleFrom(foregroundColor: Colors.red),
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (confirm == true && context.mounted) {
+                context.read<SalesDetailsBloc>().add(
+                      SalesDetailsEvent.deleteSale(sale.id),
+                    );
+              }
+            },
+          ),
+          const SizedBox(width: 12),
+          // Edit button
+          _buildIconActionButton(
+            context,
+            icon: Icons.edit_outlined,
+            color: AppColors.purple,
+            onTap: () async {
               // Navigate to EditSalesScreen with sale details
               final result = await Navigator.push(
                 context,
@@ -796,22 +862,20 @@ class SalesDetailsDrawer extends StatelessWidget {
                 context
                     .read<AllSalesBloc>()
                     .add(const AllSalesEvent.loadSales());
+                // Refresh the drawer content
+                context.read<SalesDetailsBloc>().add(
+                      SalesDetailsEvent.fetchSaleDetails(sale.id),
+                    );
               }
             },
-            icon: const Icon(Icons.edit),
-            label: const Text('Edit'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange.shade600,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        // Download Invoice
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () async {
+          const SizedBox(width: 12),
+          // Download Invoice
+          _buildIconActionButton(
+            context,
+            icon: Icons.download_outlined,
+            color: AppColors.purple,
+            onTap: () async {
               final user = context.read<UserCubit>().state;
               final shop = user?.shopDetails;
 
@@ -826,16 +890,30 @@ class SalesDetailsDrawer extends StatelessWidget {
                 shopDetails: shop,
               );
             },
-            icon: const Icon(Icons.download),
-            label: const Text('Download Invoice'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.purple,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIconActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
         ),
-      ],
+        child: Icon(icon, color: color, size: 24),
+      ),
     );
   }
 }

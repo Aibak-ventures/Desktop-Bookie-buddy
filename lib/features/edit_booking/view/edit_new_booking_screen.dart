@@ -144,9 +144,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final _isPriceFilterEnabled = ValueNotifier<bool>(false);
 
   // New Fields for Redesign
-  int coolingPeriodDays = 1;
-  // int coolingPeriodDays = 1;
-  // int coolingPeriodDays = 1;
+  int coolingPeriodDays = 0; // Default to None (0 = same as return date)
   final runningKilometersController = TextEditingController();
 
   // Step state
@@ -511,10 +509,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     if (_haveDatesChanged()) {
       updates['pickup_date'] = pickupDate.format().appendTimeToDate(time: pickupTime);
       updates['return_date'] = returnDate.format().appendTimeToDate(time: returnTime);
-      updates['cooling_period_date'] = returnDate
-          .add(Duration(days: coolingPeriodDays))
-          .format()
-          .appendTimeToDate(time: returnTime);
+      // If coolingPeriodDays is 0 (None), use exact return date and time
+      updates['cooling_period_date'] = coolingPeriodDays == 0
+          ? returnDate.format().appendTimeToDate(time: returnTime)
+          : returnDate
+              .add(Duration(days: coolingPeriodDays))
+              .format()
+              .appendTimeToDate(time: returnTime);
     }
     
     // Include client entirely if any client field changed
@@ -552,20 +553,36 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Note: API expects 'variants' not 'products'
     if (_haveProductsChanged()) {
       final products = selectedProductsNotifier.value;
-      updates['variants'] = products.map((p) => {
-        'variant_id': p.variant.variantId,
-        'quantity': p.quantity,
-        'amount': p.amount,
-        'measurements': p.measurements.isNotEmpty ? p.measurements : null,
+      updates['variants'] = products.map((p) {
+        final variantData = <String, dynamic>{
+          'variant_id': p.variant.variantId,
+          'quantity': p.quantity,
+          'amount': p.amount,
+        };
+        // Include booked item ID if exists (for updating existing items)
+        if (p.variant.id != null) {
+          variantData['id'] = p.variant.id;
+        }
+        // Include measurements if present
+        if (p.measurements.isNotEmpty) {
+          variantData['measurements'] = p.measurements;
+        }
+        return variantData;
       }).toList();
     }
 
     // Include additional charges if changed
     if (_haveAdditionalChargesChanged()) {
       final charges = additionalChargesNotifier.value;
-      updates['additional_charges'] = charges.map((c) => {
-        'name': c.name,
-        'amount': c.amount,
+      updates['additional_charges'] = charges.map((c) {
+        final chargeData = <String, dynamic>{
+          'name': c.name,
+          'amount': c.amount,
+        };
+        if (c.id != null) {
+          chargeData['id'] = c.id;
+        }
+        return chargeData;
       }).toList();
     }
 
@@ -3606,10 +3623,39 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Calculate rental days between booking and return dates
+  /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
+  /// Considers the actual time component for accurate 24-hour period calculation
   int _calculateRentalDays() {
-    if (pickupDate == returnDate) return 1;
-    final difference = returnDate.difference(pickupDate).inDays;
-    return difference > 0 ? difference : 1;
+    if (pickupDate == returnDate && pickupTime == returnTime) return 1;
+    
+    // Create DateTime objects with time component
+    final pickupDateTime = DateTime(
+      pickupDate.year,
+      pickupDate.month,
+      pickupDate.day,
+      pickupTime?.hour ?? 0,
+      pickupTime?.minute ?? 0,
+    );
+    
+    final returnDateTime = DateTime(
+      returnDate.year,
+      returnDate.month,
+      returnDate.day,
+      returnTime?.hour ?? 23,
+      returnTime?.minute ?? 59,
+    );
+    
+    final difference = returnDateTime.difference(pickupDateTime);
+    final hours = difference.inHours;
+
+    // Below 24 hours = 1 day, above = days based on hours
+    if (hours < 24) {
+      return 1;
+    } else {
+      // Calculate days based on hours: 24-48 hours = 2 days, etc.
+      // Use ceil to count partial days as full days
+      return (hours / 24).ceil();
+    }
   }
 
   Widget _buildProductListHeader() {
@@ -4992,11 +5038,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       address: clientAddressController.text.trim(),
       pickupDate: pickupDate.format().appendTimeToDate(time: pickupTime),
       returnDate: returnDate.format().appendTimeToDate(time: returnTime),
-      // Calculate cooling period date from return date + days
-      coolingPeriodDate: returnDate
-          .add(Duration(days: coolingPeriodDays))
-          .format()
-          .appendTimeToDate(time: returnTime),
+      // Calculate cooling period date from return date + days (or same as return if None/0)
+      coolingPeriodDate: coolingPeriodDays == 0
+          ? returnDate.format().appendTimeToDate(time: returnTime)
+          : returnDate
+              .add(Duration(days: coolingPeriodDays))
+              .format()
+              .appendTimeToDate(time: returnTime),
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
@@ -5168,13 +5216,21 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w500,
                             ),
-                            items: List.generate(10, (index) {
-                              final days = index + 1;
-                              return DropdownMenuItem(
-                                value: days,
-                                child: Text('$days day${days > 1 ? 's' : ''}'),
-                              );
-                            }),
+                            items: [
+                              // Add \"None\" option
+                              const DropdownMenuItem(
+                                value: 0,
+                                child: Text('None'),
+                              ),
+                              // Generate 1-10 days
+                              ...List.generate(10, (index) {
+                                final days = index + 1;
+                                return DropdownMenuItem(
+                                  value: days,
+                                  child: Text('$days day${days > 1 ? 's' : ''}'),
+                                );
+                              }),
+                            ],
                             onChanged: (val) {
                               if (val != null) {
                                 setState(() => coolingPeriodDays = val);

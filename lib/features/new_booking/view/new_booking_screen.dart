@@ -179,9 +179,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   // New Fields for Redesign
-  int coolingPeriodDays = 1;
-  // int coolingPeriodDays = 1;
-  // int coolingPeriodDays = 1;
+  int coolingPeriodDays = 0; // Default to None (0 = same as return date)
   final runningKilometersController = TextEditingController();
 
   // Step state
@@ -1614,8 +1612,26 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Calculate number of days between pickup and return dates
   /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
+  /// Considers the actual time component for accurate 24-hour period calculation
   int _calculateRentalDays() {
-    final difference = returnDate.difference(pickupDate);
+    // Create DateTime objects with time component
+    final pickupDateTime = DateTime(
+      pickupDate.year,
+      pickupDate.month,
+      pickupDate.day,
+      pickupTime?.hour ?? 0,
+      pickupTime?.minute ?? 0,
+    );
+    
+    final returnDateTime = DateTime(
+      returnDate.year,
+      returnDate.month,
+      returnDate.day,
+      returnTime?.hour ?? 23,
+      returnTime?.minute ?? 59,
+    );
+    
+    final difference = returnDateTime.difference(pickupDateTime);
     final hours = difference.inHours;
 
     // Below 24 hours = 1 day, above = days based on hours
@@ -1623,6 +1639,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return 1;
     } else {
       // Calculate days based on hours: 24-48 hours = 2 days, etc.
+      // Use ceil to count partial days as full days
       return (hours / 24).ceil();
     }
   }
@@ -3981,16 +3998,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       client: clientData,
       address: clientAddressController.text.trim(),
       pickupDate: pickupDate.format().appendTimeToDate(time: pickupTime),
-      // Add cooling period to return date before passing to backend
-      returnDate: returnDate
-          .add(Duration(days: coolingPeriodDays))
-          .format()
-          .appendTimeToDate(time: returnTime),
+      // If coolingPeriodDays is 0 (None), use exact return date; otherwise add cooling period days
+      returnDate: coolingPeriodDays == 0
+          ? returnDate.format().appendTimeToDate(time: returnTime)
+          : returnDate
+              .add(Duration(days: coolingPeriodDays))
+              .format()
+              .appendTimeToDate(time: returnTime),
       // Cooling period date is same as adjusted return date
-      coolingPeriodDate: returnDate
-          .add(Duration(days: coolingPeriodDays))
-          .format()
-          .appendTimeToDate(time: returnTime),
+      coolingPeriodDate: coolingPeriodDays == 0
+          ? returnDate.format().appendTimeToDate(time: returnTime)
+          : returnDate
+              .add(Duration(days: coolingPeriodDays))
+              .format()
+              .appendTimeToDate(time: returnTime),
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
@@ -4193,13 +4214,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w500,
                             ),
-                            items: List.generate(10, (index) {
-                              final days = index + 1;
-                              return DropdownMenuItem(
-                                value: days,
-                                child: Text('$days day${days > 1 ? 's' : ''}'),
-                              );
-                            }),
+                            items: [
+                              // Add "None" option
+                              const DropdownMenuItem(
+                                value: 0,
+                                child: Text('None'),
+                              ),
+                              // Generate 1-10 days
+                              ...List.generate(10, (index) {
+                                final days = index + 1;
+                                return DropdownMenuItem(
+                                  value: days,
+                                  child: Text('$days day${days > 1 ? 's' : ''}'),
+                                );
+                              }),
+                            ],
                             onChanged: (val) {
                               if (val != null) {
                                 setState(() => coolingPeriodDays = val);
