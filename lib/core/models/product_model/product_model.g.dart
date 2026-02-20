@@ -20,6 +20,12 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       category: json['category'] as String?,
       purchaseAmount: (json['purchase_price'] as num?)?.toInt(),
       price: (json['price'] as num?)?.toInt(),
+      salePrice: json['sale_price'] as String?,
+      registrationNumber: json['registration_number'] as String?,
+      pollutionExpiry: json['pollution_expiry'] as String?,
+      insuranceExpiry: json['insurance_expiry'] as String?,
+      fitnessExpiry: json['fitness_expiry'] as String?,
+      barcode: json['barcode'] as String?,
       variants: (json['variants'] as List<dynamic>)
           .map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -38,6 +44,12 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'category': instance.category,
       'purchase_price': instance.purchaseAmount,
       'price': instance.price,
+      'sale_price': instance.salePrice,
+      'registration_number': instance.registrationNumber,
+      'pollution_expiry': instance.pollutionExpiry,
+      'insurance_expiry': instance.insuranceExpiry,
+      'fitness_expiry': instance.fitnessExpiry,
+      'barcode': instance.barcode,
       'variants': instance.variants,
     };
 

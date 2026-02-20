@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StockManagementCubit extends Cubit<StockManagementState> {
   final ProductRepository _repository;
+  
+  // Track unique categories across all loaded pages for current service
+  final Set<String> _uniqueCategories = {};
 
   StockManagementCubit({required ProductRepository repository})
       : _repository = repository,
@@ -23,6 +26,8 @@ class StockManagementCubit extends Cubit<StockManagementState> {
     try {
       if (page == 1) {
         emit(const StockManagementState.loading());
+        // Reset categories when loading first page or switching services
+        _uniqueCategories.clear();
       } else {
         // Keep current state but mark as paginating
         state.maybeWhen(
@@ -78,14 +83,13 @@ class StockManagementCubit extends Cubit<StockManagementState> {
       final nextPageUrl = paginationModel.nextPageUrl;
       final totalProducts = paginationModel.totalData;
 
-      // Calculate total unique categories from all products
-      final uniqueCategories = <String>{};
+      // Accumulate unique categories from loaded products
       for (final product in productList) {
         if (product.category != null && product.category!.isNotEmpty) {
-          uniqueCategories.add(product.category!);
+          _uniqueCategories.add(product.category!);
         }
       }
-      final totalCategories = uniqueCategories.length;
+      final totalCategories = _uniqueCategories.length;
 
       if (page == 1) {
         emit(StockManagementState.loaded(

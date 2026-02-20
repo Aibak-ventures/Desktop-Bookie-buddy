@@ -34,10 +34,23 @@ mixin _$ProductRequestModel {
   int? get purchasePrice => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   int? get price => throw _privateConstructorUsedError;
+  @JsonKey(name: 'sale_price', includeIfNull: false)
+  int? get salePrice => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   String? get category => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
-  String? get model => throw _privateConstructorUsedError;
+  String? get model =>
+      throw _privateConstructorUsedError; // Vehicle-specific fields
+  @JsonKey(name: 'registration_number', includeIfNull: false)
+  String? get registrationNumber => throw _privateConstructorUsedError;
+  @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+  String? get pollutionExpiry => throw _privateConstructorUsedError;
+  @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+  String? get insuranceExpiry => throw _privateConstructorUsedError;
+  @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+  String? get fitnessExpiry => throw _privateConstructorUsedError;
+  @JsonKey(name: 'barcode', includeIfNull: false)
+  String? get barcode => throw _privateConstructorUsedError;
   @JsonKey(toJson: _variantsToJson, includeIfNull: false)
   List<ProductVariantModel>? get variants =>
       throw _privateConstructorUsedError; // Don't include this in auto-generated JSON
@@ -68,8 +81,18 @@ abstract class $ProductRequestModelCopyWith<$Res> {
       @JsonKey(includeIfNull: false) String? color,
       @JsonKey(name: 'purchase_price', includeIfNull: false) int? purchasePrice,
       @JsonKey(includeIfNull: false) int? price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
       @JsonKey(includeIfNull: false) String? category,
       @JsonKey(includeIfNull: false) String? model,
+      @JsonKey(name: 'registration_number', includeIfNull: false)
+      String? registrationNumber,
+      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      String? pollutionExpiry,
+      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      String? insuranceExpiry,
+      @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+      String? fitnessExpiry,
+      @JsonKey(name: 'barcode', includeIfNull: false) String? barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false) XFile? image});
@@ -97,8 +120,14 @@ class _$ProductRequestModelCopyWithImpl<$Res, $Val extends ProductRequestModel>
     Object? color = freezed,
     Object? purchasePrice = freezed,
     Object? price = freezed,
+    Object? salePrice = freezed,
     Object? category = freezed,
     Object? model = freezed,
+    Object? registrationNumber = freezed,
+    Object? pollutionExpiry = freezed,
+    Object? insuranceExpiry = freezed,
+    Object? fitnessExpiry = freezed,
+    Object? barcode = freezed,
     Object? variants = freezed,
     Object? image = freezed,
   }) {
@@ -131,6 +160,10 @@ class _$ProductRequestModelCopyWithImpl<$Res, $Val extends ProductRequestModel>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      salePrice: freezed == salePrice
+          ? _value.salePrice
+          : salePrice // ignore: cast_nullable_to_non_nullable
+              as int?,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -138,6 +171,26 @@ class _$ProductRequestModelCopyWithImpl<$Res, $Val extends ProductRequestModel>
       model: freezed == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
+              as String?,
+      registrationNumber: freezed == registrationNumber
+          ? _value.registrationNumber
+          : registrationNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pollutionExpiry: freezed == pollutionExpiry
+          ? _value.pollutionExpiry
+          : pollutionExpiry // ignore: cast_nullable_to_non_nullable
+              as String?,
+      insuranceExpiry: freezed == insuranceExpiry
+          ? _value.insuranceExpiry
+          : insuranceExpiry // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fitnessExpiry: freezed == fitnessExpiry
+          ? _value.fitnessExpiry
+          : fitnessExpiry // ignore: cast_nullable_to_non_nullable
+              as String?,
+      barcode: freezed == barcode
+          ? _value.barcode
+          : barcode // ignore: cast_nullable_to_non_nullable
               as String?,
       variants: freezed == variants
           ? _value.variants
@@ -167,8 +220,18 @@ abstract class _$$ProductRequestModelImplCopyWith<$Res>
       @JsonKey(includeIfNull: false) String? color,
       @JsonKey(name: 'purchase_price', includeIfNull: false) int? purchasePrice,
       @JsonKey(includeIfNull: false) int? price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
       @JsonKey(includeIfNull: false) String? category,
       @JsonKey(includeIfNull: false) String? model,
+      @JsonKey(name: 'registration_number', includeIfNull: false)
+      String? registrationNumber,
+      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      String? pollutionExpiry,
+      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      String? insuranceExpiry,
+      @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+      String? fitnessExpiry,
+      @JsonKey(name: 'barcode', includeIfNull: false) String? barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false) XFile? image});
@@ -194,8 +257,14 @@ class __$$ProductRequestModelImplCopyWithImpl<$Res>
     Object? color = freezed,
     Object? purchasePrice = freezed,
     Object? price = freezed,
+    Object? salePrice = freezed,
     Object? category = freezed,
     Object? model = freezed,
+    Object? registrationNumber = freezed,
+    Object? pollutionExpiry = freezed,
+    Object? insuranceExpiry = freezed,
+    Object? fitnessExpiry = freezed,
+    Object? barcode = freezed,
     Object? variants = freezed,
     Object? image = freezed,
   }) {
@@ -228,6 +297,10 @@ class __$$ProductRequestModelImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      salePrice: freezed == salePrice
+          ? _value.salePrice
+          : salePrice // ignore: cast_nullable_to_non_nullable
+              as int?,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -235,6 +308,26 @@ class __$$ProductRequestModelImplCopyWithImpl<$Res>
       model: freezed == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
+              as String?,
+      registrationNumber: freezed == registrationNumber
+          ? _value.registrationNumber
+          : registrationNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      pollutionExpiry: freezed == pollutionExpiry
+          ? _value.pollutionExpiry
+          : pollutionExpiry // ignore: cast_nullable_to_non_nullable
+              as String?,
+      insuranceExpiry: freezed == insuranceExpiry
+          ? _value.insuranceExpiry
+          : insuranceExpiry // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fitnessExpiry: freezed == fitnessExpiry
+          ? _value.fitnessExpiry
+          : fitnessExpiry // ignore: cast_nullable_to_non_nullable
+              as String?,
+      barcode: freezed == barcode
+          ? _value.barcode
+          : barcode // ignore: cast_nullable_to_non_nullable
               as String?,
       variants: freezed == variants
           ? _value._variants
@@ -259,8 +352,17 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
       @JsonKey(includeIfNull: false) this.color,
       @JsonKey(name: 'purchase_price', includeIfNull: false) this.purchasePrice,
       @JsonKey(includeIfNull: false) this.price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) this.salePrice,
       @JsonKey(includeIfNull: false) this.category,
       @JsonKey(includeIfNull: false) this.model,
+      @JsonKey(name: 'registration_number', includeIfNull: false)
+      this.registrationNumber,
+      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      this.pollutionExpiry,
+      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      this.insuranceExpiry,
+      @JsonKey(name: 'fitness_expiry', includeIfNull: false) this.fitnessExpiry,
+      @JsonKey(name: 'barcode', includeIfNull: false) this.barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       final List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false) this.image})
@@ -291,11 +393,30 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
   @JsonKey(includeIfNull: false)
   final int? price;
   @override
+  @JsonKey(name: 'sale_price', includeIfNull: false)
+  final int? salePrice;
+  @override
   @JsonKey(includeIfNull: false)
   final String? category;
   @override
   @JsonKey(includeIfNull: false)
   final String? model;
+// Vehicle-specific fields
+  @override
+  @JsonKey(name: 'registration_number', includeIfNull: false)
+  final String? registrationNumber;
+  @override
+  @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+  final String? pollutionExpiry;
+  @override
+  @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+  final String? insuranceExpiry;
+  @override
+  @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+  final String? fitnessExpiry;
+  @override
+  @JsonKey(name: 'barcode', includeIfNull: false)
+  final String? barcode;
   final List<ProductVariantModel>? _variants;
   @override
   @JsonKey(toJson: _variantsToJson, includeIfNull: false)
@@ -314,7 +435,7 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
 
   @override
   String toString() {
-    return 'ProductRequestModel(productId: $productId, serviceId: $serviceId, name: $name, description: $description, color: $color, purchasePrice: $purchasePrice, price: $price, category: $category, model: $model, variants: $variants, image: $image)';
+    return 'ProductRequestModel(productId: $productId, serviceId: $serviceId, name: $name, description: $description, color: $color, purchasePrice: $purchasePrice, price: $price, salePrice: $salePrice, category: $category, model: $model, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, variants: $variants, image: $image)';
   }
 
   @override
@@ -333,9 +454,20 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
             (identical(other.purchasePrice, purchasePrice) ||
                 other.purchasePrice == purchasePrice) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.salePrice, salePrice) ||
+                other.salePrice == salePrice) &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.model, model) || other.model == model) &&
+            (identical(other.registrationNumber, registrationNumber) ||
+                other.registrationNumber == registrationNumber) &&
+            (identical(other.pollutionExpiry, pollutionExpiry) ||
+                other.pollutionExpiry == pollutionExpiry) &&
+            (identical(other.insuranceExpiry, insuranceExpiry) ||
+                other.insuranceExpiry == insuranceExpiry) &&
+            (identical(other.fitnessExpiry, fitnessExpiry) ||
+                other.fitnessExpiry == fitnessExpiry) &&
+            (identical(other.barcode, barcode) || other.barcode == barcode) &&
             const DeepCollectionEquality().equals(other._variants, _variants) &&
             (identical(other.image, image) || other.image == image));
   }
@@ -351,8 +483,14 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
       color,
       purchasePrice,
       price,
+      salePrice,
       category,
       model,
+      registrationNumber,
+      pollutionExpiry,
+      insuranceExpiry,
+      fitnessExpiry,
+      barcode,
       const DeepCollectionEquality().hash(_variants),
       image);
 
@@ -384,8 +522,18 @@ abstract class _ProductRequestModel implements ProductRequestModel {
       @JsonKey(name: 'purchase_price', includeIfNull: false)
       final int? purchasePrice,
       @JsonKey(includeIfNull: false) final int? price,
+      @JsonKey(name: 'sale_price', includeIfNull: false) final int? salePrice,
       @JsonKey(includeIfNull: false) final String? category,
       @JsonKey(includeIfNull: false) final String? model,
+      @JsonKey(name: 'registration_number', includeIfNull: false)
+      final String? registrationNumber,
+      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      final String? pollutionExpiry,
+      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      final String? insuranceExpiry,
+      @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+      final String? fitnessExpiry,
+      @JsonKey(name: 'barcode', includeIfNull: false) final String? barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       final List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -416,11 +564,29 @@ abstract class _ProductRequestModel implements ProductRequestModel {
   @JsonKey(includeIfNull: false)
   int? get price;
   @override
+  @JsonKey(name: 'sale_price', includeIfNull: false)
+  int? get salePrice;
+  @override
   @JsonKey(includeIfNull: false)
   String? get category;
   @override
   @JsonKey(includeIfNull: false)
-  String? get model;
+  String? get model; // Vehicle-specific fields
+  @override
+  @JsonKey(name: 'registration_number', includeIfNull: false)
+  String? get registrationNumber;
+  @override
+  @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+  String? get pollutionExpiry;
+  @override
+  @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+  String? get insuranceExpiry;
+  @override
+  @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+  String? get fitnessExpiry;
+  @override
+  @JsonKey(name: 'barcode', includeIfNull: false)
+  String? get barcode;
   @override
   @JsonKey(toJson: _variantsToJson, includeIfNull: false)
   List<ProductVariantModel>?

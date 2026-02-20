@@ -981,19 +981,19 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  // Sale Price column - show actual sale_price from variants
+                  // Sale Price column - show actual sale_price from product
                   Expanded(
                     flex: 2,
                     child: Builder(
                       builder: (context) {
-                        // Get the sale price from variants (use first variant's sale price)
-                        int? salePrice;
-                        if (product.variants.isNotEmpty) {
-                          salePrice = product.variants.first.salePrice;
+                        // Get the sale price from product (not variants)
+                        double? salePriceValue;
+                        if (product.salePrice != null && product.salePrice!.isNotEmpty) {
+                          salePriceValue = double.tryParse(product.salePrice!);
                         }
                         return Text(
-                          salePrice != null
-                              ? '₹ ${NumberFormat('#,###').format(salePrice)}'
+                          salePriceValue != null
+                              ? '₹ ${NumberFormat('#,###.##').format(salePriceValue)}'
                               : '-',
                           style: const TextStyle(
                             fontSize: 14,

@@ -48,9 +48,18 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _categoryController = TextEditingController();
   final _purchaseAmountController = TextEditingController();
   final _priceController = TextEditingController();
+  final _salePriceController = TextEditingController(); // Sale price
   final _descriptionController = TextEditingController();
   final _lengthController = TextEditingController(); // For materials
   final _fabricTypeController = TextEditingController(); // For materials
+  
+  // Vehicle-specific fields
+  final _registrationNumberController = TextEditingController();
+  final _pollutionExpiryController = TextEditingController();
+  final _insuranceExpiryController = TextEditingController();
+  final _fitnessExpiryController = TextEditingController();
+  final _barcodeController = TextEditingController();
+  
   final _imageNotifier = ValueNotifier<XFile?>(null);
   final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
 
@@ -117,6 +126,14 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             _purchaseAmountController.text =
                 product.purchaseAmount?.toString() ?? '';
             _descriptionController.text = product.description ?? '';
+
+            // Vehicle-specific fields initialization
+            _registrationNumberController.text =
+                product.registrationNumber ?? '';
+            _pollutionExpiryController.text = product.pollutionExpiry ?? '';
+            _insuranceExpiryController.text = product.insuranceExpiry ?? '';
+            _fitnessExpiryController.text = product.fitnessExpiry ?? '';
+            _barcodeController.text = product.barcode ?? '';
 
             // Load existing variants for edit mode
             if (mainServiceType!.isDress && product.variants.isNotEmpty) {
@@ -313,8 +330,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           ),
           const SizedBox(height: 20),
 
-          // Variants section (for all service types when adding new product)
-          if (widget.product == null) _buildVariantsSection(),
+          // Variants section (show for both add and edit mode)
+          _buildVariantsSection(),
 
           const SizedBox(height: 20),
 
@@ -419,6 +436,17 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         SizedBox(
           width: 280,
           child: CustomTextField(
+            label: 'Sale Price (Optional)',
+            controller: _salePriceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
             label: 'Category (Optional)',
             controller: _categoryController,
             validator: (value) => AppInputValidators.isEmpty(value)
@@ -488,6 +516,17 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           child: CustomTextField(
             label: 'Rent Price (Optional)',
             controller: _priceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Sale Price (Optional)',
+            controller: _salePriceController,
             keyboardType: TextInputType.number,
             validator: (value) => AppInputValidators.isEmpty(value)
                 ? null
@@ -574,6 +613,17 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         SizedBox(
           width: 280,
           child: CustomTextField(
+            label: 'Sale Price (Optional)',
+            controller: _salePriceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
             label: 'Fabric Type',
             controller: _fabricTypeController,
             validator: (value) =>
@@ -639,8 +689,19 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         SizedBox(
           width: 280,
           child: CustomTextField(
-            label: 'Selling Price (Optional)',
+            label: 'Rent Price (Optional)',
             controller: _priceController,
+            keyboardType: TextInputType.number,
+            validator: (value) => AppInputValidators.isEmpty(value)
+                ? null
+                : AppInputValidators.amount(value, allowZero: true),
+          ),
+        ),
+        SizedBox(
+          width: 280,
+          child: CustomTextField(
+            label: 'Sale Price (Optional)',
+            controller: _salePriceController,
             keyboardType: TextInputType.number,
             validator: (value) => AppInputValidators.isEmpty(value)
                 ? null
@@ -683,6 +744,59 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                 : AppInputValidators.model(value),
           ),
         ),
+      ]);
+
+      // Add vehicle-specific fields if the service type is Vehicle
+      if (mainServiceType!.isVehicle) {
+        commonFields.addAll([
+          SizedBox(
+            width: 280,
+            child: CustomTextField(
+              label: 'Registration Number (Optional)',
+              controller: _registrationNumberController,
+              validator: null,
+            ),
+          ),
+          SizedBox(
+            width: 280,
+            child: CustomTextField(
+              label: 'Pollution Expiry (Optional)',
+              controller: _pollutionExpiryController,
+              validator: null,
+              hintText: 'DD/MM/YYYY',
+            ),
+          ),
+          SizedBox(
+            width: 280,
+            child: CustomTextField(
+              label: 'Insurance Expiry (Optional)',
+              controller: _insuranceExpiryController,
+              validator: null,
+              hintText: 'DD/MM/YYYY',
+            ),
+          ),
+          SizedBox(
+            width: 280,
+            child: CustomTextField(
+              label: 'Fitness Expiry (Optional)',
+              controller: _fitnessExpiryController,
+              validator: null,
+              hintText: 'DD/MM/YYYY',
+            ),
+          ),
+          SizedBox(
+            width: 280,
+            child: CustomTextField(
+              label: 'Barcode (Optional)',
+              controller: _barcodeController,
+              validator: null,
+            ),
+          ),
+        ]);
+      }
+
+      // Add description field at the end
+      commonFields.add(
         SizedBox(
           width: 280,
           child: CustomTextField(
@@ -694,7 +808,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                 : AppInputValidators.description(value),
           ),
         ),
-      ]);
+      );
     }
 
     return Wrap(
@@ -1253,8 +1367,25 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           color: _colorController.text.trim(),
           purchasePrice: _purchaseAmountController.text.trim().toIntOrNull(),
           price: _priceController.text.trim().toIntOrNull(),
+          salePrice: _salePriceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
+          // Vehicle-specific fields (will be null if not vehicle)
+          registrationNumber: _registrationNumberController.text.trim().isEmpty
+              ? null
+              : _registrationNumberController.text.trim(),
+          pollutionExpiry: _pollutionExpiryController.text.trim().isEmpty
+              ? null
+              : _pollutionExpiryController.text.trim(),
+          insuranceExpiry: _insuranceExpiryController.text.trim().isEmpty
+              ? null
+              : _insuranceExpiryController.text.trim(),
+          fitnessExpiry: _fitnessExpiryController.text.trim().isEmpty
+              ? null
+              : _fitnessExpiryController.text.trim(),
+          barcode: _barcodeController.text.trim().isEmpty
+              ? null
+              : _barcodeController.text.trim(),
           variants: editVariants,
           image: _imageNotifier.value,
         );
@@ -1267,8 +1398,25 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           color: _colorController.text.trim(),
           purchasePrice: _purchaseAmountController.text.trim().toIntOrNull(),
           price: _priceController.text.trim().toIntOrNull(),
+          salePrice: _salePriceController.text.trim().toIntOrNull(),
           category: _categoryController.text.trim(),
           model: _modelController.text.trim(),
+          // Vehicle-specific fields (will be null if not vehicle)
+          registrationNumber: _registrationNumberController.text.trim().isEmpty
+              ? null
+              : _registrationNumberController.text.trim(),
+          pollutionExpiry: _pollutionExpiryController.text.trim().isEmpty
+              ? null
+              : _pollutionExpiryController.text.trim(),
+          insuranceExpiry: _insuranceExpiryController.text.trim().isEmpty
+              ? null
+              : _insuranceExpiryController.text.trim(),
+          fitnessExpiry: _fitnessExpiryController.text.trim().isEmpty
+              ? null
+              : _fitnessExpiryController.text.trim(),
+          barcode: _barcodeController.text.trim().isEmpty
+              ? null
+              : _barcodeController.text.trim(),
           variants: variantList,
           image: _imageNotifier.value,
         );
@@ -1405,9 +1553,15 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     _categoryController.dispose();
     _purchaseAmountController.dispose();
     _priceController.dispose();
+    _salePriceController.dispose();
     _descriptionController.dispose();
     _lengthController.dispose();
     _fabricTypeController.dispose();
+    _registrationNumberController.dispose();
+    _pollutionExpiryController.dispose();
+    _insuranceExpiryController.dispose();
+    _fitnessExpiryController.dispose();
+    _barcodeController.dispose();
     _variantSizeController.dispose();
     _variantStockController.dispose();
     _variantBarcodeController.dispose();

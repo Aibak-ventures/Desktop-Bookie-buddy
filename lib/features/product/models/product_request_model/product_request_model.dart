@@ -24,8 +24,19 @@ class ProductRequestModel with _$ProductRequestModel {
     @JsonKey(includeIfNull: false) String? color,
     @JsonKey(name: 'purchase_price', includeIfNull: false) int? purchasePrice,
     @JsonKey(includeIfNull: false) int? price,
+    @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
     @JsonKey(includeIfNull: false) String? category,
     @JsonKey(includeIfNull: false) String? model,
+    // Vehicle-specific fields
+    @JsonKey(name: 'registration_number', includeIfNull: false)
+    String? registrationNumber,
+    @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+    String? pollutionExpiry,
+    @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+    String? insuranceExpiry,
+    @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+    String? fitnessExpiry,
+    @JsonKey(name: 'barcode', includeIfNull: false) String? barcode,
     @JsonKey(toJson: _variantsToJson, includeIfNull: false)
     List<ProductVariantModel>? variants,
 

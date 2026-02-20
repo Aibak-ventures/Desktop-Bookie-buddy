@@ -20,6 +20,13 @@ class ProductModel with _$ProductModel {
     String? category,
     @JsonKey(name: 'purchase_price') int? purchaseAmount,
     @JsonKey(name: 'price') int? price,
+    @JsonKey(name: 'sale_price') String? salePrice,
+    // Vehicle-specific fields
+    @JsonKey(name: 'registration_number') String? registrationNumber,
+    @JsonKey(name: 'pollution_expiry') String? pollutionExpiry,
+    @JsonKey(name: 'insurance_expiry') String? insuranceExpiry,
+    @JsonKey(name: 'fitness_expiry') String? fitnessExpiry,
+    @JsonKey(name: 'barcode') String? barcode,
     @JsonKey(name: 'variants') required List<ProductVariantModel> variants,
   }) = _ProductModel;
 

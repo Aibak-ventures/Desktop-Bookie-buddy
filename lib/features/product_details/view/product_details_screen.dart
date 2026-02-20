@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
@@ -6,6 +7,7 @@ import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product/view/widgets/variant_size_type_text_field.dart';
@@ -413,6 +415,56 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     product.variants.first.attribute != product.name))
               ..._buildVariantsSection(product),
 
+            // Stock count for non-variant products
+            if (product.variants.length == 1 &&
+                product.variants.first.attribute == product.name) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.purple.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.purple.withOpacity(0.2)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.inventory_2_outlined,
+                            size: 20, color: AppColors.purple),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Total Stock:',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.purple,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${product.variants.first.stock} Units',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+
             // Product Specifications
             if (product.category != null ||
                 product.model != null ||
@@ -453,6 +505,132 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 ),
               ),
               const SizedBox(height: 16),
+            ],
+
+            // Vehicle-specific information (Registration & Valid Upto)
+            if (product.mainServiceType?.isVehicle == true &&
+                (product.registrationNumber != null ||
+                    product.pollutionExpiry != null ||
+                    product.insuranceExpiry != null ||
+                    product.fitnessExpiry != null ||
+                    product.barcode != null)) ...[
+              // Registration Number
+              if (product.registrationNumber != null &&
+                  product.registrationNumber!.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.app_registration,
+                          size: 18, color: Colors.grey.shade600),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Registration No:',
+                        style: TextStyle(
+                          color: Color(0xFF787878),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        product.registrationNumber!,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+
+              // Valid Upto Section (Expiry Dates)
+              if (product.pollutionExpiry != null ||
+                  product.insuranceExpiry != null ||
+                  product.fitnessExpiry != null) ...[
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3F0FF),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.purple.withOpacity(0.2)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.verified_user_outlined,
+                              size: 18, color: AppColors.purple),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Valid Upto',
+                            style: TextStyle(
+                              color: AppColors.purple,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildExpiryRow(
+                          'Pollution', product.pollutionExpiry ?? 'N/A'),
+                      const SizedBox(height: 8),
+                      _buildExpiryRow(
+                          'Insurance', product.insuranceExpiry ?? 'N/A'),
+                      const SizedBox(height: 8),
+                      _buildExpiryRow('Fitness', product.fitnessExpiry ?? 'N/A'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Barcode
+              if (product.barcode != null && product.barcode!.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.qr_code,
+                          size: 18, color: Colors.grey.shade600),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Barcode:',
+                        style: TextStyle(
+                          color: Color(0xFF787878),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        product.barcode!,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
             ],
 
             // Description
@@ -704,6 +882,31 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
+  // Helper method for vehicle expiry dates
+  Widget _buildExpiryRow(String label, String value) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Color(0xFF787878),
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: TextStyle(
+            color: value == 'N/A' ? Colors.grey.shade400 : Colors.black,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _variantCard(ProductVariantModel variant) {
     return Stack(
       clipBehavior: Clip.none,
@@ -775,102 +978,38 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   }
 
   void _showDeleteProductDialog(ProductModel product) {
-    final passwordController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Product'),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Are you sure you want to delete product "${product.name}"? This action cannot be undone.',
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password to confirm',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock_outline),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password is required';
-                  }
-                  return null;
-                },
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (formKey.currentState!.validate()) {
-                Navigator.pop(dialogContext);
-                try {
-                  await context
-                      .read<ProductDetailsCubit>()
-                      .deleteProduct(product.id);
-                  if (mounted) {
-                    context.read<StockManagementCubit>().hideProductDetails();
-                    context.showSnackBar('Product deleted successfully');
-                  }
-                } catch (e) {
-                  if (mounted) {
-                    context.showSnackBar('Failed to delete product: $e',
-                        isError: true);
-                  }
-                }
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+    performSecureActionDialog(
+      context,
+      SecretPasswordLocations.productDeletion,
+      onSuccess: () async {
+        try {
+          await context
+              .read<ProductDetailsCubit>()
+              .deleteProduct(product.id);
+          if (mounted) {
+            context.read<StockManagementCubit>().hideProductDetails();
+            context.showSnackBar('Product deleted successfully');
+          }
+        } catch (e) {
+          if (mounted) {
+            context.showSnackBar('Failed to delete product: $e',
+                isError: true);
+          }
+        }
+      },
     );
   }
 
   void _showDeleteVariantDialog(ProductVariantModel variant) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Variant'),
-        content: Text(
-            'Are you sure you want to delete variant "${variant.attribute}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<ProductDetailsCubit>().deleteProductVariant(
-                    productId: widget.productId,
-                    variantId: variant.id,
-                  );
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+    performSecureActionDialog(
+      context,
+      SecretPasswordLocations.productDeletion,
+      onSuccess: () async {
+        await context.read<ProductDetailsCubit>().deleteProductVariant(
+              productId: widget.productId,
+              variantId: variant.id,
+            );
+      },
     );
   }
 
