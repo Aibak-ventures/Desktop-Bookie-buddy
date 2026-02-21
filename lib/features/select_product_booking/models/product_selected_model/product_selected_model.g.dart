@@ -18,6 +18,7 @@ _$ProductSelectedModelImpl _$$ProductSelectedModelImplFromJson(
               .toList() ??
           const [],
       quantity: (json['quantity'] as num).toInt(),
+      runningKilometers: json['runningKilometers'] as String?,
     );
 
 Map<String, dynamic> _$$ProductSelectedModelImplToJson(
@@ -27,4 +28,5 @@ Map<String, dynamic> _$$ProductSelectedModelImplToJson(
       'amount': instance.amount,
       'measurements': instance.measurements,
       'quantity': instance.quantity,
+      'runningKilometers': instance.runningKilometers,
     };

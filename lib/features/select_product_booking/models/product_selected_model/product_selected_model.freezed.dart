@@ -25,6 +25,7 @@ mixin _$ProductSelectedModel {
   List<MeasurementValueModel> get measurements =>
       throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
+  String? get runningKilometers => throw _privateConstructorUsedError;
 
   /// Serializes this ProductSelectedModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,7 +47,8 @@ abstract class $ProductSelectedModelCopyWith<$Res> {
       {ProductInfoModel variant,
       int amount,
       List<MeasurementValueModel> measurements,
-      int quantity});
+      int quantity,
+      String? runningKilometers});
 
   $ProductInfoModelCopyWith<$Res> get variant;
 }
@@ -71,6 +73,7 @@ class _$ProductSelectedModelCopyWithImpl<$Res,
     Object? amount = null,
     Object? measurements = null,
     Object? quantity = null,
+    Object? runningKilometers = freezed,
   }) {
     return _then(_value.copyWith(
       variant: null == variant
@@ -89,6 +92,10 @@ class _$ProductSelectedModelCopyWithImpl<$Res,
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
               as int,
+      runningKilometers: freezed == runningKilometers
+          ? _value.runningKilometers
+          : runningKilometers // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -115,7 +122,8 @@ abstract class _$$ProductSelectedModelImplCopyWith<$Res>
       {ProductInfoModel variant,
       int amount,
       List<MeasurementValueModel> measurements,
-      int quantity});
+      int quantity,
+      String? runningKilometers});
 
   @override
   $ProductInfoModelCopyWith<$Res> get variant;
@@ -138,6 +146,7 @@ class __$$ProductSelectedModelImplCopyWithImpl<$Res>
     Object? amount = null,
     Object? measurements = null,
     Object? quantity = null,
+    Object? runningKilometers = freezed,
   }) {
     return _then(_$ProductSelectedModelImpl(
       variant: null == variant
@@ -156,6 +165,10 @@ class __$$ProductSelectedModelImplCopyWithImpl<$Res>
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
               as int,
+      runningKilometers: freezed == runningKilometers
+          ? _value.runningKilometers
+          : runningKilometers // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -167,7 +180,8 @@ class _$ProductSelectedModelImpl implements _ProductSelectedModel {
       {required this.variant,
       required this.amount,
       final List<MeasurementValueModel> measurements = const [],
-      required this.quantity})
+      required this.quantity,
+      this.runningKilometers})
       : _measurements = measurements;
 
   factory _$ProductSelectedModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -188,10 +202,12 @@ class _$ProductSelectedModelImpl implements _ProductSelectedModel {
 
   @override
   final int quantity;
+  @override
+  final String? runningKilometers;
 
   @override
   String toString() {
-    return 'ProductSelectedModel(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity)';
+    return 'ProductSelectedModel(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
   }
 
   @override
@@ -204,13 +220,20 @@ class _$ProductSelectedModelImpl implements _ProductSelectedModel {
             const DeepCollectionEquality()
                 .equals(other._measurements, _measurements) &&
             (identical(other.quantity, quantity) ||
-                other.quantity == quantity));
+                other.quantity == quantity) &&
+            (identical(other.runningKilometers, runningKilometers) ||
+                other.runningKilometers == runningKilometers));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, variant, amount,
-      const DeepCollectionEquality().hash(_measurements), quantity);
+  int get hashCode => Object.hash(
+      runtimeType,
+      variant,
+      amount,
+      const DeepCollectionEquality().hash(_measurements),
+      quantity,
+      runningKilometers);
 
   /// Create a copy of ProductSelectedModel
   /// with the given fields replaced by the non-null parameter values.
@@ -235,7 +258,8 @@ abstract class _ProductSelectedModel implements ProductSelectedModel {
       {required final ProductInfoModel variant,
       required final int amount,
       final List<MeasurementValueModel> measurements,
-      required final int quantity}) = _$ProductSelectedModelImpl;
+      required final int quantity,
+      final String? runningKilometers}) = _$ProductSelectedModelImpl;
 
   factory _ProductSelectedModel.fromJson(Map<String, dynamic> json) =
       _$ProductSelectedModelImpl.fromJson;
@@ -248,6 +272,8 @@ abstract class _ProductSelectedModel implements ProductSelectedModel {
   List<MeasurementValueModel> get measurements;
   @override
   int get quantity;
+  @override
+  String? get runningKilometers;
 
   /// Create a copy of ProductSelectedModel
   /// with the given fields replaced by the non-null parameter values.

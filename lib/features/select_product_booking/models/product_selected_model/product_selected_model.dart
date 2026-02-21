@@ -12,6 +12,7 @@ class ProductSelectedModel with _$ProductSelectedModel {
     required int amount,
     @Default([]) List<MeasurementValueModel> measurements,
     required int quantity,
+    String? runningKilometers, // For vehicles - start and end km
   }) = _ProductSelectedModel;
 
   factory ProductSelectedModel.fromJson(Map<String, dynamic> json) =>
@@ -26,16 +27,27 @@ extension ProductSelectedModelToJsonExtension on ProductSelectedModel {
         measurementMap[m.name] = m.value;
       }
 
-    return {
+    final json = <String, dynamic>{
       'id': variant.variantId,
       'amount': amount,
-      if (includeMeasurement) 'measurements': measurementMap,
       'quantity': quantity,
     };
+    
+    // Add measurements if included and not empty
+    if (includeMeasurement && measurementMap.isNotEmpty) {
+      json['measurements'] = measurementMap;
+    }
+    
+    // Add running kilometers for vehicles if present
+    if (runningKilometers != null && runningKilometers!.isNotEmpty) {
+      json['running_kilometers'] = runningKilometers;
+    }
+    
+    return json;
   }
 }
 
-// import 'dart:convert';
+// import 'dart:convert';   
 
 // import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 // import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';

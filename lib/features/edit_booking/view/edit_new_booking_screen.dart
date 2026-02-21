@@ -3151,11 +3151,48 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         return BlocListener<SelectProductBloc, SelectProductState>(
           bloc: _selectProductBloc,
           listener: (context, state) {
-            // Show/hide overlay based on state
+            //Update existing products' stock from availability API
             state.maybeWhen(
               loaded: (products, p1, p2, p3, p4, p5, isSearching, p7, p8, p9,
                   p10, p11, p12, p13, p14) {
-                // Show overlay if:
+                // Update stock for already selected products from fresh availability data
+                if (widget.bookingId != null && products.isNotEmpty) {
+                  final currentProducts = selectedProductsNotifier.value;
+                  final updatedProducts = currentProducts.map((selectedProduct) {
+                    // Find matching variant in fresh availability data
+                    for (final freshProduct in products) {
+                      final matchingVariant = freshProduct.variants.firstWhere(
+                        (v) => v.id == selectedProduct.variant.variantId,
+                        orElse: () => ProductVariantModel(
+                          id: 0,
+                          attribute: '',
+                          price: null,
+                          stock: 0,
+                          remainingStock: null,
+                        ),
+                      );
+                      
+                      if (matchingVariant.id != 0) {
+                        // Update with fresh stock values
+                        return selectedProduct.copyWith(
+                          variant: selectedProduct.variant.copyWith(
+                            stock: matchingVariant.stock,
+                            remainingStock: matchingVariant.remainingStock,
+                          ),
+                        );
+                      }
+                    }
+                    return selectedProduct; // No update if not found
+                  }).toList();
+                  
+                  // Only update if something actually changed
+                  if (updatedProducts.toString() != currentProducts.toString()) {
+                    selectedProductsNotifier.value = updatedProducts;
+                    log('✅ Updated stock values for ${updatedProducts.length} selected products');
+                  }
+                }
+                
+                // Show/hide overlay based on state
                 // 1. There are products AND
                 // 2. Either search text is not empty OR filters are applied (isSearching = true)
                 final hasSearchText = serviceSearchController.text.isNotEmpty;

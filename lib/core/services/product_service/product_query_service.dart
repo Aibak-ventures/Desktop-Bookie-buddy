@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
@@ -225,7 +226,7 @@ class ProductQueryService {
                 if (endPrice != null) 'max_price': endPrice,
                 if (bookingId != null) 'booking_id': bookingId,
                 if (variantIds != null && variantIds.isNotEmpty) 
-                  'variant_ids': variantIds,
+                  'variant_ids': jsonEncode(variantIds), // Send as JSON array string
               },
       );
       // log('Fetch available products response: ${response.realUri.toString()} ${response.data}');
