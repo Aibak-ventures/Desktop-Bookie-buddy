@@ -9,6 +9,7 @@ import 'package:bookie_buddy_web/core/models/product_model/product_variant_model
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
+import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product/view/widgets/variant_size_type_text_field.dart';
 import 'package:bookie_buddy_web/features/product_details/view/widgets/monthly_bar_chart.dart';
@@ -31,10 +32,15 @@ import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/
 
 class ProductDetailsScreen extends StatefulWidget {
   final int productId;
-
+  final int? serviceId; // Service ID passed from navigation
+final MainServiceType? mainServiceType;
+final ProductModel? productForEdit; // Optional product model for direct data access
   const ProductDetailsScreen({
     super.key,
     required this.productId,
+    this.serviceId,
+    this.mainServiceType,
+    this.productForEdit,
   });
 
   @override
@@ -44,11 +50,30 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  int _currentPage = 1;
+  String _currentBookingStatus = 'upcoming'; // Track current tab status
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    
+    // Listen to tab changes and reload bookings with the appropriate status
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        final newStatus = _tabController.index == 0 ? 'upcoming' : 'completed';
+        if (newStatus != _currentBookingStatus) {
+          _currentBookingStatus = newStatus;
+          context
+              .read<ProductDetailsCubit>()
+              .reloadBookingsWithStatus(widget.productId, _currentBookingStatus);
+        }
+      }
+    });
+    
+    context
+        .read<ProductDetailsCubit>()
+        .loadProductDetails(widget.productId, bookingStatus: _currentBookingStatus);
   }
 
   @override
@@ -63,54 +88,67 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       providers: [
         BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
       ],
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
-        body: Stack(
-          children: [
-            BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-              builder: (context, state) {
-                return state.when(
-                  initial: () => const Center(child: Text('Initializing...')),
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(color: AppColors.purple),
-                  ),
-                  loaded: (product, bookings, monthlySummary, nextPageUrl,
-                          isPaginatingBookings) =>
-                      _buildContent(context, product, bookings, monthlySummary),
-                  error: (message) => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error_outline,
-                            size: 64, color: Colors.red.shade300),
-                        const SizedBox(height: 16),
-                        Text(
-                          message,
-                          style: TextStyle(
-                              fontSize: 16, color: Colors.red.shade600),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            context
-                                .read<ProductDetailsCubit>()
-                                .loadProductDetails(widget.productId);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.purple,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
+      child: BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
+        listener: (context, drawerState) {
+          // When drawer opens with a booking ID, fetch the booking details
+          if (drawerState.isOpen && drawerState.selectedBookingId != null) {
+            context.read<BookingDetailsBloc>().add(
+                  BookingDetailsEvent.fetchBookingDetails(
+                    drawerState.selectedBookingId!,
                   ),
                 );
-              },
-            ),
-            // Drawer overlay
-            const BookingDetailsDrawer(),
-          ],
+          }
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF5F7FA),
+          body: Stack(
+            children: [
+              BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                builder: (context, state) {
+                  return state.when(
+                    initial: () => const Center(child: Text('Initializing...')),
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(color: AppColors.purple),
+                    ),
+                    loaded: (product, bookings, monthlySummary, nextPageUrl,
+                            isPaginatingBookings) =>
+                        _buildContent(
+                            context, product, bookings, monthlySummary),
+                    error: (message) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error_outline,
+                              size: 64, color: Colors.red.shade300),
+                          const SizedBox(height: 16),
+                          Text(
+                            message,
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.red.shade600),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<ProductDetailsCubit>()
+                                  .loadProductDetails(widget.productId, bookingStatus: _currentBookingStatus);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.purple,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+              // Drawer overlay
+              const BookingDetailsDrawer(),
+            ],
+          ),
         ),
       ),
     );
@@ -123,7 +161,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     List<ProductMonthlyDataModel> monthlySummary,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -224,29 +262,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               ),
               const SizedBox(width: 12),
               OutlinedButton.icon(
-                onPressed: () async {
-                  final selectedServiceId =
-                      context.read<StockManagementCubit>().state.maybeWhen(
-                            loaded: (_, __, ___, ____, _____, serviceId, ______,
-                                    _______) =>
-                                serviceId,
-                            orElse: () => null,
-                          );
-                  final result = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => BlocProvider(
-                      create: (context) => SaveProductCubit(),
-                      child: AddEditProductDialog(
-                        serviceId: selectedServiceId,
-                        product: product,
-                      ),
-                    ),
-                  );
-                  if (result == true && context.mounted) {
-                    context
-                        .read<ProductDetailsCubit>()
-                        .loadProductDetails(product.id);
-                  }
+                onPressed: () {
+                  _showAddEditProductDialog(context, product: widget.productForEdit);
                 },
                 icon: const Icon(Icons.edit_outlined, size: 16),
                 label: const Text('Edit Product',
@@ -507,130 +524,102 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               const SizedBox(height: 16),
             ],
 
-            // Vehicle-specific information (Registration & Valid Upto)
-            if (product.mainServiceType?.isVehicle == true &&
-                (product.registrationNumber != null ||
-                    product.pollutionExpiry != null ||
-                    product.insuranceExpiry != null ||
-                    product.fitnessExpiry != null ||
-                    product.barcode != null)) ...[
+            // Vehicle-specific information (Registration & Valid Upto) for vehicles
+            // Always show for vehicles, even if fields are empty (show N/A)
+            // Show if: mainServiceType is vehicle OR if we have vehicle attributes (fallback)
+            if ((product.effectiveRegistrationNumber != null ||
+                product.effectivePollutionExpiry != null ||
+                product.effectiveInsuranceExpiry != null ||
+                product.effectiveFitnessExpiry != null)) ...[
               // Registration Number
-              if (product.registrationNumber != null &&
-                  product.registrationNumber!.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.app_registration,
-                          size: 18, color: Colors.grey.shade600),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Registration No:',
-                        style: TextStyle(
-                          color: Color(0xFF787878),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        product.registrationNumber!,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade200),
                 ),
-                const SizedBox(height: 12),
-              ],
+                child: Row(
+                  children: [
+                    Icon(Icons.app_registration,
+                        size: 18, color: Colors.grey.shade600),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Registration No:',
+                      style: TextStyle(
+                        color: Color(0xFF787878),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      product.effectiveRegistrationNumber != null &&
+                              product.effectiveRegistrationNumber!.isNotEmpty
+                          ? product.effectiveRegistrationNumber!
+                          : 'N/A',
+                      style: TextStyle(
+                        color: product.effectiveRegistrationNumber != null &&
+                                product.effectiveRegistrationNumber!.isNotEmpty
+                            ? Colors.black
+                            : Colors.grey.shade400,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
 
-              // Valid Upto Section (Expiry Dates)
-              if (product.pollutionExpiry != null ||
-                  product.insuranceExpiry != null ||
-                  product.fitnessExpiry != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3F0FF),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.purple.withOpacity(0.2)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.verified_user_outlined,
-                              size: 18, color: AppColors.purple),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'Valid Upto',
-                            style: TextStyle(
-                              color: AppColors.purple,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+              // Valid Upto Section (Expiry Dates) - Always show for vehicles
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F0FF),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.purple.withOpacity(0.2)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.verified_user_outlined,
+                            size: 18, color: AppColors.purple),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Valid Upto',
+                          style: TextStyle(
+                            color: AppColors.purple,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      _buildExpiryRow(
-                          'Pollution', product.pollutionExpiry ?? 'N/A'),
-                      const SizedBox(height: 8),
-                      _buildExpiryRow(
-                          'Insurance', product.insuranceExpiry ?? 'N/A'),
-                      const SizedBox(height: 8),
-                      _buildExpiryRow('Fitness', product.fitnessExpiry ?? 'N/A'),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Barcode
-              if (product.barcode != null && product.barcode!.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.qr_code,
-                          size: 18, color: Colors.grey.shade600),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Barcode:',
-                        style: TextStyle(
-                          color: Color(0xFF787878),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
                         ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        product.barcode!,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    _buildExpiryRow(
+                        'Pollution',
+                        product.effectivePollutionExpiry?.isNotEmpty == true
+                            ? product.effectivePollutionExpiry!
+                            : 'N/A'),
+                    const SizedBox(height: 8),
+                    _buildExpiryRow(
+                        'Insurance',
+                        product.effectiveInsuranceExpiry?.isNotEmpty == true
+                            ? product.effectiveInsuranceExpiry!
+                            : 'N/A'),
+                    const SizedBox(height: 8),
+                    _buildExpiryRow(
+                        'Permit',
+                        product.effectiveFitnessExpiry?.isNotEmpty == true
+                            ? product.effectiveFitnessExpiry!
+                            : 'N/A'),
+                  ],
                 ),
-                const SizedBox(height: 16),
-              ],
+              ),
+              const SizedBox(height: 16),
             ],
 
             // Description
@@ -696,45 +685,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF1F2937),
                 ),
-              ),
-              const Spacer(),
-              // Earned & Expense indicators in the same row
-              Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF8B5CF6),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  const Text(
-                    'Earned',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFF6B6B),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  const Text(
-                    'Expense',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -804,7 +754,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               ),
               tabs: const [
                 Tab(text: 'Upcoming'),
-                Tab(text: 'Returns'),
+                Tab(text: 'Completed'),
               ],
             ),
           ),
@@ -816,19 +766,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                // Upcoming Bookings
+                // Upcoming Bookings (API filtered)
                 _buildBookingsList(
-                  bookings
-                      .where((b) => b.bookingStatus == BookingStatus.upcoming)
-                      .toList(),
+                  bookings,
                   'No upcoming bookings',
                 ),
-                // Returns (Completed) Bookings
+                // Completed Bookings (API filtered)
                 _buildBookingsList(
-                  bookings
-                      .where((b) => b.bookingStatus == BookingStatus.completed)
-                      .toList(),
-                  'No returned bookings',
+                  bookings,
+                  'No completed bookings',
                   isOngoing: true,
                 ),
               ],
@@ -907,13 +853,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  Widget _variantCard(ProductVariantModel variant) {
+  Widget _variantCard(ProductVariantModel variant, ProductModel product) {
+    // For gadgets, use wider rectangular design to accommodate serial numbers
+    final isGadget = product.mainServiceType?.isGadget == true;
+    final cardWidth = isGadget ? 150.0 : 82.0;
+    final cardHeight = 65.0;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          width: 82,
-          height: 65,
+          width: cardWidth,
+          height: cardHeight,
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
@@ -983,17 +934,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       SecretPasswordLocations.productDeletion,
       onSuccess: () async {
         try {
-          await context
-              .read<ProductDetailsCubit>()
-              .deleteProduct(product.id);
+          await context.read<ProductDetailsCubit>().deleteProduct(product.id);
           if (mounted) {
             context.read<StockManagementCubit>().hideProductDetails();
             context.showSnackBar('Product deleted successfully');
           }
         } catch (e) {
           if (mounted) {
-            context.showSnackBar('Failed to delete product: $e',
-                isError: true);
+            context.showSnackBar('Failed to delete product: $e', isError: true);
           }
         }
       },
@@ -1031,7 +979,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           children: [
             ...product.variants.map((variant) => Padding(
                   padding: const EdgeInsets.only(right: 12),
-                  child: _variantCard(variant),
+                  child: _variantCard(variant, product),
                 )),
             _addVariantButton(),
           ],
@@ -1328,16 +1276,42 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           child: BookingCard(
             booking: booking,
             useReturnDate: isOngoing,
-            onTap: () => _showBookingDetailsDrawer(booking),
+            // onTap: () => _showBookingDetailsDrawer(booking),
+            onTap: () {
+              // Open booking details drawer using the cubit
+              context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id!);
+            },
           ),
         );
       },
     );
   }
 
-  void _showBookingDetailsDrawer(BookingsModel booking) {
-    // Open booking details drawer using the cubit
-    context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id!);
+
+  /// Show add/edit product dialog (same as stock management screen)
+  Future<void> _showAddEditProductDialog(BuildContext context,
+      {ProductModel? product}) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => SaveProductCubit()),
+          BlocProvider.value(value: context.read<ServiceBloc>()),
+        ],
+        child: AddEditProductDialog(
+          serviceId: widget.serviceId ,
+          product: product,
+        ),
+      ),
+    );
+
+    // Refresh product details if a product was edited
+    if (result == true && mounted) {
+      context
+          .read<ProductDetailsCubit>()
+          .loadProductDetails(widget.productId, bookingStatus: _currentBookingStatus);
+    }
   }
 
   void _showBookingDetailsDrawerOLD(BookingsModel booking) {

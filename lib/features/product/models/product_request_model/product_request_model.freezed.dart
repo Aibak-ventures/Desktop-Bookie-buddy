@@ -40,16 +40,16 @@ mixin _$ProductRequestModel {
   String? get category => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   String? get model =>
-      throw _privateConstructorUsedError; // Vehicle-specific fields
-  @JsonKey(name: 'registration_number', includeIfNull: false)
+      throw _privateConstructorUsedError; // Vehicle-specific fields - these won't be in JSON, handled separately in toFormJson
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get registrationNumber => throw _privateConstructorUsedError;
-  @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get pollutionExpiry => throw _privateConstructorUsedError;
-  @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get insuranceExpiry => throw _privateConstructorUsedError;
-  @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get fitnessExpiry => throw _privateConstructorUsedError;
-  @JsonKey(name: 'barcode', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get barcode => throw _privateConstructorUsedError;
   @JsonKey(toJson: _variantsToJson, includeIfNull: false)
   List<ProductVariantModel>? get variants =>
@@ -84,15 +84,15 @@ abstract class $ProductRequestModelCopyWith<$Res> {
       @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
       @JsonKey(includeIfNull: false) String? category,
       @JsonKey(includeIfNull: false) String? model,
-      @JsonKey(name: 'registration_number', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? registrationNumber,
-      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? pollutionExpiry,
-      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? insuranceExpiry,
-      @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? fitnessExpiry,
-      @JsonKey(name: 'barcode', includeIfNull: false) String? barcode,
+      @JsonKey(includeFromJson: false, includeToJson: false) String? barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false) XFile? image});
@@ -223,15 +223,15 @@ abstract class _$$ProductRequestModelImplCopyWith<$Res>
       @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
       @JsonKey(includeIfNull: false) String? category,
       @JsonKey(includeIfNull: false) String? model,
-      @JsonKey(name: 'registration_number', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? registrationNumber,
-      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? pollutionExpiry,
-      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? insuranceExpiry,
-      @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       String? fitnessExpiry,
-      @JsonKey(name: 'barcode', includeIfNull: false) String? barcode,
+      @JsonKey(includeFromJson: false, includeToJson: false) String? barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false) XFile? image});
@@ -355,14 +355,14 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
       @JsonKey(name: 'sale_price', includeIfNull: false) this.salePrice,
       @JsonKey(includeIfNull: false) this.category,
       @JsonKey(includeIfNull: false) this.model,
-      @JsonKey(name: 'registration_number', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       this.registrationNumber,
-      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       this.pollutionExpiry,
-      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       this.insuranceExpiry,
-      @JsonKey(name: 'fitness_expiry', includeIfNull: false) this.fitnessExpiry,
-      @JsonKey(name: 'barcode', includeIfNull: false) this.barcode,
+      @JsonKey(includeFromJson: false, includeToJson: false) this.fitnessExpiry,
+      @JsonKey(includeFromJson: false, includeToJson: false) this.barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       final List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false) this.image})
@@ -401,21 +401,21 @@ class _$ProductRequestModelImpl implements _ProductRequestModel {
   @override
   @JsonKey(includeIfNull: false)
   final String? model;
-// Vehicle-specific fields
+// Vehicle-specific fields - these won't be in JSON, handled separately in toFormJson
   @override
-  @JsonKey(name: 'registration_number', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? registrationNumber;
   @override
-  @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? pollutionExpiry;
   @override
-  @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? insuranceExpiry;
   @override
-  @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? fitnessExpiry;
   @override
-  @JsonKey(name: 'barcode', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? barcode;
   final List<ProductVariantModel>? _variants;
   @override
@@ -525,15 +525,16 @@ abstract class _ProductRequestModel implements ProductRequestModel {
       @JsonKey(name: 'sale_price', includeIfNull: false) final int? salePrice,
       @JsonKey(includeIfNull: false) final String? category,
       @JsonKey(includeIfNull: false) final String? model,
-      @JsonKey(name: 'registration_number', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       final String? registrationNumber,
-      @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       final String? pollutionExpiry,
-      @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       final String? insuranceExpiry,
-      @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+      @JsonKey(includeFromJson: false, includeToJson: false)
       final String? fitnessExpiry,
-      @JsonKey(name: 'barcode', includeIfNull: false) final String? barcode,
+      @JsonKey(includeFromJson: false, includeToJson: false)
+      final String? barcode,
       @JsonKey(toJson: _variantsToJson, includeIfNull: false)
       final List<ProductVariantModel>? variants,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -571,21 +572,22 @@ abstract class _ProductRequestModel implements ProductRequestModel {
   String? get category;
   @override
   @JsonKey(includeIfNull: false)
-  String? get model; // Vehicle-specific fields
+  String?
+      get model; // Vehicle-specific fields - these won't be in JSON, handled separately in toFormJson
   @override
-  @JsonKey(name: 'registration_number', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get registrationNumber;
   @override
-  @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get pollutionExpiry;
   @override
-  @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get insuranceExpiry;
   @override
-  @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get fitnessExpiry;
   @override
-  @JsonKey(name: 'barcode', includeIfNull: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? get barcode;
   @override
   @JsonKey(toJson: _variantsToJson, includeIfNull: false)

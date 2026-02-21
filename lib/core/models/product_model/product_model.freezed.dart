@@ -37,7 +37,7 @@ mixin _$ProductModel {
   int? get price => throw _privateConstructorUsedError;
   @JsonKey(name: 'sale_price')
   String? get salePrice =>
-      throw _privateConstructorUsedError; // Vehicle-specific fields
+      throw _privateConstructorUsedError; // Vehicle-specific fields (for direct API responses or request models)
   @JsonKey(name: 'registration_number')
   String? get registrationNumber => throw _privateConstructorUsedError;
   @JsonKey(name: 'pollution_expiry')
@@ -47,7 +47,9 @@ mixin _$ProductModel {
   @JsonKey(name: 'fitness_expiry')
   String? get fitnessExpiry => throw _privateConstructorUsedError;
   @JsonKey(name: 'barcode')
-  String? get barcode => throw _privateConstructorUsedError;
+  String? get barcode =>
+      throw _privateConstructorUsedError; // Attributes map for nested vehicle data from list API
+  Map<String, dynamic> get attributes => throw _privateConstructorUsedError;
   @JsonKey(name: 'variants')
   List<ProductVariantModel> get variants => throw _privateConstructorUsedError;
 
@@ -86,6 +88,7 @@ abstract class $ProductModelCopyWith<$Res> {
       @JsonKey(name: 'insurance_expiry') String? insuranceExpiry,
       @JsonKey(name: 'fitness_expiry') String? fitnessExpiry,
       @JsonKey(name: 'barcode') String? barcode,
+      Map<String, dynamic> attributes,
       @JsonKey(name: 'variants') List<ProductVariantModel> variants});
 }
 
@@ -121,6 +124,7 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? insuranceExpiry = freezed,
     Object? fitnessExpiry = freezed,
     Object? barcode = freezed,
+    Object? attributes = null,
     Object? variants = null,
   }) {
     return _then(_value.copyWith(
@@ -192,6 +196,10 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.barcode
           : barcode // ignore: cast_nullable_to_non_nullable
               as String?,
+      attributes: null == attributes
+          ? _value.attributes
+          : attributes // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       variants: null == variants
           ? _value.variants
           : variants // ignore: cast_nullable_to_non_nullable
@@ -227,6 +235,7 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       @JsonKey(name: 'insurance_expiry') String? insuranceExpiry,
       @JsonKey(name: 'fitness_expiry') String? fitnessExpiry,
       @JsonKey(name: 'barcode') String? barcode,
+      Map<String, dynamic> attributes,
       @JsonKey(name: 'variants') List<ProductVariantModel> variants});
 }
 
@@ -260,6 +269,7 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? insuranceExpiry = freezed,
     Object? fitnessExpiry = freezed,
     Object? barcode = freezed,
+    Object? attributes = null,
     Object? variants = null,
   }) {
     return _then(_$ProductModelImpl(
@@ -331,6 +341,10 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.barcode
           : barcode // ignore: cast_nullable_to_non_nullable
               as String?,
+      attributes: null == attributes
+          ? _value._attributes
+          : attributes // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       variants: null == variants
           ? _value._variants
           : variants // ignore: cast_nullable_to_non_nullable
@@ -341,7 +355,7 @@ class __$$ProductModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProductModelImpl implements _ProductModel {
+class _$ProductModelImpl extends _ProductModel {
   const _$ProductModelImpl(
       {required this.id,
       required this.name,
@@ -361,9 +375,12 @@ class _$ProductModelImpl implements _ProductModel {
       @JsonKey(name: 'insurance_expiry') this.insuranceExpiry,
       @JsonKey(name: 'fitness_expiry') this.fitnessExpiry,
       @JsonKey(name: 'barcode') this.barcode,
+      final Map<String, dynamic> attributes = const {},
       @JsonKey(name: 'variants')
       required final List<ProductVariantModel> variants})
-      : _variants = variants;
+      : _attributes = attributes,
+        _variants = variants,
+        super._();
 
   factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductModelImplFromJson(json);
@@ -397,7 +414,7 @@ class _$ProductModelImpl implements _ProductModel {
   @override
   @JsonKey(name: 'sale_price')
   final String? salePrice;
-// Vehicle-specific fields
+// Vehicle-specific fields (for direct API responses or request models)
   @override
   @JsonKey(name: 'registration_number')
   final String? registrationNumber;
@@ -413,6 +430,17 @@ class _$ProductModelImpl implements _ProductModel {
   @override
   @JsonKey(name: 'barcode')
   final String? barcode;
+// Attributes map for nested vehicle data from list API
+  final Map<String, dynamic> _attributes;
+// Attributes map for nested vehicle data from list API
+  @override
+  @JsonKey()
+  Map<String, dynamic> get attributes {
+    if (_attributes is EqualUnmodifiableMapView) return _attributes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_attributes);
+  }
+
   final List<ProductVariantModel> _variants;
   @override
   @JsonKey(name: 'variants')
@@ -424,7 +452,7 @@ class _$ProductModelImpl implements _ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, variants: $variants)';
+    return 'ProductModel(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, attributes: $attributes, variants: $variants)';
   }
 
   @override
@@ -459,31 +487,35 @@ class _$ProductModelImpl implements _ProductModel {
             (identical(other.fitnessExpiry, fitnessExpiry) ||
                 other.fitnessExpiry == fitnessExpiry) &&
             (identical(other.barcode, barcode) || other.barcode == barcode) &&
+            const DeepCollectionEquality()
+                .equals(other._attributes, _attributes) &&
             const DeepCollectionEquality().equals(other._variants, _variants));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      description,
-      mainServiceType,
-      color,
-      model,
-      image,
-      thumbnailImage,
-      category,
-      purchaseAmount,
-      price,
-      salePrice,
-      registrationNumber,
-      pollutionExpiry,
-      insuranceExpiry,
-      fitnessExpiry,
-      barcode,
-      const DeepCollectionEquality().hash(_variants));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        name,
+        description,
+        mainServiceType,
+        color,
+        model,
+        image,
+        thumbnailImage,
+        category,
+        purchaseAmount,
+        price,
+        salePrice,
+        registrationNumber,
+        pollutionExpiry,
+        insuranceExpiry,
+        fitnessExpiry,
+        barcode,
+        const DeepCollectionEquality().hash(_attributes),
+        const DeepCollectionEquality().hash(_variants)
+      ]);
 
   /// Create a copy of ProductModel
   /// with the given fields replaced by the non-null parameter values.
@@ -501,7 +533,7 @@ class _$ProductModelImpl implements _ProductModel {
   }
 }
 
-abstract class _ProductModel implements ProductModel {
+abstract class _ProductModel extends ProductModel {
   const factory _ProductModel(
       {required final int id,
       required final String name,
@@ -521,8 +553,10 @@ abstract class _ProductModel implements ProductModel {
       @JsonKey(name: 'insurance_expiry') final String? insuranceExpiry,
       @JsonKey(name: 'fitness_expiry') final String? fitnessExpiry,
       @JsonKey(name: 'barcode') final String? barcode,
+      final Map<String, dynamic> attributes,
       @JsonKey(name: 'variants')
       required final List<ProductVariantModel> variants}) = _$ProductModelImpl;
+  const _ProductModel._() : super._();
 
   factory _ProductModel.fromJson(Map<String, dynamic> json) =
       _$ProductModelImpl.fromJson;
@@ -555,7 +589,8 @@ abstract class _ProductModel implements ProductModel {
   int? get price;
   @override
   @JsonKey(name: 'sale_price')
-  String? get salePrice; // Vehicle-specific fields
+  String?
+      get salePrice; // Vehicle-specific fields (for direct API responses or request models)
   @override
   @JsonKey(name: 'registration_number')
   String? get registrationNumber;
@@ -570,7 +605,9 @@ abstract class _ProductModel implements ProductModel {
   String? get fitnessExpiry;
   @override
   @JsonKey(name: 'barcode')
-  String? get barcode;
+  String? get barcode; // Attributes map for nested vehicle data from list API
+  @override
+  Map<String, dynamic> get attributes;
   @override
   @JsonKey(name: 'variants')
   List<ProductVariantModel> get variants;

@@ -12,7 +12,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
       : super(const ProductDetailsState.initial());
 
   /// Load product details by ID along with bookings and monthly summary
-  Future<void> loadProductDetails(int productId) async {
+  Future<void> loadProductDetails(int productId, {String? bookingStatus}) async {
     try {
       emit(const ProductDetailsState.loading());
 
@@ -20,7 +20,11 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
       final results = await Future.wait([
         _repository.getProductInfo(productId),
         _repository
-            .getProductBookings(productId: productId, page: 1)
+            .getProductBookings(
+              productId: productId,
+              page: 1,
+              status: bookingStatus,
+            )
             .catchError((e) {
           log('Error loading bookings: $e');
           return null;
@@ -49,8 +53,34 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
+  /// Reload bookings with a specific status filter without reloading product info
+  Future<void> reloadBookingsWithStatus(int productId, String? status) async {
+    await state.maybeMap(
+      loaded: (loadedState) async {
+        try {
+          final bookingsData = await _repository.getProductBookings(
+            productId: productId,
+            page: 1,
+            status: status,
+          );
+
+          emit(ProductDetailsState.loaded(
+            product: loadedState.product,
+            bookings: bookingsData.data,
+            monthlySummary: loadedState.monthlySummary,
+            nextPageUrl: bookingsData.nextPageUrl,
+          ));
+        } catch (e) {
+          log('Error reloading bookings: $e');
+          // Keep the current state on error
+        }
+      },
+      orElse: () async {},
+    );
+  }
+
   /// Load more bookings (pagination)
-  Future<void> loadMoreBookings(int productId, int page) async {
+  Future<void> loadMoreBookings(int productId, int page, {String? status}) async {
     state.maybeMap(
       loaded: (loadedState) {
         if (loadedState.isPaginatingBookings ||
@@ -71,6 +101,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
             .getProductBookings(
           productId: productId,
           page: page,
+          status: status,
         )
             .then((moreBookings) {
           emit(ProductDetailsState.loaded(

@@ -27,16 +27,18 @@ class ProductRequestModel with _$ProductRequestModel {
     @JsonKey(name: 'sale_price', includeIfNull: false) int? salePrice,
     @JsonKey(includeIfNull: false) String? category,
     @JsonKey(includeIfNull: false) String? model,
-    // Vehicle-specific fields
-    @JsonKey(name: 'registration_number', includeIfNull: false)
+    
+    // Vehicle-specific fields - these won't be in JSON, handled separately in toFormJson
+    @JsonKey(includeFromJson: false, includeToJson: false)
     String? registrationNumber,
-    @JsonKey(name: 'pollution_expiry', includeIfNull: false)
+    @JsonKey(includeFromJson: false, includeToJson: false)
     String? pollutionExpiry,
-    @JsonKey(name: 'insurance_expiry', includeIfNull: false)
+    @JsonKey(includeFromJson: false, includeToJson: false)
     String? insuranceExpiry,
-    @JsonKey(name: 'fitness_expiry', includeIfNull: false)
+    @JsonKey(includeFromJson: false, includeToJson: false)
     String? fitnessExpiry,
-    @JsonKey(name: 'barcode', includeIfNull: false) String? barcode,
+    @JsonKey(includeFromJson: false, includeToJson: false) String? barcode,
+    
     @JsonKey(toJson: _variantsToJson, includeIfNull: false)
     List<ProductVariantModel>? variants,
 
@@ -50,11 +52,30 @@ class ProductRequestModel with _$ProductRequestModel {
 
 extension ProductRequestModelExtension on ProductRequestModel {
   Future<Map<String, dynamic>> toFormJson([bool isAdding = true]) async {
-    final json = toJson(); // generated JSON without image
+    final json = toJson(); // generated JSON without image and vehicle fields
 
     print('🔧 toFormJson - isAdding: $isAdding');
     print('🔧 toFormJson - productId: $productId');
     print('🔧 toFormJson - image is null: ${image == null}');
+
+    // Add vehicle-specific fields as attributes[field_name]
+    if (registrationNumber != null && registrationNumber!.isNotEmpty) {
+      json['attributes[registration_number]'] = registrationNumber;
+      print('🔧 toFormJson - Added registration_number to attributes');
+    }
+    if (pollutionExpiry != null && pollutionExpiry!.isNotEmpty) {
+      json['attributes[pollution_expiry]'] = _convertDateFormat(pollutionExpiry!);
+      print('🔧 toFormJson - Added pollution_expiry to attributes: ${_convertDateFormat(pollutionExpiry!)}');
+    }
+    if (insuranceExpiry != null && insuranceExpiry!.isNotEmpty) {
+      json['attributes[insurance_expiry]'] = _convertDateFormat(insuranceExpiry!);
+      print('🔧 toFormJson - Added insurance_expiry to attributes: ${_convertDateFormat(insuranceExpiry!)}');
+    }
+    if (fitnessExpiry != null && fitnessExpiry!.isNotEmpty) {
+      json['attributes[permit_expiry]'] = _convertDateFormat(fitnessExpiry!);
+      print('🔧 toFormJson - Added permit_expiry to attributes: ${_convertDateFormat(fitnessExpiry!)}');
+    }
+    // Note: barcode is NOT added because it's not valid for Car Rentals service
 
     if (image != null) {
       try {
@@ -89,5 +110,37 @@ extension ProductRequestModelExtension on ProductRequestModel {
 
     print('🔧 toFormJson - Final JSON keys: ${json.keys.join(", ")}');
     return json;
+  }
+
+  /// Convert date from DD/MM/YYYY or DD-MM-YYYY to YYYY-MM-DD
+  String _convertDateFormat(String date) {
+    try {
+      // Remove any whitespace
+      final trimmed = date.trim();
+      
+      // Check if already in YYYY-MM-DD format
+      if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(trimmed)) {
+        return trimmed;
+      }
+      
+      // Try DD/MM/YYYY or DD-MM-YYYY format
+      final parts = trimmed.split(RegExp(r'[/-]'));
+      if (parts.length == 3) {
+        final day = parts[0].padLeft(2, '0');
+        final month = parts[1].padLeft(2, '0');
+        final year = parts[2];
+        
+        // If year is 2 digits, assume 20xx
+        final fullYear = year.length == 2 ? '20$year' : year;
+        
+        return '$fullYear-$month-$day';
+      }
+      
+      // If format is unrecognized, return as-is
+      return trimmed;
+    } catch (e) {
+      print('⚠️ Date conversion error: $e, returning original: $date');
+      return date;
+    }
   }
 }

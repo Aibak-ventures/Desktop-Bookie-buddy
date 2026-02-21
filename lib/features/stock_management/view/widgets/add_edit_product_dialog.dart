@@ -123,17 +123,18 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             _categoryController.text = product.category ?? '';
             _colorController.text = product.color ?? '';
             _priceController.text = product.price?.toString() ?? '';
+            _salePriceController.text = product.salePrice ?? '';
             _purchaseAmountController.text =
                 product.purchaseAmount?.toString() ?? '';
             _descriptionController.text = product.description ?? '';
 
-            // Vehicle-specific fields initialization
+            // Vehicle-specific fields initialization (read from attributes if needed)
             _registrationNumberController.text =
-                product.registrationNumber ?? '';
-            _pollutionExpiryController.text = product.pollutionExpiry ?? '';
-            _insuranceExpiryController.text = product.insuranceExpiry ?? '';
-            _fitnessExpiryController.text = product.fitnessExpiry ?? '';
-            _barcodeController.text = product.barcode ?? '';
+                product.effectiveRegistrationNumber ?? '';
+            _pollutionExpiryController.text = product.effectivePollutionExpiry ?? '';
+            _insuranceExpiryController.text = product.effectiveInsuranceExpiry ?? '';
+            _fitnessExpiryController.text = product.effectiveFitnessExpiry ?? '';
+            _barcodeController.text = product.effectiveBarcode ?? '';
 
             // Load existing variants for edit mode
             if (mainServiceType!.isDress && product.variants.isNotEmpty) {
@@ -778,18 +779,10 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           SizedBox(
             width: 280,
             child: CustomTextField(
-              label: 'Fitness Expiry (Optional)',
+              label: 'Permit Expiry (Optional)',
               controller: _fitnessExpiryController,
               validator: null,
               hintText: 'DD/MM/YYYY',
-            ),
-          ),
-          SizedBox(
-            width: 280,
-            child: CustomTextField(
-              label: 'Barcode (Optional)',
-              controller: _barcodeController,
-              validator: null,
             ),
           ),
         ]);

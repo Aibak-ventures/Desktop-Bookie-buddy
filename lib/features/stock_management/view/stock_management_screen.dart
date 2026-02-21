@@ -163,9 +163,15 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                       builder: (context, state) {
                         // Check if we should show product details
                         return state.maybeWhen(
-                          loaded: (_, __, ___, ____, _____, ______, _______,
+                          loaded: (products, __, ___, ____, _____, selectedServiceId, _______,
                               selectedProductId) {
                             if (selectedProductId != null) {
+                              // Find the product to get its serviceId
+                              final selectedProduct = products.firstWhere(
+                                (p) => p.id == selectedProductId,
+                                orElse: () => products.first,
+                              );
+                              
                               // Show product details
                               return RepositoryProvider.value(
                                 value: context.read<ProductRepository>(),
@@ -174,7 +180,11 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                     context.read<ProductRepository>(),
                                   )..loadProductDetails(selectedProductId),
                                   child: ProductDetailsScreen(
-                                      productId: selectedProductId),
+                                    productId: selectedProductId,
+                                    serviceId:  selectedServiceId,
+                                    mainServiceType: selectedProduct.mainServiceType,
+                                    productForEdit: selectedProduct,
+                                  ),
                                 ),
                               );
                             } else {

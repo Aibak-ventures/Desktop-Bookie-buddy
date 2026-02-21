@@ -26,6 +26,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       insuranceExpiry: json['insurance_expiry'] as String?,
       fitnessExpiry: json['fitness_expiry'] as String?,
       barcode: json['barcode'] as String?,
+      attributes: json['attributes'] as Map<String, dynamic>? ?? const {},
       variants: (json['variants'] as List<dynamic>)
           .map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -50,6 +51,7 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'insurance_expiry': instance.insuranceExpiry,
       'fitness_expiry': instance.fitnessExpiry,
       'barcode': instance.barcode,
+      'attributes': instance.attributes,
       'variants': instance.variants,
     };
 
