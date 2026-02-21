@@ -182,6 +182,8 @@ class ProductQueryService {
     int? endPrice,
     TimeOfDay? pickupTime,
     TimeOfDay? returnTime,
+    int? bookingId, // For edit mode
+    List<int>? variantIds, // For edit mode
   }) async {
     try {
       final response = await _dio.get(
@@ -221,6 +223,9 @@ class ProductQueryService {
                 },
                 if (startPrice != null) 'min_price': startPrice,
                 if (endPrice != null) 'max_price': endPrice,
+                if (bookingId != null) 'booking_id': bookingId,
+                if (variantIds != null && variantIds.isNotEmpty) 
+                  'variant_ids': variantIds,
               },
       );
       // log('Fetch available products response: ${response.realUri.toString()} ${response.data}');

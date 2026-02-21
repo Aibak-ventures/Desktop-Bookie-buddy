@@ -190,6 +190,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   List<ProductSelectedModel>? _originalProducts;
   List<AdditionalChargesModel>? _originalAdditionalCharges;
   List<DocumentFile>? _originalDocuments; // Track original documents for removal detection
+  String? _originalRunningKm; // Track original running kilometers
+  DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
 
   // Customization state
   bool showCustomization = false;
@@ -239,6 +241,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     if (booking.coolingPeriodDate != null) {
       coolingPeriodDate = booking.coolingPeriodDate!.parseToDateTime();
+      // Calculate cooling period days from the dates
+      final coolingDate = booking.coolingPeriodDate!.parseToDateTime();
+      coolingPeriodDays = coolingDate.difference(returnDate).inDays.abs();
+      log('🔧 Cooling period: $coolingPeriodDays days (Return: $returnDate, Cooling: $coolingDate)');
+    } else {
+      // No cooling period set
+      coolingPeriodDays = 0;
+      coolingPeriodDate = null;
     }
 
     // Set client details
@@ -291,6 +301,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     if (booking.otherDetails.end != null) {
       runningKilometersController.text = booking.otherDetails.end!;
     }
+
+    // Store original delivery status
+    deliveryStatus = booking.deliveryStatus;
 
     // Set products
     log('🔧 Loading ${booking.bookedItems.length} products from booking');
@@ -400,6 +413,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       path: d.path,
       bytes: d.bytes != null ? List<int>.from(d.bytes!) : null,
     )).toList();
+    
+    // Store original running kilometers and delivery status
+    _originalRunningKm = booking.otherDetails.end;
+    _originalDeliveryStatus = booking.deliveryStatus;
 
     log('✅ Original values stored for incremental update tracking');
   }
@@ -449,6 +466,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     return currentAdvance != (_originalAdvanceAmount ?? 0) ||
            currentSecurity != (_originalSecurityAmount ?? 0) ||
            currentDiscount != (_originalDiscountAmount ?? 0);
+  }
+
+  /// Check if running kilometers have changed
+  bool _hasRunningKmChanged() {
+    final currentKm = runningKilometersController.text.trim();
+    return currentKm != (_originalRunningKm ?? '');
+  }
+
+  /// Check if delivery status has changed
+  bool _hasDeliveryStatusChanged() {
+    return deliveryStatus != _originalDeliveryStatus;
   }
 
   /// Check if products have changed (added, removed, or modified)
@@ -586,24 +614,28 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       }).toList();
     }
 
-    // Always include other metadata
+    // Include purchase_mode only if needed (minimal metadata)
     updates['purchase_mode'] = 'normal';
-    updates['payment_method'] = paymentMethod.toJson();
-    updates['delivery_status'] = deliveryStatus.toValue();
     
-    // Include description if present
+    // Include delivery_status only if changed
+    if (_hasDeliveryStatusChanged()) {
+      updates['delivery_status'] = deliveryStatus.toValue();
+    }
+    
+    // Include description if present and changed
     final description = descriptionController.text.trim();
     if (description.isNotEmpty) {
       updates['description'] = description;
     }
     
-    // Include other details
-    updates['other_details'] = {
-      'location_start': startLocationController.text.trim().nullIfEmpty,
-      'location_from': pickupLocationController.text.trim().nullIfEmpty,
-      'location_to': destinationLocationController.text.trim().nullIfEmpty,
-      'end': runningKilometersController.text.trim().nullIfEmpty,
-    };
+    // Include running kilometers if changed (even if cleared to null/empty)
+    if (_hasRunningKmChanged()) {
+      final runningKm = runningKilometersController.text.trim().nullIfEmpty;
+      // Send other_details even if km is null - this allows clearing the value
+      updates['other_details'] = {
+        'end': runningKm,
+      };
+    }
     
     log('📝 Partial update payload: $updates');
     return updates;
@@ -741,7 +773,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Check if description is filled
     if (descriptionController.text.trim().isNotEmpty) return true;
-    if (runningKilometersController.text.trim().isNotEmpty) return true;
+    if (_hasRunningKmChanged()) return true;
+    if (_hasDeliveryStatusChanged()) return true;
 
     return false;
   }
@@ -2511,6 +2544,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         (selectedServiceId == null || selectedServiceId == -1)
             ? null
             : selectedServiceId;
+    
+    // Extract variant IDs from currently selected products for edit mode
+    final currentVariantIds = selectedProductsNotifier.value
+        .map((p) => p.variant.variantId)
+        .whereType<int>()
+        .toList();
+    
     _selectProductBloc.add(
       SelectProductEvent.loadProducts(
         serviceId: serviceIdToUse,
@@ -2520,6 +2560,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         returnTime: returnTime,
         useAvailableProductsApi: !isSales,
         isSales: isSales,
+        bookingId: widget.bookingId, // Pass booking ID for edit mode
+        variantIds: currentVariantIds.isNotEmpty ? currentVariantIds : null, // Pass current variants
       ),
     );
   }
@@ -3906,7 +3948,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      '${product.variant.remainingStock ?? product.variant.stock} left',
+                      '${product.variant.remainingStock ?? product.variant.stock ?? 0} left',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

@@ -25,7 +25,9 @@ mixin _$SelectProductEvent {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
@@ -39,7 +41,9 @@ mixin _$SelectProductEvent {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         searchProducts,
     required TResult Function() loadNextSearchResults,
   }) =>
@@ -53,7 +57,9 @@ mixin _$SelectProductEvent {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
@@ -67,7 +73,9 @@ mixin _$SelectProductEvent {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) =>
@@ -81,7 +89,9 @@ mixin _$SelectProductEvent {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
@@ -95,7 +105,9 @@ mixin _$SelectProductEvent {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
@@ -163,7 +175,9 @@ abstract class _$$LoadProductsImplCopyWith<$Res> {
       TimeOfDay? pickupTime,
       TimeOfDay? returnTime,
       bool useAvailableProductsApi,
-      bool isSales});
+      bool isSales,
+      int? bookingId,
+      List<int>? variantIds});
 }
 
 /// @nodoc
@@ -186,6 +200,8 @@ class __$$LoadProductsImplCopyWithImpl<$Res>
     Object? returnTime = freezed,
     Object? useAvailableProductsApi = null,
     Object? isSales = null,
+    Object? bookingId = freezed,
+    Object? variantIds = freezed,
   }) {
     return _then(_$LoadProductsImpl(
       serviceId: freezed == serviceId
@@ -216,6 +232,14 @@ class __$$LoadProductsImplCopyWithImpl<$Res>
           ? _value.isSales
           : isSales // ignore: cast_nullable_to_non_nullable
               as bool,
+      bookingId: freezed == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      variantIds: freezed == variantIds
+          ? _value._variantIds
+          : variantIds // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 }
@@ -230,7 +254,10 @@ class _$LoadProductsImpl implements _LoadProducts {
       this.pickupTime,
       this.returnTime,
       this.useAvailableProductsApi = true,
-      this.isSales = false});
+      this.isSales = false,
+      this.bookingId,
+      final List<int>? variantIds})
+      : _variantIds = variantIds;
 
   @override
   final int? serviceId;
@@ -248,10 +275,23 @@ class _$LoadProductsImpl implements _LoadProducts {
   @override
   @JsonKey()
   final bool isSales;
+  @override
+  final int? bookingId;
+// For edit mode - to check availability excluding current booking
+  final List<int>? _variantIds;
+// For edit mode - to check availability excluding current booking
+  @override
+  List<int>? get variantIds {
+    final value = _variantIds;
+    if (value == null) return null;
+    if (_variantIds is EqualUnmodifiableListView) return _variantIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'SelectProductEvent.loadProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales)';
+    return 'SelectProductEvent.loadProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales, bookingId: $bookingId, variantIds: $variantIds)';
   }
 
   @override
@@ -272,12 +312,25 @@ class _$LoadProductsImpl implements _LoadProducts {
             (identical(
                     other.useAvailableProductsApi, useAvailableProductsApi) ||
                 other.useAvailableProductsApi == useAvailableProductsApi) &&
-            (identical(other.isSales, isSales) || other.isSales == isSales));
+            (identical(other.isSales, isSales) || other.isSales == isSales) &&
+            (identical(other.bookingId, bookingId) ||
+                other.bookingId == bookingId) &&
+            const DeepCollectionEquality()
+                .equals(other._variantIds, _variantIds));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, serviceId, pickupDate,
-      returnDate, pickupTime, returnTime, useAvailableProductsApi, isSales);
+  int get hashCode => Object.hash(
+      runtimeType,
+      serviceId,
+      pickupDate,
+      returnDate,
+      pickupTime,
+      returnTime,
+      useAvailableProductsApi,
+      isSales,
+      bookingId,
+      const DeepCollectionEquality().hash(_variantIds));
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -297,7 +350,9 @@ class _$LoadProductsImpl implements _LoadProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
@@ -311,12 +366,14 @@ class _$LoadProductsImpl implements _LoadProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
     return loadProducts(serviceId, pickupDate, returnDate, pickupTime,
-        returnTime, useAvailableProductsApi, isSales);
+        returnTime, useAvailableProductsApi, isSales, bookingId, variantIds);
   }
 
   @override
@@ -329,7 +386,9 @@ class _$LoadProductsImpl implements _LoadProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
@@ -343,12 +402,14 @@ class _$LoadProductsImpl implements _LoadProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) {
     return loadProducts?.call(serviceId, pickupDate, returnDate, pickupTime,
-        returnTime, useAvailableProductsApi, isSales);
+        returnTime, useAvailableProductsApi, isSales, bookingId, variantIds);
   }
 
   @override
@@ -361,7 +422,9 @@ class _$LoadProductsImpl implements _LoadProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
@@ -375,14 +438,16 @@ class _$LoadProductsImpl implements _LoadProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
   }) {
     if (loadProducts != null) {
       return loadProducts(serviceId, pickupDate, returnDate, pickupTime,
-          returnTime, useAvailableProductsApi, isSales);
+          returnTime, useAvailableProductsApi, isSales, bookingId, variantIds);
     }
     return orElse();
   }
@@ -434,7 +499,9 @@ abstract class _LoadProducts implements SelectProductEvent {
       final TimeOfDay? pickupTime,
       final TimeOfDay? returnTime,
       final bool useAvailableProductsApi,
-      final bool isSales}) = _$LoadProductsImpl;
+      final bool isSales,
+      final int? bookingId,
+      final List<int>? variantIds}) = _$LoadProductsImpl;
 
   int? get serviceId;
   String get pickupDate;
@@ -443,6 +510,9 @@ abstract class _LoadProducts implements SelectProductEvent {
   TimeOfDay? get returnTime;
   bool get useAvailableProductsApi;
   bool get isSales;
+  int?
+      get bookingId; // For edit mode - to check availability excluding current booking
+  List<int>? get variantIds;
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -500,7 +570,9 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
@@ -514,7 +586,9 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
@@ -531,7 +605,9 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
@@ -545,7 +621,9 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) {
@@ -562,7 +640,9 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
@@ -576,7 +656,9 @@ class _$LoadNextPageProductsImpl implements _LoadNextPageProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
@@ -647,7 +729,9 @@ abstract class _$$SearchProductsImplCopyWith<$Res> {
       TimeOfDay? pickupTime,
       TimeOfDay? returnTime,
       bool useAvailableProductsApi,
-      bool isSales});
+      bool isSales,
+      int? bookingId,
+      List<int>? variantIds});
 }
 
 /// @nodoc
@@ -674,6 +758,8 @@ class __$$SearchProductsImplCopyWithImpl<$Res>
     Object? returnTime = freezed,
     Object? useAvailableProductsApi = null,
     Object? isSales = null,
+    Object? bookingId = freezed,
+    Object? variantIds = freezed,
   }) {
     return _then(_$SearchProductsImpl(
       serviceId: freezed == serviceId
@@ -720,6 +806,14 @@ class __$$SearchProductsImplCopyWithImpl<$Res>
           ? _value.isSales
           : isSales // ignore: cast_nullable_to_non_nullable
               as bool,
+      bookingId: freezed == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      variantIds: freezed == variantIds
+          ? _value._variantIds
+          : variantIds // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 }
@@ -738,7 +832,10 @@ class _$SearchProductsImpl implements _SearchProducts {
       this.pickupTime,
       this.returnTime,
       this.useAvailableProductsApi = true,
-      this.isSales = false});
+      this.isSales = false,
+      this.bookingId,
+      final List<int>? variantIds})
+      : _variantIds = variantIds;
 
   @override
   final int? serviceId;
@@ -765,10 +862,23 @@ class _$SearchProductsImpl implements _SearchProducts {
   @override
   @JsonKey()
   final bool isSales;
+  @override
+  final int? bookingId;
+// For edit mode
+  final List<int>? _variantIds;
+// For edit mode
+  @override
+  List<int>? get variantIds {
+    final value = _variantIds;
+    if (value == null) return null;
+    if (_variantIds is EqualUnmodifiableListView) return _variantIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'SelectProductEvent.searchProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, query: $query, type: $type, startPrice: $startPrice, endPrice: $endPrice, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales)';
+    return 'SelectProductEvent.searchProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, query: $query, type: $type, startPrice: $startPrice, endPrice: $endPrice, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales, bookingId: $bookingId, variantIds: $variantIds)';
   }
 
   @override
@@ -795,7 +905,11 @@ class _$SearchProductsImpl implements _SearchProducts {
             (identical(
                     other.useAvailableProductsApi, useAvailableProductsApi) ||
                 other.useAvailableProductsApi == useAvailableProductsApi) &&
-            (identical(other.isSales, isSales) || other.isSales == isSales));
+            (identical(other.isSales, isSales) || other.isSales == isSales) &&
+            (identical(other.bookingId, bookingId) ||
+                other.bookingId == bookingId) &&
+            const DeepCollectionEquality()
+                .equals(other._variantIds, _variantIds));
   }
 
   @override
@@ -811,7 +925,9 @@ class _$SearchProductsImpl implements _SearchProducts {
       pickupTime,
       returnTime,
       useAvailableProductsApi,
-      isSales);
+      isSales,
+      bookingId,
+      const DeepCollectionEquality().hash(_variantIds));
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -832,7 +948,9 @@ class _$SearchProductsImpl implements _SearchProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
@@ -846,7 +964,9 @@ class _$SearchProductsImpl implements _SearchProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
@@ -861,7 +981,9 @@ class _$SearchProductsImpl implements _SearchProducts {
         pickupTime,
         returnTime,
         useAvailableProductsApi,
-        isSales);
+        isSales,
+        bookingId,
+        variantIds);
   }
 
   @override
@@ -874,7 +996,9 @@ class _$SearchProductsImpl implements _SearchProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
@@ -888,7 +1012,9 @@ class _$SearchProductsImpl implements _SearchProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) {
@@ -903,7 +1029,9 @@ class _$SearchProductsImpl implements _SearchProducts {
         pickupTime,
         returnTime,
         useAvailableProductsApi,
-        isSales);
+        isSales,
+        bookingId,
+        variantIds);
   }
 
   @override
@@ -916,7 +1044,9 @@ class _$SearchProductsImpl implements _SearchProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
@@ -930,7 +1060,9 @@ class _$SearchProductsImpl implements _SearchProducts {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),
@@ -947,7 +1079,9 @@ class _$SearchProductsImpl implements _SearchProducts {
           pickupTime,
           returnTime,
           useAvailableProductsApi,
-          isSales);
+          isSales,
+          bookingId,
+          variantIds);
     }
     return orElse();
   }
@@ -1003,7 +1137,9 @@ abstract class _SearchProducts implements SelectProductEvent {
       final TimeOfDay? pickupTime,
       final TimeOfDay? returnTime,
       final bool useAvailableProductsApi,
-      final bool isSales}) = _$SearchProductsImpl;
+      final bool isSales,
+      final int? bookingId,
+      final List<int>? variantIds}) = _$SearchProductsImpl;
 
   int? get serviceId;
   String get pickupDate;
@@ -1016,6 +1152,8 @@ abstract class _SearchProducts implements SelectProductEvent {
   TimeOfDay? get returnTime;
   bool get useAvailableProductsApi;
   bool get isSales;
+  int? get bookingId; // For edit mode
+  List<int>? get variantIds;
 
   /// Create a copy of SelectProductEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1074,7 +1212,9 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         loadProducts,
     required TResult Function() loadNextPageProducts,
     required TResult Function(
@@ -1088,7 +1228,9 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)
         searchProducts,
     required TResult Function() loadNextSearchResults,
   }) {
@@ -1105,7 +1247,9 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult? Function()? loadNextPageProducts,
     TResult? Function(
@@ -1119,7 +1263,9 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult? Function()? loadNextSearchResults,
   }) {
@@ -1136,7 +1282,9 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         loadProducts,
     TResult Function()? loadNextPageProducts,
     TResult Function(
@@ -1150,7 +1298,9 @@ class _$LoadNextSearchResultsImpl implements _LoadNextSearchResults {
             TimeOfDay? pickupTime,
             TimeOfDay? returnTime,
             bool useAvailableProductsApi,
-            bool isSales)?
+            bool isSales,
+            int? bookingId,
+            List<int>? variantIds)?
         searchProducts,
     TResult Function()? loadNextSearchResults,
     required TResult orElse(),

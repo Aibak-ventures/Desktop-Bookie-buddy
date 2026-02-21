@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
@@ -6,6 +7,7 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
@@ -24,6 +26,7 @@ import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_deta
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:printing/printing.dart';
 
 class SaleDetailsScreen extends StatelessWidget {
   const SaleDetailsScreen({super.key, required this.saleId});
@@ -130,6 +133,85 @@ class SaleDetailsScreen extends StatelessWidget {
                         children: [
                           Icon(Icons.edit_outlined, color: AppColors.purple),
                           Text('Edit'),
+                        ],
+                      ),
+                    ),
+
+                    // View Invoice
+                    PopupMenuItem<int>(
+                      value: 2,
+                      onTap: () async {
+                        if (sale == null) {
+                          debugPrint('sale is null, returning from view invoice action');
+                          return;
+                        }
+                        try {
+                          // Show loading indicator
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                          
+                          // Fetch invoice from backend
+                          final repository = getIt<SalesRepository>();
+                          final pdfBytes = await repository.getInvoicePdfBytes(sale.id);
+                          
+                          // Close loading indicator
+                          if (context.mounted) Navigator.of(context).pop();
+                          
+                          // Show PDF viewer
+                          if (context.mounted) {
+                            await showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.8,
+                                  height: MediaQuery.of(context).size.height * 0.9,
+                                  child: Column(
+                                    children: [
+                                      AppBar(
+                                        title: Text('Invoice #${sale.invoiceId}'),
+                                        actions: [
+                                          IconButton(
+                                            icon: const Icon(Icons.close),
+                                            onPressed: () => Navigator.of(context).pop(),
+                                          ),
+                                        ],
+                                      ),
+                                      // Expanded(
+                                      //   child: PdfPreview(
+                                      //     build: (format) => pdfBytes,
+                                      //     canChangeOrientation: false,
+                                      //     canChangePageFormat: false,
+                                      //     canDebug: false,
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        } catch (e, stack) {
+                          log('Error viewing invoice: $e', stackTrace: stack);
+                          // Close loading if still showing
+                          if (context.mounted) Navigator.of(context).pop();
+                          if (context.mounted) {
+                            context.showSnackBar(
+                              'Failed to load invoice: ${e.toString()}',
+                              isError: true,
+                            );
+                          }
+                        }
+                      },
+                      child: const Row(
+                        spacing: 5,
+                        children: [
+                          Icon(Icons.picture_as_pdf, color: AppColors.purple),
+                          Text('View Invoice'),
                         ],
                       ),
                     ),

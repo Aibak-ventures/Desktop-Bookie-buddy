@@ -284,6 +284,8 @@ class ProductRepository {
     int? endPrice,
     TimeOfDay? pickupTime,
     TimeOfDay? returnTime,
+    int? bookingId, // For edit mode
+    List<int>? variantIds, // For edit mode
   }) async {
     try {
       final response = await safeApiCall(
@@ -299,8 +301,9 @@ class ProductRepository {
           endPrice: endPrice,
           pickupTime: pickupTime,
           returnTime: returnTime,
-        ),
-      );
+          bookingId: bookingId,
+          variantIds: variantIds,
+        ),     );
 
       if (response.status.isSuccess) {
         return PaginationModel<ProductModel>.fromJson(

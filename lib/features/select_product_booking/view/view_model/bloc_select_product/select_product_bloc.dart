@@ -46,6 +46,8 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
           nextPageUrl: null,
           pickupTime: event.pickupTime,
           returnTime: event.returnTime,
+          bookingId: event.bookingId,
+          variantIds: event.variantIds,
         );
       } else {
         result = await _repository.getProductsPaginated(
@@ -142,6 +144,8 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
           endPrice: event.endPrice,
           pickupTime: event.pickupTime,
           returnTime: event.returnTime,
+          bookingId: event.bookingId,
+          variantIds: event.variantIds,
         );
       } else {
         result = await _repository.searchAndFilterProducts(
