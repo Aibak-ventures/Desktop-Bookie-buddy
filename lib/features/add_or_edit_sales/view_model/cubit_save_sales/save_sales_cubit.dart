@@ -69,8 +69,26 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
       );
     } catch (e, stack) {
       log('Error occurred while saving sales: $e', stackTrace: stack);
-      emit(SaveSalesState.failure(e.toString()));
+      emit(SaveSalesState.failure(_formatSalesError(e.toString())));
     }
+  }
+
+  /// Formats backend error messages into clean, user-readable text
+  String _formatSalesError(String rawError) {
+    // Handle "Insufficient stock for ProductName (VariantName). Available: X, requested: Y."
+    // → "Not enough stock: ProductName is unavailable. Please remove it from the sale."
+    final insufficientStockRegex = RegExp(
+      r'Insufficient stock for (.+?)\s*\(.*?\)\.',
+      caseSensitive: false,
+    );
+    final match = insufficientStockRegex.firstMatch(rawError);
+    if (match != null) {
+      final productName = match.group(1)?.trim() ?? 'a product';
+      return 'Not enough stock for "$productName". Please remove it from the sale or reduce the quantity.';
+    }
+
+    // Handle other validation errors - just return the message as-is (it's already extracted cleanly)
+    return rawError;
   }
 }
 

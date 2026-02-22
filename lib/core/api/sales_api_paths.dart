@@ -11,6 +11,6 @@ class SalesApiPaths {
   static const sales = '${_rootV4}sales/'; // List endpoint (v4)
   static const salesV4 = '${_rootV4}sales/'; // Create endpoint (v4)
   static String salesDetailV4(int id) => '${salesV4}$id/'; // Get detail (v4)
-  static String updateSaleV4(int id) => '${salesV4}$id/'; // Update (v4)
+  static String updateSaleV4(int id) => '${salesV4}update-sale/$id/'; // Update (v4) - uses dedicated update endpoint
   static String deleteSaleV4(int id) => '${salesV4}$id/'; // Delete (v4)
 }
