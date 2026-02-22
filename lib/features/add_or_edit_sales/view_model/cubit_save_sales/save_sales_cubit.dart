@@ -22,7 +22,7 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
     // ✅ VALIDATION FIRST
     final products = salesRequest.products;
 
-    if (products!.isEmpty) {
+    if (products == null || products.isEmpty) {
       emit(const SaveSalesState.failure('Please add at least one product'));
       return;
     }

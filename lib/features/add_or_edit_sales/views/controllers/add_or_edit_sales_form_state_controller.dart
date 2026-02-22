@@ -235,6 +235,8 @@ class AddOrEditSalesFormStateController {
         return null;
       }
 
+      // CRITICAL FIX: Always send all products when any field has changed
+      // This ensures the backend receives the complete product list
       return SalesRequestModel(
         id: original.id,
         saleDate: saleDateChanged ? currentSaleDate : null,
@@ -243,9 +245,9 @@ class AddOrEditSalesFormStateController {
             ? clientPhoneController.text.trim()
             : null,
         address: addressChanged ? placeController.text.trim() : null,
-        products: productsChanged && newProducts.isNotEmpty
-            ? newProducts
-            : null,
+        // Send all current products if products changed OR if any other field changed
+        // This prevents partial updates that might clear products
+        products: newProducts.isNotEmpty ? newProducts : null,
 
         description: descriptionChanged
             ? descriptionController.text.trim()

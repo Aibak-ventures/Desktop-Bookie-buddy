@@ -212,6 +212,27 @@ class BookingService {
         formData.fields.add(MapEntry('remove_documents', jsonEncode(removedDocumentUrls)));
       }
       
+      // 📝 LOG FORM DATA CONTENTS FOR DEBUGGING
+      log('┌─────────────────────────────────────────────────────────────');
+      log('│ 📤 PATCH REQUEST TO: /bookings/$bookingId/');
+      log('├─────────────────────────────────────────────────────────────');
+      log('│ 📋 FORM FIELDS (${formData.fields.length} fields):');
+      for (final field in formData.fields) {
+        // Truncate very long values for readability
+        final value = field.value.length > 500 
+            ? '${field.value.substring(0, 500)}... (truncated, ${field.value.length} chars total)'
+            : field.value;
+        log('│   ${field.key}: $value');
+      }
+      if (formData.files.isNotEmpty) {
+        log('├─────────────────────────────────────────────────────────────');
+        log('│ 📎 FILES (${formData.files.length} files):');
+        for (final file in formData.files) {
+          log('│   ${file.key}: ${file.value.filename} (${file.value.length} bytes)');
+        }
+      }
+      log('└─────────────────────────────────────────────────────────────');
+      
       final response = await _dio.patch(
         '${ApiPaths.bookings.updateDetails}$bookingId/',
         data: formData,
