@@ -187,11 +187,17 @@ Future<void> showUnavailableProductsDialog({
             children: [
               TextButton(
                 onPressed: () {
+                  // Remove only products that match the unavailable list.
+                  // Use variantId (consistent with how unavailable products were identified).
+                  // Correct logic: keep products NOT in the unavailable set.
                   selectedProductsNotifier.value =
                       selectedProductsNotifier.value
                           .where(
-                            (e) => unavailableSelectedProducts
-                                .any((un) => e.variant.id != un.variant.id),
+                            (e) => !unavailableSelectedProducts.any(
+                              (un) =>
+                                  e.variant.variantId ==
+                                  un.variant.variantId,
+                            ),
                           )
                           .toList();
                   dialogContext.pop();

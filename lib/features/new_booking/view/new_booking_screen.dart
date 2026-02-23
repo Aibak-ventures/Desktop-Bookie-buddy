@@ -1,11 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
@@ -13,7 +11,6 @@ import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -27,7 +24,6 @@ import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
     show ServicesModel;
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
@@ -35,7 +31,6 @@ import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
@@ -46,8 +41,6 @@ import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/se
 import 'package:bookie_buddy_web/features/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
-
-import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +49,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Conditional import for web-specific code
 import 'web_helper_stub.dart' if (dart.library.html) 'web_helper_web.dart'
     as web_helper;
-// import 'package:go_router/go_router.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/select_date_failure_dialog.dart';
-
-import 'package:bookie_buddy_web/features/sale_details/view/widgets/generate_sale_details_pdf.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -135,6 +124,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
+  // Reactive overlay state — updated without rebuilding the OverlayEntry
+  final _overlayProducts = ValueNotifier<List<ProductModel>>([]);
+  final _overlayIsLoading = ValueNotifier<bool>(false);
 
   // Product search filter state
   List<String> _searchTypes = ['Name', 'Category', 'Model', 'Color'];
@@ -283,12 +275,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _maxPriceNotifier.dispose();
     _isPriceFilterEnabled.dispose();
     runningKilometersController.dispose();
+    _overlayProducts.dispose();
+    _overlayIsLoading.dispose();
     super.dispose();
   }
 
   void _removeSearchOverlay() {
     _searchOverlayEntry?.remove();
     _searchOverlayEntry = null;
+    _overlayProducts.value = [];
+    _overlayIsLoading.value = false;
   }
 
   /// Check if there are any unsaved changes
@@ -1614,36 +1610,40 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// Calculate number of days between pickup and return dates
   /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
   /// Considers the actual time component for accurate 24-hour period calculation
-  int _calculateRentalDays() {
-    // Create DateTime objects with time component
-    final pickupDateTime = DateTime(
-      pickupDate.year,
-      pickupDate.month,
-      pickupDate.day,
-      pickupTime?.hour ?? 0,
-      pickupTime?.minute ?? 0,
-    );
-    
-    final returnDateTime = DateTime(
-      returnDate.year,
-      returnDate.month,
-      returnDate.day,
-      returnTime?.hour ?? 23,
-      returnTime?.minute ?? 59,
-    );
-    
-    final difference = returnDateTime.difference(pickupDateTime);
-    final hours = difference.inHours;
+int _calculateRentalDays() {
+  // Default pickup time: 23:59 if not selected
+  final pickupDateTime = DateTime(
+    pickupDate.year,
+    pickupDate.month,
+    pickupDate.day,
+    pickupTime?.hour ?? 23,
+    pickupTime?.minute ?? 59,
+  );
 
-    // Below 24 hours = 1 day, above = days based on hours
-    if (hours < 24) {
-      return 1;
-    } else {
-      // Calculate days based on hours: 24-48 hours = 2 days, etc.
-      // Use ceil to count partial days as full days
-      return (hours / 24).ceil();
-    }
+  // Default return time: 00:00 if not selected
+  final returnDateTime = DateTime(
+    returnDate.year,
+    returnDate.month,
+    returnDate.day,
+    returnTime?.hour ?? 0,
+    returnTime?.minute ?? 0,
+  );
+
+  // Safety: return date must be after pickup
+  if (!returnDateTime.isAfter(pickupDateTime)) {
+    return 1;
   }
+
+  final difference = returnDateTime.difference(pickupDateTime);
+
+  // Convert to hours (include minutes precision)
+  final hours = difference.inMinutes / 60;
+
+  // Business rule:
+  // Below 24 hours = 1 day
+  // Every started 24h block = +1 day
+  return hours <= 24 ? 1 : (hours / 24).ceil();
+}
 
   /// Get service-specific specification text for product
   String _getProductSpecifications(ProductSelectedModel product) {
@@ -2585,26 +2585,38 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         return BlocListener<SelectProductBloc, SelectProductState>(
           bloc: _selectProductBloc,
           listener: (context, state) {
-            // Show/hide overlay based on state
+            final hasQuery = serviceSearchController.text.isNotEmpty;
+            final hasFilters = _isPriceFilterEnabled.value ||
+                _selectedSearchTypeIndex.value != 0;
+            final hasAnyFilter = hasQuery || hasFilters;
+
             state.maybeWhen(
+              loading: () {
+                // While fetching, show the overlay with a spinner so the user
+                // knows something is happening — do NOT remove the overlay.
+                if (hasAnyFilter) {
+                  _overlayIsLoading.value = true;
+                  if (_searchOverlayEntry == null) {
+                    _showSearchOverlay();
+                  }
+                }
+              },
               loaded: (products, p1, p2, p3, p4, p5, isSearching, p7, p8, p9,
                   p10, p11, p12, p13, p14) {
-                // Show overlay if:
-                // 1. There are products AND
-                // 2. Either search text is not empty OR filters are applied (isSearching = true)
-                final hasSearchText = serviceSearchController.text.isNotEmpty;
-                final hasFilters = _isPriceFilterEnabled.value ||
-                    _selectedSearchTypeIndex.value != 0;
-
-                if (hasSearchText ||
-                    hasFilters ||
-                    (products.isNotEmpty && isSearching)) {
-                  _showSearchOverlay(products);
+                if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
+                  _overlayIsLoading.value = false;
+                  _overlayProducts.value = products;
+                  if (_searchOverlayEntry == null) {
+                    _showSearchOverlay();
+                  }
                 } else {
                   _removeSearchOverlay();
                 }
               },
-              orElse: () => _removeSearchOverlay(),
+              orElse: () {
+                // Error or unknown — only hide if nothing is being searched
+                if (!hasAnyFilter) _removeSearchOverlay();
+              },
             );
           },
           child: CompositedTransformTarget(
@@ -2727,13 +2739,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  void _showSearchOverlay(List<ProductModel> products) {
-    _removeSearchOverlay();
+  void _showSearchOverlay() {
+    // Guard: only insert once; subsequent updates go through the ValueNotifiers
+    if (_searchOverlayEntry != null) return;
 
     _searchOverlayEntry = OverlayEntry(
       builder: (context) => Stack(
         children: [
-          // Transparent barrier to close overlay when clicking outside
+          // Transparent barrier — tap outside to dismiss
           Positioned.fill(
             child: GestureDetector(
               onTap: () {
@@ -2741,9 +2754,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 _removeSearchOverlay();
               },
               behavior: HitTestBehavior.opaque,
-              child: Container(
-                color: Colors.transparent,
-              ),
+              child: const SizedBox.expand(),
             ),
           ),
           // The actual search overlay
@@ -2756,104 +2767,167 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               child: Material(
                 elevation: 8,
                 borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  constraints: const BoxConstraints(maxHeight: 450),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Header with close button
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
+                // Wrap both notifiers so the overlay rebuilds reactively
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: _overlayIsLoading,
+                  builder: (context, isLoading, _) {
+                    return ValueListenableBuilder<List<ProductModel>>(
+                      valueListenable: _overlayProducts,
+                      builder: (context, productList, _) {
+                        return Container(
+                          constraints: const BoxConstraints(maxHeight: 450),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border:
+                                Border.all(color: Colors.grey.shade200),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Search Results (${products.length})',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                serviceSearchController.clear();
-                                _removeSearchOverlay();
-                              },
-                              child: Icon(
-                                Icons.close,
-                                size: 18,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Product list
-                      products.isEmpty
-                          ? Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 32, horizontal: 16),
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.search_off_rounded,
-                                      size: 48, color: Colors.grey.shade300),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'No results found',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey.shade600,
-                                    ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // ── Header ──────────────────────────────────
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Try adjusting your search or filters',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey.shade500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Flexible(
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4),
-                                itemCount: products.length,
-                                separatorBuilder: (_, __) => Divider(
-                                  height: 1,
-                                  color: Colors.grey.shade200,
                                 ),
-                                itemBuilder: (_, i) =>
-                                    _buildOverlaySearchItem(products[i]),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    if (isLoading)
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 12,
+                                            height: 12,
+                                            child:
+                                                CircularProgressIndicator(
+                                              strokeWidth: 1.5,
+                                              color: Colors.grey.shade500,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Searching...',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey.shade700,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    else
+                                      Text(
+                                        'Search Results (${productList.length})',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        serviceSearchController.clear();
+                                        _removeSearchOverlay();
+                                      },
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 18,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                    ],
-                  ),
+                              // ── Body ────────────────────────────────────
+                              if (isLoading)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 36),
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Color(0xFF6132E4),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        'Loading products...',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              else if (productList.isEmpty)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 32, horizontal: 16),
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.search_off_rounded,
+                                          size: 48,
+                                          color: Colors.grey.shade300),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'No results found',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Try adjusting your search or filters',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              else
+                                Flexible(
+                                  child: ListView.separated(
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4),
+                                    itemCount: productList.length,
+                                    separatorBuilder: (_, __) => Divider(
+                                      height: 1,
+                                      color: Colors.grey.shade200,
+                                    ),
+                                    itemBuilder: (_, i) =>
+                                        _buildOverlaySearchItem(
+                                            productList[i]),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

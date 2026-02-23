@@ -170,9 +170,18 @@ class BookingService {
       // Add regular fields as JSON strings (as per API requirement)
       partialData.forEach((key, value) {
         if (value != null) {
-          if (value is List || value is Map) {
-            // Complex objects need to be JSON encoded
+          if (value is List) {
+            // Arrays stay JSON-encoded (e.g. 'variants', 'additional_charges')
             formData.fields.add(MapEntry(key, jsonEncode(value)));
+          } else if (value is Map) {
+            // Nested objects must be expanded using bracket notation so Django/DRF
+            // can parse them as dicts.  e.g. other_details={'end':'50'} becomes
+            // formData field  other_details[end] = '50'
+            (value as Map<String, dynamic>).forEach((subKey, subValue) {
+              if (subValue != null) {
+                formData.fields.add(MapEntry('$key[$subKey]', subValue.toString()));
+              }
+            });
           } else {
             // Simple values
             formData.fields.add(MapEntry(key, value.toString()));

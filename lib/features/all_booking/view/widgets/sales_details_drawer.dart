@@ -752,7 +752,7 @@ class SalesDetailsDrawer extends StatelessWidget {
             const SizedBox(height: 8),
           ],
           const Divider(height: 24),
-          _buildPaymentRow('Grand Total', '₹${sale.totalAmount}',
+          _buildPaymentRow('Grand Total', '₹${sale.paidAmount}',
               isBold: true, fontSize: 15),
           // Note: Balance row removed as requested
         ],

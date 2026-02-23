@@ -1968,6 +1968,9 @@ class BookingDetailsDrawer extends StatelessWidget {
                     context.read<BookingDetailsBloc>().add(
                           BookingDetailsEvent.fetchBookingDetails(booking.id),
                         );
+                    context.read<AllBookingBloc>().add(
+                          const AllBookingEvent.loadBookings(),
+                        );
                   }
                 },
               );

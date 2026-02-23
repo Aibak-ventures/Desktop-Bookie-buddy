@@ -406,8 +406,7 @@ class SaleDetailsScreen extends StatelessWidget {
                       ),
                       SaleDetailsPaymentDetailsRow(
                         title: 'Grand Total',
-                        amount: saleDetails.totalAmount -
-                            saleDetails.discountAmount,
+                        amount: saleDetails.paidAmount,
                         isTotal: true,
                       ),
                       // SaleDetailsPaymentDetailsRow(
