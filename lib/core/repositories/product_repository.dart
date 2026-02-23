@@ -467,4 +467,48 @@ class ProductRepository {
       rethrow;
     }
   }
+
+  /// Check which variant IDs from [variantIds] are NOT available for the
+  /// given [pickupDate] / [returnDate] range (optionally excluding [bookingId]).
+  ///
+  /// Returns a list of variant IDs that are **not available** (not_found_ids
+  /// from the API meta field).
+  Future<List<int>> checkVariantAvailability({
+    required String pickupDate,
+    required String returnDate,
+    required List<int> variantIds,
+    int? bookingId,
+    TimeOfDay? pickupTime,
+    TimeOfDay? returnTime,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _queryService.checkVariantAvailability(
+          pickupDate: pickupDate,
+          returnDate: returnDate,
+          variantIds: variantIds,
+          bookingId: bookingId,
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+        ),
+      );
+      if (response.status.isSuccess) {
+        // Response structure: data.data.meta.not_found_ids
+        final dataMap = response.data as Map<String, dynamic>?;
+        final innerData = dataMap?['data'] as Map<String, dynamic>?;
+        final meta = innerData?['meta'] as Map<String, dynamic>?;
+        final notFoundIds = (meta?['not_found_ids'] as List<dynamic>?)
+                ?.map((e) => (e as num).toInt())
+                .toList() ??
+            [];
+        log('checkVariantAvailability: not_found_ids=$notFoundIds');
+        return notFoundIds;
+      }
+      log('checkVariantAvailability failed: ${response.devMessage}');
+      return [];
+    } catch (e, stack) {
+      log('Error checking variant availability: $e', stackTrace: stack);
+      return [];
+    }
+  }
 }

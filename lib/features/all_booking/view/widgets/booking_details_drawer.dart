@@ -22,7 +22,6 @@ import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/s
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/components/booking_payment_history_tile.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +30,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
 
 class BookingDetailsDrawer extends StatelessWidget {
   const BookingDetailsDrawer({super.key});
@@ -1978,20 +1980,41 @@ class BookingDetailsDrawer extends StatelessWidget {
           icon: Icons.download_outlined,
           color: AppColors.purple,
           onTap: () async {
-            final user = context.read<UserCubit>().state;
-            final shop = user?.shopDetails;
-
-            if (shop == null) {
-              context.showSnackBar('Shop info not found', isError: true);
-              return;
-            }
-
-            // Generate Booking PDF
-            await GenerateBookingPdf.shareInvoice(
+            // Show loading indicator
+            showDialog(
               context: context,
-              bookingDetails: booking,
-              shopDetails: shop,
+              barrierDismissible: false,
+              builder: (_) => const Center(
+                child: CircularProgressIndicator(),
+              ),
             );
+
+            try {
+              // Fetch invoice PDF bytes from backend
+              final repository = getIt<BookingRepository>();
+              final pdfBytes = await repository.getInvoicePdfBytes(booking.id);
+
+              // Close loading indicator
+              if (context.mounted) Navigator.of(context).pop();
+
+              // Open/download the PDF
+              if (context.mounted) {
+                if (kIsWeb) {
+                  openPdfInNewTab(pdfBytes, 'booking_invoice_${booking.id}.pdf');
+                } else {
+                  openPdfInNewTab(pdfBytes, 'booking_invoice_${booking.id}.pdf');
+                }
+              }
+            } catch (e) {
+              // Close loading indicator on error
+              if (context.mounted) Navigator.of(context).pop();
+              if (context.mounted) {
+                context.showSnackBar(
+                  'Failed to download invoice: $e',
+                  isError: true,
+                );
+              }
+            }
           },
         ),
         const SizedBox(width: 12),

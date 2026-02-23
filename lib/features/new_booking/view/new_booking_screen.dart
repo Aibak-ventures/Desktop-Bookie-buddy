@@ -58,6 +58,7 @@ import 'web_helper_stub.dart' if (dart.library.html) 'web_helper_web.dart'
     as web_helper;
 // import 'package:go_router/go_router.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/select_date_failure_dialog.dart';
 
 import 'package:bookie_buddy_web/features/sale_details/view/widgets/generate_sale_details_pdf.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
@@ -1692,6 +1693,52 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         isSales: isSales,
       ),
     );
+
+    // After reloading products, check if selected products are still available
+    _checkSelectedProductsAvailability();
+  }
+
+  /// Check if already-selected products are still available for the current
+  /// date range. If any are unavailable, show the [showUnavailableProductsDialog].
+  Future<void> _checkSelectedProductsAvailability() async {
+    final isSales = selectedBookingType == BookingType.sales;
+    // Only check availability for bookings, not sales
+    if (isSales) return;
+
+    final selected = selectedProductsNotifier.value;
+    if (selected.isEmpty) return;
+
+    final variantIds = selected
+        .map((p) => p.variant.variantId)
+        .whereType<int>()
+        .toList();
+    if (variantIds.isEmpty) return;
+
+    final effectiveReturnDate =
+        returnDate.add(Duration(days: coolingPeriodDays)).format();
+
+    try {
+      final notFoundIds =
+          await getIt<ProductRepository>().checkVariantAvailability(
+        pickupDate: pickupDate.format(),
+        returnDate: effectiveReturnDate,
+        variantIds: variantIds,
+        pickupTime: pickupTime,
+        returnTime: returnTime,
+      );
+
+      if (notFoundIds.isNotEmpty && mounted) {
+        await showUnavailableProductsDialog(
+          context: context,
+          unavailableDateFrom: pickupDate.format(),
+          unavailableDateTo: effectiveReturnDate,
+          unavailableProducts: notFoundIds,
+          selectedProductsNotifier: selectedProductsNotifier,
+        );
+      }
+    } catch (e) {
+      log('Error checking selected product availability: $e');
+    }
   }
 
   /// Helper method to check if current pickup date (sale date) is in the past

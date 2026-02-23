@@ -248,6 +248,50 @@ class ProductQueryService {
     }
   }
 
+  /// Check availability of specific variant IDs for a given date range.
+  /// Returns the raw API response which includes meta.not_found_ids.
+  Future<CustomResponseModel> checkVariantAvailability({
+    required String pickupDate,
+    required String returnDate,
+    required List<int> variantIds,
+    int? bookingId,
+    TimeOfDay? pickupTime,
+    TimeOfDay? returnTime,
+  }) async {
+    try {
+      final response = await _dio.get(
+        ApiPaths.bookings.availableProducts,
+        queryParameters: {
+          'page': 1,
+          'event_date': pickupDate.parseToDateTime().format(reverse: true),
+          'return_date': (returnTime != null &&
+                  returnTime.hour == 23 &&
+                  returnTime.minute == 59)
+              ? returnDate
+                  .parseToDateTime()
+                  .add(const Duration(days: 1))
+                  .format(reverse: true)
+              : returnDate.parseToDateTime().format(reverse: true),
+          if (pickupTime != null)
+            'event_time': pickupTime.formatToTime(
+              date: pickupDate.parseToDateTime(),
+            ),
+          if (returnTime != null)
+            'return_time': returnTime.formatToTime(
+              date: returnDate.parseToDateTime(),
+            ),
+          if (bookingId != null) 'booking_id': bookingId,
+          'variant_ids': jsonEncode(variantIds),
+        },
+      );
+      log('checkVariantAvailability url: ${response.realUri.toString()}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('checkVariantAvailability error: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   Future<CustomResponseModel> fetchMatchingProductsFromAnotherShop({
     required int fromVariantId,
     required int toShopId,

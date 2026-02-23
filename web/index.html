@@ -19,7 +19,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=1280, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -39,8 +39,8 @@
     }
 
     html {
-      min-width: 1280px !important;
-      min-height: 720px !important;
+      min-width: 1280px;
+      min-height: 720px;
       overflow-x: auto;
       overflow-y: auto;
     }
@@ -48,39 +48,19 @@
     body {
       margin: 0;
       padding: 0;
-      min-width: 1280px !important;
-      min-height: 720px !important;
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-      height: 100%;
-    }
-    
-    /* Flutter container with fixed minimum size */
-    #root, flt-glass-pane {
-      min-width: 1280px !important;
-      min-height: 720px !important;
+      min-width: 1280px;
+      min-height: 720px;
+      overflow: auto;
       width: 100%;
       height: 100%;
     }
 
-    /* Show warning on too small screens */
-    @media (max-width: 1279px), (max-height: 719px) {
-      body::before {
-        content: "⚠️ Screen too small! Minimum resolution: 1280x720";
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: #ff6b6b;
-        color: white;
-        padding: 12px;
-        text-align: center;
-        z-index: 999999;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 14px;
-        font-weight: bold;
-      }
+    /* Flutter container with fixed minimum size */
+    #root, flt-glass-pane {
+      min-width: 1280px;
+      min-height: 720px;
+      width: 100%;
+      height: 100%;
     }
 
     /* Loading indicator */

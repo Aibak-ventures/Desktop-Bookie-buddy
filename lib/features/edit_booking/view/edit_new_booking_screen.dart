@@ -50,6 +50,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
+import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/select_date_failure_dialog.dart';
 
 import 'package:bookie_buddy_web/features/sale_details/view/widgets/generate_sale_details_pdf.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
@@ -2564,6 +2565,50 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         variantIds: currentVariantIds.isNotEmpty ? currentVariantIds : null, // Pass current variants
       ),
     );
+
+    // After reloading products, check if selected products are still available
+    _checkSelectedProductsAvailability();
+  }
+
+  /// Check if already-selected products are still available for the current
+  /// date range. Uses booking_id to exclude the current booking from conflict
+  /// checks (edit mode). Shows [showUnavailableProductsDialog] if any are not.
+  Future<void> _checkSelectedProductsAvailability() async {
+    final isSales = selectedBookingType == BookingType.sales;
+    if (isSales) return;
+
+    final selected = selectedProductsNotifier.value;
+    if (selected.isEmpty) return;
+
+    final variantIds = selected
+        .map((p) => p.variant.variantId)
+        .whereType<int>()
+        .toList();
+    if (variantIds.isEmpty) return;
+
+    try {
+      final notFoundIds =
+          await getIt<ProductRepository>().checkVariantAvailability(
+        pickupDate: pickupDate.format(),
+        returnDate: returnDate.format(),
+        variantIds: variantIds,
+        bookingId: widget.bookingId, // Pass booking_id in edit mode
+        pickupTime: pickupTime,
+        returnTime: returnTime,
+      );
+
+      if (notFoundIds.isNotEmpty && mounted) {
+        await showUnavailableProductsDialog(
+          context: context,
+          unavailableDateFrom: pickupDate.format(),
+          unavailableDateTo: returnDate.format(),
+          unavailableProducts: notFoundIds,
+          selectedProductsNotifier: selectedProductsNotifier,
+        );
+      }
+    } catch (e) {
+      log('Error checking selected product availability: $e');
+    }
   }
 
   Widget _buildSalesDateSection() {
