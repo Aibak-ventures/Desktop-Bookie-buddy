@@ -1314,7 +1314,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         child: Text(
           title,
           style: TextStyle(
-            fontSize: 19,
+            fontSize: 13,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
             color: Colors.grey.shade800, // Changed to standard grey

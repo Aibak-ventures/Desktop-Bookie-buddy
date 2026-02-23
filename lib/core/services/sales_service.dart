@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -119,6 +120,7 @@ class SalesService {
 
       final response = await _dio.get(
         url,
+        queryParameters: {'send_whatsapp': false},
         options: Options(
           responseType: ResponseType.bytes,
           followRedirects: false,
@@ -128,10 +130,22 @@ class SalesService {
 
       if (response.statusCode == 200) {
         log('Invoice PDF fetched successfully, size: ${response.data.length} bytes');
-        return response.data;
+        return Uint8List.fromList(response.data as List<int>);
       } else {
-        log('Error fetching invoice PDF: ${response.statusCode}');
-        throw 'Failed to fetch invoice: HTTP ${response.statusCode}';
+        // Decode the JSON error body from bytes to show the actual backend message
+        String errorMessage = 'Failed to fetch invoice (HTTP ${response.statusCode})';
+        try {
+          final jsonStr = utf8.decode(response.data as List<int>);
+          final jsonBody = jsonDecode(jsonStr) as Map<String, dynamic>;
+          final msg = jsonBody['message'] as String?;
+          final devMsg = jsonBody['dev_message'] as String?;
+          if (msg != null && msg.isNotEmpty) {
+            errorMessage = msg;
+            log('Backend error: $msg | dev: $devMsg');
+          }
+        } catch (_) {}
+        log('Error fetching invoice PDF: ${response.statusCode} - $errorMessage');
+        throw errorMessage;
       }
     } catch (e, stack) {
       log('Error fetching sale invoice PDF: $e', stackTrace: stack);

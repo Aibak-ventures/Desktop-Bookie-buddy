@@ -2367,21 +2367,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Helper: Show time validation error
   void _showTimeError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red.shade600,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
-        action: SnackBarAction(
-          label: 'OK',
-          textColor: Colors.white,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ),
-    );
+    context.showSnackBar(message, isError: true);
   }
 
   /// Helper: Initialize cooling period on first load based on shop settings
@@ -3348,7 +3334,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           Expanded(
             child: Center(
               child: Text(
-                '${product.amount * product.quantity}',
+                '${product.amount * product.quantity * (rentalDays > 0 ? rentalDays : 1)}',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700, // Bold
@@ -3522,9 +3508,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
+              final isSaleType = selectedBookingType == BookingType.sales;
+              final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
-                (sum, product) => sum + (product.amount * product.quantity),
+                (sum, product) => sum + (product.amount * product.quantity * summaryRentalDays),
               );
               final additionalTotal = additionalCharges.fold<int>(
                 0,
@@ -3815,23 +3803,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
               // Validate name
               if (name.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please enter charge name'),
-                    backgroundColor: Colors.orange,
-                  ),
-                );
+                context.showSnackBar('Please enter charge name', isError: true);
                 return;
               }
 
               // Validate amount
               if (amount == null || amount <= 0) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please enter a valid amount greater than 0'),
-                    backgroundColor: Colors.orange,
-                  ),
-                );
+                context.showSnackBar('Please enter a valid amount greater than 0', isError: true);
                 return;
               }
 

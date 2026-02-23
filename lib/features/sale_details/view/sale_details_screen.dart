@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
@@ -23,10 +24,12 @@ import 'package:bookie_buddy_web/features/sale_details/view/widgets/sale_details
 import 'package:bookie_buddy_web/features/sale_details/view/widgets/sale_details_payment_details_row.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/widgets/sale_details_section.dart';
 import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
+import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:printing/printing.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SaleDetailsScreen extends StatelessWidget {
   const SaleDetailsScreen({super.key, required this.saleId});
@@ -162,38 +165,27 @@ class SaleDetailsScreen extends StatelessWidget {
                           // Close loading indicator
                           if (context.mounted) Navigator.of(context).pop();
                           
-                          // Show PDF viewer
+                          // Download and open invoice
                           if (context.mounted) {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => Dialog(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  height: MediaQuery.of(context).size.height * 0.9,
-                                  child: Column(
-                                    children: [
-                                      AppBar(
-                                        title: Text('Invoice #${sale.invoiceId}'),
-                                        actions: [
-                                          IconButton(
-                                            icon: const Icon(Icons.close),
-                                            onPressed: () => Navigator.of(context).pop(),
-                                          ),
-                                        ],
-                                      ),
-                                      // Expanded(
-                                      //   child: PdfPreview(
-                                      //     build: (format) => pdfBytes,
-                                      //     canChangeOrientation: false,
-                                      //     canChangePageFormat: false,
-                                      //     canDebug: false,
-                                      //   ),
-                                      // ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
+                            if (kIsWeb) {
+                              openPdfInNewTab(pdfBytes, 'sale_invoice_${sale.id}.pdf');
+                            } else {
+                              // For desktop, save to Downloads and open
+                              final downloadsDir = Directory(
+                                  '${Platform.environment['USERPROFILE']}\\Downloads');
+                              if (!downloadsDir.existsSync()) {
+                                downloadsDir.createSync(recursive: true);
+                              }
+                              final fileName = 'sale_invoice_${sale.id}.pdf';
+                              final filePath = '${downloadsDir.path}\\$fileName';
+                              final file = File(filePath);
+                              await file.writeAsBytes(pdfBytes);
+                              await launchUrl(Uri.file(filePath));
+                              if (context.mounted) {
+                                context.showSnackBar(
+                                    'Invoice saved to Downloads\\$fileName');
+                              }
+                            }
                           }
                         } catch (e, stack) {
                           log('Error viewing invoice: $e', stackTrace: stack);
