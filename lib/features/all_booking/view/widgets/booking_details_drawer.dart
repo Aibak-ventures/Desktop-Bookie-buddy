@@ -826,7 +826,8 @@ class BookingDetailsDrawer extends StatelessWidget {
           const SizedBox(height: 16),
           ...booking.bookedItems.map((item) {
             // Determine specifications label based on mainServiceType
-            String specsLabel = item.mainServiceType.quantityFieldLabel;
+            // Uses variantAttributeLabel: 'Size' for dress/costume, 'Serial Number' for gadget, 'Model' for vehicle, 'Variant' for others
+            String specsLabel = item.mainServiceType.variantAttributeLabel;
             // if (item.mainServiceType != null) {
             //   switch (item.mainServiceType) {
             //     case MainServiceType.tailoring:
@@ -913,7 +914,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                             if (item.category != null &&
                                 item.category!.isNotEmpty)
                               Text(
-                                'Category : ${item.category}',
+                                '${item.mainServiceType.categoryFieldLabel} : ${item.category}',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey.shade600,

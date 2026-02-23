@@ -48,135 +48,173 @@ Future<void> showUnavailableProductsDialog({
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // Prevent dismissing by tapping outside
-    builder: (BuildContext dialogContext) => AlertDialog(
-      icon: const Icon(
-        Icons.warning_amber_rounded,
-        color: Colors.orange,
-        size: 30,
-      ),
-      title: Text(
-        'Unavailable Products',
-        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
-      ),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'The product is booked for another customer on that date ${unavailableDateFrom != null && unavailableDateTo != null ? '${unavailableDateFrom.formatToUiDate()} - ${unavailableDateTo.formatToUiDate()}' : unavailableDateFrom != null ? unavailableDateFrom.formatToUiDate() : ''}:',
-              style: TextStyle(color: Colors.grey[600], fontSize: 14.sp),
-            ),
-            const SizedBox(height: 16),
-            Flexible(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: unavailableSelectedProducts.length,
-                separatorBuilder: (context, index) => const Divider(height: 1),
-                itemBuilder: (context, index) {
-                  final selectedProduct = unavailableSelectedProducts[index];
-                  final product = selectedProduct.variant;
-                  final mainServiceType = product.mainServiceType;
-                  debugPrint('product: $product');
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Product Image
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CustomNetworkImage(
-                            imageUrl: product.image ?? '',
-                            height: 60,
-                            width: 60,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-
-                        // Product Details
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.name,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Category: ${product.category?.isNotEmpty == true ? product.category : '-'}',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              Text(
-                                mainServiceType == null ||
-                                        !mainServiceType.isDress
-                                    ? 'Model: ${product.model ?? '-'}'
-                                    : 'Size: ${product.variantAttribute ?? '-'}',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Amount
-                        Text(
-                          selectedProduct.amount.toCurrency(),
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.purple,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            selectedProductsNotifier.value = selectedProductsNotifier.value
-                .where(
-                  (e) => unavailableSelectedProducts.any(
-                    (un) => e.variant.id != un.variant.id,
-                  ),
-                )
-                .toList();
-            dialogContext.pop();
-          },
-          child: Text(
-            'Remove ${unavailableSelectedProducts.length > 1 ? 'All' : 'Product'}',
-            style: TextStyle(
-              color: Colors.red.shade600,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        TextButton(
-          onPressed: () => dialogContext.pop(),
-          child: const Text(
-            'Keep Selected',
-            style: TextStyle(fontWeight: FontWeight.w500),
-          ),
-        ),
-      ],
+    builder: (BuildContext dialogContext) => Dialog(
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(12),
+  ),
+  child: ConstrainedBox(
+    constraints: const BoxConstraints(
+      maxWidth: 700,     // 👈 web-friendly width
+      maxHeight: 520,    // 👈 prevents full screen takeover
     ),
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ================= Header =================
+          Row(
+            children: [
+              const Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange,
+                size: 28,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Unavailable Products',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              // IconButton(
+              //   onPressed: () => dialogContext.pop(),
+              //   icon: const Icon(Icons.close),
+              // ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Text(
+            'The product is already booked on '
+            '${unavailableDateFrom != null && unavailableDateTo != null
+                ? '${unavailableDateFrom.formatToUiDate()} - ${unavailableDateTo.formatToUiDate()}'
+                : unavailableDateFrom?.formatToUiDate() ?? ''}',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 16.sp,
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          const Divider(),
+
+          // ================= Product List =================
+          Expanded(
+            child: ListView.separated(
+              itemCount: unavailableSelectedProducts.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
+              itemBuilder: (context, index) {
+                final selectedProduct = unavailableSelectedProducts[index];
+                final product = selectedProduct.variant;
+                final mainServiceType = product.mainServiceType;
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: CustomNetworkImage(
+                          imageUrl: product.image ?? '',
+                          height: 64,
+                          width: 64,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Category: ${product.category?.isNotEmpty == true ? product.category : '-'}',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            Text(
+                              mainServiceType == null || !mainServiceType.isDress
+                                  ? 'Model: ${product.model ?? '-'}'
+                                  : 'Size: ${product.variantAttribute ?? '-'}',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: 12),
+
+                      Text(
+                        selectedProduct.amount.toCurrency(),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.purple,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+
+          const Divider(),
+
+          // ================= Actions =================
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  selectedProductsNotifier.value =
+                      selectedProductsNotifier.value
+                          .where(
+                            (e) => unavailableSelectedProducts
+                                .any((un) => e.variant.id != un.variant.id),
+                          )
+                          .toList();
+                  dialogContext.pop();
+                },
+                child: Text(
+                  'Remove ${unavailableSelectedProducts.length > 1 ? 'All' : 'Product'}',
+                  style: TextStyle(
+                    color: Colors.red.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () => dialogContext.pop(),
+                child: const Text('Keep Selected',style: TextStyle(color: Colors.white) ,),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  ),
+)
   );
 }

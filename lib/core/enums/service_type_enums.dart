@@ -92,10 +92,12 @@ extension MainServiceTypeX on MainServiceType? {
   /// Examples:
   /// - Dress/Costume → "Size"
   /// - Gadget → "Serial Number"
+  /// - Vehicle → "Model"
   /// - Others → "Variant"
   String get variantAttributeLabel {
     if (isDress || isCostume) return 'Size';
     if (isGadget) return 'Serial Number';
+    if (isVehicle) return 'Model';
     return 'Variant';
   }
 
@@ -128,6 +130,7 @@ extension MainServiceTypeX on MainServiceType? {
   String get quantityFieldLabel {
     if (isVehicle) return 'Unit';
     if (isMaterial) return 'Length (in meters)';
+    if (isDress || isCostume) return 'Size';
     return 'Quantity';
   }
 
