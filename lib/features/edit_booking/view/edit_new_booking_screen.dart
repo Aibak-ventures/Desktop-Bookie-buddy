@@ -517,16 +517,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     
     // Include client entirely if any client field changed
     if (_hasClientChanged()) {
+      final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
+      final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
+      final clientName = clientNameController.text.trim().nullIfEmpty;
       if (selectedClientId != null) {
+        // Existing client: send the id so server updates that client record
         updates['client_id'] = selectedClientId;
+        updates['client'] = {
+          'id': selectedClientId,
+          'name': clientName,
+          'phone1': phone1,
+          'phone2': phone2,
+        };
       } else {
         // New client
-        final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
-        final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
         updates['client'] = {
-          'name': clientNameController.text.trim().isEmpty
-              ? null
-              : clientNameController.text.trim(),
+          'name': clientName,
           'phone1': phone1,
           'phone2': phone2,
         };
@@ -547,20 +553,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
     
     // Always include products (variants) to ensure server state matches current selection.
-    // The 'id' field (booked-item id) is required by the server; it uses the submitted list
-    // as authoritative — items whose id is absent from the list are removed on the server side.
+    // IMPORTANT: The server uses 'id' as the variant identifier (product_variant id).
+    //   - Products loaded from booked_items have p.variant.id = booked_item row id (WRONG)
+    //     and p.variant.variantId = actual product variant id (CORRECT).
+    //   - Products added from search have p.variant.id = variant.id = actual variant id.
+    // Solution: use (p.variant.variantId ?? p.variant.id) so we always send the correct
+    //   product variant id. 'variant_id' as a separate key is ignored by the server.
     {
       final products = selectedProductsNotifier.value;
       updates['variants'] = products.map((p) {
+        // Use variantId (actual product variant) if present, fallback to id (from search)
+        final variantId = p.variant.variantId ?? p.variant.id;
         final variantData = <String, dynamic>{
-          'variant_id': p.variant.variantId,
+          'id': variantId,
           'quantity': p.quantity,
           'amount': p.amount,
         };
-        // Include booked-item id (required by server for full-replace logic)
-        if (p.variant.id != null) {
-          variantData['id'] = p.variant.id;
-        }
         // Include measurements if present
         if (p.measurements.isNotEmpty) {
           variantData['measurements'] = p.measurements;
@@ -5096,7 +5104,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           if (widget.onClose != null) {
             widget.onClose!();
           } else {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true); // true → caller refreshes list
           }
         }
       } else if (widget.saleDetails != null) {
@@ -6282,7 +6290,15 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
         widget.product.variants.isNotEmpty) {
       selectedVariant = widget.product.variants.first;
     } else {
-      selectedVariant = null;
+      // Also auto-select when all variants have empty attribute (single unnamed variant)
+      // — no chip will render so we must pre-select to allow adding
+      final hasVisibleChip =
+          widget.product.variants.any((v) => v.attribute.isNotEmpty);
+      if (!hasVisibleChip && widget.product.variants.isNotEmpty) {
+        selectedVariant = widget.product.variants.first;
+      } else {
+        selectedVariant = null;
+      }
     }
   }
 
@@ -6363,7 +6379,10 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                     ? SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: variants.map((variant) {
+                          // Skip chips for variants with empty attribute
+                          children: variants
+                              .where((v) => v.attribute.isNotEmpty)
+                              .map((variant) {
                             final isSelected =
                                 selectedVariant?.id == variant.id;
                             return Padding(

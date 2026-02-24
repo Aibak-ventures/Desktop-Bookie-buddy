@@ -2517,7 +2517,14 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
         widget.product.variants.isNotEmpty) {
       selectedVariant = widget.product.variants.first;
     } else {
-      selectedVariant = null;
+      // Also auto-select when all variants have empty attribute (single unnamed variant)
+      final hasVisibleChip =
+          widget.product.variants.any((v) => v.attribute.isNotEmpty);
+      if (!hasVisibleChip && widget.product.variants.isNotEmpty) {
+        selectedVariant = widget.product.variants.first;
+      } else {
+        selectedVariant = null;
+      }
     }
   }
 
@@ -2598,7 +2605,10 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                     ? SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: variants.map((variant) {
+                          // Skip chips for variants with empty attribute
+                          children: variants
+                              .where((v) => v.attribute.isNotEmpty)
+                              .map((variant) {
                             final isSelected =
                                 selectedVariant?.id == variant.id;
                             return Padding(

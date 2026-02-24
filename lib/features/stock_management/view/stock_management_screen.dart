@@ -1109,8 +1109,14 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                           tooltip: 'Edit Product',
                           color: Colors.blue,
                           onPressed: () {
-                            _showAddEditProductDialog(context,
-                                product: product);
+                            performSecureActionDialog(
+                              context,
+                              SecretPasswordLocations.productEdit,
+                              onSuccess: () {
+                                _showAddEditProductDialog(context,
+                                    product: product);
+                              },
+                            );
                           },
                         ),
                         const SizedBox(width: 8),

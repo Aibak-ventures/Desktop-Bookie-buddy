@@ -1,4 +1,6 @@
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/enums/enums.dart';
+import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
@@ -808,32 +810,38 @@ class SalesDetailsDrawer extends StatelessWidget {
             context,
             icon: Icons.delete_outline,
             color: Colors.red,
-            onTap: () async {
-              final confirm = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Delete Sale'),
-                  content: const Text(
-                      'Are you sure you want to delete this sale? This action cannot be undone.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text('Cancel'),
+            onTap: () {
+              performSecureActionDialog(
+                context,
+                SecretPasswordLocations.bookingDelete,
+                onSuccess: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete Sale'),
+                      content: const Text(
+                          'Are you sure you want to delete this sale? This action cannot be undone.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style: TextButton.styleFrom(foregroundColor: Colors.red),
+                          child: const Text('Delete'),
+                        ),
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      style: TextButton.styleFrom(foregroundColor: Colors.red),
-                      child: const Text('Delete'),
-                    ),
-                  ],
-                ),
-              );
+                  );
 
-              if (confirm == true && context.mounted) {
-                context.read<SalesDetailsBloc>().add(
-                      SalesDetailsEvent.deleteSale(sale.id),
-                    );
-              }
+                  if (confirm == true && context.mounted) {
+                    context.read<SalesDetailsBloc>().add(
+                          SalesDetailsEvent.deleteSale(sale.id),
+                        );
+                  }
+                },
+              );
             },
           ),
           const SizedBox(width: 12),
@@ -842,31 +850,37 @@ class SalesDetailsDrawer extends StatelessWidget {
             context,
             icon: Icons.edit_outlined,
             color: AppColors.purple,
-            onTap: () async {
-              // Navigate to EditSalesScreen with sale details
-              final result = await Navigator.push(
+            onTap: () {
+              performSecureActionDialog(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (_) =>
-                        SaveSalesCubit(repository: getIt<SalesRepository>()),
-                    child: EditSalesScreen(
-                      saleDetails: sale,
+                SecretPasswordLocations.bookingEdit,
+                onSuccess: () async {
+                  // Navigate to EditSalesScreen with sale details
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (_) =>
+                            SaveSalesCubit(repository: getIt<SalesRepository>()),
+                        child: EditSalesScreen(
+                          saleDetails: sale,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
+                  );
 
-              // If sale was updated, refresh the sales list
-              if (result == true && context.mounted) {
-                context
-                    .read<AllSalesBloc>()
-                    .add(const AllSalesEvent.loadSales());
-                // Refresh the drawer content
-                context.read<SalesDetailsBloc>().add(
-                      SalesDetailsEvent.fetchSaleDetails(sale.id),
-                    );
-              }
+                  // If sale was updated, refresh the sales list
+                  if (result == true && context.mounted) {
+                    context
+                        .read<AllSalesBloc>()
+                        .add(const AllSalesEvent.loadSales());
+                    // Refresh the drawer content
+                    context.read<SalesDetailsBloc>().add(
+                          SalesDetailsEvent.fetchSaleDetails(sale.id),
+                        );
+                  }
+                },
+              );
             },
           ),
           const SizedBox(width: 12),

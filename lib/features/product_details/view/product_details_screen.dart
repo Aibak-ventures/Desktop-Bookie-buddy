@@ -381,8 +381,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                       builder: (context) {
                         int? salePrice;
                         if (product.variants.isNotEmpty) {
-                          salePrice = product.variants.first.salePrice;
+                          salePrice = double.parse(product.salePrice ?? '0').toInt();
                         }
+                        // first.salePrice
                         return Text.rich(
                           TextSpan(
                             children: [
