@@ -493,16 +493,27 @@ class ProductRepository {
         ),
       );
       if (response.status.isSuccess) {
-        // Response structure: data.data.meta.not_found_ids
+        // Response structure: data.data.products[].variants[].remaining_stock
         final dataMap = response.data as Map<String, dynamic>?;
         final innerData = dataMap?['data'] as Map<String, dynamic>?;
-        final meta = innerData?['meta'] as Map<String, dynamic>?;
-        final notFoundIds = (meta?['not_found_ids'] as List<dynamic>?)
-                ?.map((e) => (e as num).toInt())
-                .toList() ??
-            [];
-        log('checkVariantAvailability: not_found_ids=$notFoundIds');
-        return notFoundIds;
+        final products = (innerData?['products'] as List<dynamic>?) ?? [];
+
+        // Collect variant IDs where remaining_stock == 0
+        final unavailableIds = <int>[];
+        for (final product in products) {
+          final productMap = product as Map<String, dynamic>?;
+          final variants = (productMap?['variants'] as List<dynamic>?) ?? [];
+          for (final variant in variants) {
+            final variantMap = variant as Map<String, dynamic>?;
+            final remainingStock = (variantMap?['remaining_stock'] as num?)?.toInt() ?? 0;
+            if (remainingStock == 0) {
+              final variantId = (variantMap?['id'] as num?)?.toInt();
+              if (variantId != null) unavailableIds.add(variantId);
+            }
+          }
+        }
+        log('checkVariantAvailability: variants with remaining_stock=0: $unavailableIds');
+        return unavailableIds;
       }
       log('checkVariantAvailability failed: ${response.devMessage}');
       return [];

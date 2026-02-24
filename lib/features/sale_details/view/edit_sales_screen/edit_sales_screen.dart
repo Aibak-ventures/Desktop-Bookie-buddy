@@ -255,7 +255,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'ID: ${widget.saleDetails.id}',
+                  '#${widget.saleDetails.invoiceId}',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

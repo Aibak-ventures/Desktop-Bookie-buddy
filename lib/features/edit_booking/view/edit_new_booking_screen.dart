@@ -26,6 +26,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
@@ -221,8 +222,28 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Load services and auto-select first one
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
-      // Load staffs for staff search dropdown
-      context.read<StaffSearchCubit>().getAllStaffs();
+      // Load staffs for staff search dropdown - pre-select existing staff if editing
+      final bookingStaffId = widget.bookingDetails?.staffId;
+      final bookingStaffName = widget.bookingDetails?.staffName;
+      final saleStaffId = widget.saleDetails?.staffId;
+      final saleStaffName = widget.saleDetails?.staffName;
+      if (bookingStaffId != null) {
+        final existingStaff = StaffModel(
+          id: bookingStaffId,
+          name: bookingStaffName ?? 'Staff',
+          phoneNumber: '',
+        );
+        context.read<StaffSearchCubit>().getAllStaffs(bookingStaffId, existingStaff);
+      } else if (saleStaffId != null) {
+        final existingStaff = StaffModel(
+          id: saleStaffId,
+          name: saleStaffName ?? 'Staff',
+          phoneNumber: '',
+        );
+        context.read<StaffSearchCubit>().getAllStaffs(saleStaffId, existingStaff);
+      } else {
+        context.read<StaffSearchCubit>().getAllStaffs();
+      }
 
       // 🔄 Load available products immediately using check-availability API
       // This ensures only products available for the booking dates are shown
@@ -444,10 +465,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
            currentClientAddress != (_originalClientAddress ?? '');
   }
 
-  /// Check if staff has changed
+  /// Check if staff has changed (reads directly from cubit to avoid timing issues)
   bool _hasStaffChanged() {
     if (_originalBooking == null) return true;
-    return selectedStaffId != _originalStaffId;
+    final currentStaffId = context.read<StaffSearchCubit>().state.selectedStaff?.id;
+    return currentStaffId != _originalStaffId;
   }
 
   /// Check if amounts have changed
@@ -540,9 +562,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       updates['address'] = clientAddressController.text.trim();
     }
     
-    // Include staff if changed
+    // Include staff if changed (read directly from cubit — reliable, no listener timing issues)
+    final currentStaffId = context.read<StaffSearchCubit>().state.selectedStaff?.id;
     if (_hasStaffChanged()) {
-      updates['staff_id'] = selectedStaffId;
+      updates['staff_id'] = currentStaffId;
     }
     
     // Include amounts if changed

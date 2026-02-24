@@ -363,6 +363,8 @@ class _BookingCalendarWidgetState extends State<BookingCalendarWidget> {
     return _card(
       // title: '',
       child: BlocListener<StaffSearchCubit, StaffSearchState>(
+        listenWhen: (previous, current) =>
+            previous.selectedStaff != current.selectedStaff,
         listener: (context, state) =>
             widget.onStaffSelected(state.selectedStaff?.id),
         child: StaffSearchNameField(
