@@ -253,6 +253,55 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Shimmer placeholder for a booking column while data loads
+  Widget _buildShimmerColumn(Color color, String title, IconData icon) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: color, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: BookingListShimmer(
+                itemCount: 4,
+                alwaysScrollable: false,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Two column layout showing Upcoming and Returns bookings with Today/Tomorrow/Upcoming grouping
   Widget _buildTwoColumnBookings(
     BuildContext context,
@@ -262,6 +311,26 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
           return state.maybeWhen(
+            loading: () => Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildShimmerColumn(
+                    const Color(0xFF667eea),
+                    'Upcoming Bookings',
+                    Icons.schedule,
+                  ),
+                ),
+                const SizedBox(width: 24),
+                Expanded(
+                  child: _buildShimmerColumn(
+                    const Color(0xFFff8a00),
+                    'Returns Booking',
+                    Icons.assignment_return,
+                  ),
+                ),
+              ],
+            ),
             loaded: (upcomingGrouped, returnsGrouped, _, __, ___, ____, _____) {
               // Calculate total counts
               final upcomingCount = upcomingGrouped.values

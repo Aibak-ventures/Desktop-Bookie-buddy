@@ -223,7 +223,17 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
   ) async {
     if (event.shouldRefresh && !event.isDeleted) {
       log('refreshing');
-      add(const AllBookingEvent.loadBookings());
+      if (state is _Loaded) {
+        final s = state as _Loaded;
+        add(AllBookingEvent.loadBookings(
+          status: s.status,
+          startDate: s.startDate,
+          endDate: s.endDate,
+          searchQuery: s.searchQuery,
+        ));
+      } else {
+        add(const AllBookingEvent.loadBookings());
+      }
       return;
     }
     if (event.booking == null) {

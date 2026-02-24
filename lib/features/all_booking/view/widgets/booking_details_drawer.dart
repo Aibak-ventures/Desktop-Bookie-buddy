@@ -151,9 +151,16 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ),
                   );
 
-              // Only refresh the main booking list if not a cancellation
-              // (to prevent tab switching)
-              // The list will be refreshed when drawer is closed or user manually refreshes
+              // Refresh the main booking list to reflect status/payment changes
+              final allBookingBloc = context.read<AllBookingBloc>();
+              allBookingBloc.state.mapOrNull(
+                loaded: (s) => allBookingBloc.add(AllBookingEvent.loadBookings(
+                  status: s.status,
+                  startDate: s.startDate,
+                  endDate: s.endDate,
+                  searchQuery: s.searchQuery,
+                )),
+              );
             }
           },
           failed: (error) {
@@ -1968,9 +1975,16 @@ class BookingDetailsDrawer extends StatelessWidget {
                     context.read<BookingDetailsBloc>().add(
                           BookingDetailsEvent.fetchBookingDetails(booking.id),
                         );
-                    context.read<AllBookingBloc>().add(
-                          const AllBookingEvent.loadBookings(),
-                        );
+                    // Reload list preserving current tab/filters
+                    final allBookingBloc = context.read<AllBookingBloc>();
+                    allBookingBloc.state.mapOrNull(
+                      loaded: (s) => allBookingBloc.add(AllBookingEvent.loadBookings(
+                        status: s.status,
+                        startDate: s.startDate,
+                        endDate: s.endDate,
+                        searchQuery: s.searchQuery,
+                      )),
+                    );
                   }
                 },
               );
