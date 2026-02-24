@@ -3980,9 +3980,23 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
   }
 
+  /// Returns true only for service types where the total price
+  /// should be multiplied by rental days (vehicle, gadgets, equipment, costume).
+  bool _shouldMultiplyByDays(MainServiceType? serviceType) {
+    return serviceType == MainServiceType.vehicle ||
+        serviceType == MainServiceType.gadgets ||
+        serviceType == MainServiceType.equipment ||
+        serviceType == MainServiceType.costume;
+  }
+
   Widget _buildProductRow(ProductSelectedModel product) {
     final isSales = selectedBookingType == BookingType.sales;
     final rentalDays = !isSales ? _calculateRentalDays() : 0;
+    // Only multiply price by days for qualifying service types
+    final effectiveDaysMultiplier =
+        (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
+            ? (rentalDays > 0 ? rentalDays : 1)
+            : 1;
     final hasVariants = _hasAnyProductWithVariants();
 
     return Container(
@@ -4211,7 +4225,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           Expanded(
             child: Center(
               child: Text(
-                '${product.amount * product.quantity}',
+                '${product.amount * product.quantity * effectiveDaysMultiplier}',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -4678,9 +4692,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
+              final isSaleType = selectedBookingType == BookingType.sales;
+              final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
-                (sum, product) => sum + (product.amount * product.quantity),
+                (sum, product) {
+                  // Only multiply by days for qualifying service types
+                  final daysMultiplier =
+                      (!isSaleType && _shouldMultiplyByDays(product.variant.mainServiceType))
+                          ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
+                          : 1;
+                  return sum + (product.amount * product.quantity * daysMultiplier);
+                },
               );
               final additionalTotal = additionalCharges.fold<int>(
                 0,
