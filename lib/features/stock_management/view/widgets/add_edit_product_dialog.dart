@@ -1053,6 +1053,52 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   }
 
   void _saveVariant() {
+    final isGadget = mainServiceType?.isGadget == true;
+
+    if (isGadget) {
+      // Gadget: validate serial number
+      if (_variantQrCodeController.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a serial number')),
+        );
+        return;
+      }
+
+      final serialNumber = _variantQrCodeController.text.trim();
+      final barcode = _variantBarcodeController.text.trim();
+      final updatedVariants =
+          List<ProductVariantModel>.from(variantsNotifier.value);
+
+      if (_editingVariant != null) {
+        final index =
+            updatedVariants.indexWhere((v) => v.id == _editingVariant!.id);
+        if (index != -1) {
+          updatedVariants[index] = ProductVariantModel(
+            id: _editingVariant!.id,
+            attribute: serialNumber,
+            stock: 1,
+            remainingStock: _editingVariant!.remainingStock,
+            externalQrCode: barcode.isEmpty ? null : barcode,
+          );
+        }
+      } else {
+        updatedVariants.add(
+          ProductVariantModel(
+            id: DateTime.now().millisecondsSinceEpoch,
+            attribute: serialNumber,
+            stock: 1,
+            remainingStock: 1,
+            externalQrCode: barcode.isEmpty ? null : barcode,
+          ),
+        );
+      }
+
+      variantsNotifier.value = updatedVariants;
+      _cancelVariantForm();
+      return;
+    }
+
+    // Default (non-gadget) variant save
     if (_variantSizeController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter variant name/size')),
@@ -1141,39 +1187,66 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: CustomTextField(
-                  controller: _variantSizeController,
-                  label: 'Size / Variant Name *',
-                  validator: (value) =>
-                      AppInputValidators.onEmpty(value, 'Size'),
+          if (mainServiceType?.isGadget == true) ...[
+            // Gadgets: only Serial Number + Barcode
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: CustomTextField(
+                    controller: _variantQrCodeController,
+                    label: 'Serial Number *',
+                    validator: null,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: CustomTextField(
-                  controller: _variantStockController,
-                  label: 'Stock Quantity *',
-                  keyboardType: TextInputType.number,
-                  validator: (value) =>
-                      AppInputValidators.quantity(value, allowZero: false),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: CustomTextField(
+                    controller: _variantBarcodeController,
+                    label: 'Barcode (Optional)',
+                    validator: null,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: CustomTextField(
-                  controller: _variantQrCodeController,
-                  label: 'External QR Code (Optional)',
-                  validator: null,
+              ],
+            ),
+          ] else ...[
+            // Default: Size/Variant Name + Stock + External QR Code
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: CustomTextField(
+                    controller: _variantSizeController,
+                    label: 'Size / Variant Name *',
+                    validator: (value) =>
+                        AppInputValidators.onEmpty(value, 'Size'),
+                  ),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: CustomTextField(
+                    controller: _variantStockController,
+                    label: 'Stock Quantity *',
+                    keyboardType: TextInputType.number,
+                    validator: (value) =>
+                        AppInputValidators.quantity(value, allowZero: false),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: CustomTextField(
+                    controller: _variantQrCodeController,
+                    label: 'External QR Code (Optional)',
+                    validator: null,
+                  ),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

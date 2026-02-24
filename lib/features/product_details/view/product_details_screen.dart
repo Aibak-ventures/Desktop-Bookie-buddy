@@ -263,7 +263,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               const SizedBox(width: 12),
               OutlinedButton.icon(
                 onPressed: () {
-                  _showAddEditProductDialog(context, product: widget.productForEdit);
+                  performSecureActionDialog(
+                    context,
+                    SecretPasswordLocations.productEdit,
+                    onSuccess: () {
+                      _showAddEditProductDialog(context,
+                          product: widget.productForEdit);
+                    },
+                  );
                 },
                 icon: const Icon(Icons.edit_outlined, size: 16),
                 label: const Text('Edit Product',
@@ -909,7 +916,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           right: -5,
           child: InkWell(
             onTap: () {
-              _showEditVariantDialog(variant);
+              performSecureActionDialog(
+                context,
+                SecretPasswordLocations.productEdit,
+                onSuccess: () {
+                  _showEditVariantDialog(variant);
+                },
+              );
             },
             child: Container(
               padding: const EdgeInsets.all(3),
