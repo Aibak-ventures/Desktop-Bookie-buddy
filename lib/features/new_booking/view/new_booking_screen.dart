@@ -1989,7 +1989,15 @@ int _calculateRentalDays() {
                               }
                             });
                           },
-                          selectedProducts: selectedProductsNotifier.value,
+                          selectedProducts: selectedProductsNotifier.value
+                              .where(
+                                (p) =>
+                                    (p.variant.mainServiceType?.isDress ??
+                                        false) ||
+                                    (p.variant.mainServiceType?.isCostume ??
+                                        false),
+                              )
+                              .toList(),
                         )
                       : Container(
                           key: const ValueKey('products'),
@@ -3696,15 +3704,18 @@ int _calculateRentalDays() {
               if (selectedBookingType == BookingType.sales) {
                 return const SizedBox.shrink();
               }
-              final hasDresses = products.any(
-                (p) => p.variant.mainServiceType?.isDress ?? false,
+              final hasDressesOrCostumes = products.any(
+                (p) =>
+                    (p.variant.mainServiceType?.isDress ?? false) ||
+                    (p.variant.mainServiceType?.isCostume ?? false),
               );
-              if (!hasDresses) return const SizedBox.shrink();
+              if (!hasDressesOrCostumes) return const SizedBox.shrink();
 
-              // Check if any dress product has measurements (customizations saved)
+              // Check if any dress/costume product has measurements (customizations saved)
               final hasCustomizations = products.any(
                 (p) =>
-                    (p.variant.mainServiceType?.isDress ?? false) &&
+                    ((p.variant.mainServiceType?.isDress ?? false) ||
+                        (p.variant.mainServiceType?.isCostume ?? false)) &&
                     p.measurements.isNotEmpty,
               );
 

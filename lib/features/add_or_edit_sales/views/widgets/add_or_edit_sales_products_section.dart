@@ -5,14 +5,19 @@ import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/widgets/add_or_edit_sales_section.dart';
+// import 'package:bookie_buddy_web/features/add_or_edit_sales/views/widgets/add_or_edit_sales_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/components/edit_booking_product_list_tile.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddOrEditSalesProductsSection extends StatelessWidget {
   const AddOrEditSalesProductsSection({
@@ -233,26 +238,32 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
 
   Future<void> _handleAddMore(BuildContext context) async {
     try {
-      await context.push<List<ProductSelectedModel>>(
-        SelectServiceScreen(
-          onServiceSelected: (service, context) async {
-            final result = await context.push<List<ProductSelectedModel>>(
-              SelectProductScreen(
-                serviceId: service.id,
-                preSelectedData: selectedProductsNotifier.value,
-                pickupDate: pickUpDateController.text,
-                returnDate: returnDateController.text,
-                useAvailableProductsApi: false,
-                isSales: true,
+      final result = await Navigator.push<List<ProductSelectedModel>>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => SelectProductBloc(
+                  repository: getIt<ProductRepository>(),
+                ),
               ),
-            );
-            if (result != null) {
-              selectedProductsNotifier.value = result;
-            }
-            if (context.mounted) context.pop(); // close service screen
-          },
+              BlocProvider(create: (_) => SelectedProductsCubit()),
+            ],
+            child: SelectProductScreen(
+              serviceId: null, // All services
+              pickupDate: pickUpDateController.text,
+              returnDate: returnDateController.text,
+              preSelectedData: selectedProductsNotifier.value,
+              isSales: true,
+              useAvailableProductsApi: false,
+            ),
+          ),
         ),
       );
+      if (result != null) {
+        selectedProductsNotifier.value = result;
+      }
     } catch (e, s) {
       log(e.toString(), stackTrace: s);
     }

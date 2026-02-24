@@ -589,6 +589,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
           pickupDate: _formController.saleDateController.text,
           returnDate: _formController.saleDateController.text,
           isSales: true,
+          useAvailableProductsApi: false,
         ),
       );
     }
