@@ -29,6 +29,7 @@ class ProductModel with _$ProductModel {
     @JsonKey(name: 'insurance_expiry') String? insuranceExpiry,
     @JsonKey(name: 'fitness_expiry') String? fitnessExpiry,
     @JsonKey(name: 'barcode') String? barcode,
+    @JsonKey(name: 'general_service_name') String? generalServiceName,
     // Attributes map for nested vehicle data from list API
     @Default({}) Map<String, dynamic> attributes,
     @JsonKey(name: 'variants') required List<ProductVariantModel> variants,

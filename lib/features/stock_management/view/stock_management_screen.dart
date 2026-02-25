@@ -281,6 +281,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
         return state.maybeWhen(
           loaded: (_, totalProducts, totalCategories, __, ___, ____, _____,
               ______) {
+            final serviceCount =
+                context.read<ServiceBloc>().getServices().length;
             return Row(
               children: [
                 _summaryCard(
@@ -290,26 +292,31 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                 const SizedBox(width: 16),
                 _summaryCard(
                   'Total Categories',
-                  totalCategories.toString(),
+                  serviceCount.toString(),
                 ),
               ],
             );
           },
-          orElse: () => Row(
-            children: [
-              SizedBox(
-                width: 227,
-                height: 98,
-                child: _summaryCard('Total Products', '-'),
-              ),
-              const SizedBox(width: 16),
-              SizedBox(
-                width: 227,
-                height: 98,
-                child: _summaryCard('Total Categories', '-'),
-              ),
-            ],
-          ),
+          orElse: () {
+            final serviceCount =
+                context.read<ServiceBloc>().getServices().length;
+            return Row(
+              children: [
+                SizedBox(
+                  width: 227,
+                  height: 98,
+                  child: _summaryCard('Total Products', '-'),
+                ),
+                const SizedBox(width: 16),
+                SizedBox(
+                  width: 227,
+                  height: 98,
+                  child: _summaryCard(
+                      'Total Services', serviceCount.toString()),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -417,13 +424,19 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                             fontSize: 14,
                           ),
                           onChanged: (value) {
-                            // Debounce search
+                            // Debounce search — use _applyProductFilters so
+                            // the selected search_by type is always respected
                             Future.delayed(const Duration(milliseconds: 500),
                                 () {
                               if (_searchController.text == value) {
-                                context
-                                    .read<StockManagementCubit>()
-                                    .searchProducts(value);
+                                _applyProductFilters(
+                                  selectedServiceId == -1
+                                      ? null
+                                      : selectedServiceId,
+                                  _selectedSearchTypeIndex.value,
+                                  _priceRange.value,
+                                  _isPriceFilterEnabled.value,
+                                );
                               }
                             });
                           },
@@ -978,7 +991,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                           ),
                         ),
                         child: Text(
-                          product.mainServiceType.productNameLabel,
+                          product.generalServiceName ?? '-',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -1786,12 +1799,12 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
                           Navigator.of(context).pop();
 
-                          // Trigger filter application
+                          // Trigger filter application using temp values to avoid timing issues
                           _applyProductFilters(
                             tempSelectedServiceId.value,
-                            _selectedSearchTypeIndex.value,
-                            _priceRange.value,
-                            _isPriceFilterEnabled.value,
+                            tempSelectedSearchTypeIndex.value,
+                            tempPriceRange.value,
+                            isPriceFilterEnabledWidgetNotifier.value,
                           );
                         },
                         style: ElevatedButton.styleFrom(

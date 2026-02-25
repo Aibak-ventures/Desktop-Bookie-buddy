@@ -116,8 +116,10 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           if (product != null) {
             _nameController.text = product.name;
             // Set stock/unit field based on service type
-            if (mainServiceType != null && !mainServiceType!.isDress) {
-              _stockController.text = product.variants.first.stock.toString();
+            if (mainServiceType != null && !mainServiceType!.needsVariantsSection) {
+              _stockController.text = product.variants.isNotEmpty
+                  ? product.variants.first.stock.toString()
+                  : '';
             }
             _modelController.text = product.model ?? '';
             _categoryController.text = product.category ?? '';
@@ -137,7 +139,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             _barcodeController.text = product.effectiveBarcode ?? '';
 
             // Load existing variants for edit mode
-            if (mainServiceType!.isDress && product.variants.isNotEmpty) {
+            if (mainServiceType!.needsVariantsSection && product.variants.isNotEmpty) {
               variantsNotifier.value = List.from(product.variants);
             }
           }
@@ -813,6 +815,11 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
 
   /// Build variants section for managing product variants
   Widget _buildVariantsSection() {
+    // Only show for service types that need variants (dress, costume, shoes, bridal)
+    if (mainServiceType == null || !mainServiceType!.needsVariantsSection) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

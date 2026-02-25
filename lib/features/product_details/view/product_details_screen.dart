@@ -864,15 +864,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   Widget _variantCard(ProductVariantModel variant, ProductModel product) {
     // For gadgets, use wider rectangular design to accommodate serial numbers
     final isGadget = product.mainServiceType?.isGadget == true;
-    final cardWidth = isGadget ? 150.0 : 82.0;
-    final cardHeight = 65.0;
+    final cardWidth = isGadget ? 160.0 : 82.0;
+    final cardMinHeight = isGadget ? 72.0 : 65.0;
 
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
           width: cardWidth,
-          height: cardHeight,
+          constraints: BoxConstraints(minHeight: cardMinHeight),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
@@ -889,6 +890,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               Text(
                 variant.attribute,
                 textAlign: TextAlign.center,
+                maxLines: isGadget ? 3 : 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: Color(0xFF171717),
                   fontSize: 12,
@@ -977,10 +980,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   // Helper method to build variants section (only if product has variants)
   List<Widget> _buildVariantsSection(ProductModel product) {
+    final isGadget = product.mainServiceType?.isGadget == true;
+    // Filter out any auto-created single variant whose attribute equals the product name
+    final displayVariants = product.variants
+        .where((v) =>
+            v.attribute.trim().toLowerCase() != product.name.trim().toLowerCase())
+        .toList();
+
+    if (displayVariants.isEmpty) return [];
+
+    final sectionTitle = isGadget ? 'Serial Numbers' : 'Available Variants';
+
     return [
-      const Text(
-        'Available Serial Numbers',
-        style: TextStyle(
+      Text(
+        sectionTitle,
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Color(0xFF1F2937),
@@ -991,7 +1005,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            ...product.variants.map((variant) => Padding(
+            ...displayVariants.map((variant) => Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: _variantCard(variant, product),
                 )),

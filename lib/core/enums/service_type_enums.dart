@@ -9,6 +9,8 @@ enum MainServiceType {
   room,
   costume,
   jewellery,
+  shoes,
+  bridal,
   others;
 
   static MainServiceType fromString(String? serviceName) {
@@ -25,6 +27,9 @@ enum MainServiceType {
     if (name.contains('costume')) return MainServiceType.costume;
     if (name.contains('jewellery') || name.contains('jewelry'))
       return MainServiceType.jewellery;
+    if (name.contains('shoe')) return MainServiceType.shoes;
+    if (name.contains('bride') || name.contains('bridal'))
+      return MainServiceType.bridal;
 
     return MainServiceType.others;
   }
@@ -58,7 +63,14 @@ extension MainServiceTypeX on MainServiceType? {
   bool get isRoom => this == MainServiceType.room;
   bool get isCostume => this == MainServiceType.costume;
   bool get isJewellery => this == MainServiceType.jewellery;
+  bool get isShoes => this == MainServiceType.shoes;
+  bool get isBridal => this == MainServiceType.bridal;
   bool get isOthers => this == MainServiceType.others;
+
+  /// Returns true for service types that support multi-variant product setup
+  /// (dress sizes, costume sizes, shoe sizes, bridal sizes)
+  bool get needsVariantsSection =>
+      isDress || isCostume || isShoes || isBridal;
 
   // ==================== Variant Management ====================
 

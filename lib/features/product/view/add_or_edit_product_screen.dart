@@ -59,8 +59,14 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
     final product = widget.product;
     if (product != null) {
       _nameController.text = product.name;
-      if (!mainServiceType.isDress) {
-        _stockController.text = product.variants.first.stock.toString();
+      if (!mainServiceType.needsVariantsSection) {
+        _stockController.text = product.variants.isNotEmpty
+            ? product.variants.first.stock.toString()
+            : '';
+      } else {
+        // Pre-populate variants for edit mode
+        variantsNotifier.value =
+            List<ProductVariantModel>.from(product.variants);
       }
       _modelController.text = product.model ?? '';
       _categoryController.text = product.category ?? '';
@@ -144,16 +150,15 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
                   validator: AppInputValidators.productName,
                 ),
               ),
-              if (!mainServiceType.isDress)
+              if (!mainServiceType.needsVariantsSection)
                 SizedBox(
                   width: 420,
                   child: CustomTextField(
                     label: mainServiceType.isVehicle ? 'Unit' : 'Quantity',
                     controller: _stockController,
                     keyboardType: TextInputType.number,
-                    validator: (value) => mainServiceType.isDress
-                        ? null
-                        : AppInputValidators.quantity(value, allowZero: true),
+                    validator: (value) =>
+                        AppInputValidators.quantity(value, allowZero: true),
                   ),
                 ),
               SizedBox(
@@ -218,7 +223,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           ),
           const SizedBox(height: 24),
 
-          if (mainServiceType.isDress && widget.product == null)
+          if (mainServiceType.needsVariantsSection)
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -355,9 +360,8 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
         return;
       }
 
-      if (mainServiceType.isDress &&
-          variantsNotifier.value.isEmpty &&
-          widget.product == null) {
+      if (mainServiceType.needsVariantsSection &&
+          variantsNotifier.value.isEmpty) {
         CustomSnackBar(message: "Please add at least one variant");
         return;
       }
@@ -365,7 +369,7 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
       final variantList =
           List<ProductVariantModel>.from(variantsNotifier.value);
 
-      if (!mainServiceType.isDress) {
+      if (!mainServiceType.needsVariantsSection) {
         variantList.clear();
         variantList.add(
           ProductVariantModel(
@@ -470,8 +474,8 @@ class _AddOrEditProductScreenState extends State<AddOrEditProductScreen> {
           product.purchaseAmount
               .toString()
               .hasNumberChangedComparedTo(_purchaseAmountController.text) ||
-          (!mainServiceType.isDress &&
-              product.variants.first.stock.toString() !=
+          (!mainServiceType.needsVariantsSection &&
+              (product.variants.firstOrNull?.stock.toString() ?? '') !=
                   _stockController.text.trim()) ||
           _imageNotifier.value != null;
     }

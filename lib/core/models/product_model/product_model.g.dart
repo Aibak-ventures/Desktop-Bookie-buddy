@@ -26,6 +26,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       insuranceExpiry: json['insurance_expiry'] as String?,
       fitnessExpiry: json['fitness_expiry'] as String?,
       barcode: json['barcode'] as String?,
+      generalServiceName: json['general_service_name'] as String?,
       attributes: json['attributes'] as Map<String, dynamic>? ?? const {},
       variants: (json['variants'] as List<dynamic>)
           .map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
@@ -51,6 +52,7 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'insurance_expiry': instance.insuranceExpiry,
       'fitness_expiry': instance.fitnessExpiry,
       'barcode': instance.barcode,
+      'general_service_name': instance.generalServiceName,
       'attributes': instance.attributes,
       'variants': instance.variants,
     };
@@ -64,5 +66,7 @@ const _$MainServiceTypeEnumMap = {
   MainServiceType.room: 'room',
   MainServiceType.costume: 'costume',
   MainServiceType.jewellery: 'jewellery',
+  MainServiceType.shoes: 'shoes',
+  MainServiceType.bridal: 'bridal',
   MainServiceType.others: 'others',
 };
