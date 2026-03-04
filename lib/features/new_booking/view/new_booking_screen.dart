@@ -2621,6 +2621,17 @@ int _calculateRentalDays() {
                   _removeSearchOverlay();
                 }
               },
+              error: (_) {
+                _overlayIsLoading.value = false;
+                _overlayProducts.value = [];
+                if (hasAnyFilter) {
+                  if (_searchOverlayEntry == null) {
+                    _showSearchOverlay();
+                  }
+                } else {
+                  _removeSearchOverlay();
+                }
+              },
               orElse: () {
                 // Error or unknown — only hide if nothing is being searched
                 if (!hasAnyFilter) _removeSearchOverlay();
@@ -2980,7 +2991,7 @@ int _calculateRentalDays() {
       // Check if incrementing would exceed available stock
       final existing = products[existingIndex];
       final newQuantity = existing.quantity + 1;
-      final availableStock = variant.remainingStock ?? variant.stock ?? 0;
+      final availableStock = variant.remainingStock ?? variant.stock;
 
       if (newQuantity > availableStock) {
         context.showSnackBar(
@@ -3277,7 +3288,7 @@ int _calculateRentalDays() {
                 // Text
                 Expanded(
                   child: Text(
-                    product.variant.name ?? '',
+                    product.variant.name,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

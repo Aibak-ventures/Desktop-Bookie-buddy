@@ -8,7 +8,7 @@ part 'product_model.g.dart';
 @freezed
 class ProductModel with _$ProductModel {
   const ProductModel._();
-  
+
   const factory ProductModel({
     required int id,
     required String name,
@@ -22,7 +22,8 @@ class ProductModel with _$ProductModel {
     String? category,
     @JsonKey(name: 'purchase_price') int? purchaseAmount,
     @JsonKey(name: 'price') int? price,
-    @JsonKey(name: 'sale_price') String? salePrice,
+    @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+    String? salePrice,
     // Vehicle-specific fields (for direct API responses or request models)
     @JsonKey(name: 'registration_number') String? registrationNumber,
     @JsonKey(name: 'pollution_expiry') String? pollutionExpiry,
@@ -34,6 +35,11 @@ class ProductModel with _$ProductModel {
     @Default({}) Map<String, dynamic> attributes,
     @JsonKey(name: 'variants') required List<ProductVariantModel> variants,
   }) = _ProductModel;
+
+  static String? _salePriceFromJson(dynamic value) {
+    if (value == null) return null;
+    return value.toString();
+  }
 
   // Custom getters to read from attributes if direct fields are null
   String? get effectiveRegistrationNumber =>
