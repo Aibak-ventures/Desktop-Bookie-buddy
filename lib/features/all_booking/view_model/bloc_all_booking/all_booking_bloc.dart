@@ -100,7 +100,9 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
   ) async {
     try {
       // API requires items to be returned before completing
-      if (event.currentStatus != DeliveryStatus.returned) {
+      // EXCEPT for cancelled bookings - skip delivery status update for those
+      if (event.currentStatus != DeliveryStatus.returned &&
+          event.currentStatus != DeliveryStatus.cancelled) {
         await _repository.updateDeliveryStatus(
           event.bookingId,
           DeliveryStatus.returned,

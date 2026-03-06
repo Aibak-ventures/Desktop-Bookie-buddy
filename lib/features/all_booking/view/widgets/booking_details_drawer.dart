@@ -1436,84 +1436,6 @@ class BookingDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPhoneRow(String label, String phone) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-        Row(
-          children: [
-            Text(
-              phone,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(width: 12),
-            InkWell(
-              onTap: () async {
-                final uri = Uri.parse('tel:$phone');
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-              child: Icon(Icons.phone, size: 18, color: Colors.grey.shade600),
-            ),
-            const SizedBox(width: 8),
-            InkWell(
-              onTap: () async {
-                final uri = Uri.parse('https://wa.me/$phone');
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-              child: SvgPicture.asset(
-                AppAssets.whatsAppSvg,
-                width: 18,
-                height: 18,
-                colorFilter: ColorFilter.mode(
-                  Colors.green.shade600,
-                  BlendMode.srcIn,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildPaymentDetails(
       BookingDetailsModel booking, BuildContext context) {
     final productTotal = booking.bookedItems.fold<int>(
@@ -2280,50 +2202,6 @@ class BookingDetailsDrawer extends StatelessWidget {
           border: Border.all(color: Colors.grey.shade300),
         ),
         child: Icon(icon, color: color, size: 24),
-      ),
-    );
-  }
-
-  Widget _buildCompletionStatusSection(BookingDetailsModel booking) {
-    final isCompleted = booking.deliveryStatus == DeliveryStatus.returned;
-
-    if (!isCompleted) {
-      return const SizedBox
-          .shrink(); // Don't show anything for non-completed bookings
-    }
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFF4CAF50),
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF4CAF50).withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.check_circle,
-            color: Colors.white,
-            size: 18,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            'Completed on ${_formatCompletionDate(booking.returnDate)}',
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
       ),
     );
   }

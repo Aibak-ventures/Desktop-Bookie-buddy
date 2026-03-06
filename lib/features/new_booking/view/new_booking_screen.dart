@@ -203,6 +203,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
+                                                    
+  // Summary expansion state
+  bool _isSummaryExpanded = false;
 
   @override
   void initState() {
@@ -1868,59 +1871,6 @@ int _calculateRentalDays() {
     }
   }
 
-  Widget _buildCompactHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Back button
-          InkWell(
-            onTap: _handleBackNavigation,
-            borderRadius: BorderRadius.circular(4),
-            child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.arrow_back_ios,
-                      size: 14, color: Colors.grey.shade600),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Back',
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Title
-          Text(
-            _getTabTitle(),
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Tab buttons
-          _buildTabButtons(),
-          const Spacer(),
-        ],
-      ),
-    );
-  }
 
   String _getTabTitle() {
     switch (selectedBookingType) {
@@ -4984,14 +4934,14 @@ int _calculateRentalDays() {
 
                   const SizedBox(height: 7),
 
-                  // Upload documents - Optional, Only for Booking mode
-                  if (selectedBookingType == BookingType.booking) ...[
-                    const SizedBox(height: 8),
-                    BookingDocumentUploadSection(
-                      documentsNotifier: documentsNotifier,
-                    ),
-                    const SizedBox(height: 7),
-                  ],
+                  // Upload documents - Hidden for now
+                  // if (selectedBookingType == BookingType.booking) ...[
+                  //   const SizedBox(height: 8),
+                  //   BookingDocumentUploadSection(
+                  //     documentsNotifier: documentsNotifier,
+                  //   ),
+                  //   const SizedBox(height: 7),
+                  // ],
 
                   // Staff Details - Required
                   Row(
@@ -5068,9 +5018,145 @@ int _calculateRentalDays() {
             ),
           ),
 
+          // Expandable summary section in step 1
+          ListenableBuilder(
+            listenable: Listenable.merge([
+              selectedProductsNotifier,
+              additionalChargesNotifier,
+              advanceAmountController,
+              discountAmountController,
+            ]),
+            builder: (context, _) {
+              final products = selectedProductsNotifier.value;
+              if (products.isEmpty) return const SizedBox.shrink();
+
+              final additionalCharges = additionalChargesNotifier.value;
+              final advanceAmount =
+                  advanceAmountController.text.trim().toIntOrNull() ?? 0;
+              final discountAmount =
+                  discountAmountController.text.trim().toIntOrNull() ?? 0;
+
+              final isSaleType = selectedBookingType == BookingType.sales;
+              final rentalDays = !isSaleType ? _calculateRentalDays() : 1;
+              final productTotal = products.fold<int>(
+                0,
+                (sum, product) {
+                  final daysMultiplier = (!isSaleType &&
+                          _shouldMultiplyByDays(
+                              product.variant.mainServiceType))
+                      ? (rentalDays > 0 ? rentalDays : 1)
+                      : 1;
+                  return sum +
+                      (product.amount * product.quantity * daysMultiplier);
+                },
+              );
+              final additionalTotal = additionalCharges.fold<int>(
+                0,
+                (sum, charge) => sum + (charge.amount ?? 0),
+              );
+              final totalPayable =
+                  productTotal + additionalTotal - discountAmount;
+              final remainingAmount = totalPayable - advanceAmount;
+
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 245, 242, 254),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: const Color(0xFF6132E4).withOpacity(0.2)),
+                  ),
+                  child: Column(
+                    children: [
+                      // Collapsed view - always visible
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _isSummaryExpanded = !_isSummaryExpanded;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(10),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.receipt_long_rounded,
+                                      size: 16, color: Color(0xFF6132E4)),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    !isSaleType && rentalDays > 1
+                                        ? 'Total ($rentalDays days)'
+                                        : 'Total amount',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF3E3E3E),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '₹${remainingAmount > 0 ? remainingAmount : 0}',
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF6132E4),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Icon(
+                                    _isSummaryExpanded
+                                        ? Icons.keyboard_arrow_up_rounded
+                                        : Icons.keyboard_arrow_down_rounded,
+                                    size: 20,
+                                    color: const Color(0xFF6132E4),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Expanded breakdown
+                      if (_isSummaryExpanded)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+                          child: Column(
+                            children: [
+                              const Divider(height: 8, thickness: 1),
+                              const SizedBox(height: 4),
+                              _buildSummaryRow('Product total', productTotal),
+                              if (additionalTotal > 0)
+                                _buildSummaryRow(
+                                    'Additional charges', additionalTotal),
+                              if (discountAmount > 0)
+                                _buildSummaryRow('- Discount', discountAmount,
+                                    isNegative: true),
+                              const Divider(height: 12, thickness: 1),
+                              if (advanceAmount > 0)
+                                _buildSummaryRow('Paid', advanceAmount,
+                                    valueColor: const Color(0xFF1AB000)),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+
           // Bottom Button - Continue
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
             child: SizedBox(
               width: double.infinity,
               height: 48,
