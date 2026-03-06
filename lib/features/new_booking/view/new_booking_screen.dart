@@ -1436,7 +1436,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _applyProductFilters(
       int searchTypeIndex, RangeValues priceRange, bool isPriceEnabled) {
     _isPriceFilterEnabled.value = isPriceEnabled;
-    final searchTerm = serviceSearchController.text.trim();
+    final searchTerm = serviceSearchController.text.trim().toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
 
     // Determine search type
@@ -1473,6 +1473,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         }
         break;
     }
+    
+      // Ensure we always have a valid search type when a query exists.
+      searchType ??= 'name';
 
     // Check if any filter is applied
     final hasSearchQuery = searchTerm.isNotEmpty;
@@ -1511,9 +1514,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  void _onSearchChanged() {
+  void _onSearchChanged([String? newValue]) {
     // Allow search even if selectedServiceId is null (All Services)
-    final query = serviceSearchController.text.trim();
+    final query = (newValue ?? serviceSearchController.text).trim().toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
     // If "All Services" is selected, serviceId will be -1, so we pass null to API
     final serviceIdToUse =
@@ -1524,6 +1527,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final hasSearchQuery = query.isNotEmpty;
     final hasPriceFilter = _isPriceFilterEnabled.value;
     final hasAnyFilter = hasSearchQuery || hasPriceFilter;
+
+    // Debug log to trace search behavior
+    log('_onSearchChanged -> query: "$query", hasSearchQuery: $hasSearchQuery, hasPriceFilter: $hasPriceFilter, searchTypeIndex: ${_selectedSearchTypeIndex.value}, hasAnyFilter: $hasAnyFilter');
 
     if (!hasAnyFilter) {
       _selectProductBloc.add(
@@ -1570,9 +1576,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           } else {
             searchType = 'color';
           }
-          break;
+            break;
       }
 
+          // Ensure we have a fallback search type
+          searchType ??= 'name';
+
+      log('_onSearchChanged -> dispatching searchProducts, type: $searchType');
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: serviceIdToUse,
@@ -1696,6 +1706,56 @@ int _calculateRentalDays() {
 
     // After reloading products, check if selected products are still available
     _checkSelectedProductsAvailability();
+  }
+
+  /// Perform a quick local filter on the currently loaded products
+  /// and show results immediately in the overlay. This avoids waiting
+  /// for server responses for single-character queries.
+  void _showLocalFilteredResults(String rawQuery) {
+    final q = rawQuery.toLowerCase();
+
+    // Get products from current bloc state if available
+    final currentProducts = _selectProductBloc.state.maybeWhen(
+      loaded: (
+        products,
+        nextPageUrl,
+        serviceId,
+        pickupDate,
+        returnDate,
+        isPaginating,
+        isSearching,
+        searchQuery,
+        searchType,
+        startPrice,
+        endPrice,
+        pickupTime,
+        returnTime,
+        useAvailableProductsApi,
+        isSales,
+      ) => products,
+      orElse: () => <ProductModel>[],
+    );
+
+    if (currentProducts.isEmpty) return;
+
+    final filtered = currentProducts.where((p) {
+      final name = p.name.toLowerCase();
+      final color = p.color?.toLowerCase() ?? '';
+      final category = p.category?.toLowerCase() ?? '';
+      final model = p.model?.toLowerCase() ?? '';
+      final variantMatch = p.variants
+          .any((v) => v.attribute.toLowerCase().contains(q));
+
+      // Default to name + variant attribute
+      return name.contains(q) || color.contains(q) ||
+          category.contains(q) || model.contains(q) || variantMatch;
+    }).toList();
+
+    _overlayIsLoading.value = false;
+    _overlayProducts.value = filtered;
+    if (_searchOverlayEntry == null) {
+      _showSearchOverlay();
+    }
   }
 
   /// Check if already-selected products are still available for the current
@@ -2717,9 +2777,78 @@ int _calculateRentalDays() {
                                       horizontal: 12, vertical: 14),
                                 ),
                                 onChanged: (value) {
-                                  _onSearchChanged();
+                                  _onSearchChanged(value);
                                   if (value.isEmpty) {
                                     _removeSearchOverlay();
+                                  } else {
+                                    // Show quick local results for single-char input
+                                    if (value.trim().length == 1) {
+                                      _showLocalFilteredResults(value.trim());
+                                    }
+                                    // Immediate dispatch to ensure backend receives search_value
+                                    final queryValue = value.trim().toLowerCase();
+                                    final isSales =
+                                        selectedBookingType == BookingType.sales;
+                                    final serviceIdToUse =
+                                        (selectedServiceId == null ||
+                                                selectedServiceId == -1)
+                                            ? null
+                                            : selectedServiceId;
+                                    String? searchType;
+                                    switch (_selectedSearchTypeIndex.value) {
+                                      case 0:
+                                        searchType = 'name';
+                                        break;
+                                      case 1:
+                                        searchType = 'category';
+                                        break;
+                                      case 2:
+                                        searchType = 'model';
+                                        break;
+                                      case 3:
+                                        if (_currentServiceType != null) {
+                                          if (_currentServiceType
+                                              .isMultiVariantProductType) {
+                                            if (_currentServiceType ==
+                                                    MainServiceType.dress ||
+                                                _currentServiceType ==
+                                                    MainServiceType.costume) {
+                                              searchType = 'size';
+                                            } else if (_currentServiceType ==
+                                                MainServiceType.gadgets) {
+                                              searchType = 'serial_number';
+                                            } else {
+                                              searchType = 'variant';
+                                            }
+                                          } else {
+                                            searchType = 'color';
+                                          }
+                                        } else {
+                                          searchType = 'color';
+                                        }
+                                        break;
+                                    }
+                                    searchType ??= 'name';
+
+                                    _selectProductBloc.add(
+                                      SelectProductEvent.searchProducts(
+                                        serviceId: serviceIdToUse,
+                                        query: queryValue,
+                                        type: searchType,
+                                        startPrice: _isPriceFilterEnabled.value
+                                            ? _priceRange.value.start.round()
+                                            : null,
+                                        endPrice: _isPriceFilterEnabled.value
+                                            ? _priceRange.value.end.round()
+                                            : null,
+                                        pickupDate: pickupDate.format(),
+                                        returnDate: returnDate.format(),
+                                        pickupTime: pickupTime,
+                                        returnTime: returnTime,
+                                        useAvailableProductsApi: !isSales,
+                                        isSales: isSales,
+                                      ),
+                                    );
                                   }
                                 },
                               );

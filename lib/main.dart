@@ -46,7 +46,7 @@ void main() async {
     await windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
-
+     
       // Additional window manager options (uncomment as needed):
 
       // 1. Disable minimize button:

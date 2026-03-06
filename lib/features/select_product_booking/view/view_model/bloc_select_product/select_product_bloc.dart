@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
@@ -127,11 +129,16 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
   ) async {
     emit(const _Loading());
 
+    // Debug log for incoming search event
+    log('_onSearchProducts -> query: ${event.query}, type: ${event.type}, useAvailable: ${event.useAvailableProductsApi}');
+
     try {
-      final PaginationModel<ProductModel> result;
+      late final PaginationModel<ProductModel> result;
       // Convert 0 to null for "All Services" mode
       final serviceId = event.serviceId == 0 ? null : event.serviceId;
       if (event.useAvailableProductsApi) {
+        // Always pass the typed query through to the available-products API
+        // so the backend receives `search_value` even for short queries.
         result = await _repository.getAvailableProductsPaginated(
           serviceId: serviceId,
           page: 1,
@@ -147,6 +154,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
           bookingId: event.bookingId,
           variantIds: event.variantIds,
         );
+        log('_onSearchProducts -> fetched ${result.data.length} products from repo (useAvailable=true)');
       } else {
         result = await _repository.searchAndFilterProducts(
           serviceId: serviceId,

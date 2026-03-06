@@ -30,9 +30,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 class BookingDetailsDrawer extends StatelessWidget {
   const BookingDetailsDrawer({super.key});
@@ -650,7 +653,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                 final isPdf = docUrl.toLowerCase().endsWith('.pdf');
 
                 return InkWell(
-                  onTap: () => _showDocumentModal(context, docUrl, index + 1),
+                  onTap: () => _showDocumentModal(
+                      context, docUrl, index + 1, booking.client.phone1.toString()),
                   child: Container(
                     width: 100,
                     height: 100,
@@ -702,7 +706,8 @@ class BookingDetailsDrawer extends StatelessWidget {
     );
   }
 
-  void _showDocumentModal(BuildContext context, String docUrl, int docNumber) {
+  void _showDocumentModal(
+      BuildContext context, String docUrl, int docNumber, String? phone) {
     final isPdf = docUrl.toLowerCase().endsWith('.pdf');
 
     showDialog(
@@ -774,14 +779,62 @@ class BookingDetailsDrawer extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Download button
+                    // Download / Actions button -> show share/print modal
                     IconButton(
                       onPressed: () async {
-                        final uri = Uri.parse(docUrl);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri,
-                              mode: LaunchMode.externalApplication);
-                        }
+                        // Show a small dialog with Share / Print options
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Choose action'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: const Icon(Icons.share),
+                                  title: const Text('Share'),
+                                  subtitle: const Text('Share via WhatsApp'),
+                                  onTap: () async {
+                                    Navigator.of(ctx).pop();
+                                    // If phone available use wa.me with number, else open generic share URL
+                                    final encoded = Uri.encodeComponent(docUrl);
+                                    Uri uri;
+                                    if (phone != null && phone.trim().isNotEmpty) {
+                                      final plain = phone.replaceAll(RegExp(r"[^0-9+]"), '');
+                                      uri = Uri.parse('https://wa.me/$plain?text=$encoded');
+                                    } else {
+                                      uri = Uri.parse('https://api.whatsapp.com/send?text=$encoded');
+                                    }
+
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri,
+                                          mode: LaunchMode.externalApplication);
+                                    }
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.print),
+                                  title: const Text('Print'),
+                                  subtitle: const Text('Open document to print'),
+                                  onTap: () async {
+                                    Navigator.of(ctx).pop();
+                                    final uri = Uri.parse(docUrl);
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri,
+                                          mode: LaunchMode.externalApplication);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(),
+                                child: const Text('Cancel'),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.download,
                           color: Colors.white, size: 28),
@@ -1997,43 +2050,7 @@ class BookingDetailsDrawer extends StatelessWidget {
           context,
           icon: Icons.download_outlined,
           color: AppColors.purple,
-          onTap: () async {
-            // Show loading indicator
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-
-            try {
-              // Fetch invoice PDF bytes from backend
-              final repository = getIt<BookingRepository>();
-              final pdfBytes = await repository.getInvoicePdfBytes(booking.id);
-
-              // Close loading indicator
-              if (context.mounted) Navigator.of(context).pop();
-
-              // Open/download the PDF
-              if (context.mounted) {
-                if (kIsWeb) {
-                  openPdfInNewTab(pdfBytes, 'booking_invoice_${booking.id}.pdf');
-                } else {
-                  openPdfInNewTab(pdfBytes, 'booking_invoice_${booking.id}.pdf');
-                }
-              }
-            } catch (e) {
-              // Close loading indicator on error
-              if (context.mounted) Navigator.of(context).pop();
-              if (context.mounted) {
-                context.showSnackBar(
-                  'Failed to download invoice: $e',
-                  isError: true,
-                );
-              }
-            }
-          },
+          onTap: () => _showInvoiceActionsModal(context, booking),
         ),
         const SizedBox(width: 12),
         // Delete button for completed bookings (icon style, on left side)
@@ -2305,6 +2322,97 @@ class BookingDetailsDrawer extends StatelessWidget {
               color: Colors.white,
               fontWeight: FontWeight.w600,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showInvoiceActionsModal(
+      BuildContext context, BookingDetailsModel booking) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Invoice'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.message, color: Color(0xFF25D366)),
+              title: const Text('Send via WhatsApp'),
+              subtitle: Text(
+                'Send invoice PDF to ${booking.client.phone1}',
+              ),
+              onTap: () async {
+                Navigator.of(ctx).pop();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  // Backend sends the invoice PDF directly to the customer's
+                  // WhatsApp number via WhatsApp Business API
+                  final repository = getIt<BookingRepository>();
+                  await repository.sendInvoice(booking.id, true);
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar(
+                      'Invoice sent to ${booking.client.phone1} via WhatsApp ✓',
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to send invoice: $e',
+                        isError: true);
+                  }
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.print, color: AppColors.purple),
+              title: const Text('Print'),
+              subtitle: const Text('Download and open invoice PDF'),
+              onTap: () async {
+                Navigator.of(ctx).pop();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  final repository = getIt<BookingRepository>();
+                  final pdfBytes =
+                      await repository.getInvoicePdfBytes(booking.id);
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (kIsWeb) {
+                    openPdfInNewTab(
+                        pdfBytes, 'booking_invoice_${booking.id}.pdf');
+                  } else {
+                    final dir = await getTemporaryDirectory();
+                    final file =
+                        File('${dir.path}/booking_invoice_${booking.id}.pdf');
+                    await file.writeAsBytes(pdfBytes);
+                    await OpenFile.open(file.path);
+                  }
+                } catch (e) {
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to open invoice: $e',
+                        isError: true);
+                  }
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
           ),
         ],
       ),
