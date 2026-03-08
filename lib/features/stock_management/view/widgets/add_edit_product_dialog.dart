@@ -762,29 +762,23 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           ),
           SizedBox(
             width: 280,
-            child: CustomTextField(
+            child: _buildDatePickerField(
               label: 'Pollution Expiry (Optional)',
               controller: _pollutionExpiryController,
-              validator: null,
-              hintText: 'DD/MM/YYYY',
             ),
           ),
           SizedBox(
             width: 280,
-            child: CustomTextField(
+            child: _buildDatePickerField(
               label: 'Insurance Expiry (Optional)',
               controller: _insuranceExpiryController,
-              validator: null,
-              hintText: 'DD/MM/YYYY',
             ),
           ),
           SizedBox(
             width: 280,
-            child: CustomTextField(
+            child: _buildDatePickerField(
               label: 'Permit Expiry (Optional)',
               controller: _fitnessExpiryController,
-              validator: null,
-              hintText: 'DD/MM/YYYY',
             ),
           ),
         ]);
@@ -811,6 +805,80 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
       spacing: 16,
       children: commonFields,
     );
+  }
+
+  /// Build a date picker field for vehicle expiry dates
+  Widget _buildDatePickerField({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return TextFormField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: 'Select date',
+        suffixIcon: const Icon(Icons.calendar_today, size: 20),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: AppColors.purple, width: 2),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      ),
+      onTap: () async {
+        final DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: controller.text.isNotEmpty
+              ? _parseDate(controller.text) ?? DateTime.now()
+              : DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: AppColors.purple,
+                  onPrimary: Colors.white,
+                  onSurface: Colors.black,
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+
+        if (pickedDate != null) {
+          // Format as DD/MM/YYYY
+          final formattedDate =
+              '${pickedDate.day.toString().padLeft(2, '0')}/${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year}';
+          controller.text = formattedDate;
+        }
+      },
+    );
+  }
+
+  /// Parse date from DD/MM/YYYY format
+  DateTime? _parseDate(String dateStr) {
+    try {
+      final parts = dateStr.split('/');
+      if (parts.length == 3) {
+        final day = int.parse(parts[0]);
+        final month = int.parse(parts[1]);
+        final year = int.parse(parts[2]);
+        return DateTime(year, month, day);
+      }
+    } catch (e) {
+      // Invalid date format
+    }
+    return null;
   }
 
   /// Build variants section for managing product variants

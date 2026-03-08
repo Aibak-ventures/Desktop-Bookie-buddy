@@ -216,7 +216,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Product Overview',
+                'Product Overviesw',
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
@@ -864,15 +864,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   Widget _variantCard(ProductVariantModel variant, ProductModel product) {
     // For gadgets, use wider rectangular design to accommodate serial numbers
     final isGadget = product.mainServiceType?.isGadget == true;
-    final cardWidth = isGadget ? 160.0 : 82.0;
-    final cardMinHeight = isGadget ? 72.0 : 65.0;
+    final cardWidth = isGadget ? 200.0 : 102.0;
+    final cardMinHeight = isGadget ? 72.0 : 58.0;
 
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
           width: cardWidth,
-          constraints: BoxConstraints(minHeight: cardMinHeight),
+          height: cardMinHeight,
+          // constraints: BoxConstraints(minHeight: cardMinHeight),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
           decoration: ShapeDecoration(
             color: Colors.white,
@@ -1019,8 +1020,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   Widget _addVariantButton() {
     return Container(
-      width: 82,
-      height: 65,
+      width: 52,
+      height: 58,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -1206,20 +1207,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           ),
         ),
         actions: [
-          // Delete button
-          TextButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-              _showDeleteVariantDialog(variant);
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-          const Spacer(),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
+          Row(
+            children: [
+              // Delete button
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  _showDeleteVariantDialog(variant);
+                },
+                child: const Text('Delete', style: TextStyle(color: Colors.red)),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text('Cancel'),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
             onPressed: () async {
               if (formKey.currentState!.validate()) {
                 final attribute = variantAttributeController.text.trim();
@@ -1257,6 +1261,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               foregroundColor: Colors.white,
             ),
             child: const Text('Save'),
+          ),
+            ],
           ),
         ],
       ),

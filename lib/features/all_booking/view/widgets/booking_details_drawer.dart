@@ -1435,7 +1435,7 @@ class BookingDetailsDrawer extends StatelessWidget {
       ),
     );
   }
-
+ 
   Widget _buildPaymentDetails(
       BookingDetailsModel booking, BuildContext context) {
     final productTotal = booking.bookedItems.fold<int>(
