@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_icons.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -6,7 +6,7 @@ import 'package:pdf/widgets.dart' as pw;
 Future<pw.ImageProvider> getPdfImageProvider({
   required String? imagePath,
   required bool isAsset,
-  String assetImagePath = AppIcons.unknownProduct,
+  String assetImagePath = AppAssets.unknownProduct,
   Dio? dio,
 }) async {
   Uint8List imageBytes;

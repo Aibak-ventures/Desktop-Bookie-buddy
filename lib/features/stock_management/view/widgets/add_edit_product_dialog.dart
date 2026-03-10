@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
@@ -9,11 +8,9 @@ import 'package:bookie_buddy_web/core/models/product_model/product_variant_model
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
-import 'package:bookie_buddy_web/features/product/view/widgets/variants_widget.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';

@@ -9,7 +9,6 @@ import 'package:bookie_buddy_web/features/all_booking/view/widgets/all_booking_e
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model_extensions.dart';
-import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

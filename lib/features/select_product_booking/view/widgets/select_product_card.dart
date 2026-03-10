@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_icons.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
@@ -66,7 +66,7 @@ class SelectProductCard extends StatelessWidget {
                         'https://static.vecteezy.com/system/resources/thumbnails/054/519/001/small/e-commerce-product-box-illustration-for-sales-vector.jpg',
                     errorWidget: (context, url, error) {
                       return Image.asset(
-                        AppIcons.unknownProduct,
+                        AppAssets.unknownProduct,
                         fit: BoxFit.cover,
                         width: double.infinity,
                       );

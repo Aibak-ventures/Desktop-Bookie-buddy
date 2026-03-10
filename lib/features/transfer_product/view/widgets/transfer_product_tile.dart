@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_icons.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
@@ -51,12 +51,12 @@ class TransferProductTile extends StatelessWidget {
             aspectRatio: 1,
             child: product.image == null
                 ? Image.asset(
-                    AppIcons.unknownProduct,
+                    AppAssets.unknownProduct,
                   )
                 : CustomNetworkImage(
                     imageUrl: product.image!,
                     errorWidget: (context, url, error) => Image.asset(
-                      AppIcons.unknownProduct,
+                      AppAssets.unknownProduct,
                     ),
                   ),
           ),

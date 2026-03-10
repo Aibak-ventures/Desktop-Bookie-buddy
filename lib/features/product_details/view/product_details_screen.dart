@@ -17,8 +17,6 @@ import 'package:bookie_buddy_web/features/product_details/view_model/product_det
 import 'package:bookie_buddy_web/features/product_details/view_model/product_details_state.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
-import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
@@ -26,8 +24,6 @@ import 'package:bookie_buddy_web/features/stock_management/view/widgets/add_edit
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/product/view_model/cubit_add_expense/add_expense_cubit.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 
 class ProductDetailsScreen extends StatefulWidget {

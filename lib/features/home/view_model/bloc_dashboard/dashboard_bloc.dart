@@ -1,12 +1,9 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/home/models/carousel_data_model/carousel_data_model.dart';
-import 'package:bookie_buddy_web/features/home/models/dashboard_list_model.dart';
 import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
