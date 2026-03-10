@@ -3554,8 +3554,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       ProductModel product, ProductVariantModel variant) {
     log('_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}');
 
-    final price = variant.price ?? product.price ?? 0;
-    log('Adding variant: ${variant.attribute}, price: $price');
+    // For sales mode, use sale_price if available, otherwise fall back to rent price
+    final isSales = selectedBookingType == BookingType.sales;
+    // Parse product-level sale_price (String?) to int
+    final productSalePriceInt = isSales && product.salePrice != null
+        ? (double.tryParse(product.salePrice!)?.toInt())
+        : null;
+    final price = isSales
+        ? (variant.salePrice ?? productSalePriceInt ?? variant.price ?? product.price ?? 0)
+        : (variant.price ?? product.price ?? 0);
+    log('Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)');
 
     final products =
         List<ProductSelectedModel>.from(selectedProductsNotifier.value);
@@ -3790,7 +3798,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       mainServiceType: product.mainServiceType,
       productImageUrl: product.image!,
       availableVariants: variants,
-      initialAmount: null,
+      // Pass sale_price as initialAmount so dialog pre-populates the sale price in sales mode
+      initialAmount: selectedBookingType == BookingType.sales
+          ? product.salePrice
+          : null,
       initialQuantity: null,
       onConfirm: (id, size, amount, quantity) {
         final attribute = size == null || size.isEmpty

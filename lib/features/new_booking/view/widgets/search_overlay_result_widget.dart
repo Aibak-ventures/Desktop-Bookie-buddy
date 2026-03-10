@@ -43,7 +43,12 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
 
   @override
   Widget build(BuildContext context) {
-    final price = widget.product.price ?? 0;
+    // Show sale_price in sales mode, rent price in booking mode
+    final price = widget.isSales
+        ? (double.tryParse(widget.product.salePrice ?? '')?.toInt() ??
+            widget.product.price ??
+            0)
+        : (widget.product.price ?? 0);
     final variants = widget.product.variants;
     // Define min width preventing squeeze/overflow
     const double minRowWidth = 700;

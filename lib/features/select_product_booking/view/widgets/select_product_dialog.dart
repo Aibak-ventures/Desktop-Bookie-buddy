@@ -83,9 +83,13 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
   }
 
   void _updateAmountFromSelectedVariant() {
-    if (selectedVariant?.price != null && selectedVariant!.price! > 0) {
+    // In sales mode prefer salePrice, otherwise use rent price
+    final variantPrice = widget.isSales
+        ? (selectedVariant?.salePrice ?? selectedVariant?.price)
+        : selectedVariant?.price;
+    if (variantPrice != null && variantPrice > 0) {
       final quantity = int.tryParse(quantityController.text) ?? 1;
-      final totalAmount = selectedVariant!.price! * quantity;
+      final totalAmount = variantPrice * quantity;
       amountController.text = totalAmount.toString();
     } else if (widget.initialAmount?.isNotEmpty == true) {
       // Fallback to initial amount if provided
