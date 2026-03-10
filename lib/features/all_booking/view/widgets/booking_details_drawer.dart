@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -14,7 +15,6 @@ import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart'
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/edit_booking/view/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
-import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
@@ -55,72 +55,72 @@ class BookingDetailsDrawer extends StatelessWidget {
       child: BlocBuilder<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
         builder: (context, drawerState) {
           return AnimatedPositioned(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          right: drawerState.isOpen ? 0 : -650,
-          top: 0,
-          bottom: 0,
-          width: 470,
-          child: GestureDetector(
-            // Consume all taps inside the drawer to prevent closing
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              // Do nothing - just consume the tap
-            },
-            child: Material(
-              elevation: 16,
-              shadowColor: Colors.black.withOpacity(0.3),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(-4, 0),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Close button header
-                    Container(
-                      // padding: const EdgeInsets.symmetric(
-                      //     horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey.shade200),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            right: drawerState.isOpen ? 0 : -650,
+            top: 0,
+            bottom: 0,
+            width: 470,
+            child: GestureDetector(
+              // Consume all taps inside the drawer to prevent closing
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                // Do nothing - just consume the tap
+              },
+              child: Material(
+                elevation: 16,
+                shadowColor: Colors.black.withOpacity(0.3),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 20,
+                        offset: const Offset(-4, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // Close button header
+                      Container(
+                        // padding: const EdgeInsets.symmetric(
+                        //     horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            bottom: BorderSide(color: Colors.grey.shade200),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.chevron_right, size: 28),
+                              onPressed: () {
+                                context
+                                    .read<BookingDetailsDrawerCubit>()
+                                    .closeDrawer();
+                              },
+                              tooltip: 'Close',
+                              color: Colors.grey.shade600,
+                              hoverColor: Colors.grey.shade100,
+                            ),
+                          ],
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.chevron_right, size: 28),
-                            onPressed: () {
-                              context
-                                  .read<BookingDetailsDrawerCubit>()
-                                  .closeDrawer();
-                            },
-                            tooltip: 'Close',
-                            color: Colors.grey.shade600,
-                            hoverColor: Colors.grey.shade100,
-                          ),
-                        ],
+                      Expanded(
+                        child: _buildContent(context, drawerState),
                       ),
-                    ),
-                    Expanded(
-                      child: _buildContent(context, drawerState),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
-    ),
+          );
+        },
+      ),
     );
   }
 
@@ -253,7 +253,8 @@ class BookingDetailsDrawer extends StatelessWidget {
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     // Check if booking has refund amounts - if yes, don't allow status change from cancelled
-    final hasRefundAmounts = booking.totalRefunded > 0 || booking.refunds.isNotEmpty;
+    final hasRefundAmounts =
+        booking.totalRefunded > 0 || booking.refunds.isNotEmpty;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -653,8 +654,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                 final isPdf = docUrl.toLowerCase().endsWith('.pdf');
 
                 return InkWell(
-                  onTap: () => _showDocumentModal(
-                      context, docUrl, index + 1, booking.client.phone1.toString()),
+                  onTap: () => _showDocumentModal(context, docUrl, index + 1,
+                      booking.client.phone1.toString()),
                   child: Container(
                     width: 100,
                     height: 100,
@@ -799,11 +800,15 @@ class BookingDetailsDrawer extends StatelessWidget {
                                     // If phone available use wa.me with number, else open generic share URL
                                     final encoded = Uri.encodeComponent(docUrl);
                                     Uri uri;
-                                    if (phone != null && phone.trim().isNotEmpty) {
-                                      final plain = phone.replaceAll(RegExp(r"[^0-9+]"), '');
-                                      uri = Uri.parse('https://wa.me/$plain?text=$encoded');
+                                    if (phone != null &&
+                                        phone.trim().isNotEmpty) {
+                                      final plain = phone.replaceAll(
+                                          RegExp(r"[^0-9+]"), '');
+                                      uri = Uri.parse(
+                                          'https://wa.me/$plain?text=$encoded');
                                     } else {
-                                      uri = Uri.parse('https://api.whatsapp.com/send?text=$encoded');
+                                      uri = Uri.parse(
+                                          'https://api.whatsapp.com/send?text=$encoded');
                                     }
 
                                     if (await canLaunchUrl(uri)) {
@@ -815,7 +820,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                                 ListTile(
                                   leading: const Icon(Icons.print),
                                   title: const Text('Print'),
-                                  subtitle: const Text('Open document to print'),
+                                  subtitle:
+                                      const Text('Open document to print'),
                                   onTap: () async {
                                     Navigator.of(ctx).pop();
                                     final uri = Uri.parse(docUrl);
@@ -1008,8 +1014,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ],
                   ),
                   // Show measurements if they exist
-                  if (item.measurements != null &&
-                      item.measurements!.isNotEmpty) ...[
+                  if (item.measurements.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     const Divider(height: 1),
                     const SizedBox(height: 8),
@@ -1025,7 +1030,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     Wrap(
                       spacing: 8,
                       runSpacing: 4,
-                      children: item.measurements!.map((measurement) {
+                      children: item.measurements.map((measurement) {
                         return Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
@@ -1054,10 +1059,9 @@ class BookingDetailsDrawer extends StatelessWidget {
           // Show location details once if ANY item is a vehicle (MOVED OUTSIDE LOOP)
           if (booking.bookedItems
                   .any((item) => item.mainServiceType.isVehicle) &&
-              booking.otherDetails != null &&
-              (booking.otherDetails!.locationStart != null ||
-                  booking.otherDetails!.locationFrom != null ||
-                  booking.otherDetails!.locationTo != null)) ...[
+              (booking.otherDetails.locationStart != null ||
+                  booking.otherDetails.locationFrom != null ||
+                  booking.otherDetails.locationTo != null)) ...[
             Container(
               margin: const EdgeInsets.only(top: 8),
               padding: const EdgeInsets.all(12),
@@ -1088,7 +1092,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  if (booking.otherDetails!.locationStart != null) ...[
+                  if (booking.otherDetails.locationStart != null) ...[
                     Row(
                       children: [
                         Text(
@@ -1101,7 +1105,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            booking.otherDetails!.locationStart!,
+                            booking.otherDetails.locationStart!,
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -1113,7 +1117,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                   ],
-                  if (booking.otherDetails!.locationFrom != null) ...[
+                  if (booking.otherDetails.locationFrom != null) ...[
                     Row(
                       children: [
                         Text(
@@ -1126,7 +1130,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            booking.otherDetails!.locationFrom!,
+                            booking.otherDetails.locationFrom!,
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -1138,7 +1142,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                   ],
-                  if (booking.otherDetails!.locationTo != null) ...[
+                  if (booking.otherDetails.locationTo != null) ...[
                     Row(
                       children: [
                         Text(
@@ -1151,7 +1155,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            booking.otherDetails!.locationTo!,
+                            booking.otherDetails.locationTo!,
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -1435,7 +1439,7 @@ class BookingDetailsDrawer extends StatelessWidget {
       ),
     );
   }
- 
+
   Widget _buildPaymentDetails(
       BookingDetailsModel booking, BuildContext context) {
     final productTotal = booking.bookedItems.fold<int>(
@@ -1650,13 +1654,13 @@ class BookingDetailsDrawer extends StatelessWidget {
                       balance > 0 ? Colors.red.shade600 : Colors.green.shade600,
                   isBold: true,
                   fontSize: 15),
-              
+
               // Show refund details for cancelled bookings
               if (isCancelled) ...[
                 const SizedBox(height: 12),
                 const Divider(height: 24),
                 const SizedBox(height: 8),
-                
+
                 // Show refunded amount if any
                 if (booking.totalRefunded > 0)
                   _buildPaymentRow(
@@ -1665,7 +1669,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     valueColor: Colors.green.shade600,
                     fontSize: 13,
                   ),
-                
+
                 // Calculate deducted amount: what was paid but not refunded
                 // This is the penalty/cancellation charge
                 if (booking.totalRefunded < paid) ...[
@@ -1677,7 +1681,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     fontSize: 13,
                   ),
                 ],
-                
+
                 // Show remaining refundable balance
                 // if (booking.refundableBalance > 0) ...[
                 //   const SizedBox(height: 6),
@@ -1690,7 +1694,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                 //   ),
                 // ],
               ],
-              
+
               const SizedBox(height: 12),
               // Payment history toggle
               TextButton.icon(
@@ -1953,7 +1957,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                     // Reload list preserving current tab/filters
                     final allBookingBloc = context.read<AllBookingBloc>();
                     allBookingBloc.state.mapOrNull(
-                      loaded: (s) => allBookingBloc.add(AllBookingEvent.loadBookings(
+                      loaded: (s) =>
+                          allBookingBloc.add(AllBookingEvent.loadBookings(
                         status: s.status,
                         startDate: s.startDate,
                         endDate: s.endDate,
@@ -2114,9 +2119,10 @@ class BookingDetailsDrawer extends StatelessWidget {
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(isCancelled ? 'Complete Cancelled Work' : 'Mark as Completed'),
-                  content: Text(
-                    isCancelled 
+                  title: Text(isCancelled
+                      ? 'Complete Cancelled Work'
+                      : 'Mark as Completed'),
+                  content: Text(isCancelled
                       ? 'Are you sure you want to complete this cancelled booking?'
                       : 'Are you sure you want to mark this booking as completed?'),
                   actions: [
@@ -2143,7 +2149,8 @@ class BookingDetailsDrawer extends StatelessWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: isCancelled ? Colors.red.shade600 : AppColors.purple,
+              backgroundColor:
+                  isCancelled ? Colors.red.shade600 : AppColors.purple,
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

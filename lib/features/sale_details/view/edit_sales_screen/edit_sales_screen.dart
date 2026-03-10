@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
@@ -24,7 +25,6 @@ import 'package:bookie_buddy_web/features/select_product_booking/models/product_
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';
 // import 'package:bookie_buddy_web/features/service/view_model/bloc/service_bloc.dart';
-import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,12 +101,12 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         name: widget.saleDetails.staffName ?? 'Staff Name',
         phoneNumber: '',
       );
-      
+
       // Load all staffs and pre-select the existing staff
       context.read<StaffSearchCubit>().getAllStaffs(
-        widget.saleDetails.staffId,
-        existingStaff,
-      );
+            widget.saleDetails.staffId,
+            existingStaff,
+          );
     } else {
       // No staff assigned, just load all staffs
       context.read<StaffSearchCubit>()
@@ -137,54 +137,54 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: _handlePop,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F6FA),
-        body: SizedBox(
-          height: screenHeight,
-          child: Form(
-          key: _formController.formKey,
-          child: Column(
-            children: [
-              // Header with back button
-              _buildHeader(),
-              // Main content
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left Side: Date + Products
-                      Expanded(
-                        flex: 7,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildDateSelectionSection(),
-                            const SizedBox(height: 16),
-                            Expanded(child: _buildProductsSection()),
-                          ],
-                        ),
-                      ),
+        canPop: false,
+        onPopInvokedWithResult: _handlePop,
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF5F6FA),
+          body: SizedBox(
+            height: screenHeight,
+            child: Form(
+              key: _formController.formKey,
+              child: Column(
+                children: [
+                  // Header with back button
+                  _buildHeader(),
+                  // Main content
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Left Side: Date + Products
+                          Expanded(
+                            flex: 7,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildDateSelectionSection(),
+                                const SizedBox(height: 16),
+                                Expanded(child: _buildProductsSection()),
+                              ],
+                            ),
+                          ),
 
-                      const SizedBox(width: 16),
+                          const SizedBox(width: 16),
 
-                      // Right Side: Details Panel
-                      SizedBox(
-                        width: 340,
-                        child: _buildRightSidePanel(),
+                          // Right Side: Details Panel
+                          SizedBox(
+                            width: 340,
+                            child: _buildRightSidePanel(),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 
   // ---- Header with Back Button ----
@@ -434,8 +434,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
               _showSearchOverlay();
             }
           },
-          loaded: (products, p1, p2, p3, p4, p5, isSearching, p7, p8, p9,
-              p10, p11, p12, p13, p14) {
+          loaded: (products, p1, p2, p3, p4, p5, isSearching, p7, p8, p9, p10,
+              p11, p12, p13, p14) {
             final hasSearchText = _serviceSearchController.text.isNotEmpty;
             if (hasSearchText) {
               _overlayProducts.value = products;
@@ -486,8 +486,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                       ),
                       prefixIcon: const Icon(Icons.search, size: 18),
                       border: InputBorder.none,
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 14),
                     ),
                     onChanged: (value) {
                       _onSearchChanged();
@@ -547,11 +547,11 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   void _applyProductFilters() {
     final searchTerm = _serviceSearchController.text.trim();
     final searchTypesList = ['name', 'category', 'model', 'color'];
-    
+
     // Get the correct search type based on current service
     String searchType;
     final searchTypeIndex = _selectedSearchTypeIndex.value;
-    
+
     if (_currentServiceType != null && searchTypeIndex == 3) {
       // For 4th option (index 3), use dynamic type based on service
       if (_currentServiceType!.isMultiVariantProductType) {
@@ -597,7 +597,9 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
     final currentProducts = _selectProductBloc.state.maybeWhen(
-      loaded: (products, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14) => products,
+      loaded: (products, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13,
+              p14) =>
+          products,
       orElse: () => <ProductModel>[],
     );
 
@@ -608,7 +610,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         if (productPrice > maxProductPrice) {
           maxProductPrice = productPrice.toDouble();
         }
-        // Also check variant prices  
+        // Also check variant prices
         for (final variant in product.variants) {
           final variantPrice = variant.salePrice ?? variant.price ?? 0;
           if (variantPrice > maxProductPrice) {
@@ -623,8 +625,10 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     }
 
     // Setup local state for dialog
-    final isPriceFilterEnabledWidgetNotifier = ValueNotifier(_isPriceFilterEnabled.value);
-    final tempSelectedSearchTypeIndex = ValueNotifier<int>(_selectedSearchTypeIndex.value);
+    final isPriceFilterEnabledWidgetNotifier =
+        ValueNotifier(_isPriceFilterEnabled.value);
+    final tempSelectedSearchTypeIndex =
+        ValueNotifier<int>(_selectedSearchTypeIndex.value);
     final tempPriceRange = ValueNotifier<RangeValues>(_priceRange.value);
     final tempMaxPriceNotifier = ValueNotifier<double>(_maxPriceNotifier.value);
     final maxPriceController = TextEditingController(
@@ -662,7 +666,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
             children: [
               // Header
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF8F9FA),
                   borderRadius: const BorderRadius.vertical(
@@ -723,10 +728,12 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                         builder: (context, serviceState) {
                           List<ServicesModel> services = [];
                           serviceState.whenOrNull(loaded: (s) => services = s);
-                          
+
                           // Filter out material services for sales
                           services = services
-                              .where((s) => !s.mainServiceName.toLowerCase().contains('material'))
+                              .where((s) => !s.mainServiceName
+                                  .toLowerCase()
+                                  .contains('material'))
                               .toList();
 
                           if (services.isEmpty) {
@@ -751,7 +758,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                   // Combine "All Services" (-1) and actual services
                                   final allOptions = [
                                     {'id': -1, 'name': 'All Services'},
-                                    ...services.map((s) => {'id': s.id, 'name': s.name})
+                                    ...services.map(
+                                        (s) => {'id': s.id, 'name': s.name})
                                   ];
 
                                   return Wrap(
@@ -760,7 +768,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                     children: allOptions.map((option) {
                                       final id = option['id'] as int;
                                       final name = option['name'] as String;
-                                      final isSelected = _selectedServiceId == id;
+                                      final isSelected =
+                                          _selectedServiceId == id;
 
                                       return InkWell(
                                         onTap: () {
@@ -769,37 +778,66 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             // Update search types when service changes
                                             if (id == -1) {
                                               _currentServiceType = null;
-                                              _searchTypes = ['Name', 'Category', 'Model', 'Color'];
+                                              _searchTypes = [
+                                                'Name',
+                                                'Category',
+                                                'Model',
+                                                'Color'
+                                              ];
                                             } else {
-                                              final service = services.firstWhere(
+                                              final service =
+                                                  services.firstWhere(
                                                 (s) => s.id == id,
                                                 orElse: () => services.first,
                                               );
-                                              _currentServiceType = MainServiceType.fromString(
-                                                  service.mainServiceName);
+                                              _currentServiceType =
+                                                  MainServiceType.fromString(
+                                                      service.mainServiceName);
 
                                               // Update search types based on service-specific field labels
-                                              final categoryLabel = _currentServiceType!.categoryFieldLabel;
-                                              final secondaryLabel = _currentServiceType!.secondaryAttributeLabel ?? 'Color';
+                                              final categoryLabel =
+                                                  _currentServiceType!
+                                                      .categoryFieldLabel;
+                                              final secondaryLabel =
+                                                  _currentServiceType!
+                                                          .secondaryAttributeLabel ??
+                                                      'Color';
 
                                               // Update search types based on whether the service has variants
-                                              if (_currentServiceType!.isMultiVariantProductType) {
-                                                final variantLabel = _currentServiceType!.variantAttributeLabel;
-                                                _searchTypes = ['Name', categoryLabel, secondaryLabel, variantLabel];
+                                              if (_currentServiceType!
+                                                  .isMultiVariantProductType) {
+                                                final variantLabel =
+                                                    _currentServiceType!
+                                                        .variantAttributeLabel;
+                                                _searchTypes = [
+                                                  'Name',
+                                                  categoryLabel,
+                                                  secondaryLabel,
+                                                  variantLabel
+                                                ];
                                               } else {
-                                                _searchTypes = ['Name', categoryLabel, secondaryLabel, 'Color'];
+                                                _searchTypes = [
+                                                  'Name',
+                                                  categoryLabel,
+                                                  secondaryLabel,
+                                                  'Color'
+                                                ];
                                               }
                                             }
-                                            
+
                                             // Reset search type index if out of bounds
-                                            if (_selectedSearchTypeIndex.value >= _searchTypes.length) {
-                                              _selectedSearchTypeIndex.value = 0;
+                                            if (_selectedSearchTypeIndex
+                                                    .value >=
+                                                _searchTypes.length) {
+                                              _selectedSearchTypeIndex.value =
+                                                  0;
                                             }
                                           });
                                         },
                                         borderRadius: BorderRadius.circular(12),
                                         child: AnimatedContainer(
-                                          duration: const Duration(milliseconds: 200),
+                                          duration:
+                                              const Duration(milliseconds: 200),
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 16,
                                             vertical: 10,
@@ -808,7 +846,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             color: isSelected
                                                 ? const Color(0xFF6132E4)
                                                 : Colors.grey.shade50,
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             border: Border.all(
                                               color: isSelected
                                                   ? const Color(0xFF6132E4)
@@ -818,9 +857,12 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             boxShadow: isSelected
                                                 ? [
                                                     BoxShadow(
-                                                      color: const Color(0xFF6132E4).withOpacity(0.3),
+                                                      color: const Color(
+                                                              0xFF6132E4)
+                                                          .withOpacity(0.3),
                                                       blurRadius: 8,
-                                                      offset: const Offset(0, 4),
+                                                      offset:
+                                                          const Offset(0, 4),
                                                     ),
                                                   ]
                                                 : null,
@@ -830,7 +872,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             children: [
                                               if (isSelected)
                                                 const Padding(
-                                                  padding: EdgeInsets.only(right: 6),
+                                                  padding:
+                                                      EdgeInsets.only(right: 6),
                                                   child: Icon(
                                                     Icons.check_circle_rounded,
                                                     color: Colors.white,
@@ -888,7 +931,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                               final type = entry.value;
                               final isSelected = selectedIndex == index;
                               return InkWell(
-                                onTap: () => tempSelectedSearchTypeIndex.value = index,
+                                onTap: () =>
+                                    tempSelectedSearchTypeIndex.value = index,
                                 borderRadius: BorderRadius.circular(12),
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
@@ -910,7 +954,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                     boxShadow: isSelected
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFF6132E4).withOpacity(0.3),
+                                              color: const Color(0xFF6132E4)
+                                                  .withOpacity(0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 4),
                                             ),
@@ -932,8 +977,12 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                       Text(
                                         type,
                                         style: TextStyle(
-                                          color: isSelected ? Colors.white : Colors.grey.shade700,
-                                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.grey.shade700,
+                                          fontWeight: isSelected
+                                              ? FontWeight.w600
+                                              : FontWeight.w500,
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         ),
@@ -966,15 +1015,18 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                           ),
                           ValueListenableBuilder<bool>(
                             valueListenable: isPriceFilterEnabledWidgetNotifier,
-                            builder: (context, isEnabled, child) => Transform.scale(
+                            builder: (context, isEnabled, child) =>
+                                Transform.scale(
                               scale: 0.85,
                               child: Switch(
                                 value: isEnabled,
                                 onChanged: (value) {
-                                  isPriceFilterEnabledWidgetNotifier.value = value;
+                                  isPriceFilterEnabledWidgetNotifier.value =
+                                      value;
                                 },
                                 activeThumbColor: const Color(0xFF6132E4),
-                                activeTrackColor: const Color(0xFF6132E4).withOpacity(0.3),
+                                activeTrackColor:
+                                    const Color(0xFF6132E4).withOpacity(0.3),
                                 inactiveThumbColor: Colors.grey.shade400,
                                 inactiveTrackColor: Colors.grey.shade200,
                               ),
@@ -1012,19 +1064,22 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             height: 42,
                                             decoration: BoxDecoration(
                                               color: Colors.grey.shade50,
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                               border: Border.all(
                                                 color: Colors.grey.shade300,
                                               ),
                                             ),
                                             child: TextField(
                                               controller: maxPriceController,
-                                              keyboardType: TextInputType.number,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               decoration: const InputDecoration(
                                                 hintText: 'Enter max price',
                                                 prefixText: '₹ ',
                                                 border: InputBorder.none,
-                                                contentPadding: EdgeInsets.symmetric(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
                                                   horizontal: 12,
                                                   vertical: 12,
                                                 ),
@@ -1043,8 +1098,10 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                               maxPriceController.text.trim(),
                                             );
                                             if (newMax != null && newMax > 0) {
-                                              tempMaxPriceNotifier.value = newMax;
-                                              tempPriceRange.value = RangeValues(
+                                              tempMaxPriceNotifier.value =
+                                                  newMax;
+                                              tempPriceRange.value =
+                                                  RangeValues(
                                                 0,
                                                 newMax,
                                               );
@@ -1056,11 +1113,13 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                               horizontal: 16,
                                               vertical: 12,
                                             ),
-                                            backgroundColor: const Color(0xFF6132E4),
+                                            backgroundColor:
+                                                const Color(0xFF6132E4),
                                             foregroundColor: Colors.white,
                                             elevation: 0,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                           ),
                                           child: const Text(
@@ -1078,7 +1137,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                     ValueListenableBuilder<RangeValues>(
                                       valueListenable: tempPriceRange,
                                       builder: (context, range, child) => Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Container(
                                             padding: const EdgeInsets.symmetric(
@@ -1087,7 +1147,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             ),
                                             decoration: BoxDecoration(
                                               color: Colors.grey.shade100,
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                             child: Text(
                                               '₹${range.start.round()}',
@@ -1099,7 +1160,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12),
                                             child: Icon(
                                               Icons.arrow_forward,
                                               size: 18,
@@ -1114,13 +1176,17 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4).withOpacity(0.1),
-                                                  const Color(0xFF6132E4).withOpacity(0.05),
+                                                  const Color(0xFF6132E4)
+                                                      .withOpacity(0.1),
+                                                  const Color(0xFF6132E4)
+                                                      .withOpacity(0.05),
                                                 ],
                                               ),
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4).withOpacity(0.3),
+                                                color: const Color(0xFF6132E4)
+                                                    .withOpacity(0.3),
                                               ),
                                             ),
                                             child: Text(
@@ -1145,17 +1211,25 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                       builder: (context, range, child) =>
                                           ValueListenableBuilder<double>(
                                         valueListenable: tempMaxPriceNotifier,
-                                        builder: (context, currentMaxPrice, child) => SliderTheme(
+                                        builder:
+                                            (context, currentMaxPrice, child) =>
+                                                SliderTheme(
                                           data: SliderThemeData(
-                                            activeTrackColor: const Color(0xFF6132E4),
-                                            inactiveTrackColor: Colors.grey.shade200,
+                                            activeTrackColor:
+                                                const Color(0xFF6132E4),
+                                            inactiveTrackColor:
+                                                Colors.grey.shade200,
                                             thumbColor: const Color(0xFF6132E4),
-                                            overlayColor: const Color(0xFF6132E4).withOpacity(0.2),
+                                            overlayColor:
+                                                const Color(0xFF6132E4)
+                                                    .withOpacity(0.2),
                                             trackHeight: 4,
-                                            thumbShape: const RoundSliderThumbShape(
+                                            thumbShape:
+                                                const RoundSliderThumbShape(
                                               enabledThumbRadius: 8,
                                             ),
-                                            overlayShape: const RoundSliderOverlayShape(
+                                            overlayShape:
+                                                const RoundSliderOverlayShape(
                                               overlayRadius: 16,
                                             ),
                                           ),
@@ -1200,8 +1274,10 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                         onPressed: () {
                           tempSelectedSearchTypeIndex.value = 0;
                           tempMaxPriceNotifier.value = _maxPriceNotifier.value;
-                          maxPriceController.text = _maxPriceNotifier.value.toInt().toString();
-                          tempPriceRange.value = RangeValues(0, tempMaxPriceNotifier.value);
+                          maxPriceController.text =
+                              _maxPriceNotifier.value.toInt().toString();
+                          tempPriceRange.value =
+                              RangeValues(0, tempMaxPriceNotifier.value);
                           isPriceFilterEnabledWidgetNotifier.value = false;
                         },
                         style: OutlinedButton.styleFrom(
@@ -1232,10 +1308,13 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                         onPressed: () {
                           // Apply changes
                           setState(() {
-                            _selectedSearchTypeIndex.value = tempSelectedSearchTypeIndex.value;
+                            _selectedSearchTypeIndex.value =
+                                tempSelectedSearchTypeIndex.value;
                             _priceRange.value = tempPriceRange.value;
-                            _maxPriceNotifier.value = tempMaxPriceNotifier.value;
-                            _isPriceFilterEnabled.value = isPriceFilterEnabledWidgetNotifier.value;
+                            _maxPriceNotifier.value =
+                                tempMaxPriceNotifier.value;
+                            _isPriceFilterEnabled.value =
+                                isPriceFilterEnabledWidgetNotifier.value;
                           });
 
                           Navigator.of(context).pop();
@@ -1499,32 +1578,33 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                       child: SizedBox(
                         height: 32,
                         child: TextField(
-                        controller: _inlinePriceController,
-                        focusNode: _inlinePriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: Colors.grey.shade400),
+                          controller: _inlinePriceController,
+                          focusNode: _inlinePriceFocusNode,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide:
-                                const BorderSide(color: Color(0xFF6132E4)),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade400),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFF6132E4)),
+                            ),
                           ),
+                          onSubmitted: (_) => _saveEditingPrice(product),
                         ),
-                        onSubmitted: (_) => _saveEditingPrice(product),
-                      ),
                       ),
                     )
                   : GestureDetector(
@@ -1841,8 +1921,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                               // Body
                               if (isLoading)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 36),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 36),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -1898,8 +1978,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                 Flexible(
                                   child: ListView.separated(
                                     shrinkWrap: true,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 4),
                                     itemCount: productList.length,
                                     separatorBuilder: (_, __) => Divider(
                                       height: 1,
@@ -1947,8 +2027,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         : null;
     final price = variant.salePrice ?? productSalePriceInt ?? variant.price ?? product.price ?? 0;
 
-    final products =
-        List<ProductSelectedModel>.from(_formController.selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+        _formController.selectedProductsNotifier.value);
 
     // Check if this variant already exists
     final existingIndex = products.indexWhere(
@@ -2368,11 +2448,11 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
       context: context,
     );
     if (req == null) return;
-    
+
     // 📊 DETAILED LOGGING FOR DEBUGGING
-    log('\n' + '='*80);
+    log('\n' + '=' * 80);
     log('📤 SALES UPDATE REQUEST DATA');
-    log('='*80);
+    log('=' * 80);
     log('Sale ID: ${req.id}');
     log('Staff ID: ${req.staffId}');
     log('Client Phone: ${req.clientPhone}');
@@ -2408,8 +2488,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     log('\n📋 Compare with Postman format:');
     log('Postman uses: "variants": [{"id": 645, "quantity": 1, "amount": 2500}]');
     log('We are sending: "variants": ${jsonData['variants']}');
-    log('='*80 + '\n');
-    
+    log('=' * 80 + '\n');
+
     context.read<SaveSalesCubit>().saveSales(
           salesRequest: req,
           isEditMode: true,
@@ -2654,8 +2734,8 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                       widget.product.model!.isNotEmpty)
                     Text(
                       '${widget.product.mainServiceType.secondaryAttributeLabel ?? "Model"}: ${widget.product.model}',
-                      style: TextStyle(
-                          fontSize: 11, color: Colors.grey.shade600),
+                      style:
+                          TextStyle(fontSize: 11, color: Colors.grey.shade600),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
@@ -45,7 +46,6 @@ import 'package:bookie_buddy_web/features/new_booking/models/document_file_model
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
-import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
@@ -192,7 +192,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   int? _originalSecurityAmount;
   int? _originalDiscountAmount;
   List<AdditionalChargesModel>? _originalAdditionalCharges;
-  List<DocumentFile>? _originalDocuments; // Track original documents for removal detection
+  List<DocumentFile>?
+      _originalDocuments; // Track original documents for removal detection
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
 
@@ -232,14 +233,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           name: bookingStaffName ?? 'Staff',
           phoneNumber: '',
         );
-        context.read<StaffSearchCubit>().getAllStaffs(bookingStaffId, existingStaff);
+        context
+            .read<StaffSearchCubit>()
+            .getAllStaffs(bookingStaffId, existingStaff);
       } else if (saleStaffId != null) {
         final existingStaff = StaffModel(
           id: saleStaffId,
           name: saleStaffName ?? 'Staff',
           phoneNumber: '',
         );
-        context.read<StaffSearchCubit>().getAllStaffs(saleStaffId, existingStaff);
+        context
+            .read<StaffSearchCubit>()
+            .getAllStaffs(saleStaffId, existingStaff);
       } else {
         context.read<StaffSearchCubit>().getAllStaffs();
       }
@@ -360,7 +365,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     selectedProductsNotifier.value = products;
 
     // Set additional charges
-    additionalChargesNotifier.value = booking.additionalCharges!;
+    additionalChargesNotifier.value = booking.additionalCharges;
 
     // Load existing documents for preview
     log('📄 Loading documents from booking. Total documents: ${booking.documents.length}');
@@ -402,33 +407,38 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     _originalPickupTime = booking.pickupDate != null
         ? TimeOfDay.fromDateTime(booking.pickupDate!.parseToDateTime())
         : null;
-    _originalReturnTime = TimeOfDay.fromDateTime(booking.returnDate.parseToDateTime());
-    
+    _originalReturnTime =
+        TimeOfDay.fromDateTime(booking.returnDate.parseToDateTime());
+
     _originalClientName = booking.client.name;
-    _originalClientPhone1 = booking.client.phone1?.toString();
+    _originalClientPhone1 = booking.client.phone1.toString();
     _originalClientPhone2 = booking.client.phone2?.toString();
     _originalClientAddress = booking.address;
-    
+
     _originalStaffId = booking.staffId;
-    
+
     _originalAdvanceAmount = booking.paidAmount;
     _originalSecurityAmount = booking.securityAmount;
     _originalDiscountAmount = booking.discountAmount;
-    
+
     // Store deep copy of additional charges
-    _originalAdditionalCharges = additionalChargesNotifier.value.map((c) => AdditionalChargesModel(
-      id: c.id,
-      name: c.name,
-      amount: c.amount,
-    )).toList();
+    _originalAdditionalCharges = additionalChargesNotifier.value
+        .map((c) => AdditionalChargesModel(
+              id: c.id,
+              name: c.name,
+              amount: c.amount,
+            ))
+        .toList();
 
     // Store deep copy of documents
-    _originalDocuments = documentsNotifier.value.map((d) => DocumentFile(
-      name: d.name,
-      path: d.path,
-      bytes: d.bytes != null ? List<int>.from(d.bytes!) : null,
-    )).toList();
-    
+    _originalDocuments = documentsNotifier.value
+        .map((d) => DocumentFile(
+              name: d.name,
+              path: d.path,
+              bytes: d.bytes != null ? List<int>.from(d.bytes!) : null,
+            ))
+        .toList();
+
     // Store original running kilometers and delivery status
     _originalRunningKm = booking.otherDetails.end;
     _originalDeliveryStatus = booking.deliveryStatus;
@@ -439,49 +449,59 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   /// Check if dates have changed
   bool _haveDatesChanged() {
     if (_originalBooking == null) return true; // New booking, send all
-    
-    final currentPickupDate = pickupDate.format().appendTimeToDate(time: pickupTime);
-    final currentReturnDate = returnDate.format().appendTimeToDate(time: returnTime);
-    final originalPickupDateStr = _originalPickupDate?.format().appendTimeToDate(time: _originalPickupTime);
-    final originalReturnDateStr = _originalReturnDate?.format().appendTimeToDate(time: _originalReturnTime);
-    
-    return currentPickupDate != originalPickupDateStr || 
-           currentReturnDate != originalReturnDateStr;
+
+    final currentPickupDate =
+        pickupDate.format().appendTimeToDate(time: pickupTime);
+    final currentReturnDate =
+        returnDate.format().appendTimeToDate(time: returnTime);
+    final originalPickupDateStr = _originalPickupDate
+        ?.format()
+        .appendTimeToDate(time: _originalPickupTime);
+    final originalReturnDateStr = _originalReturnDate
+        ?.format()
+        .appendTimeToDate(time: _originalReturnTime);
+
+    return currentPickupDate != originalPickupDateStr ||
+        currentReturnDate != originalReturnDateStr;
   }
 
   /// Check if client details have changed
   bool _hasClientChanged() {
     if (_originalBooking == null) return true;
-    
+
     final currentClientName = clientNameController.text.trim();
     final currentClientPhone1 = clientPhone1Controller.text.trim();
     final currentClientPhone2 = clientPhone2Controller.text.trim();
     final currentClientAddress = clientAddressController.text.trim();
-    
+
     return currentClientName != (_originalClientName ?? '') ||
-           currentClientPhone1 != (_originalClientPhone1 ?? '') ||
-           currentClientPhone2 != (_originalClientPhone2 ?? '') ||
-           currentClientAddress != (_originalClientAddress ?? '');
+        currentClientPhone1 != (_originalClientPhone1 ?? '') ||
+        currentClientPhone2 != (_originalClientPhone2 ?? '') ||
+        currentClientAddress != (_originalClientAddress ?? '');
   }
 
   /// Check if staff has changed (reads directly from cubit to avoid timing issues)
   bool _hasStaffChanged() {
     if (_originalBooking == null) return true;
-    final currentStaffId = context.read<StaffSearchCubit>().state.selectedStaff?.id;
+    final currentStaffId =
+        context.read<StaffSearchCubit>().state.selectedStaff?.id;
     return currentStaffId != _originalStaffId;
   }
 
   /// Check if amounts have changed
   bool _haveAmountsChanged() {
     if (_originalBooking == null) return true;
-    
-    final currentAdvance = advanceAmountController.text.trim().toIntOrNull() ?? 0;
-    final currentSecurity = securityAmountController.text.trim().toIntOrNull() ?? 0;
-    final currentDiscount = discountAmountController.text.trim().toIntOrNull() ?? 0;
-    
+
+    final currentAdvance =
+        advanceAmountController.text.trim().toIntOrNull() ?? 0;
+    final currentSecurity =
+        securityAmountController.text.trim().toIntOrNull() ?? 0;
+    final currentDiscount =
+        discountAmountController.text.trim().toIntOrNull() ?? 0;
+
     return currentAdvance != (_originalAdvanceAmount ?? 0) ||
-           currentSecurity != (_originalSecurityAmount ?? 0) ||
-           currentDiscount != (_originalDiscountAmount ?? 0);
+        currentSecurity != (_originalSecurityAmount ?? 0) ||
+        currentDiscount != (_originalDiscountAmount ?? 0);
   }
 
   /// Check if running kilometers have changed
@@ -499,34 +519,36 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   bool _haveAdditionalChargesChanged() {
     if (_originalBooking == null) return true;
     if (_originalAdditionalCharges == null) return true;
-    
+
     final currentCharges = additionalChargesNotifier.value;
-    
+
     // Check if count changed
-    if (currentCharges.length != _originalAdditionalCharges!.length) return true;
-    
+    if (currentCharges.length != _originalAdditionalCharges!.length)
+      return true;
+
     // Check if any charge changed
     for (int i = 0; i < currentCharges.length; i++) {
       final current = currentCharges[i];
       final original = _originalAdditionalCharges![i];
-      
-      if (current.name != original.name ||
-          current.amount != original.amount) {
+
+      if (current.name != original.name || current.amount != original.amount) {
         return true;
       }
     }
-    
+
     return false;
   }
 
   /// Build partial update request with only changed fields
   Map<String, dynamic> _buildPartialUpdateRequest() {
     final updates = <String, dynamic>{};
-    
+
     // Only include dates if changed
     if (_haveDatesChanged()) {
-      updates['pickup_date'] = pickupDate.format().appendTimeToDate(time: pickupTime);
-      updates['return_date'] = returnDate.format().appendTimeToDate(time: returnTime);
+      updates['pickup_date'] =
+          pickupDate.format().appendTimeToDate(time: pickupTime);
+      updates['return_date'] =
+          returnDate.format().appendTimeToDate(time: returnTime);
       // If coolingPeriodDays is 0 (None), use exact return date and time
       updates['cooling_period_date'] = coolingPeriodDays == 0
           ? returnDate.format().appendTimeToDate(time: returnTime)
@@ -535,7 +557,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               .format()
               .appendTimeToDate(time: returnTime);
     }
-    
+
     // Include client entirely if any client field changed
     if (_hasClientChanged()) {
       final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
@@ -560,20 +582,24 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       }
       updates['address'] = clientAddressController.text.trim();
     }
-    
+
     // Include staff if changed (read directly from cubit — reliable, no listener timing issues)
-    final currentStaffId = context.read<StaffSearchCubit>().state.selectedStaff?.id;
+    final currentStaffId =
+        context.read<StaffSearchCubit>().state.selectedStaff?.id;
     if (_hasStaffChanged()) {
       updates['staff_id'] = currentStaffId;
     }
-    
+
     // Include amounts if changed
     if (_haveAmountsChanged()) {
-      updates['advance_amount'] = advanceAmountController.text.trim().toIntOrNull();
-      updates['security_amount'] = securityAmountController.text.trim().toIntOrNull();
-      updates['discount_amount'] = discountAmountController.text.trim().toIntOrNull();
+      updates['advance_amount'] =
+          advanceAmountController.text.trim().toIntOrNull();
+      updates['security_amount'] =
+          securityAmountController.text.trim().toIntOrNull();
+      updates['discount_amount'] =
+          discountAmountController.text.trim().toIntOrNull();
     }
-    
+
     // Always include products (variants) to ensure server state matches current selection.
     // IMPORTANT: The server uses 'id' as the variant identifier (product_variant id).
     //   - Products loaded from booked_items have p.variant.id = booked_item row id (WRONG)
@@ -616,18 +642,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Include purchase_mode only if needed (minimal metadata)
     updates['purchase_mode'] = 'normal';
-    
+
     // Include delivery_status only if changed
     if (_hasDeliveryStatusChanged()) {
       updates['delivery_status'] = deliveryStatus.toValue();
     }
-    
+
     // Include description if present and changed
     final description = descriptionController.text.trim();
     if (description.isNotEmpty) {
       updates['description'] = description;
     }
-    
+
     // Include running kilometers if changed (even if cleared to null/empty)
     if (_hasRunningKmChanged()) {
       final runningKm = runningKilometersController.text.trim().nullIfEmpty;
@@ -639,7 +665,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         'end': runningKm ?? '',
       };
     }
-    
+
     log('📝 Partial update payload: $updates');
     return updates;
   }
@@ -2551,13 +2577,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         (selectedServiceId == null || selectedServiceId == -1)
             ? null
             : selectedServiceId;
-    
+
     // Extract variant IDs from currently selected products for edit mode
     final currentVariantIds = selectedProductsNotifier.value
         .map((p) => p.variant.variantId)
         .whereType<int>()
         .toList();
-    
+
     _selectProductBloc.add(
       SelectProductEvent.loadProducts(
         serviceId: serviceIdToUse,
@@ -2568,7 +2594,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         useAvailableProductsApi: !isSales,
         isSales: isSales,
         bookingId: widget.bookingId, // Pass booking ID for edit mode
-        variantIds: currentVariantIds.isNotEmpty ? currentVariantIds : null, // Pass current variants
+        variantIds: currentVariantIds.isNotEmpty
+            ? currentVariantIds
+            : null, // Pass current variants
       ),
     );
 
@@ -2586,10 +2614,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     final selected = selectedProductsNotifier.value;
     if (selected.isEmpty) return;
 
-    final variantIds = selected
-        .map((p) => p.variant.variantId)
-        .whereType<int>()
-        .toList();
+    final variantIds =
+        selected.map((p) => p.variant.variantId).whereType<int>().toList();
     if (variantIds.isEmpty) return;
 
     try {
@@ -3209,7 +3235,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 // Update stock for already selected products from fresh availability data
                 if (widget.bookingId != null && products.isNotEmpty) {
                   final currentProducts = selectedProductsNotifier.value;
-                  final updatedProducts = currentProducts.map((selectedProduct) {
+                  final updatedProducts =
+                      currentProducts.map((selectedProduct) {
                     for (final freshProduct in products) {
                       final matchingVariant = freshProduct.variants.firstWhere(
                         (v) => v.id == selectedProduct.variant.variantId,
@@ -3232,7 +3259,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     }
                     return selectedProduct;
                   }).toList();
-                  if (updatedProducts.toString() != currentProducts.toString()) {
+                  if (updatedProducts.toString() !=
+                      currentProducts.toString()) {
                     selectedProductsNotifier.value = updatedProducts;
                     log('✅ Updated stock values for ${updatedProducts.length} selected products');
                   }
@@ -3371,12 +3399,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       valueListenable: _overlayProducts,
                       builder: (context, productList, _) {
                         return Container(
-                          constraints:
-                              const BoxConstraints(maxHeight: 450),
+                          constraints: const BoxConstraints(maxHeight: 450),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            border: Border.all(
-                                color: Colors.grey.shade200),
+                            border: Border.all(color: Colors.grey.shade200),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Column(
@@ -3403,11 +3429,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                           SizedBox(
                                             width: 12,
                                             height: 12,
-                                            child:
-                                                CircularProgressIndicator(
+                                            child: CircularProgressIndicator(
                                               strokeWidth: 1.5,
-                                              color:
-                                                  Colors.grey.shade500,
+                                              color: Colors.grey.shade500,
                                             ),
                                           ),
                                           const SizedBox(width: 8),
@@ -3416,8 +3440,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                             style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600,
-                                              color:
-                                                  Colors.grey.shade700,
+                                              color: Colors.grey.shade700,
                                             ),
                                           ),
                                         ],
@@ -3448,8 +3471,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                               // Body
                               if (isLoading)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 36),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 36),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -3506,17 +3529,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                   child: ListView.separated(
                                     shrinkWrap: true,
                                     padding:
-                                        const EdgeInsets.symmetric(
-                                            vertical: 4),
+                                        const EdgeInsets.symmetric(vertical: 4),
                                     itemCount: productList.length,
-                                    separatorBuilder: (_, __) =>
-                                        Divider(
+                                    separatorBuilder: (_, __) => Divider(
                                       height: 1,
                                       color: Colors.grey.shade200,
                                     ),
                                     itemBuilder: (_, i) =>
-                                        _buildOverlaySearchItem(
-                                            productList[i]),
+                                        _buildOverlaySearchItem(productList[i]),
                                   ),
                                 ),
                             ],
@@ -3870,7 +3890,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   /// Considers the actual time component for accurate 24-hour period calculation
   int _calculateRentalDays() {
     if (pickupDate == returnDate && pickupTime == returnTime) return 1;
-    
+
     // Create DateTime objects with time component
     final pickupDateTime = DateTime(
       pickupDate.year,
@@ -3879,7 +3899,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       pickupTime?.hour ?? 0,
       pickupTime?.minute ?? 0,
     );
-    
+
     final returnDateTime = DateTime(
       returnDate.year,
       returnDate.month,
@@ -3887,7 +3907,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       returnTime?.hour ?? 23,
       returnTime?.minute ?? 59,
     );
-    
+
     final difference = returnDateTime.difference(pickupDateTime);
     final hours = difference.inHours;
 
@@ -4726,16 +4746,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final isSaleType = selectedBookingType == BookingType.sales;
-              final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
+              final summaryRentalDays =
+                  !isSaleType ? _calculateRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
                 (sum, product) {
                   // Only multiply by days for qualifying service types
-                  final daysMultiplier =
-                      (!isSaleType && _shouldMultiplyByDays(product.variant.mainServiceType))
-                          ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-                          : 1;
-                  return sum + (product.amount * product.quantity * daysMultiplier);
+                  final daysMultiplier = (!isSaleType &&
+                          _shouldMultiplyByDays(
+                              product.variant.mainServiceType))
+                      ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
+                      : 1;
+                  return sum +
+                      (product.amount * product.quantity * daysMultiplier);
                 },
               );
               final additionalTotal = additionalCharges.fold<int>(
@@ -5134,20 +5157,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       if (widget.bookingDetails != null) {
         // Update existing booking with incremental changes only
         final partialUpdate = _buildPartialUpdateRequest();
-        
+
         // Detect document changes
         final currentDocs = documentsNotifier.value;
-        final originalDocPaths = _originalDocuments?.map((d) => d.path).toSet() ?? {};
+        final originalDocPaths =
+            _originalDocuments?.map((d) => d.path).toSet() ?? {};
         final currentDocPaths = currentDocs.map((d) => d.path).toSet();
-        
+
         // Find removed documents (were in original but not in current)
-        final removedUrls = originalDocPaths.difference(currentDocPaths).toList();
-        
+        final removedUrls =
+            originalDocPaths.difference(currentDocPaths).toList();
+
         // Find new documents (have bytes = newly uploaded)
         final newDocs = currentDocs.where((d) => d.bytes != null).toList();
-        
+
         log('📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}');
-        
+
         await repository.updateBookingPartial(
           widget.bookingDetails!.id,
           partialUpdate,
@@ -5493,7 +5518,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                 final days = index + 1;
                                 return DropdownMenuItem(
                                   value: days,
-                                  child: Text('$days day${days > 1 ? 's' : ''}'),
+                                  child:
+                                      Text('$days day${days > 1 ? 's' : ''}'),
                                 );
                               }),
                             ],
@@ -6478,8 +6504,8 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                       widget.product.model!.isNotEmpty)
                     Text(
                       '${widget.product.mainServiceType.secondaryAttributeLabel ?? "Model"}: ${widget.product.model}',
-                      style: TextStyle(
-                          fontSize: 11, color: Colors.grey.shade600),
+                      style:
+                          TextStyle(fontSize: 11, color: Colors.grey.shade600),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

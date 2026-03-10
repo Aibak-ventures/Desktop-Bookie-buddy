@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
@@ -14,7 +15,6 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_deta
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/edit_sales_screen/edit_sales_screen.dart';
-import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -41,7 +41,9 @@ class SalesDetailsDrawer extends StatelessWidget {
             success: (message, didPop, needRefresh) {
               context.showSnackBar(message);
               if (needRefresh) {
-                context.read<AllSalesBloc>().add(const AllSalesEvent.loadSales());
+                context
+                    .read<AllSalesBloc>()
+                    .add(const AllSalesEvent.loadSales());
               }
               if (didPop) {
                 context.read<SalesDetailsDrawerCubit>().closeDrawer();
@@ -167,7 +169,8 @@ class SalesDetailsDrawer extends StatelessWidget {
               // Scrollable content
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -198,7 +201,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                       ],
 
                       // Staff name section (if staff exists)
-                      if (sale.staffName != null && sale.staffName!.isNotEmpty) ...[
+                      if (sale.staffName != null &&
+                          sale.staffName!.isNotEmpty) ...[
                         _buildStaffSection(sale),
                         const SizedBox(height: 24),
                       ],
@@ -404,7 +408,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                             ),
-                        ] else if (item.mainServiceType == MainServiceType.vehicle) ...[
+                        ] else if (item.mainServiceType ==
+                            MainServiceType.vehicle) ...[
                           // For vehicle: show Model and Category (Brand)
                           if (item.model != null && item.model!.isNotEmpty)
                             Text(
@@ -414,7 +419,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                             ),
-                          if (item.category != null && item.category!.isNotEmpty)
+                          if (item.category != null &&
+                              item.category!.isNotEmpty)
                             Text(
                               'Brand : ${item.category}',
                               style: TextStyle(
@@ -422,7 +428,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                             ),
-                        ] else if (item.mainServiceType == MainServiceType.gadgets) ...[
+                        ] else if (item.mainServiceType ==
+                            MainServiceType.gadgets) ...[
                           // For gadget: show Serial Number (variant) and Color
                           if (item.variantAttribute != null &&
                               item.variantAttribute!.isNotEmpty)
@@ -441,9 +448,11 @@ class SalesDetailsDrawer extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                             ),
-                        ] else if (item.mainServiceType == MainServiceType.equipment) ...[
+                        ] else if (item.mainServiceType ==
+                            MainServiceType.equipment) ...[
                           // For equipment: show Category
-                          if (item.category != null && item.category!.isNotEmpty)
+                          if (item.category != null &&
+                              item.category!.isNotEmpty)
                             Text(
                               'Category : ${item.category}',
                               style: TextStyle(
@@ -453,7 +462,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                             ),
                         ] else ...[
                           // For others: show Category and Color
-                          if (item.category != null && item.category!.isNotEmpty)
+                          if (item.category != null &&
+                              item.category!.isNotEmpty)
                             Text(
                               'Category : ${item.category}',
                               style: TextStyle(
@@ -507,7 +517,7 @@ class SalesDetailsDrawer extends StatelessWidget {
   Widget _buildCustomerDetails(SaleDetailsModel sale) {
     // Get phone number from client or clientPhone field
     final phone1 =
-        sale.client?.phone1?.toString() ?? sale.clientPhone.toString();
+        sale.client?.phone1.toString() ?? sale.clientPhone.toString();
     final phone2 = sale.client?.phone2?.toString();
     final name = sale.client?.name;
 
@@ -826,7 +836,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () => Navigator.pop(context, true),
-                          style: TextButton.styleFrom(foregroundColor: Colors.red),
+                          style:
+                              TextButton.styleFrom(foregroundColor: Colors.red),
                           child: const Text('Delete'),
                         ),
                       ],
@@ -858,8 +869,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => BlocProvider(
-                        create: (_) =>
-                            SaveSalesCubit(repository: getIt<SalesRepository>()),
+                        create: (_) => SaveSalesCubit(
+                            repository: getIt<SalesRepository>()),
                         child: EditSalesScreen(
                           saleDetails: sale,
                         ),

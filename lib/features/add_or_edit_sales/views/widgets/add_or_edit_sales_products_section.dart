@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
@@ -15,7 +16,6 @@ import 'package:bookie_buddy_web/features/select_product_booking/models/product_
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
-import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -150,7 +150,8 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
           width: context.isMobile ? null : 0.5.widthR,
           child: CustomTextField(
             controller: amountController,
-            validator: (value) => AppInputValidators.amount(value, allowZero: false),
+            validator: (value) =>
+                AppInputValidators.amount(value, allowZero: false),
             hintText: 'Enter Amount',
             keyboardType: TextInputType.number,
           ),

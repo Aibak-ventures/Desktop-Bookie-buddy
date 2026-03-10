@@ -19,7 +19,7 @@ class DashboardRepository {
     try {
       return await _dashboardService.fetchDesktopDashboardData(
         page: page,
-        activeShopId: activeShop?.id?.toString(),
+        activeShopId: activeShop?.id.toString(),
       );
     } catch (e, stack) {
       log('Error loading desktop dashboard data: $e', stackTrace: stack);

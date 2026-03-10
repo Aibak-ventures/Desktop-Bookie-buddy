@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
@@ -41,7 +42,6 @@ import 'package:bookie_buddy_web/features/new_booking/helpers/booking_validation
 import 'package:bookie_buddy_web/features/new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/new_booking_app_bar.dart';
-import 'package:bookie_buddy_web/src/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -203,7 +203,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
-                                                    
+
   // Summary expansion state
   bool _isSummaryExpanded = false;
 
@@ -1477,9 +1477,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         }
         break;
     }
-    
-      // Ensure we always have a valid search type when a query exists.
-      searchType ??= 'name';
+
+    // Ensure we always have a valid search type when a query exists.
+    searchType ??= 'name';
 
     // Check if any filter is applied
     final hasSearchQuery = searchTerm.isNotEmpty;
@@ -1520,7 +1520,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _onSearchChanged([String? newValue]) {
     // Allow search even if selectedServiceId is null (All Services)
-    final query = (newValue ?? serviceSearchController.text).trim().toLowerCase();
+    final query =
+        (newValue ?? serviceSearchController.text).trim().toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
     // If "All Services" is selected, serviceId will be -1, so we pass null to API
     final serviceIdToUse =
@@ -1580,11 +1581,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           } else {
             searchType = 'color';
           }
-            break;
+          break;
       }
 
-          // Ensure we have a fallback search type
-          searchType ??= 'name';
+      // Ensure we have a fallback search type
+      searchType ??= 'name';
 
       log('_onSearchChanged -> dispatching searchProducts, type: $searchType');
       _selectProductBloc.add(
@@ -1624,40 +1625,40 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// Calculate number of days between pickup and return dates
   /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
   /// Considers the actual time component for accurate 24-hour period calculation
-int _calculateRentalDays() {
-  // Default pickup time: 23:59 if not selected
-  final pickupDateTime = DateTime(
-    pickupDate.year,
-    pickupDate.month,
-    pickupDate.day,
-    pickupTime?.hour ?? 23,
-    pickupTime?.minute ?? 59,
-  );
+  int _calculateRentalDays() {
+    // Default pickup time: 23:59 if not selected
+    final pickupDateTime = DateTime(
+      pickupDate.year,
+      pickupDate.month,
+      pickupDate.day,
+      pickupTime?.hour ?? 23,
+      pickupTime?.minute ?? 59,
+    );
 
-  // Default return time: 00:00 if not selected
-  final returnDateTime = DateTime(
-    returnDate.year,
-    returnDate.month,
-    returnDate.day,
-    returnTime?.hour ?? 0,
-    returnTime?.minute ?? 0,
-  );
+    // Default return time: 00:00 if not selected
+    final returnDateTime = DateTime(
+      returnDate.year,
+      returnDate.month,
+      returnDate.day,
+      returnTime?.hour ?? 0,
+      returnTime?.minute ?? 0,
+    );
 
-  // Safety: return date must be after pickup
-  if (!returnDateTime.isAfter(pickupDateTime)) {
-    return 1;
+    // Safety: return date must be after pickup
+    if (!returnDateTime.isAfter(pickupDateTime)) {
+      return 1;
+    }
+
+    final difference = returnDateTime.difference(pickupDateTime);
+
+    // Convert to hours (include minutes precision)
+    final hours = difference.inMinutes / 60;
+
+    // Business rule:
+    // Below 24 hours = 1 day
+    // Every started 24h block = +1 day
+    return hours <= 24 ? 1 : (hours / 24).ceil();
   }
-
-  final difference = returnDateTime.difference(pickupDateTime);
-
-  // Convert to hours (include minutes precision)
-  final hours = difference.inMinutes / 60;
-
-  // Business rule:
-  // Below 24 hours = 1 day
-  // Every started 24h block = +1 day
-  return hours <= 24 ? 1 : (hours / 24).ceil();
-}
 
   /// Get service-specific specification text for product
   String _getProductSpecifications(ProductSelectedModel product) {
@@ -1736,7 +1737,8 @@ int _calculateRentalDays() {
         returnTime,
         useAvailableProductsApi,
         isSales,
-      ) => products,
+      ) =>
+          products,
       orElse: () => <ProductModel>[],
     );
 
@@ -1747,12 +1749,15 @@ int _calculateRentalDays() {
       final color = p.color?.toLowerCase() ?? '';
       final category = p.category?.toLowerCase() ?? '';
       final model = p.model?.toLowerCase() ?? '';
-      final variantMatch = p.variants
-          .any((v) => v.attribute.toLowerCase().contains(q));
+      final variantMatch =
+          p.variants.any((v) => v.attribute.toLowerCase().contains(q));
 
       // Default to name + variant attribute
-      return name.contains(q) || color.contains(q) ||
-          category.contains(q) || model.contains(q) || variantMatch;
+      return name.contains(q) ||
+          color.contains(q) ||
+          category.contains(q) ||
+          model.contains(q) ||
+          variantMatch;
     }).toList();
 
     _overlayIsLoading.value = false;
@@ -1772,10 +1777,8 @@ int _calculateRentalDays() {
     final selected = selectedProductsNotifier.value;
     if (selected.isEmpty) return;
 
-    final variantIds = selected
-        .map((p) => p.variant.variantId)
-        .whereType<int>()
-        .toList();
+    final variantIds =
+        selected.map((p) => p.variant.variantId).whereType<int>().toList();
     if (variantIds.isEmpty) return;
 
     final effectiveReturnDate =
@@ -1875,7 +1878,6 @@ int _calculateRentalDays() {
         return BookingType.oldBooking;
     }
   }
-
 
   String _getTabTitle() {
     switch (selectedBookingType) {
@@ -2747,9 +2749,10 @@ int _calculateRentalDays() {
                                       _showLocalFilteredResults(value.trim());
                                     }
                                     // Immediate dispatch to ensure backend receives search_value
-                                    final queryValue = value.trim().toLowerCase();
-                                    final isSales =
-                                        selectedBookingType == BookingType.sales;
+                                    final queryValue =
+                                        value.trim().toLowerCase();
+                                    final isSales = selectedBookingType ==
+                                        BookingType.sales;
                                     final serviceIdToUse =
                                         (selectedServiceId == null ||
                                                 selectedServiceId == -1)
@@ -2887,8 +2890,7 @@ int _calculateRentalDays() {
                           constraints: const BoxConstraints(maxHeight: 450),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            border:
-                                Border.all(color: Colors.grey.shade200),
+                            border: Border.all(color: Colors.grey.shade200),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Column(
@@ -2915,8 +2917,7 @@ int _calculateRentalDays() {
                                           SizedBox(
                                             width: 12,
                                             height: 12,
-                                            child:
-                                                CircularProgressIndicator(
+                                            child: CircularProgressIndicator(
                                               strokeWidth: 1.5,
                                               color: Colors.grey.shade500,
                                             ),
@@ -2958,8 +2959,8 @@ int _calculateRentalDays() {
                               // ── Body ────────────────────────────────────
                               if (isLoading)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 36),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 36),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -3015,16 +3016,15 @@ int _calculateRentalDays() {
                                 Flexible(
                                   child: ListView.separated(
                                     shrinkWrap: true,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 4),
                                     itemCount: productList.length,
                                     separatorBuilder: (_, __) => Divider(
                                       height: 1,
                                       color: Colors.grey.shade200,
                                     ),
                                     itemBuilder: (_, i) =>
-                                        _buildOverlaySearchItem(
-                                            productList[i]),
+                                        _buildOverlaySearchItem(productList[i]),
                                   ),
                                 ),
                             ],
@@ -3760,16 +3760,19 @@ int _calculateRentalDays() {
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final isSaleType = selectedBookingType == BookingType.sales;
-              final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
+              final summaryRentalDays =
+                  !isSaleType ? _calculateRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
                 (sum, product) {
                   // Only multiply by days for qualifying service types
-                  final daysMultiplier =
-                      (!isSaleType && _shouldMultiplyByDays(product.variant.mainServiceType))
-                          ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-                          : 1;
-                  return sum + (product.amount * product.quantity * daysMultiplier);
+                  final daysMultiplier = (!isSaleType &&
+                          _shouldMultiplyByDays(
+                              product.variant.mainServiceType))
+                      ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
+                      : 1;
+                  return sum +
+                      (product.amount * product.quantity * daysMultiplier);
                 },
               );
               final additionalTotal = additionalCharges.fold<int>(
@@ -4070,7 +4073,9 @@ int _calculateRentalDays() {
 
               // Validate amount
               if (amount == null || amount <= 0) {
-                context.showSnackBar('Please enter a valid amount greater than 0', isError: true);
+                context.showSnackBar(
+                    'Please enter a valid amount greater than 0',
+                    isError: true);
                 return;
               }
 
@@ -4464,7 +4469,8 @@ int _calculateRentalDays() {
                                 final days = index + 1;
                                 return DropdownMenuItem(
                                   value: days,
-                                  child: Text('$days day${days > 1 ? 's' : ''}'),
+                                  child:
+                                      Text('$days day${days > 1 ? 's' : ''}'),
                                 );
                               }),
                             ],
