@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -22,7 +22,7 @@ class SaveProductCubit extends Cubit<SaveProductState> {
       log('SaveProductCubit: Saving product with ID: ${product.productId}');
       log('SaveProductCubit: Product name: ${product.name}');
       log('SaveProductCubit: Is editing: ${product.productId != null}');
-      
+
       await _repository.saveProduct(
         product: product,
       );

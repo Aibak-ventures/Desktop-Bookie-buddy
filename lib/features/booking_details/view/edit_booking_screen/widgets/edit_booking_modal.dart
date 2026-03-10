@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';

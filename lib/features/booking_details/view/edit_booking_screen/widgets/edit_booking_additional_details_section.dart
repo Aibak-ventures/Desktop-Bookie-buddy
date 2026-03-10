@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_section_column.dart';
 import 'package:flutter/material.dart';

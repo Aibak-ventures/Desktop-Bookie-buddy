@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';

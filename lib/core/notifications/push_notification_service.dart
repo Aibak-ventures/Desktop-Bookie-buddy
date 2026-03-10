@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';

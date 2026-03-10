@@ -1,7 +1,7 @@
 // import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/navigation/navigations.dart';
 import 'package:bookie_buddy_web/core/theme/app_theme.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';

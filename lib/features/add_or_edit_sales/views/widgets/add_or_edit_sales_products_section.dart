@@ -1,6 +1,6 @@
 import 'dart:developer';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
 import 'package:bookie_buddy_web/features/change_password/repository/change_password_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,7 +13,10 @@ part 'reset_password_bloc.freezed.dart';
 class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
   final ChangePasswordRepository _repository =
       getIt<ChangePasswordRepository>();
-  ResetPasswordBloc({required AuthRepository authRepository, required changePasswordRepository}) : super(const _Initial()) {
+  ResetPasswordBloc(
+      {required AuthRepository authRepository,
+      required changePasswordRepository})
+      : super(const _Initial()) {
     on<_ResetPassword>(_onResetPassword);
   }
 

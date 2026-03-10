@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';

@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/invoice_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';

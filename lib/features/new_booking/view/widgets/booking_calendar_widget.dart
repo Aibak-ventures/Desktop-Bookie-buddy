@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';

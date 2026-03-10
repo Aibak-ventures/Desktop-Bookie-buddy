@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';

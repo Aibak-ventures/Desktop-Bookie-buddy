@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

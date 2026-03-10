@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 // import 'package:bookie_buddy_web/core/constants/enums/enums.dart' show SecretPasswordLocations;
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
     hide UserPasswordSettingRole;

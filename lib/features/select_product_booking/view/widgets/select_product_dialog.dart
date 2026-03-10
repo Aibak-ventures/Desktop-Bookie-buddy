@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';

@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
 import 'package:firebase_core/firebase_core.dart';

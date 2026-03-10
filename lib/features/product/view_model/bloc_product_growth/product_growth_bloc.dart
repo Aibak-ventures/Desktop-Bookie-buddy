@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

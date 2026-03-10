@@ -1,7 +1,7 @@
 import 'dart:developer' show log;
 
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/repositories/expense_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';

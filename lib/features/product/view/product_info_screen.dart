@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';

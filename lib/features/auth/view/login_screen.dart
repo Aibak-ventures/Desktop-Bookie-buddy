@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/app_input_validators.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';

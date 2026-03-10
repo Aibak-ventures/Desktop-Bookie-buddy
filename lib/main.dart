@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/my_app.dart';
@@ -16,9 +16,10 @@ void main() async {
   // Suppress known Flutter keyboard errors on Windows
   FlutterError.onError = (FlutterErrorDetails details) {
     // Filter out the RawKeyboard assertion error which is a known framework issue
-    final isKeyboardError = details.exception.toString().contains('RawKeyDownEvent') ||
-        details.exception.toString().contains('_keysPressed.isNotEmpty');
-    
+    final isKeyboardError =
+        details.exception.toString().contains('RawKeyDownEvent') ||
+            details.exception.toString().contains('_keysPressed.isNotEmpty');
+
     if (!isKeyboardError) {
       // Report all other errors normally
       FlutterError.presentError(details);
@@ -46,7 +47,7 @@ void main() async {
     await windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
-     
+
       // Additional window manager options (uncomment as needed):
 
       // 1. Disable minimize button:

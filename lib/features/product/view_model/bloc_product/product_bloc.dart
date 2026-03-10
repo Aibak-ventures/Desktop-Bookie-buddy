@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
