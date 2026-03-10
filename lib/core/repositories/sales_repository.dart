@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.d
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/core/services/sales_service.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';
 
 class SalesRepository {

@@ -50,7 +50,7 @@ import 'web_helper_stub.dart' if (dart.library.html) 'web_helper_web.dart'
     as web_helper;
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/select_date_failure_dialog.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
-import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
+import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';

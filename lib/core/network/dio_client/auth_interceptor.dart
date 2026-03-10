@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/core/services/auth_service.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';

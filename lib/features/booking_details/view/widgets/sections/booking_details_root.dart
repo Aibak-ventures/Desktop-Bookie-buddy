@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/utils/open_external_applications.dart';
+import 'package:bookie_buddy_web/utils/open_external_applications.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_client_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_date_section.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_documents_section.dart';

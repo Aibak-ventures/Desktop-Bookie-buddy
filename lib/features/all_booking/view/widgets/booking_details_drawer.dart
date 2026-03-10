@@ -33,7 +33,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
-import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
+import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 

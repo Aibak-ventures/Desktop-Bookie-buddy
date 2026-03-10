@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/services/client_services.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 
 class ClientRepository {

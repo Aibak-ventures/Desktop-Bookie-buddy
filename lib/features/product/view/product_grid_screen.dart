@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/utils/responsive_screen_mixin.dart';
+import 'package:bookie_buddy_web/utils/responsive_screen_mixin.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/product_card.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/product/view/product_info_screen.dart';

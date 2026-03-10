@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/core/utils/download_file_from_url.dart';
+import 'package:bookie_buddy_web/utils/download_file_from_url.dart';
 
 class LedgerService {
   Future<CustomResponseModel> fetchDataForInvoicePdf({

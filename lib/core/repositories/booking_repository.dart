@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booki
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/services/booking_service.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';

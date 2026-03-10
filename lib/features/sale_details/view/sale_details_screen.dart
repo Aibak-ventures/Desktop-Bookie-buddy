@@ -23,7 +23,7 @@ import 'package:bookie_buddy_web/features/sale_details/view/widgets/sale_details
 import 'package:bookie_buddy_web/features/sale_details/view/widgets/sale_details_payment_details_row.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/widgets/sale_details_section.dart';
 import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
-import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
+import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

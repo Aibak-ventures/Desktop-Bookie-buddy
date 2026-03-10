@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/services/expense_service.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_expense_grouped_model/ledger_expense_grouped_model.dart';
 import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';
 

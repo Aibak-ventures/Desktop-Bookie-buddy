@@ -17,7 +17,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/product_search_field_widget.dart';
-import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
+import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_product_search/product_search_cubit.dart';
 import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
 import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';

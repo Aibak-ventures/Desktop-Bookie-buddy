@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.d
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_action_service.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_query_service.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
 import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';

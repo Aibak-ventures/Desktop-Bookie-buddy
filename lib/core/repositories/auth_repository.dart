@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/services/auth_service.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 
 class AuthRepository {
   final AuthService _authService;

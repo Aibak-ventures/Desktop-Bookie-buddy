@@ -9,8 +9,8 @@ import 'package:bookie_buddy_web/core/models/booking_details_model/booking_detai
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
-import 'package:bookie_buddy_web/core/utils/download_file.dart';
-import 'package:bookie_buddy_web/core/utils/share_file.dart';
+import 'package:bookie_buddy_web/utils/download_file.dart';
+import 'package:bookie_buddy_web/utils/share_file.dart';
 import 'package:bookie_buddy_web/utils/get_pdf_image_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;

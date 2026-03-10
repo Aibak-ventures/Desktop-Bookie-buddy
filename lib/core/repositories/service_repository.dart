@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
 import 'package:bookie_buddy_web/core/services/service_api.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 
 class ServiceRepository {
   final ServiceApi _serviceApi;

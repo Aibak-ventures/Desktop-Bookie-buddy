@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
+import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 
 class ResponsiveWidget extends StatelessWidget {

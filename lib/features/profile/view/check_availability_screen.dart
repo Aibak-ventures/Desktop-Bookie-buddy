@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/show_custom_bottom_sheet.dart';
-import 'package:bookie_buddy_web/core/utils/responsive_helper.dart';
+import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/features/home/models/dashboard_model/dashboard_model.dart';
 import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';

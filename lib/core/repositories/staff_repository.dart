@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/core/models/staff_details_model/staff_details_m
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/models/staff_request_model/staff_request_model.dart';
 import 'package:bookie_buddy_web/core/services/staff_service.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/staff/staff_analytics_model/staff_analytics_model.dart';
 
 class StaffRepository {

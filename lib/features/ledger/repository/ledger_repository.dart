@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/invoice_enums.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/ledger/models/daily_summary_model/daily_summary_model.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_bookings_grouped_model/ledger_bookings_grouped_model.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_invoice_entry_model/ledger_invoice_entry_model.dart';
