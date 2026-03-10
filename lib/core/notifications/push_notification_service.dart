@@ -16,7 +16,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../features/booking_details/view/booking_details_screen.dart';
-import '../navigation/navigations.dart';
+import '../routing/app_router.dart';
 import 'firebase_notification_manager.dart';
 
 /// Handles push + local notification setup & routing.

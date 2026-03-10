@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:bookie_buddy_web/core/models/bug_report_model/bug_report_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/navigation/navigations.dart';
+import 'package:bookie_buddy_web/core/routing/app_router.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/profile/view_model/cubit_bug_report/bug_report_cubit.dart';
 import 'package:feedback/feedback.dart';
@@ -34,7 +34,7 @@ class ReportProblemScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 flushbarPosition: FlushbarPosition.TOP,
               ).show(navigatorKey.currentContext!);
-              
+
               // Go back after showing success
               Future.delayed(const Duration(seconds: 1), () {
                 Navigator.of(context).pop();
@@ -75,7 +75,7 @@ class ReportProblemScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Instructions card
               Container(
                 padding: const EdgeInsets.all(16),
@@ -124,9 +124,9 @@ class ReportProblemScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Start bug report button
               Center(
                 child: ElevatedButton.icon(
@@ -149,9 +149,9 @@ class ReportProblemScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Additional info
               Center(
                 child: Text(
@@ -210,12 +210,13 @@ class ReportProblemScreen extends StatelessWidget {
 
         // Create bug report model
         final bugReport = BugReportModel(
-          title: feedback.text.isEmpty 
-              ? 'Bug Report - ${DateTime.now()}' 
+          title: feedback.text.isEmpty
+              ? 'Bug Report - ${DateTime.now()}'
               : feedback.text,
           description: feedback.text,
           moreDetails: moreDetails,
-          image1: feedback.screenshot.toString(), // Screenshot from BetterFeedback
+          image1:
+              feedback.screenshot.toString(), // Screenshot from BetterFeedback
           image2: null,
         );
 

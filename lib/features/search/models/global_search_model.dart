@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
+import 'package:bookie_buddy_web/core/routing/app_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'global_search_model.freezed.dart';

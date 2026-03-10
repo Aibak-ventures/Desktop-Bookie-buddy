@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/navigation/navigations.dart';
+import 'package:bookie_buddy_web/core/routing/app_router.dart';
 import 'package:bookie_buddy_web/features/in_app_update/services/in_app_update_service.dart';
 import 'package:bookie_buddy_web/features/in_app_update/view/show_ios_app_update_dialog.dart';
 import 'package:flutter/foundation.dart';

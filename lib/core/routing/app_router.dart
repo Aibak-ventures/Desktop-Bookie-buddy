@@ -9,10 +9,9 @@ import 'package:bookie_buddy_web/core/models/expense_model/expense_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
-import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
+import 'package:bookie_buddy_web/core/routing/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/screens/success_animation_screen.dart';
-// import 'package:bookie_buddy_web/core/ui/screens/transfer_animation_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
@@ -111,7 +110,7 @@ final GlobalKey<NavigatorState> _subNavKey = GlobalKey<NavigatorState>();
 ///   context.pop();
 /// }
 ///```
-class Navigations {
+class AppRouter {
   static final router = GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: AppRoutes.splash.path,

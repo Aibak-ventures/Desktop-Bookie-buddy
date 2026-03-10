@@ -2,7 +2,7 @@
 import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/navigation/navigations.dart';
+import 'package:bookie_buddy_web/core/routing/app_router.dart';
 import 'package:bookie_buddy_web/core/theme/app_theme.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
@@ -14,7 +14,6 @@ import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_add_booking/add_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_client_save/client_save_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
-// import 'package:bookie_buddy_web/features/add_booking/view_model/cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/view_model/bloc_auth/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
@@ -76,8 +75,7 @@ class MyApp extends StatelessWidget {
           create: (context) => StaffListBloc(repository: getIt.get())
             ..add(const StaffListEvent.loadStaffs()),
         ),
-        BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit()),
+        BlocProvider(create: (context) => BookingDetailsPaymentHistoryCubit()),
         BlocProvider(create: (context) => ProductBloc()),
         BlocProvider(
             create: (context) => StaffSearchCubit(repository: getIt.get())),
@@ -120,11 +118,11 @@ class MyApp extends StatelessWidget {
           return MediaQuery(
             data: MediaQuery.of(context).copyWith(
               size: Size(
-                MediaQuery.of(context).size.width < 1280 
-                    ? 1280 
+                MediaQuery.of(context).size.width < 1280
+                    ? 1280
                     : MediaQuery.of(context).size.width,
-                MediaQuery.of(context).size.height < 720 
-                    ? 720 
+                MediaQuery.of(context).size.height < 720
+                    ? 720
                     : MediaQuery.of(context).size.height,
               ),
             ),

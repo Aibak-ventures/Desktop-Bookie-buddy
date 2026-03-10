@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/navigation/navigations.dart';
+import 'package:bookie_buddy_web/core/routing/app_router.dart';
 import 'package:flutter/material.dart';
 
 void CustomSnackBar({
