@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';

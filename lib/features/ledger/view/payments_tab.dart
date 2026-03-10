@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/invoice_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_sized_box.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
@@ -67,7 +67,7 @@ class _PaymentsTabState extends State<PaymentsTab> {
     // Cache screen height and AppBar height
     _screenHeight ??= context.screenHeight.toDouble();
     _appBarHeight ??= _calculateAppBarHeight();
-    
+
     log('🔍 Checking visible section. Keys count: ${_groupKeysWithTotal.length}');
 
     String? targetDate;
@@ -173,7 +173,7 @@ class _PaymentsTabState extends State<PaymentsTab> {
                   log('    💰 Payment: ${payment.clientName} - ${payment.paymentAmount}');
                 }
               }
-              
+
               if (paymentList.isEmpty) {
                 return const EmptyDataWidget(
                   message: 'No payments',

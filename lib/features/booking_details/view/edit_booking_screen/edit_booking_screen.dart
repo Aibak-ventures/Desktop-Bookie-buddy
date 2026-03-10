@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';

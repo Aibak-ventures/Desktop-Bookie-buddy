@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/services/auth_service.dart';
 import 'package:bookie_buddy_web/core/services/secure_action_auth_session_manager.dart';

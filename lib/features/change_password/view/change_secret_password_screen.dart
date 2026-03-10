@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/change_password/view_model/bloc_secret_password/secret_password_bloc.dart';

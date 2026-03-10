@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 

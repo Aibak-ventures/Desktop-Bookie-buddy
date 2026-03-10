@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_month_and_year_picker.dart';
 import 'package:bookie_buddy_web/features/staff/staff_analytics_model/staff_analytics_model.dart';

@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view/widgets/add_old_booking_section.dart';
 import 'package:flutter/material.dart';

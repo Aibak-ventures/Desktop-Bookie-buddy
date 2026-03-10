@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

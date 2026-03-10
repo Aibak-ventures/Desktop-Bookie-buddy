@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/controller/edit_booking_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_section_column.dart';

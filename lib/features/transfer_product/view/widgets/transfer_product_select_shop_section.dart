@@ -1,6 +1,6 @@
 import 'dart:developer';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/shop_model/shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';

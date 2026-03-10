@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
@@ -196,10 +196,12 @@ class CompletedBookingsScreen extends StatelessWidget {
                                               final bookingCubit = context
                                                   .read<BookingSelectionCubit>()
                                                 ..selectBooking(booking);
-                                               final result = await Navigator.push(
+                                              final result =
+                                                  await Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => BookingDetailsScreen(
+                                                  builder: (context) =>
+                                                      BookingDetailsScreen(
                                                     bookingId: booking.id!,
                                                   ),
                                                 ),

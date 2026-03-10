@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
-import 'package:bookie_buddy_web/core/error/exceptions/product_exceptions.dart';
+import 'package:bookie_buddy_web/utils/error/exceptions/product_exceptions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';

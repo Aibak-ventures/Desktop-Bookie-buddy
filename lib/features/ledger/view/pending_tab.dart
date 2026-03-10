@@ -1,6 +1,5 @@
-
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
@@ -72,35 +71,34 @@ class PendingTab extends StatelessWidget {
                       }
                       final groupedData = walletPending[index];
 
-                     return Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        groupedData.date.getDateHeading(),
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    ),
-
-    ListTile(
-      leading: const Icon(Icons.access_time),
-      title: const Text('Pending Customers'),
-      subtitle: Text('Return date: ${groupedData.date}'),
-      trailing: Text(
-        groupedData.total.toString(),
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ],
-);
-
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Text(
+                              groupedData.date.getDateHeading(),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.access_time),
+                            title: const Text('Pending Customers'),
+                            subtitle: Text('Return date: ${groupedData.date}'),
+                            trailing: Text(
+                              groupedData.total.toString(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
                     },
                   ),
                 ),

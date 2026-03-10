@@ -8,10 +8,10 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';

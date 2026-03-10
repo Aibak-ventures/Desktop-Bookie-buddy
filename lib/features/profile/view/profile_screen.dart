@@ -4,8 +4,8 @@ import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart'
     show SecretPasswordLocations;
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/navigation/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';

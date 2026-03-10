@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -332,23 +332,20 @@ class _SalesListScreenState extends State<SalesListScreen> {
       //   AppRoutes.saleDetails.name,
       //   pathParameters: {'id': sale.id.toString()},
       // );
-  final result = await Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => BlocProvider(
-      create: (_) => SaleDetailsBloc(repository: getIt.get())
-        ..add(SaleDetailsEvent.getSaleDetails(saleId:  sale.id)),
-      child: SaleDetailsScreen(saleId: sale.id),
-    ),
-  ),
-);
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (_) => SaleDetailsBloc(repository: getIt.get())
+              ..add(SaleDetailsEvent.getSaleDetails(saleId: sale.id)),
+            child: SaleDetailsScreen(saleId: sale.id),
+          ),
+        ),
+      );
 
-
-
-if (result == true) {
-  _fetchData(context); // refresh data
-}
-
+      if (result == true) {
+        _fetchData(context); // refresh data
+      }
     } catch (e, stack) {
       log(
         'Error occurred while navigating to sale details: $e',

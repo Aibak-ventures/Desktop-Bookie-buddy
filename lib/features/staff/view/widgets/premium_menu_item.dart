@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';

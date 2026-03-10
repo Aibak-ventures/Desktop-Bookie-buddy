@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 /// This file contains all the enums used in the app

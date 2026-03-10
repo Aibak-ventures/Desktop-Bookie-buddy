@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/models/all_shop_summary_model/all_shop_summary_model.dart';
@@ -97,7 +97,7 @@ class AllShopSummaryScreen extends StatelessWidget {
                           // Shop Performance Section
                           Row(
                             children: [
-                               Icon(
+                              Icon(
                                 Icons.store_mall_directory_outlined,
                                 color: AppColors.black87,
                               ),
@@ -129,13 +129,15 @@ class AllShopSummaryScreen extends StatelessWidget {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => BlocProvider(
-                                          create: (context) => AllShopSummaryCubit(getIt.get())
-                                            ..fetchAllShopSummary(
-                                              year: DateTime.now().year,
-                                              month: DateTime.now().month,
-                                              shopId: shop.shopId,
-                                            ),
-                                          child: AllShopSummaryShopDetailsScreen(
+                                          create: (context) =>
+                                              AllShopSummaryCubit(getIt.get())
+                                                ..fetchAllShopSummary(
+                                                  year: DateTime.now().year,
+                                                  month: DateTime.now().month,
+                                                  shopId: shop.shopId,
+                                                ),
+                                          child:
+                                              AllShopSummaryShopDetailsScreen(
                                             shopId: shop.shopId,
                                           ),
                                         ),

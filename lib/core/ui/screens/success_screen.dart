@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_sized_box.dart';
 import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
 import 'package:flutter/material.dart';

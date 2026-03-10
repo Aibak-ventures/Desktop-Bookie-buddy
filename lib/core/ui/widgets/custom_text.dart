@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 
 class CustomText extends StatelessWidget {

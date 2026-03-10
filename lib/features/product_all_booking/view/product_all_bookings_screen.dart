@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view/product_booking_completed_tab.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view/product_booking_upcoming_tab.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_upcoming/product_booking_upcoming_bloc.dart';

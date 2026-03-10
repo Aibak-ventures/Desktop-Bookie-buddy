@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';

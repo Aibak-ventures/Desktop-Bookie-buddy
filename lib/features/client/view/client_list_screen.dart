@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';
@@ -160,28 +160,26 @@ class _ClientListViewState extends State<_ClientListView> {
               // 📋 Client list
               Expanded(
                 child: BlocConsumer<ClientListBloc, ClientListState>(
-         listener: (context, state) {
-  state.maybeMap(
-    success: (value) {
-      context.showSnackBar(
-        value.message,
-        isError: false,
-      );
-      if (value.needRefresh) {
-        _fetchData(context);
-      }
-    },
-    error: (value) {
-      context.showSnackBar(
-        value.error,
-        isError: true,
-      );
-    },
-    orElse: () {},
-  );
-},
-
-
+                  listener: (context, state) {
+                    state.maybeMap(
+                      success: (value) {
+                        context.showSnackBar(
+                          value.message,
+                          isError: false,
+                        );
+                        if (value.needRefresh) {
+                          _fetchData(context);
+                        }
+                      },
+                      error: (value) {
+                        context.showSnackBar(
+                          value.error,
+                          isError: true,
+                        );
+                      },
+                      orElse: () {},
+                    );
+                  },
                   builder: (context, state) {
                     return state.maybeWhen(
                       loading: () => const Center(

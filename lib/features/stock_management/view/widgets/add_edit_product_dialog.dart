@@ -1,8 +1,7 @@
-
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -49,14 +48,14 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _descriptionController = TextEditingController();
   final _lengthController = TextEditingController(); // For materials
   final _fabricTypeController = TextEditingController(); // For materials
-  
+
   // Vehicle-specific fields
   final _registrationNumberController = TextEditingController();
   final _pollutionExpiryController = TextEditingController();
   final _insuranceExpiryController = TextEditingController();
   final _fitnessExpiryController = TextEditingController();
   final _barcodeController = TextEditingController();
-  
+
   final _imageNotifier = ValueNotifier<XFile?>(null);
   final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
 
@@ -113,7 +112,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           if (product != null) {
             _nameController.text = product.name;
             // Set stock/unit field based on service type
-            if (mainServiceType != null && !mainServiceType!.needsVariantsSection) {
+            if (mainServiceType != null &&
+                !mainServiceType!.needsVariantsSection) {
               _stockController.text = product.variants.isNotEmpty
                   ? product.variants.first.stock.toString()
                   : '';
@@ -130,13 +130,17 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             // Vehicle-specific fields initialization (read from attributes if needed)
             _registrationNumberController.text =
                 product.effectiveRegistrationNumber ?? '';
-            _pollutionExpiryController.text = product.effectivePollutionExpiry ?? '';
-            _insuranceExpiryController.text = product.effectiveInsuranceExpiry ?? '';
-            _fitnessExpiryController.text = product.effectiveFitnessExpiry ?? '';
+            _pollutionExpiryController.text =
+                product.effectivePollutionExpiry ?? '';
+            _insuranceExpiryController.text =
+                product.effectiveInsuranceExpiry ?? '';
+            _fitnessExpiryController.text =
+                product.effectiveFitnessExpiry ?? '';
             _barcodeController.text = product.effectiveBarcode ?? '';
 
             // Load existing variants for edit mode
-            if (mainServiceType!.needsVariantsSection && product.variants.isNotEmpty) {
+            if (mainServiceType!.needsVariantsSection &&
+                product.variants.isNotEmpty) {
               variantsNotifier.value = List.from(product.variants);
             }
           }
@@ -828,7 +832,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: AppColors.purple, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       onTap: () async {
         final DateTime? pickedDate = await showDatePicker(

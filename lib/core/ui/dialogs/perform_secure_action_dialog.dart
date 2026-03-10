@@ -4,13 +4,14 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 // import 'package:bookie_buddy_web/core/constants/enums/enums.dart' show SecretPasswordLocations;
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
+    hide UserPasswordSettingRole;
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart' hide ShopRole;
-    // show SecretPasswordLocations;
+// show SecretPasswordLocations;
 
 // import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
 import 'package:bookie_buddy_web/core/services/secure_action_auth_session_manager.dart';
@@ -41,7 +42,6 @@ bool _roleCheck(UserPasswordSettingsModel? settings, ShopRole shopRole) {
       return true;
   }
 }
-
 
 // Main function to handle any action that requires authentication
 Future<void> performSecureActionDialog(
@@ -162,7 +162,7 @@ void _verifyPasswordThenPerformActionDialog(
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Title
                     Text(
                       'Secret Password',
@@ -174,7 +174,7 @@ void _verifyPasswordThenPerformActionDialog(
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
-                    
+
                     // Subtitle
                     Text(
                       'Enter your password to continue',
@@ -185,7 +185,7 @@ void _verifyPasswordThenPerformActionDialog(
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Password Field
                     CustomTextField(
                       hintText: 'Enter Password',
@@ -216,7 +216,7 @@ void _verifyPasswordThenPerformActionDialog(
                       },
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Action Buttons
                     Row(
                       children: [

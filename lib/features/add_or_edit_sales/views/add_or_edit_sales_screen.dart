@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
@@ -133,7 +133,8 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
 
                   // ---- WhatsApp & Stock Checkboxes ----
                   ValueListenableBuilder(
-                    valueListenable: _formController.isSharingPdfToWhatsAppNotifier,
+                    valueListenable:
+                        _formController.isSharingPdfToWhatsAppNotifier,
                     builder: (context, isSharingPdf, __) => Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -147,30 +148,38 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                           CheckboxListTile(
                             value: isSharingPdf,
                             onChanged: (value) {
-                              _formController.isSharingPdfToWhatsAppNotifier.value = value ?? false;
+                              _formController.isSharingPdfToWhatsAppNotifier
+                                  .value = value ?? false;
                             },
                             activeColor: AppColors.purple,
                             title: const Text(
                               'Send PDF to WhatsApp',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w500),
                             ),
                             contentPadding: EdgeInsets.zero,
                             controlAffinity: ListTileControlAffinity.leading,
                           ),
-                          
+
                           // Decrease Stock checkbox - only show for past dates
                           ValueListenableBuilder(
-                            valueListenable: _formController.stockCountDecreaseNotifier,
+                            valueListenable:
+                                _formController.stockCountDecreaseNotifier,
                             builder: (context, stockCountDecrease, __) {
                               // Check if selected date is in the past
-                              final saleDateText = _formController.saleDateController.text;
+                              final saleDateText =
+                                  _formController.saleDateController.text;
                               bool isPastDate = false;
                               if (saleDateText.isNotEmpty) {
                                 try {
-                                  final saleDate = saleDateText.formatToUiDate().parseToDateTime();
+                                  final saleDate = saleDateText
+                                      .formatToUiDate()
+                                      .parseToDateTime();
                                   final today = DateTime.now();
-                                  final todayDate = DateTime(today.year, today.month, today.day);
-                                  final selectedDate = DateTime(saleDate.year, saleDate.month, saleDate.day);
+                                  final todayDate = DateTime(
+                                      today.year, today.month, today.day);
+                                  final selectedDate = DateTime(saleDate.year,
+                                      saleDate.month, saleDate.day);
                                   isPastDate = selectedDate.isBefore(todayDate);
                                 } catch (e) {
                                   isPastDate = false;
@@ -190,7 +199,8 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                                       border: Border.all(color: Colors.white),
                                     ),
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Icon(
                                           Icons.info_outline,
@@ -200,12 +210,15 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                                         const SizedBox(width: 8),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               CheckboxListTile(
                                                 value: stockCountDecrease,
                                                 onChanged: (value) {
-                                                  _formController.stockCountDecreaseNotifier.value = value ?? true;
+                                                  _formController
+                                                      .stockCountDecreaseNotifier
+                                                      .value = value ?? true;
                                                 },
                                                 activeColor: AppColors.purple,
                                                 title: const Text(
@@ -217,10 +230,13 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                                                 ),
                                                 subtitle: const Text(
                                                   'If unchecked, the stock quantity will not be decreased from the inventory',
-                                                  style: TextStyle(fontSize: 12),
+                                                  style:
+                                                      TextStyle(fontSize: 12),
                                                 ),
                                                 contentPadding: EdgeInsets.zero,
-                                                controlAffinity: ListTileControlAffinity.leading,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
                                               ),
                                             ],
                                           ),
@@ -309,13 +325,14 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                           label: 'Discount Amount (Optional)',
                           prefixIcon: const Icon(Icons.currency_rupee),
                           keyboardType: TextInputType.number,
-                          validator: (value) => AppInputValidators.isEmpty(value)
-                              ? null
-                              : AppInputValidators.amount(
-                                  value,
-                                  allowZero: true,
-                                  fieldName: 'Discount',
-                                ),
+                          validator: (value) =>
+                              AppInputValidators.isEmpty(value)
+                                  ? null
+                                  : AppInputValidators.amount(
+                                      value,
+                                      allowZero: true,
+                                      fieldName: 'Discount',
+                                    ),
                         ),
                       ],
                     ),
@@ -334,8 +351,7 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
                                 _formController.selectedProductsNotifier.value;
                             final discountText =
                                 _formController.discountController.text;
-                            final total =
-                                products.fold<int>(
+                            final total = products.fold<int>(
                                   0,
                                   (pv, e) =>
                                       pv + (e.variant.quantity * e.amount),
@@ -506,11 +522,10 @@ class _AddOrEditSalesScreenState extends State<AddOrEditSalesScreen> {
     if (original == null) {
       final anyClientInput =
           _formController.clientPhoneController.text.trim().isNotEmpty;
-      final anyOther =
-          _formController.placeController.text.trim().isNotEmpty ||
-              _formController.descriptionController.text.trim().isNotEmpty ||
-              discountText.isNotEmpty ||
-              products.isNotEmpty;
+      final anyOther = _formController.placeController.text.trim().isNotEmpty ||
+          _formController.descriptionController.text.trim().isNotEmpty ||
+          discountText.isNotEmpty ||
+          products.isNotEmpty;
       // Sale date controller is always set (today) so ignore that.
       return anyClientInput || anyOther;
     }

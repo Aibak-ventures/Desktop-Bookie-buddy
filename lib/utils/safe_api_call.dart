@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/error/exceptions/product_exceptions.dart';
+import 'package:bookie_buddy_web/utils/error/exceptions/product_exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 

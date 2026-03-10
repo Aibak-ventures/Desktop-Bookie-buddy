@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:flutter/material.dart';
@@ -51,10 +51,12 @@ class BookingPaymentHistoryTile extends StatelessWidget {
     for (final refund in refunds) {
       if (refund is Map<String, dynamic>) {
         // Try 'refunded_amount' first (from API), then fallback to 'amount'
-        final dynamic refundAmountRaw = refund['refunded_amount'] ?? refund['amount'] ?? 0;
+        final dynamic refundAmountRaw =
+            refund['refunded_amount'] ?? refund['amount'] ?? 0;
         final int amount = refundAmountRaw is num ? refundAmountRaw.toInt() : 0;
         // API uses 'refund_method' for refunds
-        final paymentMethodStr = refund['refund_method'] ?? refund['payment_method'] ?? 'cash';
+        final paymentMethodStr =
+            refund['refund_method'] ?? refund['payment_method'] ?? 'cash';
         final dateTime = refund['created_at'] ?? refund['datetime'] ?? '';
 
         transactions.add(TransactionEntry(

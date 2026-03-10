@@ -1,5 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -63,14 +63,18 @@ class _CalenderWidgetState extends State<CalenderWidget> {
           calendarStyle: const CalendarStyle(
             outsideDaysVisible: false,
             todayTextStyle: TextStyle(color: AppColors.green, fontSize: 11),
-            rangeStartDecoration: BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
-            rangeEndDecoration: BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
-            withinRangeDecoration: BoxDecoration(color: AppColors.purpleLight, shape: BoxShape.circle),
+            rangeStartDecoration:
+                BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+            rangeEndDecoration:
+                BoxDecoration(color: AppColors.purple, shape: BoxShape.circle),
+            withinRangeDecoration: BoxDecoration(
+                color: AppColors.purpleLight, shape: BoxShape.circle),
           ),
           headerStyle: const HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
-            titleTextStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            titleTextStyle:
+                TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
           daysOfWeekStyle: const DaysOfWeekStyle(
             weekdayStyle: TextStyle(fontSize: 10),

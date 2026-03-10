@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
@@ -29,8 +29,9 @@ import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/
 class ProductDetailsScreen extends StatefulWidget {
   final int productId;
   final int? serviceId; // Service ID passed from navigation
-final MainServiceType? mainServiceType;
-final ProductModel? productForEdit; // Optional product model for direct data access
+  final MainServiceType? mainServiceType;
+  final ProductModel?
+      productForEdit; // Optional product model for direct data access
   const ProductDetailsScreen({
     super.key,
     required this.productId,
@@ -53,23 +54,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    
+
     // Listen to tab changes and reload bookings with the appropriate status
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         final newStatus = _tabController.index == 0 ? 'upcoming' : 'completed';
         if (newStatus != _currentBookingStatus) {
           _currentBookingStatus = newStatus;
-          context
-              .read<ProductDetailsCubit>()
-              .reloadBookingsWithStatus(widget.productId, _currentBookingStatus);
+          context.read<ProductDetailsCubit>().reloadBookingsWithStatus(
+              widget.productId, _currentBookingStatus);
         }
       }
     });
-    
-    context
-        .read<ProductDetailsCubit>()
-        .loadProductDetails(widget.productId, bookingStatus: _currentBookingStatus);
+
+    context.read<ProductDetailsCubit>().loadProductDetails(widget.productId,
+        bookingStatus: _currentBookingStatus);
   }
 
   @override
@@ -127,7 +126,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                             onPressed: () {
                               context
                                   .read<ProductDetailsCubit>()
-                                  .loadProductDetails(widget.productId, bookingStatus: _currentBookingStatus);
+                                  .loadProductDetails(widget.productId,
+                                      bookingStatus: _currentBookingStatus);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.purple,
@@ -384,7 +384,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                       builder: (context) {
                         int? salePrice;
                         if (product.variants.isNotEmpty) {
-                          salePrice = double.parse(product.salePrice ?? '0').toInt();
+                          salePrice =
+                              double.parse(product.salePrice ?? '0').toInt();
                         }
                         // first.salePrice
                         return Text.rich(
@@ -981,7 +982,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     // Filter out any auto-created single variant whose attribute equals the product name
     final displayVariants = product.variants
         .where((v) =>
-            v.attribute.trim().toLowerCase() != product.name.trim().toLowerCase())
+            v.attribute.trim().toLowerCase() !=
+            product.name.trim().toLowerCase())
         .toList();
 
     if (displayVariants.isEmpty) return [];
@@ -1211,7 +1213,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   Navigator.of(dialogContext).pop();
                   _showDeleteVariantDialog(variant);
                 },
-                child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                child:
+                    const Text('Delete', style: TextStyle(color: Colors.red)),
               ),
               const Spacer(),
               TextButton(
@@ -1220,44 +1223,47 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               ),
               const SizedBox(width: 8),
               ElevatedButton(
-            onPressed: () async {
-              if (formKey.currentState!.validate()) {
-                final attribute = variantAttributeController.text.trim();
-                final quantity =
-                    int.tryParse(variantQuantityController.text.trim()) ?? 0;
-                final externalBarcode = externalBarcodeController.text.trim();
+                onPressed: () async {
+                  if (formKey.currentState!.validate()) {
+                    final attribute = variantAttributeController.text.trim();
+                    final quantity =
+                        int.tryParse(variantQuantityController.text.trim()) ??
+                            0;
+                    final externalBarcode =
+                        externalBarcodeController.text.trim();
 
-                try {
-                  // Update variant
-                  await context
-                      .read<ProductDetailsCubit>()
-                      .updateProductVariant(
-                        productId: widget.productId,
-                        variantId: variant.id,
-                        attribute: attribute,
-                        stock: quantity,
-                        externalQrCode:
-                            externalBarcode.isEmpty ? null : externalBarcode,
-                      );
+                    try {
+                      // Update variant
+                      await context
+                          .read<ProductDetailsCubit>()
+                          .updateProductVariant(
+                            productId: widget.productId,
+                            variantId: variant.id,
+                            attribute: attribute,
+                            stock: quantity,
+                            externalQrCode: externalBarcode.isEmpty
+                                ? null
+                                : externalBarcode,
+                          );
 
-                  if (context.mounted) {
-                    Navigator.of(dialogContext).pop();
-                    context.showSnackBar('Variant updated successfully');
+                      if (context.mounted) {
+                        Navigator.of(dialogContext).pop();
+                        context.showSnackBar('Variant updated successfully');
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        context.showSnackBar('Failed to update variant: $e',
+                            isError: true);
+                      }
+                    }
                   }
-                } catch (e) {
-                  if (context.mounted) {
-                    context.showSnackBar('Failed to update variant: $e',
-                        isError: true);
-                  }
-                }
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.purple,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Save'),
-          ),
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.purple,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Save'),
+              ),
             ],
           ),
         ],
@@ -1317,7 +1323,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-
   /// Show add/edit product dialog (same as stock management screen)
   Future<void> _showAddEditProductDialog(BuildContext context,
       {ProductModel? product}) async {
@@ -1330,7 +1335,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           BlocProvider.value(value: context.read<ServiceBloc>()),
         ],
         child: AddEditProductDialog(
-          serviceId: widget.serviceId ,
+          serviceId: widget.serviceId,
           product: product,
         ),
       ),
@@ -1338,9 +1343,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
     // Refresh product details if a product was edited
     if (result == true && mounted) {
-      context
-          .read<ProductDetailsCubit>()
-          .loadProductDetails(widget.productId, bookingStatus: _currentBookingStatus);
+      context.read<ProductDetailsCubit>().loadProductDetails(widget.productId,
+          bookingStatus: _currentBookingStatus);
     }
   }
 

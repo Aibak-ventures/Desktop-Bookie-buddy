@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -112,34 +112,34 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
           ),
           ...payments.map(
             (payment) => LedgerListTile(
-            onTap: () {
-  if (payment.type == LedgerListType.booking) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => BookingDetailsScreen(
-          bookingId: payment.id,
-        ),
-      ),
-    );
-  } else if (payment.type == LedgerListType.sales) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(
-          create: (_) => SaleDetailsBloc(repository: getIt.get<SalesRepository>())
-            ..add(
-              SaleDetailsEvent.getSaleDetails(
-                saleId: payment.id,
-              ),
-            ),
-          child: SaleDetailsScreen(
-            saleId: payment.id,
-          ),
-        ),
-      ),
-    );
-  }
-},
-
+              onTap: () {
+                if (payment.type == LedgerListType.booking) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => BookingDetailsScreen(
+                        bookingId: payment.id,
+                      ),
+                    ),
+                  );
+                } else if (payment.type == LedgerListType.sales) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider(
+                        create: (_) => SaleDetailsBloc(
+                            repository: getIt.get<SalesRepository>())
+                          ..add(
+                            SaleDetailsEvent.getSaleDetails(
+                              saleId: payment.id,
+                            ),
+                          ),
+                        child: SaleDetailsScreen(
+                          saleId: payment.id,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              },
               icon: Column(
                 children: [
                   payment.paymentMethod.isCash ? AppAssets.cash : AppAssets.upi,

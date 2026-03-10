@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/premium_badge.dart';
 import 'package:bookie_buddy_web/features/staff/staff_analytics_model/staff_analytics_model.dart';

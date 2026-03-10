@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 
 class AppDateUtils {
   /// Returns the short name of the month given by [month].

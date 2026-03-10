@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
@@ -47,9 +47,8 @@ Future<ClientModel?> showAddClientDialog({
                 label: 'Phone Number 1',
               ),
               CustomTextField(
-                validator: (value) => AppInputValidators.isEmpty(value)
-                    ? null
-                    : null,
+                validator: (value) =>
+                    AppInputValidators.isEmpty(value) ? null : null,
                 controller: phone2Controller,
                 label: 'Phone Number 2',
               )

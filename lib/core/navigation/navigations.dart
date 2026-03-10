@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/models/expense_model/expense_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
@@ -603,8 +603,8 @@ class Navigations {
         path: AppRoutes.shopActivities.path,
         name: AppRoutes.shopActivities.name,
         builder: (context, state) => BlocProvider(
-          create: (context) =>
-              ShopActivityLogCubit(ShopActivityRepository())..loadShopActivities(),
+          create: (context) => ShopActivityLogCubit(ShopActivityRepository())
+            ..loadShopActivities(),
           child: const ShopActivityLogScreen(),
         ),
       ),
@@ -619,7 +619,7 @@ class Navigations {
               year: DateTime.now().year,
               month: DateTime.now().month,
             ),
-          child:  AllShopSummaryScreen(),
+          child: AllShopSummaryScreen(),
         ),
       ),
 

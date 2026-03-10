@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
@@ -241,22 +241,19 @@ class AddOrEditSalesFormStateController {
         id: original.id,
         saleDate: saleDateChanged ? currentSaleDate : null,
         staffId: isStaffChanged ? selectedStaff?.id : null,
-        clientPhone: isClientPhoneChanged
-            ? clientPhoneController.text.trim()
-            : null,
+        clientPhone:
+            isClientPhoneChanged ? clientPhoneController.text.trim() : null,
         address: addressChanged ? placeController.text.trim() : null,
         // Send all current products if products changed OR if any other field changed
         // This prevents partial updates that might clear products
         products: newProducts.isNotEmpty ? newProducts : null,
 
-        description: descriptionChanged
-            ? descriptionController.text.trim()
-            : null,
+        description:
+            descriptionChanged ? descriptionController.text.trim() : null,
         discountAmount: discountChanged ? discountAmount : null,
 
-        paymentMethod: paymentMethodChanged
-            ? paymentMethodNotifier.value
-            : null,
+        paymentMethod:
+            paymentMethodChanged ? paymentMethodNotifier.value : null,
       );
     }
     return SalesRequestModel(

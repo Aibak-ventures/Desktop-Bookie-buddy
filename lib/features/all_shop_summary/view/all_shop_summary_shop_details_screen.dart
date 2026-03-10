@@ -1,9 +1,9 @@
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/custom_icons_icons.dart';
-import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/list_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/models/all_shop_summary_model/all_shop_summary_model.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/view/widgets/all_shop_summary_app_bar_date_change_button.dart';
@@ -37,8 +37,9 @@ class AllShopSummaryShopDetailsScreen extends StatelessWidget {
           loaded: (shopSummary) => shopSummary,
         );
         final shopDetails = allShopSummary.shops.firstWhereOrNull(
-          (e) => e.shopId == shopId,
-        ) ?? AllShopSummaryShopModel.empty();
+              (e) => e.shopId == shopId,
+            ) ??
+            AllShopSummaryShopModel.empty();
 
         // Get the current month data (you can modify this to show different months)
         final currentMonthData = shopDetails.monthlyDetails.isNotEmpty
@@ -176,7 +177,6 @@ class _TotalProfitCard extends StatelessWidget {
               opacity: const AlwaysStoppedAnimation(0.5),
             ),
           ),
-
           Padding(
             padding: 20.padding,
             child: Column(
@@ -259,7 +259,6 @@ class _PerformanceOverview extends StatelessWidget {
                   growth: shopDetails.overallRevenue.profitGrowth,
                 ),
               ),
-
               Padding(
                 padding: 20.paddingHorizontal,
                 child: SizedBox(
@@ -267,7 +266,6 @@ class _PerformanceOverview extends StatelessWidget {
                   child: VerticalDivider(color: AppColors.grey300),
                 ),
               ),
-
               Expanded(
                 child: ShopSummaryPerformanceOverviewMetricCard(
                   icon: Icons.shopping_bag,

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';

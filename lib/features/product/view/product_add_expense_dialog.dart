@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/constants/expense_categories.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_add_expense/add_expense_cubit.dart';
@@ -58,7 +58,7 @@ class _ProductAddExpenseDialogState extends State<ProductAddExpenseDialog> {
     super.initState();
     // Load categories based on service type
     _categories = ExpenseCategories.forService(widget.mainServiceType);
-    
+
     if (widget.id != null) {
       dateController.text = widget.existingDate?.formatToUiDate() ?? '';
       expenseController.text = widget.existingAmount?.toString() ?? '';

@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
@@ -182,9 +182,10 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                           ),
 
                           // Show refund details for cancelled bookings
-                          if (booking.bookingStatus == BookingStatus.cancelled) ...[
+                          if (booking.bookingStatus ==
+                              BookingStatus.cancelled) ...[
                             const Divider(),
-                            
+
                             // Show refunded amount
                             if (booking.totalRefunded > 0)
                               _PaymentDetailsRow(
@@ -192,16 +193,18 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                 amount: booking.totalRefunded.toInt(),
                                 color: Colors.green.shade600,
                               ),
-                            
+
                             // Calculate deducted amount: what was paid but not refunded
-                            if (booking.totalRefunded < booking.actualPaidAmount) ...[
+                            if (booking.totalRefunded <
+                                booking.actualPaidAmount) ...[
                               _PaymentDetailsRow(
                                 title: 'Deducted',
-                                amount: (booking.actualPaidAmount - booking.totalRefunded.toInt()),
+                                amount: (booking.actualPaidAmount -
+                                    booking.totalRefunded.toInt()),
                                 color: Colors.red.shade600,
                               ),
                             ],
-                            
+
                             // Show remaining refundable balance
                             if (booking.refundableBalance > 0)
                               _PaymentDetailsRow(
@@ -211,7 +214,7 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                 fontSize: 15,
                               ),
                           ],
-                          
+
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

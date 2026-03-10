@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/custom_icons_icons.dart';
-import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,9 +34,8 @@ class ShopSummaryPerformanceOverviewMetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPositive = growth >= 0;
-    final growthColor = (negativeColor ? !isPositive : isPositive)
-        ? _greenColor
-        : _redColor;
+    final growthColor =
+        (negativeColor ? !isPositive : isPositive) ? _greenColor : _redColor;
     final growthBgColor = growthColor.changeOpacity(0.1);
 
     return Column(

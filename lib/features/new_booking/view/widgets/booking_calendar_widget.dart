@@ -1,12 +1,12 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 

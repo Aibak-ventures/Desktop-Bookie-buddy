@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
@@ -625,10 +625,14 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
             style: ElevatedButton.styleFrom(
               padding: ResponsiveHelper.getPadding(
                 context,
-                mobile: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                tablet: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                desktop: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                largeDesktop: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                mobile:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                tablet:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                desktop:
+                    const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                largeDesktop:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
             ),
             child: const Text('Retry'),
@@ -777,10 +781,14 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
                       foregroundColor: Colors.white,
                       padding: ResponsiveHelper.getPadding(
                         context,
-                        mobile: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        tablet: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        desktop: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                        largeDesktop: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        mobile: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        tablet: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        desktop: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 14),
+                        largeDesktop: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -985,7 +993,8 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
           mobile: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           tablet: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           desktop: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          largeDesktop: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          largeDesktop:
+              const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         ),
         decoration: BoxDecoration(
           color: AppColors.purple.withValues(alpha: 0.1),

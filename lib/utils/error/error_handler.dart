@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/error/exceptions/auth_exceptions.dart';
-import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
-import 'package:bookie_buddy_web/core/error/exceptions/network_exceptions.dart';
-import 'package:bookie_buddy_web/core/error/failures.dart';
+import 'package:bookie_buddy_web/utils/error/exceptions/auth_exceptions.dart';
+import 'package:bookie_buddy_web/utils/error/exceptions/booking_exceptions.dart';
+import 'package:bookie_buddy_web/utils/error/exceptions/network_exceptions.dart';
+import 'package:bookie_buddy_web/utils/error/failures.dart';
 import 'package:dio/dio.dart';
 
 class ErrorHandler {

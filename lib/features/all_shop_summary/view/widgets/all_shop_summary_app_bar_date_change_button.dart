@@ -1,6 +1,6 @@
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_month_and_year_picker.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/view_models/cubit_all_shop_summary/all_shop_summary_cubit.dart';
 import 'package:flutter/material.dart';

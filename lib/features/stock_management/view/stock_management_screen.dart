@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 // import 'package:bookie_buddy_web/core/models/service_model.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
@@ -162,15 +162,15 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                       builder: (context, state) {
                         // Check if we should show product details
                         return state.maybeWhen(
-                          loaded: (products, __, ___, ____, _____, selectedServiceId, _______,
-                              selectedProductId) {
+                          loaded: (products, __, ___, ____, _____,
+                              selectedServiceId, _______, selectedProductId) {
                             if (selectedProductId != null) {
                               // Find the product to get its serviceId
                               final selectedProduct = products.firstWhere(
                                 (p) => p.id == selectedProductId,
                                 orElse: () => products.first,
                               );
-                              
+
                               // Show product details
                               return RepositoryProvider.value(
                                 value: context.read<ProductRepository>(),
@@ -180,8 +180,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                   )..loadProductDetails(selectedProductId),
                                   child: ProductDetailsScreen(
                                     productId: selectedProductId,
-                                    serviceId:  selectedServiceId,
-                                    mainServiceType: selectedProduct.mainServiceType,
+                                    serviceId: selectedServiceId,
+                                    mainServiceType:
+                                        selectedProduct.mainServiceType,
                                     productForEdit: selectedProduct,
                                   ),
                                 ),
@@ -310,8 +311,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                 SizedBox(
                   width: 227,
                   height: 98,
-                  child: _summaryCard(
-                      'Total Services', serviceCount.toString()),
+                  child:
+                      _summaryCard('Total Services', serviceCount.toString()),
                 ),
               ],
             );
@@ -1010,7 +1011,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                       builder: (context) {
                         // Get the sale price from product (not variants)
                         double? salePriceValue;
-                        if (product.salePrice != null && product.salePrice!.isNotEmpty) {
+                        if (product.salePrice != null &&
+                            product.salePrice!.isNotEmpty) {
                           salePriceValue = double.tryParse(product.salePrice!);
                         }
                         return Text(

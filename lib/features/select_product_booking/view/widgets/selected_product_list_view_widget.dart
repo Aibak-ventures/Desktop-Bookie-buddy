@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/selected_product_card.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_security_amount_model/ledger_security_amount_model.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/ledger_security_amount_list_tile.dart';

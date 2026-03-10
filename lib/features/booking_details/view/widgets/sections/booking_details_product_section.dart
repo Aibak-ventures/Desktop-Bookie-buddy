@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/product_simple_details_tile.dart';

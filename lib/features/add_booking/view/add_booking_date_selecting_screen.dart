@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
@@ -38,8 +38,9 @@ class _AddBookingDateSelectingScreenState
   final returnDateController =
       TextEditingController(text: DateTime.now().add(1.days()).format());
   final pickupDateNotifier = ValueNotifier<DateTime>(DateTime.now());
-  late final TextEditingController coolingPeriodDateController; // Initially empty
-late final DateTime pickupInitiallySelectedDate;
+  late final TextEditingController
+      coolingPeriodDateController; // Initially empty
+  late final DateTime pickupInitiallySelectedDate;
   bool coolingPeriodManuallySelected =
       false; // Track if user manually selected cooling period
 
@@ -55,16 +56,16 @@ late final DateTime pickupInitiallySelectedDate;
     coolingPeriodDuration =
         context.read<UserCubit>().state?.shopSettings.coolingPeriodDuration ??
             0;
-               final coolingPeriod = returnDateController.text
+    final coolingPeriod = returnDateController.text
         .parseToDateTime()
         .add(coolingPeriodDuration.days())
         .format();
-coolingPeriodDateController = TextEditingController(text: coolingPeriod);
+    coolingPeriodDateController = TextEditingController(text: coolingPeriod);
     // Don't auto-populate cooling period - let user select manually if needed
-     pickupInitiallySelectedDate =
+    pickupInitiallySelectedDate =
         pickupDateNotifier.value.isAfter(DateTime.now())
-        ? DateTime.now()
-        : pickupDateNotifier.value;
+            ? DateTime.now()
+            : pickupDateNotifier.value;
   }
 
   @override
@@ -229,22 +230,22 @@ coolingPeriodDateController = TextEditingController(text: coolingPeriod);
                       ),
                     ),
                     const SizedBox(height: 16),
-                  //  CalenderWidget(
-                  //           firstDate: pickupInitiallySelectedDate,
-                  //           selectedDate: pickupDateNotifier.value,
-                  //           onDateSelected: (selectedDate) {
-                  //             pickupDateNotifier.value = selectedDate;
-                  //             validateTimeOnSameDay();
-                  //             final returnDate = returnDateController.text
-                  //                 .parseToDateTime();
-                  //             if (returnDate.isBefore(selectedDate)) {
-                  //               selectReturnDate(
-                  //                 context,
-                  //                 selectedDate.add(1.days()),
-                  //               );
-                  //             }
-                  //           },
-                  //         ),
+                    //  CalenderWidget(
+                    //           firstDate: pickupInitiallySelectedDate,
+                    //           selectedDate: pickupDateNotifier.value,
+                    //           onDateSelected: (selectedDate) {
+                    //             pickupDateNotifier.value = selectedDate;
+                    //             validateTimeOnSameDay();
+                    //             final returnDate = returnDateController.text
+                    //                 .parseToDateTime();
+                    //             if (returnDate.isBefore(selectedDate)) {
+                    //               selectReturnDate(
+                    //                 context,
+                    //                 selectedDate.add(1.days()),
+                    //               );
+                    //             }
+                    //           },
+                    //         ),
                   ],
                 ),
               ),
@@ -991,9 +992,9 @@ coolingPeriodDateController = TextEditingController(text: coolingPeriod);
         );
       }
     }
-    
   }
-    void validateTimeOnSameDay() {
+
+  void validateTimeOnSameDay() {
     if (pickupTime != null &&
         pickupDateNotifier.value.isSameDay(DateTime.now())) {
       // If pickup date is today, ensure pickup time is after current time
@@ -1039,7 +1040,6 @@ coolingPeriodDateController = TextEditingController(text: coolingPeriod);
     }
   }
 
-
   Future<void> selectCoolingPeriodDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -1057,8 +1057,7 @@ coolingPeriodDateController = TextEditingController(text: coolingPeriod);
     BuildContext context, [
     DateTime? pickedDate,
   ]) async {
-    final DateTime? picked =
-        pickedDate ??
+    final DateTime? picked = pickedDate ??
         await showDatePicker(
           context: context,
           initialDate: returnDateController.text.parseToDateTime(),
@@ -1070,9 +1069,8 @@ coolingPeriodDateController = TextEditingController(text: coolingPeriod);
       returnDateController.text = picked.format();
       validateTimeOnSameDay();
 
-      coolingPeriodDateController.text = picked
-          .add(coolingPeriodDuration.days())
-          .format();
+      coolingPeriodDateController.text =
+          picked.add(coolingPeriodDuration.days()).format();
     }
   }
 
@@ -1107,5 +1105,4 @@ extension StringTimeExtensions on String {
       return null;
     }
   }
-  
 }

@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/extensions/list_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 
 enum PaymentMethod {
   gPay('gpay', 'UPI', 'upi'),

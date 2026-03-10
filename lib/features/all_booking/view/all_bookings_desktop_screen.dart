@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
@@ -8,8 +8,8 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_bookin
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_date_filter.dart';
 import 'package:flutter/material.dart';

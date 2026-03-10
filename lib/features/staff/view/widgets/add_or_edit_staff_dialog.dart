@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/models/staff_request_model/staff_request_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';

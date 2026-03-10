@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -68,15 +68,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               CustomProfileTile(
                 icon: Icons.password,
                 title: 'Change Account Password',
-                onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BlocProvider(
-          create: (context) => ResetPasswordBloc(
-          authRepository: getIt<AuthRepository>(),
-          changePasswordRepository: getIt<ChangePasswordRepository>(),
-          ),
-          child: const ResetPasswordScreen(),
-        )));
-                  },
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                            create: (context) => ResetPasswordBloc(
+                              authRepository: getIt<AuthRepository>(),
+                              changePasswordRepository:
+                                  getIt<ChangePasswordRepository>(),
+                            ),
+                            child: const ResetPasswordScreen(),
+                          )));
+                },
               ),
               5.height,
 //               if (shopRole.isOwner)
@@ -107,12 +109,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     context.showSnackBar('No password settings available');
                     return;
                   }
-                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>BlocProvider(
-            create: (context) => ManagePasswordSettingsBloc(getIt.get())
-              ..add(ManagePasswordSettingsEvent.load(passwordSettings ?? [])),
-            child: const ManagePasswordScreen(),
-          ),
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) =>
+                          ManagePasswordSettingsBloc(getIt.get())
+                            ..add(ManagePasswordSettingsEvent.load(
+                                passwordSettings ?? [])),
+                      child: const ManagePasswordScreen(),
+                    ),
                   ));
                 },
               ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/repositories/client_repository.dart';

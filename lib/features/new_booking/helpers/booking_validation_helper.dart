@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 
 /// Validation result model that holds validation status and error messages
 class BookingValidationResult {

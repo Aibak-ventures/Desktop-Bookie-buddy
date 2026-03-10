@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/navigation/navigations.dart';
 import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';

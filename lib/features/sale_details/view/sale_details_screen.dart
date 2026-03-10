@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -144,7 +144,8 @@ class SaleDetailsScreen extends StatelessWidget {
                       value: 2,
                       onTap: () async {
                         if (sale == null) {
-                          debugPrint('sale is null, returning from view invoice action');
+                          debugPrint(
+                              'sale is null, returning from view invoice action');
                           return;
                         }
                         try {
@@ -156,18 +157,20 @@ class SaleDetailsScreen extends StatelessWidget {
                               child: CircularProgressIndicator(),
                             ),
                           );
-                          
+
                           // Fetch invoice from backend
                           final repository = getIt<SalesRepository>();
-                          final pdfBytes = await repository.getInvoicePdfBytes(sale.id);
-                          
+                          final pdfBytes =
+                              await repository.getInvoicePdfBytes(sale.id);
+
                           // Close loading indicator
                           if (context.mounted) Navigator.of(context).pop();
-                          
+
                           // Download and open invoice
                           if (context.mounted) {
                             if (kIsWeb) {
-                              openPdfInNewTab(pdfBytes, 'sale_invoice_${sale.id}.pdf');
+                              openPdfInNewTab(
+                                  pdfBytes, 'sale_invoice_${sale.id}.pdf');
                             } else {
                               // For desktop, save to Downloads and open
                               final downloadsDir = Directory(
@@ -176,7 +179,8 @@ class SaleDetailsScreen extends StatelessWidget {
                                 downloadsDir.createSync(recursive: true);
                               }
                               final fileName = 'sale_invoice_${sale.id}.pdf';
-                              final filePath = '${downloadsDir.path}\\$fileName';
+                              final filePath =
+                                  '${downloadsDir.path}\\$fileName';
                               final file = File(filePath);
                               await file.writeAsBytes(pdfBytes);
                               await launchUrl(Uri.file(filePath));
@@ -289,29 +293,29 @@ class SaleDetailsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10.h,
-                children: [
-                  if (saleDetails.client?.name != null)
-                    SaleDetailsDetailsColumn(
-                      label: 'Client Name',
-                      value: saleDetails.client!.name,
-                    ),
-                  SaleDetailsDetailsColumn(
-                    label: 'Phone number',
-                    value: saleDetails.clientPhone?.toString() ?? 'N/A',
-                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10.h,
+                    children: [
+                      if (saleDetails.client?.name != null)
+                        SaleDetailsDetailsColumn(
+                          label: 'Client Name',
+                          value: saleDetails.client!.name,
+                        ),
+                      SaleDetailsDetailsColumn(
+                        label: 'Phone number',
+                        value: saleDetails.clientPhone?.toString() ?? 'N/A',
+                      ),
 
-                  // if (saleDetails.address.isNotNullOrEmpty)
-                  SaleDetailsDetailsColumn(
-                    label: 'Place',
-                    value: saleDetails.address.isNotEmpty 
-                        ? saleDetails.address 
-                        : 'N/A',
+                      // if (saleDetails.address.isNotNullOrEmpty)
+                      SaleDetailsDetailsColumn(
+                        label: 'Place',
+                        value: saleDetails.address.isNotEmpty
+                            ? saleDetails.address
+                            : 'N/A',
+                      ),
+                    ],
                   ),
-                ],
-              ),
                 ),
                 15.height,
                 SaleDetailsSection(

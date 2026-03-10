@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/product/view/widgets/product_growth_list_tile.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product_growth/product_growth_bloc.dart';

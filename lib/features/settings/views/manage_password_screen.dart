@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
@@ -19,7 +19,8 @@ class ManagePasswordScreen extends StatelessWidget {
     final userState = context.read<UserCubit>().state;
     return Scaffold(
       appBar: AppBar(title: const Text('Manage Secret Password')),
-      body: BlocListener<ManagePasswordSettingsBloc, ManagePasswordSettingsState>(
+      body:
+          BlocListener<ManagePasswordSettingsBloc, ManagePasswordSettingsState>(
         listenWhen: (p, c) =>
             p.status != c.status &&
             (c.status == ManagePwdSettingsStatus.success ||
@@ -32,9 +33,7 @@ class ManagePasswordScreen extends StatelessWidget {
           } else if (state.status == ManagePwdSettingsStatus.success) {
             context.read<UserCubit>().loadUserData();
             log('Manage Password Settings Success: ${state.message}');
-            NavigatorX(context)
-              
-              .pop();
+            NavigatorX(context).pop();
             if (state.message != null) {
               context.showSnackBar(state.message!);
             }
@@ -49,10 +48,8 @@ class ManagePasswordScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     const _BannerGuidance(),
-                    BlocBuilder<
-                      ManagePasswordSettingsBloc,
-                      ManagePasswordSettingsState
-                    >(
+                    BlocBuilder<ManagePasswordSettingsBloc,
+                        ManagePasswordSettingsState>(
                       buildWhen: (p, c) => p.settings != c.settings,
                       builder: (context, state) {
                         final list = state.settings.isEmpty
@@ -78,15 +75,15 @@ class ManagePasswordScreen extends StatelessWidget {
                                         setting: setting,
                                         isEnabled:
                                             userState?.shopRole?.isOwner ??
-                                            false,
+                                                false,
                                         onChanged: (newVal) {
                                           if (newVal != null) {
                                             context
                                                 .read<
-                                                  ManagePasswordSettingsBloc
-                                                >()
+                                                    ManagePasswordSettingsBloc>()
                                                 .add(
-                                                  ManagePasswordSettingsEvent.updateRole(
+                                                  ManagePasswordSettingsEvent
+                                                      .updateRole(
                                                     newRole: newVal,
                                                     target: setting,
                                                   ),
@@ -103,10 +100,8 @@ class ManagePasswordScreen extends StatelessWidget {
                 ),
               ),
               if (userState?.shopRole?.isOwner ?? false)
-                BlocBuilder<
-                  ManagePasswordSettingsBloc,
-                  ManagePasswordSettingsState
-                >(
+                BlocBuilder<ManagePasswordSettingsBloc,
+                    ManagePasswordSettingsState>(
                   buildWhen: (p, c) =>
                       p.status != c.status || p.hasChanges != c.hasChanges,
                   builder: (context, state) {
@@ -126,8 +121,8 @@ class ManagePasswordScreen extends StatelessWidget {
                           onPressed: () {
                             if (!canSave) return; // guard
                             context.read<ManagePasswordSettingsBloc>().add(
-                              const ManagePasswordSettingsEvent.save(),
-                            );
+                                  const ManagePasswordSettingsEvent.save(),
+                                );
                           },
                         ),
                       ),
@@ -147,36 +142,36 @@ class _BannerGuidance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: double.infinity,
-    padding: EdgeInsets.all(12.w),
-    margin: EdgeInsets.only(bottom: 14.h),
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: 10.radiusBorder,
-      border: Border.all(color: Colors.blueGrey.shade100),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 4.r,
-          offset: Offset(0, 2.h),
+        width: double.infinity,
+        padding: EdgeInsets.all(12.w),
+        margin: EdgeInsets.only(bottom: 14.h),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: 10.radiusBorder,
+          border: Border.all(color: Colors.blueGrey.shade100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 4.r,
+              offset: Offset(0, 2.h),
+            ),
+          ],
         ),
-      ],
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(Icons.info_outline, size: 20.sp, color: Colors.blueGrey),
-        8.width,
-        Expanded(
-          child: Text(
-            'Set which roles can use the secret password for restricted actions.\n'
-            '• Grant access only to trusted roles (e.g., Staff, Manager, Owner).\n'
-            '• Used to quickly approve protected actions (like edits or overrides).\n'
-            '• You can change these permissions anytime; updates apply immediately.',
-            style: TextStyle(fontSize: 13.sp, height: 1.3),
-          ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.info_outline, size: 20.sp, color: Colors.blueGrey),
+            8.width,
+            Expanded(
+              child: Text(
+                'Set which roles can use the secret password for restricted actions.\n'
+                '• Grant access only to trusted roles (e.g., Staff, Manager, Owner).\n'
+                '• Used to quickly approve protected actions (like edits or overrides).\n'
+                '• You can change these permissions anytime; updates apply immediately.',
+                style: TextStyle(fontSize: 13.sp, height: 1.3),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }

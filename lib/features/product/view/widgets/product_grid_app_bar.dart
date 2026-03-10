@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_icon_button.dart';
 import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
