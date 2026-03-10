@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 
 /// Centralized expense categories by service type.
 /// Use [ExpenseCategories.forService] to obtain the list for a given main service type.

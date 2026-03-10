@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/gender_type_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:flutter/material.dart';
 
 class MeasurementFieldModel {

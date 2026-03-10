@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/enums/invoice_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/invoice_enums.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/ledger/models/daily_summary_model/daily_summary_model.dart';

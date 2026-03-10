@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/invoice_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/invoice_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ledger_invoice_entry_model.freezed.dart';

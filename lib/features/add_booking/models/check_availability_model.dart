@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:bookie_buddy_web/core/enums/availability_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/availability_status_enums.dart';
 
 class CheckAvailabilityModel {
   final CheckAvailabilityStatus status;

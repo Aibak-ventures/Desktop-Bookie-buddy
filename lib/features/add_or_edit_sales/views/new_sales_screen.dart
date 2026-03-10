@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/enums/payment_method_enums.dart';
+import '../../../core/constants/enums/payment_method_enums.dart';
 
 /// New Sales Screen - Dedicated screen for creating new sales
 /// This is a simplified version of AddOrEditSalesScreen focused only on creation

@@ -24,7 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/enums/payment_method_enums.dart';
+import '../../../core/constants/enums/payment_method_enums.dart';
 
 class AddOrEditSalesScreen extends StatefulWidget {
   const AddOrEditSalesScreen({super.key, this.saleDetails});

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/notifications/firebase_notification_manager.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';

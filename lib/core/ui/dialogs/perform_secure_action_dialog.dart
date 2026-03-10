@@ -3,12 +3,12 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/app_input_validators.dart';
-// import 'package:bookie_buddy_web/core/enums/enums.dart' show SecretPasswordLocations;
-import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
-import 'package:bookie_buddy_web/core/enums/enums.dart' hide ShopRole;
+// import 'package:bookie_buddy_web/core/constants/enums/enums.dart' show SecretPasswordLocations;
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/constants/enums/enums.dart' hide ShopRole;
     // show SecretPasswordLocations;
 
-// import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart';
+// import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';

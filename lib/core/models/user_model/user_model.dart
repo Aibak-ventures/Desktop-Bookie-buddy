@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/core/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_web/core/enums/enums.dart'
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/enums.dart'
     show SecretPasswordLocations, UserPasswordSettingRole;
-import 'package:bookie_buddy_web/core/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
 import 'package:bookie_buddy_web/core/models/shop_settings_model/shop_settings_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/enums/customization_work_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/customization_work_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dashboard_custom_work_model.freezed.dart';

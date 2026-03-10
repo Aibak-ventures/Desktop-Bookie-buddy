@@ -1,4 +1,4 @@
-// import 'package:bookie_buddy_web/core/enums/payment_method_enums.dart';
+// import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 // import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 // import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 // import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
