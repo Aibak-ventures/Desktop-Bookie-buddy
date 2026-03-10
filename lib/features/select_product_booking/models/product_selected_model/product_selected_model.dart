@@ -29,7 +29,7 @@ extension ProductSelectedModelToJsonExtension on ProductSelectedModel {
 
     final json = <String, dynamic>{
       'id': variant.variantId,
-      'amount': amount,
+      'amount': amount * quantity,
       'quantity': quantity,
     };
     

@@ -590,7 +590,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         final variantData = <String, dynamic>{
           'id': variantId,
           'quantity': p.quantity,
-          'amount': p.amount,
+          'amount': p.amount * p.quantity,
         };
         // Include measurements if present
         if (p.measurements.isNotEmpty) {

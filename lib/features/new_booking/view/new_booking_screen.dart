@@ -4275,12 +4275,12 @@ int _calculateRentalDays() {
   RequestSalesModel _buildSalesRequest() {
     final products = selectedProductsNotifier.value;
 
-    // Build variants array with id, quantity, and amount
+    // Build variants array with id, quantity, and amount (total = per-unit price × quantity)
     final variants = products.map((product) {
       return {
         'id': product.variant.variantId,
         'quantity': product.quantity,
-        'amount': product.amount,
+        'amount': product.amount * product.quantity,
       };
     }).toList();
 
