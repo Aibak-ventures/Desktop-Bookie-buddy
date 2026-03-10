@@ -14,7 +14,7 @@ import 'package:bookie_buddy_web/features/add_booking/view/widgets/add_additiona
 import 'package:bookie_buddy_web/features/add_booking/view/widgets/add_booking_select_status_widget.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_add_booking/add_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
-import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
+import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

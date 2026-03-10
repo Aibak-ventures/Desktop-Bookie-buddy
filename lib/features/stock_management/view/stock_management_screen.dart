@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
 // import 'package:bookie_buddy_web/core/models/service_model.dart';
@@ -778,7 +779,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.purple.withOpacity(0.9),
+                color: AppColors.purple.changeOpacity(0.9),
                 letterSpacing: 0.8,
               ),
             ),

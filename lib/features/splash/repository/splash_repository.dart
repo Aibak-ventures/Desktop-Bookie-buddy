@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/view/onboarding_screen.dart';
 import 'package:bookie_buddy_web/features/in_app_update/repository/in_app_update_repository.dart';
-import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
+import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 import 'package:flutter/foundation.dart';
 
 class SplashRepository {

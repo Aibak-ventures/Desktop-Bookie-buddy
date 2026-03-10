@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/view_model/bloc_auth/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
-import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
+import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view_model/contact_support_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

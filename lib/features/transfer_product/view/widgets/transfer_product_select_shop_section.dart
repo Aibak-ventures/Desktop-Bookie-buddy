@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
 // import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
-import 'package:bookie_buddy_web/features/main/widgets/shop_switcher_bottom_sheet.dart';
+import 'package:bookie_buddy_web/core/app/widgets/shop_switcher_bottom_sheet.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/widgets/show_shop_list_bottom_sheet.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/utils/responsive_helper.dart';
-import 'package:bookie_buddy_web/core/widgets/responsive_widget.dart';
+import 'package:bookie_buddy_web/utils/responsive_widget.dart';
 import 'package:flutter/material.dart';
 
 /// Mixin to easily make any screen responsive

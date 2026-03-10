@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
-import 'package:bookie_buddy_web/my_app.dart';
+import 'package:bookie_buddy_web/core/app/my_app.dart';
 import 'package:feedback/feedback.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';

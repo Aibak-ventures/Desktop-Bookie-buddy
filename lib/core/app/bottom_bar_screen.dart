@@ -554,7 +554,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
         if (user == null) return const SizedBox.shrink();
-        final hasMultipleShops = user.haveMultipleShops ?? false;
+        final hasMultipleShops = user.haveMultipleShops;
         if (!hasMultipleShops) return const SizedBox.shrink();
 
         return Padding(
@@ -647,7 +647,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     return BlocBuilder<UserCubit, UserModel?>(
       builder: (context, user) {
         if (user == null) return const SizedBox.shrink();
-        final hasMultipleShops = user.haveMultipleShops ?? false;
+        final hasMultipleShops = user.haveMultipleShops;
         if (!hasMultipleShops) return const SizedBox.shrink();
 
         return Padding(

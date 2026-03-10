@@ -44,7 +44,7 @@ import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments/wallet_payments_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
-import 'package:bookie_buddy_web/features/main/view/bottom_bar_screen.dart';
+import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
 import 'package:bookie_buddy_web/features/product/view/product_growth_screen.dart';
@@ -437,8 +437,8 @@ class AppRouter {
           final queryParams = state.uri.queryParameters;
           final pickupDate = queryParams['pickup_date'];
           final returnDate = queryParams['return_date'];
-          final isSameDateAsOldBooking =
-              queryParams['is_same_date_as_old_booking'] == 'true';
+          // final isSameDateAsOldBooking =
+          //     queryParams['is_same_date_as_old_booking'] == 'true';
 
           final availabilityCheckOnly = bool.tryParse(
             queryParams['availability'] ?? '',
