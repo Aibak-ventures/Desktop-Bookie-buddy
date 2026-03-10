@@ -5938,7 +5938,11 @@ int _calculateRentalDays() {
       if (mounted) Navigator.of(context).pop();
       if (mounted) {
         context.showSnackBar('Old booking saved successfully!');
-        _resetForm();
+        if (widget.onClose != null) {
+          widget.onClose!();
+        } else {
+          Navigator.of(context).pop();
+        }
       }
     } catch (e) {
       if (mounted) Navigator.of(context).pop();
