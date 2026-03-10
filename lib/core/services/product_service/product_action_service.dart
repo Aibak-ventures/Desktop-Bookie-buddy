@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/product_exceptions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/utils/safe_api_call.dart';
@@ -27,7 +27,7 @@ class ProductActionService {
       print('📍 Has Image: ${product.image != null}');
 
       final String url =
-          "${ApiPaths.service.productsRoot}${isAdding ? '' : '$productId/'}";
+          "${ApiEndpoints.service.productsRoot}${isAdding ? '' : '$productId/'}";
       print('📍 URL: $url');
       print('📍 Method: ${isAdding ? 'POST' : 'PATCH'}');
 
@@ -67,11 +67,11 @@ class ProductActionService {
       final res = isAdding
           ? await _dio.post(url, data: formData)
           : await _dio.patch(url, data: formData);
-      
+
       print('✅ Response Status: ${res.statusCode}');
       print('✅ Response Data: ${res.data}');
       print('🌐 === API CALL END ===\n');
-      
+
       if (res.statusCode == 413) throw UnknownAppException('Image too large');
       return CustomResponseModel.fromJson(res.data);
 
@@ -105,7 +105,7 @@ class ProductActionService {
   }) async {
     try {
       final res = await _dio.post(
-        '${ApiPaths.service.productsRoot}$productId/variants/',
+        '${ApiEndpoints.service.productsRoot}$productId/variants/',
         data: {
           'attribute': attribute,
           'stock': stock,
@@ -131,7 +131,7 @@ class ProductActionService {
   }) async {
     try {
       final res = await _dio.patch(
-        '${ApiPaths.service.productsRoot}$productId/variants/$variantId/',
+        '${ApiEndpoints.service.productsRoot}$productId/variants/$variantId/',
         data: {
           if (updatedAttribute != null) 'attribute': updatedAttribute,
           // "price": 250001,
@@ -155,7 +155,7 @@ class ProductActionService {
   }) async {
     try {
       final res = await _dio.delete(
-        '${ApiPaths.service.productsRoot}$productId/${variantId == null ? '' : 'variants/$variantId/'}',
+        '${ApiEndpoints.service.productsRoot}$productId/${variantId == null ? '' : 'variants/$variantId/'}',
       );
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
@@ -170,7 +170,7 @@ class ProductActionService {
     try {
       final bool isAdding = expense.expenseId == null;
       final String url =
-          '${ApiPaths.expenses.variantExpenses}${expense.expenseId == null ? '' : '${expense.expenseId}/'}';
+          '${ApiEndpoints.expenses.variantExpenses}${expense.expenseId == null ? '' : '${expense.expenseId}/'}';
 
       final body = expense.toJson();
 
@@ -192,7 +192,7 @@ class ProductActionService {
     try {
       // final res = await _dio.delete("/expenses/product_expenses/$expenseId");
       final res = await _dio.delete(
-        '${ApiPaths.expenses.variantExpenses}$expenseId/',
+        '${ApiEndpoints.expenses.variantExpenses}$expenseId/',
       );
 
       return CustomResponseModel.fromJson(res.data);
@@ -210,7 +210,7 @@ class ProductActionService {
   }) async {
     try {
       final res = await _dio.post(
-        ApiPaths.service.transferStock,
+        ApiEndpoints.service.transferStock,
         data: {
           'from_variant_id': fromVariantId,
           'to_shop_id': toShopId,

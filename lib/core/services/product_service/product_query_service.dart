@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
@@ -20,7 +20,7 @@ class ProductQueryService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.service.productSearch,
+        ApiEndpoints.service.productSearch,
         queryParameters: {
           'page': page,
           'search_by': 'name',
@@ -39,7 +39,8 @@ class ProductQueryService {
 
   Future<CustomResponseModel> fetchProductInfo(int productId) async {
     try {
-      final res = await _dio.get(ApiPaths.service.productById('$productId'));
+      final res =
+          await _dio.get(ApiEndpoints.service.productById('$productId'));
       // log("Fetch product info: ${res.realUri.toString()}, data: ${res.data}");
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
@@ -63,8 +64,8 @@ class ProductQueryService {
 
       final response = await _dio.get(
         useProductSearchEndpoint
-            ? ApiPaths.service.productSearch
-            : ApiPaths.service.productsRoot,
+            ? ApiEndpoints.service.productSearch
+            : ApiEndpoints.service.productsRoot,
         queryParameters: {
           'page': page,
           if (query != null && query.isNotEmpty) ...{
@@ -96,7 +97,7 @@ class ProductQueryService {
   }) async {
     try {
       final res = await _dio.get(
-        '${ApiPaths.service.productsRoot}product-bookings/$productId/',
+        '${ApiEndpoints.service.productsRoot}product-bookings/$productId/',
         queryParameters: {
           'page': page,
           if (status != null)
@@ -154,7 +155,7 @@ class ProductQueryService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.service.productsRoot,
+        ApiEndpoints.service.productsRoot,
         queryParameters: {
           'page': page,
           // Don't send shop_service_id for "All Services" (-1 or null)
@@ -188,7 +189,7 @@ class ProductQueryService {
   }) async {
     try {
       final response = await _dio.get(
-        nextPageUrl ?? ApiPaths.bookings.availableProducts,
+        nextPageUrl ?? ApiEndpoints.bookings.availableProducts,
         queryParameters: nextPageUrl != null
             ? null
             : {
@@ -225,8 +226,9 @@ class ProductQueryService {
                 if (startPrice != null) 'min_price': startPrice,
                 if (endPrice != null) 'max_price': endPrice,
                 if (bookingId != null) 'booking_id': bookingId,
-                if (variantIds != null && variantIds.isNotEmpty) 
-                  'variant_ids': jsonEncode(variantIds), // Send as JSON array string
+                if (variantIds != null && variantIds.isNotEmpty)
+                  'variant_ids':
+                      jsonEncode(variantIds), // Send as JSON array string
               },
       );
       // log('Fetch available products response: ${response.realUri.toString()} ${response.data}');
@@ -239,7 +241,8 @@ class ProductQueryService {
 
   Future<CustomResponseModel> fetchProductGrowthData(int productId) async {
     try {
-      final res = await _dio.get(ApiPaths.service.monthlySummary('$productId'));
+      final res =
+          await _dio.get(ApiEndpoints.service.monthlySummary('$productId'));
       // log("Product growth data: ${res.realUri.toString()}, data: ${res.data}");
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
@@ -260,7 +263,7 @@ class ProductQueryService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.bookings.availableProducts,
+        ApiEndpoints.bookings.availableProducts,
         queryParameters: {
           'page': 1,
           'event_date': pickupDate.parseToDateTime().format(reverse: true),
@@ -299,7 +302,7 @@ class ProductQueryService {
   }) async {
     try {
       final res = await _dio.post(
-        ApiPaths.service.matchProduct,
+        ApiEndpoints.service.matchProduct,
         queryParameters: {'page': page},
         data: {'from_variant_id': fromVariantId, 'to_shop_id': toShopId},
       );
@@ -317,7 +320,7 @@ class ProductQueryService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.service.transferHistory,
+        ApiEndpoints.service.transferHistory,
         queryParameters: {'page': page, 'shop_id': shopId},
       );
       // log("Transfer product history response: ${response.realUri.toString()}, data: ${response.data}");

@@ -1,6 +1,6 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
-class LedgerApiPaths {
+class LedgerEndpoints {
   static const _rootV4 = '${ApiConfig.v4}/bookings/wallet/';
   static const _rootV5 = '${ApiConfig.v5}/bookings/wallet/';
 

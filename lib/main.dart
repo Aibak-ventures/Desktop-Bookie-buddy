@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';

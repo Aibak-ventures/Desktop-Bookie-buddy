@@ -1,6 +1,6 @@
 import 'dart:developer';
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:dio/dio.dart';
 
@@ -13,7 +13,7 @@ class PaymentService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.ledger.paymentDetails,
+        ApiEndpoints.ledger.paymentDetails,
         queryParameters: {
           'page': page,
           if (clientId != null) 'client_id': clientId,
@@ -35,7 +35,7 @@ class PaymentService {
     try {
       log('date wise summary Date: $date');
       final response = await _dio.get(
-        ApiPaths.expenses.daywiseSummary,
+        ApiEndpoints.expenses.daywiseSummary,
         queryParameters: {
           'date': date,
           if (clientId != null) 'client_id': clientId,

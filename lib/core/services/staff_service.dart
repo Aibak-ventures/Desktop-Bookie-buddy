@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/models/staff_request_model/staff_request_model.dart';
@@ -13,7 +13,7 @@ class StaffService {
   Future<CustomResponseModel> fetchStaffs({required int page}) async {
     try {
       final response = await dio.get(
-        ApiPaths.staff.staff,
+        ApiEndpoints.staff.staff,
         queryParameters: {'page': page},
       );
       log(response.realUri.toString());
@@ -27,7 +27,7 @@ class StaffService {
 
   Future<CustomResponseModel> fetchStaffDetails(int staffId) async {
     try {
-      final response = await dio.get(ApiPaths.staff.staffById(staffId));
+      final response = await dio.get(ApiEndpoints.staff.staffById(staffId));
       log(
         'Fetch staff details response: ${response.realUri.toString()}, data: ${response.data}',
       );
@@ -41,7 +41,7 @@ class StaffService {
   Future<CustomResponseModel> addStaff(StaffRequestModel staffData) async {
     try {
       final response = await dio.post(
-        ApiPaths.staff.staff,
+        ApiEndpoints.staff.staff,
         data: staffData.toJson(),
       );
       log(
@@ -56,7 +56,7 @@ class StaffService {
 
   Future<CustomResponseModel> deleteStaff(int staffId) async {
     try {
-      final response = await dio.delete(ApiPaths.staff.staffById(staffId));
+      final response = await dio.delete(ApiEndpoints.staff.staffById(staffId));
       log(
         'Delete staff response: ${response.realUri.toString()}, data: ${response.data}',
       );
@@ -73,7 +73,7 @@ class StaffService {
       final data = staffData.toJson();
       log('edit staff request body: $data');
       final response = await dio.patch(
-        ApiPaths.staff.staffById(staffData.id!),
+        ApiEndpoints.staff.staffById(staffData.id!),
         data: data,
       );
       log(
@@ -93,7 +93,7 @@ class StaffService {
   }) async {
     try {
       final response = await dio.get(
-        ApiPaths.staff.staffAnalyticsReportById(staffId),
+        ApiEndpoints.staff.staffAnalyticsReportById(staffId),
         queryParameters: {'year': year, 'month': month},
       );
       log(
@@ -115,7 +115,7 @@ class StaffService {
   }) async {
     try {
       final response = await dio.post(
-        ApiPaths.staff.staffMonthlyBookingsOrSales,
+        ApiEndpoints.staff.staffMonthlyBookingsOrSales,
         data: {
           'page': page,
           'staff_id': staffId,

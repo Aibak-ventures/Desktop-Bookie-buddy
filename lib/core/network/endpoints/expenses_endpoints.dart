@@ -1,6 +1,6 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
-class ExpensesApiPaths {
+class ExpensesEndpoints {
   static const _root = '${ApiConfig.v3}/expenses/';
   static const expenses = '${_root}expenses/';
   static const variantExpenses = '${_root}variant-expenses/';

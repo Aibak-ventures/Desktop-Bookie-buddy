@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
-class AuthApiPaths {
-  const AuthApiPaths();
+class AuthEndpoints {
+  const AuthEndpoints();
 
   static const _rootV3 = '${ApiConfig.v3}/auth/';
   static const _rootV4 = '${ApiConfig.v4}/auth/';

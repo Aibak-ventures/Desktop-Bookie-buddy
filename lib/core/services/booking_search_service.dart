@@ -1,6 +1,6 @@
 // import 'dart:developer';
-// import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-// import 'package:bookie_buddy_web/core/api/api_paths.dart';
+// import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+// import 'package:bookie_buddy_web/core/network/endpoints/api_paths.dart';
 // import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 
 // class BookingSearchService {

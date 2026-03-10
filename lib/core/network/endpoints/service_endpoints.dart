@@ -1,6 +1,6 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
-class ServiceApiPaths {
+class ServiceEndpoints {
   static const _root = '${ApiConfig.v3}/service/';
   static const selected = '${_root}selected/';
   static const productSearch = '${_root}product-search/';

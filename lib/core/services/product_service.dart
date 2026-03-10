@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:dio/dio.dart';
 
@@ -16,13 +16,12 @@ class ProductService {
     String? category,
     double? minPrice,
     double? maxPrice,
-     
   }) async {
     try {
       log('🔄 Fetching products - Page: $page, Search: $search');
 
       final response = await _dio.get(
-        ApiPaths.products.products,
+        ApiEndpoints.products.products,
         queryParameters: {
           'page': page,
           if (search != null && search.isNotEmpty) 'search': search,
@@ -43,7 +42,7 @@ class ProductService {
   /// Get product details
   Future<CustomResponseModel> getProductDetails(int id) async {
     try {
-      final response = await _dio.get(ApiPaths.products.productDetail(id));
+      final response = await _dio.get(ApiEndpoints.products.productDetail(id));
       log('✅ Product details: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -56,7 +55,7 @@ class ProductService {
   Future<CustomResponseModel> createProduct(Map<String, dynamic> data) async {
     try {
       final response = await _dio.post(
-        ApiPaths.products.products,
+        ApiEndpoints.products.products,
         data: data,
       );
       log('✅ Product created: ${response.data}');
@@ -72,7 +71,7 @@ class ProductService {
       int id, Map<String, dynamic> data) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.products.updateProduct(id),
+        ApiEndpoints.products.updateProduct(id),
         data: data,
       );
       log('✅ Product updated: ${response.data}');
@@ -86,7 +85,8 @@ class ProductService {
   /// Delete a product
   Future<CustomResponseModel> deleteProduct(int id) async {
     try {
-      final response = await _dio.delete(ApiPaths.products.deleteProduct(id));
+      final response =
+          await _dio.delete(ApiEndpoints.products.deleteProduct(id));
       log('✅ Product deleted: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -101,7 +101,7 @@ class ProductService {
   Future<CustomResponseModel> getProductVariants(int productId) async {
     try {
       final response =
-          await _dio.get(ApiPaths.products.productVariants(productId));
+          await _dio.get(ApiEndpoints.products.productVariants(productId));
       log('✅ Product variants: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -117,7 +117,7 @@ class ProductService {
   ) async {
     try {
       final response = await _dio.post(
-        ApiPaths.products.createProductVariant(productId),
+        ApiEndpoints.products.createProductVariant(productId),
         data: data,
       );
       log('✅ Product variant created: ${response.data}');
@@ -136,7 +136,7 @@ class ProductService {
   ) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.products.updateProductVariant(productId, variantId),
+        ApiEndpoints.products.updateProductVariant(productId, variantId),
         data: data,
       );
       log('✅ Product variant updated: ${response.data}');
@@ -152,7 +152,7 @@ class ProductService {
       int productId, int variantId) async {
     try {
       final response = await _dio.delete(
-        ApiPaths.products.deleteProductVariant(productId, variantId),
+        ApiEndpoints.products.deleteProductVariant(productId, variantId),
       );
       log('✅ Product variant deleted: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -168,7 +168,7 @@ class ProductService {
   Future<CustomResponseModel> getProductMaterials(int productId) async {
     try {
       final response =
-          await _dio.get(ApiPaths.products.productMaterials(productId));
+          await _dio.get(ApiEndpoints.products.productMaterials(productId));
       log('✅ Product materials: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -184,7 +184,7 @@ class ProductService {
   ) async {
     try {
       final response = await _dio.post(
-        ApiPaths.products.addProductMaterial(productId),
+        ApiEndpoints.products.addProductMaterial(productId),
         data: data,
       );
       log('✅ Product material added: ${response.data}');
@@ -200,7 +200,7 @@ class ProductService {
       int productId, int materialId) async {
     try {
       final response = await _dio.delete(
-        ApiPaths.products.removeProductMaterial(productId, materialId),
+        ApiEndpoints.products.removeProductMaterial(productId, materialId),
       );
       log('✅ Product material removed: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -216,7 +216,7 @@ class ProductService {
   Future<CustomResponseModel> checkAvailability(int productId) async {
     try {
       final response =
-          await _dio.get(ApiPaths.products.checkAvailability(productId));
+          await _dio.get(ApiEndpoints.products.checkAvailability(productId));
       log('✅ Product availability: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -230,7 +230,7 @@ class ProductService {
       int productId, Map<String, dynamic> data) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.products.updateStock(productId),
+        ApiEndpoints.products.updateStock(productId),
         data: data,
       );
       log('✅ Product stock updated: ${response.data}');
@@ -244,7 +244,7 @@ class ProductService {
   /// Get low stock products
   Future<CustomResponseModel> getLowStockProducts() async {
     try {
-      final response = await _dio.get(ApiPaths.products.lowStockProducts);
+      final response = await _dio.get(ApiEndpoints.products.lowStockProducts);
       log('✅ Low stock products: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -256,7 +256,7 @@ class ProductService {
   /// Get out of stock products
   Future<CustomResponseModel> getOutOfStockProducts() async {
     try {
-      final response = await _dio.get(ApiPaths.products.outOfStockProducts);
+      final response = await _dio.get(ApiEndpoints.products.outOfStockProducts);
       log('✅ Out of stock products: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -274,7 +274,7 @@ class ProductService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.products.searchProducts,
+        ApiEndpoints.products.searchProducts,
         queryParameters: {
           'q': query,
           'page': page,
@@ -295,7 +295,7 @@ class ProductService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.products.filterByCategory,
+        ApiEndpoints.products.filterByCategory,
         queryParameters: {
           'category': category,
           'page': page,
@@ -317,7 +317,7 @@ class ProductService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.products.filterByPrice,
+        ApiEndpoints.products.filterByPrice,
         queryParameters: {
           'min_price': minPrice,
           'max_price': maxPrice,

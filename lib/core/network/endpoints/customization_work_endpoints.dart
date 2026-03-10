@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
 /// API paths for Customization Work endpoints (v4)
-class CustomizationWorkApiPaths {
+class CustomizationWorkEndpoints {
   static const _root = '${ApiConfig.v4}/customization-work/';
 
   // CRUD Operations

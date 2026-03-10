@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
 /// API paths for Product endpoints (v4)
-class ProductApiPaths {
+class ProductEndpoints {
   static const _root = '${ApiConfig.v4}/products/';
 
   // CRUD Operations

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/enums/enums.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 class ShopService {
   Future<CustomResponseModel> fetchShops() async {
     try {
-      final response = await DioClient.dio.get(ApiPaths.shop.availableShops);
+      final response =
+          await DioClient.dio.get(ApiEndpoints.shop.availableShops);
       // log("Fetch Shops Response: ${response.realUri.toString()} ,${response.data}");
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -28,7 +29,7 @@ class ShopService {
       debugPrint('Update Shop Privacy Settings Request: $data');
       // throw 'Error: can\'t update shop privacy settings';
       final response = await DioClient.dio.patch(
-        ApiPaths.shop.privacySettings,
+        ApiEndpoints.shop.privacySettings,
         data: data,
       );
       log(
@@ -47,7 +48,7 @@ class ShopService {
   }) async {
     try {
       final response = await DioClient.dio.patch(
-        ApiPaths.shop.updateSettings,
+        ApiEndpoints.shop.updateSettings,
         data: {
           'cooling_days': coolingPeriodDuration,
           'default_action': addButtonDefaultAction?.toJson(),
@@ -70,7 +71,7 @@ class ShopService {
   }) async {
     try {
       final response = await DioClient.dio.get(
-        ApiPaths.shop.allShopSummary(
+        ApiEndpoints.shop.allShopSummary(
           year: year,
           month: month,
           shopId: shopId,

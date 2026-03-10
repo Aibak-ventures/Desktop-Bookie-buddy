@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
 /// API paths for Tailor module endpoints
 ///
@@ -6,8 +6,8 @@ import 'package:bookie_buddy_web/core/api/api_config.dart';
 /// - CRUD operations for tailors
 /// - Monthly summary and analytics
 /// - Tailor management
-class TailorApiPaths {
-  const TailorApiPaths();
+class TailorEndpoints {
+  const TailorEndpoints();
 
   static const _root = '${ApiConfig.v3}/tailored/';
   static const tailors = '${_root}tailor/';

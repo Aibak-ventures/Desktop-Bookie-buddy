@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/error/error_handler.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/core/error/exceptions/booking_exceptions.dart';
@@ -56,7 +56,7 @@ class DashboardService {
   }) async {
     try {
       final response = await DioClient.dio.get(
-        ApiPaths.bookings.dashboard,
+        ApiEndpoints.bookings.dashboard,
         queryParameters: {
           'page': page,
           if (isOngoing) 'type': 'ongoing',

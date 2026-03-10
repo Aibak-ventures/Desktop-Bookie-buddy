@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/api/baseurl.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/baseurl.dart';
 // import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';

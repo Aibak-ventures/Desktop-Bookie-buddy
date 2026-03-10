@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
@@ -17,12 +17,12 @@ import 'package:http_parser/http_parser.dart';
 
 class BookingService {
   final _dio = DioClient.dio;
-  final bookingManagementUrl = ApiPaths.bookings.bookingsV3;
+  final bookingManagementUrl = ApiEndpoints.bookings.bookingsV3;
 
   Future<CustomResponseModel> getBooking(int bookingId) async {
     try {
       final response = await _dio.get(
-        '${ApiPaths.bookings.bookingsV5}$bookingId/',
+        '${ApiEndpoints.bookings.bookingsV5}$bookingId/',
       );
       // log('booking details response: ${response.realUri.toString()} , ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -40,7 +40,7 @@ class BookingService {
 
       log(data.toString());
       final response = await _dio.post(
-        ApiPaths.bookings.bookingsV5,
+        ApiEndpoints.bookings.bookingsV5,
         data: data,
       );
 
@@ -60,7 +60,7 @@ class BookingService {
     try {
       log('Creating sale with data: $saleData');
       final response = await _dio.post(
-        ApiPaths.sales.salesV4,
+        ApiEndpoints.sales.salesV4,
         data: saleData,
       );
 
@@ -81,7 +81,7 @@ class BookingService {
   }) async {
     try {
       final response = await _dio.post(
-        '${ApiPaths.bookings.addPayment}$bookingId/',
+        '${ApiEndpoints.bookings.addPayment}$bookingId/',
         data: {'amount': amount, 'payment_method': paymentMethod},
       );
 
@@ -101,7 +101,7 @@ class BookingService {
   }) async {
     try {
       final response = await _dio.patch(
-        '${ApiPaths.bookings.updateBookingStatus}$bookingId/',
+        '${ApiEndpoints.bookings.updateBookingStatus}$bookingId/',
         data: {'booking_status': bookingStatus},
       );
       log(
@@ -120,7 +120,7 @@ class BookingService {
   }) async {
     try {
       final response = await _dio.patch(
-        '${ApiPaths.bookings.updateDeliveryStatus}$bookingId/',
+        '${ApiEndpoints.bookings.updateDeliveryStatus}$bookingId/',
         data: {'delivery_status': deliveryStatus},
       );
 
@@ -140,7 +140,7 @@ class BookingService {
   ) async {
     try {
       final response = await _dio.patch(
-        '${ApiPaths.bookings.updateDetails}$bookingId/',
+        '${ApiEndpoints.bookings.updateDetails}$bookingId/',
         data: updatedBooking.toJson(),
       );
 
@@ -166,7 +166,7 @@ class BookingService {
     try {
       // Use FormData for file uploads and complex nested data
       final formData = FormData();
-      
+
       // Add regular fields as JSON strings (as per API requirement)
       partialData.forEach((key, value) {
         if (value != null) {
@@ -179,7 +179,8 @@ class BookingService {
             // formData field  other_details[end] = '50'
             (value as Map<String, dynamic>).forEach((subKey, subValue) {
               if (subValue != null) {
-                formData.fields.add(MapEntry('$key[$subKey]', subValue.toString()));
+                formData.fields
+                    .add(MapEntry('$key[$subKey]', subValue.toString()));
               }
             });
           } else {
@@ -188,15 +189,15 @@ class BookingService {
           }
         }
       });
-      
+
       // Add new documents if any
       if (newDocuments != null && newDocuments.isNotEmpty) {
         for (int i = 0; i < newDocuments.length; i++) {
           final doc = newDocuments[i];
           // Check if it's a new file: has bytes (web upload) or path is not a URL (local file)
-          final isNewFile = doc.bytes != null || 
+          final isNewFile = doc.bytes != null ||
               (doc.path.isNotEmpty && !doc.path.startsWith('http'));
-          
+
           if (isNewFile && (doc.bytes != null || doc.path.isNotEmpty)) {
             // New file upload from web or mobile
             if (doc.bytes != null) {
@@ -215,12 +216,13 @@ class BookingService {
           }
         }
       }
-      
+
       // Add removed document URLs
       if (removedDocumentUrls != null && removedDocumentUrls.isNotEmpty) {
-        formData.fields.add(MapEntry('remove_documents', jsonEncode(removedDocumentUrls)));
+        formData.fields
+            .add(MapEntry('remove_documents', jsonEncode(removedDocumentUrls)));
       }
-      
+
       // 📝 LOG FORM DATA CONTENTS FOR DEBUGGING
       log('┌─────────────────────────────────────────────────────────────');
       log('│ 📤 PATCH REQUEST TO: /bookings/$bookingId/');
@@ -228,7 +230,7 @@ class BookingService {
       log('│ 📋 FORM FIELDS (${formData.fields.length} fields):');
       for (final field in formData.fields) {
         // Truncate very long values for readability
-        final value = field.value.length > 500 
+        final value = field.value.length > 500
             ? '${field.value.substring(0, 500)}... (truncated, ${field.value.length} chars total)'
             : field.value;
         log('│   ${field.key}: $value');
@@ -241,9 +243,9 @@ class BookingService {
         }
       }
       log('└─────────────────────────────────────────────────────────────');
-      
+
       final response = await _dio.patch(
-        '${ApiPaths.bookings.updateDetails}$bookingId/',
+        '${ApiEndpoints.bookings.updateDetails}$bookingId/',
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',
@@ -279,13 +281,13 @@ class BookingService {
     try {
       // Update delivery status to cancelled
       final response = await _dio.patch(
-        '${ApiPaths.bookings.updateDeliveryStatus}$bookingId/',
+        '${ApiEndpoints.bookings.updateDeliveryStatus}$bookingId/',
         data: {'delivery_status': 'cancelled'},
       );
       log(
         'cancel booking response: ${response.realUri.toString()}, data: ${response.data}',
       );
-      
+
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error cancelling booking: $e', stackTrace: stack);
@@ -301,7 +303,7 @@ class BookingService {
   }) async {
     try {
       final response = await _dio.post(
-        ApiPaths.bookings.addRefund(bookingId),
+        ApiEndpoints.bookings.addRefund(bookingId),
         data: {
           'amount': amount,
           'refund_method': paymentMethod,
@@ -355,7 +357,7 @@ class BookingService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.bookings.desktopList,
+        ApiEndpoints.bookings.desktopList,
         queryParameters: {
           'status':
               status, // pending, upcoming, returns, not_returned, completed
@@ -397,7 +399,7 @@ class BookingService {
       final data = bookingData.toJson();
       log('request old booking data: $data');
       final response = await _dio.post(
-        ApiPaths.bookings.oldBookings,
+        ApiEndpoints.bookings.oldBookings,
         data: data,
       );
 
@@ -416,7 +418,7 @@ class BookingService {
     required String filePath,
   }) async {
     try {
-      final url = ApiPaths.bookings.downloadBookingInvoice(bookingId);
+      final url = ApiEndpoints.bookings.downloadBookingInvoice(bookingId);
       log('Downloading booking invoice from: $url');
 
       final response = await _dio.get(
@@ -470,7 +472,7 @@ class BookingService {
   }) async {
     try {
       // Use the correct endpoint format: /api/v5/bookings/bookings/send-invoice/{id}/
-      final url = ApiPaths.bookings.sendBookingInvoice(bookingId);
+      final url = ApiEndpoints.bookings.sendBookingInvoice(bookingId);
       log('Sending booking invoice from: $url');
 
       final response = await _dio.get(
@@ -480,7 +482,7 @@ class BookingService {
         },
       );
       log('Send invoice response: ${response.realUri.toString()}');
-      
+
       // Handle potential HTML response (404 error)
       if (response.data is String) {
         log('Received HTML/text response instead of JSON');
@@ -492,7 +494,7 @@ class BookingService {
           data: null,
         );
       }
-      
+
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error sending booking invoice: $e', stackTrace: stack);
@@ -510,7 +512,7 @@ class BookingService {
   /// Get invoice PDF bytes for viewing/downloading
   Future<Uint8List> getInvoicePdfBytes(int bookingId) async {
     try {
-      final url = ApiPaths.bookings.sendBookingInvoice(bookingId);
+      final url = ApiEndpoints.bookings.sendBookingInvoice(bookingId);
       log('Fetching booking invoice PDF from: $url');
 
       final response = await _dio.get(
@@ -528,7 +530,8 @@ class BookingService {
         return Uint8List.fromList(response.data as List<int>);
       } else {
         // Decode the JSON error body from bytes to show the actual backend message
-        String errorMessage = 'Failed to fetch invoice (HTTP ${response.statusCode})';
+        String errorMessage =
+            'Failed to fetch invoice (HTTP ${response.statusCode})';
         try {
           final jsonStr = utf8.decode(response.data as List<int>);
           final jsonBody = jsonDecode(jsonStr) as Map<String, dynamic>;
@@ -546,4 +549,5 @@ class BookingService {
       log('Error fetching booking invoice PDF: $e', stackTrace: stack);
       rethrow;
     }
-  }}
+  }
+}

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:dio/dio.dart';
 
@@ -21,7 +21,7 @@ class CustomizationWorkService {
       log('🔄 Fetching customization works - Page: $page, Search: $search, Status: $status');
 
       final response = await _dio.get(
-        ApiPaths.customizationWork.customizationWorks,
+        ApiEndpoints.customizationWork.customizationWorks,
         queryParameters: {
           'page': page,
           if (search != null && search.isNotEmpty) 'search': search,
@@ -46,7 +46,7 @@ class CustomizationWorkService {
   Future<CustomResponseModel> getCustomizationWorkDetails(int id) async {
     try {
       final response = await _dio.get(
-        ApiPaths.customizationWork.customizationWorkDetail(id),
+        ApiEndpoints.customizationWork.customizationWorkDetail(id),
       );
       log('✅ Customization Work details response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -61,7 +61,7 @@ class CustomizationWorkService {
       Map<String, dynamic> data) async {
     try {
       final response = await _dio.post(
-        ApiPaths.customizationWork.customizationWorks,
+        ApiEndpoints.customizationWork.customizationWorks,
         data: data,
       );
       log('✅ Customization Work created: ${response.data}');
@@ -79,7 +79,7 @@ class CustomizationWorkService {
   ) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.customizationWork.updateCustomizationWork(id),
+        ApiEndpoints.customizationWork.updateCustomizationWork(id),
         data: data,
       );
       log('✅ Customization Work updated: ${response.data}');
@@ -94,7 +94,7 @@ class CustomizationWorkService {
   Future<CustomResponseModel> deleteCustomizationWork(int id) async {
     try {
       final response = await _dio.delete(
-        ApiPaths.customizationWork.deleteCustomizationWork(id),
+        ApiEndpoints.customizationWork.deleteCustomizationWork(id),
       );
       log('✅ Customization Work deleted: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -108,7 +108,7 @@ class CustomizationWorkService {
   Future<CustomResponseModel> markAsCompleted(int id) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.customizationWork.markAsCompleted(id),
+        ApiEndpoints.customizationWork.markAsCompleted(id),
       );
       log('✅ Customization Work marked as completed: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -122,7 +122,7 @@ class CustomizationWorkService {
   Future<CustomResponseModel> markAsPending(int id) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.customizationWork.markAsPending(id),
+        ApiEndpoints.customizationWork.markAsPending(id),
       );
       log('✅ Customization Work marked as pending: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -136,7 +136,7 @@ class CustomizationWorkService {
   Future<CustomResponseModel> markAsInProgress(int id) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.customizationWork.markAsInProgress(id),
+        ApiEndpoints.customizationWork.markAsInProgress(id),
       );
       log('✅ Customization Work marked as in progress: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -153,7 +153,7 @@ class CustomizationWorkService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.customizationWork.searchCustomizationWorks,
+        ApiEndpoints.customizationWork.searchCustomizationWorks,
         queryParameters: {
           'q': query,
           'page': page,
@@ -174,7 +174,7 @@ class CustomizationWorkService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.customizationWork.filterByStatus,
+        ApiEndpoints.customizationWork.filterByStatus,
         queryParameters: {
           'status': status,
           'page': page,

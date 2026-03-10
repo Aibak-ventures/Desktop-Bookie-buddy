@@ -1,6 +1,6 @@
-import 'package:bookie_buddy_web/core/api/api_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
 
-class StaffApiPaths {
+class StaffEndpoints {
   static const _root = '${ApiConfig.v3}/shop/';
   static const String staff = '${_root}staff/';
   static const String staffAnalyticsReport =

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';
 import 'package:dio/dio.dart';
@@ -21,7 +21,7 @@ class SalesService {
       log('🔄 Fetching sales - Page: $page, Search: $search, From: $fromDate, To: $toDate');
 
       final response = await _dio.get(
-        ApiPaths.sales.sales,
+        ApiEndpoints.sales.sales,
         queryParameters: {
           'page': page,
           if (search != null && search.isNotEmpty) 'search': search,
@@ -43,7 +43,7 @@ class SalesService {
 
   Future<CustomResponseModel> getSaleDetails(int saleId) async {
     try {
-      final response = await _dio.get(ApiPaths.sales.salesDetailV4(saleId));
+      final response = await _dio.get(ApiEndpoints.sales.salesDetailV4(saleId));
       log('Sales get response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -55,7 +55,7 @@ class SalesService {
   Future<CustomResponseModel> createSale(SalesRequestModel salesRequest) async {
     try {
       final response = await _dio.post(
-        ApiPaths.sales.salesV4,
+        ApiEndpoints.sales.salesV4,
         data: salesRequest.toJson(),
       );
       log('Sales create response: ${response.data}');
@@ -69,7 +69,7 @@ class SalesService {
   Future<CustomResponseModel> updateSale(SalesRequestModel salesRequest) async {
     try {
       final response = await _dio.patch(
-        ApiPaths.sales.updateSaleV4(salesRequest.id!),
+        ApiEndpoints.sales.updateSaleV4(salesRequest.id!),
         data: salesRequest.toJson(),
       );
       log('Sales update response: ${response.data}');
@@ -103,7 +103,8 @@ class SalesService {
 
   Future<CustomResponseModel> deleteSale(int saleId) async {
     try {
-      final response = await _dio.delete(ApiPaths.sales.deleteSaleV4(saleId));
+      final response =
+          await _dio.delete(ApiEndpoints.sales.deleteSaleV4(saleId));
       log('Sales delete response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -115,7 +116,7 @@ class SalesService {
   /// Get invoice PDF bytes for viewing/downloading
   Future<Uint8List> getInvoicePdfBytes(int saleId) async {
     try {
-      final url = ApiPaths.sales.downloadInvoice(saleId);
+      final url = ApiEndpoints.sales.downloadInvoice(saleId);
       log('Fetching sale invoice PDF from: $url');
 
       final response = await _dio.get(
@@ -133,7 +134,8 @@ class SalesService {
         return Uint8List.fromList(response.data as List<int>);
       } else {
         // Decode the JSON error body from bytes to show the actual backend message
-        String errorMessage = 'Failed to fetch invoice (HTTP ${response.statusCode})';
+        String errorMessage =
+            'Failed to fetch invoice (HTTP ${response.statusCode})';
         try {
           final jsonStr = utf8.decode(response.data as List<int>);
           final jsonBody = jsonDecode(jsonStr) as Map<String, dynamic>;

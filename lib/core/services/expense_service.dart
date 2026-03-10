@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';
 import 'package:dio/dio.dart';
@@ -16,7 +16,7 @@ class ExpenseService {
   }) async {
     try {
       final response = await _dio.get(
-        ApiPaths.ledger.expenses,
+        ApiEndpoints.ledger.expenses,
         queryParameters: {
           'page': page,
           if (clientId != null) 'client_id': clientId,
@@ -37,7 +37,7 @@ class ExpenseService {
   }) async {
     try {
       final response = await _dio.post(
-        ApiPaths.expenses.expenses,
+        ApiEndpoints.expenses.expenses,
         data: expense.toJson(),
       );
       log(
@@ -56,7 +56,7 @@ class ExpenseService {
   }) async {
     try {
       final response = await _dio.patch(
-        '${ApiPaths.expenses.expenses}${updatedExpense.expenseId}/',
+        '${ApiEndpoints.expenses.expenses}${updatedExpense.expenseId}/',
         data: updatedExpense.toJson(),
       );
 
@@ -77,8 +77,8 @@ class ExpenseService {
     try {
       final response = await _dio.delete(
         variantId != null
-            ? '${ApiPaths.expenses.variantExpenses}$expenseId/'
-            : '${ApiPaths.expenses.expenses}$expenseId/',
+            ? '${ApiEndpoints.expenses.variantExpenses}$expenseId/'
+            : '${ApiEndpoints.expenses.expenses}$expenseId/',
       );
 
       log(

@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
@@ -23,7 +23,7 @@ class AuthService {
         ..interceptors.clear()
         ..options.validateStatus = (status) => true;
       final response = await dio.post(
-        ApiPaths.auth.login,
+        ApiEndpoints.auth.login,
         data: {
           'phone': phone,
           'password': password,
@@ -56,7 +56,7 @@ class AuthService {
   static Future<CustomResponseModel> secretLogin(String password) async {
     try {
       final response = await DioClient.dio.post(
-        ApiPaths.auth.walletLogin,
+        ApiEndpoints.auth.walletLogin,
         data: {'password': password},
       );
 
@@ -74,7 +74,7 @@ class AuthService {
   }) async {
     try {
       final response = await DioClient.dio.post(
-        ApiPaths.auth.changePassword,
+        ApiEndpoints.auth.changePassword,
         data: {
           'old_password': oldPassword,
           'new_password': newPassword,
@@ -94,7 +94,7 @@ class AuthService {
   }) async {
     try {
       final response = await DioClient.dio.post(
-        ApiPaths.auth.changeSecondaryPassword,
+        ApiEndpoints.auth.changeSecondaryPassword,
         data: {
           'old_secondary_password': oldPassword,
           'new_secondary_password': newPassword,
@@ -125,7 +125,7 @@ class AuthService {
   Future<String?> refreshToken({required String? refreshToken}) async {
     try {
       final response = await DioClient.dio.post(
-        ApiPaths.auth.refresh,
+        ApiEndpoints.auth.refresh,
         data: {'refresh': refreshToken},
       );
       // IMPORTANT: Do NOT mutate response.data when masking; it caused the real

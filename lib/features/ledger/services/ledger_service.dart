@@ -1,11 +1,9 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/api/api_paths.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/utils/download_file_from_url.dart';
-
-
 
 class LedgerService {
   Future<CustomResponseModel> fetchDataForInvoicePdf({
@@ -16,7 +14,7 @@ class LedgerService {
   }) async {
     try {
       final response = await DioClient.dio.get(
-        ApiPaths.expenses.transactionHistory,
+        ApiEndpoints.expenses.transactionHistory,
         queryParameters: {
           'from_date': fromDate,
           'to_date': toDate,
@@ -39,16 +37,17 @@ class LedgerService {
     required String filePath,
     int? clientId,
     String type = 'all',
-  }) async => downloadFileFromUrl(
-    url: ApiPaths.expenses.exportTransactionsExcel,
-    filePath: filePath,
-    queryParameters: {
-      'from_date': fromDate,
-      'to_date': toDate,
-      'type': type,
-      if (clientId != null) 'client_id': clientId,
-    },
-  );
+  }) async =>
+      downloadFileFromUrl(
+        url: ApiEndpoints.expenses.exportTransactionsExcel,
+        filePath: filePath,
+        queryParameters: {
+          'from_date': fromDate,
+          'to_date': toDate,
+          'type': type,
+          if (clientId != null) 'client_id': clientId,
+        },
+      );
 
   Future<CustomResponseModel> fetchSecurityAmountsPagination({
     required int page,
@@ -56,7 +55,7 @@ class LedgerService {
   }) async {
     try {
       final response = await DioClient.dio.get(
-        ApiPaths.ledger.securityAmounts,
+        ApiEndpoints.ledger.securityAmounts,
         queryParameters: {
           'page': page,
           if (clientId != null) 'client_id': clientId,
@@ -81,7 +80,7 @@ class LedgerService {
   }) async {
     try {
       final response = await DioClient.dio.get(
-        ApiPaths.ledger.bookingAmounts,
+        ApiEndpoints.ledger.bookingAmounts,
         queryParameters: {
           'page': page,
           if (clientId != null) 'client_id': clientId,
@@ -102,7 +101,7 @@ class LedgerService {
   }) async {
     try {
       final response = await DioClient.dio.get(
-        ApiPaths.ledger.sales,
+        ApiEndpoints.ledger.sales,
         queryParameters: {
           'page': page,
           if (clientId != null) 'client_id': clientId,

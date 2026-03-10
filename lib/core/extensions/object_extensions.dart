@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/config/logger_config.dart';
+import 'package:bookie_buddy_web/core/config/logger_config.dart';
 
 extension ObjectX on Object? {
   void logInfo({String? before, String? after}) =>

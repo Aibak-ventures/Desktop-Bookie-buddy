@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/config/dio_client/auth_interceptor.dart';
-import 'package:bookie_buddy_web/core/api/baseurl.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/auth_interceptor.dart';
+import 'package:bookie_buddy_web/core/network/endpoints/baseurl.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
