@@ -57,7 +57,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 
 /// Booking types enum for the tab selection
-enum BookingType { booking, sales, customWork }
+enum BookingType { booking, sales, customWork, oldBooking }
 
 class NewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -173,6 +173,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // New Fields for Redesign
   int coolingPeriodDays = 0; // Default to None (0 = same as return date)
+  DateTime? _bookedDate; // Optional for old booking entries
   final runningKilometersController = TextEditingController();
 
   // Step state
@@ -372,6 +373,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     staffNameController.clear();
     selectedStaffId = null;
     selectedClientId = null;
+    _bookedDate = null;
     advanceAmountController.clear();
     securityAmountController.clear();
     discountAmountController.clear();
@@ -1497,7 +1499,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
           returnTime: returnTime,
-          useAvailableProductsApi: !isSales,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
           isSales: isSales,
         ),
       );
@@ -1510,7 +1512,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
           returnTime: returnTime,
-          useAvailableProductsApi: !isSales,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
           isSales: isSales,
         ),
       );
@@ -1542,7 +1544,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
           returnTime: returnTime,
-          useAvailableProductsApi: !isSales,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
           isSales: isSales,
         ),
       );
@@ -1597,7 +1599,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
           returnTime: returnTime,
-          useAvailableProductsApi: !isSales,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
           isSales: isSales,
         ),
       );
@@ -1690,10 +1692,10 @@ int _calculateRentalDays() {
     final serviceIdToUse =
         (serviceId == null || serviceId == -1) ? null : serviceId;
 
-    // For bookings, add cooling period to return date when calling API
-    final effectiveReturnDate = isSales
-        ? returnDate.format()
-        : returnDate.add(Duration(days: coolingPeriodDays)).format();
+    // For booking mode only, add cooling period; sales and old booking use actual return date
+    final effectiveReturnDate = selectedBookingType == BookingType.booking
+        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+        : returnDate.format();
 
     _selectProductBloc.add(
       SelectProductEvent.loadProducts(
@@ -1702,7 +1704,7 @@ int _calculateRentalDays() {
         returnDate: effectiveReturnDate,
         pickupTime: pickupTime,
         returnTime: returnTime,
-        useAvailableProductsApi: !isSales,
+        useAvailableProductsApi: selectedBookingType == BookingType.booking,
         isSales: isSales,
       ),
     );
@@ -1857,6 +1859,8 @@ int _calculateRentalDays() {
         return BookingTabType.sales;
       case BookingType.customWork:
         return BookingTabType.customWork;
+      case BookingType.oldBooking:
+        return BookingTabType.oldBooking;
     }
   }
 
@@ -1868,6 +1872,8 @@ int _calculateRentalDays() {
         return BookingType.sales;
       case BookingTabType.customWork:
         return BookingType.customWork;
+      case BookingTabType.oldBooking:
+        return BookingType.oldBooking;
     }
   }
 
@@ -1880,6 +1886,8 @@ int _calculateRentalDays() {
         return 'New Sale';
       case BookingType.customWork:
         return 'Custom Work';
+      case BookingType.oldBooking:
+        return 'Old Booking';
     }
   }
 
@@ -1895,6 +1903,7 @@ int _calculateRentalDays() {
         children: [
           _buildTabButton('Booking', BookingType.booking),
           _buildTabButton('Sales', BookingType.sales),
+          _buildTabButton('Old Booking', BookingType.oldBooking),
         ],
       ),
     );
@@ -1931,6 +1940,9 @@ int _calculateRentalDays() {
           child: Text('Custom Work - Coming Soon'),
         ),
       );
+    }
+    if (selectedBookingType == BookingType.oldBooking) {
+      return _buildOldBookingContent();
     }
     // Same UI for both booking and sales
     return _buildBookingContent();
@@ -2795,7 +2807,7 @@ int _calculateRentalDays() {
                                         returnDate: returnDate.format(),
                                         pickupTime: pickupTime,
                                         returnTime: returnTime,
-                                        useAvailableProductsApi: !isSales,
+                                        useAvailableProductsApi: selectedBookingType == BookingType.booking,
                                         isSales: isSales,
                                       ),
                                     );
@@ -3998,7 +4010,7 @@ int _calculateRentalDays() {
             returnTime: returnTime,
             preSelectedData: selectedProductsNotifier.value,
             isSales: selectedBookingType == BookingType.sales,
-            useAvailableProductsApi: selectedBookingType != BookingType.sales,
+            useAvailableProductsApi: selectedBookingType == BookingType.booking,
           ),
         ),
       ),
@@ -5639,6 +5651,340 @@ int _calculateRentalDays() {
           ),
         ],
       ),
+    );
+  }
+
+  // ─── Old Booking ─────────────────────────────────────────────────────────
+
+  Widget _buildOldBookingContent() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Left: dates + product search / table
+        Expanded(
+          flex: 7,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildDateSelectionSection(),
+              const SizedBox(height: 16),
+              Expanded(child: _buildServiceSelectionSection()),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        // Right: client details + summary + submit
+        SizedBox(
+          width: 340,
+          child: _buildOldBookingRightPanel(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOldBookingRightPanel() {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Booked Date (optional)
+                  const Text(
+                    'Booked Date (Optional)',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 4),
+                  GestureDetector(
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _bookedDate ?? DateTime.now(),
+                        firstDate: DateTime(2015),
+                        lastDate: DateTime.now(),
+                      );
+                      if (picked != null) setState(() => _bookedDate = picked);
+                    },
+                    child: Container(
+                      height: 44,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.calendar_today,
+                              size: 16, color: Colors.grey.shade500),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _bookedDate != null
+                                  ? _bookedDate!.format()
+                                  : 'Select booked date',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: _bookedDate != null
+                                    ? Colors.black87
+                                    : Colors.grey.shade400,
+                              ),
+                            ),
+                          ),
+                          if (_bookedDate != null)
+                            GestureDetector(
+                              onTap: () => setState(() => _bookedDate = null),
+                              child: const Icon(Icons.close,
+                                  size: 16, color: Colors.grey),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Client Name
+                  const Text(
+                    'Client',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87),
+                  ),
+                  const SizedBox(height: 4),
+                  BlocListener<ClientCubit, ClientState>(
+                    listener: (context, state) {
+                      if (state.selectedClient != null) {
+                        final client = state.selectedClient!;
+                        clientNameController.text = client.name;
+                        clientPhone1Controller.text =
+                            client.phone1.toString();
+                        if (client.phone2 != null) {
+                          clientPhone2Controller.text =
+                              client.phone2.toString();
+                        }
+                        selectedClientId = client.id;
+                      }
+                    },
+                    child: ClientSearchNameField(
+                      nameController: clientNameController,
+                      errorText: _clientNameError,
+                      hitText: 'Type or search name',
+                    ),
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Client Phone
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: clientPhone1Controller,
+                    hint: 'Client Phone',
+                    isNumber: true,
+                    prefixIcon: Icons.phone,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Address
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: clientAddressController,
+                    hint: 'Place / Address',
+                    prefixIcon: Icons.location_on,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Staff
+                  const Text(
+                    'Staff',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87),
+                  ),
+                  const SizedBox(height: 4),
+                  StaffSearchNameField(
+                    nameController: staffNameController,
+                    errorText: _staffNameError,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Payment Method
+                  _buildPaymentMethodSection(),
+                  const SizedBox(height: _fieldSpacing),
+
+                  // Notes / Description
+                  Container(
+                    height: 80,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextField(
+                      controller: descriptionController,
+                      maxLines: null,
+                      expands: true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Notes / Description',
+                        hintStyle:
+                            TextStyle(fontSize: 13, color: Colors.grey),
+                      ),
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+
+          // Bottom: total + submit button
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Total Amount',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black54),
+                ),
+                const SizedBox(height: 4),
+                ValueListenableBuilder<List<ProductSelectedModel>>(
+                  valueListenable: selectedProductsNotifier,
+                  builder: (context, products, _) {
+                    final total = products.fold<int>(
+                        0, (sum, p) => sum + (p.amount * p.quantity));
+                    return Text(
+                      '₹ ${total.toCurrency()}',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF6132E4),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _handleConfirmOldBooking,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6132E4),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Save Old Booking',
+                      style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleConfirmOldBooking() async {
+    final products = selectedProductsNotifier.value;
+
+    if (products.isEmpty) {
+      context.showSnackBar('Please select at least one item', isError: true);
+      return;
+    }
+
+    if (clientNameController.text.trim().isEmpty) {
+      setState(() => _clientNameError = 'Please enter client name');
+      context.showSnackBar('Please enter client name', isError: true);
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) =>
+          const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final repository = getIt<BookingRepository>();
+      final request = _buildOldBookingRequest();
+      log('Old Booking Request: ${request.toJson()}');
+      await repository.createOldBooking(request);
+
+      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        context.showSnackBar('Old booking saved successfully!');
+        _resetForm();
+      }
+    } catch (e) {
+      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        context.showSnackBar(
+            'Failed to save old booking: ${e.toString()}',
+            isError: true);
+      }
+      log('Error creating old booking: $e');
+    }
+  }
+
+  RequestBookingModel _buildOldBookingRequest() {
+    final products = selectedProductsNotifier.value;
+    final totalAmount = products.fold<int>(
+        0, (sum, p) => sum + (p.amount * p.quantity));
+
+    final staffState = context.read<StaffSearchCubit>().state;
+    final staffId = staffState.selectedStaff?.id;
+
+    return RequestBookingModel(
+      clientId: selectedClientId,
+      staffId: staffId,
+      client: selectedClientId == null
+          ? ClientRequestModel(
+              id: null,
+              name: clientNameController.text.trim().isEmpty
+                  ? null
+                  : clientNameController.text.trim(),
+              phone1: clientPhone1Controller.text.trim().toIntOrNull(),
+            )
+          : null,
+      address: clientAddressController.text.trim().isEmpty
+          ? null
+          : clientAddressController.text.trim(),
+      bookedDate: _bookedDate?.format(),
+      pickupDate: pickupDate.format(),
+      returnDate: returnDate.format(),
+      advanceAmount: totalAmount,
+      paymentMethod: _selectedPaymentMethod,
+      deliveryStatus: DeliveryStatus.returned,
+      bookingStatus: BookingStatus.completed,
+      description: descriptionController.text.trim().isEmpty
+          ? null
+          : descriptionController.text.trim(),
+      products: products,
     );
   }
 

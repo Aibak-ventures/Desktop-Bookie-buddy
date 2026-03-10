@@ -1964,16 +1964,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
   }
 
-  BookingType _convertTabTypeToBookingType(BookingTabType tabType) {
-    switch (tabType) {
-      case BookingTabType.booking:
-        return BookingType.booking;
-      case BookingTabType.sales:
-        return BookingType.sales;
-      case BookingTabType.customWork:
-        return BookingType.customWork;
-    }
-  }
+  // BookingType _convertTabTypeToBookingType(BookingTabType tabType) {
+  //   switch (tabType) {
+  //     case BookingTabType.booking:
+  //       return BookingType.booking;
+  //     case BookingTabType.sales:
+  //       return BookingType.sales;
+  //     case BookingTabType.customWork:
+  //       return BookingType.customWork;
+  //   }
+  // }
 
   Widget _buildCompactHeader() {
     return Container(

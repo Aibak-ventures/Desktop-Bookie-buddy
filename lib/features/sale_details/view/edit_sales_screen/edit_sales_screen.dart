@@ -1943,7 +1943,11 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   /// Add product from search with specific variant
   void _addProductFromSearchWithVariant(
       ProductModel product, ProductVariantModel variant) {
-    final price = variant.price ?? product.price ?? 0;
+    // EditSalesScreen is always in sales mode — prefer sale_price over rent price
+    final productSalePriceInt = product.salePrice != null
+        ? (double.tryParse(product.salePrice!)?.toInt())
+        : null;
+    final price = variant.salePrice ?? productSalePriceInt ?? variant.price ?? product.price ?? 0;
 
     final products =
         List<ProductSelectedModel>.from(_formController.selectedProductsNotifier.value);
@@ -2531,7 +2535,10 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
 
   @override
   Widget build(BuildContext context) {
-    final price = widget.product.price ?? 0;
+    // EditSalesScreen is always in sales mode — prefer sale_price over rent price
+    final price = widget.product.salePrice != null
+        ? (double.tryParse(widget.product.salePrice!)?.toInt() ?? widget.product.price ?? 0)
+        : (widget.product.price ?? 0);
     final variants = widget.product.variants;
 
     return Container(

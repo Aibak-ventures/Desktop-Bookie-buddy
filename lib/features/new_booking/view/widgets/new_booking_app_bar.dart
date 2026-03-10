@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum BookingTabType { booking, sales, customWork }
+enum BookingTabType { booking, sales, customWork, oldBooking }
 
 class NewBookingAppBar extends StatefulWidget {
   final BookingTabType selectedTab;
@@ -74,6 +74,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         children: [
           _buildTab('Booking', BookingTabType.booking),
           _buildTab('Sales', BookingTabType.sales),
+          _buildTab('Old Booking', BookingTabType.oldBooking),
           // _buildTab('Custom work', BookingTabType.customWork),
         ],
       ),
