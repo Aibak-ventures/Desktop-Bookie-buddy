@@ -2,16 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/routing/app_router.dart';
 import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
-import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
-import 'package:bookie_buddy_web/core/services/auth_service.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
@@ -299,7 +298,7 @@ class AuthInterceptor extends Interceptor {
         return false;
       }
 
-      final isRefreshed = await getIt<AuthRepository>().refreshToken();
+      final isRefreshed = await getIt<IAuthRepository>().refreshToken();
       final newAccessToken = TokenStorage.accessToken;
 
       if (isRefreshed && newAccessToken != null && newAccessToken.isNotEmpty) {
@@ -511,7 +510,7 @@ class AuthInterceptor extends Interceptor {
 
   Future<void> _clearSessionAndNavigate(BuildContext context) async {
     try {
-      await AuthService.clearUserSession();
+      await getIt.get<IAuthRepository>().clearSession();
       if (context.mounted) {
         await context.pushAndRemoveUntil(LoginScreen());
       }
@@ -522,7 +521,7 @@ class AuthInterceptor extends Interceptor {
 
   Future<void> _clearSession() async {
     try {
-      await AuthService.clearUserSession();
+      await getIt.get<IAuthRepository>().clearSession();
     } catch (e) {
       log('Error clearing session: $e');
     }

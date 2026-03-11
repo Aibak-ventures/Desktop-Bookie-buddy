@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -11,7 +11,7 @@ class OnboardingScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/desktop_login_backgrond.png',
+              'assets/images/desktop_login_background.png',
               fit: BoxFit.cover,
             ),
           ),

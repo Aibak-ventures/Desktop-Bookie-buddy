@@ -1,7 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,12 +9,14 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final _repository = getIt.get<AuthRepository>();
-  AuthBloc() : super(const _Initial()) {
+  final LoginUseCase _loginUseCase;
+  AuthBloc({required LoginUseCase loginUseCase})
+      : _loginUseCase = loginUseCase,
+        super(const _Initial()) {
     on<_LoginRequested>((event, emit) async {
       emit(const AuthState.loading());
       try {
-        await _repository.loginUser(
+        await _loginUseCase.call(
           phone: event.phone,
           password: event.password,
           fcmToken: event.fcmToken,

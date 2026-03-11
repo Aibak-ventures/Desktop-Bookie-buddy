@@ -228,12 +228,12 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.changeOpacity(0.04),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.02),
+                  color: Colors.black.changeOpacity(0.02),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),

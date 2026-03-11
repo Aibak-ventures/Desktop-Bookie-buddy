@@ -20,7 +20,7 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_deta
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/stock_management/view/stock_management_screen.dart';
 import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
-import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

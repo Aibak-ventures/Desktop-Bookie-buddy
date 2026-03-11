@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
-import 'package:bookie_buddy_web/features/change_password/repository/change_password_repository.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/change_account_password_usecase.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'reset_password_event.dart';
@@ -11,12 +9,10 @@ part 'reset_password_state.dart';
 part 'reset_password_bloc.freezed.dart';
 
 class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
-  final ChangePasswordRepository _repository =
-      getIt<ChangePasswordRepository>();
-  ResetPasswordBloc(
-      {required AuthRepository authRepository,
-      required changePasswordRepository})
-      : super(const _Initial()) {
+  final ChangeAccountPasswordUseCase _changePassword;
+  ResetPasswordBloc({required ChangeAccountPasswordUseCase changePassword})
+      : _changePassword = changePassword,
+        super(const _Initial()) {
     on<_ResetPassword>(_onResetPassword);
   }
 
@@ -28,7 +24,7 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
       if (event.oldPassword == event.newPassword) {
         throw 'New password cannot be the same as the old password';
       }
-      await _repository.changeAccountPassword(
+      await _changePassword.call(
         oldPassword: event.oldPassword,
         newPassword: event.newPassword,
         logoutFromAllDevices: event.logoutFromAllDevices,

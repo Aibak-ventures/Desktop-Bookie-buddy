@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
+import 'package:bookie_buddy_web/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/expense_repository.dart';
@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
-import 'package:bookie_buddy_web/core/services/auth_service.dart';
+import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/services/booking_service.dart';
 import 'package:bookie_buddy_web/core/services/client_services.dart';
 import 'package:bookie_buddy_web/core/services/expense_service.dart';
@@ -20,7 +20,10 @@ import 'package:bookie_buddy_web/core/services/shop_service.dart';
 import 'package:bookie_buddy_web/core/services/staff_service.dart';
 import 'package:bookie_buddy_web/core/services/user_service.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
-import 'package:bookie_buddy_web/features/change_password/repository/change_password_repository.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/change_account_password_usecase.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/change_secret_password_usecase.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/login_usecase.dart';
 import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.dart';
 import 'package:bookie_buddy_web/features/home/services/dashboard_service.dart';
 import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.dart';
@@ -36,11 +39,11 @@ final getIt = GetIt.instance;
 class AppDependencies {
   static final _registerLazy = getIt.registerLazySingleton;
   static final _get = getIt.get;
-  static void setupServices() {
-    _registerLazy(AuthService.new);
+
+  /// register services
+  static void _registerServices() {
     _registerLazy(UserService.new);
     _registerLazy(DashboardService.new);
-    // _registerLazy(BookingSearchService.new);
     _registerLazy(BookingService.new);
     _registerLazy(ProductQueryService.new);
     _registerLazy(ProductActionService.new);
@@ -57,21 +60,19 @@ class AppDependencies {
     _registerLazy(() => const SearchService());
   }
 
-  static void setupRepositories() {
+  /// register repositories
+  static void _registerRepositories() {
     _registerLazy(
       () => UserRepository(
         userService: _get<UserService>(),
         prefs: _get<SharedPreferenceHelper>(),
+        authRepository: _get<IAuthRepository>(),
       ),
     );
-
-    _registerLazy(() => AuthRepository(authService: _get<AuthService>()));
 
     _registerLazy(() => DashboardRepository(_get<DashboardService>()));
 
     _registerLazy(() => BookingRepository(_get<BookingService>()));
-
-    _registerLazy(ChangePasswordRepository.new);
 
     _registerLazy(() => ServiceRepository(serviceApi: _get<ServiceApi>()));
 
@@ -101,10 +102,31 @@ class AppDependencies {
     );
   }
 
+  static void _registerFeatures() {
+    _registerAuthFeature();
+  }
+
+  // ================== feature specific ==================
+
+  /// register auth use cases
+  static void _registerAuthFeature() {
+    _registerLazy(AuthRemoteDatasource.new);
+    _registerLazy<IAuthRepository>(
+        () => AuthRepositoryImpl(_get<AuthRemoteDatasource>()));
+    _registerLazy(
+      () => LoginUseCase(_get<IAuthRepository>()),
+    );
+    _registerLazy(() => ChangeAccountPasswordUseCase(_get<IAuthRepository>()));
+    _registerLazy(() => ChangeSecretPasswordUseCase(_get<IAuthRepository>()));
+  }
+
+  // ================== end of feature specific ==================
+
   /// Initializes the dependencies for the application by registering
   /// the BookingController using Get.lazyPut for dependency injection.
   static void init() {
-    setupServices();
-    setupRepositories();
+    _registerServices();
+    _registerFeatures();
+    _registerRepositories();
   }
 }

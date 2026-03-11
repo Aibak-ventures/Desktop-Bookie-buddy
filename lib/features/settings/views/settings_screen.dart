@@ -1,14 +1,14 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+// import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/change_account_password_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
+// import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/change_password/repository/change_password_repository.dart';
-import 'package:bookie_buddy_web/features/change_password/view/reset_password_screen.dart';
-import 'package:bookie_buddy_web/features/change_password/view_model/bloc_reset_password/reset_password_bloc.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/pages/reset_password_screen.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/reset_password_bloc/reset_password_bloc.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/settings/view_models/bloc_manage_password_settings/manage_password_settings_bloc.dart';
 import 'package:bookie_buddy_web/features/settings/view_models/cubit_add_button_default_action/add_button_default_action_cubit.dart';
@@ -29,12 +29,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final userCubit = context.read<UserCubit>();
     final user = userCubit.state;
-    final shopRole = user?.shopRole ?? ShopRole.staff;
-    final isOwner = shopRole.isOwner;
-    final isCustomWorkFeatureEnabled = user?.hasFeature(
-          AppPremiumFeatures.customizationWork,
-        ) ??
-        false;
+    // final shopRole = user?.shopRole ?? ShopRole.staff;
+    // final isOwner = shopRole.isOwner;
+    // final isCustomWorkFeatureEnabled = user?.hasFeature(
+    //       AppPremiumFeatures.customizationWork,
+    //     ) ??
+    //     false;
 
     return MultiBlocProvider(
       providers: [
@@ -72,9 +72,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => BlocProvider(
                             create: (context) => ResetPasswordBloc(
-                              authRepository: getIt<AuthRepository>(),
-                              changePasswordRepository:
-                                  getIt<ChangePasswordRepository>(),
+                              changePassword:
+                                  getIt<ChangeAccountPasswordUseCase>(),
                             ),
                             child: const ResetPasswordScreen(),
                           )));

@@ -9,7 +9,7 @@ import 'package:bookie_buddy_web/core/storage/token_manager.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 import 'package:dio/dio.dart';
 
-class AuthService {
+class AuthRemoteDatasource {
   Future<CustomResponseModel> userLogin({
     required String phone,
     required String password,
@@ -42,7 +42,7 @@ class AuthService {
   /// It clears shared preferences, resets application dependencies,
   /// disposes the profile controller, and empties the image cache.
   /// Any exceptions during these operations are logged.
-  static Future<void> clearUserSession() async {
+  Future<void> clearUserSession() async {
     // Perform logout operation
     try {
       await TokenStorage.clearTokens();
@@ -53,7 +53,7 @@ class AuthService {
     }
   }
 
-  static Future<CustomResponseModel> secretLogin(String password) async {
+  Future<CustomResponseModel> secretLogin(String password) async {
     try {
       final response = await DioClient.dio.post(
         ApiEndpoints.auth.walletLogin,
@@ -67,7 +67,7 @@ class AuthService {
     }
   }
 
-  static Future<CustomResponseModel> changeAccountPassword({
+  Future<CustomResponseModel> changeAccountPassword({
     required String oldPassword,
     required String newPassword,
     required bool logoutFromAllDevices,
@@ -88,7 +88,7 @@ class AuthService {
     }
   }
 
-  static Future<CustomResponseModel> changeSecretPassword({
+  Future<CustomResponseModel> changeSecretPassword({
     required String oldPassword,
     required String newPassword,
   }) async {

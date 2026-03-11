@@ -28,8 +28,8 @@ import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.da
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
-import 'package:bookie_buddy_web/features/auth/view/login_screen.dart';
-import 'package:bookie_buddy_web/features/auth/view/onboarding_screen.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/pages/onboarding_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';

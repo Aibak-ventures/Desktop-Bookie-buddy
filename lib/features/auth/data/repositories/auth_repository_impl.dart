@@ -1,29 +1,29 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/services/auth_service.dart';
+import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 
-class AuthRepository {
-  final AuthService _authService;
+class AuthRepositoryImpl implements IAuthRepository {
+  final AuthRemoteDatasource _datasource;
 
-  AuthRepository({required AuthService authService})
-      : _authService = authService;
+  AuthRepositoryImpl(this._datasource);
 
-  Future<void> loginUser({
+  @override
+  Future<void> login({
     required String phone,
     required String password,
     String? fcmToken,
   }) async {
     try {
       final response = await safeApiCall(
-        () => _authService.userLogin(
+        () => _datasource.userLogin(
           phone: phone,
           password: password,
           fcmToken: fcmToken,
         ),
       );
-      // log('Login response: ${response.toJson()}');
       if (response.status.isSuccess) {
         final responseData = response.data as Map<String, dynamic>;
         final String accessToken = responseData['access'];
@@ -43,10 +43,11 @@ class AuthRepository {
     }
   }
 
+  @override
   Future<void> secretLogin(String password) async {
     try {
       final response = await safeApiCall(
-        () => AuthService.secretLogin(password),
+        () => _datasource.secretLogin(password),
       );
       log('Secret login response: ${response.toJson()}');
       if (!response.status.isSuccess) {
@@ -60,20 +61,22 @@ class AuthRepository {
     }
   }
 
-  Future<void> clearUserSession() async {
+  @override
+  Future<void> clearSession() async {
     try {
-      await AuthService.clearUserSession();
+      await _datasource.clearUserSession();
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       rethrow;
     }
   }
 
+  @override
   Future<bool> refreshToken() async {
     try {
       final refreshToken = TokenStorage.refreshToken;
       final newAccessToken = await safeApiCall(
-        () => _authService.refreshToken(refreshToken: refreshToken),
+        () => _datasource.refreshToken(refreshToken: refreshToken),
       );
 
       // Persist new tokens
@@ -82,6 +85,35 @@ class AuthRepository {
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       return false;
+    }
+  }
+
+  @override
+  Future<void> changeAccountPassword(
+      {required String oldPassword,
+      required String newPassword,
+      bool logoutFromAllDevices = false}) async {
+    try {
+      await _datasource.changeAccountPassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        logoutFromAllDevices: logoutFromAllDevices,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> changeSecretPassword(
+      {required String oldPassword, required String newPassword}) async {
+    try {
+      await _datasource.changeSecretPassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      );
+    } catch (e) {
+      rethrow;
     }
   }
 }

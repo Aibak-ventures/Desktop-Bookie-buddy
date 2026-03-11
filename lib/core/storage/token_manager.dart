@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 
 class TokenManager {
   static Timer? _refreshTimer;
@@ -43,7 +43,7 @@ class TokenManager {
       _isRefreshing = true;
       log('Proactive token refresh triggered');
       try {
-        await getIt.get<AuthRepository>().refreshToken();
+        await getIt.get<IAuthRepository>().refreshToken();
         log('Proactive token refresh completed successfully');
       } catch (e) {
         log('Proactive token refresh failed: $e');

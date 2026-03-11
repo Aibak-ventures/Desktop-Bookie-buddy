@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/auth/view_model/bloc_auth/auth_bloc.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 import 'package:bookie_buddy_web/features/profile/view_model/contact_support_view_model.dart';
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/desktop_login_backgrond.png',
+              'assets/images/desktop_login_background.png',
               fit: BoxFit.cover,
             ),
           ),

@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/change_password/repository/change_password_repository.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/change_secret_password_usecase.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'secret_password_event.dart';
@@ -9,15 +8,17 @@ part 'secret_password_bloc.freezed.dart';
 
 class SecretPasswordBloc
     extends Bloc<SecretPasswordEvent, SecretPasswordState> {
-  final ChangePasswordRepository _repository =
-      getIt<ChangePasswordRepository>();
+  final ChangeSecretPasswordUseCase _changeSecretPassword;
 
-  SecretPasswordBloc({required Object repository}) : super(const _Initial()) {
+  SecretPasswordBloc(
+      {required ChangeSecretPasswordUseCase changeSecretPassword})
+      : _changeSecretPassword = changeSecretPassword,
+        super(const _Initial()) {
     on<SecretPasswordEvent>((event, emit) async {
       emit(const _Loading());
 
       try {
-        await _repository.changeSecretPassword(
+        await _changeSecretPassword.call(
           oldPassword: event.oldPassword,
           newPassword: event.newPassword,
         );

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/services/auth_service.dart';
 import 'package:bookie_buddy_web/core/services/secure_action_auth_session_manager.dart';
 import 'package:bookie_buddy_web/core/services/user_service.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
@@ -14,11 +14,14 @@ import 'package:flutter/rendering.dart';
 class UserRepository {
   final UserService _userService;
   final SharedPreferenceHelper _prefs;
+  final IAuthRepository _authRepository;
   UserRepository({
     required UserService userService,
     required SharedPreferenceHelper prefs,
+    required IAuthRepository authRepository,
   })  : _userService = userService,
-        _prefs = prefs;
+        _prefs = prefs,
+        _authRepository = authRepository;
 
   Future<UserModel> fetchUserData() async {
     try {
@@ -38,7 +41,7 @@ class UserRepository {
   Future<void> logOut({String? fcmToken}) async {
     try {
       if (fcmToken != null) await removeFCMToken(fcmToken);
-      await AuthService.clearUserSession();
+      await _authRepository.clearSession();
       SecureActionAuthSessionManager.reset();
       await CachedNetworkImageProvider.defaultCacheManager.emptyCache();
       // Clear all stored data from SharedPreferences

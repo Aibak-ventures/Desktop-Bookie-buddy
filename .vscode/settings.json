@@ -6,7 +6,10 @@
         "mocktail",
         "msix",
         "Noto",
+        "prefs",
         "skeletonizer",
-        "spinkit"
+        "spinkit",
+        "usecase",
+        "usecases"
     ]
 }

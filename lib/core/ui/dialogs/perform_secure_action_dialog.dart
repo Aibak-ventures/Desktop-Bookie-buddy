@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 // import 'package:bookie_buddy_web/core/constants/enums/enums.dart' show SecretPasswordLocations;
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
@@ -13,7 +14,6 @@ import 'package:bookie_buddy_web/core/constants/enums/enums.dart' hide ShopRole;
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/repositories/auth_repository.dart';
 import 'package:bookie_buddy_web/core/services/secure_action_auth_session_manager.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
@@ -37,9 +37,6 @@ bool _roleCheck(UserPasswordSettingsModel? settings, ShopRole shopRole) {
 
     case UserPasswordSettingRole.staff:
       return shopRole == ShopRole.staff;
-
-    default:
-      return true;
   }
 }
 
@@ -116,7 +113,7 @@ void _verifyPasswordThenPerformActionDialog(
             if (password.isNotEmpty) {
               // Call the reAuth function with the entered password
               try {
-                await getIt.get<AuthRepository>().secretLogin(password);
+                await getIt.get<IAuthRepository>().secretLogin(password);
                 SecureActionAuthSessionManager
                     .markVerified(); // Mark as verified for to skip re auth for next 1 min
                 context.pop();
