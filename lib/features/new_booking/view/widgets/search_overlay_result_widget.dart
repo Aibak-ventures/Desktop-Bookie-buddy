@@ -136,6 +136,8 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                                 padding: const EdgeInsets.only(right: 4),
                                 child: SelectableVariantChip(
                                   text: variant.attribute,
+                                  quantity:
+                                      variant.remainingStock ?? variant.stock ?? 0,
                                   isSelected: isSelected,
                                   onTap: () {
                                     setState(() {
@@ -328,11 +330,13 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
 // Selectable variant chip widget
 class SelectableVariantChip extends StatelessWidget {
   final String text;
+  final int quantity;
   final bool isSelected;
   final VoidCallback onTap;
 
   const SelectableVariantChip({
     required this.text,
+    required this.quantity,
     required this.isSelected,
     required this.onTap,
   });
@@ -345,10 +349,10 @@ class SelectableVariantChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: isShortText ? 33 : null,
-        height: 33,
+        width: isShortText ? 46 : null,
+        height: 46,
         padding:
-            isShortText ? null : const EdgeInsets.symmetric(horizontal: 12),
+            isShortText ? null : const EdgeInsets.symmetric(horizontal: 10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
@@ -359,13 +363,30 @@ class SelectableVariantChip extends StatelessWidget {
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            Text(
+              '$quantity',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: isSelected
+                    ? const Color(0xFF6132E4)
+                    : Colors.grey.shade700,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -124,6 +124,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
+  bool _showAllProductsOnSearchFocus = false;
   // Reactive overlay state — updated without rebuilding the OverlayEntry
   final _overlayProducts = ValueNotifier<List<ProductModel>>([]);
   final _overlayIsLoading = ValueNotifier<bool>(false);
@@ -174,6 +175,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // New Fields for Redesign
   int coolingPeriodDays = 0; // Default to None (0 = same as return date)
   DateTime? _bookedDate; // Optional for old booking entries
+  int _manualExtraRentalDays = 0; // Optional extra days added by user
   final runningKilometersController = TextEditingController();
 
   // Step state
@@ -287,14 +289,48 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _removeSearchOverlay() {
     _searchOverlayEntry?.remove();
     _searchOverlayEntry = null;
+    _showAllProductsOnSearchFocus = false;
     _overlayProducts.value = [];
     _overlayIsLoading.value = false;
+  }
+
+  void _searchAllProductsForOverlay() {
+    final isSales = selectedBookingType == BookingType.sales;
+    final serviceIdToUse =
+        (selectedServiceId == null || selectedServiceId == -1)
+            ? null
+            : selectedServiceId;
+
+    _showAllProductsOnSearchFocus = true;
+    _overlayIsLoading.value = true;
+    if (_searchOverlayEntry == null) {
+      _showSearchOverlay();
+    }
+
+    _selectProductBloc.add(
+      SelectProductEvent.searchProducts(
+        serviceId: serviceIdToUse,
+        query: '',
+        type: 'name',
+        startPrice:
+            _isPriceFilterEnabled.value ? _priceRange.value.start.round() : null,
+        endPrice:
+            _isPriceFilterEnabled.value ? _priceRange.value.end.round() : null,
+        pickupDate: pickupDate.format(),
+        returnDate: returnDate.format(),
+        pickupTime: pickupTime,
+        returnTime: returnTime,
+        useAvailableProductsApi: selectedBookingType == BookingType.booking,
+        isSales: isSales,
+      ),
+    );
   }
 
   /// Check if there are any unsaved changes
   bool hasUnsavedChanges() {
     // Check if products are selected
     if (selectedProductsNotifier.value.isNotEmpty) return true;
+    if (_manualExtraRentalDays > 0) return true;
 
     // Check if client details are filled
     if (clientNameController.text.trim().isNotEmpty) return true;
@@ -374,6 +410,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     selectedStaffId = null;
     selectedClientId = null;
     _bookedDate = null;
+    _manualExtraRentalDays = 0;
     advanceAmountController.clear();
     securityAmountController.clear();
     discountAmountController.clear();
@@ -1660,6 +1697,31 @@ int _calculateRentalDays() {
   return hours <= 24 ? 1 : (hours / 24).ceil();
 }
 
+  int _getEffectiveRentalDays() {
+    final baseDays = _calculateRentalDays();
+    final totalDays = baseDays + _manualExtraRentalDays;
+    return totalDays > 0 ? totalDays : 1;
+  }
+
+  int _getDaysMultiplierForProduct(ProductSelectedModel product) {
+    if (selectedBookingType == BookingType.sales) return 1;
+    if (!_shouldMultiplyByDays(product.variant.mainServiceType)) return 1;
+    return _getEffectiveRentalDays();
+  }
+
+  void _incrementRentalDays() {
+    setState(() {
+      _manualExtraRentalDays += 1;
+    });
+  }
+
+  void _decrementRentalDays() {
+    if (_manualExtraRentalDays == 0) return;
+    setState(() {
+      _manualExtraRentalDays -= 1;
+    });
+  }
+
   /// Get service-specific specification text for product
   String _getProductSpecifications(ProductSelectedModel product) {
     final mainServiceType = product.variant.mainServiceType;
@@ -1767,8 +1829,9 @@ int _calculateRentalDays() {
   /// date range. If any are unavailable, show the [showUnavailableProductsDialog].
   Future<void> _checkSelectedProductsAvailability() async {
     final isSales = selectedBookingType == BookingType.sales;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
     // Only check availability for bookings, not sales
-    if (isSales) return;
+    if (isSales || isOldBooking) return;
 
     final selected = selectedProductsNotifier.value;
     if (selected.isEmpty) return;
@@ -2264,6 +2327,9 @@ int _calculateRentalDays() {
 
   Future<void> _selectDate({required bool isPickup}) async {
     final isSales = selectedBookingType == BookingType.sales;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
+    final today = DateTime.now().dateOnly;
+    final oldBookingMinDate = DateTime(2015);
 
     if (isPickup) {
       // PICKUP DATE PICKER (or SALE DATE for sales mode)
@@ -2272,8 +2338,10 @@ int _calculateRentalDays() {
       final picked = await showDatePicker(
         context: context,
         initialDate: pickupDate,
-        firstDate: DateTime.now().subtract(const Duration(days: 365)),
-        lastDate: isSales
+        firstDate: isOldBooking
+            ? oldBookingMinDate
+            : DateTime.now().subtract(const Duration(days: 365)),
+        lastDate: (isSales || isOldBooking)
             ? DateTime.now()
             : DateTime.now().add(const Duration(days: 365)),
         builder: (context, child) {
@@ -2301,7 +2369,8 @@ int _calculateRentalDays() {
 
           // RIPPLE EFFECT: If pickup > return, push return forward
           if (picked.dateOnly.isAfter(returnDate.dateOnly)) {
-            returnDate = picked.add(const Duration(days: 1));
+            returnDate =
+                isOldBooking ? picked : picked.add(const Duration(days: 1));
 
             // Also update cooling period if it exists
             if (coolingPeriodDate != null) {
@@ -2318,8 +2387,40 @@ int _calculateRentalDays() {
       }
     } else {
       // RETURN DATE PICKER
+      if (isOldBooking) {
+        final minReturnDate = pickupDate.dateOnly;
+        final initialReturnDate = returnDate.dateOnly.isBefore(minReturnDate)
+            ? minReturnDate
+            : returnDate.dateOnly.isAfter(today)
+                ? today
+                : returnDate.dateOnly;
+
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: initialReturnDate,
+          firstDate: minReturnDate,
+          lastDate: today,
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme:
+                    const ColorScheme.light(primary: Color(0xFF6132E4)),
+              ),
+              child: child!,
+            );
+          },
+        );
+
+        if (picked != null) {
+          setState(() {
+            returnDate = picked;
+          });
+          _loadProductsForService(selectedServiceId);
+        }
+        return;
+      }
+
       // CRITICAL: Must be today or future, never in the past
-      final today = DateTime.now().dateOnly;
       final minReturnDate =
           pickupDate.dateOnly.isAfter(today) ? pickupDate.dateOnly : today;
 
@@ -2353,6 +2454,27 @@ int _calculateRentalDays() {
         // Reload products with new date
         _loadProductsForService(selectedServiceId);
       }
+    }
+  }
+
+  Future<void> _selectBookedDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _bookedDate ?? DateTime.now(),
+      firstDate: DateTime(2015),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() => _bookedDate = picked);
     }
   }
 
@@ -2615,7 +2737,8 @@ int _calculateRentalDays() {
         return BlocListener<SelectProductBloc, SelectProductState>(
           bloc: _selectProductBloc,
           listener: (context, state) {
-            final hasQuery = serviceSearchController.text.isNotEmpty;
+            final hasQuery = serviceSearchController.text.isNotEmpty ||
+                _showAllProductsOnSearchFocus;
             final hasFilters = _isPriceFilterEnabled.value ||
                 _selectedSearchTypeIndex.value != 0;
             final hasAnyFilter = hasQuery || hasFilters;
@@ -2696,6 +2819,11 @@ int _calculateRentalDays() {
 
                               return TextField(
                                 controller: serviceSearchController,
+                                onTap: () {
+                                  if (serviceSearchController.text.trim().isEmpty) {
+                                    _searchAllProductsForOverlay();
+                                  }
+                                },
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontFamily: 'Inter',
@@ -2739,6 +2867,10 @@ int _calculateRentalDays() {
                                       horizontal: 12, vertical: 14),
                                 ),
                                 onChanged: (value) {
+                                  if (value.trim().isNotEmpty &&
+                                      _showAllProductsOnSearchFocus) {
+                                    _showAllProductsOnSearchFocus = false;
+                                  }
                                   _onSearchChanged(value);
                                   if (value.isEmpty) {
                                     _removeSearchOverlay();
@@ -3065,6 +3197,7 @@ int _calculateRentalDays() {
 
     // For sales mode, use sale_price if available, otherwise fall back to price
     final isSales = selectedBookingType == BookingType.sales;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
     // Parse product-level sale_price (String?) to int for comparison
     final productSalePriceInt = isSales && product.salePrice != null
         ? (double.tryParse(product.salePrice!)?.toInt())
@@ -3083,17 +3216,20 @@ int _calculateRentalDays() {
     );
 
     if (existingIndex != -1) {
-      // Check if incrementing would exceed available stock
       final existing = products[existingIndex];
       final newQuantity = existing.quantity + 1;
-      final availableStock = variant.remainingStock ?? variant.stock;
 
-      if (newQuantity > availableStock) {
-        context.showSnackBar(
-          'Cannot add more. Available stock: $availableStock',
-          isError: true,
-        );
-        return; // Don't add the product
+      if (!isOldBooking) {
+        // Check if incrementing would exceed available stock
+        final availableStock = variant.remainingStock ?? variant.stock;
+
+        if (newQuantity > availableStock) {
+          context.showSnackBar(
+            'Cannot add more. Available stock: $availableStock',
+            isError: true,
+          );
+          return; // Don't add the product
+        }
       }
 
       // Increment quantity
@@ -3207,6 +3343,7 @@ int _calculateRentalDays() {
 
   Widget _buildProductListHeader() {
     final isSales = selectedBookingType == BookingType.sales;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
     final hasVariants = _hasAnyProductWithVariants();
 
     return Padding(
@@ -3227,14 +3364,16 @@ int _calculateRentalDays() {
             Expanded(child: _buildHeaderCell('Variants')),
             const SizedBox(width: 4),
           ],
+          if (!isOldBooking) ...[
+            Expanded(child: _buildHeaderCell('Available')),
+            const SizedBox(width: 4),
+          ],
+          Expanded(child: _buildHeaderCell('Quantity')),
+          const SizedBox(width: 4),
           if (!isSales) ...[
             Expanded(child: _buildHeaderCell('Days')),
             const SizedBox(width: 4),
           ],
-          Expanded(child: _buildHeaderCell('Available')),
-          const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Quantity')),
-          const SizedBox(width: 4),
           Expanded(child: _buildHeaderCell('Price / item')),
           const SizedBox(width: 4),
           Expanded(child: _buildHeaderCell('Total')),
@@ -3339,7 +3478,8 @@ int _calculateRentalDays() {
 
   Widget _buildProductRow(ProductSelectedModel product) {
     final isSales = selectedBookingType == BookingType.sales;
-    final rentalDays = !isSales ? _calculateRentalDays() : 0;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
+    final rentalDays = !isSales ? _getEffectiveRentalDays() : 0;
     // Only multiply price by days for qualifying service types
     final effectiveDaysMultiplier =
         (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
@@ -3434,68 +3574,46 @@ int _calculateRentalDays() {
             ),
             const SizedBox(width: 4),
           ],
-          // Days (only for bookings)
-          if (!isSales) ...[
+          // Available Badge
+          if (!isOldBooking) ...[
             Expanded(
               child: Center(
                 child: Container(
+                  //  width: 58,
+                  // height: 21,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
+                    color: const Color(0x1C1FD300), // Light green bg
+                    borderRadius: BorderRadius.circular(3),
                   ),
-                  child: Text(
-                    '$rentalDays',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF6132E4),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF27AE60), // Green dot
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${product.variant.remainingStock ?? product.variant.stock} left',
+                        style: const TextStyle(
+                          fontSize: 12, // Slightly larger font 12
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF27AE60),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 4),
           ],
-          // Available Badge
-          Expanded(
-            child: Center(
-              child: Container(
-                //  width: 58,
-                // height: 21,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0x1C1FD300), // Light green bg
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF27AE60), // Green dot
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${product.variant.remainingStock ?? product.variant.stock} left',
-                      style: const TextStyle(
-                        fontSize: 12, // Slightly larger font 12
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF27AE60),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 4),
           // Quantity Buttons
           Expanded(
             child: Row(
@@ -3517,14 +3635,45 @@ int _calculateRentalDays() {
                 _buildQuantityBtn(
                     icon: Icons.add,
                     onTap: () => _incrementQuantity(product),
-                    isDisabled: product.quantity >=
-                        (product.variant.remainingStock ??
-                            product.variant.stock ??
-                            999)),
+                    isDisabled: !isOldBooking &&
+                        product.quantity >=
+                            (product.variant.remainingStock ??
+                                product.variant.stock ??
+                                999)),
               ],
             ),
           ),
           const SizedBox(width: 4),
+          // Days controls (only for bookings/custom/old booking)
+          if (!isSales) ...[
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildQuantityBtn(
+                    icon: Icons.remove,
+                    onTap: _decrementRentalDays,
+                    isDisabled: _manualExtraRentalDays == 0,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    '$rentalDays',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  _buildQuantityBtn(
+                    icon: Icons.add,
+                    onTap: _incrementRentalDays,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 4),
+          ],
           // Price / item
           Expanded(
             child: _editingVariantId == product.variant.variantId
@@ -3634,14 +3783,18 @@ int _calculateRentalDays() {
 
   /// Increment quantity of a product with stock validation
   void _incrementQuantity(ProductSelectedModel product) {
-    // Check available stock using remainingStock with fallback to stock
-    final availableStock =
-        product.variant.remainingStock ?? product.variant.stock ?? 999;
-    final currentQuantity = product.quantity;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
 
-    // Silently prevent increment if at max - button should already be disabled
-    if (currentQuantity >= availableStock) {
-      return;
+    if (!isOldBooking) {
+      // Check available stock using remainingStock with fallback to stock
+      final availableStock =
+          product.variant.remainingStock ?? product.variant.stock ?? 999;
+      final currentQuantity = product.quantity;
+
+      // Silently prevent increment if at max - button should already be disabled
+      if (currentQuantity >= availableStock) {
+        return;
+      }
     }
 
     final products =
@@ -3761,7 +3914,7 @@ int _calculateRentalDays() {
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final isSaleType = selectedBookingType == BookingType.sales;
-              final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
+              final summaryRentalDays = !isSaleType ? _getEffectiveRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
                 (sum, product) {
@@ -4211,6 +4364,13 @@ int _calculateRentalDays() {
   RequestBookingModel _buildBookingRequest() {
     final products = selectedProductsNotifier.value;
     final additionalCharges = additionalChargesNotifier.value;
+    final requestProducts = products
+        .map(
+          (product) => product.copyWith(
+            amount: product.amount * _getDaysMultiplierForProduct(product),
+          ),
+        )
+        .toList();
 
     // Get staff ID from cubit
     final staffState = context.read<StaffSearchCubit>().state;
@@ -4258,7 +4418,7 @@ int _calculateRentalDays() {
       purchaseMode: 'normal',
       paymentMethod: paymentMethod,
       deliveryStatus: deliveryStatus,
-      products: products,
+      products: requestProducts,
       additionalCharges:
           additionalCharges.isNotEmpty ? additionalCharges : null,
       description: descriptionController.text.trim().isNotEmpty
@@ -4313,6 +4473,7 @@ int _calculateRentalDays() {
 
   Widget _buildDateSelectionSection() {
     final isSales = selectedBookingType == BookingType.sales;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -4348,6 +4509,31 @@ int _calculateRentalDays() {
                 value: pickupDate.format(),
                 onTap: () => _selectDate(isPickup: true),
               ),
+            )
+          else if (isOldBooking)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: _buildOldBookedDateField(),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildNewDateField(
+                    label: 'Pickup date',
+                    value: pickupDate.format(),
+                    onTap: () => _selectDate(isPickup: true),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildNewDateField(
+                    label: 'Return date',
+                    value: returnDate.format(),
+                    onTap: () => _selectDate(isPickup: false),
+                  ),
+                ),
+              ],
             )
           else
             // Booking mode - pickup and return dates
@@ -4536,6 +4722,65 @@ int _calculateRentalDays() {
                 ),
                 Icon(Icons.keyboard_arrow_down,
                     size: 18, color: Colors.grey.shade500),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOldBookedDateField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Booked date (optional)',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey.shade600,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: _selectBookedDate,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            height: 42,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF9F9FC),
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.calendar_today_outlined,
+                    size: 16, color: const Color(0xFF9A76E8)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _bookedDate?.format() ?? 'Select booked date',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: _bookedDate == null
+                          ? Colors.grey.shade500
+                          : Colors.black87,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                if (_bookedDate != null)
+                  GestureDetector(
+                    onTap: () => setState(() => _bookedDate = null),
+                    child: Icon(Icons.close, size: 16, color: Colors.grey.shade500),
+                  )
+                else
+                  Icon(Icons.keyboard_arrow_down,
+                      size: 18, color: Colors.grey.shade500),
               ],
             ),
           ),
@@ -5056,7 +5301,7 @@ int _calculateRentalDays() {
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final isSaleType = selectedBookingType == BookingType.sales;
-              final rentalDays = !isSaleType ? _calculateRentalDays() : 1;
+              final rentalDays = !isSaleType ? _getEffectiveRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
                 (sum, product) {
@@ -5693,59 +5938,6 @@ int _calculateRentalDays() {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Booked Date (optional)
-                  const Text(
-                    'Booked Date (Optional)',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 4),
-                  GestureDetector(
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: _bookedDate ?? DateTime.now(),
-                        firstDate: DateTime(2015),
-                        lastDate: DateTime.now(),
-                      );
-                      if (picked != null) setState(() => _bookedDate = picked);
-                    },
-                    child: Container(
-                      height: 44,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.calendar_today,
-                              size: 16, color: Colors.grey.shade500),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              _bookedDate != null
-                                  ? _bookedDate!.format()
-                                  : 'Select booked date',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: _bookedDate != null
-                                    ? Colors.black87
-                                    : Colors.grey.shade400,
-                              ),
-                            ),
-                          ),
-                          if (_bookedDate != null)
-                            GestureDetector(
-                              onTap: () => setState(() => _bookedDate = null),
-                              child: const Icon(Icons.close,
-                                  size: 16, color: Colors.grey),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
                   // Client Name
                   const Text(
                     'Client',
@@ -5786,31 +5978,21 @@ int _calculateRentalDays() {
                   ),
                   const SizedBox(height: _fieldSpacing),
 
+                  // Client Phone 2
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: clientPhone2Controller,
+                    hint: 'Client Phone 2 (Optional)',
+                    isNumber: true,
+                    prefixIcon: Icons.phone_android,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+
                   // Address
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: clientAddressController,
                     hint: 'Place / Address',
                     prefixIcon: Icons.location_on,
                   ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Staff
-                  const Text(
-                    'Staff',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87),
-                  ),
-                  const SizedBox(height: 4),
-                  StaffSearchNameField(
-                    nameController: staffNameController,
-                    errorText: _staffNameError,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Payment Method
-                  _buildPaymentMethodSection(),
                   const SizedBox(height: _fieldSpacing),
 
                   // Notes / Description
@@ -5869,9 +6051,15 @@ int _calculateRentalDays() {
                   valueListenable: selectedProductsNotifier,
                   builder: (context, products, _) {
                     final total = products.fold<int>(
-                        0, (sum, p) => sum + (p.amount * p.quantity));
+                      0,
+                      (sum, product) =>
+                          sum +
+                          (product.amount *
+                              product.quantity *
+                              _getDaysMultiplierForProduct(product)),
+                    );
                     return Text(
-                      '₹ ${total.toCurrency()}',
+                      total.toCurrency(),
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
@@ -5958,14 +6146,24 @@ int _calculateRentalDays() {
   RequestBookingModel _buildOldBookingRequest() {
     final products = selectedProductsNotifier.value;
     final totalAmount = products.fold<int>(
-        0, (sum, p) => sum + (p.amount * p.quantity));
-
-    final staffState = context.read<StaffSearchCubit>().state;
-    final staffId = staffState.selectedStaff?.id;
+      0,
+      (sum, product) =>
+          sum +
+          (product.amount *
+              product.quantity *
+              _getDaysMultiplierForProduct(product)),
+    );
+    final requestProducts = products
+        .map(
+          (product) => product.copyWith(
+            amount: product.amount * _getDaysMultiplierForProduct(product),
+          ),
+        )
+        .toList();
 
     return RequestBookingModel(
       clientId: selectedClientId,
-      staffId: staffId,
+      staffId: null,
       client: selectedClientId == null
           ? ClientRequestModel(
               id: null,
@@ -5973,6 +6171,7 @@ int _calculateRentalDays() {
                   ? null
                   : clientNameController.text.trim(),
               phone1: clientPhone1Controller.text.trim().toIntOrNull(),
+              phone2: clientPhone2Controller.text.trim().toIntOrNull(),
             )
           : null,
       address: clientAddressController.text.trim().isEmpty
@@ -5988,7 +6187,7 @@ int _calculateRentalDays() {
       description: descriptionController.text.trim().isEmpty
           ? null
           : descriptionController.text.trim(),
-      products: products,
+      products: requestProducts,
     );
   }
 
