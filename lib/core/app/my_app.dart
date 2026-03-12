@@ -92,9 +92,12 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               ShopListBloc(shopRepo: getIt.get(), userRepo: getIt.get()),
         ),
-        BlocProvider(create: (context) => ClientCubit(repository: getIt.get())),
         BlocProvider(
-            create: (context) => ClientSaveBloc(repository: getIt.get())),
+          create: (context) => ClientCubit(getClients: getIt.get()),
+        ),
+        BlocProvider(
+          create: (context) => ClientSaveBloc(addClient: getIt.get()),
+        ),
         BlocProvider(
             create: (context) => ProductSearchCubit(repository: getIt.get())),
         BlocProvider(

@@ -3,8 +3,6 @@ import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
@@ -416,7 +414,7 @@ class _EditBookingModalState extends State<EditBookingModal> {
                 const SizedBox(height: 12),
                 _buildSummaryRow(
                   'Status',
-                  widget.booking.deliveryStatus.name ?? 'N/A',
+                  widget.booking.deliveryStatus.name,
                   valueColor:
                       _getStatusColor(widget.booking.deliveryStatus.name),
                 ),
@@ -533,8 +531,8 @@ Future<void> showEditBookingModal({
     barrierColor: Colors.black.withOpacity(0.5),
     builder: (dialogContext) => BlocProvider(
       create: (_) => UpdateBookingCubit(
-        bookingRepository: getIt<BookingRepository>(),
-        clientRepository: getIt<ClientRepository>(),
+        repository: getIt(),
+        addClient: getIt(),
       ),
       child: EditBookingModal(booking: booking),
     ),

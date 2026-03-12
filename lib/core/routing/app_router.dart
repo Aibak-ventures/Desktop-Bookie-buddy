@@ -33,7 +33,7 @@ import 'package:bookie_buddy_web/features/auth/presentation/pages/onboarding_scr
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
-import 'package:bookie_buddy_web/features/client/view/client_list_screen.dart';
+import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
@@ -226,8 +226,8 @@ class AppRouter {
           }
           return BlocProvider(
             create: (context) => UpdateBookingCubit(
-              bookingRepository: getIt.get(),
-              clientRepository: getIt.get(),
+              repository: getIt.get(),
+              addClient: getIt.get(),
             ),
             child: EditBookingScreen(booking: booking),
           );
@@ -306,7 +306,7 @@ class AppRouter {
           providers: [
             BlocProvider(
               create: (context) =>
-                  ClientCubit(repository: getIt.get())..clearSelected(),
+                  ClientCubit(getClients: getIt.get())..clearSelected(),
             ),
             BlocProvider(
               create: (context) => WalletExpenseBloc(
@@ -407,8 +407,8 @@ class AppRouter {
         name: AppRoutes.addOldBookings.name,
         builder: (context, state) => BlocProvider(
           create: (context) => AddOldBookingsBloc(
-            bookingRepository: getIt.get(),
-            clientRepository: getIt.get(),
+            repository: getIt.get(),
+            addClient: getIt.get(),
           ),
           child: const AddOldBookingScreen(),
         ),

@@ -58,5 +58,7 @@ const _$MainServiceTypeEnumMap = {
   MainServiceType.room: 'room',
   MainServiceType.costume: 'costume',
   MainServiceType.jewellery: 'jewellery',
+  MainServiceType.shoes: 'shoes',
+  MainServiceType.bridal: 'bridal',
   MainServiceType.others: 'others',
 };

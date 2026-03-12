@@ -5,6 +5,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'product_model.freezed.dart';
 part 'product_model.g.dart';
 
+String? _salePriceFromJson(dynamic value) {
+  if (value == null) return null;
+  return value.toString();
+}
+
 @freezed
 class ProductModel with _$ProductModel {
   const ProductModel._();
@@ -36,27 +41,23 @@ class ProductModel with _$ProductModel {
     @JsonKey(name: 'variants') required List<ProductVariantModel> variants,
   }) = _ProductModel;
 
-  static String? _salePriceFromJson(dynamic value) {
-    if (value == null) return null;
-    return value.toString();
-  }
-
   // Custom getters to read from attributes if direct fields are null
   String? get effectiveRegistrationNumber =>
       registrationNumber ?? attributes['registration_number'] as String?;
-  
+
   String? get effectivePollutionExpiry =>
       pollutionExpiry ?? attributes['pollution_expiry'] as String?;
-  
+
   String? get effectiveInsuranceExpiry =>
       insuranceExpiry ?? attributes['insurance_expiry'] as String?;
-  
+
   // API uses 'permit_expiry' but we call it fitness/permit expiry
   String? get effectiveFitnessExpiry =>
-      fitnessExpiry ?? attributes['permit_expiry'] as String? ?? attributes['fitness_expiry'] as String?;
-  
-  String? get effectiveBarcode =>
-      barcode ?? attributes['barcode'] as String?;
+      fitnessExpiry ??
+      attributes['permit_expiry'] as String? ??
+      attributes['fitness_expiry'] as String?;
+
+  String? get effectiveBarcode => barcode ?? attributes['barcode'] as String?;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json);

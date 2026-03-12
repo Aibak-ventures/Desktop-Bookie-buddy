@@ -76,8 +76,8 @@ class CompletedBookingsScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => BlocProvider(
                       create: (context) => AddOldBookingsBloc(
-                        bookingRepository: getIt.get(),
-                        clientRepository: getIt.get(),
+                        repository: getIt.get(),
+                        addClient: getIt.get(),
                       ),
                       child: const AddOldBookingScreen(),
                     ),

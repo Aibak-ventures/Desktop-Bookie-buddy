@@ -22,7 +22,7 @@ import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
 import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
 import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
 import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
-import 'package:bookie_buddy_web/features/client/view/client_list_screen.dart';
+import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_bookings/ledger_bookings_bloc.dart';
@@ -290,7 +290,7 @@ class ProfileScreen extends StatelessWidget {
                       providers: [
                         BlocProvider(
                           create: (context) => ClientCubit(
-                            repository: getIt.get(),
+                            getClients: getIt.get(),
                           )..clearSelected(),
                         ),
                         BlocProvider(

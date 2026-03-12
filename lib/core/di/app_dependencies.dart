@@ -1,6 +1,12 @@
 import 'package:bookie_buddy_web/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
+import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
+import 'package:bookie_buddy_web/features/client/data/repositories/client_repository_impl.dart';
+import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
+import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
+import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_usecase.dart';
+import 'package:bookie_buddy_web/features/client/domain/usecases/delete_client_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/data/repositories/expense_repository_impl.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
@@ -10,7 +16,6 @@ import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/services/booking_service.dart';
-import 'package:bookie_buddy_web/core/services/client_services.dart';
 import 'package:bookie_buddy_web/features/expense/data/datasources/expense_remote_datasources.dart';
 import 'package:bookie_buddy_web/features/expense/domain/usecases/save_expense_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/domain/usecases/save_product_expense_usecase.dart';
@@ -50,14 +55,13 @@ class AppDependencies {
   static void _registerServices() {
     _registerLazy(UserService.new);
     _registerLazy(DashboardService.new);
-    _registerLazy(BookingService.new);
     _registerLazy(ProductQueryService.new);
     _registerLazy(ProductActionService.new);
     _registerLazy(PendingService.new);
     _registerLazy(PaymentService.new);
     _registerLazy(LedgerService.new);
     _registerLazy(ShopService.new);
-    _registerLazy(ClientServices.new);
+    _registerLazy(BookingService.new);
     _registerLazy(SharedPreferenceHelper.new);
     _registerLazy(ServiceApi.new);
     _registerLazy(SalesService.new);
@@ -81,9 +85,6 @@ class AppDependencies {
     _registerLazy(() => ServiceRepository(serviceApi: _get<ServiceApi>()));
 
     _registerLazy(() => ShopRepository(service: _get<ShopService>()));
-
-    _registerLazy(() => ClientRepository(service: _get<ClientServices>()));
-
     _registerLazy(() => SalesRepository(service: _get<SalesService>()));
 
     _registerLazy(() => StaffRepository(_get<StaffService>()));
@@ -108,6 +109,7 @@ class AppDependencies {
     _registerAuthFeature();
     _registerSearchFeature();
     _registerExpenseFeature();
+    _registerClientFeature();
   }
 
   // ================== feature specific ==================
@@ -141,6 +143,16 @@ class AppDependencies {
     _registerLazy(() => SaveExpenseUsecase(_get<IExpenseRepository>()));
     _registerLazy(() => SaveProductExpenseUsecase(_get<IExpenseRepository>()));
     _registerLazy(() => DeleteExpenseUsecase(_get<IExpenseRepository>()));
+  }
+
+  static void _registerClientFeature() {
+    _registerLazy(ClientRemoteDatasource.new);
+    _registerLazy<IClientRepository>(
+        () => ClientRepositoryImpl(_get<ClientRemoteDatasource>()));
+    _registerLazy(() => GetClientsUseCase(_get<IClientRepository>()));
+    _registerLazy(() => AddClientUseCase(_get<IClientRepository>()));
+    _registerLazy(() => UpdateClientUseCase(_get<IClientRepository>()));
+    _registerLazy(() => DeleteClientUseCase(_get<IClientRepository>()));
   }
 
   // ================== end of feature specific ==================

@@ -5,20 +5,24 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
-import 'package:bookie_buddy_web/features/client/view_model/bloc_client_list/client_list_bloc.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_list_bloc/client_list_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/models/client_request_model/client_request_model.dart';
-import '../../../core/ui/dialogs/show_add_client_dialog.dart';
+import '../../../../core/models/client_request_model/client_request_model.dart';
+import '../../../../core/ui/dialogs/show_add_client_dialog.dart';
 
 class ClientListScreen extends StatelessWidget {
   const ClientListScreen({super.key});
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => ClientListBloc(repository: getIt.get())
+        create: (context) => ClientListBloc(
+            addClient: getIt.get(),
+            getClients: getIt.get(),
+            updateClient: getIt.get(),
+            deleteClient: getIt.get())
           ..add(const ClientListEvent.loadClients()),
         child: const _ClientListView(),
       );
@@ -223,9 +227,9 @@ class _ClientListViewState extends State<_ClientListView> {
                                     child: const Icon(Icons.person,
                                         color: AppColors.purple),
                                   ),
-                                  title: Text(client.name ?? '-'),
+                                  title: Text(client.name),
                                   subtitle: Text(
-                                    'Phone 1: ${client.phone1 ?? '-'}\n'
+                                    'Phone 1: ${client.phone1}\n'
                                     'Phone 2: ${client.phone2 ?? '-'}',
                                   ),
                                   isThreeLine: true,

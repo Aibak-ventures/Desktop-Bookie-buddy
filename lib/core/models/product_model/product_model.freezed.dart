@@ -35,7 +35,7 @@ mixin _$ProductModel {
   int? get purchaseAmount => throw _privateConstructorUsedError;
   @JsonKey(name: 'price')
   int? get price => throw _privateConstructorUsedError;
-  @JsonKey(name: 'sale_price')
+  @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
   String? get salePrice =>
       throw _privateConstructorUsedError; // Vehicle-specific fields (for direct API responses or request models)
   @JsonKey(name: 'registration_number')
@@ -84,7 +84,8 @@ abstract class $ProductModelCopyWith<$Res> {
       String? category,
       @JsonKey(name: 'purchase_price') int? purchaseAmount,
       @JsonKey(name: 'price') int? price,
-      @JsonKey(name: 'sale_price') String? salePrice,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+      String? salePrice,
       @JsonKey(name: 'registration_number') String? registrationNumber,
       @JsonKey(name: 'pollution_expiry') String? pollutionExpiry,
       @JsonKey(name: 'insurance_expiry') String? insuranceExpiry,
@@ -237,7 +238,8 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       String? category,
       @JsonKey(name: 'purchase_price') int? purchaseAmount,
       @JsonKey(name: 'price') int? price,
-      @JsonKey(name: 'sale_price') String? salePrice,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+      String? salePrice,
       @JsonKey(name: 'registration_number') String? registrationNumber,
       @JsonKey(name: 'pollution_expiry') String? pollutionExpiry,
       @JsonKey(name: 'insurance_expiry') String? insuranceExpiry,
@@ -383,7 +385,7 @@ class _$ProductModelImpl extends _ProductModel {
       this.category,
       @JsonKey(name: 'purchase_price') this.purchaseAmount,
       @JsonKey(name: 'price') this.price,
-      @JsonKey(name: 'sale_price') this.salePrice,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) this.salePrice,
       @JsonKey(name: 'registration_number') this.registrationNumber,
       @JsonKey(name: 'pollution_expiry') this.pollutionExpiry,
       @JsonKey(name: 'insurance_expiry') this.insuranceExpiry,
@@ -427,7 +429,7 @@ class _$ProductModelImpl extends _ProductModel {
   @JsonKey(name: 'price')
   final int? price;
   @override
-  @JsonKey(name: 'sale_price')
+  @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
   final String? salePrice;
 // Vehicle-specific fields (for direct API responses or request models)
   @override
@@ -568,7 +570,8 @@ abstract class _ProductModel extends ProductModel {
       final String? category,
       @JsonKey(name: 'purchase_price') final int? purchaseAmount,
       @JsonKey(name: 'price') final int? price,
-      @JsonKey(name: 'sale_price') final String? salePrice,
+      @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
+      final String? salePrice,
       @JsonKey(name: 'registration_number') final String? registrationNumber,
       @JsonKey(name: 'pollution_expiry') final String? pollutionExpiry,
       @JsonKey(name: 'insurance_expiry') final String? insuranceExpiry,
@@ -610,7 +613,7 @@ abstract class _ProductModel extends ProductModel {
   @JsonKey(name: 'price')
   int? get price;
   @override
-  @JsonKey(name: 'sale_price')
+  @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson)
   String?
       get salePrice; // Vehicle-specific fields (for direct API responses or request models)
   @override

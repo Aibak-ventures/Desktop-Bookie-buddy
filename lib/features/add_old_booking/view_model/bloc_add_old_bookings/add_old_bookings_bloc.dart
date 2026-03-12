@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
+import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,14 +13,15 @@ part 'add_old_bookings_bloc.freezed.dart';
 
 class AddOldBookingsBloc
     extends Bloc<AddOldBookingsEvent, AddOldBookingsState> {
-  final BookingRepository _bookingRepository;
-  final ClientRepository _clientRepository;
+  final BookingRepository _repository;
+  final AddClientUseCase _addClient;
+
   AddOldBookingsBloc({
-    required BookingRepository bookingRepository,
-    required ClientRepository clientRepository,
-  })  : _bookingRepository = bookingRepository,
-        _clientRepository = clientRepository,
-        super(const _Initial()) {
+    required BookingRepository repository,
+    required AddClientUseCase addClient,
+  })  : _repository = repository,
+        _addClient = addClient,
+        super(const AddOldBookingsState.initial()) {
     on<_AddBooking>(_onAddBooking);
   }
 
@@ -32,15 +33,13 @@ class AddOldBookingsBloc
     try {
       int? clientId = event.booking.clientId;
       if (clientId == null && event.booking.client != null) {
-        final newClient = await _clientRepository.addClient(
-          event.booking.client!,
-        );
+        final newClient = await _addClient.call(event.booking.client!);
         log('New client added: ${newClient.toJson()}');
         clientId = newClient.id;
       } else {
         log('Existing client found: ${event.booking.clientId}');
       }
-      await _bookingRepository.createOldBooking(
+      await _repository.createOldBooking(
         event.booking.copyWith(clientId: clientId),
       );
       emit(const _Success());

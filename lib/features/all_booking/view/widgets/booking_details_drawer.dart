@@ -247,7 +247,7 @@ class BookingDetailsDrawer extends StatelessWidget {
 
   Widget _buildBookingHeaderSection(
       BuildContext context, BookingDetailsModel booking) {
-    final status = booking.deliveryStatus ?? DeliveryStatus.booked;
+    final status = booking.deliveryStatus;
     // Check if booking is completed - disable delivery status editing
     // Cancelled bookings can still change delivery status ONLY if no refunds exist
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
@@ -1444,13 +1444,12 @@ class BookingDetailsDrawer extends StatelessWidget {
       BookingDetailsModel booking, BuildContext context) {
     final productTotal = booking.bookedItems.fold<int>(
       0,
-      (sum, item) => sum + (item.amount ?? 0),
+      (sum, item) => sum + (item.amount),
     );
     final additionalTotal = booking.additionalCharges.fold<int>(
-          0,
-          (sum, charge) => sum + (charge.amount ?? 0),
-        ) ??
-        0;
+      0,
+      (sum, charge) => sum + (charge.amount ?? 0),
+    );
     final totalAmount = booking.totalAmount;
     final paid = booking.actualPaidAmount;
     final discount = booking.discountAmount ?? 0;
@@ -1461,7 +1460,7 @@ class BookingDetailsDrawer extends StatelessWidget {
     // Check if booking is cancelled or completed
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
-    final isBookingFinalized = isCancelled || isCompleted;
+    // final isBookingFinalized = isCancelled || isCompleted;
 
     return Column(
       children: [
@@ -1932,7 +1931,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                             create: (_) => ServiceBloc(repository: getIt()),
                           ),
                           BlocProvider(
-                            create: (_) => ClientCubit(repository: getIt()),
+                            create: (_) => ClientCubit(getClients: getIt()),
                           ),
                           BlocProvider(
                             create: (_) =>

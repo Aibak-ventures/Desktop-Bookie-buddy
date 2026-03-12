@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
+import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,9 +10,9 @@ part 'client_cubit.freezed.dart';
 part 'client_state.dart';
 
 class ClientCubit extends Cubit<ClientState> {
-  final ClientRepository _repository;
-  ClientCubit({required ClientRepository repository})
-      : _repository = repository,
+  final GetClientsUseCase _getClients;
+  ClientCubit({required GetClientsUseCase getClients})
+      : _getClients = getClients,
         super(
           const ClientState(
             selectedClient: null,
@@ -25,7 +25,7 @@ class ClientCubit extends Cubit<ClientState> {
 
   Future<List<ClientModel>> searchClient(String query) async {
     try {
-      final result = await _repository.getClients(searchName: query);
+      final result = await _getClients.call(searchName: query);
 
       emit(
         ClientState(

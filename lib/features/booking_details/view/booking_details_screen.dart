@@ -617,8 +617,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (context) => UpdateBookingCubit(
-                  bookingRepository: getIt.get(),
-                  clientRepository: getIt.get(),
+                  repository: getIt.get(),
+                  addClient: getIt.get(),
                 ),
                 child: EditBookingScreen(booking: booking),
               ),

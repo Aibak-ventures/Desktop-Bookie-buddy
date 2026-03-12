@@ -20,7 +20,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       category: json['category'] as String?,
       purchaseAmount: (json['purchase_price'] as num?)?.toInt(),
       price: (json['price'] as num?)?.toInt(),
-      salePrice: ProductModel._salePriceFromJson(json['sale_price']),
+      salePrice: json['sale_price'] as String?,
       registrationNumber: json['registration_number'] as String?,
       pollutionExpiry: json['pollution_expiry'] as String?,
       insuranceExpiry: json['insurance_expiry'] as String?,

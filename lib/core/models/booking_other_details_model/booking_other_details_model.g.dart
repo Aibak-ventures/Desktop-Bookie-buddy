@@ -12,8 +12,7 @@ _$BookingOtherDetailsModelImpl _$$BookingOtherDetailsModelImplFromJson(
       locationStart: json['location_start'] as String?,
       locationFrom: json['location_from'] as String?,
       locationTo: json['location_to'] as String?,
-      // 'end' stores running_km; also fall back to explicit 'running_km' key for API compatibility
-      end: json['end'] as String? ?? json['running_km'] as String?,
+      end: json['end'] as String?,
     );
 
 Map<String, dynamic> _$$BookingOtherDetailsModelImplToJson(

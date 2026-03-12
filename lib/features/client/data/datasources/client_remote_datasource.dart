@@ -4,16 +4,18 @@ import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:dio/dio.dart';
 
-class ClientServices {
-  static final String clientUrl = ApiEndpoints.bookings.clients;
+class ClientRemoteDatasource {
+  final Dio _dio = DioClient.dio;
+  final String clientUrl = ApiEndpoints.bookings.clients;
   Future<CustomResponseModel> getClients({
     int page = 1,
     String? searchName,
     String? searchPhone,
   }) async {
     try {
-      final response = await DioClient.dio.get(
+      final response = await _dio.get(
         clientUrl,
         queryParameters: {
           'page': page,
@@ -32,7 +34,7 @@ class ClientServices {
 
   Future<CustomResponseModel> addClient(ClientRequestModel client) async {
     try {
-      final response = await DioClient.dio.post(
+      final response = await _dio.post(
         clientUrl,
         data: client.toJson(),
       );
@@ -49,7 +51,7 @@ class ClientServices {
 
   Future<CustomResponseModel> updateClient(ClientRequestModel client) async {
     try {
-      final response = await DioClient.dio.patch(
+      final response = await _dio.patch(
         '$clientUrl${client.id}/',
         data: client.toJson(),
       );
@@ -65,7 +67,7 @@ class ClientServices {
 
   Future<CustomResponseModel> deleteClient(int clientId) async {
     try {
-      final response = await DioClient.dio.delete('$clientUrl$clientId/');
+      final response = await _dio.delete('$clientUrl$clientId/');
 
       log(
         'delete client response: ${response.realUri.toString()}, data: ${response.data}',

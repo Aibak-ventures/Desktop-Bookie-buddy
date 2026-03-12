@@ -11,13 +11,10 @@ part 'add_booking_bloc.freezed.dart';
 
 class AddBookingBloc extends Bloc<AddBookingEvent, AddBookingState> {
   final BookingRepository _bookingRepository;
-  // final ClientRepository _clientRepository;
 
   AddBookingBloc({
     required BookingRepository bookingRepository,
-    // required ClientRepository clientRepository,
   })  : _bookingRepository = bookingRepository,
-        //  _clientRepository = clientRepository,
         super(const _Initial(booking: RequestBookingModel())) {
     //
     on<_UpdateBookingData>(_onUpdateBookingData);
