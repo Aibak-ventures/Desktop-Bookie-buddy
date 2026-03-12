@@ -8,7 +8,6 @@ import 'package:bookie_buddy_web/core/services/product_service/product_query_ser
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/product/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
-import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';
 import 'package:bookie_buddy_web/features/transfer_product/models/transfer_product_history_model/transfer_product_history_model.dart';
 import 'package:flutter/material.dart';
 
@@ -36,26 +35,6 @@ class ProductRepository {
       throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error saving product: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
-
-  // CREATE or UPDATE Expense
-  Future<void> saveProductExpense({
-    required ExpenseRequestModel expense,
-  }) async {
-    try {
-      final response = await safeApiCall(
-        () => _actionService.addOrUpdateProductExpense(expense: expense),
-      );
-      log('Save product expense response: ${response.toJson()}');
-      if (response.status.isSuccess) {
-        return;
-      }
-      log('Save product expense failed: ${response.devMessage}');
-      throw response.message ?? 'Failed to complete operation';
-    } catch (e, stack) {
-      log('Error saving product expense: $e', stackTrace: stack);
       rethrow;
     }
   }
@@ -303,7 +282,8 @@ class ProductRepository {
           returnTime: returnTime,
           bookingId: bookingId,
           variantIds: variantIds,
-        ),     );
+        ),
+      );
 
       if (response.status.isSuccess) {
         return PaginationModel<ProductModel>.fromJson(
@@ -505,7 +485,8 @@ class ProductRepository {
           final variants = (productMap?['variants'] as List<dynamic>?) ?? [];
           for (final variant in variants) {
             final variantMap = variant as Map<String, dynamic>?;
-            final remainingStock = (variantMap?['remaining_stock'] as num?)?.toInt() ?? 0;
+            final remainingStock =
+                (variantMap?['remaining_stock'] as num?)?.toInt() ?? 0;
             if (remainingStock == 0) {
               final variantId = (variantMap?['id'] as num?)?.toInt();
               if (variantId != null) unavailableIds.add(variantId);

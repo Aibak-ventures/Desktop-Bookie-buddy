@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/invoice_enums.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/features/ledger/models/ledger_expense_grouped_model/ledger_expense_grouped_model.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/ledger/models/daily_summary_model/daily_summary_model.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_bookings_grouped_model/ledger_bookings_grouped_model.dart';
@@ -24,12 +25,12 @@ class LedgerRepository {
     required LedgerService ledgerService,
     required PendingService balanceService,
     required PaymentService paymentService,
-  }) : _ledgerService = ledgerService,
-       _balanceService = balanceService,
-       _paymentService = paymentService;
+  })  : _ledgerService = ledgerService,
+        _balanceService = balanceService,
+        _paymentService = paymentService;
 
   Future<PaginationModel<LedgerSecurityAmountDailyModel>>
-  getSecurityAmountsPagination({required int page, int? clientId}) async {
+      getSecurityAmountsPagination({required int page, int? clientId}) async {
     try {
       final response = await safeApiCall(
         () => _ledgerService.fetchSecurityAmountsPagination(
@@ -139,8 +140,8 @@ class LedgerRepository {
               LedgerBookingDailyModel.fromJson(item as Map<String, dynamic>),
           customJsonParser: (dataJson, itemFromJson) =>
               LedgerBookingsGroupedModel.fromCustomJson(
-                dataJson as Map<String, dynamic>,
-              ).dailyBookings,
+            dataJson as Map<String, dynamic>,
+          ).dailyBookings,
         );
       }
       log('Get ledger Bookings Pagination Error: ${response.devMessage}');
@@ -166,8 +167,8 @@ class LedgerRepository {
           (item) => LedgerSaleDailyModel.fromJson(item as Map<String, dynamic>),
           customJsonParser: (dataJson, itemFromJson) =>
               LedgerSalesGroupedModel.fromCustomJson(
-                dataJson as Map<String, dynamic>,
-              ),
+            dataJson as Map<String, dynamic>,
+          ),
         );
       }
       log('Get ledger Sales Pagination Error: ${response.devMessage}');
@@ -260,6 +261,35 @@ class LedgerRepository {
       return filePath;
     } catch (e, stack) {
       log('Error downloading ledger invoice: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<PaginationModel<LedgerExpenseDailyModel>> getExpensePagination({
+    required int page,
+    int? clientId,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _ledgerService.fetchExpensePagination(page: page),
+      );
+      if (response.status.isSuccess) {
+        return PaginationModel<LedgerExpenseDailyModel>.fromJson(
+          response.data,
+          (item) =>
+              LedgerExpenseDailyModel.fromJson(item as Map<String, dynamic>),
+          customJsonParser: (dataJson, itemFromJson) {
+            final expenses = LedgerExpenseGroupedModel.fromCustomJson(
+              dataJson as Map<String, dynamic>,
+            );
+            return expenses.dailyExpenses;
+          },
+        );
+      }
+      log('Get Expense Pagination Error: ${response.devMessage}');
+      throw response.message ?? 'Failed to get expense pagination';
+    } catch (e, stack) {
+      log('Get Expense Pagination Error: $e', stackTrace: stack);
       rethrow;
     }
   }

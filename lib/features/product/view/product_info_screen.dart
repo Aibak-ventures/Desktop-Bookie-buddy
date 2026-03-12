@@ -9,12 +9,11 @@ import 'package:bookie_buddy_web/core/ui/dialogs/show_variant_selection_dialog.d
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
-import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
+import 'package:bookie_buddy_web/features/expense/presentation/dialogs/product_add_expense_dialog.dart';
 import 'package:bookie_buddy_web/features/product/view/product_growth_screen.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product_growth/product_growth_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product_info/product_info_bloc.dart';
-import 'package:bookie_buddy_web/features/product/view_model/cubit_add_expense/add_expense_cubit.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view/product_all_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_completed/product_booking_completed_bloc.dart';
 import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_upcoming/product_booking_upcoming_bloc.dart';
@@ -815,17 +814,24 @@ class ProductInfoScreen extends StatelessWidget {
     final product = context.read<ProductInfoBloc>().getProductInfo();
     if (product == null) return;
 
-    await showDialog(
+    showProductAddExpenseDialog(
       context: context,
-      builder: (context) => BlocProvider(
-        create: (_) => AddExpenseCubit(repository: getIt.get()),
-        child: ProductAddExpenseDialog(
-          variantId: product.variants.first.id,
-          mainServiceType: mainServiceType,
-          variants: product.variants,
-        ),
-      ),
+      variantId: product.variants.first.id,
+      mainServiceType: mainServiceType,
+      variants: product.variants,
     );
+
+    // await showDialog(
+    //   context: context,
+    //   builder: (context) => BlocProvider(
+    //     create: (_) => AddExpenseCubit(saveProductExpenseUsecase: getIt.get()),
+    //     child: ProductAddExpenseDialog(
+    //       variantId: product.variants.first.id,
+    //       mainServiceType: mainServiceType,
+    //       variants: product.variants,
+    //     ),
+    //   ),
+    // );
   }
 
   void _showGrowthScreen(BuildContext context) async {

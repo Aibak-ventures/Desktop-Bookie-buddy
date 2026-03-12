@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/client_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/expense_repository.dart';
+import 'package:bookie_buddy_web/features/expense/data/repositories/expense_repository_impl.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
@@ -11,7 +11,7 @@ import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/services/booking_service.dart';
 import 'package:bookie_buddy_web/core/services/client_services.dart';
-import 'package:bookie_buddy_web/core/services/expense_service.dart';
+import 'package:bookie_buddy_web/features/expense/data/datasources/expense_remote_datasources.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_action_service.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_query_service.dart';
 import 'package:bookie_buddy_web/core/services/sales_service.dart';
@@ -49,7 +49,7 @@ class AppDependencies {
     _registerLazy(BookingService.new);
     _registerLazy(ProductQueryService.new);
     _registerLazy(ProductActionService.new);
-    _registerLazy(ExpenseService.new);
+    _registerLazy(ExpenseRemoteDataSource.new);
     _registerLazy(PendingService.new);
     _registerLazy(PaymentService.new);
     _registerLazy(LedgerService.new);
@@ -81,7 +81,7 @@ class AppDependencies {
 
     _registerLazy(() => ClientRepository(service: _get<ClientServices>()));
 
-    _registerLazy(() => ExpenseRepository(_get<ExpenseService>()));
+    _registerLazy(() => ExpenseRepositoryImpl(_get<ExpenseRemoteDataSource>()));
 
     _registerLazy(() => SalesRepository(service: _get<SalesService>()));
 

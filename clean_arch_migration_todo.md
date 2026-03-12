@@ -9,12 +9,11 @@
 - [x] **auth** — login, secret login, change password, session, token refresh
 - [x] **search** — single query use case, no mutations, already has `services/` + `repositories/`
 - [x] **splash** — thin, just checks token and routes; no datasource needed
+- [x] **save_expense** (now `expense`) — moved shared data/domain layer to its own feature, combined add global/product expenses.
 
 ---
 
 ## 🟢 Phase 1 — Easy (Isolated, read-light)
-
-- [ ] **save_expense** — only has `view/` + `view_model/`, no existing repo layer; straightforward write
 
 ---
 

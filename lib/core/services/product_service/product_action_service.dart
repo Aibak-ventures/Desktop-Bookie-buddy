@@ -6,7 +6,6 @@ import 'package:bookie_buddy_web/utils/error/exceptions/product_exceptions.dart'
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/product/models/product_request_model/product_request_model.dart';
-import 'package:bookie_buddy_web/features/save_expense/models/expense_request_model/expense_request_model.dart';
 
 import 'package:dio/dio.dart';
 
@@ -164,43 +163,19 @@ class ProductActionService {
     }
   }
 
-  Future<CustomResponseModel> addOrUpdateProductExpense({
-    required ExpenseRequestModel expense,
-  }) async {
-    try {
-      final bool isAdding = expense.expenseId == null;
-      final String url =
-          '${ApiEndpoints.expenses.variantExpenses}${expense.expenseId == null ? '' : '${expense.expenseId}/'}';
+  // Future<CustomResponseModel> deleteExpense(int expenseId) async {
+  //   try {
+  //     // final res = await _dio.delete("/expenses/product_expenses/$expenseId");
+  //     final res = await _dio.delete(
+  //       '${ApiEndpoints.expenses.variantExpenses}$expenseId/',
+  //     );
 
-      final body = expense.toJson();
-
-      final res = isAdding
-          ? await _dio.post(url, data: body)
-          : await _dio.patch(url, data: body);
-
-      log(
-        'add or update expense status: ${res.realUri.toString()}, ${res.statusCode}, data: ${res.data}',
-      );
-      return CustomResponseModel.fromJson(res.data);
-    } catch (e, stack) {
-      log('add or update expense error: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
-
-  Future<CustomResponseModel> deleteExpense(int expenseId) async {
-    try {
-      // final res = await _dio.delete("/expenses/product_expenses/$expenseId");
-      final res = await _dio.delete(
-        '${ApiEndpoints.expenses.variantExpenses}$expenseId/',
-      );
-
-      return CustomResponseModel.fromJson(res.data);
-    } catch (e, stack) {
-      log('delete expense error: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
+  //     return CustomResponseModel.fromJson(res.data);
+  //   } catch (e, stack) {
+  //     log('delete expense error: $e', stackTrace: stack);
+  //     rethrow;
+  //   }
+  // }
 
   Future<CustomResponseModel> transferProductToAnotherShop({
     required int fromVariantId,

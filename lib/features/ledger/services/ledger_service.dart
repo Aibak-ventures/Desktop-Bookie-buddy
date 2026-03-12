@@ -117,4 +117,26 @@ class LedgerService {
       rethrow;
     }
   }
+
+  // Fetch all expenses
+  Future<CustomResponseModel> fetchExpensePagination({
+    required int page,
+    int? clientId,
+  }) async {
+    try {
+      final response = await DioClient.dio.get(
+        ApiEndpoints.ledger.expenses,
+        queryParameters: {
+          'page': page,
+          if (clientId != null) 'client_id': clientId,
+        },
+      );
+      log(response.realUri.toString());
+      // log('Fetch Expenses Response: ${response.realUri.toString()}, Data: ${response.data}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Fetch Expenses Error: ${e}', stackTrace: stack);
+      rethrow;
+    }
+  }
 }

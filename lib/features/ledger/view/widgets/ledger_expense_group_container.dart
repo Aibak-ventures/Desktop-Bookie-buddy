@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -8,9 +7,8 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_shimmer_box.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/ledger_list_tile.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
-import 'package:bookie_buddy_web/features/product/view/product_add_expense_dialog.dart';
-import 'package:bookie_buddy_web/features/product/view_model/cubit_add_expense/add_expense_cubit.dart';
-import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.dart';
+import 'package:bookie_buddy_web/features/expense/presentation/dialogs/product_add_expense_dialog.dart';
+import 'package:bookie_buddy_web/features/expense/presentation/pages/add_expense_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -95,27 +93,41 @@ class LedgerExpenseGroupContainer extends StatelessWidget {
                         context,
                         expense.serviceId,
                       );
-                      showDialog(
+                      showProductAddExpenseDialog(
                         context: context,
-                        builder: (context) => BlocProvider(
-                          create: (context) =>
-                              AddExpenseCubit(repository: getIt.get()),
-                          child: ProductAddExpenseDialog(
-                            id: expense.id,
-                            mainServiceType: mainService,
-                            variantId: expense.variantId ?? expense.productId!,
-                            existingAmount: expense.expense,
-                            existingDate: expense.date,
-                            existingDescription: expense.description,
-                            existingType: expense.type,
-                          ),
-                        ),
+                        id: expense.id,
+                        mainServiceType: mainService,
+                        variantId: expense.variantId ?? expense.productId!,
+                        existingAmount: expense.expense,
+                        existingDate: expense.date,
+                        existingDescription: expense.description,
+                        existingType: expense.type,
                       ).then((_) {
                         context.read<WalletExpenseBloc>().add(
                               const WalletExpenseEvent.loadExpense(),
                             );
                       });
-                      ;
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (context) => BlocProvider(
+                      //     create: (context) => AddExpenseCubit(
+                      //         saveProductExpenseUsecase: getIt.get()),
+                      //     child: ProductAddExpenseDialog(
+                      //       id: expense.id,
+                      //       mainServiceType: mainService,
+                      //       variantId: expense.variantId ?? expense.productId!,
+                      //       existingAmount: expense.expense,
+                      //       existingDate: expense.date,
+                      //       existingDescription: expense.description,
+                      //       existingType: expense.type,
+                      //     ),
+                      //   ),
+                      // ).then((_) {
+                      //   context.read<WalletExpenseBloc>().add(
+                      //         const WalletExpenseEvent.loadExpense(),
+                      //       );
+                      // });
+
                       return;
                     }
                     context.push(AddExpenseScreen(expense: expense)).then((_) {

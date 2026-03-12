@@ -296,6 +296,7 @@ class ProfileScreen extends StatelessWidget {
                         BlocProvider(
                           create: (context) => WalletExpenseBloc(
                             repository: getIt.get(),
+                            expenseRepository: getIt.get(),
                           ),
                         ),
                         BlocProvider(

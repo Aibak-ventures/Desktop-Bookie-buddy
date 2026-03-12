@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/repositories/expense_repository.dart';
+import 'package:bookie_buddy_web/features/expense/domain/repositories/i_expense_repository.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_expense_grouped_model/ledger_expense_grouped_model.dart';
+import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -11,9 +12,13 @@ part 'wallet_expense_event.dart';
 part 'wallet_expense_state.dart';
 
 class WalletExpenseBloc extends Bloc<WalletExpenseEvent, WalletExpenseState> {
-  final ExpenseRepository _repository;
-  WalletExpenseBloc({required ExpenseRepository repository})
+  final LedgerRepository _repository;
+  final IExpenseRepository _expenseRepository;
+  WalletExpenseBloc(
+      {required LedgerRepository repository,
+      required IExpenseRepository expenseRepository})
       : _repository = repository,
+        _expenseRepository = expenseRepository,
         super(const _Loading()) {
     on<_LoadExpense>(_onLoadExpense);
     on<_LoadNextPageExpense>(_onLoadNextPageExpense);
@@ -83,7 +88,7 @@ class WalletExpenseBloc extends Bloc<WalletExpenseEvent, WalletExpenseState> {
   ) async {
     // final s = state;
     try {
-      await _repository.deleteExpense(
+      await _expenseRepository.deleteExpense(
         expenseId: event.expenseId,
         variantId: event.variantId,
       );

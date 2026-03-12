@@ -67,7 +67,7 @@ import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.
 import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
 import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
-import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.dart';
+import 'package:bookie_buddy_web/features/expense/presentation/pages/add_expense_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
@@ -309,7 +309,8 @@ class AppRouter {
                   ClientCubit(repository: getIt.get())..clearSelected(),
             ),
             BlocProvider(
-              create: (context) => WalletExpenseBloc(repository: getIt.get()),
+              create: (context) => WalletExpenseBloc(
+                  repository: getIt.get(), expenseRepository: getIt.get()),
             ),
             BlocProvider(
               create: (context) => WalletPaymentsBloc(repository: getIt.get()),

@@ -25,7 +25,7 @@ import 'package:bookie_buddy_web/features/product/view_model/bloc_product/produc
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/profile/repository/bug_report_repository.dart';
 import 'package:bookie_buddy_web/features/profile/view_model/cubit_bug_report/bug_report_cubit.dart';
-import 'package:bookie_buddy_web/features/save_expense/view_model/cubit_save_expense/save_expense_cubit.dart';
+import 'package:bookie_buddy_web/features/expense/presentation/bloc/save_expense_cubit/save_expense_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
@@ -45,7 +45,10 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               UserCubit(repository: getIt.get())..loadUserIfNot(),
         ),
-        BlocProvider(create: (context) => SaveExpenseCubit()),
+        BlocProvider(
+            create: (context) => SaveExpenseCubit(
+                saveExpenseUsecase: getIt.get(),
+                saveProductExpenseUsecase: getIt.get())),
         BlocProvider(
             create: (context) => AllBookingBloc(repository: getIt.get())),
         BlocProvider(
