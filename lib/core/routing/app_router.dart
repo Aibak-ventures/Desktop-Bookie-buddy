@@ -310,7 +310,7 @@ class AppRouter {
             ),
             BlocProvider(
               create: (context) => WalletExpenseBloc(
-                  repository: getIt.get(), expenseRepository: getIt.get()),
+                  repository: getIt.get(), deleteExpenseUsecase: getIt.get()),
             ),
             BlocProvider(
               create: (context) => WalletPaymentsBloc(repository: getIt.get()),
