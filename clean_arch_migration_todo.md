@@ -7,13 +7,13 @@
 
 ## ✅ Done
 - [x] **auth** — login, secret login, change password, session, token refresh
+- [x] **search** — single query use case, no mutations, already has `services/` + `repositories/`
+- [x] **splash** — thin, just checks token and routes; no datasource needed
 
 ---
 
 ## 🟢 Phase 1 — Easy (Isolated, read-light)
 
-- [ ] **search** — single query use case, no mutations, already has `services/` + `repositories/`
-- [ ] **splash** — thin, just checks token and routes; no datasource needed
 - [ ] **save_expense** — only has `view/` + `view_model/`, no existing repo layer; straightforward write
 
 ---

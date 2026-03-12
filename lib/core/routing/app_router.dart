@@ -71,7 +71,7 @@ import 'package:bookie_buddy_web/features/save_expense/view/add_expense_screen.d
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
-import 'package:bookie_buddy_web/features/splash/view/splash_screen.dart';
+import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_select_and_transfer_product_screen.dart';
 
