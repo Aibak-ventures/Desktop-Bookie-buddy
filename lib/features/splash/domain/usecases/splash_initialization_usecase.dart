@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart';
 
 class SplashInitializationUseCase {
   Future<void> call() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
 
     final onboarding =
         SharedPreferenceHelper.getBool(AppConstants.onboardingKey);
