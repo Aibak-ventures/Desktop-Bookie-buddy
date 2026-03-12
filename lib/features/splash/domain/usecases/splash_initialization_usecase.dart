@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/routing/app_router.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
@@ -13,9 +14,9 @@ import 'package:flutter/foundation.dart';
 class SplashInitializationUseCase {
   Future<void> call() async {
     await Future.delayed(const Duration(seconds: 3));
-    //!TODO: check onboarding
 
-    final onboarding = SharedPreferenceHelper.getBool('onboarding');
+    final onboarding =
+        SharedPreferenceHelper.getBool(AppConstants.onboardingKey);
     log('onboarding: $onboarding');
 
     final initialScreen = !(onboarding ?? false)

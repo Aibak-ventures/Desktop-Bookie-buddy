@@ -10,6 +10,7 @@ class AppConstants {
   static const String accessTokenKey = 'accessToken';
   static const String refreshTokenKey = 'refreshToken';
   static const String tokenExpiryKey = 'tokenExpiry';
+  static const String onboardingKey = 'onboarding';
 
   // FCM keys
   static const String fcmVapidKey =
