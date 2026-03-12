@@ -30,8 +30,10 @@ import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.da
 import 'package:bookie_buddy_web/features/ledger/services/ledger_service.dart';
 import 'package:bookie_buddy_web/features/ledger/services/payment_service.dart';
 import 'package:bookie_buddy_web/features/ledger/services/pending_service.dart';
-import 'package:bookie_buddy_web/features/search/repositories/search_repository.dart';
-import 'package:bookie_buddy_web/features/search/services/search_service.dart';
+import 'package:bookie_buddy_web/features/search/data/datasources/search_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/search/data/repositories/search_repository_impl.dart';
+import 'package:bookie_buddy_web/features/search/domain/repositories/i_search_repository.dart';
+import 'package:bookie_buddy_web/features/search/domain/usecases/search_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -57,7 +59,6 @@ class AppDependencies {
     _registerLazy(ServiceApi.new);
     _registerLazy(SalesService.new);
     _registerLazy(StaffService.new);
-    _registerLazy(() => const SearchService());
   }
 
   /// register repositories
@@ -83,9 +84,8 @@ class AppDependencies {
     _registerLazy(() => ExpenseRepository(_get<ExpenseService>()));
 
     _registerLazy(() => SalesRepository(service: _get<SalesService>()));
-    _registerLazy(() => StaffRepository(_get<StaffService>()));
 
-    _registerLazy(() => SearchRepository(_get<SearchService>()));
+    _registerLazy(() => StaffRepository(_get<StaffService>()));
 
     _registerLazy(
       () => ProductRepository(
@@ -102,8 +102,10 @@ class AppDependencies {
     );
   }
 
+  /// register feature specific dependencies
   static void _registerFeatures() {
     _registerAuthFeature();
+    _registerSearchFeature();
   }
 
   // ================== feature specific ==================
@@ -118,6 +120,16 @@ class AppDependencies {
     );
     _registerLazy(() => ChangeAccountPasswordUseCase(_get<IAuthRepository>()));
     _registerLazy(() => ChangeSecretPasswordUseCase(_get<IAuthRepository>()));
+  }
+
+  /// register global search use cases
+  static void _registerSearchFeature() {
+    _registerLazy(SearchRemoteDatasource.new);
+    _registerLazy<ISearchRepository>(
+        () => SearchRepositoryImpl(_get<SearchRemoteDatasource>()));
+    _registerLazy(
+      () => SearchUseCase(_get<ISearchRepository>()),
+    );
   }
 
   // ================== end of feature specific ==================

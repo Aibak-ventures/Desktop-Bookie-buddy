@@ -1,17 +1,17 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/features/search/domain/repositories/i_search_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/search/models/global_search_model.dart';
-import 'package:bookie_buddy_web/features/search/services/search_service.dart';
-// import 'package:bookie_buddy_web/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/features/search/domain/models/global_search_model.dart';
+import 'package:bookie_buddy_web/features/search/data/datasources/search_remote_datasource.dart';
 
-class SearchRepository {
-  final SearchService _service;
-  const SearchRepository(this._service);
+class SearchRepositoryImpl implements ISearchRepository {
+  final SearchRemoteDatasource _datasource;
+  const SearchRepositoryImpl(this._datasource);
 
   /// get global search
-
+  @override
   Future<PaginationModel<GlobalSearchModel>> getGlobalSearch({
     int page = 1,
     String? searchQuery,
@@ -20,7 +20,7 @@ class SearchRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _service.fetchGlobalSearch(
+        () => _datasource.fetchGlobalSearch(
           page: page,
           searchQuery: searchQuery,
           startDate: startDate,

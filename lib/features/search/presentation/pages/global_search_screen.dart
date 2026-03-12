@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
+import 'package:bookie_buddy_web/features/search/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
@@ -15,8 +16,7 @@ import 'package:bookie_buddy_web/utils/responsive_widget.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
 import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
-import 'package:bookie_buddy_web/features/search/models/global_search_model.dart';
-import 'package:bookie_buddy_web/features/search/view_model/bloc_search/search_bloc.dart';
+import 'package:bookie_buddy_web/features/search/domain/models/global_search_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
