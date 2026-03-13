@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/controller/edit_booking_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_button.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_client_details_section.dart';

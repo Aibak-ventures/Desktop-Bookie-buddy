@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 // import 'package:bookie_buddy_web/features/add_booking/view_model/cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';

@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/edit_booking/view/edit_new_booking_screen.dart';
@@ -1934,8 +1934,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                             create: (_) => ClientCubit(getClients: getIt()),
                           ),
                           BlocProvider(
-                            create: (_) =>
-                                StaffSearchCubit(repository: getIt()),
+                            create: (_) => StaffSearchCubit(getStaffs: getIt()),
                           ),
                           BlocProvider(
                             create: (_) => SelectedProductsCubit(),

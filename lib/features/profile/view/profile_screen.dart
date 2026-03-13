@@ -4,6 +4,8 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart'
     show SecretPasswordLocations;
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_list_bloc/staff_list_bloc.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/pages/staff_list_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/routing/app_routes.dart';
@@ -19,9 +21,6 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_bookin
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
-import 'package:bookie_buddy_web/features/staff/view/staff_list_screen.dart';
-import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
-import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
 import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
@@ -346,7 +345,10 @@ class ProfileScreen extends StatelessWidget {
             NavigatorX(context).push(
               BlocProvider(
                 create: (context) => StaffListBloc(
-                  repository: getIt.get<StaffRepository>(),
+                  getStaffs: getIt.get(),
+                  addStaff: getIt.get(),
+                  editStaff: getIt.get(),
+                  deleteStaff: getIt.get(),
                 )..add(const StaffListEvent.loadStaffs()),
                 child: const StaffListScreen(),
               ),
@@ -376,7 +378,7 @@ class ProfileScreen extends StatelessWidget {
                 child: const SettingsScreen(),
               ),
             ));
-            // TODO: Navigate to Settings screen when implemented
+            // !TODO: Navigate to Settings screen when implemented
             // context.showSnackBar('Settings screen coming soon!');
           },
         ),

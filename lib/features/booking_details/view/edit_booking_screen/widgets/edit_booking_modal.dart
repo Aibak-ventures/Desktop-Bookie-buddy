@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/controller/edit_booking_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_additional_charges_section.dart';

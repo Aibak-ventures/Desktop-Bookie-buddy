@@ -12,7 +12,15 @@ import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/staff_repository.dart';
+import 'package:bookie_buddy_web/features/staff/data/repositories/staff_repository_impl.dart';
+import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
+import 'package:bookie_buddy_web/features/staff/domain/usecases/add_staff_usecase.dart';
+import 'package:bookie_buddy_web/features/staff/domain/usecases/delete_staff_usecase.dart';
+import 'package:bookie_buddy_web/features/staff/domain/usecases/edit_staff_usecase.dart';
+import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_analytics_report_usecase.dart';
+import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_monthly_bookings_usecase.dart';
+import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_monthly_sales_usecase.dart';
+import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/services/booking_service.dart';
@@ -26,7 +34,7 @@ import 'package:bookie_buddy_web/core/services/product_service/product_query_ser
 import 'package:bookie_buddy_web/core/services/sales_service.dart';
 import 'package:bookie_buddy_web/core/services/service_api.dart';
 import 'package:bookie_buddy_web/core/services/shop_service.dart';
-import 'package:bookie_buddy_web/core/services/staff_service.dart';
+import 'package:bookie_buddy_web/features/staff/data/datasources/staff_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/services/user_service.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
@@ -65,7 +73,6 @@ class AppDependencies {
     _registerLazy(SharedPreferenceHelper.new);
     _registerLazy(ServiceApi.new);
     _registerLazy(SalesService.new);
-    _registerLazy(StaffService.new);
   }
 
   /// register repositories
@@ -86,8 +93,6 @@ class AppDependencies {
 
     _registerLazy(() => ShopRepository(service: _get<ShopService>()));
     _registerLazy(() => SalesRepository(service: _get<SalesService>()));
-
-    _registerLazy(() => StaffRepository(_get<StaffService>()));
 
     _registerLazy(
       () => ProductRepository(
@@ -110,6 +115,7 @@ class AppDependencies {
     _registerSearchFeature();
     _registerExpenseFeature();
     _registerClientFeature();
+    _registerStaffFeature();
   }
 
   // ================== feature specific ==================
@@ -153,6 +159,21 @@ class AppDependencies {
     _registerLazy(() => AddClientUseCase(_get<IClientRepository>()));
     _registerLazy(() => UpdateClientUseCase(_get<IClientRepository>()));
     _registerLazy(() => DeleteClientUseCase(_get<IClientRepository>()));
+  }
+
+  static void _registerStaffFeature() {
+    _registerLazy(StaffRemoteDatasource.new);
+    _registerLazy<IStaffRepository>(
+        () => StaffRepositoryImpl(_get<StaffRemoteDatasource>()));
+    _registerLazy(() => GetStaffsUseCase(_get<IStaffRepository>()));
+    _registerLazy(() => AddStaffUseCase(_get<IStaffRepository>()));
+    _registerLazy(() => EditStaffUseCase(_get<IStaffRepository>()));
+    _registerLazy(() => DeleteStaffUseCase(_get<IStaffRepository>()));
+    _registerLazy(
+        () => GetStaffAnalyticsReportUseCase(_get<IStaffRepository>()));
+    _registerLazy(
+        () => GetStaffMonthlyBookingsUseCase(_get<IStaffRepository>()));
+    _registerLazy(() => GetStaffMonthlySalesUseCase(_get<IStaffRepository>()));
   }
 
   // ================== end of feature specific ==================

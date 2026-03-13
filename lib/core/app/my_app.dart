@@ -1,5 +1,5 @@
 // import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:bookie_buddy_web/features/staff/view_model/bloc_staff_list/staff_list_bloc.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_list_bloc/staff_list_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/routing/app_router.dart';
@@ -9,7 +9,7 @@ import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.d
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_product_search/product_search_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_add_booking/add_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_client_save/client_save_bloc.dart';
@@ -75,16 +75,17 @@ class MyApp extends StatelessWidget {
             ),
         ),
         BlocProvider(
-          create: (context) => StaffListBloc(repository: getIt.get())
-            ..add(const StaffListEvent.loadStaffs()),
+          create: (context) => StaffListBloc(
+            getStaffs: getIt.get(),
+            addStaff: getIt.get(),
+            editStaff: getIt.get(),
+            deleteStaff: getIt.get(),
+          )..add(const StaffListEvent.loadStaffs()),
         ),
         BlocProvider(create: (context) => BookingDetailsPaymentHistoryCubit()),
         BlocProvider(create: (context) => ProductBloc()),
         BlocProvider(
-            create: (context) => StaffSearchCubit(repository: getIt.get())),
-        BlocProvider(
-          create: (context) => StaffListBloc(repository: getIt.get())
-            ..add(const StaffListEvent.loadStaffs()),
+          create: (context) => StaffSearchCubit(getStaffs: getIt.get()),
         ),
         BlocProvider(create: (context) => SaveProductCubit()),
         BlocProvider(create: (context) => BookingSelectionCubit()),

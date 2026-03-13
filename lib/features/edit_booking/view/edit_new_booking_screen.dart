@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
 
 import 'package:bookie_buddy_web/core/ui/widgets/client_search_name_field.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/edit_booking/view/widgets/edit_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/new_booking_app_bar.dart';
@@ -27,7 +27,7 @@ import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
 import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';

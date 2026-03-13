@@ -1,7 +1,7 @@
 // import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 // import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 // import 'package:bookie_buddy_web/core/extensions/string_extensions.dart';
-// import 'package:bookie_buddy_web/core/view_model/cubit_staff_search/staff_search_cubit.dart';
+// import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 // import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 // import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 // import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
