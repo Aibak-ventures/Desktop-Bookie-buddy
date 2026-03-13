@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_custom_alert_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/settings/view_models/cubit_add_button_default_action/add_button_default_action_cubit.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/bloc/add_button_default_action_cubit/add_button_default_action_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

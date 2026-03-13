@@ -12,6 +12,11 @@ import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
+import 'package:bookie_buddy_web/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:bookie_buddy_web/features/settings/domain/repositories/i_settings_repository.dart';
+import 'package:bookie_buddy_web/features/settings/domain/usecases/update_shop_privacy_settings_usecase.dart';
+import 'package:bookie_buddy_web/features/settings/domain/usecases/update_shop_settings_usecase.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/repositories/i_dashboard_repository.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
 import 'package:bookie_buddy_web/features/staff/data/repositories/staff_repository_impl.dart';
@@ -119,6 +124,7 @@ class AppDependencies {
     _registerClientFeature();
     _registerStaffFeature();
     _registerDashboardFeature();
+    _registerSettingsFeature();
   }
 
   // ================== feature specific ==================
@@ -185,6 +191,18 @@ class AppDependencies {
         () => DashboardRepositoryImpl(_get<DashboardRemoteDatasource>()));
     _registerLazy(
       () => GetDashboardDesktopDataUseCase(_get<IDashboardRepository>()),
+    );
+  }
+
+  static void _registerSettingsFeature() {
+    _registerLazy(SettingsRemoteDatasource.new);
+    _registerLazy<ISettingsRepository>(
+        () => SettingsRepositoryImpl(_get<SettingsRemoteDatasource>()));
+    _registerLazy(
+      () => UpdateShopPrivacySettingsUseCase(_get<ISettingsRepository>()),
+    );
+    _registerLazy(
+      () => UpdateShopSettingsUseCase(_get<ISettingsRepository>()),
     );
   }
 

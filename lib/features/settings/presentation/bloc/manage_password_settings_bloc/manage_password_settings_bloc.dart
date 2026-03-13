@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
+import 'package:bookie_buddy_web/features/settings/domain/usecases/update_shop_privacy_settings_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,8 +12,8 @@ part 'manage_password_settings_bloc.freezed.dart';
 
 class ManagePasswordSettingsBloc
     extends Bloc<ManagePasswordSettingsEvent, ManagePasswordSettingsState> {
-  final ShopRepository _repository;
-  ManagePasswordSettingsBloc(this._repository)
+  final UpdateShopPrivacySettingsUseCase _updateShopPrivacySettings;
+  ManagePasswordSettingsBloc(this._updateShopPrivacySettings)
     : super(const ManagePasswordSettingsState.loaded()) {
     on<_Load>(_onLoad);
     on<_UpdateRole>(_onUpdateRole);
@@ -74,7 +74,7 @@ class ManagePasswordSettingsBloc
       ),
     );
     try {
-      await _repository.updateShopPrivacySettings(state.settings);
+      await _updateShopPrivacySettings(state.settings);
       emit(
         state.copyWith(
           status: ManagePwdSettingsStatus.success,

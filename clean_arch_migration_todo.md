@@ -13,12 +13,12 @@
 - [x] **client** — only `view/` + `view_model/`; CRUD via existing `ClientRepository` in core.
 - [x] **staff** — Complete feature migration to Clean Architecture, including Use Cases, Blocs, Widgets, and DI.
 - [x] **dashboard** — Renamed from `home`. Contains `LoadDashboardUseCase`, reads only, has clear domain boundaries.
+- [x] **settings** — Extracted settings endpoints out of `ShopService`/`ShopRepository` into a dedicated Domain/Data layer.
 
 ---
 
 ## 🟢 Phase 1 — Easy (Isolated, read-light)
 
-- [ ] **settings** — mostly navigation + calling auth use cases (already done); thin logic layer.
 - [ ] **profile** — user info, bug report, shop activity; a few use cases but no cross-feature deps.
 
 ---

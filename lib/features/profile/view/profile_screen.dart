@@ -20,7 +20,7 @@ import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.da
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
-import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';

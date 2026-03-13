@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
@@ -70,7 +71,6 @@ import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales
 import 'package:bookie_buddy_web/features/expense/presentation/pages/add_expense_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
-import 'package:bookie_buddy_web/features/settings/views/settings_screen.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_screen.dart';
 import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_select_and_transfer_product_screen.dart';

@@ -222,50 +222,50 @@ enum AppFeatures {
       features?.contains(name.toUpperCase()) ?? false;
 }
 
-enum AddButtonDefaultAction {
-  booking,
-  sales,
-  ask;
+// enum AddButtonDefaultAction {
+//   booking,
+//   sales,
+//   ask;
 
-  static const _BOOKINGS = 'BOOKINGS';
-  static const _SALES = 'SALES';
-  static const _ASK = 'ASK_EVERY_TIME';
+//   static const _BOOKINGS = 'BOOKINGS';
+//   static const _SALES = 'SALES';
+//   static const _ASK = 'ASK_EVERY_TIME';
 
-  String get label {
-    switch (this) {
-      case booking:
-        return 'New Booking';
-      case sales:
-        return 'New Sales';
-      case ask:
-        return 'Ask every time';
-    }
-  }
+//   String get label {
+//     switch (this) {
+//       case booking:
+//         return 'New Booking';
+//       case sales:
+//         return 'New Sales';
+//       case ask:
+//         return 'Ask every time';
+//     }
+//   }
 
-  static AddButtonDefaultAction fromString(String value) {
-    switch (value.toUpperCase()) {
-      case _BOOKINGS:
-        return booking;
-      case _SALES:
-        return sales;
-      case _ASK:
-        return ask;
-      default:
-        return booking;
-    }
-  }
+//   static AddButtonDefaultAction fromString(String value) {
+//     switch (value.toUpperCase()) {
+//       case _BOOKINGS:
+//         return booking;
+//       case _SALES:
+//         return sales;
+//       case _ASK:
+//         return ask;
+//       default:
+//         return booking;
+//     }
+//   }
 
-  String toJson() {
-    switch (this) {
-      case booking:
-        return _BOOKINGS;
-      case sales:
-        return _SALES;
-      case ask:
-        return _ASK;
-    }
-  }
-}
+//   String toJson() {
+//     switch (this) {
+//       case booking:
+//         return _BOOKINGS;
+//       case sales:
+//         return _SALES;
+//       case ask:
+//         return _ASK;
+//     }
+//   }
+// }
 
 enum Month {
   january,

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
+import 'package:bookie_buddy_web/features/settings/domain/usecases/update_shop_settings_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -9,11 +9,11 @@ part 'add_button_default_action_state.dart';
 part 'add_button_default_action_cubit.freezed.dart';
 
 class AddButtonDefaultActionCubit extends Cubit<AddButtonDefaultActionState> {
-  final ShopRepository _repository;
+  final UpdateShopSettingsUseCase _updateShopSettings;
   AddButtonDefaultActionCubit({
     required AddButtonDefaultAction initialAction,
-    required ShopRepository repository,
-  })  : _repository = repository,
+    required UpdateShopSettingsUseCase updateShopSettings,
+  })  : _updateShopSettings = updateShopSettings,
         super(
             AddButtonDefaultActionState.initial(initialAction: initialAction));
 
@@ -25,7 +25,7 @@ class AddButtonDefaultActionCubit extends Cubit<AddButtonDefaultActionState> {
           error: null,
         ),
       );
-      await _repository.updateShopSettings(
+      await _updateShopSettings(
           // addButtonDefaultAction: action as AddButtonDefaultAction?
           );
 

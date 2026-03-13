@@ -1,19 +1,16 @@
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-// import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/change_account_password_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-// import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/reset_password_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/reset_password_bloc/reset_password_bloc.dart';
 import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
-import 'package:bookie_buddy_web/features/settings/view_models/bloc_manage_password_settings/manage_password_settings_bloc.dart';
-import 'package:bookie_buddy_web/features/settings/view_models/cubit_add_button_default_action/add_button_default_action_cubit.dart';
-import 'package:bookie_buddy_web/features/settings/view_models/cubit_product_reserve_days/product_reserve_days_cubit.dart';
-import 'package:bookie_buddy_web/features/settings/views/manage_password_screen.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/bloc/manage_password_settings_bloc/manage_password_settings_bloc.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/bloc/add_button_default_action_cubit/add_button_default_action_cubit.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/bloc/product_reserve_days_cubit/product_reserve_days_cubit.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/pages/manage_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,7 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             final initialCoolingDays =
                 user?.shopSettings.coolingPeriodDuration ?? 0;
             return ProductReserveDaysCubit(
-              repository: getIt.get(),
+              updateShopSettings: getIt.get(),
               initialDays: initialCoolingDays,
             );
           },
@@ -54,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 AddButtonDefaultAction.booking;
             return AddButtonDefaultActionCubit(
               initialAction: action,
-              repository: getIt.get(),
+              updateShopSettings: getIt.get(),
             );
           },
         ),

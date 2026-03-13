@@ -1,8 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/models/shop_model/shop_model.dart';
-import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/services/shop_service.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/models/all_shop_summary_model/all_shop_summary_model.dart';
@@ -25,25 +23,6 @@ class ShopRepository {
       throw response.message ?? 'Failed to get shops';
     } catch (e, stack) {
       log('Get Shops Exception: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
-
-  Future<void> updateShopPrivacySettings(
-    List<UserPasswordSettingsModel> updatedPasswordSettings,
-  ) async {
-    try {
-      final response = await safeApiCall(
-        () => _service.updateShopPrivacySettings(updatedPasswordSettings),
-      );
-
-      if (response.status.isSuccess) {
-        return;
-      }
-      log('Update Shop Privacy Settings Error: ${response.devMessage}');
-      throw response.message ?? 'Failed to update shop privacy settings';
-    } catch (e, stack) {
-      log('Update Shop Privacy Settings Exception: $e', stackTrace: stack);
       rethrow;
     }
   }
@@ -74,28 +53,4 @@ class ShopRepository {
       rethrow;
     }
   }
-
-  Future<void> updateShopSettings({
-    int? coolingPeriodDuration,
-    AddButtonDefaultAction? addButtonDefaultAction,
-  }) async {
-    try {
-      final response = await safeApiCall(
-        () => _service.updateShopSettings(
-          coolingPeriodDuration: coolingPeriodDuration,
-          addButtonDefaultAction: addButtonDefaultAction,
-        ),
-      );
-
-      if (response.status.isSuccess) {
-        return;
-      }
-      log('Update Shop Privacy Settings Error: ${response.devMessage}');
-      throw response.message ?? 'Failed to update shop settings';
-    } catch (e, stack) {
-      log('Update Shop Privacy Settings Exception: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
 }
-
