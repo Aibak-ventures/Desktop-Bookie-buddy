@@ -1,21 +1,23 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/features/dashboard/domain/repositories/i_dashboard_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/features/home/models/dashboard_model/dashboard_model.dart';
-import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
-import 'package:bookie_buddy_web/features/home/services/dashboard_service.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/models/dashboard_model/dashboard_model.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 
-class DashboardRepository {
-  final DashboardService _dashboardService;
+class DashboardRepositoryImpl implements IDashboardRepository {
+  final DashboardRemoteDatasource _dashboardService;
 
-  DashboardRepository(this._dashboardService);
+  DashboardRepositoryImpl(this._dashboardService);
 
   /// Fetch new desktop dashboard data using v4 API
-  Future<DesktopDashboardResponse> loadDesktopDashboardData({
+  @override
+  Future<DesktopDashboardResponse> getDashboardDesktopData({
     int page = 1,
     UserModel? activeShop,
-  }) async { 
+  }) async {
     try {
       return await _dashboardService.fetchDesktopDashboardData(
         page: page,

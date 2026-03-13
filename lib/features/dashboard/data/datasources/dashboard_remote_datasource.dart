@@ -7,10 +7,10 @@ import 'package:bookie_buddy_web/utils/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/booking_exceptions.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/network_exceptions.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
 import 'package:dio/dio.dart';
 
-class DashboardService {
+class DashboardRemoteDatasource {
   /// Fetches dashboard data from the new desktop-dashboard v4 API endpoint
   Future<DesktopDashboardResponse> fetchDesktopDashboardData({
     int page = 1,

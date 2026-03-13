@@ -6,22 +6,23 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
-import 'package:bookie_buddy_web/features/home/models/booking_grouped_model/booking_grouped_model.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/models/booking_grouped_model/booking_grouped_model.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class HomeBookingListWidget extends StatefulWidget {
-  const HomeBookingListWidget({super.key});
+class DashboardBookingListWidget extends StatefulWidget {
+  const DashboardBookingListWidget({super.key});
 
   @override
-  State<HomeBookingListWidget> createState() => _HomeBookingListWidgetState();
+  State<DashboardBookingListWidget> createState() =>
+      _DashboardBookingListWidgetState();
 }
 
-class _HomeBookingListWidgetState extends State<HomeBookingListWidget>
+class _DashboardBookingListWidgetState extends State<DashboardBookingListWidget>
     with SingleTickerProviderStateMixin {
   final searchTextController = TextEditingController();
   late TabController _tabController;

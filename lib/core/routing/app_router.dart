@@ -35,7 +35,7 @@ import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_scre
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
-import 'package:bookie_buddy_web/features/home/view/home_screen.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_bookings/ledger_bookings_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_sales/ledger_sales_bloc.dart';
@@ -151,7 +151,7 @@ class AppRouter {
               GoRoute(
                 path: AppRoutes.home.path,
                 name: AppRoutes.home.name,
-                builder: (context, state) => const HomeScreen(),
+                builder: (context, state) => const DashboardScreen(),
               ),
             ],
           ),

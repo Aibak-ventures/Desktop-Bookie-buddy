@@ -19,8 +19,7 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view_model/bloc_completed_bookings/completed_bookings_bloc.dart';
-import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.dart';
-import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/profile/repository/bug_report_repository.dart';
@@ -68,7 +67,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SelectedProductsCubit()),
         BlocProvider(
           create: (context) => DashboardBloc(
-            repository: getIt.get<DashboardRepository>(),
+            getDashboardDesktopDataUseCase: getIt.get(),
             userCubit: context.read<UserCubit>(),
           )..add(
               const DashboardEvent.loadDashboardData(),

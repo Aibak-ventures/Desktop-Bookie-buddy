@@ -1,15 +1,12 @@
 import 'package:bookie_buddy_web/core/network/endpoints/baseurl.dart';
-// import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widget.dart';
-// import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-// import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
-import 'package:bookie_buddy_web/features/home/view/widgets/carousel_home.dart';
-import 'package:bookie_buddy_web/features/home/view_model/bloc_dashboard/dashboard_bloc.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carousel_dashboard.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart'
@@ -18,16 +15,16 @@ import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_bookin
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatefulWidget {
+class DashboardScreen extends StatefulWidget {
   final void Function(String statusTab)? onNavigateToBookings;
 
-  const HomeScreen({super.key, this.onNavigateToBookings});
+  const DashboardScreen({super.key, this.onNavigateToBookings});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
@@ -121,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ______) {
                                   return SizedBox(
                                     height: 120,
-                                    child: CarouselHome(
+                                    child: CarouselDashboard(
                                       data: carouselData,
                                       onNavigateToBookings:
                                           widget.onNavigateToBookings,
@@ -130,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 orElse: () => SizedBox(
                                   height: 120,
-                                  child: CarouselHome(
+                                  child: CarouselDashboard(
                                     data: DesktopDashboardCarouselData.empty(),
                                     onNavigateToBookings:
                                         widget.onNavigateToBookings,

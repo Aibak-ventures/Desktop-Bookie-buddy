@@ -10,15 +10,15 @@ import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_bookin
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
-import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CarouselHome extends StatelessWidget {
+class CarouselDashboard extends StatelessWidget {
   final DesktopDashboardCarouselData data;
   final void Function(String statusTab)? onNavigateToBookings;
 
-  const CarouselHome({
+  const CarouselDashboard({
     required this.data,
     this.onNavigateToBookings,
     super.key,

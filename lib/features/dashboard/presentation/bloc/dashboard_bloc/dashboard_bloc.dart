@@ -4,8 +4,8 @@ import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.d
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/home/models/desktop_dashboard_response.dart';
-import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,13 +14,13 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final DashboardRepository _repository;
+  final GetDashboardDesktopDataUseCase _getDashboardDesktopDataUseCase;
   final UserCubit? _userCubit;
 
   DashboardBloc({
-    required DashboardRepository repository,
+    required GetDashboardDesktopDataUseCase getDashboardDesktopDataUseCase,
     UserCubit? userCubit,
-  })  : _repository = repository,
+  })  : _getDashboardDesktopDataUseCase = getDashboardDesktopDataUseCase,
         _userCubit = userCubit,
         super(const _Loading()) {
     on<_LoadDashboardData>(_onLoadDashboardData);
@@ -117,7 +117,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     try {
       final activeShop = event.activeShop ?? _userCubit?.state;
-      final response = await _repository.loadDesktopDashboardData(
+      final response = await _getDashboardDesktopDataUseCase.call(
         page: 1,
         activeShop: activeShop,
       );
@@ -171,7 +171,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
       final activeShop = _userCubit?.state;
-      final response = await _repository.loadDesktopDashboardData(
+      final response = await _getDashboardDesktopDataUseCase.call(
         page: page,
         activeShop: activeShop,
       );

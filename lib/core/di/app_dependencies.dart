@@ -12,6 +12,8 @@ import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/repositories/i_dashboard_repository.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
 import 'package:bookie_buddy_web/features/staff/data/repositories/staff_repository_impl.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/add_staff_usecase.dart';
@@ -41,8 +43,8 @@ import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_reposi
 import 'package:bookie_buddy_web/features/auth/domain/usecases/change_account_password_usecase.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/change_secret_password_usecase.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/login_usecase.dart';
-import 'package:bookie_buddy_web/features/home/repository/dashboard_repository.dart';
-import 'package:bookie_buddy_web/features/home/services/dashboard_service.dart';
+import 'package:bookie_buddy_web/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:bookie_buddy_web/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.dart';
 import 'package:bookie_buddy_web/features/ledger/services/ledger_service.dart';
 import 'package:bookie_buddy_web/features/ledger/services/payment_service.dart';
@@ -62,7 +64,6 @@ class AppDependencies {
   /// register services
   static void _registerServices() {
     _registerLazy(UserService.new);
-    _registerLazy(DashboardService.new);
     _registerLazy(ProductQueryService.new);
     _registerLazy(ProductActionService.new);
     _registerLazy(PendingService.new);
@@ -85,7 +86,8 @@ class AppDependencies {
       ),
     );
 
-    _registerLazy(() => DashboardRepository(_get<DashboardService>()));
+    _registerLazy(
+        () => DashboardRepositoryImpl(_get<DashboardRemoteDatasource>()));
 
     _registerLazy(() => BookingRepository(_get<BookingService>()));
 
@@ -116,6 +118,7 @@ class AppDependencies {
     _registerExpenseFeature();
     _registerClientFeature();
     _registerStaffFeature();
+    _registerDashboardFeature();
   }
 
   // ================== feature specific ==================
@@ -174,6 +177,15 @@ class AppDependencies {
     _registerLazy(
         () => GetStaffMonthlyBookingsUseCase(_get<IStaffRepository>()));
     _registerLazy(() => GetStaffMonthlySalesUseCase(_get<IStaffRepository>()));
+  }
+
+  static void _registerDashboardFeature() {
+    _registerLazy(DashboardRemoteDatasource.new);
+    _registerLazy<IDashboardRepository>(
+        () => DashboardRepositoryImpl(_get<DashboardRemoteDatasource>()));
+    _registerLazy(
+      () => GetDashboardDesktopDataUseCase(_get<IDashboardRepository>()),
+    );
   }
 
   // ================== end of feature specific ==================
