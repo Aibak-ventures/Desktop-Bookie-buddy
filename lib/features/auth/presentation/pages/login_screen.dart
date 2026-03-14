@@ -1,3 +1,5 @@
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/common/domain/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
@@ -6,7 +8,6 @@ import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view_model/contact_support_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -211,6 +212,6 @@ class _LoginScreenState extends State<LoginScreen> {
       SvgPicture.asset('assets/icons/whatsapp.svg', width: 18, height: 18),
       const SizedBox(width: 6),
       const Text("Whatsapp", style: TextStyle(color: Colors.green)),
-    ]).onTap(() => const ContactSupportViewModel().launchWhatsApp());
+    ]).onTap(() => getIt.get<LaunchWhatsappSupportUsecase>().call());
   }
 }

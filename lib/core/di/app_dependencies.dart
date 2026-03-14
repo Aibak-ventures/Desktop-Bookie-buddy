@@ -11,7 +11,10 @@ import 'package:bookie_buddy_web/features/expense/data/repositories/expense_repo
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
+import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
+import 'package:bookie_buddy_web/core/common/domain/usecases/launch_email_support_usecase.dart';
+import 'package:bookie_buddy_web/core/common/domain/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/features/settings/data/datasources/settings_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:bookie_buddy_web/features/settings/domain/repositories/i_settings_repository.dart';
@@ -58,6 +61,15 @@ import 'package:bookie_buddy_web/features/search/data/datasources/search_remote_
 import 'package:bookie_buddy_web/features/search/data/repositories/search_repository_impl.dart';
 import 'package:bookie_buddy_web/features/search/domain/repositories/i_search_repository.dart';
 import 'package:bookie_buddy_web/features/search/domain/usecases/search_usecase.dart';
+import 'package:bookie_buddy_web/features/profile/data/datasources/bug_report_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/profile/data/datasources/shop_activity_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/profile/data/repositories/bug_report_repository_impl.dart';
+import 'package:bookie_buddy_web/features/profile/data/repositories/shop_activity_repository_impl.dart';
+import 'package:bookie_buddy_web/features/profile/domain/repositories/i_bug_report_repository.dart';
+import 'package:bookie_buddy_web/features/profile/domain/repositories/i_shop_activity_repository.dart';
+import 'package:bookie_buddy_web/features/profile/domain/usecases/submit_bug_report_usecase.dart';
+import 'package:bookie_buddy_web/features/profile/domain/usecases/load_shop_activities_usecase.dart';
+import 'package:bookie_buddy_web/features/profile/domain/usecases/load_next_shop_activities_page_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -118,6 +130,7 @@ class AppDependencies {
 
   /// register feature specific dependencies
   static void _registerFeatures() {
+    _registerCommon();
     _registerAuthFeature();
     _registerSearchFeature();
     _registerExpenseFeature();
@@ -125,9 +138,15 @@ class AppDependencies {
     _registerStaffFeature();
     _registerDashboardFeature();
     _registerSettingsFeature();
+    _registerProfileFeature();
   }
 
   // ================== feature specific ==================
+
+  static void _registerCommon() {
+    _registerLazy(() => LaunchEmailSupportUsecase());
+    _registerLazy(() => LaunchWhatsappSupportUsecase());
+  }
 
   /// register auth use cases
   static void _registerAuthFeature() {
@@ -204,6 +223,22 @@ class AppDependencies {
     _registerLazy(
       () => UpdateShopSettingsUseCase(_get<ISettingsRepository>()),
     );
+  }
+
+  static void _registerProfileFeature() {
+    _registerLazy(() => BugReportRemoteDatasource(DioClient.dio));
+    _registerLazy(() => ShopActivityRemoteDatasource(DioClient.dio));
+
+    _registerLazy<IBugReportRepository>(
+        () => BugReportRepositoryImpl(_get<BugReportRemoteDatasource>()));
+    _registerLazy<IShopActivityRepository>(
+        () => ShopActivityRepositoryImpl(_get<ShopActivityRemoteDatasource>()));
+
+    _registerLazy(() => SubmitBugReportUseCase(_get<IBugReportRepository>()));
+    _registerLazy(
+        () => LoadShopActivitiesUseCase(_get<IShopActivityRepository>()));
+    _registerLazy(() =>
+        LoadNextShopActivitiesPageUseCase(_get<IShopActivityRepository>()));
   }
 
   // ================== end of feature specific ==================

@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/reset_password_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/reset_password_bloc/reset_password_bloc.dart';
-import 'package:bookie_buddy_web/features/profile/view/widgets/custom_profile_tile.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/widgets/custom_profile_tile.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/bloc/manage_password_settings_bloc/manage_password_settings_bloc.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/bloc/add_button_default_action_cubit/add_button_default_action_cubit.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/bloc/product_reserve_days_cubit/product_reserve_days_cubit.dart';

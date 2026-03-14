@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:another_flushbar/flushbar.dart';
-import 'package:bookie_buddy_web/core/models/bug_report_model/bug_report_model.dart';
+import 'package:bookie_buddy_web/features/profile/domain/models/bug_report_model/bug_report_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/routing/app_router.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/profile/view_model/cubit_bug_report/bug_report_cubit.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/bloc/bug_report_cubit/bug_report_cubit.dart';
 import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

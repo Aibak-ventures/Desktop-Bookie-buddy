@@ -22,8 +22,7 @@ import 'package:bookie_buddy_web/features/completed_bookings/view_model/bloc_com
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/bloc_product/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/view_model/cubit_save_product/save_product_cubit.dart';
-import 'package:bookie_buddy_web/features/profile/repository/bug_report_repository.dart';
-import 'package:bookie_buddy_web/features/profile/view_model/cubit_bug_report/bug_report_cubit.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/bloc/bug_report_cubit/bug_report_cubit.dart';
 import 'package:bookie_buddy_web/features/expense/presentation/bloc/save_expense_cubit/save_expense_cubit.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
@@ -101,7 +100,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (context) => ProductSearchCubit(repository: getIt.get())),
         BlocProvider(
-            create: (context) => BugReportCubit(BugReportRepository())),
+            create: (context) =>
+                BugReportCubit(submitBugReportUseCase: getIt.get())),
       ],
       child: MaterialApp(
         title: 'BookieBuddy',

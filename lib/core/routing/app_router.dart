@@ -57,13 +57,12 @@ import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_pr
 import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_upcoming/product_booking_upcoming_bloc.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/view/all_shop_summary_screen.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/view_models/cubit_all_shop_summary/all_shop_summary_cubit.dart';
-import 'package:bookie_buddy_web/features/profile/repository/shop_activity_repository.dart';
-import 'package:bookie_buddy_web/features/profile/view/about_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view/contact_and_support_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view/profile_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view/report_problem_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view/shop_activity_log_screen.dart';
-import 'package:bookie_buddy_web/features/profile/view_model/cubit_shop_activity_log/shop_activity_log_cubit.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/pages/about_screen.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/pages/contact_and_support_screen.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/pages/profile_screen.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/pages/report_problem_screen.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/pages/shop_activity_log_screen.dart';
+import 'package:bookie_buddy_web/features/profile/presentation/bloc/shop_activity_log_cubit/shop_activity_log_cubit.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
 import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
@@ -603,8 +602,10 @@ class AppRouter {
         path: AppRoutes.shopActivities.path,
         name: AppRoutes.shopActivities.name,
         builder: (context, state) => BlocProvider(
-          create: (context) => ShopActivityLogCubit(ShopActivityRepository())
-            ..loadShopActivities(),
+          create: (context) => ShopActivityLogCubit(
+            loadNextShopActivitiesPageUseCase: getIt.get(),
+            loadShopActivitiesUseCase: getIt.get(),
+          )..loadShopActivities(),
           child: const ShopActivityLogScreen(),
         ),
       ),

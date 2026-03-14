@@ -1,17 +1,24 @@
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookie_buddy_web/features/profile/models/shop_activity_model/shop_activity_model.dart';
-import 'package:bookie_buddy_web/features/profile/repository/shop_activity_repository.dart';
+import 'package:bookie_buddy_web/features/profile/domain/models/shop_activity_model/shop_activity_model.dart';
+import 'package:bookie_buddy_web/features/profile/domain/usecases/load_next_shop_activities_page_usecase.dart';
+import 'package:bookie_buddy_web/features/profile/domain/usecases/load_shop_activities_usecase.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'shop_activity_log_state.dart';
 part 'shop_activity_log_cubit.freezed.dart';
 
 class ShopActivityLogCubit extends Cubit<ShopActivityLogState> {
-  final ShopActivityRepository _repository;
+  final LoadShopActivitiesUseCase _loadShopActivitiesUseCase;
+  final LoadNextShopActivitiesPageUseCase _loadNextShopActivitiesPageUseCase;
 
-  ShopActivityLogCubit(this._repository)
-      : super(const ShopActivityLogState.initial());
+  ShopActivityLogCubit({
+    required LoadShopActivitiesUseCase loadShopActivitiesUseCase,
+    required LoadNextShopActivitiesPageUseCase
+        loadNextShopActivitiesPageUseCase,
+  })  : _loadShopActivitiesUseCase = loadShopActivitiesUseCase,
+        _loadNextShopActivitiesPageUseCase = loadNextShopActivitiesPageUseCase,
+        super(const ShopActivityLogState.initial());
 
   Future<void> loadShopActivities({bool refresh = false}) async {
     try {
@@ -20,7 +27,7 @@ class ShopActivityLogCubit extends Cubit<ShopActivityLogState> {
       }
 
       log('Loading shop activities...');
-      final result = await _repository.loadShopActivities();
+      final result = await _loadShopActivitiesUseCase.call();
 
       emit(ShopActivityLogState.loaded(
         activities: result.activities,
@@ -35,11 +42,11 @@ class ShopActivityLogCubit extends Cubit<ShopActivityLogState> {
 
   Future<void> loadNextPage() async {
     final currentState = state;
-    
+
     // Only load if we're in loaded state and have a next page URL and not already paginating
     if (currentState is! _Loaded) return;
     final loadedState = currentState;
-    
+
     if (loadedState.nextPageUrl == null || loadedState.isPaginating) return;
 
     try {
@@ -47,7 +54,8 @@ class ShopActivityLogCubit extends Cubit<ShopActivityLogState> {
       emit(loadedState.copyWith(isPaginating: true));
 
       log('Loading next page: ${loadedState.nextPageUrl}');
-      final result = await _repository.loadNextPage(loadedState.nextPageUrl!);
+      final result = await _loadNextShopActivitiesPageUseCase
+          .call(loadedState.nextPageUrl!);
 
       // Append new activities to existing list
       final updatedActivities = [

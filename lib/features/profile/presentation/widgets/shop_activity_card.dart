@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/profile/models/shop_activity_model/shop_activity_model.dart';
+import 'package:bookie_buddy_web/features/profile/domain/models/shop_activity_model/shop_activity_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -171,7 +171,7 @@ class ShopActivityCard extends StatelessWidget {
       if (parts.length >= 2) {
         final dateParts = parts[0].split('-');
         final timeParts = parts[1].split(':');
-        
+
         if (dateParts.length == 3 && timeParts.length >= 2) {
           final date = DateTime(
             int.parse(dateParts[2]), // year
@@ -180,10 +180,10 @@ class ShopActivityCard extends StatelessWidget {
             int.parse(timeParts[0]), // hour
             int.parse(timeParts[1]), // minute
           );
-          
+
           final now = DateTime.now();
           final difference = now.difference(date);
-          
+
           if (difference.inMinutes < 1) {
             return 'Just now';
           } else if (difference.inHours < 1) {

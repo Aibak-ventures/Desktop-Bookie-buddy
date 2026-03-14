@@ -1,16 +1,20 @@
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/common/domain/usecases/launch_email_support_usecase.dart';
+import 'package:bookie_buddy_web/core/common/domain/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/profile/view_model/contact_support_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ContactAndSupportScreen extends StatelessWidget {
   const ContactAndSupportScreen({super.key});
-  final viewModel = const ContactSupportViewModel();
+
   @override
   Widget build(BuildContext context) {
+    final emailUseCase = getIt.get<LaunchEmailSupportUsecase>();
+    final whatsappUseCase = getIt.get<LaunchWhatsappSupportUsecase>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Contact & Support'),
@@ -29,7 +33,7 @@ class ContactAndSupportScreen extends StatelessWidget {
               title: 'Connect via Email',
               onTap: () async {
                 try {
-                  await viewModel.launchEmail();
+                  await emailUseCase.call();
                 } catch (e) {
                   context.showSnackBar(
                     'Failed to launch email app',
@@ -50,7 +54,7 @@ class ContactAndSupportScreen extends StatelessWidget {
                 height: 30,
               ),
               title: 'Connect via WhatsApp',
-              onTap: viewModel.launchWhatsApp,
+              onTap: whatsappUseCase.call,
             ),
           ],
         ),
