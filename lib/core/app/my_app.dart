@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/core/theme/app_theme.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_product_search/product_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';

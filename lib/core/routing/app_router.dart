@@ -14,7 +14,7 @@ import 'package:bookie_buddy_web/core/routing/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/screens/success_animation_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_booking_client_details_screen.dart';

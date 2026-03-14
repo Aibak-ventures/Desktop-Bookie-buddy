@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

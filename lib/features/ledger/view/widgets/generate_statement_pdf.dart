@@ -11,7 +11,7 @@ import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/utils/share_file.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_client/client_cubit.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_invoice_entry_model/ledger_invoice_entry_model.dart';
 import 'package:bookie_buddy_web/features/ledger/models/ledger_summary_model.dart';
 import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.dart';

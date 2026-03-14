@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/models/client_request_model/client_request_model.dart';
-import '../../../../core/ui/dialogs/show_add_client_dialog.dart';
+import '../widgets/show_add_client_dialog.dart';
 
 class ClientListScreen extends StatelessWidget {
   const ClientListScreen({super.key});
