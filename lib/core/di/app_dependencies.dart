@@ -9,7 +9,14 @@ import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_u
 import 'package:bookie_buddy_web/features/client/domain/usecases/delete_client_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/data/repositories/expense_repository_impl.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
+import 'package:bookie_buddy_web/features/sales/data/repositories/sales_repository_impl.dart';
+import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/create_sale_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usecase.dart';
 import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
 import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
@@ -41,7 +48,7 @@ import 'package:bookie_buddy_web/features/expense/domain/usecases/delete_expense
 import 'package:bookie_buddy_web/features/expense/domain/repositories/i_expense_repository.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_action_service.dart';
 import 'package:bookie_buddy_web/core/services/product_service/product_query_service.dart';
-import 'package:bookie_buddy_web/core/services/sales_service.dart';
+import 'package:bookie_buddy_web/features/sales/data/datasources/sales_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/services/service_api.dart';
 import 'package:bookie_buddy_web/core/services/shop_service.dart';
 import 'package:bookie_buddy_web/features/staff/data/datasources/staff_remote_datasource.dart';
@@ -90,7 +97,6 @@ class AppDependencies {
     _registerLazy(BookingService.new);
     _registerLazy(SharedPreferenceHelper.new);
     _registerLazy(ServiceApi.new);
-    _registerLazy(SalesService.new);
   }
 
   /// register repositories
@@ -111,8 +117,6 @@ class AppDependencies {
     _registerLazy(() => ServiceRepository(serviceApi: _get<ServiceApi>()));
 
     _registerLazy(() => ShopRepository(service: _get<ShopService>()));
-    _registerLazy(() => SalesRepository(service: _get<SalesService>()));
-
     _registerLazy(
       () => ProductRepository(
         queryService: _get<ProductQueryService>(),
@@ -139,6 +143,7 @@ class AppDependencies {
     _registerDashboardFeature();
     _registerSettingsFeature();
     _registerProfileFeature();
+    _registerSalesFeature();
   }
 
   // ================== feature specific ==================
@@ -239,6 +244,18 @@ class AppDependencies {
         () => LoadShopActivitiesUseCase(_get<IShopActivityRepository>()));
     _registerLazy(() =>
         LoadNextShopActivitiesPageUseCase(_get<IShopActivityRepository>()));
+  }
+
+  static void _registerSalesFeature() {
+    _registerLazy(SalesRemoteDatasource.new);
+    _registerLazy<ISalesRepository>(
+        () => SalesRepositoryImpl(service: _get<SalesRemoteDatasource>()));
+    _registerLazy(() => GetSalesUseCase(_get<ISalesRepository>()));
+    _registerLazy(() => GetSaleDetailsUseCase(_get<ISalesRepository>()));
+    _registerLazy(() => CreateSaleUseCase(_get<ISalesRepository>()));
+    _registerLazy(() => UpdateSaleUseCase(_get<ISalesRepository>()));
+    _registerLazy(() => DeleteSaleUseCase(_get<ISalesRepository>()));
+    _registerLazy(() => GetSaleInvoicePdfUseCase(_get<ISalesRepository>()));
   }
 
   // ================== end of feature specific ==================

@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -30,7 +31,7 @@ import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/product_customization_widget.dart';
@@ -45,16 +46,14 @@ import 'package:bookie_buddy_web/features/new_booking/models/document_file_model
 
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/generate_booking_pdf.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/select_date_failure_dialog.dart';
 
-import 'package:bookie_buddy_web/features/sale_details/view/widgets/generate_sale_details_pdf.dart';
-import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
-// import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/widgets/generate_sale_details_pdf.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
 
 /// Booking types enum for the tab selection
@@ -3580,7 +3579,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         ? (double.tryParse(product.salePrice!)?.toInt())
         : null;
     final price = isSales
-        ? (variant.salePrice ?? productSalePriceInt ?? variant.price ?? product.price ?? 0)
+        ? (variant.salePrice ??
+            productSalePriceInt ??
+            variant.price ??
+            product.price ??
+            0)
         : (variant.price ?? product.price ?? 0);
     log('Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)');
 
@@ -3818,9 +3821,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       productImageUrl: product.image!,
       availableVariants: variants,
       // Pass sale_price as initialAmount so dialog pre-populates the sale price in sales mode
-      initialAmount: selectedBookingType == BookingType.sales
-          ? product.salePrice
-          : null,
+      initialAmount:
+          selectedBookingType == BookingType.sales ? product.salePrice : null,
       initialQuantity: null,
       onConfirm: (id, size, amount, quantity) {
         final attribute = size == null || size.isEmpty
@@ -5191,7 +5193,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       } else if (widget.saleDetails != null) {
         // Update existing sale
         final salesRequest = _buildSalesRequest();
-        await getIt<SalesRepository>().updateSale(salesRequest);
+        await getIt<ISalesRepository>().updateSale(salesRequest);
         GlobalLoadingOverlay.hide();
         if (mounted) {
           context.showSnackBar('Sale updated successfully!');
@@ -5971,7 +5973,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         }
 
                         if (isSale) {
-                          final repo = getIt<SalesRepository>();
+                          final repo = getIt<ISalesRepository>();
                           final sale = await repo.getSaleDetails(id);
 
                           // Close loading before showing dialog

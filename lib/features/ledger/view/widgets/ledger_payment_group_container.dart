@@ -3,7 +3,6 @@ import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
@@ -11,8 +10,8 @@ import 'package:bookie_buddy_web/features/ledger/models/payment_model/payment_mo
 import 'package:bookie_buddy_web/features/ledger/utils/ledger_enums.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/generate_payment_pdf.dart';
 import 'package:bookie_buddy_web/features/ledger/view/widgets/ledger_list_tile.dart';
-import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
-import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/pages/sale_details_screen.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/sale_details_bloc/sale_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -126,7 +125,8 @@ class LedgerPaymentGroupContainer extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => BlocProvider(
                         create: (_) => SaleDetailsBloc(
-                            repository: getIt.get<SalesRepository>())
+                            deleteSaleUseCase: getIt.get(),
+                            getSaleDetailsUseCase: getIt.get())
                           ..add(
                             SaleDetailsEvent.getSaleDetails(
                               saleId: payment.id,

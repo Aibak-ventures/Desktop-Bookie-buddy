@@ -28,8 +28,8 @@ import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_bookings
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_sales/ledger_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_security_amounts/ledger_security_amounts_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
-import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/pages/sales_list_screen.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_list_bloc/sales_list_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments/wallet_payments_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
@@ -361,7 +361,7 @@ class ProfileScreen extends StatelessWidget {
           title: 'Sales',
           onTap: () => NavigatorX(context).push(
             BlocProvider(
-              create: (context) => SalesListBloc(repository: getIt.get()),
+              create: (context) => SalesListBloc(getSalesUseCase: getIt.get()),
               child: const SalesListScreen(),
             ),
           ),

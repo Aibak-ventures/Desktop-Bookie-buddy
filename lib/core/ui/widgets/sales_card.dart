@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/date_and_time_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

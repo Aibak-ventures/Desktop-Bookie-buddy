@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
@@ -49,7 +50,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'web_helper_stub.dart' if (dart.library.html) 'web_helper_web.dart'
     as web_helper;
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/dialogs/select_date_failure_dialog.dart';
-import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
@@ -2809,7 +2809,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                         returnDate: returnDate.format(),
                                         pickupTime: pickupTime,
                                         returnTime: returnTime,
-                                        useAvailableProductsApi: selectedBookingType == BookingType.booking,
+                                        useAvailableProductsApi:
+                                            selectedBookingType ==
+                                                BookingType.booking,
                                         isSales: isSales,
                                       ),
                                     );
@@ -3069,7 +3071,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         ? (double.tryParse(product.salePrice!)?.toInt())
         : null;
     final price = isSales
-        ? (variant.salePrice ?? productSalePriceInt ?? variant.price ?? product.price ?? 0)
+        ? (variant.salePrice ??
+            productSalePriceInt ??
+            variant.price ??
+            product.price ??
+            0)
         : (variant.price ?? product.price ?? 0);
     log('Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)');
 
@@ -3148,9 +3154,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       productImageUrl: product.image!,
       availableVariants: variants,
       // Pass sale_price as initialAmount so dialog pre-populates the sale price in sales mode
-      initialAmount: selectedBookingType == BookingType.sales
-          ? product.salePrice
-          : null,
+      initialAmount:
+          selectedBookingType == BookingType.sales ? product.salePrice : null,
       initialQuantity: null,
       onConfirm: (id, size, amount, quantity) {
         final attribute = size == null || size.isEmpty
@@ -5315,7 +5320,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                           if (isSale) {
                             // For sales, use sales API endpoint
-                            final repo = getIt<SalesRepository>();
+                            final repo = getIt<ISalesRepository>();
                             final pdfBytes = await repo.getInvoicePdfBytes(id);
 
                             GlobalLoadingOverlay.hide();
@@ -5765,8 +5770,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       if (state.selectedClient != null) {
                         final client = state.selectedClient!;
                         clientNameController.text = client.name;
-                        clientPhone1Controller.text =
-                            client.phone1.toString();
+                        clientPhone1Controller.text = client.phone1.toString();
                         if (client.phone2 != null) {
                           clientPhone2Controller.text =
                               client.phone2.toString();
@@ -5821,8 +5825,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   // Notes / Description
                   Container(
                     height: 80,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
@@ -5834,8 +5838,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes / Description',
-                        hintStyle:
-                            TextStyle(fontSize: 13, color: Colors.grey),
+                        hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                       ),
                       style: const TextStyle(fontSize: 13),
                     ),
@@ -5900,8 +5903,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ),
                     child: const Text(
                       'Save Old Booking',
-                      style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -5930,8 +5933,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          const Center(child: CircularProgressIndicator()),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     try {
@@ -5952,8 +5954,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     } catch (e) {
       if (mounted) Navigator.of(context).pop();
       if (mounted) {
-        context.showSnackBar(
-            'Failed to save old booking: ${e.toString()}',
+        context.showSnackBar('Failed to save old booking: ${e.toString()}',
             isError: true);
       }
       log('Error creating old booking: $e');
@@ -5962,8 +5963,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   RequestBookingModel _buildOldBookingRequest() {
     final products = selectedProductsNotifier.value;
-    final totalAmount = products.fold<int>(
-        0, (sum, p) => sum + (p.amount * p.quantity));
+    final totalAmount =
+        products.fold<int>(0, (sum, p) => sum + (p.amount * p.quantity));
 
     final staffState = context.read<StaffSearchCubit>().state;
     final staffId = staffState.selectedStaff?.id;

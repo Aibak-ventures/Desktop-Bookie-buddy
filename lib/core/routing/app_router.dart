@@ -9,7 +9,7 @@ import 'package:bookie_buddy_web/core/models/booking_details_model/booking_detai
 import 'package:bookie_buddy_web/core/models/expense_model/expense_model.dart';
 import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/core/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/routing/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/screens/success_animation_screen.dart';
@@ -24,11 +24,11 @@ import 'package:bookie_buddy_web/features/add_booking/view/add_customization_scr
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view/add_old_booking_screen.dart';
 import 'package:bookie_buddy_web/features/add_old_booking/view_model/bloc_add_old_bookings/add_old_bookings_bloc.dart';
-import 'package:bookie_buddy_web/features/add_or_edit_sales/view_model/cubit_save_sales/save_sales_cubit.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
-import 'package:bookie_buddy_web/features/add_or_edit_sales/views/add_or_edit_sales_screen.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/pages/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/onboarding_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
@@ -63,10 +63,10 @@ import 'package:bookie_buddy_web/features/profile/presentation/pages/profile_scr
 import 'package:bookie_buddy_web/features/profile/presentation/pages/report_problem_screen.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/pages/shop_activity_log_screen.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/bloc/shop_activity_log_cubit/shop_activity_log_cubit.dart';
-import 'package:bookie_buddy_web/features/sale_details/view/sale_details_screen.dart';
-import 'package:bookie_buddy_web/features/sale_details/view_model/bloc_sale_details/sale_details_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/view/sales_list_screen.dart';
-import 'package:bookie_buddy_web/features/sales/view_model/bloc_sales_list/sales_list_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/pages/sale_details_screen.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/sale_details_bloc/sale_details_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/pages/sales_list_screen.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_list_bloc/sales_list_bloc.dart';
 import 'package:bookie_buddy_web/features/expense/presentation/pages/add_expense_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
@@ -268,10 +268,15 @@ class AppRouter {
         builder: (context, state) => MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => SalesListBloc(repository: getIt.get()),
+              create: (context) => SalesListBloc(
+                getSalesUseCase: getIt.get(),
+              ),
             ),
             BlocProvider(
-              create: (context) => SaleDetailsBloc(repository: getIt.get()),
+              create: (context) => SaleDetailsBloc(
+                getSaleDetailsUseCase: getIt.get(),
+                deleteSaleUseCase: getIt.get(),
+              ),
             ),
           ],
           child: const SalesListScreen(),
@@ -421,7 +426,10 @@ class AppRouter {
           final saleDetails = state.extra as SaleDetailsModel?;
 
           return BlocProvider(
-            create: (context) => SaveSalesCubit(repository: getIt.get()),
+            create: (context) => SaveSalesCubit(
+              createSaleUseCase: getIt.get(),
+              updateSaleUseCase: getIt.get(),
+            ),
             child: AddOrEditSalesScreen(saleDetails: saleDetails),
           );
         },

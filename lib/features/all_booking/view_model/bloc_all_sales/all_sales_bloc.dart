@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/models/sale_model/sale_model.dart';
-import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
+import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,10 +13,10 @@ part 'all_sales_event.dart';
 part 'all_sales_state.dart';
 
 class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
-  final SalesRepository _repository;
+  final GetSalesUseCase _getSalesUseCase;
 
-  AllSalesBloc({required SalesRepository repository})
-      : _repository = repository,
+  AllSalesBloc({required GetSalesUseCase getSalesUseCase})
+      : _getSalesUseCase = getSalesUseCase,
         super(const AllSalesState.loading()) {
     on<_LoadSales>(_onFetchSales);
     on<_LoadMoreSales>(
@@ -37,7 +37,7 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
 
     try {
       final nextPage = PaginationModel.getPageFromUrl(s.nextPageUrl);
-      final result = await _repository.getSalesPagination(
+      final result = await _getSalesUseCase(
         page: nextPage,
         search: s.searchQuery,
         fromDate: s.fromDate,
@@ -67,7 +67,7 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
     emit(const _Loading());
 
     try {
-      final result = await _repository.getSalesPagination(
+      final result = await _getSalesUseCase(
         page: event.page ?? 1,
         search: event.searchQuery,
         fromDate: event.fromDate,

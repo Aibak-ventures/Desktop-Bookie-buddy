@@ -2,26 +2,23 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-
+import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
-import 'package:bookie_buddy_web/utils/download_file.dart';
-import 'package:bookie_buddy_web/utils/share_file.dart';
 import 'package:bookie_buddy_web/utils/get_pdf_image_provider.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:url_launcher/url_launcher.dart';
-import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:share_plus/share_plus.dart';
 
-class GenerateSalesPdf {
+class GenerateSaleDetailsPdf {
   static Future<void> shareInvoice({
     required BuildContext context,
     required SaleDetailsModel saleDetails,
@@ -29,61 +26,31 @@ class GenerateSalesPdf {
   }) async {
     try {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF...');
+      final pdf = await generateInvoice(saleDetails, shopDetails);
+      // Save PDF to device
+      final output = await getApplicationDocumentsDirectory();
 
-      // Generate PDF locally instead of downloading from server
-      final pdfBytes = await generateInvoice(saleDetails, shopDetails);
+      final box =
+          context.isMobile ? null : context.findRenderObject() as RenderBox?;
 
+      final file = File(
+        '${output.path}/sale_invoice_${saleDetails.invoiceId}.pdf',
+      );
+      await file.writeAsBytes(pdf);
+      final fileName = file.path.split('/').last;
       GlobalLoadingOverlay.hide();
-
-      if (kIsWeb) {
-        // On web, trigger browser download
-        final fileName = 'invoice_${saleDetails.invoiceId}.pdf';
-        downloadFileWeb(pdfBytes, fileName);
-
-        if (context.mounted) {
-          context.showSnackBar('Invoice downloaded successfully');
-        }
-      } else {
-        // On mobile/desktop, save to file
-        final fileName = 'invoice_${saleDetails.invoiceId}.pdf';
-
-        // For Windows desktop, save to Downloads folder and open
-        if (Platform.isWindows) {
-          // Get Downloads folder path
-          final downloadsDir =
-              Directory('${Platform.environment['USERPROFILE']}\\Downloads');
-          if (!downloadsDir.existsSync()) {
-            downloadsDir.createSync(recursive: true);
-          }
-
-          final filePath = '${downloadsDir.path}\\$fileName';
-          final file = File(filePath);
-          await file.writeAsBytes(pdfBytes);
-
-          log('PDF saved to: $filePath');
-
-          // Open the PDF with default viewer
-          try {
-            await launchUrl(Uri.file(filePath));
-          } catch (e) {
-            log('Could not open PDF: $e');
-          }
-
-          if (context.mounted) {
-            context.showSnackBar('Invoice saved to Downloads\\$fileName');
-          }
-        } else {
-          // For mobile, use the share functionality
-          final dir = await getTemporaryDirectory();
-          final filePath = '${dir.path}/$fileName';
-          final file = File(filePath);
-          await file.writeAsBytes(pdfBytes);
-          await shareFile(context: context, filePath: filePath);
-        }
-      }
+      await SharePlus.instance.share(
+        ShareParams(
+          title: fileName,
+          subject: fileName,
+          previewThumbnail: XFile(file.path),
+          files: [XFile(file.path)],
+          sharePositionOrigin:
+              box == null ? null : box.localToGlobal(Offset.zero) & box.size,
+        ),
+      );
     } catch (e, stack) {
       log('Error sharing invoice: $e', stackTrace: stack);
-      rethrow;
     } finally {
       GlobalLoadingOverlay.hide();
     }
@@ -139,7 +106,7 @@ class GenerateSalesPdf {
 
     final pdf = pw.Document(
       creator: 'Bookie Buddy',
-      author: 'Bookie Buddy',
+      author: 'AFNAN P',
       theme: pw.ThemeData.withFont(
         base: ttfRegular,
         bold: ttfMedium,
@@ -201,7 +168,12 @@ class GenerateSalesPdf {
         ),
         // Footer for every page
         footer: (context) => context.pagesCount == context.pageNumber
-            ? _buildTermsAndConditions(shopDetails.termsAndConditions)
+            ? _buildTermsAndConditions([
+                'Damage to the product after delivery will not be our responsibility.',
+                'Refund or replacement will not be provided after the product is sold.',
+                'Verify all products before leaving the shop.',
+                'Products once sold will not be taken back or exchanged.',
+              ])
             : pw.SizedBox.shrink(),
 
         build: (context) => [
@@ -284,9 +256,9 @@ class GenerateSalesPdf {
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            text('INVOICE NO: ', saleDetails.invoiceId),
+            text('INVOICE NO: ', saleDetails.invoiceId.toString()),
             pw.SizedBox(height: 4),
-            text('DATE: ', saleDetails.saleDate),
+            text('DATE: ', saleDetails.saleDate.formatToUiDate()),
           ],
         ),
         _buildClientBlock(saleDetails),
@@ -295,18 +267,16 @@ class GenerateSalesPdf {
   }
 
   // Client block
-  static pw.Widget _buildClientBlock(SaleDetailsModel saleDetails) {
-    if (saleDetails.client == null) return pw.SizedBox.shrink();
-
-    final client = saleDetails.client!;
-    final clientAddress = saleDetails.address;
+  static pw.Widget _buildClientBlock(SaleDetailsModel bookingDetails) {
+    final client = bookingDetails.client;
+    final clientAddress = bookingDetails.address;
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.end,
       children: [
         pw.Text('BILL TO', style: _sectionTitleStyle),
         pw.SizedBox(height: 4),
-        pw.Text(client.name, style: _boldStyle.copyWith(fontSize: 14)),
-        if (client.phone1 != 0) pw.Text(client.phone1.toString()),
+        pw.Text(client?.name ?? '', style: _boldStyle.copyWith(fontSize: 14)),
+        if (client?.phone1 != 0) pw.Text(client?.phone1.toString() ?? ''),
         if (clientAddress.isNotEmpty)
           ...clientAddress.splitByWords().map(
                 (line) =>
@@ -316,9 +286,11 @@ class GenerateSalesPdf {
     );
   }
 
+  /// Splits a string into chunks of a specific length.
+
   // Product items table
   static pw.Widget _buildItemsTable(
-    SaleDetailsModel saleDetails,
+    SaleDetailsModel bookingDetails,
     List<pw.ImageProvider> productImages,
   ) {
     pw.Text tableHeadingText(
@@ -364,9 +336,9 @@ class GenerateSalesPdf {
             ),
           ),
           // products rows
-          if (saleDetails.products.isNotEmpty)
-            ...List.generate(saleDetails.products.length, (index) {
-              final product = saleDetails.products[index];
+          if (bookingDetails.products.isNotEmpty)
+            ...List.generate(bookingDetails.products.length, (index) {
+              final product = bookingDetails.products[index];
               final productImage = index < productImages.length
                   ? productImages[index]
                   : _unknownProductImage;
@@ -397,7 +369,7 @@ class GenerateSalesPdf {
                         children: [
                           pw.Center(
                             child: pw.Text(
-                              product.subtotal.toCurrency(),
+                              (product.price * product.quantity).toCurrency(),
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                               ),
@@ -420,6 +392,7 @@ class GenerateSalesPdf {
     pw.ImageProvider productImage,
     ProductSaleInfoModel product,
   ) {
+    final mainServiceType = product.mainServiceType;
     const textStyle = const pw.TextStyle(
       fontSize: 12,
       color: PdfColors.grey600,
@@ -444,18 +417,20 @@ class GenerateSalesPdf {
               product.name,
               style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
             ),
-            if (product.variantAttribute != null)
+            if (mainServiceType.isDress)
               pw.Text(
-                'Size: ${product.variantAttribute}',
+                'Size: ${product.variantAttribute ?? '-'}',
                 style: textStyle,
               ),
-            if (product.color != null)
-              pw.Text('Color: ${product.color}', style: textStyle),
-            if (product.model != null)
-              pw.Text('Model: ${product.model}', style: textStyle),
-            if (product.category != null)
+            if (mainServiceType.isDress || mainServiceType.isOthers)
+              pw.Text('Color: ${product.color ?? '-'}', style: textStyle),
+            if (mainServiceType.isVehicle)
+              pw.Text('Model: ${product.model ?? '-'}', style: textStyle),
+            if (mainServiceType.isVehicle ||
+                mainServiceType.isOthers ||
+                mainServiceType.isEquipment)
               pw.Text(
-                'Category : ${product.category}',
+                '${mainServiceType.isVehicle ? 'Brand' : 'Category'} : ${product.category ?? '-'}',
                 style: textStyle,
               ),
           ],
@@ -466,47 +441,65 @@ class GenerateSalesPdf {
 
   /// Builds the summary and terms section of the PDF.
   static pw.Widget _buildSummaryAndTerms(
-    SaleDetailsModel saleDetails,
+    SaleDetailsModel bookingDetails,
     pw.Font? fontBold,
   ) {
+    const double lineSpacing = 3;
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       children: [
-        // Left side: Terms
+        // Left side: Booking info
         pw.Expanded(
-            flex: 2, child: pw.SizedBox.shrink()), // Placeholder if needed
-
-        // Right side: Totals
+          flex: 2,
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.RichText(
+                text: pw.TextSpan(
+                  text: 'SALE ',
+                  children: const [
+                    pw.TextSpan(
+                      text: 'INFO:',
+                      style: pw.TextStyle(color: PdfColors.black),
+                    ),
+                  ],
+                  style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                    color: _customColor,
+                    letterSpacing: _letterSpacing,
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 4),
+              pw.Text('Sale : ${bookingDetails.saleDate.formatToUiDate()}'),
+              pw.SizedBox(height: lineSpacing),
+              pw.Text('Payment Method : ${bookingDetails.paymentMethod.name}'),
+            ],
+          ),
+        ),
+        // Right side: Totals and Signature
         pw.Expanded(
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.end,
             children: [
-              if ((saleDetails.discountAmount) > 0)
-                _buildTotalRow(
-                  'DISCOUNT TOTAL',
-                  saleDetails.discountAmount.toCurrency(),
-                ),
               _buildTotalRow(
-                'PAID AMOUNT',
-                saleDetails.paidAmount.toCurrency(),
+                'SUBTOTAL',
+                bookingDetails.totalAmount.toCurrency(),
                 fontBold: fontBold,
               ),
+              if (bookingDetails.discountAmount > 0)
+                _buildTotalRow(
+                  'DISCOUNT TOTAL',
+                  bookingDetails.discountAmount.toCurrency(),
+                ),
               pw.Divider(),
               _buildTotalRow(
                 'GRAND TOTAL',
-                saleDetails.totalAmount.toCurrency(),
+                (bookingDetails.totalAmount - bookingDetails.discountAmount)
+                    .toCurrency(),
                 fontBold: fontBold,
               ),
-              if (saleDetails.balanceDueAmount > 0)
-                pw.Padding(
-                  padding: const pw.EdgeInsets.only(top: 6),
-                  child: _buildTotalRow(
-                    'BALANCE DUE',
-                    isBalanceDue: true,
-                    saleDetails.balanceDueAmount.toCurrency(),
-                  ),
-                ),
             ],
           ),
         ),
@@ -539,13 +532,7 @@ class GenerateSalesPdf {
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
-          pw.Expanded(
-            child: pw.Text(
-              title,
-              style: styleTitle,
-              textAlign: pw.TextAlign.start,
-            ),
-          ),
+          pw.Text(title, style: styleTitle, textAlign: pw.TextAlign.end),
           pw.Text(value, style: styleAmount, textAlign: pw.TextAlign.end),
         ],
       ),

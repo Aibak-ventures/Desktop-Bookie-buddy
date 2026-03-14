@@ -4,7 +4,9 @@ import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/sales_repository.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
@@ -86,7 +88,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => AllSalesBloc(
-              repository: getIt.get<SalesRepository>(),
+              getSalesUseCase: getIt.get<GetSalesUseCase>(),
             ),
           ),
           BlocProvider(
@@ -94,7 +96,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => SalesDetailsBloc(
-              repository: getIt.get<SalesRepository>(),
+              getSaleDetailsUseCase: getIt.get<GetSaleDetailsUseCase>(),
+              deleteSaleUseCase: getIt.get<DeleteSaleUseCase>(),
             ),
           ),
         ],
