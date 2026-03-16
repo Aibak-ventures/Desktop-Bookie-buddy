@@ -9,6 +9,11 @@ class StockManagementCubit extends Cubit<StockManagementState> {
   
   // Track unique categories across all loaded pages for current service
   final Set<String> _uniqueCategories = {};
+  String _activeSearchQuery = '';
+  String? _activeSearchType;
+  int? _activeStartPrice;
+  int? _activeEndPrice;
+  int? _activeServiceId = -1;
 
   StockManagementCubit({required ProductRepository repository})
       : _repository = repository,
@@ -24,6 +29,20 @@ class StockManagementCubit extends Cubit<StockManagementState> {
     int page = 1,
   }) async {
     try {
+      if (page == 1) {
+        _activeServiceId = serviceId ?? -1;
+        _activeSearchQuery = searchQuery;
+        _activeSearchType = searchType;
+        _activeStartPrice = startPrice;
+        _activeEndPrice = endPrice;
+      }
+
+      final resolvedServiceId = page == 1 ? serviceId : _activeServiceId;
+      final resolvedSearchQuery = page == 1 ? searchQuery : _activeSearchQuery;
+      final resolvedSearchType = page == 1 ? searchType : _activeSearchType;
+      final resolvedStartPrice = page == 1 ? startPrice : _activeStartPrice;
+      final resolvedEndPrice = page == 1 ? endPrice : _activeEndPrice;
+
       if (page == 1) {
         emit(const StockManagementState.loading());
         // Reset categories when loading first page or switching services
@@ -56,14 +75,18 @@ class StockManagementCubit extends Cubit<StockManagementState> {
 
       // Prepare the service ID for API (null if -1 or null means all services)
       final int? apiServiceId =
-          (serviceId == null || serviceId == -1) ? null : serviceId;
+          (resolvedServiceId == null || resolvedServiceId == -1)
+              ? null
+              : resolvedServiceId;
 
       final paginationModel = (apiServiceId == null)
           ? await _repository.searchAllProducts(
-              query: searchQuery,
+              query: resolvedSearchQuery,
               page: page,
             )
-          : (searchQuery.isEmpty && startPrice == null && endPrice == null)
+          : (resolvedSearchQuery.isEmpty &&
+                  resolvedStartPrice == null &&
+                  resolvedEndPrice == null)
               ? await _repository.getProductsPaginated(
                   serviceId: apiServiceId,
                   page: page,
@@ -71,10 +94,10 @@ class StockManagementCubit extends Cubit<StockManagementState> {
                 )
               : await _repository.searchAndFilterProducts(
                   serviceId: apiServiceId,
-                  query: searchQuery,
-                  type: searchType ?? 'name',
-                  startPrice: startPrice,
-                  endPrice: endPrice,
+                  query: resolvedSearchQuery,
+                  type: resolvedSearchType ?? 'name',
+                  startPrice: resolvedStartPrice,
+                  endPrice: resolvedEndPrice,
                   page: page,
                   includeInStockOnly: false,
                 );
@@ -98,8 +121,9 @@ class StockManagementCubit extends Cubit<StockManagementState> {
           totalCategories: totalCategories,
           nextPageUrl: nextPageUrl,
           isPaginating: false,
-          selectedServiceId: serviceId ?? -1, // Default to -1 (All Services)
-          searchQuery: searchQuery,
+          selectedServiceId:
+              resolvedServiceId ?? -1, // Default to -1 (All Services)
+          searchQuery: resolvedSearchQuery,
         ));
       } else {
         // Append to existing products
@@ -112,8 +136,8 @@ class StockManagementCubit extends Cubit<StockManagementState> {
               totalCategories: totalCategories,
               nextPageUrl: nextPageUrl,
               isPaginating: false,
-              selectedServiceId: serviceId ?? -1,
-              searchQuery: searchQuery,
+              selectedServiceId: resolvedServiceId ?? -1,
+              searchQuery: resolvedSearchQuery,
               selectedProductId: selectedProductId,
             ));
           },
@@ -144,8 +168,11 @@ class StockManagementCubit extends Cubit<StockManagementState> {
           final uri = Uri.parse(nextPageUrl);
           final page = int.tryParse(uri.queryParameters['page'] ?? '1') ?? 1;
           await loadProducts(
-            serviceId: selectedServiceId,
-            searchQuery: searchQuery,
+            serviceId: _activeServiceId,
+            searchQuery: _activeSearchQuery,
+            searchType: _activeSearchType,
+            startPrice: _activeStartPrice,
+            endPrice: _activeEndPrice,
             page: page,
           );
         }
@@ -156,7 +183,14 @@ class StockManagementCubit extends Cubit<StockManagementState> {
 
   /// Filter by service ID
   Future<void> filterByService(int? serviceId) async {
-    await loadProducts(serviceId: serviceId, searchQuery: '', page: 1);
+    await loadProducts(
+      serviceId: serviceId,
+      searchQuery: '',
+      searchType: null,
+      startPrice: null,
+      endPrice: null,
+      page: 1,
+    );
   }
 
   /// Search products

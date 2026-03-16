@@ -50,17 +50,33 @@ class ProductActionService {
         log('   ${file.key}: ${file.value.filename} (${file.value.length} bytes)');
       });
 
-      final variant = product.variants?.firstOrNull;
-      if (!isAdding && product.variants != null && variant != null) {
-        print('🔄 Updating variant: ${variant.id}');
-        await safeApiCall(
-          () => updateVariant(
-            productId: productId,
-            variantId: variant.id,
-            updatedAttribute: variant.attribute,
-            updatedStock: variant.stock,
-          ),
-        );
+      if (!isAdding && product.variants != null && product.variants!.isNotEmpty) {
+        for (final variant in product.variants!) {
+          // New variants created in UI use timestamp IDs; treat them as add calls.
+          final isTempVariantId = variant.id >= 1000000000000;
+          if (isTempVariantId) {
+            print('🆕 Adding new variant during edit: ${variant.attribute}');
+            await safeApiCall(
+              () => addProductVariants(
+                productId: productId!,
+                attribute: variant.attribute,
+                stock: variant.stock,
+              ),
+            );
+            continue;
+          }
+
+          print('🔄 Updating variant: ${variant.id}');
+          await safeApiCall(
+            () => updateVariant(
+              productId: productId!,
+              variantId: variant.id,
+              updatedAttribute: variant.attribute,
+              updatedStock: variant.stock,
+              externalQrCode: variant.externalQrCode,
+            ),
+          );
+        }
       }
 
       print('🚀 Sending ${isAdding ? 'POST' : 'PATCH'} request...');

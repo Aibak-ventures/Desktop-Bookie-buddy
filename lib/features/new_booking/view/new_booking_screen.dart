@@ -125,6 +125,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
   bool _showAllProductsOnSearchFocus = false;
+  final ScrollController _searchResultsScrollController = ScrollController();
   // Reactive overlay state — updated without rebuilding the OverlayEntry
   final _overlayProducts = ValueNotifier<List<ProductModel>>([]);
   final _overlayIsLoading = ValueNotifier<bool>(false);
@@ -225,6 +226,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     clientNameController.addListener(_onClientNameChanged);
     clientPhone1Controller.addListener(_onClientPhoneChanged);
     clientPhone2Controller.addListener(_onClientPhoneChanged);
+    _searchResultsScrollController.addListener(_handleSearchOverlayScroll);
 
     // Set up web beforeunload listener to prevent accidental browser close
     if (kIsWeb) {
@@ -283,6 +285,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     runningKilometersController.dispose();
     _overlayProducts.dispose();
     _overlayIsLoading.dispose();
+    _searchResultsScrollController.removeListener(_handleSearchOverlayScroll);
+    _searchResultsScrollController.dispose();
     super.dispose();
   }
 
@@ -292,6 +296,41 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _showAllProductsOnSearchFocus = false;
     _overlayProducts.value = [];
     _overlayIsLoading.value = false;
+  }
+
+  void _handleSearchOverlayScroll() {
+    if (!_searchResultsScrollController.hasClients) return;
+    final position = _searchResultsScrollController.position;
+    if (position.pixels < position.maxScrollExtent - 180) return;
+    _selectProductBloc.state.maybeWhen(
+      loaded: (
+        products,
+        nextPageUrl,
+        serviceId,
+        pickupDate,
+        returnDate,
+        isPaginating,
+        isSearching,
+        searchQuery,
+        searchType,
+        startPrice,
+        endPrice,
+        pickupTime,
+        returnTime,
+        useAvailableProductsApi,
+        isSales,
+      ) {
+        if (isPaginating || nextPageUrl == null) return;
+        if (isSearching) {
+          _selectProductBloc
+              .add(const SelectProductEvent.loadNextSearchResults());
+        } else {
+          _selectProductBloc
+              .add(const SelectProductEvent.loadNextPageProducts());
+        }
+      },
+      orElse: () {},
+    );
   }
 
   void _searchAllProductsForOverlay() {
@@ -3147,6 +3186,7 @@ int _calculateRentalDays() {
                               else
                                 Flexible(
                                   child: ListView.separated(
+                                    controller: _searchResultsScrollController,
                                     shrinkWrap: true,
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4),
@@ -4405,9 +4445,9 @@ int _calculateRentalDays() {
               .add(Duration(days: coolingPeriodDays))
               .format()
               .appendTimeToDate(time: returnTime),
-      // Cooling period date is same as adjusted return date
+      // If cooling period is None (0), do not send cooling period end date
       coolingPeriodDate: coolingPeriodDays == 0
-          ? returnDate.format().appendTimeToDate(time: returnTime)
+          ? null
           : returnDate
               .add(Duration(days: coolingPeriodDays))
               .format()

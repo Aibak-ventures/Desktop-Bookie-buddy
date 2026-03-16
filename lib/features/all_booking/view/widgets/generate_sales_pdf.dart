@@ -22,6 +22,16 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:bookie_buddy_web/core/extensions/context_extensions.dart';
 
 class GenerateSalesPdf {
+  static Future<String?> _loadOptionalSvg(String assetPath) async {
+    try {
+      final svg = await rootBundle.loadString(assetPath);
+      return svg.trim().isEmpty ? null : svg;
+    } catch (e, stack) {
+      log('Optional PDF SVG asset missing: $assetPath', error: e, stackTrace: stack);
+      return null;
+    }
+  }
+
   static Future<void> shareInvoice({
     required BuildContext context,
     required SaleDetailsModel saleDetails,
@@ -129,13 +139,11 @@ class GenerateSalesPdf {
     final ttfExtraBold = pw.Font.ttf(fontExtraBold);
     final ttfMalayalam = pw.Font.ttf(fontMalayalam);
 
-    // Load the SVG header graphic
-    final headerSvg = await rootBundle.loadString(
-      AppAssets.bookingPdfLayoutHeaderSvg,
-    );
-    final footerSvg = await rootBundle.loadString(
-      AppAssets.bookingPdfLayoutFooterSvg,
-    );
+    // Load optional SVG graphics (do not fail PDF generation if missing)
+    final headerSvg =
+        await _loadOptionalSvg(AppAssets.bookingPdfLayoutHeaderSvg);
+    final footerSvg =
+        await _loadOptionalSvg(AppAssets.bookingPdfLayoutFooterSvg);
 
     final pdf = pw.Document(
       creator: 'Bookie Buddy',
@@ -176,27 +184,31 @@ class GenerateSalesPdf {
                 ignoreMargins: true,
                 child: pw.Column(
                   children: [
-                    pw.SvgImage(
-                      svg: headerSvg,
-                      fit: pw.BoxFit.cover,
-                      alignment: pw.Alignment.topCenter,
-                    ),
+                    if (headerSvg != null)
+                      pw.SvgImage(
+                        svg: headerSvg,
+                        fit: pw.BoxFit.cover,
+                        alignment: pw.Alignment.topCenter,
+                      ),
                     pw.Spacer(),
-                    pw.SvgImage(
-                      svg: footerSvg,
-                      alignment: pw.Alignment.bottomCenter,
-                    ),
+                    if (footerSvg != null)
+                      pw.SvgImage(
+                        svg: footerSvg,
+                        alignment: pw.Alignment.bottomCenter,
+                      ),
                   ],
                 ),
               );
             }
-            return pw.FullPage(
-              ignoreMargins: true,
-              child: pw.SvgImage(
-                svg: footerSvg,
-                alignment: pw.Alignment.bottomCenter,
-              ),
-            );
+            return footerSvg != null
+                ? pw.FullPage(
+                    ignoreMargins: true,
+                    child: pw.SvgImage(
+                      svg: footerSvg,
+                      alignment: pw.Alignment.bottomCenter,
+                    ),
+                  )
+                : pw.SizedBox.shrink();
           },
         ),
         // Footer for every page
