@@ -3948,12 +3948,12 @@ int _calculateRentalDays() {
             builder: (context, _) {
               final products = selectedProductsNotifier.value;
               final additionalCharges = additionalChargesNotifier.value;
-              final advanceAmount =
-                  advanceAmountController.text.trim().toIntOrNull() ?? 0;
+              final isSaleType = selectedBookingType == BookingType.sales;
+              final advanceAmount = isSaleType
+                  ? 0
+                  : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
-
-              final isSaleType = selectedBookingType == BookingType.sales;
               final summaryRentalDays = !isSaleType ? _getEffectiveRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
@@ -3976,21 +3976,30 @@ int _calculateRentalDays() {
 
               return Column(
                 children: [
-                  _buildSummaryRow('Product total', productTotal),
-                  if (additionalTotal > 0)
-                    _buildSummaryRow('Additional charges', additionalTotal),
-                  if (discountAmount > 0)
-                    _buildSummaryRow('- Discount', discountAmount,
-                        isNegative: true),
-                  const Divider(height: 6),
-                  _buildSummaryRow('Paid', advanceAmount,
-                      valueColor: const Color(0xFF1AB000)),
-                  _buildSummaryRow(
-                    'Total payable',
-                    remainingAmount > 0 ? remainingAmount : 0,
-                    valueColor: const Color(0xFFD30000),
-                    isBold: true,
-                  ),
+                  if (isSaleType)
+                    _buildSummaryRow(
+                      'Total amount',
+                      remainingAmount > 0 ? remainingAmount : 0,
+                      valueColor: const Color(0xFF6132E4),
+                      isBold: true,
+                    )
+                  else ...[
+                    _buildSummaryRow('Product total', productTotal),
+                    if (additionalTotal > 0)
+                      _buildSummaryRow('Additional charges', additionalTotal),
+                    if (discountAmount > 0)
+                      _buildSummaryRow('- Discount', discountAmount,
+                          isNegative: true),
+                    const Divider(height: 6),
+                    _buildSummaryRow('Paid', advanceAmount,
+                        valueColor: const Color(0xFF1AB000)),
+                    _buildSummaryRow(
+                      'Total payable',
+                      remainingAmount > 0 ? remainingAmount : 0,
+                      valueColor: const Color(0xFFD30000),
+                      isBold: true,
+                    ),
+                  ],
                 ],
               );
             },
@@ -4474,6 +4483,7 @@ int _calculateRentalDays() {
   /// Build sales request for creating a sale
   RequestSalesModel _buildSalesRequest() {
     final products = selectedProductsNotifier.value;
+    final discount = discountAmountController.text.trim().toIntOrNull() ?? 0;
 
     // Build variants array with id, quantity, and amount (total = per-unit price × quantity)
     final variants = products.map((product) {
@@ -4483,6 +4493,11 @@ int _calculateRentalDays() {
         'amount': product.amount * product.quantity,
       };
     }).toList();
+    final grossTotal = variants.fold<int>(
+      0,
+      (sum, item) => sum + ((item['amount'] as int?) ?? 0),
+    );
+    final finalTotal = (grossTotal - discount) > 0 ? (grossTotal - discount) : 0;
 
     // Get staff ID from cubit
     final staffState = context.read<StaffSearchCubit>().state;
@@ -4503,9 +4518,10 @@ int _calculateRentalDays() {
           : descriptionController.text.trim(),
       sendInvoice: sendPdfToWhatsApp,
       variants: variants,
-      paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+      // Sales flow has no paid field in UI; mark as fully paid by default.
+      paidAmount: finalTotal,
       paymentMethod: paymentMethod,
-      discount: discountAmountController.text.trim().toIntOrNull() ?? 0,
+      discount: discount,
       // Default to true, or use checkbox value if past date
       decreaseStock: decreaseStockForPastDate || !_isPastDate(),
     );
@@ -5335,12 +5351,12 @@ int _calculateRentalDays() {
               if (products.isEmpty) return const SizedBox.shrink();
 
               final additionalCharges = additionalChargesNotifier.value;
-              final advanceAmount =
-                  advanceAmountController.text.trim().toIntOrNull() ?? 0;
+              final isSaleType = selectedBookingType == BookingType.sales;
+              final advanceAmount = isSaleType
+                  ? 0
+                  : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
-
-              final isSaleType = selectedBookingType == BookingType.sales;
               final rentalDays = !isSaleType ? _getEffectiveRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
@@ -5445,7 +5461,7 @@ int _calculateRentalDays() {
                                 _buildSummaryRow('- Discount', discountAmount,
                                     isNegative: true),
                               const Divider(height: 12, thickness: 1),
-                              if (advanceAmount > 0)
+                              if (!isSaleType && advanceAmount > 0)
                                 _buildSummaryRow('Paid', advanceAmount,
                                     valueColor: const Color(0xFF1AB000)),
                             ],

@@ -11,15 +11,19 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/views/new_sales_screen.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/view_model/cubit_save_sales/save_sales_cubit.dart';
-import 'package:bookie_buddy_web/features/all_booking/view/widgets/generate_sales_pdf.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sale_details/view/edit_sales_screen/edit_sales_screen.dart';
 import 'package:bookie_buddy_web/src/di/injection.dart';
+import 'package:bookie_buddy_web/core/utils/open_pdf_in_new_tab.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SalesDetailsDrawer extends StatelessWidget {
@@ -890,19 +894,7 @@ class SalesDetailsDrawer extends StatelessWidget {
             icon: Icons.download_outlined,
             color: AppColors.purple,
             onTap: () async {
-              final user = context.read<UserCubit>().state;
-              final shop = user?.shopDetails;
-
-              if (shop == null) {
-                context.showSnackBar('Shop info not found', isError: true);
-                return;
-              }
-
-              await GenerateSalesPdf.shareInvoice(
-                context: context,
-                saleDetails: sale,
-                shopDetails: shop,
-              );
+              _showInvoiceActionsModal(context, sale);
             },
           ),
         ],
@@ -927,6 +919,94 @@ class SalesDetailsDrawer extends StatelessWidget {
           border: Border.all(color: Colors.grey.shade300),
         ),
         child: Icon(icon, color: color, size: 24),
+      ),
+    );
+  }
+
+  void _showInvoiceActionsModal(BuildContext context, SaleDetailsModel sale) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Invoice'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.message, color: Color(0xFF25D366)),
+              title: const Text('Send via WhatsApp'),
+              subtitle: Text(
+                'Send invoice PDF to ${sale.clientPhone}',
+              ),
+              onTap: () async {
+                Navigator.of(ctx).pop();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  final repository = getIt<SalesRepository>();
+                  await repository.sendInvoice(
+                    saleId: sale.id,
+                    sendWhatsApp: true,
+                  );
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar(
+                      'Invoice sent to ${sale.clientPhone} via WhatsApp',
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to send invoice: $e',
+                        isError: true);
+                  }
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.print, color: AppColors.purple),
+              title: const Text('Print'),
+              subtitle: const Text('Download and open invoice PDF'),
+              onTap: () async {
+                Navigator.of(ctx).pop();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  final repository = getIt<SalesRepository>();
+                  final pdfBytes = await repository.getInvoicePdfBytes(sale.id);
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (kIsWeb) {
+                    openPdfInNewTab(pdfBytes, 'sales_invoice_${sale.id}.pdf');
+                  } else {
+                    final dir = await getTemporaryDirectory();
+                    final file = File('${dir.path}/sales_invoice_${sale.id}.pdf');
+                    await file.writeAsBytes(pdfBytes);
+                    await OpenFile.open(file.path);
+                  }
+                } catch (e) {
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to open invoice: $e',
+                        isError: true);
+                  }
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+        ],
       ),
     );
   }

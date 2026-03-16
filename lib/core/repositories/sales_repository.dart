@@ -117,4 +117,25 @@ class SalesRepository {
       rethrow;
     }
   }
+
+  Future<void> sendInvoice({
+    required int saleId,
+    required bool sendWhatsApp,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _service.sendInvoice(
+          saleId: saleId,
+          sendWhatsApp: sendWhatsApp,
+        ),
+      );
+      if (!response.status.isSuccess) {
+        log('Failed to send sale invoice: ${response.devMessage}');
+        throw response.message ?? 'Failed to send invoice';
+      }
+    } catch (e, stack) {
+      log('Error sending sale invoice: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
 }
