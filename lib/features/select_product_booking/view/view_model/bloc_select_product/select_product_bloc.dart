@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_available_products_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_products_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/search_and_filter_products_usecase.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +15,17 @@ part 'select_product_event.dart';
 part 'select_product_state.dart';
 
 class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
-  final ProductRepository _repository;
+  final GetAvailableProductsPaginatedUseCase _getAvailableProducts;
+  final GetProductsPaginatedUseCase _getProducts;
+  final SearchAndFilterProductsUseCase _searchAndFilterProducts;
 
-  SelectProductBloc({required ProductRepository repository})
-      : _repository = repository,
+  SelectProductBloc({
+    required GetAvailableProductsPaginatedUseCase getAvailableProducts,
+    required GetProductsPaginatedUseCase getProducts,
+    required SearchAndFilterProductsUseCase searchAndFilterProducts,
+  })  : _getAvailableProducts = getAvailableProducts,
+        _getProducts = getProducts,
+        _searchAndFilterProducts = searchAndFilterProducts,
         super(const _Loading()) {
     on<_LoadProducts>(_onLoadProducts);
     on<_LoadNextPageProducts>(
@@ -40,7 +49,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
       // Convert 0 to null for "All Services" mode
       final serviceId = event.serviceId == 0 ? null : event.serviceId;
       if (event.useAvailableProductsApi) {
-        result = await _repository.getAvailableProductsPaginated(
+        result = await _getAvailableProducts(
           serviceId: serviceId,
           page: 1,
           pickupDate: event.pickupDate,
@@ -52,7 +61,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
           variantIds: event.variantIds,
         );
       } else {
-        result = await _repository.getProductsPaginated(
+        result = await _getProducts(
           serviceId: serviceId,
           page: 1,
           includeInStockOnly: event.isSales,
@@ -92,7 +101,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
       // Convert 0 to null for "All Services" mode
       final serviceId = s.serviceId == 0 ? null : s.serviceId;
       if (s.useAvailableProductsApi) {
-        result = await _repository.getAvailableProductsPaginated(
+        result = await _getAvailableProducts(
           serviceId: serviceId,
           page: page,
           pickupDate: s.pickupDate,
@@ -104,7 +113,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
           returnTime: s.returnTime,
         );
       } else {
-        result = await _repository.getProductsPaginated(
+        result = await _getProducts(
           serviceId: serviceId,
           page: page,
           includeInStockOnly: s.isSales,
@@ -139,7 +148,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
       if (event.useAvailableProductsApi) {
         // Always pass the typed query through to the available-products API
         // so the backend receives `search_value` even for short queries.
-        result = await _repository.getAvailableProductsPaginated(
+        result = await _getAvailableProducts(
           serviceId: serviceId,
           page: 1,
           query: event.query,
@@ -156,7 +165,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
         );
         log('_onSearchProducts -> fetched ${result.data.length} products from repo (useAvailable=true)');
       } else {
-        result = await _repository.searchAndFilterProducts(
+        result = await _searchAndFilterProducts(
           serviceId: serviceId,
           query: event.query,
           type: event.type,
@@ -203,7 +212,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
       // Convert 0 to null for "All Services" mode
       final serviceId = s.serviceId == 0 ? null : s.serviceId;
       if (s.useAvailableProductsApi) {
-        result = await _repository.getAvailableProductsPaginated(
+        result = await _getAvailableProducts(
           serviceId: serviceId,
           page: page,
           query: s.searchQuery,
@@ -217,7 +226,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
           returnTime: s.returnTime,
         );
       } else {
-        result = await _repository.searchAndFilterProducts(
+        result = await _searchAndFilterProducts(
           serviceId: serviceId,
           page: page,
           query: s.searchQuery,

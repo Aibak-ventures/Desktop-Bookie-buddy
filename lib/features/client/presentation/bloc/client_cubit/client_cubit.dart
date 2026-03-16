@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

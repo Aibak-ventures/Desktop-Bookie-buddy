@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
-import 'package:bookie_buddy_web/core/models/staff_request_model/staff_request_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_request_model/staff_request_model.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/add_staff_usecase.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/delete_staff_usecase.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/edit_staff_usecase.dart';

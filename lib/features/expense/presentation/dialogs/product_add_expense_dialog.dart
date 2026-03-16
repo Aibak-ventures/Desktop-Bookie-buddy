@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/features/expense/presentation/bloc/cubit_add_expense/add_expense_cubit.dart';
 import 'package:bookie_buddy_web/features/expense/domain/models/expense_request_model/expense_request_model.dart';

@@ -16,16 +16,13 @@
 - [x] **settings** — Extracted settings endpoints out of `ShopService`/`ShopRepository` into a dedicated Domain/Data layer.
 - [x] **profile** — user info, bug report, shop activity; a few use cases but no cross-feature deps.
 - [x] **sales** (Groups: `sales`, `sale_details`, `add_or_edit_sales`) — `SalesRepository` existed in core; moved to feature-scoped domain layer.
-
----
-
-## 🟢 Phase 1 — Easy (Completed ✅)
+- [x] **product** (Groups: `product`, `product_details`, `stock_management`, `transfer_product`, `select_product_booking`) — Complex logic around variants, history, and available stock.
 
 ---
 
 ## 🟡 Phase 2 — Medium 
 
-- [ ] **product** (Groups: `product`, `product_details`, `stock_management`, `transfer_product`, `select_product_booking`) — Complex logic around variants, history, and available stock.
+
 - [ ] **ledger** — wallet, payments, pending, security amounts; most complex read-heavy data layer, relies heavily on shared Core models.
 
 ---
@@ -43,3 +40,9 @@
 - [ ] Move remaining `core/repositories/` to feature-scoped domain layers
 - [ ] Create per-feature DI files (e.g., `home_dependencies.dart`) as the project grows
 - [ ] Add unit tests for all use cases
+
+---
+
+## 🟢 Phase 1 — Easy (Completed ✅)
+
+

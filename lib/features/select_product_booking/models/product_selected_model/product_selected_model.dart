@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -32,22 +32,22 @@ extension ProductSelectedModelToJsonExtension on ProductSelectedModel {
       'amount': amount * quantity,
       'quantity': quantity,
     };
-    
+
     // Add measurements if included and not empty
     if (includeMeasurement && measurementMap.isNotEmpty) {
       json['measurements'] = measurementMap;
     }
-    
+
     // Add running kilometers for vehicles if present
     if (runningKilometers != null && runningKilometers!.isNotEmpty) {
       json['running_kilometers'] = runningKilometers;
     }
-    
+
     return json;
   }
 }
 
-// import 'dart:convert';   
+// import 'dart:convert';
 
 // import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
 // import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';

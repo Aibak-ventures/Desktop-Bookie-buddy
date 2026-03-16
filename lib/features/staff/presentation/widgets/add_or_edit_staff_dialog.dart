@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
-import 'package:bookie_buddy_web/core/models/staff_request_model/staff_request_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_request_model/staff_request_model.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_list_bloc/staff_list_bloc.dart';
 import 'package:flutter/material.dart';

@@ -1,10 +1,9 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_vehicle_customization_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/show_search_type_bottom_sheet.dart';
@@ -61,7 +60,9 @@ class _EditBookingProductSectionState extends State<EditBookingProductSection> {
     super.initState();
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
-      repository: getIt<ProductRepository>(),
+      getAvailableProducts: getIt(),
+      getProducts: getIt(),
+      searchAndFilterProducts: getIt(),
     );
 
     // Load services

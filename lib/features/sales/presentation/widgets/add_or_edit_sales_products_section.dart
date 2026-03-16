@@ -6,7 +6,6 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/add_or_edit_sales_section.dart';
@@ -246,7 +245,9 @@ class AddOrEditSalesProductsSection extends StatelessWidget {
             providers: [
               BlocProvider(
                 create: (_) => SelectProductBloc(
-                  repository: getIt<ProductRepository>(),
+                  getAvailableProducts: getIt(),
+                  getProducts: getIt(),
+                  searchAndFilterProducts: getIt(),
                 ),
               ),
               BlocProvider(create: (_) => SelectedProductsCubit()),

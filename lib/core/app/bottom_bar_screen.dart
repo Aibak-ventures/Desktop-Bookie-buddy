@@ -1,9 +1,9 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
@@ -20,8 +20,7 @@ import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_bookin
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/stock_management/view/stock_management_screen.dart';
-import 'package:bookie_buddy_web/features/stock_management/view_model/stock_management_cubit.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/stock_management_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -123,14 +122,14 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => StockManagementCubit(
-              repository: getIt.get(),
+              getProducts: getIt.get(),
+              deleteProduct: getIt.get(),
+              searchAllProducts: getIt.get(),
+              searchAndFilterProducts: getIt.get(),
             ),
           ),
         ],
-        child: RepositoryProvider(
-          create: (context) => getIt.get<ProductRepository>(),
-          child: const StockManagementScreen(),
-        ),
+        child: const StockManagementScreen(),
       ),
     ];
     super.initState();

@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 
 class ClientRepositoryImpl implements IClientRepository {
   final ClientRemoteDatasource _datasource;
@@ -72,7 +72,8 @@ class ClientRepositoryImpl implements IClientRepository {
   @override
   Future<ClientModel> updateClient(ClientRequestModel client) async {
     try {
-      final response = await safeApiCall(() => _datasource.updateClient(client));
+      final response =
+          await safeApiCall(() => _datasource.updateClient(client));
       if (response.status.isSuccess) {
         return ClientModel.fromJson(response.data as Map<String, dynamic>);
       }
@@ -87,7 +88,8 @@ class ClientRepositoryImpl implements IClientRepository {
   @override
   Future<void> deleteClient(int clientId) async {
     try {
-      final response = await safeApiCall(() => _datasource.deleteClient(clientId));
+      final response =
+          await safeApiCall(() => _datasource.deleteClient(clientId));
       if (!response.status.isSuccess) {
         log('Failed to delete client: ${response.devMessage}');
         throw response.message ?? 'Failed to complete operation';

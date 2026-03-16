@@ -7,8 +7,8 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/models/expense_model/expense_model.dart';
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/routing/app_routes.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
@@ -46,15 +46,15 @@ import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments
 import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
 import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
-import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
-import 'package:bookie_buddy_web/features/product/view/product_grid_screen.dart';
-import 'package:bookie_buddy_web/features/product/view/product_growth_screen.dart';
-import 'package:bookie_buddy_web/features/product/view/product_info_screen.dart';
-import 'package:bookie_buddy_web/features/product/view_model/bloc_product_growth/product_growth_bloc.dart';
-import 'package:bookie_buddy_web/features/product/view_model/bloc_product_info/product_info_bloc.dart';
-import 'package:bookie_buddy_web/features/product_all_booking/view/product_all_bookings_screen.dart';
-import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_completed/product_booking_completed_bloc.dart';
-import 'package:bookie_buddy_web/features/product_all_booking/view_model/bloc_product_booking_upcoming/product_booking_upcoming_bloc.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/add_or_edit_product_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/product_grid_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_info/pages/product_growth_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_info/pages/product_info_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_info/bloc/product_growth_bloc/product_growth_bloc.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_info/bloc/product_info_bloc/product_info_bloc.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_info/pages/product_all_bookings_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_info/bloc/product_booking_completed_bloc/product_booking_completed_bloc.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_info/bloc/product_booking_upcoming_bloc/product_booking_upcoming_bloc.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/view/all_shop_summary_screen.dart';
 import 'package:bookie_buddy_web/features/all_shop_summary/view_models/cubit_all_shop_summary/all_shop_summary_cubit.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/pages/about_screen.dart';
@@ -71,8 +71,8 @@ import 'package:bookie_buddy_web/features/expense/presentation/pages/add_expense
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
-import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_screen.dart';
-import 'package:bookie_buddy_web/features/transfer_product/view/transfer_product_select_and_transfer_product_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/transfer_product/pages/transfer_product_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/transfer_product/pages/transfer_product_select_and_transfer_product_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -851,8 +851,12 @@ class AppRouter {
             );
           }
           return BlocProvider(
-            create: (context) => ProductInfoBloc(repository: getIt.get())
-              ..add(ProductInfoEvent.loadProductInfo(productId)),
+            create: (context) => ProductInfoBloc(
+              addProductVariants: getIt.get(),
+              deleteProduct: getIt.get(),
+              getProductInfo: getIt.get(),
+              updateVariant: getIt.get(),
+            )..add(ProductInfoEvent.loadProductInfo(productId)),
             child: ProductInfoScreen(
               serviceId: serviceId,
               productId: productId,
@@ -990,8 +994,9 @@ class AppRouter {
             );
           }
           return BlocProvider(
-            create: (context) => ProductGrowthBloc()
-              ..add(ProductGrowthEvent.loadProductGrowthData(productId)),
+            create: (context) => ProductGrowthBloc(
+              getProductGrowthData: getIt.get(),
+            )..add(ProductGrowthEvent.loadProductGrowthData(productId)),
             child: ProductGrowthScreen(productId: productId),
           );
         },
@@ -1013,12 +1018,12 @@ class AppRouter {
             providers: [
               BlocProvider(
                 create: (context) => ProductBookingUpcomingBloc(
-                  repository: getIt.get(),
+                  getProductBookings: getIt.get(),
                 )..add(ProductBookingUpcomingEvent.loadBookings(productId)),
               ),
               BlocProvider(
                 create: (context) => ProductBookingCompletedBloc(
-                  repository: getIt.get(),
+                  getProductBookings: getIt.get(),
                 )..add(ProductBookingCompletedEvent.loadBookings(productId)),
               ),
             ],

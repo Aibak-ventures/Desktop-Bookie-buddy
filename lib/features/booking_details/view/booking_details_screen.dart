@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';

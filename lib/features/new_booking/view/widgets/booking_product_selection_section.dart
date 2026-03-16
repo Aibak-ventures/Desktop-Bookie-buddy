@@ -1,6 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/screens/select_service_screen.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_network_image.dart';
@@ -530,7 +529,9 @@ class _BookingProductSelectionSectionState
                   providers: [
                     BlocProvider(
                       create: (_) => SelectProductBloc(
-                        repository: getIt<ProductRepository>(),
+                        getAvailableProducts: getIt(),
+                        getProducts: getIt(),
+                        searchAndFilterProducts: getIt(),
                       ),
                     ),
                     BlocProvider(create: (_) => SelectedProductsCubit()),

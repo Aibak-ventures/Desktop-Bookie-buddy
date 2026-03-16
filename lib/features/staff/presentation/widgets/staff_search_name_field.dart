@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';

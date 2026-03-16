@@ -9,7 +9,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/price_filter_tool_tip_widget.da
 import 'package:bookie_buddy_web/core/ui/widgets/service_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/show_custom_bottom_sheet.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
-import 'package:bookie_buddy_web/features/product/view/add_or_edit_product_screen.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';

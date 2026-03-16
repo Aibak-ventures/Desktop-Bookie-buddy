@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/product_simple_details_tile.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/widgets/product_simple_details_tile.dart';
 import 'package:flutter/material.dart';
 
 class EditBookingProductListTile extends StatelessWidget {

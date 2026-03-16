@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/delete_client_usecase.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

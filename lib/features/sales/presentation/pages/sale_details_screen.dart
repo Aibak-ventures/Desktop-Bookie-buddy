@@ -7,11 +7,11 @@ import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repo
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/product_simple_details_tile.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/widgets/product_simple_details_tile.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';

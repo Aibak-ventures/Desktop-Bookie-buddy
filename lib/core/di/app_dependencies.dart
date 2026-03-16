@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usec
 import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/delete_client_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/data/repositories/expense_repository_impl.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
+import 'package:bookie_buddy_web/features/product/data/repositories/product_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/data/repositories/sales_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/create_sale_usecase.dart';
@@ -46,8 +46,24 @@ import 'package:bookie_buddy_web/features/expense/domain/usecases/save_expense_u
 import 'package:bookie_buddy_web/features/expense/domain/usecases/save_product_expense_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/domain/usecases/delete_expense_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/domain/repositories/i_expense_repository.dart';
-import 'package:bookie_buddy_web/core/services/product_service/product_action_service.dart';
-import 'package:bookie_buddy_web/core/services/product_service/product_query_service.dart';
+import 'package:bookie_buddy_web/features/product/data/datasources/product_action_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/product/data/datasources/product_query_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/add_product_variants_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/delete_product_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_available_products_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_matching_products_from_another_shop_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_bookings_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_growth_data_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_info_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_products_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/get_transfer_product_history_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/save_product_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/search_all_products_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/search_and_filter_products_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/transfer_product_to_another_shop_usecase.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/update_variant_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/data/datasources/sales_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/services/service_api.dart';
 import 'package:bookie_buddy_web/core/services/shop_service.dart';
@@ -88,8 +104,6 @@ class AppDependencies {
   /// register services
   static void _registerServices() {
     _registerLazy(UserService.new);
-    _registerLazy(ProductQueryService.new);
-    _registerLazy(ProductActionService.new);
     _registerLazy(PendingService.new);
     _registerLazy(PaymentService.new);
     _registerLazy(LedgerService.new);
@@ -118,12 +132,6 @@ class AppDependencies {
 
     _registerLazy(() => ShopRepository(service: _get<ShopService>()));
     _registerLazy(
-      () => ProductRepository(
-        queryService: _get<ProductQueryService>(),
-        actionService: _get<ProductActionService>(),
-      ),
-    );
-    _registerLazy(
       () => LedgerRepository(
         ledgerService: _get<LedgerService>(),
         balanceService: _get<PendingService>(),
@@ -144,6 +152,7 @@ class AppDependencies {
     _registerSettingsFeature();
     _registerProfileFeature();
     _registerSalesFeature();
+    _registerProductFeature();
   }
 
   // ================== feature specific ==================
@@ -256,6 +265,32 @@ class AppDependencies {
     _registerLazy(() => UpdateSaleUseCase(_get<ISalesRepository>()));
     _registerLazy(() => DeleteSaleUseCase(_get<ISalesRepository>()));
     _registerLazy(() => GetSaleInvoicePdfUseCase(_get<ISalesRepository>()));
+  }
+
+  static void _registerProductFeature() {
+    _registerLazy(() => ProductQueryRemoteDatasource(dio: DioClient.dio));
+    _registerLazy(() => ProductActionRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IProductRepository>(
+      () => ProductRepositoryImpl(
+        queryService: _get<ProductQueryRemoteDatasource>(),
+        actionService: _get<ProductActionRemoteDatasource>(),
+      ),
+    );
+    _registerLazy(() => SaveProductUseCase(_get<IProductRepository>()));
+    _registerLazy(() => DeleteProductUseCase(_get<IProductRepository>()));
+    _registerLazy(() => UpdateVariantUseCase(_get<IProductRepository>()));
+    _registerLazy(() => AddProductVariantsUseCase(_get<IProductRepository>()));
+    _registerLazy(() => TransferProductToAnotherShopUseCase(_get<IProductRepository>()));
+    _registerLazy(() => GetProductInfoUseCase(_get<IProductRepository>()));
+    _registerLazy(() => GetProductsPaginatedUseCase(_get<IProductRepository>()));
+    _registerLazy(() => GetAvailableProductsPaginatedUseCase(_get<IProductRepository>()));
+    _registerLazy(() => SearchAndFilterProductsUseCase(_get<IProductRepository>()));
+    _registerLazy(() => SearchAllProductsUseCase(_get<IProductRepository>()));
+    _registerLazy(() => GetProductBookingsUseCase(_get<IProductRepository>()));
+    _registerLazy(() => GetProductGrowthDataUseCase(_get<IProductRepository>()));
+    _registerLazy(() => GetMatchingProductsFromAnotherShopUseCase(_get<IProductRepository>()));
+    _registerLazy(() => GetTransferProductHistoryUseCase(_get<IProductRepository>()));
+    _registerLazy(() => CheckVariantAvailabilityUseCase(_get<IProductRepository>()));
   }
 
   // ================== end of feature specific ==================

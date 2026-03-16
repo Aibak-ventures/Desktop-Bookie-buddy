@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
@@ -18,21 +19,20 @@ import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_searc
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/search_overlay_result_widget.dart';
 import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/core/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
     show ServicesModel;
 import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/request_sales_model/request_sales_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/models/request_sales_model/request_sales_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
@@ -215,7 +215,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
-      repository: getIt<ProductRepository>(),
+      getAvailableProducts: getIt(),
+      getProducts: getIt(),
+      searchAndFilterProducts: getIt(),
     );
 
     // Add listener to client name controller to detect manual changes
@@ -1785,8 +1787,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         returnDate.add(Duration(days: coolingPeriodDays)).format();
 
     try {
-      final notFoundIds =
-          await getIt<ProductRepository>().checkVariantAvailability(
+      final notFoundIds = await getIt<CheckVariantAvailabilityUseCase>()(
         pickupDate: pickupDate.format(),
         returnDate: effectiveReturnDate,
         variantIds: variantIds,
@@ -4004,7 +4005,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           providers: [
             BlocProvider(
               create: (_) => SelectProductBloc(
-                repository: getIt<ProductRepository>(),
+                getAvailableProducts: getIt(),
+                getProducts: getIt(),
+                searchAndFilterProducts: getIt(),
               ),
             ),
             BlocProvider(create: (_) => SelectedProductsCubit()),

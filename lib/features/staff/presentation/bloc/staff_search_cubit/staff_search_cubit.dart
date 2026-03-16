@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

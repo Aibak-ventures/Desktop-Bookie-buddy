@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_vehicle_customization_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_icon_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/product_simple_details_tile.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/widgets/product_simple_details_tile.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/view/add_customization_screen.dart';
 import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';

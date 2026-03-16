@@ -8,12 +8,11 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
-import 'package:bookie_buddy_web/core/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/core/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
-import 'package:bookie_buddy_web/core/models/staff_model/staff_model.dart';
-import 'package:bookie_buddy_web/core/repositories/product_repository.dart';
+import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
@@ -88,7 +87,9 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
 
     // Initialize SelectProductBloc for product search
     _selectProductBloc = SelectProductBloc(
-      repository: getIt<ProductRepository>(),
+      getAvailableProducts: getIt.get(),
+      getProducts: getIt.get(),
+      searchAndFilterProducts: getIt.get(),
     );
   }
 

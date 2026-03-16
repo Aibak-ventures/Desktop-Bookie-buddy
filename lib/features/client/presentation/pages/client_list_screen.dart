@@ -6,11 +6,11 @@ import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_normal_elevated_button.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_list_bloc/client_list_bloc.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/models/client_request_model/client_request_model.dart';
+import '../../domain/models/client_request_model/client_request_model.dart';
 import '../widgets/show_add_client_dialog.dart';
 
 class ClientListScreen extends StatelessWidget {
