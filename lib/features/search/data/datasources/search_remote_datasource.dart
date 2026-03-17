@@ -1,12 +1,13 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:dio/dio.dart';
 
 class SearchRemoteDatasource {
-  Dio get _dio => DioClient.dio;
+  final Dio _dio;
+
+  SearchRemoteDatasource({required Dio dio}) : _dio = dio;
 
   /// fetch global search
   Future<CustomResponseModel> fetchGlobalSearch({

@@ -124,10 +124,8 @@ class EditBookingRightPanel extends StatelessWidget {
         return ValueListenableBuilder<List<AdditionalChargesModel>>(
           valueListenable: additionalChargesNotifier,
           builder: (context, charges, _) {
-            final productTotal = products.fold<int>(
-                0,
-                (sum, item) =>
-                    sum + ((item.amount ?? 0) * (item.quantity ?? 1)).round());
+            final productTotal = products.fold<int>(0,
+                (sum, item) => sum + ((item.amount) * (item.quantity)).round());
             final additional = charges.fold<double>(
                 0, (sum, item) => sum + (item.amount ?? 0).toDouble());
 

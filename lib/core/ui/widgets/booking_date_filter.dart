@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/constants/enums/invoice_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/ledger_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';

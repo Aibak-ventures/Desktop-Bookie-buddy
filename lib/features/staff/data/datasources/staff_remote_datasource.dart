@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
@@ -8,7 +7,9 @@ import 'package:bookie_buddy_web/features/staff/domain/models/staff_request_mode
 import 'package:dio/dio.dart';
 
 class StaffRemoteDatasource {
-  Dio get dio => DioClient.dio;
+  final Dio dio;
+
+  StaffRemoteDatasource({required this.dio});
 
   Future<CustomResponseModel> fetchStaffs({required int page}) async {
     try {

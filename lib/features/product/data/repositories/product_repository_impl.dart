@@ -13,21 +13,21 @@ import 'package:bookie_buddy_web/features/product/domain/models/transfer_product
 import 'package:flutter/material.dart';
 
 class ProductRepositoryImpl implements IProductRepository {
-  final ProductQueryRemoteDatasource _queryService;
-  final ProductActionRemoteDatasource _actionService;
+  final ProductQueryRemoteDatasource _queryDatasource;
+  final ProductActionRemoteDatasource _actionDatasource;
 
   ProductRepositoryImpl({
-    required ProductQueryRemoteDatasource queryService,
-    required ProductActionRemoteDatasource actionService,
-  })  : _queryService = queryService,
-        _actionService = actionService;
+    required ProductQueryRemoteDatasource queryDatasource,
+    required ProductActionRemoteDatasource actionDatasource,
+  })  : _queryDatasource = queryDatasource,
+        _actionDatasource = actionDatasource;
 
   // CREATE or UPDATE Product
   @override
   Future<void> saveProduct({required ProductRequestModel product}) async {
     try {
       final response = await safeApiCall(
-        () => _actionService.addOrUpdateProduct(product: product),
+        () => _actionDatasource.addOrUpdateProduct(product: product),
       );
       log('Save product response: ${response.toJson()}');
       if (response.status.isSuccess) {
@@ -64,7 +64,7 @@ class ProductRepositoryImpl implements IProductRepository {
   Future<void> deleteProduct({required int productId, int? variantId}) async {
     try {
       final response = await safeApiCall(
-        () => _actionService.deleteProduct(
+        () => _actionDatasource.deleteProduct(
           productId: productId,
           variantId: variantId,
         ),
@@ -91,7 +91,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _actionService.updateVariant(
+        () => _actionDatasource.updateVariant(
           productId: productId,
           variantId: variantId,
           updatedAttribute: updatedAttribute,
@@ -118,7 +118,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _actionService.addProductVariants(
+        () => _actionDatasource.addProductVariants(
           productId: productId,
           attribute: attribute,
           stock: stock,
@@ -140,7 +140,7 @@ class ProductRepositoryImpl implements IProductRepository {
   Future<ProductModel> getProductInfo(int productId) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.fetchProductInfo(productId),
+        () => _queryDatasource.fetchProductInfo(productId),
       );
       // log('Fetch product info response: ${response.toJson()}');
       if (response.status.isSuccess) {
@@ -167,7 +167,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.searchAndFilterProducts(
+        () => _queryDatasource.searchAndFilterProducts(
           serviceId: serviceId,
           query: query,
           type: type,
@@ -210,7 +210,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.getProductBookings(
+        () => _queryDatasource.getProductBookings(
           productId: productId,
           page: page,
           status: status,
@@ -239,7 +239,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.fetchProductsPaginated(
+        () => _queryDatasource.fetchProductsPaginated(
           serviceId: serviceId,
           page: page,
           includeInStockOnly: includeInStockOnly,
@@ -278,7 +278,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.fetchAvailableProductsPaginated(
+        () => _queryDatasource.fetchAvailableProductsPaginated(
           serviceId: serviceId,
           page: page,
           pickupDate: pickupDate,
@@ -338,7 +338,7 @@ class ProductRepositoryImpl implements IProductRepository {
   ) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.fetchProductGrowthData(productId),
+        () => _queryDatasource.fetchProductGrowthData(productId),
       );
       if (response.status.isSuccess) {
         return (response.data as List<dynamic>)
@@ -361,7 +361,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.searchAllProducts(
+        () => _queryDatasource.searchAllProducts(
             page: page, query: query, includeInStockOnly: includeInStockOnly),
       );
 
@@ -387,7 +387,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.fetchMatchingProductsFromAnotherShop(
+        () => _queryDatasource.fetchMatchingProductsFromAnotherShop(
           fromVariantId: fromVariantId,
           toShopId: toShopId,
           page: page,
@@ -417,7 +417,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _actionService.transferProductToAnotherShop(
+        () => _actionDatasource.transferProductToAnotherShop(
           fromVariantId: fromVariantId,
           toShopId: toShopId,
           transferQuantity: transferQuantity,
@@ -441,7 +441,7 @@ class ProductRepositoryImpl implements IProductRepository {
           {required int shopId, required int page}) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.fetchTransferProductHistory(
+        () => _queryDatasource.fetchTransferProductHistory(
           shopId: shopId,
           page: page,
         ),
@@ -479,7 +479,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _queryService.checkVariantAvailability(
+        () => _queryDatasource.checkVariantAvailability(
           pickupDate: pickupDate,
           returnDate: returnDate,
           variantIds: variantIds,

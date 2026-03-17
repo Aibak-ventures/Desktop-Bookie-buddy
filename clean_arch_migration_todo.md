@@ -17,12 +17,6 @@
 - [x] **profile** — user info, bug report, shop activity; a few use cases but no cross-feature deps.
 - [x] **sales** (Groups: `sales`, `sale_details`, `add_or_edit_sales`) — `SalesRepository` existed in core; moved to feature-scoped domain layer.
 - [x] **product** (Groups: `product`, `product_details`, `stock_management`, `transfer_product`, `select_product_booking`) — Complex logic around variants, history, and available stock.
-
----
-
-## 🟡 Phase 2 — Medium 
-
-
 - [ ] **ledger** — wallet, payments, pending, security amounts; most complex read-heavy data layer, relies heavily on shared Core models.
 
 ---
@@ -45,4 +39,4 @@
 
 ## 🟢 Phase 1 — Easy (Completed ✅)
 
-
+## 🟡 Phase 2 — Medium (Completed ✅)

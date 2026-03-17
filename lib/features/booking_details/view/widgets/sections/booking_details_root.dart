@@ -218,8 +218,7 @@ class BookingDetailsRoot extends StatelessWidget {
                         ),
                         SizedBox(height: 5.h),
                         Text(
-                          booking.returnDate.formatToRelativeDateTime() ??
-                              'N/A',
+                          booking.returnDate.formatToRelativeDateTime(),
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,

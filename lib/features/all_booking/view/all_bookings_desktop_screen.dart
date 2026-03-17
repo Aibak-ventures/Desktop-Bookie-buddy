@@ -890,7 +890,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                     child: Text(
-                      booking.shopBookingId ?? '',
+                      booking.shopBookingId,
                       style: const TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 13),
                       overflow: TextOverflow.ellipsis,
@@ -906,7 +906,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 SizedBox(
                   width: 95,
                   child: Text(
-                    _formatDateWithLabel(booking.pickupDate ?? ''),
+                    _formatDateWithLabel(booking.pickupDate),
                     style: const TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w600),
                     overflow: TextOverflow.ellipsis,
@@ -915,7 +915,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    booking.bookedItems ?? '',
+                    booking.bookedItems,
                     style: const TextStyle(fontSize: 12, color: Colors.black87),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -925,7 +925,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 SizedBox(
                   width: 110,
                   child: Text(
-                    booking.client ?? '',
+                    booking.client,
                     style: const TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,

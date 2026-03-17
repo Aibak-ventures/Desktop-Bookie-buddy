@@ -1,13 +1,15 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:dio/dio.dart';
 
 class ClientRemoteDatasource {
-  final Dio _dio = DioClient.dio;
+  final Dio _dio;
+
+  ClientRemoteDatasource({required Dio dio}) : _dio = dio;
+
   final String clientUrl = ApiEndpoints.bookings.clients;
   Future<CustomResponseModel> getClients({
     int page = 1,

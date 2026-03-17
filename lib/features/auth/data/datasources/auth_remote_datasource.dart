@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
@@ -10,6 +9,10 @@ import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 import 'package:dio/dio.dart';
 
 class AuthRemoteDatasource {
+  final Dio _dio;
+
+  AuthRemoteDatasource({required Dio dio}) : _dio = dio;
+
   Future<CustomResponseModel> userLogin({
     required String phone,
     required String password,
@@ -19,7 +22,7 @@ class AuthRemoteDatasource {
       await clearUserSession();
       log('Attempting login for phone: $phone and fcmToken: $fcmToken');
       // Clone the Dio instance and clear its interceptors
-      final dio = DioClient.dio.clone()
+      final dio = _dio.clone()
         ..interceptors.clear()
         ..options.validateStatus = (status) => true;
       final response = await dio.post(
@@ -55,7 +58,7 @@ class AuthRemoteDatasource {
 
   Future<CustomResponseModel> secretLogin(String password) async {
     try {
-      final response = await DioClient.dio.post(
+      final response = await _dio.post(
         ApiEndpoints.auth.walletLogin,
         data: {'password': password},
       );
@@ -73,7 +76,7 @@ class AuthRemoteDatasource {
     required bool logoutFromAllDevices,
   }) async {
     try {
-      final response = await DioClient.dio.post(
+      final response = await _dio.post(
         ApiEndpoints.auth.changePassword,
         data: {
           'old_password': oldPassword,
@@ -93,7 +96,7 @@ class AuthRemoteDatasource {
     required String newPassword,
   }) async {
     try {
-      final response = await DioClient.dio.post(
+      final response = await _dio.post(
         ApiEndpoints.auth.changeSecondaryPassword,
         data: {
           'old_secondary_password': oldPassword,
@@ -124,7 +127,7 @@ class AuthRemoteDatasource {
   /// the process are logged.
   Future<String?> refreshToken({required String? refreshToken}) async {
     try {
-      final response = await DioClient.dio.post(
+      final response = await _dio.post(
         ApiEndpoints.auth.refresh,
         data: {'refresh': refreshToken},
       );

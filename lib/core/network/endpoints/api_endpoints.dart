@@ -135,7 +135,7 @@ class _ExpensesNamespace {
   String get expenses => ExpensesEndpoints.expenses;
   String get variantExpenses => ExpensesEndpoints.variantExpenses;
   String get transactionHistory => ExpensesEndpoints.transactionHistory;
-  String get daywiseSummary => ExpensesEndpoints.daywiseSummary;
+  String get dayWiseSummary => ExpensesEndpoints.daywiseSummary;
   String get exportTransactionsExcel =>
       ExpensesEndpoints.exportTransactionsExcel;
 }
@@ -187,7 +187,8 @@ class _CustomizationWorkNamespace {
   const _CustomizationWorkNamespace();
 
   // CRUD Operations
-  String get customizationWorks => CustomizationWorkEndpoints.customizationWorks;
+  String get customizationWorks =>
+      CustomizationWorkEndpoints.customizationWorks;
   String customizationWorkDetail(int id) =>
       CustomizationWorkEndpoints.customizationWorkDetail(id);
   String updateCustomizationWork(int id) =>

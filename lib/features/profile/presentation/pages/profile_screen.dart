@@ -23,17 +23,17 @@ import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.d
 import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
-import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_bookings/ledger_bookings_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_sales/ledger_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_security_amounts/ledger_security_amounts_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/pages/ledger_screen.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_bookings_bloc/ledger_bookings_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_sales_bloc/ledger_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_security_amounts_bloc/ledger_security_amounts_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_expense_bloc/wallet_expense_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/pages/sales_list_screen.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_list_bloc/sales_list_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments/wallet_payments_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_payments_bloc/wallet_payments_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_pending_bloc/wallet_pending_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_simple_summary_cubit.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/pages/about_screen.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/pages/check_availability_screen.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/pages/contact_and_support_screen.dart';
@@ -294,38 +294,38 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         BlocProvider(
                           create: (context) => WalletExpenseBloc(
-                            repository: getIt.get(),
+                            getExpense: getIt.get(),
                             deleteExpenseUsecase: getIt.get(),
                           ),
                         ),
                         BlocProvider(
                           create: (context) => WalletPaymentsBloc(
-                            repository: getIt.get(),
+                            getPayments: getIt.get(),
                           ),
                         ),
                         BlocProvider(
                           create: (context) => LedgerSimpleSummaryCubit(
-                            repository: getIt.get(),
+                            getDaySummary: getIt.get(),
                           ),
                         ),
                         BlocProvider(
                           create: (context) => WalletPendingBloc(
-                            repository: getIt.get(),
+                            getPending: getIt.get(),
                           ),
                         ),
                         BlocProvider(
                           create: (context) => LedgerBookingsBloc(
-                            repository: getIt.get(),
+                            getBookings: getIt.get(),
                           ),
                         ),
                         BlocProvider(
                           create: (context) => LedgerSalesBloc(
-                            repository: getIt.get(),
+                            getSales: getIt.get(),
                           ),
                         ),
                         BlocProvider(
                           create: (context) => LedgerSecurityAmountsBloc(
-                            repository: getIt.get(),
+                            getSecurityAmounts: getIt.get(),
                           ),
                         ),
                       ],

@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
 import 'package:dio/dio.dart';
 
 class SalesRemoteDatasource {
-  Dio get _dio => DioClient.dio;
+  final Dio _dio;
+
+  SalesRemoteDatasource({required Dio dio}) : _dio = dio;
 
   Future<CustomResponseModel> getSalesPagination({
     int page = 1,

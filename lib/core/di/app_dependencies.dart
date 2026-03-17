@@ -8,6 +8,18 @@ import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usec
 import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/delete_client_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/data/repositories/expense_repository_impl.dart';
+import 'package:bookie_buddy_web/features/ledger/data/datasources/ledger_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/ledger/data/repositories/ledger_repository_impl.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/repositories/i_ledger_repository.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/download_ledger_invoice_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_bookings_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_day_summary_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_expense_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_invoice_data_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_payments_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_pending_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_sales_paginated_usecase.dart';
+import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_security_amounts_paginated_usecase.dart';
 import 'package:bookie_buddy_web/features/product/data/repositories/product_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/data/repositories/sales_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
@@ -76,10 +88,6 @@ import 'package:bookie_buddy_web/features/auth/domain/usecases/change_secret_pas
 import 'package:bookie_buddy_web/features/auth/domain/usecases/login_usecase.dart';
 import 'package:bookie_buddy_web/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:bookie_buddy_web/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/ledger/repository/ledger_repository.dart';
-import 'package:bookie_buddy_web/features/ledger/services/ledger_service.dart';
-import 'package:bookie_buddy_web/features/ledger/services/payment_service.dart';
-import 'package:bookie_buddy_web/features/ledger/services/pending_service.dart';
 import 'package:bookie_buddy_web/features/search/data/datasources/search_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/search/data/repositories/search_repository_impl.dart';
 import 'package:bookie_buddy_web/features/search/domain/repositories/i_search_repository.dart';
@@ -104,9 +112,6 @@ class AppDependencies {
   /// register services
   static void _registerServices() {
     _registerLazy(UserService.new);
-    _registerLazy(PendingService.new);
-    _registerLazy(PaymentService.new);
-    _registerLazy(LedgerService.new);
     _registerLazy(ShopService.new);
     _registerLazy(BookingService.new);
     _registerLazy(SharedPreferenceHelper.new);
@@ -123,21 +128,11 @@ class AppDependencies {
       ),
     );
 
-    _registerLazy(
-        () => DashboardRepositoryImpl(_get<DashboardRemoteDatasource>()));
-
     _registerLazy(() => BookingRepository(_get<BookingService>()));
 
     _registerLazy(() => ServiceRepository(serviceApi: _get<ServiceApi>()));
 
     _registerLazy(() => ShopRepository(service: _get<ShopService>()));
-    _registerLazy(
-      () => LedgerRepository(
-        ledgerService: _get<LedgerService>(),
-        balanceService: _get<PendingService>(),
-        paymentService: _get<PaymentService>(),
-      ),
-    );
   }
 
   /// register feature specific dependencies
@@ -153,6 +148,7 @@ class AppDependencies {
     _registerProfileFeature();
     _registerSalesFeature();
     _registerProductFeature();
+    _registerLedgerFeature();
   }
 
   // ================== feature specific ==================
@@ -164,9 +160,8 @@ class AppDependencies {
 
   /// register auth use cases
   static void _registerAuthFeature() {
-    _registerLazy(AuthRemoteDatasource.new);
-    _registerLazy<IAuthRepository>(
-        () => AuthRepositoryImpl(_get<AuthRemoteDatasource>()));
+    _registerLazy(() => AuthRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IAuthRepository>(() => AuthRepositoryImpl(_get()));
     _registerLazy(
       () => LoginUseCase(_get<IAuthRepository>()),
     );
@@ -176,27 +171,24 @@ class AppDependencies {
 
   /// register global search use cases
   static void _registerSearchFeature() {
-    _registerLazy(SearchRemoteDatasource.new);
-    _registerLazy<ISearchRepository>(
-        () => SearchRepositoryImpl(_get<SearchRemoteDatasource>()));
+    _registerLazy(() => SearchRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<ISearchRepository>(() => SearchRepositoryImpl(_get()));
     _registerLazy(
       () => SearchUseCase(_get<ISearchRepository>()),
     );
   }
 
   static void _registerExpenseFeature() {
-    _registerLazy(ExpenseRemoteDataSource.new);
-    _registerLazy<IExpenseRepository>(
-        () => ExpenseRepositoryImpl(_get<ExpenseRemoteDataSource>()));
+    _registerLazy(() => ExpenseRemoteDataSource(dio: DioClient.dio));
+    _registerLazy<IExpenseRepository>(() => ExpenseRepositoryImpl(_get()));
     _registerLazy(() => SaveExpenseUsecase(_get<IExpenseRepository>()));
     _registerLazy(() => SaveProductExpenseUsecase(_get<IExpenseRepository>()));
     _registerLazy(() => DeleteExpenseUsecase(_get<IExpenseRepository>()));
   }
 
   static void _registerClientFeature() {
-    _registerLazy(ClientRemoteDatasource.new);
-    _registerLazy<IClientRepository>(
-        () => ClientRepositoryImpl(_get<ClientRemoteDatasource>()));
+    _registerLazy(() => ClientRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IClientRepository>(() => ClientRepositoryImpl(_get()));
     _registerLazy(() => GetClientsUseCase(_get<IClientRepository>()));
     _registerLazy(() => AddClientUseCase(_get<IClientRepository>()));
     _registerLazy(() => UpdateClientUseCase(_get<IClientRepository>()));
@@ -204,9 +196,8 @@ class AppDependencies {
   }
 
   static void _registerStaffFeature() {
-    _registerLazy(StaffRemoteDatasource.new);
-    _registerLazy<IStaffRepository>(
-        () => StaffRepositoryImpl(_get<StaffRemoteDatasource>()));
+    _registerLazy(() => StaffRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IStaffRepository>(() => StaffRepositoryImpl(_get()));
     _registerLazy(() => GetStaffsUseCase(_get<IStaffRepository>()));
     _registerLazy(() => AddStaffUseCase(_get<IStaffRepository>()));
     _registerLazy(() => EditStaffUseCase(_get<IStaffRepository>()));
@@ -219,18 +210,16 @@ class AppDependencies {
   }
 
   static void _registerDashboardFeature() {
-    _registerLazy(DashboardRemoteDatasource.new);
-    _registerLazy<IDashboardRepository>(
-        () => DashboardRepositoryImpl(_get<DashboardRemoteDatasource>()));
+    _registerLazy(() => DashboardRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IDashboardRepository>(() => DashboardRepositoryImpl(_get()));
     _registerLazy(
       () => GetDashboardDesktopDataUseCase(_get<IDashboardRepository>()),
     );
   }
 
   static void _registerSettingsFeature() {
-    _registerLazy(SettingsRemoteDatasource.new);
-    _registerLazy<ISettingsRepository>(
-        () => SettingsRepositoryImpl(_get<SettingsRemoteDatasource>()));
+    _registerLazy(() => SettingsRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<ISettingsRepository>(() => SettingsRepositoryImpl(_get()));
     _registerLazy(
       () => UpdateShopPrivacySettingsUseCase(_get<ISettingsRepository>()),
     );
@@ -240,13 +229,12 @@ class AppDependencies {
   }
 
   static void _registerProfileFeature() {
-    _registerLazy(() => BugReportRemoteDatasource(DioClient.dio));
-    _registerLazy(() => ShopActivityRemoteDatasource(DioClient.dio));
+    _registerLazy(() => BugReportRemoteDatasource(dio: DioClient.dio));
+    _registerLazy(() => ShopActivityRemoteDatasource(dio: DioClient.dio));
 
-    _registerLazy<IBugReportRepository>(
-        () => BugReportRepositoryImpl(_get<BugReportRemoteDatasource>()));
+    _registerLazy<IBugReportRepository>(() => BugReportRepositoryImpl(_get()));
     _registerLazy<IShopActivityRepository>(
-        () => ShopActivityRepositoryImpl(_get<ShopActivityRemoteDatasource>()));
+        () => ShopActivityRepositoryImpl(_get()));
 
     _registerLazy(() => SubmitBugReportUseCase(_get<IBugReportRepository>()));
     _registerLazy(
@@ -256,9 +244,8 @@ class AppDependencies {
   }
 
   static void _registerSalesFeature() {
-    _registerLazy(SalesRemoteDatasource.new);
-    _registerLazy<ISalesRepository>(
-        () => SalesRepositoryImpl(service: _get<SalesRemoteDatasource>()));
+    _registerLazy(() => SalesRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<ISalesRepository>(() => SalesRepositoryImpl(service: _get()));
     _registerLazy(() => GetSalesUseCase(_get<ISalesRepository>()));
     _registerLazy(() => GetSaleDetailsUseCase(_get<ISalesRepository>()));
     _registerLazy(() => CreateSaleUseCase(_get<ISalesRepository>()));
@@ -272,25 +259,58 @@ class AppDependencies {
     _registerLazy(() => ProductActionRemoteDatasource(dio: DioClient.dio));
     _registerLazy<IProductRepository>(
       () => ProductRepositoryImpl(
-        queryService: _get<ProductQueryRemoteDatasource>(),
-        actionService: _get<ProductActionRemoteDatasource>(),
+        queryDatasource: _get(),
+        actionDatasource: _get(),
       ),
     );
     _registerLazy(() => SaveProductUseCase(_get<IProductRepository>()));
     _registerLazy(() => DeleteProductUseCase(_get<IProductRepository>()));
     _registerLazy(() => UpdateVariantUseCase(_get<IProductRepository>()));
     _registerLazy(() => AddProductVariantsUseCase(_get<IProductRepository>()));
-    _registerLazy(() => TransferProductToAnotherShopUseCase(_get<IProductRepository>()));
+    _registerLazy(
+        () => TransferProductToAnotherShopUseCase(_get<IProductRepository>()));
     _registerLazy(() => GetProductInfoUseCase(_get<IProductRepository>()));
-    _registerLazy(() => GetProductsPaginatedUseCase(_get<IProductRepository>()));
-    _registerLazy(() => GetAvailableProductsPaginatedUseCase(_get<IProductRepository>()));
-    _registerLazy(() => SearchAndFilterProductsUseCase(_get<IProductRepository>()));
+    _registerLazy(
+        () => GetProductsPaginatedUseCase(_get<IProductRepository>()));
+    _registerLazy(
+        () => GetAvailableProductsPaginatedUseCase(_get<IProductRepository>()));
+    _registerLazy(
+        () => SearchAndFilterProductsUseCase(_get<IProductRepository>()));
     _registerLazy(() => SearchAllProductsUseCase(_get<IProductRepository>()));
     _registerLazy(() => GetProductBookingsUseCase(_get<IProductRepository>()));
-    _registerLazy(() => GetProductGrowthDataUseCase(_get<IProductRepository>()));
-    _registerLazy(() => GetMatchingProductsFromAnotherShopUseCase(_get<IProductRepository>()));
-    _registerLazy(() => GetTransferProductHistoryUseCase(_get<IProductRepository>()));
-    _registerLazy(() => CheckVariantAvailabilityUseCase(_get<IProductRepository>()));
+    _registerLazy(
+        () => GetProductGrowthDataUseCase(_get<IProductRepository>()));
+    _registerLazy(() =>
+        GetMatchingProductsFromAnotherShopUseCase(_get<IProductRepository>()));
+    _registerLazy(
+        () => GetTransferProductHistoryUseCase(_get<IProductRepository>()));
+    _registerLazy(
+        () => CheckVariantAvailabilityUseCase(_get<IProductRepository>()));
+  }
+
+  static void _registerLedgerFeature() {
+    _registerLazy(() => LedgerRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<ILedgerRepository>(
+      () => LedgerRepositoryImpl(
+        datasource: _get(),
+      ),
+    );
+    _registerLazy(() => GetLedgerDaySummaryUseCase(_get<ILedgerRepository>()));
+    _registerLazy(
+        () => GetLedgerBookingsPaginatedUseCase(_get<ILedgerRepository>()));
+    _registerLazy(
+        () => GetLedgerExpensePaginatedUseCase(_get<ILedgerRepository>()));
+    _registerLazy(
+        () => DownloadLedgerInvoiceUseCase(_get<ILedgerRepository>()));
+    _registerLazy(() => GetLedgerInvoiceDataUseCase(_get<ILedgerRepository>()));
+    _registerLazy(
+        () => GetLedgerPaymentsPaginatedUseCase(_get<ILedgerRepository>()));
+    _registerLazy(
+        () => GetLedgerPendingPaginatedUseCase(_get<ILedgerRepository>()));
+    _registerLazy(
+        () => GetLedgerSalesPaginatedUseCase(_get<ILedgerRepository>()));
+    _registerLazy(() =>
+        GetLedgerSecurityAmountsPaginatedUseCase(_get<ILedgerRepository>()));
   }
 
   // ================== end of feature specific ==================

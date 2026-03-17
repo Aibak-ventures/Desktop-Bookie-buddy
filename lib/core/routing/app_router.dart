@@ -37,14 +37,14 @@ import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_updat
 import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
 import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
-import 'package:bookie_buddy_web/features/ledger/view/ledger_screen.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_bookings/ledger_bookings_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_sales/ledger_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_ledger_security_amounts/ledger_security_amounts_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_expense/wallet_expense_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_payments/wallet_payments_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/bloc_wallet_pending/wallet_pending_bloc.dart';
-import 'package:bookie_buddy_web/features/ledger/view_model/ledger_simple_summary_cubit.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/pages/ledger_screen.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_bookings_bloc/ledger_bookings_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_sales_bloc/ledger_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_security_amounts_bloc/ledger_security_amounts_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_expense_bloc/wallet_expense_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_payments_bloc/wallet_payments_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_pending_bloc/wallet_pending_bloc.dart';
+import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_simple_summary_cubit.dart';
 import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/product_grid_screen.dart';
@@ -314,27 +314,29 @@ class AppRouter {
             ),
             BlocProvider(
               create: (context) => WalletExpenseBloc(
-                  repository: getIt.get(), deleteExpenseUsecase: getIt.get()),
+                getExpense: getIt.get(),
+                deleteExpenseUsecase: getIt.get(),
+              ),
             ),
             BlocProvider(
-              create: (context) => WalletPaymentsBloc(repository: getIt.get()),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  LedgerSimpleSummaryCubit(repository: getIt.get()),
-            ),
-            BlocProvider(
-              create: (context) => WalletPendingBloc(repository: getIt.get()),
-            ),
-            BlocProvider(
-              create: (context) => LedgerBookingsBloc(repository: getIt.get()),
-            ),
-            BlocProvider(
-              create: (context) => LedgerSalesBloc(repository: getIt.get()),
+              create: (context) => WalletPaymentsBloc(getPayments: getIt.get()),
             ),
             BlocProvider(
               create: (context) =>
-                  LedgerSecurityAmountsBloc(repository: getIt.get()),
+                  LedgerSimpleSummaryCubit(getDaySummary: getIt.get()),
+            ),
+            BlocProvider(
+              create: (context) => WalletPendingBloc(getPending: getIt.get()),
+            ),
+            BlocProvider(
+              create: (context) => LedgerBookingsBloc(getBookings: getIt.get()),
+            ),
+            BlocProvider(
+              create: (context) => LedgerSalesBloc(getSales: getIt.get()),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  LedgerSecurityAmountsBloc(getSecurityAmounts: getIt.get()),
             ),
           ],
           child: const WalletScreen(),

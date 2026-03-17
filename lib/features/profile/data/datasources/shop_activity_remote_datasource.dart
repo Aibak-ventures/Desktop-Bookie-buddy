@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/features/profile/domain/models/shop_activity_li
 class ShopActivityRemoteDatasource {
   final Dio _dio;
 
-  ShopActivityRemoteDatasource(this._dio);
+  ShopActivityRemoteDatasource({required Dio dio}) : _dio = dio;
 
   Future<ShopActivityListModel> loadShopActivities({int page = 1}) async {
     try {

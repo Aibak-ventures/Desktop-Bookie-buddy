@@ -65,7 +65,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
       emit(ProductDetailsState.loaded(
         product: product,
         bookings: bookingsData?.data ?? [],
-        monthlySummary: monthlyData ?? [],
+        monthlySummary: monthlyData,
         nextPageUrl: bookingsData?.nextPageUrl,
       ));
     } catch (e) {

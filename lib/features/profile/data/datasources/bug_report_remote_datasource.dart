@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/features/profile/domain/models/bug_report_model
 class BugReportRemoteDatasource {
   final Dio _dio;
 
-  BugReportRemoteDatasource(this._dio);
+  BugReportRemoteDatasource({required Dio dio}) : _dio = dio;
 
   Future<void> submitBugReport(BugReportModel bugReport) async {
     try {
