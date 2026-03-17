@@ -1,17 +1,17 @@
 import 'package:bookie_buddy_web/core/network/endpoints/baseurl.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carousel_dashboard.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
-import 'package:bookie_buddy_web/features/all_booking/view/widgets/booking_details_drawer.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart'
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart'
     as all_booking;
-import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

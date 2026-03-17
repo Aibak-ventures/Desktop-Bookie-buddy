@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/features/product/domain/models/product_info_mod
 import 'package:bookie_buddy_web/features/booking/domain/models/security_summary_model/security_summary_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_model.freezed.dart';

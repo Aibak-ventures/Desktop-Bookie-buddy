@@ -19,7 +19,7 @@ import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart'
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
-import 'package:bookie_buddy_web/features/new_booking/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';

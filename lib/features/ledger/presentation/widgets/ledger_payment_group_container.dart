@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/pages/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/domain/models/payment_model/payment_model.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/widgets/generate_payment_pdf.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/widgets/ledger_list_tile.dart';

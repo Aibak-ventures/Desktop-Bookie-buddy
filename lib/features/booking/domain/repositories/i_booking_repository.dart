@@ -9,8 +9,8 @@ import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_
 import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
-import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
 
 abstract interface class IBookingRepository {
   Future<BookingDetailsModel> getBooking(int bookingId);

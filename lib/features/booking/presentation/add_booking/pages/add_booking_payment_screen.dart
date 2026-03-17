@@ -12,7 +12,7 @@ import 'package:bookie_buddy_web/features/booking/domain/models/additional_charg
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/add_booking/widgets/add_additional_charges_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/add_booking/widgets/add_booking_select_status_widget.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/bloc_add_booking/add_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/add_booking_bloc/add_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 import 'package:flutter/material.dart';

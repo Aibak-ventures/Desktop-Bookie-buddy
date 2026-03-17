@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_info/widgets/product_booking_list_widget.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_info/bloc/product_booking_upcoming_bloc/product_booking_upcoming_bloc.dart';

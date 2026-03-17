@@ -1,7 +1,5 @@
-// import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/bloc_add_booking/add_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/bloc_client_save/client_save_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/cubit_add_booking_products/add_booking_products_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/add_booking_bloc/add_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/add_booking_products_cubit/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_list_bloc/staff_list_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,11 +13,11 @@ import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/product_search_cubit/product_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
-import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
-import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/features/completed_bookings/view_model/bloc_completed_bookings/completed_bookings_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/completed_bookings/bloc/completed_bookings_bloc/completed_bookings_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/product_bloc/product_bloc.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/bloc/bug_report_cubit/bug_report_cubit.dart';
@@ -48,15 +46,26 @@ class MyApp extends StatelessWidget {
                 saveExpenseUsecase: getIt.get(),
                 saveProductExpenseUsecase: getIt.get())),
         BlocProvider(
-            create: (context) => AllBookingBloc(repository: getIt.get())),
+            create: (context) => AllBookingBloc(
+                  updateDeliveryStatus: getIt.get(),
+                  deleteBooking: getIt.get(),
+                  updateBookingStatus: getIt.get(),
+                  loadDesktopBookings: getIt.get(),
+                )),
         BlocProvider(
             create: (context) =>
-                CompletedBookingsBloc(repository: getIt.get())),
+                CompletedBookingsBloc(loadBookings: getIt.get())),
         BlocProvider(
-            create: (context) => BookingDetailsBloc(repository: getIt.get())),
+            create: (context) => BookingDetailsBloc(
+                  getBooking: getIt.get(),
+                  updateDeliveryStatus: getIt.get(),
+                  updateBookingStatus: getIt.get(),
+                  updatePayment: getIt.get(),
+                  cancelBooking: getIt.get(),
+                  deleteBooking: getIt.get(),
+                )),
         BlocProvider(
-            create: (context) =>
-                AddBookingBloc(bookingRepository: getIt.get())),
+            create: (context) => AddBookingBloc(addBooking: getIt.get())),
         BlocProvider(
             create: (context) => SelectProductBloc(
                   getAvailableProducts: getIt(),
@@ -105,9 +114,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ClientCubit(getClients: getIt.get()),
         ),
-        BlocProvider(
-          create: (context) => ClientSaveBloc(addClient: getIt.get()),
-        ),
+        // BlocProvider(
+        //   create: (context) => ClientSaveBloc(addClient: getIt.get()),
+        // ),
         BlocProvider(
             create: (context) =>
                 ProductSearchCubit(searchAllProductsUseCase: getIt.get())),

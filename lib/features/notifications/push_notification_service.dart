@@ -3,11 +3,12 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/storage/token_manager.dart';
-import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_past_bloc/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/pages/booking_details_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../booking_details/view/booking_details_screen.dart';
 import '../../core/routing/app_router.dart';
 import 'firebase_notification_manager.dart';
 
@@ -208,12 +208,16 @@ class PushNotificationService {
               builder: (context) => MultiBlocProvider(
                 providers: [
                   BlocProvider(
-                    create: (context) =>
-                        AllBookingBloc(repository: getIt.get()),
+                    create: (context) => AllBookingBloc(
+                      loadDesktopBookings: getIt.get(),
+                      deleteBooking: getIt.get(),
+                      updateBookingStatus: getIt.get(),
+                      updateDeliveryStatus: getIt.get(),
+                    ),
                   ),
                   BlocProvider(
                     create: (context) =>
-                        AllBookingPastBloc(repository: getIt.get()),
+                        AllBookingPastBloc(loadBookings: getIt.get()),
                   ),
                 ],
                 child: AllBookingScreen(),

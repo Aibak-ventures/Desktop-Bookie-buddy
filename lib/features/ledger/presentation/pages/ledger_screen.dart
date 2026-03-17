@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/booking_date_filter.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_filter.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';

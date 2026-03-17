@@ -1,19 +1,19 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/pages/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/search/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/booking_date_filter.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_filter.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_search_field.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/date_filter_button.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_card.dart';
 import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/utils/responsive_widget.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/pages/sale_details_screen.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sale_details_bloc/sale_details_bloc.dart';
 import 'package:bookie_buddy_web/features/search/domain/models/global_search_model.dart';

@@ -13,8 +13,8 @@ import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remot
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
-import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 

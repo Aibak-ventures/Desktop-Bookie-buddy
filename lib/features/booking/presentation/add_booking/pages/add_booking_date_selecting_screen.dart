@@ -1,5 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
-import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/cubit_add_booking_products/add_booking_products_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/add_booking_products_cubit/add_booking_products_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

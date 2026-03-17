@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/add_or_edit_sales_section.dart';
 // import 'package:bookie_buddy_web/features/add_or_edit_sales/views/widgets/add_or_edit_sales_section.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/widgets/components/edit_booking_product_list_tile.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/edit_booking_product_list_tile.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';

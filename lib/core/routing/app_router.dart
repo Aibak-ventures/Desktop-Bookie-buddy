@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/cubit_add_booking_products/add_booking_products_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/add_booking_products_cubit/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -22,20 +22,20 @@ import 'package:bookie_buddy_web/features/booking/presentation/add_booking/pages
 import 'package:bookie_buddy_web/features/booking/presentation/add_booking/pages/add_booking_payment_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/add_booking/pages/add_booking_product_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/add_booking/pages/add_customization_screen.dart';
-import 'package:bookie_buddy_web/features/add_old_booking/view/add_old_booking_screen.dart';
-import 'package:bookie_buddy_web/features/add_old_booking/view_model/bloc_add_old_bookings/add_old_bookings_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_old_booking/pages/add_old_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_old_booking/bloc/add_old_bookings_bloc/add_old_bookings_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
-import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_past_bloc/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/pages/add_or_edit_sales_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/onboarding_screen.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/edit_booking_screen.dart';
-import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_update_booking/update_booking_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/pages/booking_details_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/edit_booking/pages/edit_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/update_booking_cubit/update_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
-import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/completed_bookings/pages/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/pages/ledger_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_bookings_bloc/ledger_bookings_bloc.dart';
@@ -225,7 +225,7 @@ class AppRouter {
           }
           return BlocProvider(
             create: (context) => UpdateBookingCubit(
-              repository: getIt.get(),
+              updateBooking: getIt.get(),
               addClient: getIt.get(),
             ),
             child: EditBookingScreen(booking: booking),
@@ -242,11 +242,16 @@ class AppRouter {
           return MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => AllBookingBloc(repository: getIt.get()),
+                create: (context) => AllBookingBloc(
+                  updateDeliveryStatus: getIt.get(),
+                  deleteBooking: getIt.get(),
+                  updateBookingStatus: getIt.get(),
+                  loadDesktopBookings: getIt.get(),
+                ),
               ),
               BlocProvider(
                 create: (context) =>
-                    AllBookingPastBloc(repository: getIt.get()),
+                    AllBookingPastBloc(loadBookings: getIt.get()),
               ),
             ],
             child: AllBookingScreen(index: index),
@@ -413,7 +418,7 @@ class AppRouter {
         name: AppRoutes.addOldBookings.name,
         builder: (context, state) => BlocProvider(
           create: (context) => AddOldBookingsBloc(
-            repository: getIt.get(),
+            createOldBooking: getIt.get(),
             addClient: getIt.get(),
           ),
           child: const AddOldBookingScreen(),

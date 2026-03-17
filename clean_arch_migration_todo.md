@@ -18,13 +18,6 @@
 - [x] **sales** (Groups: `sales`, `sale_details`, `add_or_edit_sales`) — `SalesRepository` existed in core; moved to feature-scoped domain layer.
 - [x] **product** (Groups: `product`, `product_details`, `stock_management`, `transfer_product`, `select_product_booking`) — Complex logic around variants, history, and available stock.
 - [ ] **ledger** — wallet, payments, pending, security amounts; most complex read-heavy data layer, relies heavily on shared Core models.
-
----
-
-## 🔴 Phase 3 — Hard 
-
-> Note: All booking-related folders should be merged into a single `booking` feature.
-
 - [ ] **booking** (Groups: `add_booking`, `add_old_booking`, `edit_booking`, `new_booking`, `all_booking`, `completed_bookings`, `booking_details`, `product_all_booking`) — This is the core engine of the app. It reads and writes, handles payment states, interfaces with clients and products, and dictates schedule availability. 
 
 ---
@@ -40,3 +33,5 @@
 ## 🟢 Phase 1 — Easy (Completed ✅)
 
 ## 🟡 Phase 2 — Medium (Completed ✅)
+
+## 🔴 Phase 3 — Hard (Completed ✅)

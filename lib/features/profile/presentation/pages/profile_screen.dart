@@ -16,13 +16,13 @@ import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart'
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/utils/responsive_widget.dart';
-import 'package:bookie_buddy_web/features/all_booking/view/all_booking_screen.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking_past/all_booking_past_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_past_bloc/all_booking_past_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/pages/client_list_screen.dart';
-import 'package:bookie_buddy_web/features/completed_bookings/view/completed_bookings_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/completed_bookings/pages/completed_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/pages/ledger_screen.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_bookings_bloc/ledger_bookings_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_sales_bloc/ledger_sales_bloc.dart';
@@ -245,12 +245,16 @@ class ProfileScreen extends StatelessWidget {
                   builder: (context) => MultiBlocProvider(
                     providers: [
                       BlocProvider(
-                        create: (context) =>
-                            AllBookingBloc(repository: getIt.get()),
+                        create: (context) => AllBookingBloc(
+                          loadDesktopBookings: getIt.get(),
+                          deleteBooking: getIt.get(),
+                          updateBookingStatus: getIt.get(),
+                          updateDeliveryStatus: getIt.get(),
+                        ),
                       ),
                       BlocProvider(
                         create: (context) =>
-                            AllBookingPastBloc(repository: getIt.get()),
+                            AllBookingPastBloc(loadBookings: getIt.get()),
                       ),
                     ],
                     child: AllBookingScreen(),

@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widget.dart';
-import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/pages/booking_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProductBookingListWidget extends StatelessWidget {

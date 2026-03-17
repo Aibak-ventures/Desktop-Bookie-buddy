@@ -3,23 +3,22 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
-import 'package:bookie_buddy_web/features/new_booking/view/new_booking_screen.dart';
-import 'package:bookie_buddy_web/features/all_booking/view/all_bookings_desktop_screen.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_sales/all_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_booking_details_drawer/booking_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
-import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_details/sales_details_bloc.dart';
-import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_sales_bloc/all_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_bloc/sales_details_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/stock_management_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +57,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              repository: getIt.get<BookingRepositoryImpl>(),
+              getBooking: getIt.get(),
+              updateDeliveryStatus: getIt.get(),
+              updateBookingStatus: getIt.get(),
+              updatePayment: getIt.get(),
+              cancelBooking: getIt.get(),
+              deleteBooking: getIt.get(),
             ),
           ),
           BlocProvider(
@@ -66,7 +70,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
-              repository: getIt.get<BookingRepositoryImpl>(),
+              updateDeliveryStatus: getIt.get(),
+              deleteBooking: getIt.get(),
+              updateBookingStatus: getIt.get(),
+              loadDesktopBookings: getIt.get(),
             ),
           ),
         ],
@@ -79,7 +86,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              repository: getIt.get<BookingRepositoryImpl>(),
+              getBooking: getIt.get(),
+              updateDeliveryStatus: getIt.get(),
+              updateBookingStatus: getIt.get(),
+              updatePayment: getIt.get(),
+              cancelBooking: getIt.get(),
+              deleteBooking: getIt.get(),
             ),
           ),
           BlocProvider(
@@ -109,7 +121,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              repository: getIt.get<BookingRepositoryImpl>(),
+              getBooking: getIt.get(),
+              updateDeliveryStatus: getIt.get(),
+              updateBookingStatus: getIt.get(),
+              updatePayment: getIt.get(),
+              cancelBooking: getIt.get(),
+              deleteBooking: getIt.get(),
             ),
           ),
           BlocProvider(
@@ -117,7 +134,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
-              repository: getIt.get<BookingRepositoryImpl>(),
+              updateDeliveryStatus: getIt.get(),
+              deleteBooking: getIt.get(),
+              updateBookingStatus: getIt.get(),
+              loadDesktopBookings: getIt.get(),
             ),
           ),
           BlocProvider(
