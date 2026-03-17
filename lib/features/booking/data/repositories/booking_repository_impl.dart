@@ -9,7 +9,8 @@ import 'package:bookie_buddy_web/core/models/custom_response_model/custom_respon
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/services/booking_service.dart';
+import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
@@ -17,15 +18,16 @@ import 'package:bookie_buddy_web/features/new_booking/models/document_file_model
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 
-class BookingRepository {
-  final BookingService _bookingService;
-  BookingRepository(this._bookingService);
+class BookingRepositoryImpl implements IBookingRepository {
+  final BookingRemoteDatasource _datasource;
+  BookingRepositoryImpl(this._datasource);
 
   // Get a single booking
+  @override
   Future<BookingDetailsModel> getBooking(int bookingId) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.getBooking(bookingId),
+        () => _datasource.getBooking(bookingId),
       );
       if (response.status.isSuccess) {
         return BookingDetailsModel.fromJson(response.data);
@@ -39,10 +41,11 @@ class BookingRepository {
   }
 
   // Create a booking
+  @override
   Future<int> addBooking(RequestBookingModel bookingData) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.addBooking(bookingData),
+        () => _datasource.addBooking(bookingData),
       );
       if (response.status.isSuccess) {
         if (response.data is Map) {
@@ -63,10 +66,11 @@ class BookingRepository {
   }
 
   // Create a sale
+  @override
   Future<int> createSale(Map<String, dynamic> saleData) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.createSale(saleData),
+        () => _datasource.createSale(saleData),
       );
       if (response.status.isSuccess) {
         if (response.data is Map) {
@@ -86,10 +90,11 @@ class BookingRepository {
   }
 
   // Create old booking
+  @override
   Future<void> createOldBooking(RequestBookingModel bookingData) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.createOldBooking(bookingData),
+        () => _datasource.createOldBooking(bookingData),
       );
       if (response.status.isSuccess) {
         return;
@@ -103,6 +108,7 @@ class BookingRepository {
   }
 
   // Update amount or part of booking
+  @override
   Future<void> updatePayment({
     required int bookingId,
     required int amount,
@@ -110,7 +116,7 @@ class BookingRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.updatePayment(
+        () => _datasource.updatePayment(
           bookingId: bookingId,
           amount: amount,
           paymentMethod: paymentMethod.value,
@@ -128,13 +134,14 @@ class BookingRepository {
   }
 
   // Update full booking data
+  @override
   Future<CustomResponseModel> updateBooking(
     int bookingId,
     RequestBookingModel updatedBooking,
   ) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.updateBooking(bookingId, updatedBooking),
+        () => _datasource.updateBooking(bookingId, updatedBooking),
       );
       if (response.status.isSuccess || response.status.isInsufficientStock) {
         return response;
@@ -150,6 +157,7 @@ class BookingRepository {
   // Update booking with partial data (only changed fields)
   // Used for incremental updates in edit mode
   // Supports FormData for file uploads and document management
+  @override
   Future<CustomResponseModel> updateBookingPartial(
     int bookingId,
     Map<String, dynamic> partialData, {
@@ -158,7 +166,7 @@ class BookingRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.updateBookingPartial(
+        () => _datasource.updateBookingPartial(
           bookingId,
           partialData,
           newDocuments: newDocuments,
@@ -177,10 +185,11 @@ class BookingRepository {
   }
 
   // Delete a booking
+  @override
   Future<void> deleteBooking(int bookingId) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.deleteBooking(bookingId),
+        () => _datasource.deleteBooking(bookingId),
       );
       if (response.status.isSuccess) {
         return;
@@ -194,6 +203,7 @@ class BookingRepository {
   }
 
   // Cancel booking by updating delivery status and optionally adding refund
+  @override
   Future<void> cancelBooking({
     required int bookingId,
     int? refundAmount,
@@ -202,7 +212,7 @@ class BookingRepository {
     try {
       // First, update delivery status to cancelled
       final cancelResponse = await safeApiCall(
-        () => _bookingService.cancelBooking(bookingId: bookingId),
+        () => _datasource.cancelBooking(bookingId: bookingId),
       );
       if (!cancelResponse.status.isSuccess) {
         log('Error cancelling booking: ${cancelResponse.devMessage}');
@@ -212,11 +222,11 @@ class BookingRepository {
       // If there's a refund amount, add the refund
       if (refundAmount != null && refundAmount > 0 && paymentMethod != null) {
         final refundResponse = await safeApiCall(
-          () => _bookingService.addRefund(
+          () => _datasource.addRefund(
             bookingId: bookingId,
             amount: refundAmount,
-            paymentMethod: paymentMethod == PaymentMethod.gPay 
-                ? 'upi' 
+            paymentMethod: paymentMethod == PaymentMethod.gPay
+                ? 'upi'
                 : paymentMethod.value,
             refundReason: 'Booking cancelled',
           ),
@@ -233,13 +243,14 @@ class BookingRepository {
   }
 
   // Update payment status
+  @override
   Future<void> updateBookingStatus(
     int bookingId,
     BookingStatus bookingStatus,
   ) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.updateBookingStatus(
+        () => _datasource.updateBookingStatus(
           bookingId: bookingId,
           bookingStatus: bookingStatus.toValue(),
         ),
@@ -256,13 +267,14 @@ class BookingRepository {
   }
 
   // Update booking status (delivery or payment)
+  @override
   Future<void> updateDeliveryStatus(
     int bookingId,
     DeliveryStatus deliveryStatus,
   ) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.updateDeliveryStatus(
+        () => _datasource.updateDeliveryStatus(
           bookingId: bookingId,
           deliveryStatus: deliveryStatus.toValue(),
         ),
@@ -280,6 +292,7 @@ class BookingRepository {
   }
 
   // Fetch bookings list with pagination support
+  @override
   Future<PaginationModel<BookingsModel>> loadBookingsPagination({
     required LoadBookingType status,
     String? startDate,
@@ -289,7 +302,7 @@ class BookingRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.fetchBookingsPagination(
+        () => _datasource.fetchBookingsPagination(
           status: status,
           page: page,
           startDate: startDate,
@@ -317,6 +330,7 @@ class BookingRepository {
   }
 
   /// Fetch desktop bookings list with pagination support and status counts
+  @override
   Future<
       ({
         PaginationModel<DesktopBookingItemModel> pagination,
@@ -330,7 +344,7 @@ class BookingRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.fetchDesktopBookingsPagination(
+        () => _datasource.fetchDesktopBookingsPagination(
           status: status,
           page: page,
           startDate: startDate,
@@ -370,6 +384,7 @@ class BookingRepository {
     }
   }
 
+  @override
   Future<String> downloadBookingInvoice({
     required int bookingId,
     required String fileName,
@@ -388,7 +403,7 @@ class BookingRepository {
       }
 
       final response = await safeApiCall(
-        () => _bookingService.downloadBookingInvoice(
+        () => _datasource.downloadBookingInvoice(
           bookingId: bookingId,
           filePath: filePath,
         ),
@@ -440,12 +455,13 @@ class BookingRepository {
   //   }
   // }
 
+  @override
   Future<List<BookingDetailsPaymentHistoryModel>> getPaymentHistory(
     int bookingId,
   ) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.fetchPaymentHistory(bookingId),
+        () => _datasource.fetchPaymentHistory(bookingId),
       );
       if (response.status.isSuccess) {
         final paymentData = (response.data as Map<String, dynamic>)['payments']
@@ -463,10 +479,11 @@ class BookingRepository {
   }
 
   /// Send invoice to WhatsApp and return the response
+  @override
   Future<void> sendInvoice(int bookingId, bool sendWhatsApp) async {
     try {
       final response = await safeApiCall(
-        () => _bookingService.sendInvoice(
+        () => _datasource.sendInvoice(
           bookingId: bookingId,
           sendWhatsApp: sendWhatsApp,
         ),
@@ -483,9 +500,10 @@ class BookingRepository {
   }
 
   /// Get invoice PDF bytes for viewing/downloading
+  @override
   Future<Uint8List> getInvoicePdfBytes(int bookingId) async {
     try {
-      return await _bookingService.getInvoicePdfBytes(bookingId);
+      return await _datasource.getInvoicePdfBytes(bookingId);
     } catch (e, stack) {
       log('Error getting invoice PDF: $e', stackTrace: stack);
       rethrow;

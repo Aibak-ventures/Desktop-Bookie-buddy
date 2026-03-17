@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -15,9 +15,9 @@ part 'all_booking_past_bloc.freezed.dart';
 
 class AllBookingPastBloc
     extends Bloc<AllBookingPastEvent, AllBookingPastState> {
-  final BookingRepository _repository;
+  final BookingRepositoryImpl _repository;
 
-  AllBookingPastBloc({required BookingRepository repository})
+  AllBookingPastBloc({required BookingRepositoryImpl repository})
       : _repository = repository,
         super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);

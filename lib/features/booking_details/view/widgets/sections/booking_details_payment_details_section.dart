@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
@@ -105,8 +105,8 @@ class BookingDetailsPaymentDetailsSection extends StatelessWidget {
                                           builder: (context) => BlocProvider(
                                             create: (context) =>
                                                 UpdateBookingCubit(
-                                              repository: context
-                                                  .read<BookingRepository>(),
+                                              repository: context.read<
+                                                  BookingRepositoryImpl>(),
                                               addClient: context
                                                   .read<AddClientUseCase>(),
                                             ),

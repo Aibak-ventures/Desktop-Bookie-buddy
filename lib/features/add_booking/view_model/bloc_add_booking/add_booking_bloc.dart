@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,10 +10,10 @@ part 'add_booking_state.dart';
 part 'add_booking_bloc.freezed.dart';
 
 class AddBookingBloc extends Bloc<AddBookingEvent, AddBookingState> {
-  final BookingRepository _bookingRepository;
+  final BookingRepositoryImpl _bookingRepository;
 
   AddBookingBloc({
-    required BookingRepository bookingRepository,
+    required BookingRepositoryImpl bookingRepository,
   })  : _bookingRepository = bookingRepository,
         super(const _Initial(booking: RequestBookingModel())) {
     //

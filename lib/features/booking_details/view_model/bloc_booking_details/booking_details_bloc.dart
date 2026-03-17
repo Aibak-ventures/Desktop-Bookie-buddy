@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,9 +14,9 @@ part 'booking_details_state.dart';
 
 class BookingDetailsBloc
     extends Bloc<BookingDetailsEvent, BookingDetailsState> {
-  final BookingRepository _repository;
+  final BookingRepositoryImpl _repository;
 
-  BookingDetailsBloc({required BookingRepository repository})
+  BookingDetailsBloc({required BookingRepositoryImpl repository})
       : _repository = repository,
         super(const BookingDetailsState.loading()) {
     on<_FetchBookingDetails>(_onFetchBookingDetails);
@@ -48,7 +48,7 @@ class BookingDetailsBloc
   ) async {
     // Store old state for rollback on error
     final oldState = state;
-    
+
     // Optimistic update - update UI immediately
     if (oldState is _Loaded) {
       final updatedBooking = oldState.booking.copyWith(
@@ -56,7 +56,7 @@ class BookingDetailsBloc
       );
       emit(BookingDetailsState.loaded(booking: updatedBooking));
     }
-    
+
     try {
       await _repository.updateDeliveryStatus(
         event.bookingId,

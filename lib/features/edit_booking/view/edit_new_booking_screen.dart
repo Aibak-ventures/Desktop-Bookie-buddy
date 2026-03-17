@@ -21,7 +21,7 @@ import 'package:bookie_buddy_web/features/product/domain/models/product_model/pr
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
     show ServicesModel;
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
@@ -5157,7 +5157,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     GlobalLoadingOverlay.show(context);
 
     try {
-      final repository = getIt<BookingRepository>();
+      final repository = getIt<BookingRepositoryImpl>();
 
       if (widget.bookingDetails != null) {
         // Update existing booking with incremental changes only
@@ -5238,7 +5238,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
 
     try {
-      final repository = getIt<BookingRepository>();
+      final repository = getIt<BookingRepositoryImpl>();
 
       // Check if it's a sale or booking
       if (selectedBookingType == BookingType.sales) {
@@ -5990,7 +5990,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                             );
                           }
                         } else {
-                          final repo = getIt<BookingRepository>();
+                          final repo = getIt<BookingRepositoryImpl>();
                           final booking = await repo.getBooking(id);
 
                           // Close loading before showing dialog

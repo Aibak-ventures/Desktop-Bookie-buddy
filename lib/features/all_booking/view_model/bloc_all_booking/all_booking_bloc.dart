@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
 import 'package:bookie_buddy_web/core/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,9 +16,9 @@ part 'all_booking_event.dart';
 part 'all_booking_state.dart';
 
 class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
-  final BookingRepository _repository;
+  final BookingRepositoryImpl _repository;
 
-  AllBookingBloc({required BookingRepository repository})
+  AllBookingBloc({required BookingRepositoryImpl repository})
       : _repository = repository,
         super(const AllBookingState.loading()) {
     on<_LoadBookings>(_onFetchBookings);
@@ -143,8 +143,8 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     // Only show loading if we don't have data for this status yet
     // This prevents the counts from showing zero during tab switches
     final currentState = state;
-    final shouldShowLoading = currentState is! _Loaded ||
-        (currentState.status != event.status);
+    final shouldShowLoading =
+        currentState is! _Loaded || (currentState.status != event.status);
 
     if (shouldShowLoading) {
       emit(const _Loading());

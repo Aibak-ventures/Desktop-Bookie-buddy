@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
@@ -12,11 +12,11 @@ part 'update_booking_cubit.freezed.dart';
 part 'update_booking_state.dart';
 
 class UpdateBookingCubit extends Cubit<UpdateBookingState> {
-  final BookingRepository _repository;
+  final BookingRepositoryImpl _repository;
   final AddClientUseCase _addClient;
 
   UpdateBookingCubit({
-    required BookingRepository repository,
+    required BookingRepositoryImpl repository,
     required AddClientUseCase addClient,
   })  : _repository = repository,
         _addClient = addClient,

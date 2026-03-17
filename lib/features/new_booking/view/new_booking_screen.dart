@@ -25,7 +25,7 @@ import 'package:bookie_buddy_web/features/product/domain/models/product_model/pr
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
     show ServicesModel;
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
@@ -4151,7 +4151,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     try {
-      final repository = getIt<BookingRepository>();
+      final repository = getIt<BookingRepositoryImpl>();
 
       // Check if it's a sale or booking
       if (selectedBookingType == BookingType.sales) {
@@ -5224,7 +5224,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (!isSale) {
       Future.delayed(Duration.zero, () async {
         try {
-          final repo = getIt<BookingRepository>();
+          final repo = getIt<BookingRepositoryImpl>();
           await repo.sendInvoice(id, sendPdfToWhatsApp);
         } catch (e) {
           log('Error sending invoice: $e');
@@ -5352,7 +5352,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             }
                           } else {
                             // For bookings, use booking API endpoint
-                            final repo = getIt<BookingRepository>();
+                            final repo = getIt<BookingRepositoryImpl>();
                             final pdfBytes = await repo.getInvoicePdfBytes(id);
 
                             GlobalLoadingOverlay.hide();
@@ -5940,7 +5940,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     try {
-      final repository = getIt<BookingRepository>();
+      final repository = getIt<BookingRepositoryImpl>();
       final request = _buildOldBookingRequest();
       log('Old Booking Request: ${request.toJson()}');
       await repository.createOldBooking(request);

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -15,8 +14,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http_parser/http_parser.dart';
 
-class BookingService {
-  final _dio = DioClient.dio;
+class BookingRemoteDatasource {
+  final Dio _dio;
+  BookingRemoteDatasource({required Dio dio}) : _dio = dio;
+
   final bookingManagementUrl = ApiEndpoints.bookings.bookingsV3;
 
   Future<CustomResponseModel> getBooking(int bookingId) async {

@@ -1,5 +1,24 @@
 import 'package:bookie_buddy_web/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
+import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/create_old_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_payment_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_partial_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/cancel_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/load_bookings_pagination_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/load_desktop_bookings_pagination_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/download_booking_invoice_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/get_payment_history_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/get_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 import 'package:bookie_buddy_web/features/client/data/repositories/client_repository_impl.dart';
@@ -52,7 +71,6 @@ import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_monthl
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:bookie_buddy_web/core/services/booking_service.dart';
 import 'package:bookie_buddy_web/features/expense/data/datasources/expense_remote_datasources.dart';
 import 'package:bookie_buddy_web/features/expense/domain/usecases/save_expense_usecase.dart';
 import 'package:bookie_buddy_web/features/expense/domain/usecases/save_product_expense_usecase.dart';
@@ -113,7 +131,7 @@ class AppDependencies {
   static void _registerServices() {
     _registerLazy(UserService.new);
     _registerLazy(ShopService.new);
-    _registerLazy(BookingService.new);
+
     _registerLazy(SharedPreferenceHelper.new);
     _registerLazy(ServiceApi.new);
   }
@@ -127,8 +145,6 @@ class AppDependencies {
         authRepository: _get<IAuthRepository>(),
       ),
     );
-
-    _registerLazy(() => BookingRepository(_get<BookingService>()));
 
     _registerLazy(() => ServiceRepository(serviceApi: _get<ServiceApi>()));
 
@@ -149,6 +165,7 @@ class AppDependencies {
     _registerSalesFeature();
     _registerProductFeature();
     _registerLedgerFeature();
+    _registerBookingsFeature();
   }
 
   // ================== feature specific ==================
@@ -311,6 +328,35 @@ class AppDependencies {
         () => GetLedgerSalesPaginatedUseCase(_get<ILedgerRepository>()));
     _registerLazy(() =>
         GetLedgerSecurityAmountsPaginatedUseCase(_get<ILedgerRepository>()));
+  }
+
+  static void _registerBookingsFeature() {
+    _registerLazy(() => BookingRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IBookingRepository>(
+      () => BookingRepositoryImpl(_get()),
+    );
+    _registerLazy(() => GetBookingUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => AddBookingUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => CreateSaleBookingUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => CreateOldBookingUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => UpdatePaymentUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => UpdateBookingUseCase(_get<IBookingRepository>()));
+    _registerLazy(
+        () => UpdateBookingPartialUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => DeleteBookingUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => CancelBookingUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => UpdateBookingStatusUseCase(_get<IBookingRepository>()));
+    _registerLazy(
+        () => UpdateDeliveryStatusUseCase(_get<IBookingRepository>()));
+    _registerLazy(
+        () => LoadBookingsPaginationUseCase(_get<IBookingRepository>()));
+    _registerLazy(
+        () => LoadDesktopBookingsPaginationUseCase(_get<IBookingRepository>()));
+    _registerLazy(
+        () => DownloadBookingInvoiceUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => GetPaymentHistoryUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => SendInvoiceUseCase(_get<IBookingRepository>()));
+    _registerLazy(() => GetInvoicePdfBytesUseCase(_get<IBookingRepository>()));
   }
 
   // ================== end of feature specific ==================

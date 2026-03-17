@@ -32,7 +32,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -2237,7 +2237,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                 try {
                   // Backend sends the invoice PDF directly to the customer's
                   // WhatsApp number via WhatsApp Business API
-                  final repository = getIt<BookingRepository>();
+                  final repository = getIt<BookingRepositoryImpl>();
                   await repository.sendInvoice(booking.id, true);
                   if (context.mounted) Navigator.of(context).pop();
                   if (context.mounted) {
@@ -2267,7 +2267,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                       const Center(child: CircularProgressIndicator()),
                 );
                 try {
-                  final repository = getIt<BookingRepository>();
+                  final repository = getIt<BookingRepositoryImpl>();
                   final pdfBytes =
                       await repository.getInvoicePdfBytes(booking.id);
                   if (context.mounted) Navigator.of(context).pop();

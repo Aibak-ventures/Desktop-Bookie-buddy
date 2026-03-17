@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
@@ -58,7 +58,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              repository: getIt.get<BookingRepository>(),
+              repository: getIt.get<BookingRepositoryImpl>(),
             ),
           ),
           BlocProvider(
@@ -66,7 +66,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
-              repository: getIt.get<BookingRepository>(),
+              repository: getIt.get<BookingRepositoryImpl>(),
             ),
           ),
         ],
@@ -79,7 +79,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              repository: getIt.get<BookingRepository>(),
+              repository: getIt.get<BookingRepositoryImpl>(),
             ),
           ),
           BlocProvider(
@@ -109,7 +109,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              repository: getIt.get<BookingRepository>(),
+              repository: getIt.get<BookingRepositoryImpl>(),
             ),
           ),
           BlocProvider(
@@ -117,7 +117,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
-              repository: getIt.get<BookingRepository>(),
+              repository: getIt.get<BookingRepositoryImpl>(),
             ),
           ),
           BlocProvider(

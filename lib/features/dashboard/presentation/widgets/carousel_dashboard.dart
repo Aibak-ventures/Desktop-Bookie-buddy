@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_sales_deta
 import 'package:bookie_buddy_web/features/all_booking/view_model/cubit_sales_details_drawer/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/cubit_booking_details_payment_history/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/core/repositories/booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -168,7 +168,7 @@ class CarouselDashboard extends StatelessWidget {
             ),
             BlocProvider(
               create: (_) => BookingDetailsBloc(
-                repository: getIt.get<BookingRepository>(),
+                repository: getIt.get<BookingRepositoryImpl>(),
               ),
             ),
             BlocProvider(
