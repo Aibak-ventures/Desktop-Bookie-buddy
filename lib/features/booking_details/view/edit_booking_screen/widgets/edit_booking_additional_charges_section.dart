@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/ui/dialogs/add_additional_charge_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/additional_charges_list_widget.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/widgets/edit_booking_section_column.dart';
 import 'package:flutter/material.dart';
 

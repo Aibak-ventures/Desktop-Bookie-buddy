@@ -2,13 +2,13 @@ import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
-import 'package:bookie_buddy_web/core/models/desktop_booking_model/status_counts_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/booking_details/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 

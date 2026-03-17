@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/core/ui/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/booking_details_screen.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

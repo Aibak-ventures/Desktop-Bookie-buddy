@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

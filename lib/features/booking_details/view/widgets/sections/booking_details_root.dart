@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/open_external_applications.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/widgets/sections/booking_details_client_section.dart';

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_bookings_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +12,8 @@ class ProductBookingUpcomingBloc
     extends Bloc<ProductBookingUpcomingEvent, ProductBookingUpcomingState> {
   final GetProductBookingsUseCase _getProductBookings;
 
-  ProductBookingUpcomingBloc({required GetProductBookingsUseCase getProductBookings})
+  ProductBookingUpcomingBloc(
+      {required GetProductBookingsUseCase getProductBookings})
       : _getProductBookings = getProductBookings,
         super(const _Loading()) {
     on<_LoadBookings>(_onLoadBookings);

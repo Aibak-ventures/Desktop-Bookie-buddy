@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/measurement_value_model/measurement_value_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_info_model.freezed.dart';

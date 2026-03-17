@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/measurement_value_model/measurement_value_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_selected_model.freezed.dart';

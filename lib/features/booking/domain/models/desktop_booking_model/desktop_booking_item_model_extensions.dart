@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/desktop_booking_model/desktop_booking_item_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
 
 /// Extension to convert DesktopBookingItemModel to BookingsModel
 /// This allows us to reuse the BookingCard widget with desktop booking data

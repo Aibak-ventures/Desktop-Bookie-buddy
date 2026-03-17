@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/core/routing/app_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

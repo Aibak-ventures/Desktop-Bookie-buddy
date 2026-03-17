@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/models/booking_other_details_model/booking_other_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_other_details_model/booking_other_details_model.dart';
 
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
@@ -29,8 +29,8 @@ import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart'
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/booking_document_upload_section.dart';
@@ -45,7 +45,7 @@ import 'package:bookie_buddy_web/features/new_booking/helpers/booking_text_field
 import 'package:bookie_buddy_web/features/new_booking/models/document_file_model.dart';
 
 import 'package:bookie_buddy_web/features/new_booking/view/widgets/variant_chip.dart';
-import 'package:bookie_buddy_web/core/models/booking_details_model/booking_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

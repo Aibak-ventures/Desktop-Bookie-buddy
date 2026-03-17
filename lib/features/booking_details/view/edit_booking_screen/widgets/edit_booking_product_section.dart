@@ -8,8 +8,8 @@ import 'package:bookie_buddy_web/core/ui/dialogs/show_vehicle_customization_dial
 import 'package:bookie_buddy_web/core/ui/widgets/customization_expansion_tile.dart';
 import 'package:bookie_buddy_web/core/ui/widgets/show_search_type_bottom_sheet.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
-import 'package:bookie_buddy_web/features/add_booking/models/measurement_value_model/measurement_value_model.dart';
-import 'package:bookie_buddy_web/features/add_booking/view/add_customization_screen.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/pages/add_customization_screen.dart';
 import 'package:bookie_buddy_web/features/booking_details/view/edit_booking_screen/controller/edit_booking_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';

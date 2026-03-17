@@ -1,4 +1,7 @@
 // import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/bloc_add_booking/add_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/bloc_client_save/client_save_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/add_booking/bloc/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_list_bloc/staff_list_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,9 +15,6 @@ import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/product_search_cubit/product_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
-import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_add_booking/add_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/add_booking/view_model/bloc_client_save/client_save_bloc.dart';
-import 'package:bookie_buddy_web/features/add_booking/view_model/cubit_add_booking_products/add_booking_products_cubit.dart';
 import 'package:bookie_buddy_web/features/all_booking/view_model/bloc_all_booking/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/booking_details/view_model/bloc_booking_details/booking_details_bloc.dart';

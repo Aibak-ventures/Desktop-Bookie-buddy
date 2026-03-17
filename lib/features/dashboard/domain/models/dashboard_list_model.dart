@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/models/dashboard_custom_work_model/dashboard_custom_work_model.dart';
 
 class DashboardListModel {
