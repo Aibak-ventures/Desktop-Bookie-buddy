@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sales_request_model.freezed.dart';
@@ -7,9 +7,12 @@ part 'sales_request_model.g.dart';
 
 List<Map<String, dynamic>>? _variantsToJson(
   List<ProductSelectedModel>? variants,
-) => variants == null || variants.isEmpty
-    ? null
-    : variants.map((e) => e.toCustomJson(includeMeasurement: false)).toList();
+) =>
+    variants == null || variants.isEmpty
+        ? null
+        : variants
+            .map((e) => e.toCustomJson(includeMeasurement: false))
+            .toList();
 
 // Map<String, dynamic>? _clientToJson(ClientRequestModel? client) {
 //   if (client == null) return null;
@@ -20,8 +23,7 @@ List<Map<String, dynamic>>? _variantsToJson(
 //   };
 // }
 
-String? _paymentMethodToJson(PaymentMethod? method) =>
-    method?.value;
+String? _paymentMethodToJson(PaymentMethod? method) => method?.value;
 
 @freezed
 class SalesRequestModel with _$SalesRequestModel {

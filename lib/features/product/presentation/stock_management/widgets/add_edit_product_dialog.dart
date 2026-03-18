@@ -1732,8 +1732,8 @@ class _ImageCropDialog extends StatefulWidget {
 
 class _ImageCropDialogState extends State<_ImageCropDialog> {
   Rect? _cropRect;
-  Offset _dragStart = Offset.zero;
-  double _scale = 1.0;
+  // Offset _dragStart = Offset.zero;
+  // double _scale = 1.0;
 
   @override
   void initState() {

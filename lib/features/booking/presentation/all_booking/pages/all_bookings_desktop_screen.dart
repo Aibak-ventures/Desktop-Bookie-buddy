@@ -19,7 +19,6 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
   final String?
@@ -979,12 +978,12 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     );
   }
 
-  Widget _buildDeliveryStatus(DesktopBookingItemModel booking) {
-    return _DeliveryStatusDropdown(
-      key: ValueKey('delivery_status_${booking.id}'),
-      booking: booking,
-    );
-  }
+  // Widget _buildDeliveryStatus(DesktopBookingItemModel booking) {
+  //   return _DeliveryStatusDropdown(
+  //     key: ValueKey('delivery_status_${booking.id}'),
+  //     booking: booking,
+  //   );
+  // }
 
   /// Display-only delivery status (no dropdown action)
   Widget _buildDeliveryStatusDisplay(DesktopBookingItemModel booking) {
@@ -1072,8 +1071,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildSalesTableRow(SaleModel sale) {
-    final balance = sale.totalAmount - sale.paidAmount;
-    final paymentStatus = balance == 0;
+    // final balance = sale.totalAmount - sale.paidAmount;
+    // final paymentStatus = balance == 0;
 
     return Container(
       decoration: BoxDecoration(
@@ -1177,7 +1176,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 class _DeliveryStatusDropdown extends StatefulWidget {
   final DesktopBookingItemModel booking;
 
-  const _DeliveryStatusDropdown({super.key, required this.booking});
+  const _DeliveryStatusDropdown({required this.booking});
 
   @override
   State<_DeliveryStatusDropdown> createState() =>

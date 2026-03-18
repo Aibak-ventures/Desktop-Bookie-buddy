@@ -5,8 +5,6 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-// import 'package:bookie_buddy_web/core/models/service_model.dart';
-import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
@@ -1261,9 +1259,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     }
 
     // Get services for filter
-    final servicesState = context.read<ServiceBloc>().state;
-    List<ServicesModel> services = [];
-    servicesState.whenOrNull(loaded: (s) => services = s);
+    // final servicesState = context.read<ServiceBloc>().state;
+    // List<ServicesModel> services = [];
+    // servicesState.whenOrNull(loaded: (s) => services = s);
 
     // Get current selected service ID from state
     final selectedServiceId = currentState.maybeWhen(

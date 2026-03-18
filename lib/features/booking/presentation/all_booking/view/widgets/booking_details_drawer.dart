@@ -14,7 +14,7 @@ import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_c
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/presentation/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';

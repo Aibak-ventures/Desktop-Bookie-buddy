@@ -5,7 +5,6 @@ import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
@@ -1350,220 +1349,218 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     }
   }
 
-  void _showBookingDetailsDrawerOLD(BookingsModel booking) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'Booking Details',
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return Align(
-          alignment: Alignment.centerRight,
-          child: Material(
-            elevation: 16,
-            child: Container(
-              width: 450,
-              height: MediaQuery.of(context).size.height,
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: AppColors.purple,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.calendar_today,
-                            color: Colors.white, size: 24),
-                        const SizedBox(width: 12),
-                        const Expanded(
-                          child: Text(
-                            'Booking Details',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.close, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Content
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildDetailRow('Customer', booking.clientName),
-                          _buildDetailRow(
-                              'Booking ID', booking.id?.toString() ?? 'N/A'),
-                          _buildDetailRow('Status', booking.bookingStatus.name),
-                          _buildDetailRow(
-                              'Delivery Status', booking.deliveryStatus.name),
-                          _buildDetailRow(
-                              'Payment Status', booking.paymentStatus.name),
-                          if (booking.bookedDate != null)
-                            _buildDetailRow(
-                                'Booking Date',
-                                DateFormat('MMM dd, yyyy').format(
-                                    booking.bookedDate!.parseToDateTime())),
-                          if (booking.pickupDate != null)
-                            _buildDetailRow(
-                                'Pickup Date',
-                                DateFormat('MMM dd, yyyy').format(
-                                    booking.pickupDate!.parseToDateTime())),
-                          if (booking.returnDate != null)
-                            _buildDetailRow(
-                                'Return Date',
-                                DateFormat('MMM dd, yyyy').format(
-                                    booking.returnDate!.parseToDateTime())),
-                          if (booking.shopBookingId != null &&
-                              booking.shopBookingId!.isNotEmpty)
-                            _buildDetailRow(
-                                'Shop Booking ID', booking.shopBookingId!),
-                          if (booking.staffName != null &&
-                              booking.staffName!.isNotEmpty)
-                            _buildDetailRow('Staff', booking.staffName!),
-                          if (booking.bookedItems.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Booked Items',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF6B7280),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  ...booking.bookedItems.map((item) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 4),
-                                        child: Text(
-                                          '• $item',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xFF1F2937),
-                                          ),
-                                        ),
-                                      )),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(1, 0),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOut,
-          )),
-          child: child,
-        );
-      },
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 130,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF6B7280),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF1F2937),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _metricCard(
-      String label, String value, String change, Color changeColor) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1F2937),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            change,
-            style: TextStyle(
-              fontSize: 12,
-              color: changeColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // void _showBookingDetailsDrawerOLD(BookingsModel booking) {
+  //   showGeneralDialog(
+  //     context: context,
+  //     barrierDismissible: true,
+  //     barrierLabel: 'Booking Details',
+  //     transitionDuration: const Duration(milliseconds: 300),
+  //     pageBuilder: (context, animation, secondaryAnimation) {
+  //       return Align(
+  //         alignment: Alignment.centerRight,
+  //         child: Material(
+  //           elevation: 16,
+  //           child: Container(
+  //             width: 450,
+  //             height: MediaQuery.of(context).size.height,
+  //             color: Colors.white,
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 // Header
+  //                 Container(
+  //                   padding: const EdgeInsets.all(24),
+  //                   decoration: BoxDecoration(
+  //                     color: AppColors.purple,
+  //                     boxShadow: [
+  //                       BoxShadow(
+  //                         color: Colors.black.withOpacity(0.1),
+  //                         blurRadius: 4,
+  //                         offset: const Offset(0, 2),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   child: Row(
+  //                     children: [
+  //                       const Icon(Icons.calendar_today,
+  //                           color: Colors.white, size: 24),
+  //                       const SizedBox(width: 12),
+  //                       const Expanded(
+  //                         child: Text(
+  //                           'Booking Details',
+  //                           style: TextStyle(
+  //                             fontSize: 20,
+  //                             fontWeight: FontWeight.w700,
+  //                             color: Colors.white,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       IconButton(
+  //                         onPressed: () => Navigator.pop(context),
+  //                         icon: const Icon(Icons.close, color: Colors.white),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 // Content
+  //                 Expanded(
+  //                   child: SingleChildScrollView(
+  //                     padding: const EdgeInsets.all(24),
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         _buildDetailRow('Customer', booking.clientName),
+  //                         _buildDetailRow(
+  //                             'Booking ID', booking.id?.toString() ?? 'N/A'),
+  //                         _buildDetailRow('Status', booking.bookingStatus.name),
+  //                         _buildDetailRow(
+  //                             'Delivery Status', booking.deliveryStatus.name),
+  //                         _buildDetailRow(
+  //                             'Payment Status', booking.paymentStatus.name),
+  //                         if (booking.bookedDate != null)
+  //                           _buildDetailRow(
+  //                               'Booking Date',
+  //                               DateFormat('MMM dd, yyyy').format(
+  //                                   booking.bookedDate!.parseToDateTime())),
+  //                         if (booking.pickupDate != null)
+  //                           _buildDetailRow(
+  //                               'Pickup Date',
+  //                               DateFormat('MMM dd, yyyy').format(
+  //                                   booking.pickupDate!.parseToDateTime())),
+  //                         if (booking.returnDate != null)
+  //                           _buildDetailRow(
+  //                               'Return Date',
+  //                               DateFormat('MMM dd, yyyy').format(
+  //                                   booking.returnDate!.parseToDateTime())),
+  //                         if (booking.shopBookingId != null &&
+  //                             booking.shopBookingId!.isNotEmpty)
+  //                           _buildDetailRow(
+  //                               'Shop Booking ID', booking.shopBookingId!),
+  //                         if (booking.staffName != null &&
+  //                             booking.staffName!.isNotEmpty)
+  //                           _buildDetailRow('Staff', booking.staffName!),
+  //                         if (booking.bookedItems.isNotEmpty)
+  //                           Padding(
+  //                             padding: const EdgeInsets.only(top: 16),
+  //                             child: Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 const Text(
+  //                                   'Booked Items',
+  //                                   style: TextStyle(
+  //                                     fontSize: 14,
+  //                                     fontWeight: FontWeight.w600,
+  //                                     color: Color(0xFF6B7280),
+  //                                   ),
+  //                                 ),
+  //                                 const SizedBox(height: 8),
+  //                                 ...booking.bookedItems.map((item) => Padding(
+  //                                       padding:
+  //                                           const EdgeInsets.only(bottom: 4),
+  //                                       child: Text(
+  //                                         '• $item',
+  //                                         style: const TextStyle(
+  //                                           fontSize: 14,
+  //                                           color: Color(0xFF1F2937),
+  //                                         ),
+  //                                       ),
+  //                                     )),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //     transitionBuilder: (context, animation, secondaryAnimation, child) {
+  //       return SlideTransition(
+  //         position: Tween<Offset>(
+  //           begin: const Offset(1, 0),
+  //           end: Offset.zero,
+  //         ).animate(CurvedAnimation(
+  //           parent: animation,
+  //           curve: Curves.easeInOut,
+  //         )),
+  //         child: child,
+  //       );
+  //     },
+  //   );
 }
+
+  // Widget _buildDetailRow(String label, String value) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(bottom: 16),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         SizedBox(
+  //           width: 130,
+  //           child: Text(
+  //             label,
+  //             style: const TextStyle(
+  //               fontSize: 14,
+  //               fontWeight: FontWeight.w600,
+  //               color: Color(0xFF6B7280),
+  //             ),
+  //           ),
+  //         ),
+  //         Expanded(
+  //           child: Text(
+  //             value,
+  //             style: const TextStyle(
+  //               fontSize: 14,
+  //               color: Color(0xFF1F2937),
+  //               fontWeight: FontWeight.w500,
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // Widget _metricCard(
+  //     String label, String value, String change, Color changeColor) {
+  //   return Container(
+  //     padding: const EdgeInsets.all(16),
+  //     decoration: BoxDecoration(
+  //       color: Colors.grey.shade50,
+  //       borderRadius: BorderRadius.circular(8),
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           label,
+  //           style: TextStyle(
+  //             fontSize: 12,
+  //             color: Colors.grey.shade600,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 8),
+  //         Text(
+  //           value,
+  //           style: const TextStyle(
+  //             fontSize: 18,
+  //             fontWeight: FontWeight.w700,
+  //             color: Color(0xFF1F2937),
+  //           ),
+  //         ),
+  //         const SizedBox(height: 4),
+  //         Text(
+  //           change,
+  //           style: TextStyle(
+  //             fontSize: 12,
+  //             color: changeColor,
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );

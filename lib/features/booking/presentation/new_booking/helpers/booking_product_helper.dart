@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/domain/models/product_selected_model/product_selected_model.dart';
 
 /// Helper class for managing product operations in booking screen
 class BookingProductHelper {

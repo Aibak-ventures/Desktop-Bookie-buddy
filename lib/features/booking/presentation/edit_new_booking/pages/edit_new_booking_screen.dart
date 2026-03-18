@@ -38,11 +38,9 @@ import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_mode
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/select_product_screen.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/bloc_select_product/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/view_model/cubit_selected_products/selected_products_cubit.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/view/widgets/select_product_dialog.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/presentation/bloc/select_product_bloc/select_product_bloc.dart';
+import 'package:bookie_buddy_web/features/select_product_booking/presentation/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
@@ -201,7 +199,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
-  ProductSelectedModel? _selectedProductForCustomization;
+  // ProductSelectedModel? _selectedProductForCustomization;
 
   @override
   void initState() {
@@ -4852,7 +4850,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       const SizedBox(width: 8),
                       Text(
                         hasCustomizations
-                            ? 'Edit customisation'
+                            ? 'Edit customization'
                             : 'Add customization (Optional)',
                         style: const TextStyle(
                           fontSize: 14,
@@ -5029,47 +5027,47 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   // Actions
-  void _openProductSelection() async {
-    if (selectedServiceId == null) {
-      context.showSnackBar('Please select a service first', isError: true);
-      return;
-    }
+  // void _openProductSelection() async {
+  //   if (selectedServiceId == null) {
+  //     context.showSnackBar('Please select a service first', isError: true);
+  //     return;
+  //   }
 
-    // If "All Services" is selected (-1), pass null to the screen
-    final serviceIdToUse = selectedServiceId == -1 ? null : selectedServiceId;
+  //   // If "All Services" is selected (-1), pass null to the screen
+  //   final serviceIdToUse = selectedServiceId == -1 ? null : selectedServiceId;
 
-    final result = await Navigator.push<List<ProductSelectedModel>>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (_) => SelectProductBloc(
-                getAvailableProducts: getIt(),
-                getProducts: getIt(),
-                searchAndFilterProducts: getIt(),
-              ),
-            ),
-            BlocProvider(create: (_) => SelectedProductsCubit()),
-          ],
-          child: SelectProductScreen(
-            serviceId: serviceIdToUse,
-            pickupDate: pickupDate.format(),
-            returnDate: returnDate.format(),
-            pickupTime: pickupTime,
-            returnTime: returnTime,
-            preSelectedData: selectedProductsNotifier.value,
-            isSales: selectedBookingType == BookingType.sales,
-            useAvailableProductsApi: selectedBookingType != BookingType.sales,
-          ),
-        ),
-      ),
-    );
+  //   final result = await Navigator.push<List<ProductSelectedModel>>(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => MultiBlocProvider(
+  //         providers: [
+  //           BlocProvider(
+  //             create: (_) => SelectProductBloc(
+  //               getAvailableProducts: getIt(),
+  //               getProducts: getIt(),
+  //               searchAndFilterProducts: getIt(),
+  //             ),
+  //           ),
+  //           BlocProvider(create: (_) => SelectedProductsCubit()),
+  //         ],
+  //         child: SelectProductScreen(
+  //           serviceId: serviceIdToUse,
+  //           pickupDate: pickupDate.format(),
+  //           returnDate: returnDate.format(),
+  //           pickupTime: pickupTime,
+  //           returnTime: returnTime,
+  //           preSelectedData: selectedProductsNotifier.value,
+  //           isSales: selectedBookingType == BookingType.sales,
+  //           useAvailableProductsApi: selectedBookingType != BookingType.sales,
+  //         ),
+  //       ),
+  //     ),
+  //   );
 
-    if (result != null) {
-      selectedProductsNotifier.value = result;
-    }
-  }
+  //   if (result != null) {
+  //     selectedProductsNotifier.value = result;
+  //   }
+  // }
 
   void _addAdditionalCharge() async {
     final nameController = TextEditingController();
@@ -6586,9 +6584,9 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                 ),
                 Text(
                   selectedVariant != null
-                      ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock ?? 0}'
+                      ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock}'
                       : (variants.isNotEmpty
-                          ? '${variants.first.remainingStock ?? variants.first.stock ?? 0}'
+                          ? '${variants.first.remainingStock ?? variants.first.stock}'
                           : '0'),
                   style: const TextStyle(
                     fontSize: 15,

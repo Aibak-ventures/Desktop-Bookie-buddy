@@ -14,7 +14,7 @@ Future<void> handlePdfFile(
     await Future.delayed(const Duration(seconds: 1));
     html.window.print();
   } else {
-    final anchor = html.AnchorElement(href: url)
+    html.AnchorElement(href: url)
       ..setAttribute('download', fileName)
       ..click();
   }

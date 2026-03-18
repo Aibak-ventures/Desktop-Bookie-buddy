@@ -26,19 +26,6 @@ import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_use
 import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/delete_client_usecase.dart';
-import 'package:bookie_buddy_web/features/expense/data/repositories/expense_repository_impl.dart';
-import 'package:bookie_buddy_web/features/ledger/data/datasources/ledger_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/ledger/data/repositories/ledger_repository_impl.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/repositories/i_ledger_repository.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/download_ledger_invoice_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_bookings_paginated_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_day_summary_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_expense_paginated_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_invoice_data_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_payments_paginated_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_pending_paginated_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_sales_paginated_usecase.dart';
-import 'package:bookie_buddy_web/features/ledger/domain/usecases/get_ledger_security_amounts_paginated_usecase.dart';
 import 'package:bookie_buddy_web/features/product/data/repositories/product_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/data/repositories/sales_repository_impl.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
@@ -52,11 +39,6 @@ import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_email_support_usecase.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_usecase.dart';
-import 'package:bookie_buddy_web/features/settings/data/datasources/settings_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/settings/data/repositories/settings_repository_impl.dart';
-import 'package:bookie_buddy_web/features/settings/domain/repositories/i_settings_repository.dart';
-import 'package:bookie_buddy_web/features/settings/domain/usecases/update_shop_privacy_settings_usecase.dart';
-import 'package:bookie_buddy_web/features/settings/domain/usecases/update_shop_settings_usecase.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/repositories/i_dashboard_repository.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
 import 'package:bookie_buddy_web/features/staff/data/repositories/staff_repository_impl.dart';
@@ -70,11 +52,6 @@ import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_monthl
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
 import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/expense/data/datasources/expense_remote_datasources.dart';
-import 'package:bookie_buddy_web/features/expense/domain/usecases/save_expense_usecase.dart';
-import 'package:bookie_buddy_web/features/expense/domain/usecases/save_product_expense_usecase.dart';
-import 'package:bookie_buddy_web/features/expense/domain/usecases/delete_expense_usecase.dart';
-import 'package:bookie_buddy_web/features/expense/domain/repositories/i_expense_repository.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_action_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_query_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
@@ -87,7 +64,6 @@ import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_bo
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_growth_data_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_info_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_products_paginated_usecase.dart';
-import 'package:bookie_buddy_web/features/product/domain/usecases/get_transfer_product_history_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/save_product_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/search_all_products_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/search_and_filter_products_usecase.dart';
@@ -105,19 +81,6 @@ import 'package:bookie_buddy_web/features/auth/domain/usecases/change_secret_pas
 import 'package:bookie_buddy_web/features/auth/domain/usecases/login_usecase.dart';
 import 'package:bookie_buddy_web/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:bookie_buddy_web/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/search/data/datasources/search_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/search/data/repositories/search_repository_impl.dart';
-import 'package:bookie_buddy_web/features/search/domain/repositories/i_search_repository.dart';
-import 'package:bookie_buddy_web/features/search/domain/usecases/search_usecase.dart';
-import 'package:bookie_buddy_web/features/profile/data/datasources/bug_report_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/profile/data/datasources/shop_activity_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/profile/data/repositories/bug_report_repository_impl.dart';
-import 'package:bookie_buddy_web/features/profile/data/repositories/shop_activity_repository_impl.dart';
-import 'package:bookie_buddy_web/features/profile/domain/repositories/i_bug_report_repository.dart';
-import 'package:bookie_buddy_web/features/profile/domain/repositories/i_shop_activity_repository.dart';
-import 'package:bookie_buddy_web/features/profile/domain/usecases/submit_bug_report_usecase.dart';
-import 'package:bookie_buddy_web/features/profile/domain/usecases/load_shop_activities_usecase.dart';
-import 'package:bookie_buddy_web/features/profile/domain/usecases/load_next_shop_activities_page_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 import 'package:get_it/get_it.dart';
 
@@ -155,16 +118,11 @@ class AppDependencies {
   static void _registerFeatures() {
     _registerCommon();
     _registerAuthFeature();
-    _registerSearchFeature();
-    _registerExpenseFeature();
     _registerClientFeature();
     _registerStaffFeature();
     _registerDashboardFeature();
-    _registerSettingsFeature();
-    _registerProfileFeature();
     _registerSalesFeature();
     _registerProductFeature();
-    _registerLedgerFeature();
     _registerBookingsFeature();
   }
 
@@ -184,23 +142,6 @@ class AppDependencies {
     );
     _registerLazy(() => ChangeAccountPasswordUseCase(_get<IAuthRepository>()));
     _registerLazy(() => ChangeSecretPasswordUseCase(_get<IAuthRepository>()));
-  }
-
-  /// register global search use cases
-  static void _registerSearchFeature() {
-    _registerLazy(() => SearchRemoteDatasource(dio: DioClient.dio));
-    _registerLazy<ISearchRepository>(() => SearchRepositoryImpl(_get()));
-    _registerLazy(
-      () => SearchUseCase(_get<ISearchRepository>()),
-    );
-  }
-
-  static void _registerExpenseFeature() {
-    _registerLazy(() => ExpenseRemoteDataSource(dio: DioClient.dio));
-    _registerLazy<IExpenseRepository>(() => ExpenseRepositoryImpl(_get()));
-    _registerLazy(() => SaveExpenseUsecase(_get<IExpenseRepository>()));
-    _registerLazy(() => SaveProductExpenseUsecase(_get<IExpenseRepository>()));
-    _registerLazy(() => DeleteExpenseUsecase(_get<IExpenseRepository>()));
   }
 
   static void _registerClientFeature() {
@@ -232,32 +173,6 @@ class AppDependencies {
     _registerLazy(
       () => GetDashboardDesktopDataUseCase(_get<IDashboardRepository>()),
     );
-  }
-
-  static void _registerSettingsFeature() {
-    _registerLazy(() => SettingsRemoteDatasource(dio: DioClient.dio));
-    _registerLazy<ISettingsRepository>(() => SettingsRepositoryImpl(_get()));
-    _registerLazy(
-      () => UpdateShopPrivacySettingsUseCase(_get<ISettingsRepository>()),
-    );
-    _registerLazy(
-      () => UpdateShopSettingsUseCase(_get<ISettingsRepository>()),
-    );
-  }
-
-  static void _registerProfileFeature() {
-    _registerLazy(() => BugReportRemoteDatasource(dio: DioClient.dio));
-    _registerLazy(() => ShopActivityRemoteDatasource(dio: DioClient.dio));
-
-    _registerLazy<IBugReportRepository>(() => BugReportRepositoryImpl(_get()));
-    _registerLazy<IShopActivityRepository>(
-        () => ShopActivityRepositoryImpl(_get()));
-
-    _registerLazy(() => SubmitBugReportUseCase(_get<IBugReportRepository>()));
-    _registerLazy(
-        () => LoadShopActivitiesUseCase(_get<IShopActivityRepository>()));
-    _registerLazy(() =>
-        LoadNextShopActivitiesPageUseCase(_get<IShopActivityRepository>()));
   }
 
   static void _registerSalesFeature() {
@@ -300,34 +215,7 @@ class AppDependencies {
     _registerLazy(() =>
         GetMatchingProductsFromAnotherShopUseCase(_get<IProductRepository>()));
     _registerLazy(
-        () => GetTransferProductHistoryUseCase(_get<IProductRepository>()));
-    _registerLazy(
         () => CheckVariantAvailabilityUseCase(_get<IProductRepository>()));
-  }
-
-  static void _registerLedgerFeature() {
-    _registerLazy(() => LedgerRemoteDatasource(dio: DioClient.dio));
-    _registerLazy<ILedgerRepository>(
-      () => LedgerRepositoryImpl(
-        datasource: _get(),
-      ),
-    );
-    _registerLazy(() => GetLedgerDaySummaryUseCase(_get<ILedgerRepository>()));
-    _registerLazy(
-        () => GetLedgerBookingsPaginatedUseCase(_get<ILedgerRepository>()));
-    _registerLazy(
-        () => GetLedgerExpensePaginatedUseCase(_get<ILedgerRepository>()));
-    _registerLazy(
-        () => DownloadLedgerInvoiceUseCase(_get<ILedgerRepository>()));
-    _registerLazy(() => GetLedgerInvoiceDataUseCase(_get<ILedgerRepository>()));
-    _registerLazy(
-        () => GetLedgerPaymentsPaginatedUseCase(_get<ILedgerRepository>()));
-    _registerLazy(
-        () => GetLedgerPendingPaginatedUseCase(_get<ILedgerRepository>()));
-    _registerLazy(
-        () => GetLedgerSalesPaginatedUseCase(_get<ILedgerRepository>()));
-    _registerLazy(() =>
-        GetLedgerSecurityAmountsPaginatedUseCase(_get<ILedgerRepository>()));
   }
 
   static void _registerBookingsFeature() {

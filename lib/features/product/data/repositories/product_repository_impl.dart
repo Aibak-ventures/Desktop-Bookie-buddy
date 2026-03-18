@@ -9,7 +9,6 @@ import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_request_model/product_request_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/transfer_product_history_model/transfer_product_history_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductRepositoryImpl implements IProductRepository {
@@ -431,34 +430,6 @@ class ProductRepositoryImpl implements IProductRepository {
       throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
       log('Error transferring product: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
-
-  @override
-  Future<PaginationModel<TransferProductHistoryModel>>
-      getTransferProductHistory(
-          {required int shopId, required int page}) async {
-    try {
-      final response = await safeApiCall(
-        () => _queryDatasource.fetchTransferProductHistory(
-          shopId: shopId,
-          page: page,
-        ),
-      );
-
-      if (response.status.isSuccess) {
-        return PaginationModel<TransferProductHistoryModel>.fromJson(
-          response.data,
-          (json) => TransferProductHistoryModel.fromJson(
-            json as Map<String, dynamic>,
-          ),
-        );
-      }
-      log('Fetch transfer product history failed: ${response.devMessage}');
-      throw response.message ?? 'Failed to complete operation';
-    } catch (e, stack) {
-      log('Error fetching transfer product history: $e', stackTrace: stack);
       rethrow;
     }
   }

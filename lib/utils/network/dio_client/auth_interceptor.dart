@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/route/app_router.dart';
+import 'package:bookie_buddy_web/core/app/my_app.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/storage/token_storage.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';

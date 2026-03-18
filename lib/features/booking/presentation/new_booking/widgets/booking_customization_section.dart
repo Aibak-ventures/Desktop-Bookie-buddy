@@ -2,8 +2,8 @@ import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/measurement_field_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/measurement_value_model/measurement_value_model.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/add_booking/pages/add_customization_screen.dart'; // For getMeasurements
-import 'package:bookie_buddy_web/features/select_product_booking/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/add_customization_screen.dart'; // For getMeasurements
+import 'package:bookie_buddy_web/features/select_product_booking/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 
 class BookingCustomizationSection extends StatefulWidget {
@@ -36,7 +36,7 @@ class _BookingCustomizationSectionState
       ValueNotifier(GenderType.female);
   final TextEditingController _customMeasurementController =
       TextEditingController();
-  final GlobalKey<FormState> _customMeasurementFormKey = GlobalKey<FormState>();
+  // final GlobalKey<FormState> _customMeasurementFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -226,7 +226,7 @@ class _BookingCustomizationSectionState
                     //   borderRadius: BorderRadius.circular(4),
                     // ),
                     child: const Text(
-                      'Customisation',
+                      'Customization',
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                     ),
@@ -383,7 +383,7 @@ class _BookingCustomizationSectionState
             padding: const EdgeInsets.all(16.0),
             child: const Center(
               child: Text(
-                'Customisation',
+                'Customization',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -405,7 +405,7 @@ class _BookingCustomizationSectionState
                   const SizedBox(height: 30),
                   // Add Custom Measurements
                   const Text(
-                    'Add custom measurments',
+                    'Add custom measurements',
                     style: TextStyle(fontSize: 13, color: Colors.black87),
                   ),
                   const SizedBox(height: 8),
@@ -490,7 +490,7 @@ class _BookingCustomizationSectionState
                         ),
                       ),
                       child: const Text(
-                        'Save measurments',
+                        'Save measurements',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -524,7 +524,7 @@ class _BookingCustomizationSectionState
             const SizedBox(
               width: 110,
               child: Text(
-                'Measurment for :',
+                'Measurement for :',
                 style: TextStyle(fontSize: 13, color: Colors.black87),
               ),
             ),

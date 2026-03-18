@@ -342,8 +342,8 @@ class SalesDetailsDrawer extends StatelessWidget {
           const SizedBox(height: 16),
           ...sale.products.map((item) {
             // Determine specifications label based on mainServiceType (same as booking details)
-            String specsLabel =
-                item.mainServiceType?.quantityFieldLabel ?? 'Specifications';
+            // String specsLabel =
+            //     item.mainServiceType?.quantityFieldLabel ?? 'Specifications';
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
