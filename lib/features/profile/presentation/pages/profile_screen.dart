@@ -8,9 +8,9 @@ import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_list_blo
 import 'package:bookie_buddy_web/features/staff/presentation/pages/staff_list_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/routing/app_routes.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
+import 'package:bookie_buddy_web/core/route/app_routes.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';

@@ -27,7 +27,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_us
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
@@ -57,7 +57,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/w
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/select_date_failure_dialog.dart';
 
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/generate_sale_details_pdf.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 
 /// Booking types enum for the tab selection
 enum BookingType { booking, sales, customWork }
@@ -5160,7 +5160,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     GlobalLoadingOverlay.show(context);
 
     try {
-
       if (widget.bookingDetails != null) {
         // Update existing booking with incremental changes only
         final partialUpdate = _buildPartialUpdateRequest();
@@ -5240,7 +5239,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
 
     try {
-
       // Check if it's a sale or booking
       if (selectedBookingType == BookingType.sales) {
         // Build sales request
@@ -5248,7 +5246,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         log('Sales Request: ${salesRequest.toJson()}');
 
         // Call the API to create sale
-        final saleId = await getIt<CreateSaleBookingUseCase>()(salesRequest.toJson());
+        final saleId =
+            await getIt<CreateSaleBookingUseCase>()(salesRequest.toJson());
 
         // Close loading dialog
         if (mounted) Navigator.of(context).pop();

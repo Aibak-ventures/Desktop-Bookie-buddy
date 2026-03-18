@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/ui/screens/success_animation_screen.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
@@ -20,8 +20,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:go_router/go_router.dart';
 
-import '../../../../../core/ui/widgets/custom_button.dart';
-import '../../../../../core/ui/widgets/custom_textfield.dart';
+import '../../../../../core/common/widgets/custom_button.dart';
+import '../../../../../core/common/widgets/custom_textfield.dart';
 
 class AddBookingPaymentScreen extends StatefulWidget {
   const AddBookingPaymentScreen({

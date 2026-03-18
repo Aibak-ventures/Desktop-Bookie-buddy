@@ -1,17 +1,17 @@
-import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/auth_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/bookings_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/customization_work_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/expenses_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/ledger_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/notifications_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/product_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/sales_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/search_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/service_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/shop_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/staff_endpoints.dart';
-import 'package:bookie_buddy_web/core/network/endpoints/tailor_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/api_config.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/auth_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/bookings_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/customization_work_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/expenses_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/ledger_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/notifications_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/product_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/sales_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/search_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/service_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/shop_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/staff_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/tailor_endpoints.dart';
 
 /// Centralized, namespaced API paths facade used across the app.
 ///

@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/show_custom_alert_dialog.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_custom_alert_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/bloc/add_button_default_action_cubit/add_button_default_action_cubit.dart';
 import 'package:flutter/material.dart';

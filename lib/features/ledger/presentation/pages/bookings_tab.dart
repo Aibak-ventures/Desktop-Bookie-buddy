@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/ledger_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/widgets/ledger_bookings_grouped_container.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/bloc/ledger_bookings_bloc/ledger_bookings_bloc.dart';

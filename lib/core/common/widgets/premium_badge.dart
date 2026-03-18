@@ -1,12 +1,12 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/premium_feature_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/premium_feature_dialog.dart';
 // import 'package:bookie_buddy_web/core/ui/dialogs/premium_feature_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../core/constants/app_assets.dart'; // crown asset path
+import '../../constants/app_assets.dart'; // crown asset path
 
 // class PremiumBadge extends StatelessWidget {
 //   final String label;

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/ui/widgets/custom_snack_bar.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 
 /// Extensions on [BuildContext] that provide convenience methods for

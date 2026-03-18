@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/expense_model/expense_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_shimmer_box.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/widgets/ledger_list_tile.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_expense_bloc/wallet_expense_bloc.dart';

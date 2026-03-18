@@ -30,7 +30,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_bo
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_old_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_invoice_pdf_bytes_usecase.dart';
-import 'package:bookie_buddy_web/core/ui/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
@@ -57,7 +57,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/w
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 
 /// Booking types enum for the tab selection
 enum BookingType { booking, sales, customWork, oldBooking }
@@ -4162,7 +4162,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         log('Sales Request: ${salesRequest.toJson()}');
 
         // Call the API to create sale
-        final saleId = await getIt<CreateSaleBookingUseCase>()(salesRequest.toJson());
+        final saleId =
+            await getIt<CreateSaleBookingUseCase>()(salesRequest.toJson());
 
         // Close loading dialog
         if (mounted) Navigator.of(context).pop();
@@ -5354,7 +5355,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             }
                           } else {
                             // For bookings, use booking API endpoint
-                            final pdfBytes = await getIt<GetInvoicePdfBytesUseCase>()(id);
+                            final pdfBytes =
+                                await getIt<GetInvoicePdfBytesUseCase>()(id);
 
                             GlobalLoadingOverlay.hide();
 

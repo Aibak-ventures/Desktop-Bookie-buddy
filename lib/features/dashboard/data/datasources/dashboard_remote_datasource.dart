@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/network/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/utils/error/error_handler.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/booking_exceptions.dart';

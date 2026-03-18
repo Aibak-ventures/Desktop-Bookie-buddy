@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/common/domain/usecases/launch_whatsapp_support_usecase.dart';
+import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';

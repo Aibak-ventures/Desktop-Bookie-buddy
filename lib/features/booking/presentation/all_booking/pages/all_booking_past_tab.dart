@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_booking_empty_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_past_bloc/all_booking_past_bloc.dart';

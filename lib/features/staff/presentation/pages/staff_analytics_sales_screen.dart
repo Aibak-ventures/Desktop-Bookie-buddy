@@ -1,9 +1,9 @@
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/routing/app_routes.dart';
+import 'package:bookie_buddy_web/core/route/app_routes.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_card.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_analytics_sales_bloc/staff_analytics_sales_bloc.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/ui/widgets/custom_button.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

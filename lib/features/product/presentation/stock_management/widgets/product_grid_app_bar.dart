@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_icon_button.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_icon_button.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/add_or_edit_product_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/product_bloc/product_bloc.dart';
 import 'package:flutter/material.dart';

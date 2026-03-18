@@ -1,9 +1,9 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_responsive_builder.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/service_card.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_responsive_builder.dart';
+import 'package:bookie_buddy_web/core/common/widgets/empty_data_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/service_card.dart';
 import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

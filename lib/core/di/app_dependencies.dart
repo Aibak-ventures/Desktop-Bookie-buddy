@@ -49,10 +49,9 @@ import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usecase.dart';
 import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
-import 'package:bookie_buddy_web/core/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
-import 'package:bookie_buddy_web/core/common/domain/usecases/launch_email_support_usecase.dart';
-import 'package:bookie_buddy_web/core/common/domain/usecases/launch_whatsapp_support_usecase.dart';
+import 'package:bookie_buddy_web/core/common/usecases/launch_email_support_usecase.dart';
+import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/features/settings/data/datasources/settings_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:bookie_buddy_web/features/settings/domain/repositories/i_settings_repository.dart';
@@ -119,6 +118,7 @@ import 'package:bookie_buddy_web/features/profile/domain/repositories/i_shop_act
 import 'package:bookie_buddy_web/features/profile/domain/usecases/submit_bug_report_usecase.dart';
 import 'package:bookie_buddy_web/features/profile/domain/usecases/load_shop_activities_usecase.dart';
 import 'package:bookie_buddy_web/features/profile/domain/usecases/load_next_shop_activities_page_usecase.dart';
+import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;

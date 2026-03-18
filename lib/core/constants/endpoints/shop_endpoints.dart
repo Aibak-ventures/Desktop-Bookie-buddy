@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/api_config.dart';
 
 class ShopEndpoints {
   static const _root = '${ApiConfig.v3}/shop/';

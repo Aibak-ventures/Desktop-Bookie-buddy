@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/routing/app_routes.dart';
+import 'package:bookie_buddy_web/core/route/app_routes.dart';
 import 'package:bookie_buddy_web/features/staff/domain/models/staff_analytics_model/staff_analytics_model.dart';
 // import 'package:bookie_buddy_web/features/staff/models/staff_analytics_model/staff_analytics_model.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_analytics_card.dart';

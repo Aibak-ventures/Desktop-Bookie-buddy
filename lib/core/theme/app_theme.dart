@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/widgets/app_bar_theme.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -11,21 +12,7 @@ class AppTheme {
   ///
   static ThemeData lightTheme() => ThemeData(
         // app bar theme
-        appBarTheme: AppBarTheme(
-          actionsPadding: 20.paddingOnly(right: true),
-          backgroundColor: AppColors.white,
-          centerTitle: false,
-          surfaceTintColor: AppColors.white,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.white,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.light,
-          ),
-          titleTextStyle: TextStyle(
-            fontSize: 22.sp,
-            color: AppColors.black,
-          ),
-        ),
+        appBarTheme: AppAppBarTheme.lightTheme,
         primaryColor: Colors.white,
 
         // app font
@@ -102,11 +89,7 @@ class AppTheme {
             ),
           ),
         ),
-        // menuButtonTheme: MenuButtonThemeData(
-        //   style: ButtonStyle(
 
-        //   ),
-        // ),
         popupMenuTheme: PopupMenuThemeData(
           color: AppColors.white,
           elevation: 1.5,

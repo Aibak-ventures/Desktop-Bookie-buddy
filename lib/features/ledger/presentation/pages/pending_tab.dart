@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/empty_data_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/widgets/ledger_pendings_grouped_container.dart';
 import 'package:bookie_buddy_web/features/ledger/presentation/bloc/wallet_pending_bloc/wallet_pending_bloc.dart';

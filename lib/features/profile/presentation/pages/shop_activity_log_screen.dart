@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/routing/app_router.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/route/app_router.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/widgets/shop_activity_card.dart';
 import 'package:bookie_buddy_web/features/profile/presentation/bloc/shop_activity_log_cubit/shop_activity_log_cubit.dart';
 import 'package:flutter/material.dart';

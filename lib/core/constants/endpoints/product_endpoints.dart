@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/network/endpoints/api_config.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/api_config.dart';
 
 /// API paths for Product endpoints (v4)
 class ProductEndpoints {

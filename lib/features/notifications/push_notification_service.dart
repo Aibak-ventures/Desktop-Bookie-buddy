@@ -16,7 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../core/routing/app_router.dart';
+import '../../core/route/app_router.dart';
 import 'firebase_notification_manager.dart';
 
 /// Handles push + local notification setup & routing.

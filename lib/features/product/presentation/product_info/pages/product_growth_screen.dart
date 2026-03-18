@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/core/ui/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_info/widgets/product_growth_list_tile.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_info/bloc/product_growth_bloc/product_growth_bloc.dart';
 import 'package:flutter/material.dart';
