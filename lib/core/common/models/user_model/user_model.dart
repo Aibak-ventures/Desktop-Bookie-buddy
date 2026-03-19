@@ -1,9 +1,10 @@
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart'
     show SecretPasswordLocations, UserPasswordSettingRole;
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart' hide UserPasswordSettingRole;
-import 'package:bookie_buddy_web/core/models/shop_settings_model/shop_settings_model.dart';
-import 'package:bookie_buddy_web/core/models/user_shop_model/user_shop_model.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
+    hide UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/common/models/shop_settings_model/shop_settings_model.dart';
+import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_model.freezed.dart';
@@ -38,8 +39,7 @@ class UserModel with _$UserModel {
     @JsonKey(name: 'last_name', defaultValue: '') required String lastName,
     required String phone,
     @JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? role,
-    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)
-    ShopRole? shopRole,
+    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) ShopRole? shopRole,
     @JsonKey(defaultValue: false) required bool block,
     @JsonKey(name: 'multiple_shops', defaultValue: false)
     required bool haveMultipleShops,
@@ -61,8 +61,7 @@ extension UserModelX on UserModel {
 
   /// Check if user has a specific premium feature
   bool hasFeature(AppPremiumFeatures feature) {
-    return subscription?.features.contains(feature.name.toUpperCase()) ??
-        false;
+    return subscription?.features.contains(feature.name.toUpperCase()) ?? false;
   }
 }
 

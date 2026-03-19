@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
-import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/common/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';

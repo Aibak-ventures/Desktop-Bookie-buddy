@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/common/services/secure_action_auth_session_manager.dart';
-import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
-import 'package:bookie_buddy_web/core/storage/token_storage.dart';
+import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/session/secure_action_auth_session_manager.dart';
+import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
+import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/user_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_user_repository.dart';
@@ -48,7 +48,7 @@ class UserRepositoryImpl implements IUserRepository {
       await _authRepository.clearSession();
       SecureActionAuthSessionManager.reset();
       await CachedNetworkImageProvider.defaultCacheManager.emptyCache();
-      await TokenStorage.clearTokens();
+      await SessionStorage.clearTokens();
       await SharedPreferenceHelper.clearAll();
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
@@ -70,7 +70,7 @@ class UserRepositoryImpl implements IUserRepository {
   @override
   Future<void> registerFCMToken(String token) async {
     try {
-      if (TokenStorage.refreshToken.isNullOrEmpty) {
+      if (SessionStorage.refreshToken.isNullOrEmpty) {
         log('No refresh token available, skipping FCM token registration');
         return;
       }

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/shop_model/shop_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/models/shop_model/shop_model.dart';
 import 'package:bookie_buddy_web/features/shop/domain/repositories/i_shop_repository.dart';
 
 class GetShopsUseCase {

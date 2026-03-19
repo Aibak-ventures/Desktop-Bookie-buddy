@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart';
 
 enum MainServiceType {
   dress,
@@ -69,8 +69,7 @@ extension MainServiceTypeX on MainServiceType? {
 
   /// Returns true for service types that support multi-variant product setup
   /// (dress sizes, costume sizes, shoe sizes, bridal sizes)
-  bool get needsVariantsSection =>
-      isDress || isCostume || isShoes || isBridal;
+  bool get needsVariantsSection => isDress || isCostume || isShoes || isBridal;
 
   // ==================== Variant Management ====================
 

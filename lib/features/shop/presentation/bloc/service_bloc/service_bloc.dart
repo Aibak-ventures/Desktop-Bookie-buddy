@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart';
 import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shop_services_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

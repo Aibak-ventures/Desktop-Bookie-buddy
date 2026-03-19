@@ -3,11 +3,11 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
+import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class TokenStorage {
+class SessionStorage {
   static final SharedPreferences _preferences = SharedPreferenceHelper.instance;
   static DateTime? _tokenExpiryTime;
 

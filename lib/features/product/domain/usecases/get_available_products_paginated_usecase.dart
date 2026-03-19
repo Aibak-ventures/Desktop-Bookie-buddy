@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
 import 'package:flutter/material.dart';

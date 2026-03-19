@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
 
 class GetStaffMonthlyBookingsUseCase {

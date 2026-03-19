@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
-import 'package:bookie_buddy_web/core/storage/token_manager.dart';
+import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
+import 'package:bookie_buddy_web/core/session/token_refresh_manager.dart';
 import 'package:bookie_buddy_web/core/app/my_app.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 import 'package:feedback/feedback.dart';
@@ -71,7 +71,7 @@ void main() async {
   await SharedPreferenceHelper.init();
   AppDependencies.init();
   if (!kIsWeb) {
-    TokenManager.startProactiveRefresh();
+    TokenRefreshManager.startProactiveRefresh();
     FilePicker.platform;
   }
 

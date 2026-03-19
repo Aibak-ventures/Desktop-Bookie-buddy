@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/models/carousel_data_model/carousel_data_model.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/models/dashboard_list_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

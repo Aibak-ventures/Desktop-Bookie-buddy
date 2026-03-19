@@ -23,7 +23,7 @@ import 'package:bookie_buddy_web/features/client/domain/models/client_request_mo
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
-import 'package:bookie_buddy_web/core/models/services_model/services_model.dart'
+import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart'
     show ServicesModel;
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';

@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/core/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 
 abstract interface class IClientRepository {

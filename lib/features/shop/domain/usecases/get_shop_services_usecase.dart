@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart';
 import 'package:bookie_buddy_web/features/shop/domain/repositories/i_shop_repository.dart';
 
 class GetShopServicesUseCase {

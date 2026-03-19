@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:bookie_buddy_web/core/storage/token_storage.dart';
+import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 
@@ -28,7 +28,7 @@ class AuthRepositoryImpl implements IAuthRepository {
         final responseData = response.data as Map<String, dynamic>;
         final String accessToken = responseData['access'];
         final String refreshToken = responseData['refresh'];
-        await TokenStorage.saveTokens(
+        await SessionStorage.saveTokens(
           accessToken: accessToken,
           refreshToken: refreshToken,
         );
@@ -74,13 +74,13 @@ class AuthRepositoryImpl implements IAuthRepository {
   @override
   Future<bool> refreshToken() async {
     try {
-      final refreshToken = TokenStorage.refreshToken;
+      final refreshToken = SessionStorage.refreshToken;
       final newAccessToken = await safeApiCall(
         () => _datasource.refreshToken(refreshToken: refreshToken),
       );
 
       // Persist new tokens
-      await TokenStorage.saveTokens(accessToken: newAccessToken);
+      await SessionStorage.saveTokens(accessToken: newAccessToken);
       return true;
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);

@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/models/date_filter_model.dart';
+import 'package:bookie_buddy_web/core/common/models/date_filter_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

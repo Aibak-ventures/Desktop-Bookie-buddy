@@ -2,10 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
-import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
-import 'package:bookie_buddy_web/core/storage/token_manager.dart';
-import 'package:bookie_buddy_web/core/storage/token_storage.dart';
+import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
+import 'package:bookie_buddy_web/core/session/token_refresh_manager.dart';
+import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:dio/dio.dart';
 
 class AuthRemoteDatasource {
@@ -48,9 +48,9 @@ class AuthRemoteDatasource {
   Future<void> clearUserSession() async {
     // Perform logout operation
     try {
-      await TokenStorage.clearTokens();
+      await SessionStorage.clearTokens();
       await SharedPreferenceHelper.clearShopId();
-      TokenManager.stopProactiveRefresh();
+      TokenRefreshManager.stopProactiveRefresh();
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
     }
