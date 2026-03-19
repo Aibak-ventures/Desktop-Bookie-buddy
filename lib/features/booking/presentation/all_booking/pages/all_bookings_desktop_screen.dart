@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/sales_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

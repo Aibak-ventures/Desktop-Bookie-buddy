@@ -2,21 +2,21 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_theme.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_shop_list/shop_list_bloc.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
+import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
+import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/shop_list_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/bloc/booking_selection_cubit/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/product_search_cubit/product_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/product_bloc/product_bloc.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/presentation/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/presentation/bloc/selected_products_cubit/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,8 +32,13 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthBloc(loginUseCase: getIt.get())),
         BlocProvider(
-          create: (context) =>
-              UserCubit(repository: getIt.get())..loadUserIfNot(),
+          create: (context) => UserCubit(
+                getUser: getIt.get(),
+                logout: getIt.get(),
+                switchShop: getIt.get(),
+                registerFCMToken: getIt.get(),
+                userRepository: getIt.get(),
+              )..loadUserIfNot(),
         ),
         BlocProvider(
             create: (context) => AllBookingBloc(
@@ -59,7 +64,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => ServiceBloc(repository: getIt.get())
+          create: (context) => ServiceBloc(getShopServices: getIt.get())
             ..add(const ServiceEvent.loadServices()),
         ),
         BlocProvider(create: (context) => SelectedProductsCubit()),
@@ -87,7 +92,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => BookingSelectionCubit()),
         BlocProvider(
           create: (context) =>
-              ShopListBloc(shopRepo: getIt.get(), userRepo: getIt.get()),
+              ShopListBloc(getShops: getIt.get(), userRepo: getIt.get()),
         ),
         BlocProvider(
           create: (context) => ClientCubit(getClients: getIt.get()),

@@ -11,10 +11,10 @@ import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/core/view_model/bloc_service/service_bloc.dart';
+import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/presentation/bloc/selected_products_cubit/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
@@ -22,7 +22,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/w
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/booking_payment_history_tile.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -1929,7 +1929,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                       builder: (context) => MultiBlocProvider(
                         providers: [
                           BlocProvider(
-                            create: (_) => ServiceBloc(repository: getIt()),
+                            create: (_) => ServiceBloc(getShopServices: getIt()),
                           ),
                           BlocProvider(
                             create: (_) => ClientCubit(getClients: getIt()),

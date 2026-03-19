@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 // import 'package:bookie_buddy_web/features/add_booking/view_model/cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

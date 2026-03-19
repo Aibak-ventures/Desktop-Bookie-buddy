@@ -35,8 +35,11 @@ import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usecase.dart';
-import 'package:bookie_buddy_web/core/repositories/service_repository.dart';
-import 'package:bookie_buddy_web/core/repositories/shop_repository.dart';
+import 'package:bookie_buddy_web/features/shop/data/datasources/shop_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/shop/data/repositories/shop_repository_impl.dart';
+import 'package:bookie_buddy_web/features/shop/domain/repositories/i_shop_repository.dart';
+import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shops_usecase.dart';
+import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shop_services_usecase.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_email_support_usecase.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/repositories/i_dashboard_repository.dart';
@@ -50,7 +53,13 @@ import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_analyt
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_monthly_bookings_usecase.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_monthly_sales_usecase.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
-import 'package:bookie_buddy_web/core/repositories/user_repository.dart';
+import 'package:bookie_buddy_web/features/auth/data/datasources/user_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/auth/data/repositories/user_repository_impl.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_user_repository.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/get_user_usecase.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/register_fcm_token_usecase.dart';
+import 'package:bookie_buddy_web/features/auth/domain/usecases/switch_shop_usecase.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_action_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_query_remote_datasource.dart';
@@ -70,10 +79,7 @@ import 'package:bookie_buddy_web/features/product/domain/usecases/search_and_fil
 import 'package:bookie_buddy_web/features/product/domain/usecases/transfer_product_to_another_shop_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/update_variant_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/data/datasources/sales_remote_datasource.dart';
-import 'package:bookie_buddy_web/core/services/service_api.dart';
-import 'package:bookie_buddy_web/core/services/shop_service.dart';
 import 'package:bookie_buddy_web/features/staff/data/datasources/staff_remote_datasource.dart';
-import 'package:bookie_buddy_web/core/services/user_service.dart';
 import 'package:bookie_buddy_web/core/storage/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/change_account_password_usecase.dart';
@@ -92,31 +98,16 @@ class AppDependencies {
 
   /// register services
   static void _registerServices() {
-    _registerLazy(UserService.new);
-    _registerLazy(ShopService.new);
-
     _registerLazy(SharedPreferenceHelper.new);
-    _registerLazy(ServiceApi.new);
   }
 
-  /// register repositories
-  static void _registerRepositories() {
-    _registerLazy(
-      () => UserRepository(
-        userService: _get<UserService>(),
-        prefs: _get<SharedPreferenceHelper>(),
-        authRepository: _get<IAuthRepository>(),
-      ),
-    );
-
-    _registerLazy(() => ServiceRepository(serviceApi: _get<ServiceApi>()));
-
-    _registerLazy(() => ShopRepository(service: _get<ShopService>()));
-  }
+  /// register repositories — kept empty, all moved to feature registrations
+  static void _registerRepositories() {}
 
   /// register feature specific dependencies
   static void _registerFeatures() {
     _registerCommon();
+    _registerShopFeature();
     _registerAuthFeature();
     _registerClientFeature();
     _registerStaffFeature();
@@ -128,6 +119,13 @@ class AppDependencies {
 
   // ================== feature specific ==================
 
+  static void _registerShopFeature() {
+    _registerLazy(() => ShopRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IShopRepository>(() => ShopRepositoryImpl(_get()));
+    _registerLazy(() => GetShopsUseCase(_get<IShopRepository>()));
+    _registerLazy(() => GetShopServicesUseCase(_get<IShopRepository>()));
+  }
+
   static void _registerCommon() {
     _registerLazy(() => LaunchEmailSupportUsecase());
     _registerLazy(() => LaunchWhatsappSupportUsecase());
@@ -135,13 +133,25 @@ class AppDependencies {
 
   /// register auth use cases
   static void _registerAuthFeature() {
+    // auth
     _registerLazy(() => AuthRemoteDatasource(dio: DioClient.dio));
     _registerLazy<IAuthRepository>(() => AuthRepositoryImpl(_get()));
-    _registerLazy(
-      () => LoginUseCase(_get<IAuthRepository>()),
-    );
+    _registerLazy(() => LoginUseCase(_get<IAuthRepository>()));
     _registerLazy(() => ChangeAccountPasswordUseCase(_get<IAuthRepository>()));
     _registerLazy(() => ChangeSecretPasswordUseCase(_get<IAuthRepository>()));
+    // user session
+    _registerLazy(() => UserRemoteDatasource(dio: DioClient.dio));
+    _registerLazy<IUserRepository>(
+      () => UserRepositoryImpl(
+        datasource: _get(),
+        prefs: _get<SharedPreferenceHelper>(),
+        authRepository: _get<IAuthRepository>(),
+      ),
+    );
+    _registerLazy(() => GetUserUseCase(_get<IUserRepository>()));
+    _registerLazy(() => LogoutUseCase(_get<IUserRepository>()));
+    _registerLazy(() => SwitchShopUseCase(_get<IUserRepository>()));
+    _registerLazy(() => RegisterFCMTokenUseCase(_get<IUserRepository>()));
   }
 
   static void _registerClientFeature() {

@@ -14,11 +14,11 @@ import 'package:bookie_buddy_web/core/constants/enums/enums.dart' hide ShopRole;
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/core/services/secure_action_auth_session_manager.dart';
+import 'package:bookie_buddy_web/core/common/services/secure_action_auth_session_manager.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

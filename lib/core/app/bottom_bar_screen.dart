@@ -1,13 +1,13 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/models/available_shop_model/available_shop_model.dart';
+import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/core/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/core/view_model/user_cubit.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
@@ -169,78 +169,42 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   }
 
   /// Switch to a different shop
-  Future<void> _switchShop(int shopId) async {
-    // Show loading dialog
+  /// Show shop selector as a positioned popup menu, driven by ShopListBloc
+  Future<void> _showShopSelector(BuildContext context, UserModel user) async {
+    context.read<ShopListBloc>().add(const ShopListEvent.loadShops());
+
+    // Show loading indicator while shops are being fetched
     if (mounted) {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (_) => const Center(child: CircularProgressIndicator()),
       );
     }
 
-    try {
-      await context.read<UserCubit>().switchShop(shopId, null);
-
-      if (mounted) {
-        Navigator.pop(context); // Close loading dialog
-        context.showSnackBar('Shop switched successfully');
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.pop(context); // Close loading dialog
-        context.showSnackBar(
-          'Failed to switch shop: $e',
-          isError: true,
+    // Wait for loaded or error state
+    final state = await context.read<ShopListBloc>().stream.firstWhere(
+          (s) => s.maybeWhen(loading: () => false, orElse: () => true),
         );
-      }
-    }
-  }
 
-  /// Show shop selector dropdown menu
-  Future<void> _showShopSelector(BuildContext context, UserModel user) async {
-    // Fetch available shops on demand
-    List<AvailableShopModel> availableShops = [];
+    if (!mounted) return;
+    Navigator.pop(context); // close loading dialog
 
-    try {
-      // Show loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    final shops = state.whenOrNull(loaded: (shops, _) => shops);
 
-      final shops = await context.read<UserCubit>().fetchAvailableShops();
-      availableShops = shops
-          .map((e) => AvailableShopModel.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-      if (mounted) {
-        Navigator.pop(context); // Close loading dialog
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.pop(context); // Close loading dialog
-        context.showSnackBar(
-          'Failed to load shops: $e',
-          isError: true,
-        );
-      }
+    if (shops == null) {
+      // error state
+      final message =
+          state.whenOrNull(error: (msg) => msg) ?? 'Failed to load shops';
+      context.showSnackBar(message, isError: true);
       return;
     }
 
-    if (availableShops.isEmpty) {
-      if (mounted) {
-        context.showSnackBar('No shops available');
-      }
+    if (shops.isEmpty) {
+      context.showSnackBar('No shops available');
       return;
     }
 
-    // Get button position
     final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
@@ -255,35 +219,31 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         position.dx + 300,
         position.dy,
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      items: availableShops.map((shop) {
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      items: shops.map((shop) {
         final isCurrentShop = shop.id == user.shopDetails.id;
         return PopupMenuItem<int>(
           value: shop.id,
           child: Row(
             children: [
-              // Shop image
               Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.grey.shade200,
-                  image: shop.img != null
+                  image: shop.image != null
                       ? DecorationImage(
-                          image: NetworkImage(shop.img!),
+                          image: NetworkImage(shop.image!),
                           fit: BoxFit.cover,
                         )
                       : null,
                 ),
-                child: shop.img == null
+                child: shop.image == null
                     ? Icon(Icons.store, color: Colors.grey.shade400, size: 20)
                     : null,
               ),
               const SizedBox(width: 12),
-              // Shop details
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,9 +252,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                     Text(
                       shop.name,
                       style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
+                          fontSize: 14, fontWeight: FontWeight.w600),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -302,22 +260,16 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                       Text(
                         shop.address,
                         style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
+                            fontSize: 12, color: Colors.grey.shade600),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                   ],
                 ),
               ),
-              // Current shop indicator
               if (isCurrentShop)
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.green.shade600,
-                  size: 20,
-                ),
+                Icon(Icons.check_circle,
+                    color: Colors.green.shade600, size: 20),
             ],
           ),
         );
@@ -325,7 +277,26 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     );
 
     if (selectedShopId != null && selectedShopId != user.shopDetails.id) {
-      await _switchShop(selectedShopId);
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
+      try {
+        context.read<ShopListBloc>().add(ShopListEvent.changeAccount(
+            shops.firstWhere((s) => s.id == selectedShopId)));
+        await context.read<UserCubit>().switchShop(selectedShopId, null);
+        if (mounted) {
+          Navigator.pop(context);
+          context.showSnackBar('Shop switched successfully');
+        }
+      } catch (e) {
+        if (mounted) {
+          Navigator.pop(context);
+          context.showSnackBar('Failed to switch shop: $e', isError: true);
+        }
+      }
     }
   }
 

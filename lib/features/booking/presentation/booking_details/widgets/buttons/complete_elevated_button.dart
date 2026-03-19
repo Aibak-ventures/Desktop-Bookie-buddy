@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_button.dart';
-import 'package:bookie_buddy_web/core/view_model/cubit_booking_selection/booking_selection_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/bloc/booking_selection_cubit/booking_selection_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/buttons/custom_swipe_button.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/complete_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';

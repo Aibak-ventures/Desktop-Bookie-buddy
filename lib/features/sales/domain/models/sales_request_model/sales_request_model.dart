@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/select_product_booking/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sales_request_model.freezed.dart';

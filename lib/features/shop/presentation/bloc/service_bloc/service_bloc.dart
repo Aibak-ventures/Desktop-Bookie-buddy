@@ -1,0 +1,43 @@
+import 'dart:developer';
+
+import 'package:bookie_buddy_web/core/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shop_services_usecase.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'service_bloc.freezed.dart';
+part 'service_event.dart';
+part 'service_state.dart';
+
+class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
+  final GetShopServicesUseCase _getShopServices;
+
+  ServiceBloc({required GetShopServicesUseCase getShopServices})
+      : _getShopServices = getShopServices,
+        super(const _Loading()) {
+    on<_LoadServices>((event, emit) async {
+      if (!event.force) {
+        if (state is _Loaded) {
+          emit(state);
+          return;
+        }
+      }
+      emit(const _Loading());
+
+      try {
+        final services = await _getShopServices();
+        emit(_Loaded(services));
+      } catch (e, stack) {
+        log(e.toString(), stackTrace: stack);
+        emit(_Error(e.toString()));
+      }
+    });
+  }
+
+  List<ServicesModel> getServices() {
+    if (state is _Loaded) {
+      return (state as _Loaded).services;
+    }
+    return [];
+  }
+}
