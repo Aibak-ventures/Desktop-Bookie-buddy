@@ -1,6 +1,6 @@
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
@@ -21,7 +21,7 @@ class StaffSearchNameField extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<StaffSearchCubit, StaffSearchState>(
       builder: (context, state) {
-        return TypeAheadField<StaffModel>(
+        return TypeAheadField<StaffEntity>(
           controller: nameController,
           debounceDuration: const Duration(milliseconds: 150),
           hideWithKeyboard: false,

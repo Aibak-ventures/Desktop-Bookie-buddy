@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_analytics_model/staff_analytics_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_analytics_entity/staff_analytics_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
 
 class GetStaffAnalyticsReportUseCase {
@@ -6,7 +6,7 @@ class GetStaffAnalyticsReportUseCase {
 
   GetStaffAnalyticsReportUseCase(this._repository);
 
-  Future<StaffAnalyticsModel> call({
+  Future<StaffAnalyticsEntity> call({
     required int staffId,
     required int year,
     required int month,

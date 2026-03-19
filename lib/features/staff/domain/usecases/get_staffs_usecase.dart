@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
 
 class GetStaffsUseCase {
@@ -7,7 +7,7 @@ class GetStaffsUseCase {
 
   GetStaffsUseCase(this._repository);
 
-  Future<PaginationModel<StaffModel>> call({int page = 1}) async {
+  Future<PaginationModel<StaffEntity>> call({int page = 1}) async {
     return await _repository.getStaffs(page: page);
   }
 }

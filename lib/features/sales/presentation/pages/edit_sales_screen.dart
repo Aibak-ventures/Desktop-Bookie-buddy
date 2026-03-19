@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
@@ -12,7 +13,6 @@ import 'package:bookie_buddy_web/features/product/domain/models/product_info_mod
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
@@ -96,7 +96,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   void _initializeStaff() {
     // Load all staffs and select the current staff from sale details
     if (widget.saleDetails.staffId != null) {
-      final existingStaff = StaffModel(
+      final existingStaff = StaffEntity(
         id: widget.saleDetails.staffId!,
         name: widget.saleDetails.staffName ?? 'Staff Name',
         phoneNumber: '',

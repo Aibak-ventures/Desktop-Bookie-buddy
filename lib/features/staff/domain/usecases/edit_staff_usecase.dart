@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_request_model/staff_request_model.dart';
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_request_entity/staff_request_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
 
 class EditStaffUseCase {
@@ -7,7 +7,7 @@ class EditStaffUseCase {
 
   EditStaffUseCase(this._repository);
 
-  Future<StaffModel> call(StaffRequestModel staffData) async {
+  Future<StaffEntity> call(StaffRequestEntity staffData) async {
     return await _repository.editStaff(staffData);
   }
 }

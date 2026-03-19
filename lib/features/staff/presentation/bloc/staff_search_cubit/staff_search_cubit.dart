@@ -1,7 +1,7 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -15,7 +15,7 @@ class StaffSearchCubit extends Cubit<StaffSearchState> {
       : _getStaffs = getStaffs,
         super(const StaffSearchState());
 
-  void selectStaff(StaffModel staff) {
+  void selectStaff(StaffEntity staff) {
     log('Selected staff: ${staff.name}');
     emit(state.copyWith(selectedStaff: staff));
   }
@@ -35,12 +35,12 @@ class StaffSearchCubit extends Cubit<StaffSearchState> {
     emit(state.copyWith(selectedStaff: null));
   }
 
-  void getAllStaffs([int? existingStaffId, StaffModel? existingStaff]) async {
+  void getAllStaffs([int? existingStaffId, StaffEntity? existingStaff]) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
     try {
       int page = 1;
-      final List<StaffModel> allStaffs = [];
+      final List<StaffEntity> allStaffs = [];
       String? nextPageUrl;
 
       do {

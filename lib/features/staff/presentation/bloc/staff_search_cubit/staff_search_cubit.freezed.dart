@@ -16,8 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$StaffSearchState {
-  List<StaffModel> get staffs => throw _privateConstructorUsedError;
-  StaffModel? get selectedStaff => throw _privateConstructorUsedError;
+  List<StaffEntity> get staffs => throw _privateConstructorUsedError;
+  StaffEntity? get selectedStaff => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
 
@@ -35,12 +35,12 @@ abstract class $StaffSearchStateCopyWith<$Res> {
       _$StaffSearchStateCopyWithImpl<$Res, StaffSearchState>;
   @useResult
   $Res call(
-      {List<StaffModel> staffs,
-      StaffModel? selectedStaff,
+      {List<StaffEntity> staffs,
+      StaffEntity? selectedStaff,
       String? errorMessage,
       bool isLoading});
 
-  $StaffModelCopyWith<$Res>? get selectedStaff;
+  $StaffEntityCopyWith<$Res>? get selectedStaff;
 }
 
 /// @nodoc
@@ -67,11 +67,11 @@ class _$StaffSearchStateCopyWithImpl<$Res, $Val extends StaffSearchState>
       staffs: null == staffs
           ? _value.staffs
           : staffs // ignore: cast_nullable_to_non_nullable
-              as List<StaffModel>,
+              as List<StaffEntity>,
       selectedStaff: freezed == selectedStaff
           ? _value.selectedStaff
           : selectedStaff // ignore: cast_nullable_to_non_nullable
-              as StaffModel?,
+              as StaffEntity?,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -87,12 +87,12 @@ class _$StaffSearchStateCopyWithImpl<$Res, $Val extends StaffSearchState>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $StaffModelCopyWith<$Res>? get selectedStaff {
+  $StaffEntityCopyWith<$Res>? get selectedStaff {
     if (_value.selectedStaff == null) {
       return null;
     }
 
-    return $StaffModelCopyWith<$Res>(_value.selectedStaff!, (value) {
+    return $StaffEntityCopyWith<$Res>(_value.selectedStaff!, (value) {
       return _then(_value.copyWith(selectedStaff: value) as $Val);
     });
   }
@@ -107,13 +107,13 @@ abstract class _$$StaffSearchStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<StaffModel> staffs,
-      StaffModel? selectedStaff,
+      {List<StaffEntity> staffs,
+      StaffEntity? selectedStaff,
       String? errorMessage,
       bool isLoading});
 
   @override
-  $StaffModelCopyWith<$Res>? get selectedStaff;
+  $StaffEntityCopyWith<$Res>? get selectedStaff;
 }
 
 /// @nodoc
@@ -138,11 +138,11 @@ class __$$StaffSearchStateImplCopyWithImpl<$Res>
       staffs: null == staffs
           ? _value._staffs
           : staffs // ignore: cast_nullable_to_non_nullable
-              as List<StaffModel>,
+              as List<StaffEntity>,
       selectedStaff: freezed == selectedStaff
           ? _value.selectedStaff
           : selectedStaff // ignore: cast_nullable_to_non_nullable
-              as StaffModel?,
+              as StaffEntity?,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -159,23 +159,23 @@ class __$$StaffSearchStateImplCopyWithImpl<$Res>
 
 class _$StaffSearchStateImpl implements _StaffSearchState {
   const _$StaffSearchStateImpl(
-      {final List<StaffModel> staffs = const [],
+      {final List<StaffEntity> staffs = const [],
       this.selectedStaff,
       this.errorMessage,
       this.isLoading = false})
       : _staffs = staffs;
 
-  final List<StaffModel> _staffs;
+  final List<StaffEntity> _staffs;
   @override
   @JsonKey()
-  List<StaffModel> get staffs {
+  List<StaffEntity> get staffs {
     if (_staffs is EqualUnmodifiableListView) return _staffs;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_staffs);
   }
 
   @override
-  final StaffModel? selectedStaff;
+  final StaffEntity? selectedStaff;
   @override
   final String? errorMessage;
   @override
@@ -221,15 +221,15 @@ class _$StaffSearchStateImpl implements _StaffSearchState {
 
 abstract class _StaffSearchState implements StaffSearchState {
   const factory _StaffSearchState(
-      {final List<StaffModel> staffs,
-      final StaffModel? selectedStaff,
+      {final List<StaffEntity> staffs,
+      final StaffEntity? selectedStaff,
       final String? errorMessage,
       final bool isLoading}) = _$StaffSearchStateImpl;
 
   @override
-  List<StaffModel> get staffs;
+  List<StaffEntity> get staffs;
   @override
-  StaffModel? get selectedStaff;
+  StaffEntity? get selectedStaff;
   @override
   String? get errorMessage;
   @override

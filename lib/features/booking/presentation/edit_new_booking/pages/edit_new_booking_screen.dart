@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -30,7 +31,6 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
-import 'package:bookie_buddy_web/features/staff/domain/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
@@ -230,7 +230,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       final saleStaffId = widget.saleDetails?.staffId;
       final saleStaffName = widget.saleDetails?.staffName;
       if (bookingStaffId != null) {
-        final existingStaff = StaffModel(
+        final existingStaff = StaffEntity(
           id: bookingStaffId,
           name: bookingStaffName ?? 'Staff',
           phoneNumber: '',
@@ -239,7 +239,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             .read<StaffSearchCubit>()
             .getAllStaffs(bookingStaffId, existingStaff);
       } else if (saleStaffId != null) {
-        final existingStaff = StaffModel(
+        final existingStaff = StaffEntity(
           id: saleStaffId,
           name: saleStaffName ?? 'Staff',
           phoneNumber: '',
