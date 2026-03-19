@@ -236,21 +236,21 @@ mixin _$ServiceState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ServicesModel> services) loaded,
+    required TResult Function(List<ServiceEntity> services) loaded,
     required TResult Function(String error) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ServicesModel> services)? loaded,
+    TResult? Function(List<ServiceEntity> services)? loaded,
     TResult? Function(String error)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ServicesModel> services)? loaded,
+    TResult Function(List<ServiceEntity> services)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) =>
@@ -342,7 +342,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ServicesModel> services) loaded,
+    required TResult Function(List<ServiceEntity> services) loaded,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -352,7 +352,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ServicesModel> services)? loaded,
+    TResult? Function(List<ServiceEntity> services)? loaded,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -362,7 +362,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ServicesModel> services)? loaded,
+    TResult Function(List<ServiceEntity> services)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -417,7 +417,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
           _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<ServicesModel> services});
+  $Res call({List<ServiceEntity> services});
 }
 
 /// @nodoc
@@ -439,7 +439,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
       null == services
           ? _value._services
           : services // ignore: cast_nullable_to_non_nullable
-              as List<ServicesModel>,
+              as List<ServiceEntity>,
     ));
   }
 }
@@ -447,11 +447,11 @@ class __$$LoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(final List<ServicesModel> services) : _services = services;
+  const _$LoadedImpl(final List<ServiceEntity> services) : _services = services;
 
-  final List<ServicesModel> _services;
+  final List<ServiceEntity> _services;
   @override
-  List<ServicesModel> get services {
+  List<ServiceEntity> get services {
     if (_services is EqualUnmodifiableListView) return _services;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_services);
@@ -486,7 +486,7 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ServicesModel> services) loaded,
+    required TResult Function(List<ServiceEntity> services) loaded,
     required TResult Function(String error) error,
   }) {
     return loaded(services);
@@ -496,7 +496,7 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ServicesModel> services)? loaded,
+    TResult? Function(List<ServiceEntity> services)? loaded,
     TResult? Function(String error)? error,
   }) {
     return loaded?.call(services);
@@ -506,7 +506,7 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ServicesModel> services)? loaded,
+    TResult Function(List<ServiceEntity> services)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -552,9 +552,9 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements ServiceState {
-  const factory _Loaded(final List<ServicesModel> services) = _$LoadedImpl;
+  const factory _Loaded(final List<ServiceEntity> services) = _$LoadedImpl;
 
-  List<ServicesModel> get services;
+  List<ServiceEntity> get services;
 
   /// Create a copy of ServiceState
   /// with the given fields replaced by the non-null parameter values.
@@ -632,7 +632,7 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ServicesModel> services) loaded,
+    required TResult Function(List<ServiceEntity> services) loaded,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -642,7 +642,7 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ServicesModel> services)? loaded,
+    TResult? Function(List<ServiceEntity> services)? loaded,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -652,7 +652,7 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ServicesModel> services)? loaded,
+    TResult Function(List<ServiceEntity> services)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

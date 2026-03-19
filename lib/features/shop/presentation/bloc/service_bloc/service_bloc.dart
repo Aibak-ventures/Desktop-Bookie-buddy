@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shop_services_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -34,7 +34,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     });
   }
 
-  List<ServicesModel> getServices() {
+  List<ServiceEntity> getServices() {
     if (state is _Loaded) {
       return (state as _Loaded).services;
     }

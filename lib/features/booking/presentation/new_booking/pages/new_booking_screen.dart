@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
@@ -23,8 +24,6 @@ import 'package:bookie_buddy_web/features/client/domain/models/client_request_mo
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
-import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart'
-    show ServicesModel;
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_old_booking_usecase.dart';
@@ -140,7 +139,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // Update search types based on service type
   void _updateSearchTypesForService(int? serviceId) {
     final servicesState = context.read<ServiceBloc>().state;
-    List<ServicesModel> services = [];
+    List<ServiceEntity> services = [];
     servicesState.whenOrNull(loaded: (s) => services = s);
 
     // Find the service and get its main service type
@@ -549,7 +548,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // Get services for filter
     final servicesState = context.read<ServiceBloc>().state;
-    List<ServicesModel> services = [];
+    List<ServiceEntity> services = [];
     servicesState.whenOrNull(loaded: (s) => services = s);
 
     // Filter out material services for booking/sales (only show in stock listing)

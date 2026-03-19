@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
@@ -726,7 +726,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                       // Service Selection Section
                       BlocBuilder<ServiceBloc, ServiceState>(
                         builder: (context, serviceState) {
-                          List<ServicesModel> services = [];
+                          List<ServiceEntity> services = [];
                           serviceState.whenOrNull(loaded: (s) => services = s);
 
                           // Filter out material services for sales

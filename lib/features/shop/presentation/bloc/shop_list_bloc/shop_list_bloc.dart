@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/shop/domain/models/shop_model/shop_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/shop_entity/shop_entity.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_user_repository.dart';
 import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shops_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

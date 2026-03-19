@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/shop/domain/entities/shop_entity/shop_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'shop_model.freezed.dart';
@@ -22,4 +23,18 @@ class ShopModel with _$ShopModel {
 
   factory ShopModel.fromJson(Map<String, dynamic> json) =>
       _$ShopModelFromJson(json);
+}
+
+extension ShopModelMapper on ShopModel {
+  ShopEntity toEntity() => ShopEntity(
+        id: id,
+        name: name,
+        place: place,
+        phone: phone,
+        email: email,
+        address: address,
+        pincode: pincode,
+        subscriptionStatus: subscriptionStatus,
+        image: image,
+      );
 }

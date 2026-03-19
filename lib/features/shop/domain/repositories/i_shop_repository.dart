@@ -1,8 +1,8 @@
-import 'package:bookie_buddy_web/features/shop/domain/models/shop_model/shop_model.dart';
-import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/shop_entity/shop_entity.dart';
 
-abstract class IShopRepository {
-  Future<List<ShopModel>> getShops();
+abstract interface class IShopRepository {
+  Future<List<ShopEntity>> getShops();
 
-  Future<List<ServicesModel>> getShopServices();
+  Future<List<ServiceEntity>> getShopServices();
 }

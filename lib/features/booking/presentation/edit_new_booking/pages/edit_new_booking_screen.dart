@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
@@ -20,8 +21,6 @@ import 'package:bookie_buddy_web/features/client/domain/models/client_request_mo
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
-import 'package:bookie_buddy_web/features/shop/domain/models/services_model/services_model.dart'
-    show ServicesModel;
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_partial_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
@@ -957,7 +956,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Get services for filter
     final servicesState = context.read<ServiceBloc>().state;
-    List<ServicesModel> services = [];
+    List<ServiceEntity> services = [];
     servicesState.whenOrNull(loaded: (s) => services = s);
 
     // Setup local state for dialog

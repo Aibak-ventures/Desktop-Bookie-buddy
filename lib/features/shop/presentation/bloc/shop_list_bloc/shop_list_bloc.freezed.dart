@@ -19,19 +19,19 @@ mixin _$ShopListEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loadShops,
-    required TResult Function(ShopModel newShop) changeAccount,
+    required TResult Function(ShopEntity newShop) changeAccount,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadShops,
-    TResult? Function(ShopModel newShop)? changeAccount,
+    TResult? Function(ShopEntity newShop)? changeAccount,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadShops,
-    TResult Function(ShopModel newShop)? changeAccount,
+    TResult Function(ShopEntity newShop)? changeAccount,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -119,7 +119,7 @@ class _$LoadShopsImpl implements _LoadShops {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loadShops,
-    required TResult Function(ShopModel newShop) changeAccount,
+    required TResult Function(ShopEntity newShop) changeAccount,
   }) {
     return loadShops();
   }
@@ -128,7 +128,7 @@ class _$LoadShopsImpl implements _LoadShops {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadShops,
-    TResult? Function(ShopModel newShop)? changeAccount,
+    TResult? Function(ShopEntity newShop)? changeAccount,
   }) {
     return loadShops?.call();
   }
@@ -137,7 +137,7 @@ class _$LoadShopsImpl implements _LoadShops {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadShops,
-    TResult Function(ShopModel newShop)? changeAccount,
+    TResult Function(ShopEntity newShop)? changeAccount,
     required TResult orElse(),
   }) {
     if (loadShops != null) {
@@ -188,9 +188,9 @@ abstract class _$$ChangeAccountImplCopyWith<$Res> {
           _$ChangeAccountImpl value, $Res Function(_$ChangeAccountImpl) then) =
       __$$ChangeAccountImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ShopModel newShop});
+  $Res call({ShopEntity newShop});
 
-  $ShopModelCopyWith<$Res> get newShop;
+  $ShopEntityCopyWith<$Res> get newShop;
 }
 
 /// @nodoc
@@ -212,7 +212,7 @@ class __$$ChangeAccountImplCopyWithImpl<$Res>
       null == newShop
           ? _value.newShop
           : newShop // ignore: cast_nullable_to_non_nullable
-              as ShopModel,
+              as ShopEntity,
     ));
   }
 
@@ -220,8 +220,8 @@ class __$$ChangeAccountImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ShopModelCopyWith<$Res> get newShop {
-    return $ShopModelCopyWith<$Res>(_value.newShop, (value) {
+  $ShopEntityCopyWith<$Res> get newShop {
+    return $ShopEntityCopyWith<$Res>(_value.newShop, (value) {
       return _then(_value.copyWith(newShop: value));
     });
   }
@@ -233,7 +233,7 @@ class _$ChangeAccountImpl implements _ChangeAccount {
   const _$ChangeAccountImpl(this.newShop);
 
   @override
-  final ShopModel newShop;
+  final ShopEntity newShop;
 
   @override
   String toString() {
@@ -263,7 +263,7 @@ class _$ChangeAccountImpl implements _ChangeAccount {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loadShops,
-    required TResult Function(ShopModel newShop) changeAccount,
+    required TResult Function(ShopEntity newShop) changeAccount,
   }) {
     return changeAccount(newShop);
   }
@@ -272,7 +272,7 @@ class _$ChangeAccountImpl implements _ChangeAccount {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadShops,
-    TResult? Function(ShopModel newShop)? changeAccount,
+    TResult? Function(ShopEntity newShop)? changeAccount,
   }) {
     return changeAccount?.call(newShop);
   }
@@ -281,7 +281,7 @@ class _$ChangeAccountImpl implements _ChangeAccount {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadShops,
-    TResult Function(ShopModel newShop)? changeAccount,
+    TResult Function(ShopEntity newShop)? changeAccount,
     required TResult orElse(),
   }) {
     if (changeAccount != null) {
@@ -323,9 +323,9 @@ class _$ChangeAccountImpl implements _ChangeAccount {
 }
 
 abstract class _ChangeAccount implements ShopListEvent {
-  const factory _ChangeAccount(final ShopModel newShop) = _$ChangeAccountImpl;
+  const factory _ChangeAccount(final ShopEntity newShop) = _$ChangeAccountImpl;
 
-  ShopModel get newShop;
+  ShopEntity get newShop;
 
   /// Create a copy of ShopListEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -339,24 +339,25 @@ mixin _$ShopListState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ShopModel> shops, int? currentShopId) loaded,
-    required TResult Function(ShopModel newShop) changeSuccess,
+    required TResult Function(List<ShopEntity> shops, int? currentShopId)
+        loaded,
+    required TResult Function(ShopEntity newShop) changeSuccess,
     required TResult Function(String error) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult? Function(ShopModel newShop)? changeSuccess,
+    TResult? Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult? Function(ShopEntity newShop)? changeSuccess,
     TResult? Function(String error)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult Function(ShopModel newShop)? changeSuccess,
+    TResult Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult Function(ShopEntity newShop)? changeSuccess,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) =>
@@ -451,8 +452,9 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ShopModel> shops, int? currentShopId) loaded,
-    required TResult Function(ShopModel newShop) changeSuccess,
+    required TResult Function(List<ShopEntity> shops, int? currentShopId)
+        loaded,
+    required TResult Function(ShopEntity newShop) changeSuccess,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -462,8 +464,8 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult? Function(ShopModel newShop)? changeSuccess,
+    TResult? Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult? Function(ShopEntity newShop)? changeSuccess,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -473,8 +475,8 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult Function(ShopModel newShop)? changeSuccess,
+    TResult Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult Function(ShopEntity newShop)? changeSuccess,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -532,7 +534,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
           _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<ShopModel> shops, int? currentShopId});
+  $Res call({List<ShopEntity> shops, int? currentShopId});
 }
 
 /// @nodoc
@@ -555,7 +557,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
       shops: null == shops
           ? _value._shops
           : shops // ignore: cast_nullable_to_non_nullable
-              as List<ShopModel>,
+              as List<ShopEntity>,
       currentShopId: freezed == currentShopId
           ? _value.currentShopId
           : currentShopId // ignore: cast_nullable_to_non_nullable
@@ -568,12 +570,12 @@ class __$$LoadedImplCopyWithImpl<$Res>
 
 class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl(
-      {required final List<ShopModel> shops, required this.currentShopId})
+      {required final List<ShopEntity> shops, required this.currentShopId})
       : _shops = shops;
 
-  final List<ShopModel> _shops;
+  final List<ShopEntity> _shops;
   @override
-  List<ShopModel> get shops {
+  List<ShopEntity> get shops {
     if (_shops is EqualUnmodifiableListView) return _shops;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_shops);
@@ -613,8 +615,9 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ShopModel> shops, int? currentShopId) loaded,
-    required TResult Function(ShopModel newShop) changeSuccess,
+    required TResult Function(List<ShopEntity> shops, int? currentShopId)
+        loaded,
+    required TResult Function(ShopEntity newShop) changeSuccess,
     required TResult Function(String error) error,
   }) {
     return loaded(shops, currentShopId);
@@ -624,8 +627,8 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult? Function(ShopModel newShop)? changeSuccess,
+    TResult? Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult? Function(ShopEntity newShop)? changeSuccess,
     TResult? Function(String error)? error,
   }) {
     return loaded?.call(shops, currentShopId);
@@ -635,8 +638,8 @@ class _$LoadedImpl implements _Loaded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult Function(ShopModel newShop)? changeSuccess,
+    TResult Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult Function(ShopEntity newShop)? changeSuccess,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -686,10 +689,10 @@ class _$LoadedImpl implements _Loaded {
 
 abstract class _Loaded implements ShopListState {
   const factory _Loaded(
-      {required final List<ShopModel> shops,
+      {required final List<ShopEntity> shops,
       required final int? currentShopId}) = _$LoadedImpl;
 
-  List<ShopModel> get shops;
+  List<ShopEntity> get shops;
   int? get currentShopId;
 
   /// Create a copy of ShopListState
@@ -705,9 +708,9 @@ abstract class _$$ChangeSuccessImplCopyWith<$Res> {
           _$ChangeSuccessImpl value, $Res Function(_$ChangeSuccessImpl) then) =
       __$$ChangeSuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ShopModel newShop});
+  $Res call({ShopEntity newShop});
 
-  $ShopModelCopyWith<$Res> get newShop;
+  $ShopEntityCopyWith<$Res> get newShop;
 }
 
 /// @nodoc
@@ -729,7 +732,7 @@ class __$$ChangeSuccessImplCopyWithImpl<$Res>
       null == newShop
           ? _value.newShop
           : newShop // ignore: cast_nullable_to_non_nullable
-              as ShopModel,
+              as ShopEntity,
     ));
   }
 
@@ -737,8 +740,8 @@ class __$$ChangeSuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ShopModelCopyWith<$Res> get newShop {
-    return $ShopModelCopyWith<$Res>(_value.newShop, (value) {
+  $ShopEntityCopyWith<$Res> get newShop {
+    return $ShopEntityCopyWith<$Res>(_value.newShop, (value) {
       return _then(_value.copyWith(newShop: value));
     });
   }
@@ -750,7 +753,7 @@ class _$ChangeSuccessImpl implements _ChangeSuccess {
   const _$ChangeSuccessImpl(this.newShop);
 
   @override
-  final ShopModel newShop;
+  final ShopEntity newShop;
 
   @override
   String toString() {
@@ -780,8 +783,9 @@ class _$ChangeSuccessImpl implements _ChangeSuccess {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ShopModel> shops, int? currentShopId) loaded,
-    required TResult Function(ShopModel newShop) changeSuccess,
+    required TResult Function(List<ShopEntity> shops, int? currentShopId)
+        loaded,
+    required TResult Function(ShopEntity newShop) changeSuccess,
     required TResult Function(String error) error,
   }) {
     return changeSuccess(newShop);
@@ -791,8 +795,8 @@ class _$ChangeSuccessImpl implements _ChangeSuccess {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult? Function(ShopModel newShop)? changeSuccess,
+    TResult? Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult? Function(ShopEntity newShop)? changeSuccess,
     TResult? Function(String error)? error,
   }) {
     return changeSuccess?.call(newShop);
@@ -802,8 +806,8 @@ class _$ChangeSuccessImpl implements _ChangeSuccess {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult Function(ShopModel newShop)? changeSuccess,
+    TResult Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult Function(ShopEntity newShop)? changeSuccess,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -852,9 +856,9 @@ class _$ChangeSuccessImpl implements _ChangeSuccess {
 }
 
 abstract class _ChangeSuccess implements ShopListState {
-  const factory _ChangeSuccess(final ShopModel newShop) = _$ChangeSuccessImpl;
+  const factory _ChangeSuccess(final ShopEntity newShop) = _$ChangeSuccessImpl;
 
-  ShopModel get newShop;
+  ShopEntity get newShop;
 
   /// Create a copy of ShopListState
   /// with the given fields replaced by the non-null parameter values.
@@ -932,8 +936,9 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<ShopModel> shops, int? currentShopId) loaded,
-    required TResult Function(ShopModel newShop) changeSuccess,
+    required TResult Function(List<ShopEntity> shops, int? currentShopId)
+        loaded,
+    required TResult Function(ShopEntity newShop) changeSuccess,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -943,8 +948,8 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult? Function(ShopModel newShop)? changeSuccess,
+    TResult? Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult? Function(ShopEntity newShop)? changeSuccess,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -954,8 +959,8 @@ class _$ErrorImpl implements _Error {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<ShopModel> shops, int? currentShopId)? loaded,
-    TResult Function(ShopModel newShop)? changeSuccess,
+    TResult Function(List<ShopEntity> shops, int? currentShopId)? loaded,
+    TResult Function(ShopEntity newShop)? changeSuccess,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
