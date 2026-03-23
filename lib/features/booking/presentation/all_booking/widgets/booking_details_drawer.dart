@@ -33,7 +33,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
-import 'package:bookie_buddy_web/features/booking/domain/usecases/get_invoice_pdf_bytes_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -1221,6 +1221,11 @@ class BookingDetailsDrawer extends StatelessWidget {
   }
 
   Widget _buildCustomerDetails(BookingDetailsModel booking) {
+    final phone1 = _preferredPhone(
+            booking.client.phone1E164, booking.client.phone1.toString()) ??
+        booking.client.phone1.toString();
+    final phone2 = _preferredPhone(
+        booking.client.phone2E164, booking.client.phone2?.toString());
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1283,7 +1288,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            booking.client.phone1.toString(),
+                            phone1,
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -1299,8 +1304,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                           onPressed: () async {
-                            final uri = Uri.parse(
-                                'tel:${booking.client.phone1.toString()}');
+                            final uri = Uri.parse('tel:$phone1');
                             if (await canLaunchUrl(uri)) {
                               await launchUrl(uri);
                             }
@@ -1309,8 +1313,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                         const SizedBox(width: 8),
                         InkWell(
                           onTap: () async {
-                            final uri = Uri.parse(
-                                'https://wa.me/${booking.client.phone1.toString()}');
+                            final uri =
+                                Uri.parse('https://wa.me/${_waPhone(phone1)}');
                             if (await canLaunchUrl(uri)) {
                               await launchUrl(uri);
                             }
@@ -1333,7 +1337,7 @@ class BookingDetailsDrawer extends StatelessWidget {
             ],
           ),
           // Second row: Phone 2 if exists
-          if (booking.client.phone2 != null) ...[
+          if (phone2 != null && phone2.isNotEmpty && phone2 != '0') ...[
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1356,7 +1360,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              booking.client.phone2!.toString(),
+                              phone2,
                               style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
@@ -1372,8 +1376,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
                             onPressed: () async {
-                              final uri = Uri.parse(
-                                  'tel:${booking.client.phone2!.toString()}');
+                              final uri = Uri.parse('tel:$phone2');
                               if (await canLaunchUrl(uri)) {
                                 await launchUrl(uri);
                               }
@@ -1383,7 +1386,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                           InkWell(
                             onTap: () async {
                               final uri = Uri.parse(
-                                  'https://wa.me/${booking.client.phone2!.toString()}');
+                                  'https://wa.me/${_waPhone(phone2)}');
                               if (await canLaunchUrl(uri)) {
                                 await launchUrl(uri);
                               }
@@ -1977,7 +1980,7 @@ class BookingDetailsDrawer extends StatelessWidget {
           context,
           icon: Icons.download_outlined,
           color: AppColors.purple,
-          onTap: () => _showInvoiceActionsModal(context, booking),
+          onTap: () => _openInvoicePdf(context, booking),
         ),
         const SizedBox(width: 12),
         // Delete button for completed bookings (icon style, on left side)
@@ -2213,6 +2216,52 @@ class BookingDetailsDrawer extends StatelessWidget {
     );
   }
 
+  String? _preferredPhone(String? e164Phone, String? rawPhone) {
+    final e164 = e164Phone?.trim();
+    if (e164 != null && e164.isNotEmpty && e164 != '0') {
+      return e164;
+    }
+
+    final raw = rawPhone?.trim();
+    if (raw != null && raw.isNotEmpty && raw != '0') {
+      return raw;
+    }
+
+    return null;
+  }
+
+  String _waPhone(String phone) => phone.replaceAll(RegExp(r'[^0-9]'), '');
+
+  Future<void> _openInvoicePdf(
+      BuildContext context, BookingDetailsModel booking) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final getBookingInvoice = getIt<GetBookingInvoicePdfBytesUseCase>();
+      final pdfBytes = await getBookingInvoice(booking.id);
+      if (context.mounted) Navigator.of(context).pop();
+
+      if (kIsWeb) {
+        openPdfInNewTab(pdfBytes, 'booking_invoice_${booking.id}.pdf');
+        return;
+      }
+
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/booking_invoice_${booking.id}.pdf');
+      await file.writeAsBytes(pdfBytes);
+      await OpenFile.open(file.path);
+    } catch (e) {
+      if (context.mounted) Navigator.of(context).pop();
+      if (context.mounted) {
+        context.showSnackBar('Failed to open invoice: $e', isError: true);
+      }
+    }
+  }
+
   void _showInvoiceActionsModal(
       BuildContext context, BookingDetailsModel booking) {
     showDialog(
@@ -2269,7 +2318,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                 );
                 try {
                   final pdfBytes =
-                      await getIt<GetInvoicePdfBytesUseCase>()(booking.id);
+                      await getIt<GetBookingInvoicePdfBytesUseCase>()(
+                          booking.id);
                   if (context.mounted) Navigator.of(context).pop();
                   if (kIsWeb) {
                     openPdfInNewTab(

@@ -44,6 +44,7 @@ class StaffSearchNameField extends StatelessWidget {
             controller: controller,
             keyboardType: TextInputType.name,
             textInputAction: TextInputAction.next,
+            onEditingComplete: () => FocusScope.of(context).nextFocus(),
             style: const TextStyle(
               fontSize: 13,
               fontFamily: 'Inter',

@@ -11,6 +11,7 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/variant_size_type_text_field.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SizeAmountDialog extends StatefulWidget {
@@ -248,23 +249,26 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                       }
                     }),
                     SizedBox(
-                      width: 80,
-                      child: TextField(
+                      width: 90,
+                      child: CustomTextField(
                         controller: quantityController,
-                        textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
+                        hintText: 'Qty',
                         onChanged: (value) {
-                          // Clear error when user types
                           quantityErrorNotifier.value = '';
                           _updateAmountFromSelectedVariant();
                         },
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.purpleLight,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
+                        textAlign: TextAlign.center,
+                        textInputFormatter: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        validator: (value) => AppInputValidators.quantity(value,
+                            allowZero: false),
+                        fillColor: AppColors.purpleLight,
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 12,
                         ),
                       ),
                     ),

@@ -75,7 +75,7 @@ class BookingTextFieldBuilder {
                     if (nextFocusNode != null) {
                       nextFocusNode.requestFocus();
                     } else {
-                      focusNode?.unfocus();
+                      focusNode?.nextFocus();
                     }
                   },
                   style: TextStyle(

@@ -20,7 +20,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/load_desktop_b
 import 'package:bookie_buddy_web/features/booking/domain/usecases/download_booking_invoice_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_payment_history_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
-import 'package:bookie_buddy_web/features/booking/domain/usecases/get_invoice_pdf_bytes_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 import 'package:bookie_buddy_web/features/client/data/repositories/client_repository_impl.dart';
@@ -275,7 +275,8 @@ class AppDependencies {
         () => DownloadBookingInvoiceUseCase(_get<IBookingRepository>()));
     _registerLazy(() => GetPaymentHistoryUseCase(_get<IBookingRepository>()));
     _registerLazy(() => SendInvoiceUseCase(_get<IBookingRepository>()));
-    _registerLazy(() => GetInvoicePdfBytesUseCase(_get<IBookingRepository>()));
+    _registerLazy(
+        () => GetBookingInvoicePdfBytesUseCase(_get<IBookingRepository>()));
   }
 
   // ================== end of feature specific ==================

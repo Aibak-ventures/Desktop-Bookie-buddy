@@ -28,7 +28,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_us
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_old_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
-import 'package:bookie_buddy_web/features/booking/domain/usecases/get_invoice_pdf_bytes_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
@@ -190,6 +190,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   int? _editingVariantId;
   final _inlinePriceController = TextEditingController();
   final _inlinePriceFocusNode = FocusNode();
+  final Map<int, TextEditingController> _quantityControllers = {};
+  final Map<int, FocusNode> _quantityFocusNodes = {};
 
   // State variables for payment method
   PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
@@ -262,6 +264,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     pickupLocationController.dispose();
     destinationLocationController.dispose();
     _inlinePriceController.dispose();
+    for (final controller in _quantityControllers.values) {
+      controller.dispose();
+    }
+    for (final focusNode in _quantityFocusNodes.values) {
+      focusNode.dispose();
+    }
     _inlinePriceFocusNode.dispose();
     _clientNameFocusNode.dispose();
     _clientPhone1FocusNode.dispose();
@@ -2336,15 +2344,55 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // Align to left
         children: [
-          ValueListenableBuilder<List<ProductSelectedModel>>(
-            valueListenable: selectedProductsNotifier,
-            builder: (context, products, _) {
-              return Text('Select Products (${products.length})',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800));
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ValueListenableBuilder<List<ProductSelectedModel>>(
+                valueListenable: selectedProductsNotifier,
+                builder: (context, products, _) {
+                  return Text('Select Products (${products.length})',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade800));
+                },
+              ),
+              //TODO: could't find the _openProductSelection method when copying code, need attention.
+
+              // InkWell(
+              //   onTap: _openProductSelection,
+              //   borderRadius: BorderRadius.circular(8),
+              //   child: Container(
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              //     decoration: BoxDecoration(
+              //       color: const Color(0xFF6132E4).withOpacity(0.08),
+              //       borderRadius: BorderRadius.circular(8),
+              //       border: Border.all(
+              //         color: const Color(0xFF6132E4).withOpacity(0.18),
+              //       ),
+              //     ),
+              //     child: Row(
+              //       children: const [
+              //         Icon(
+              //           Icons.add,
+              //           size: 16,
+              //           color: Color(0xFF6132E4),
+              //         ),
+              //         SizedBox(width: 6),
+              //         Text(
+              //           'Add',
+              //           style: TextStyle(
+              //             fontSize: 12,
+              //             fontWeight: FontWeight.w600,
+              //             color: Color(0xFF6132E4),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+            ],
           ),
           const SizedBox(height: 5),
           _buildProductSearchBar(),
@@ -2969,7 +3017,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             flex: 3,
             child: _buildHeaderCell('items', alignLeft: true),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 10),
           Expanded(
             flex: 2,
             child: _buildHeaderCell('Specifications'),
@@ -3252,31 +3300,65 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildQuantityBtn(
-                    icon: Icons.remove,
-                    onTap: () => _decrementQuantity(product)),
-                const SizedBox(width: 6), // Reduced from 12 to 6
-                Text(
-                  '${product.quantity}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                  icon: Icons.remove,
+                  onTap: () => _decrementQuantity(product),
+                  compact: true,
+                ),
+                const SizedBox(width: 3),
+                SizedBox(
+                  width: 34,
+                  height: 28,
+                  child: TextField(
+                    controller: _getQuantityController(product),
+                    focusNode: _getQuantityFocusNode(_quantityKey(product)),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    ],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 0,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: BorderSide(color: Colors.grey.shade400),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(color: Color(0xFF6132E4)),
+                      ),
+                    ),
+                    onSubmitted: (value) => _saveTypedQuantity(product, value),
+                    onTapOutside: (_) => _saveTypedQuantity(
+                      product,
+                      _getQuantityController(product).text,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 6), // Reduced from 12 to 6
+                const SizedBox(width: 3),
                 _buildQuantityBtn(
-                    icon: Icons.add,
-                    onTap: () => _incrementQuantity(product),
-                    isDisabled: product.quantity >=
-                        (product.variant.remainingStock ??
-                            product.variant.stock ??
-                            999)),
+                  icon: Icons.add,
+                  onTap: () => _incrementQuantity(product),
+                  compact: true,
+                  isDisabled: product.quantity >=
+                      (product.variant.remainingStock ??
+                          product.variant.stock ??
+                          999),
+                ),
               ],
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 10),
           // Price / item
           Expanded(
             child: _editingVariantId == product.variant.variantId
@@ -3364,24 +3446,48 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     required IconData icon,
     required VoidCallback onTap,
     bool isDisabled = false,
+    bool compact = false,
   }) {
     return InkWell(
       onTap: isDisabled ? null : onTap,
       borderRadius: BorderRadius.circular(4),
       child: Container(
-        width: 27,
-        height: 22,
+        width: compact ? 20 : 27,
+        height: compact ? 20 : 22,
         decoration: BoxDecoration(
           color: isDisabled
               ? Colors.grey.shade300
               : const Color(0xFFF3F0FF), // Light purple bg
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Icon(icon,
-            size: 14,
-            color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4)),
+        child: Icon(
+          icon,
+          size: compact ? 12 : 14,
+          color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4),
+        ),
       ),
     );
+  }
+
+  TextEditingController _getQuantityController(ProductSelectedModel product) {
+    final quantityKey = _quantityKey(product);
+    final focusNode = _getQuantityFocusNode(quantityKey);
+    final controller = _quantityControllers.putIfAbsent(
+      quantityKey,
+      () => TextEditingController(text: product.quantity.toString()),
+    );
+    if (!focusNode.hasFocus && controller.text != product.quantity.toString()) {
+      controller.text = product.quantity.toString();
+    }
+    return controller;
+  }
+
+  int _quantityKey(ProductSelectedModel product) {
+    return product.variant.variantId ?? product.variant.id;
+  }
+
+  FocusNode _getQuantityFocusNode(int quantityKey) {
+    return _quantityFocusNodes.putIfAbsent(quantityKey, FocusNode.new);
   }
 
   /// Increment quantity of a product with stock validation
@@ -3405,6 +3511,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       products[index] = products[index].copyWith(
         quantity: products[index].quantity + 1,
       );
+      _quantityControllers[_quantityKey(product)]?.text =
+          products[index].quantity.toString();
       selectedProductsNotifier.value = products;
     }
   }
@@ -3421,11 +3529,57 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         products[index] = products[index].copyWith(
           quantity: products[index].quantity - 1,
         );
+        _quantityControllers[_quantityKey(product)]?.text =
+            products[index].quantity.toString();
       } else {
+        _quantityControllers.remove(_quantityKey(product))?.dispose();
+        _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
         products.removeAt(index);
       }
       selectedProductsNotifier.value = products;
     }
+  }
+
+  void _saveTypedQuantity(ProductSelectedModel product, String value) {
+    final parsedQuantity = int.tryParse(value.trim());
+
+    if (parsedQuantity == null || parsedQuantity <= 0) {
+      _quantityControllers[_quantityKey(product)]?.text =
+          product.quantity.toString();
+      context.showSnackBar(
+        'Quantity must be greater than 0',
+        isError: true,
+      );
+      return;
+    }
+
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
+    final availableStock =
+        product.variant.remainingStock ?? product.variant.stock ?? 999;
+
+    if (!isOldBooking && parsedQuantity > availableStock) {
+      _quantityControllers[_quantityKey(product)]?.text =
+          product.quantity.toString();
+      context.showSnackBar(
+        'Quantity cannot be greater than available stock ($availableStock)',
+        isError: true,
+      );
+      return;
+    }
+
+    final products =
+        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final index = products.indexWhere(
+      (p) => p.variant.variantId == product.variant.variantId,
+    );
+
+    if (index == -1) return;
+
+    products[index] = products[index].copyWith(quantity: parsedQuantity);
+    _quantityControllers[_quantityKey(product)]?.text =
+        parsedQuantity.toString();
+    selectedProductsNotifier.value = products;
+    _quantityFocusNodes[_quantityKey(product)]?.unfocus();
   }
 
   void _startEditingPrice(ProductSelectedModel product) {
@@ -3467,6 +3621,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _removeProduct(ProductSelectedModel product) {
     final products =
         List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    _quantityControllers.remove(_quantityKey(product))?.dispose();
+    _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
     products.removeWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -4227,7 +4383,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildNewDateField({
     required String label,
     required String value,
-    required VoidCallback onTap,
+    required Future<void> Function() onTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4242,36 +4398,51 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            height: 42,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF9F9FC),
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.calendar_today_outlined,
-                    size: 16, color: const Color(0xFF9A76E8)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black87,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
+        Focus(
+          onKeyEvent: (_, event) {
+            if (event is KeyDownEvent &&
+                (event.logicalKey == LogicalKeyboardKey.enter ||
+                    event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+              onTap().then((_) => FocusScope.of(context).nextFocus());
+              return KeyEventResult.handled;
+            }
+            return KeyEventResult.ignored;
+          },
+          child: InkWell(
+            onTap: () =>
+                onTap().then((_) => FocusScope.of(context).nextFocus()),
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              height: 42,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF9F9FC),
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today_outlined,
+                      size: 16, color: const Color(0xFF9A76E8)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      value,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black87,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 18, color: Colors.grey.shade500),
-              ],
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 18,
+                    color: Colors.grey.shade500,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -4282,7 +4453,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   Widget _buildNewTimeField({
     required String label,
     required String value,
-    required VoidCallback onTap,
+    required Future<void> Function() onTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4297,33 +4468,45 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            height: 42,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF9F9FC),
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black87,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
+        Focus(
+          onKeyEvent: (_, event) {
+            if (event is KeyDownEvent &&
+                (event.logicalKey == LogicalKeyboardKey.enter ||
+                    event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+              onTap().then((_) => FocusScope.of(context).nextFocus());
+              return KeyEventResult.handled;
+            }
+            return KeyEventResult.ignored;
+          },
+          child: InkWell(
+            onTap: () =>
+                onTap().then((_) => FocusScope.of(context).nextFocus()),
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              height: 42,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF9F9FC),
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      value,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black87,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 18, color: Colors.grey.shade500),
-              ],
+                  Icon(Icons.keyboard_arrow_down,
+                      size: 18, color: Colors.grey.shade500),
+                ],
+              ),
             ),
           ),
         ),
@@ -4417,6 +4600,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       controller: descriptionController,
                       maxLines: null,
                       expands: true,
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).nextFocus(),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes',
@@ -4741,6 +4927,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       controller: descriptionController,
                       maxLines: null,
                       expands: true,
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).nextFocus(),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes',
@@ -5077,7 +5266,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           } else {
                             // For bookings, use booking API endpoint
                             final pdfBytes =
-                                await getIt<GetInvoicePdfBytesUseCase>()(id);
+                                await getIt<GetBookingInvoicePdfBytesUseCase>()(
+                                    id);
 
                             GlobalLoadingOverlay.hide();
 
@@ -5562,6 +5752,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       controller: descriptionController,
                       maxLines: null,
                       expands: true,
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).nextFocus(),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes / Description',

@@ -33,7 +33,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
-import 'package:bookie_buddy_web/features/booking/domain/usecases/get_invoice_pdf_bytes_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -2269,7 +2269,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                 );
                 try {
                   final pdfBytes =
-                      await getIt<GetInvoicePdfBytesUseCase>()(booking.id);
+                      await getIt<GetBookingInvoicePdfBytesUseCase>()(
+                          booking.id);
                   if (context.mounted) Navigator.of(context).pop();
                   if (kIsWeb) {
                     openPdfInNewTab(
