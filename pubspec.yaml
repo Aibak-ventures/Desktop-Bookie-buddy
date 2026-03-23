@@ -78,8 +78,7 @@ dependencies:
   go_router: ^16.2.4
   file_picker: ^8.0.0
   msix: ^3.16.0
-  open_file: ^3.3.2 
-  window_manager: ^0.4.3
+  open_file: ^3.3.2
   feedback: ^3.1.0
   vector_graphics: ^1.1.7
 dev_dependencies:
@@ -89,7 +88,7 @@ dev_dependencies:
   freezed: ^2.5.8
   build_runner: ^2.5.4
   json_serializable: ^6.9.5
-  
+
   # Testing utilities
   mocktail: ^1.0.3
   bloc_test: ^10.0.0
@@ -132,7 +131,6 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/animations/
-
 
   fonts:
     - family: Poppins

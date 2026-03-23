@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
                 ProductSearchCubit(searchAllProductsUseCase: getIt.get())),
       ],
       child: MaterialApp(
-        title: 'BookieBuddy',
+        title: 'Bookie Buddy',
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme(),
