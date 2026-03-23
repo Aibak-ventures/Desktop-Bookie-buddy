@@ -6,9 +6,8 @@ part of 'status_counts_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StatusCountsModelImpl _$$StatusCountsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$StatusCountsModelImpl(
+_StatusCountsModel _$StatusCountsModelFromJson(Map<String, dynamic> json) =>
+    _StatusCountsModel(
       completed: (json['completed'] as num?)?.toInt() ?? 0,
       upcoming: (json['upcoming'] as num?)?.toInt() ?? 0,
       returns: (json['returns'] as num?)?.toInt() ?? 0,
@@ -17,8 +16,7 @@ _$StatusCountsModelImpl _$$StatusCountsModelImplFromJson(
       cancelled: (json['cancelled'] as num?)?.toInt() ?? 0,
     );
 
-Map<String, dynamic> _$$StatusCountsModelImplToJson(
-        _$StatusCountsModelImpl instance) =>
+Map<String, dynamic> _$StatusCountsModelToJson(_StatusCountsModel instance) =>
     <String, dynamic>{
       'completed': instance.completed,
       'upcoming': instance.upcoming,

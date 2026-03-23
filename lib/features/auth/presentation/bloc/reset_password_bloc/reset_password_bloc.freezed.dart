@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,858 +9,609 @@ part of 'reset_password_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$ResetPasswordEvent {
-  String get oldPassword => throw _privateConstructorUsedError;
-  String get newPassword => throw _privateConstructorUsedError;
-  bool get logoutFromAllDevices => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            String oldPassword, String newPassword, bool logoutFromAllDevices)
-        resetPassword,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            String oldPassword, String newPassword, bool logoutFromAllDevices)?
-        resetPassword,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            String oldPassword, String newPassword, bool logoutFromAllDevices)?
-        resetPassword,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ResetPassword value) resetPassword,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ResetPassword value)? resetPassword,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ResetPassword value)? resetPassword,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
 
-  /// Create a copy of ResetPasswordEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ResetPasswordEventCopyWith<ResetPasswordEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get oldPassword; String get newPassword; bool get logoutFromAllDevices;
+/// Create a copy of ResetPasswordEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ResetPasswordEventCopyWith<ResetPasswordEvent> get copyWith => _$ResetPasswordEventCopyWithImpl<ResetPasswordEvent>(this as ResetPasswordEvent, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordEvent&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword)&&(identical(other.logoutFromAllDevices, logoutFromAllDevices) || other.logoutFromAllDevices == logoutFromAllDevices));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,oldPassword,newPassword,logoutFromAllDevices);
+
+@override
+String toString() {
+  return 'ResetPasswordEvent(oldPassword: $oldPassword, newPassword: $newPassword, logoutFromAllDevices: $logoutFromAllDevices)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ResetPasswordEventCopyWith<$Res> {
-  factory $ResetPasswordEventCopyWith(
-          ResetPasswordEvent value, $Res Function(ResetPasswordEvent) then) =
-      _$ResetPasswordEventCopyWithImpl<$Res, ResetPasswordEvent>;
-  @useResult
-  $Res call(
-      {String oldPassword, String newPassword, bool logoutFromAllDevices});
-}
+abstract mixin class $ResetPasswordEventCopyWith<$Res>  {
+  factory $ResetPasswordEventCopyWith(ResetPasswordEvent value, $Res Function(ResetPasswordEvent) _then) = _$ResetPasswordEventCopyWithImpl;
+@useResult
+$Res call({
+ String oldPassword, String newPassword, bool logoutFromAllDevices
+});
 
+
+
+
+}
 /// @nodoc
-class _$ResetPasswordEventCopyWithImpl<$Res, $Val extends ResetPasswordEvent>
+class _$ResetPasswordEventCopyWithImpl<$Res>
     implements $ResetPasswordEventCopyWith<$Res> {
-  _$ResetPasswordEventCopyWithImpl(this._value, this._then);
+  _$ResetPasswordEventCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ResetPasswordEvent _self;
+  final $Res Function(ResetPasswordEvent) _then;
 
-  /// Create a copy of ResetPasswordEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? oldPassword = null,
-    Object? newPassword = null,
-    Object? logoutFromAllDevices = null,
-  }) {
-    return _then(_value.copyWith(
-      oldPassword: null == oldPassword
-          ? _value.oldPassword
-          : oldPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-      newPassword: null == newPassword
-          ? _value.newPassword
-          : newPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-      logoutFromAllDevices: null == logoutFromAllDevices
-          ? _value.logoutFromAllDevices
-          : logoutFromAllDevices // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of ResetPasswordEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? oldPassword = null,Object? newPassword = null,Object? logoutFromAllDevices = null,}) {
+  return _then(_self.copyWith(
+oldPassword: null == oldPassword ? _self.oldPassword : oldPassword // ignore: cast_nullable_to_non_nullable
+as String,newPassword: null == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
+as String,logoutFromAllDevices: null == logoutFromAllDevices ? _self.logoutFromAllDevices : logoutFromAllDevices // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ResetPasswordEvent].
+extension ResetPasswordEventPatterns on ResetPasswordEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _ResetPassword value)?  resetPassword,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ResetPassword() when resetPassword != null:
+return resetPassword(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _ResetPassword value)  resetPassword,}){
+final _that = this;
+switch (_that) {
+case _ResetPassword():
+return resetPassword(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _ResetPassword value)?  resetPassword,}){
+final _that = this;
+switch (_that) {
+case _ResetPassword() when resetPassword != null:
+return resetPassword(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String oldPassword,  String newPassword,  bool logoutFromAllDevices)?  resetPassword,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ResetPassword() when resetPassword != null:
+return resetPassword(_that.oldPassword,_that.newPassword,_that.logoutFromAllDevices);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String oldPassword,  String newPassword,  bool logoutFromAllDevices)  resetPassword,}) {final _that = this;
+switch (_that) {
+case _ResetPassword():
+return resetPassword(_that.oldPassword,_that.newPassword,_that.logoutFromAllDevices);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String oldPassword,  String newPassword,  bool logoutFromAllDevices)?  resetPassword,}) {final _that = this;
+switch (_that) {
+case _ResetPassword() when resetPassword != null:
+return resetPassword(_that.oldPassword,_that.newPassword,_that.logoutFromAllDevices);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$ResetPasswordImplCopyWith<$Res>
-    implements $ResetPasswordEventCopyWith<$Res> {
-  factory _$$ResetPasswordImplCopyWith(
-          _$ResetPasswordImpl value, $Res Function(_$ResetPasswordImpl) then) =
-      __$$ResetPasswordImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String oldPassword, String newPassword, bool logoutFromAllDevices});
+
+
+class _ResetPassword implements ResetPasswordEvent {
+  const _ResetPassword({required this.oldPassword, required this.newPassword, this.logoutFromAllDevices = false});
+  
+
+@override final  String oldPassword;
+@override final  String newPassword;
+@override@JsonKey() final  bool logoutFromAllDevices;
+
+/// Create a copy of ResetPasswordEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ResetPasswordCopyWith<_ResetPassword> get copyWith => __$ResetPasswordCopyWithImpl<_ResetPassword>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResetPassword&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword)&&(identical(other.logoutFromAllDevices, logoutFromAllDevices) || other.logoutFromAllDevices == logoutFromAllDevices));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,oldPassword,newPassword,logoutFromAllDevices);
+
+@override
+String toString() {
+  return 'ResetPasswordEvent.resetPassword(oldPassword: $oldPassword, newPassword: $newPassword, logoutFromAllDevices: $logoutFromAllDevices)';
+}
+
+
 }
 
 /// @nodoc
-class __$$ResetPasswordImplCopyWithImpl<$Res>
-    extends _$ResetPasswordEventCopyWithImpl<$Res, _$ResetPasswordImpl>
-    implements _$$ResetPasswordImplCopyWith<$Res> {
-  __$$ResetPasswordImplCopyWithImpl(
-      _$ResetPasswordImpl _value, $Res Function(_$ResetPasswordImpl) _then)
-      : super(_value, _then);
+abstract mixin class _$ResetPasswordCopyWith<$Res> implements $ResetPasswordEventCopyWith<$Res> {
+  factory _$ResetPasswordCopyWith(_ResetPassword value, $Res Function(_ResetPassword) _then) = __$ResetPasswordCopyWithImpl;
+@override @useResult
+$Res call({
+ String oldPassword, String newPassword, bool logoutFromAllDevices
+});
 
-  /// Create a copy of ResetPasswordEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? oldPassword = null,
-    Object? newPassword = null,
-    Object? logoutFromAllDevices = null,
-  }) {
-    return _then(_$ResetPasswordImpl(
-      oldPassword: null == oldPassword
-          ? _value.oldPassword
-          : oldPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-      newPassword: null == newPassword
-          ? _value.newPassword
-          : newPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-      logoutFromAllDevices: null == logoutFromAllDevices
-          ? _value.logoutFromAllDevices
-          : logoutFromAllDevices // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+
+
+
 }
-
 /// @nodoc
+class __$ResetPasswordCopyWithImpl<$Res>
+    implements _$ResetPasswordCopyWith<$Res> {
+  __$ResetPasswordCopyWithImpl(this._self, this._then);
 
-class _$ResetPasswordImpl implements _ResetPassword {
-  const _$ResetPasswordImpl(
-      {required this.oldPassword,
-      required this.newPassword,
-      this.logoutFromAllDevices = false});
+  final _ResetPassword _self;
+  final $Res Function(_ResetPassword) _then;
 
-  @override
-  final String oldPassword;
-  @override
-  final String newPassword;
-  @override
-  @JsonKey()
-  final bool logoutFromAllDevices;
-
-  @override
-  String toString() {
-    return 'ResetPasswordEvent.resetPassword(oldPassword: $oldPassword, newPassword: $newPassword, logoutFromAllDevices: $logoutFromAllDevices)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ResetPasswordImpl &&
-            (identical(other.oldPassword, oldPassword) ||
-                other.oldPassword == oldPassword) &&
-            (identical(other.newPassword, newPassword) ||
-                other.newPassword == newPassword) &&
-            (identical(other.logoutFromAllDevices, logoutFromAllDevices) ||
-                other.logoutFromAllDevices == logoutFromAllDevices));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, oldPassword, newPassword, logoutFromAllDevices);
-
-  /// Create a copy of ResetPasswordEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ResetPasswordImplCopyWith<_$ResetPasswordImpl> get copyWith =>
-      __$$ResetPasswordImplCopyWithImpl<_$ResetPasswordImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            String oldPassword, String newPassword, bool logoutFromAllDevices)
-        resetPassword,
-  }) {
-    return resetPassword(oldPassword, newPassword, logoutFromAllDevices);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            String oldPassword, String newPassword, bool logoutFromAllDevices)?
-        resetPassword,
-  }) {
-    return resetPassword?.call(oldPassword, newPassword, logoutFromAllDevices);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            String oldPassword, String newPassword, bool logoutFromAllDevices)?
-        resetPassword,
-    required TResult orElse(),
-  }) {
-    if (resetPassword != null) {
-      return resetPassword(oldPassword, newPassword, logoutFromAllDevices);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ResetPassword value) resetPassword,
-  }) {
-    return resetPassword(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ResetPassword value)? resetPassword,
-  }) {
-    return resetPassword?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ResetPassword value)? resetPassword,
-    required TResult orElse(),
-  }) {
-    if (resetPassword != null) {
-      return resetPassword(this);
-    }
-    return orElse();
-  }
+/// Create a copy of ResetPasswordEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? oldPassword = null,Object? newPassword = null,Object? logoutFromAllDevices = null,}) {
+  return _then(_ResetPassword(
+oldPassword: null == oldPassword ? _self.oldPassword : oldPassword // ignore: cast_nullable_to_non_nullable
+as String,newPassword: null == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
+as String,logoutFromAllDevices: null == logoutFromAllDevices ? _self.logoutFromAllDevices : logoutFromAllDevices // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-abstract class _ResetPassword implements ResetPasswordEvent {
-  const factory _ResetPassword(
-      {required final String oldPassword,
-      required final String newPassword,
-      final bool logoutFromAllDevices}) = _$ResetPasswordImpl;
 
-  @override
-  String get oldPassword;
-  @override
-  String get newPassword;
-  @override
-  bool get logoutFromAllDevices;
-
-  /// Create a copy of ResetPasswordEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ResetPasswordImplCopyWith<_$ResetPasswordImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 mixin _$ResetPasswordState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() submitted,
-    required TResult Function() success,
-    required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? submitted,
-    TResult? Function()? success,
-    TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? submitted,
-    TResult Function()? success,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Submitted value) submitted,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Submitted value)? submitted,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Submitted value)? submitted,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ResetPasswordState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ResetPasswordStateCopyWith<$Res> {
-  factory $ResetPasswordStateCopyWith(
-          ResetPasswordState value, $Res Function(ResetPasswordState) then) =
-      _$ResetPasswordStateCopyWithImpl<$Res, ResetPasswordState>;
+class $ResetPasswordStateCopyWith<$Res>  {
+$ResetPasswordStateCopyWith(ResetPasswordState _, $Res Function(ResetPasswordState) __);
 }
 
-/// @nodoc
-class _$ResetPasswordStateCopyWithImpl<$Res, $Val extends ResetPasswordState>
-    implements $ResetPasswordStateCopyWith<$Res> {
-  _$ResetPasswordStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [ResetPasswordState].
+extension ResetPasswordStatePatterns on ResetPasswordState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of ResetPasswordState
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Submitted value)?  submitted,TResult Function( _Success value)?  success,TResult Function( _Error value)?  error,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Submitted() when submitted != null:
+return submitted(_that);case _Success() when success != null:
+return success(_that);case _Error() when error != null:
+return error(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Submitted value)  submitted,required TResult Function( _Success value)  success,required TResult Function( _Error value)  error,}){
+final _that = this;
+switch (_that) {
+case _Initial():
+return initial(_that);case _Submitted():
+return submitted(_that);case _Success():
+return success(_that);case _Error():
+return error(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Submitted value)?  submitted,TResult? Function( _Success value)?  success,TResult? Function( _Error value)?  error,}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Submitted() when submitted != null:
+return submitted(_that);case _Success() when success != null:
+return success(_that);case _Error() when error != null:
+return error(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  submitted,TResult Function()?  success,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Submitted() when submitted != null:
+return submitted();case _Success() when success != null:
+return success();case _Error() when error != null:
+return error(_that.error);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  submitted,required TResult Function()  success,required TResult Function( String error)  error,}) {final _that = this;
+switch (_that) {
+case _Initial():
+return initial();case _Submitted():
+return submitted();case _Success():
+return success();case _Error():
+return error(_that.error);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  submitted,TResult? Function()?  success,TResult? Function( String error)?  error,}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Submitted() when submitted != null:
+return submitted();case _Success() when success != null:
+return success();case _Error() when error != null:
+return error(_that.error);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$ResetPasswordStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ResetPasswordState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$InitialImpl implements _Initial {
-  const _$InitialImpl();
-
-  @override
-  String toString() {
-    return 'ResetPasswordState.initial()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() submitted,
-    required TResult Function() success,
-    required TResult Function(String error) error,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? submitted,
-    TResult? Function()? success,
-    TResult? Function(String error)? error,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? submitted,
-    TResult Function()? success,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Submitted value) submitted,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Submitted value)? submitted,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Submitted value)? submitted,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Initial implements ResetPasswordState {
-  const factory _Initial() = _$InitialImpl;
-}
-
-/// @nodoc
-abstract class _$$SubmittedImplCopyWith<$Res> {
-  factory _$$SubmittedImplCopyWith(
-          _$SubmittedImpl value, $Res Function(_$SubmittedImpl) then) =
-      __$$SubmittedImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$SubmittedImplCopyWithImpl<$Res>
-    extends _$ResetPasswordStateCopyWithImpl<$Res, _$SubmittedImpl>
-    implements _$$SubmittedImplCopyWith<$Res> {
-  __$$SubmittedImplCopyWithImpl(
-      _$SubmittedImpl _value, $Res Function(_$SubmittedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ResetPasswordState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$SubmittedImpl implements _Submitted {
-  const _$SubmittedImpl();
 
-  @override
-  String toString() {
-    return 'ResetPasswordState.submitted()';
-  }
+class _Initial implements ResetPasswordState {
+  const _Initial();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SubmittedImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() submitted,
-    required TResult Function() success,
-    required TResult Function(String error) error,
-  }) {
-    return submitted();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? submitted,
-    TResult? Function()? success,
-    TResult? Function(String error)? error,
-  }) {
-    return submitted?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? submitted,
-    TResult Function()? success,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (submitted != null) {
-      return submitted();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Submitted value) submitted,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-  }) {
-    return submitted(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Submitted value)? submitted,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-  }) {
-    return submitted?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Submitted value)? submitted,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (submitted != null) {
-      return submitted(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
-abstract class _Submitted implements ResetPasswordState {
-  const factory _Submitted() = _$SubmittedImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ResetPasswordState.initial()';
 }
 
-/// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
+
 }
 
-/// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$ResetPasswordStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of ResetPasswordState
-  /// with the given fields replaced by the non-null parameter values.
-}
+
 
 /// @nodoc
 
-class _$SuccessImpl implements _Success {
-  const _$SuccessImpl();
 
-  @override
-  String toString() {
-    return 'ResetPasswordState.success()';
-  }
+class _Submitted implements ResetPasswordState {
+  const _Submitted();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SuccessImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() submitted,
-    required TResult Function() success,
-    required TResult Function(String error) error,
-  }) {
-    return success();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? submitted,
-    TResult? Function()? success,
-    TResult? Function(String error)? error,
-  }) {
-    return success?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? submitted,
-    TResult Function()? success,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Submitted value) submitted,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Submitted value)? submitted,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Submitted value)? submitted,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Submitted);
 }
 
-abstract class _Success implements ResetPasswordState {
-  const factory _Success() = _$SuccessImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ResetPasswordState.submitted()';
 }
 
-/// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String error});
+
 }
 
-/// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$ResetPasswordStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of ResetPasswordState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
+
 
 /// @nodoc
 
-class _$ErrorImpl implements _Error {
-  const _$ErrorImpl(this.error);
 
-  @override
-  final String error;
+class _Success implements ResetPasswordState {
+  const _Success();
+  
 
-  @override
-  String toString() {
-    return 'ResetPasswordState.error(error: $error)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
-            (identical(other.error, error) || other.error == error));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of ResetPasswordState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() submitted,
-    required TResult Function() success,
-    required TResult Function(String error) error,
-  }) {
-    return error(this.error);
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? submitted,
-    TResult? Function()? success,
-    TResult? Function(String error)? error,
-  }) {
-    return error?.call(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? submitted,
-    TResult Function()? success,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this.error);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Submitted value) submitted,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Error value) error,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Submitted value)? submitted,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Error value)? error,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Submitted value)? submitted,
-    TResult Function(_Success value)? success,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success);
 }
 
-abstract class _Error implements ResetPasswordState {
-  const factory _Error(final String error) = _$ErrorImpl;
 
-  String get error;
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of ResetPasswordState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'ResetPasswordState.success()';
 }
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Error implements ResetPasswordState {
+  const _Error(this.error);
+  
+
+ final  String error;
+
+/// Create a copy of ResetPasswordState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,error);
+
+@override
+String toString() {
+  return 'ResetPasswordState.error(error: $error)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ErrorCopyWith<$Res> implements $ResetPasswordStateCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ String error
+});
+
+
+
+
+}
+/// @nodoc
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of ResetPasswordState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
+  return _then(_Error(
+null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

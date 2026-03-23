@@ -15,7 +15,7 @@ List<Map<String, dynamic>>? _variantsToJson(
         .toList();
 
 @freezed
-class ProductRequestModel with _$ProductRequestModel {
+abstract class ProductRequestModel with _$ProductRequestModel {
   const factory ProductRequestModel({
     @JsonKey(includeIfNull: false) int? productId,
     @JsonKey(name: 'shop_service_id', includeIfNull: false) int? serviceId,

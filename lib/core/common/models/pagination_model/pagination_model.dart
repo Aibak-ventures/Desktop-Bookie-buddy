@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'pagination_model.freezed.dart';
 
 @freezed
-class PaginationModel<T> with _$PaginationModel<T> {
+abstract class PaginationModel<T> with _$PaginationModel<T> {
   const factory PaginationModel({
     required List<T> data,
     String? nextPageUrl,

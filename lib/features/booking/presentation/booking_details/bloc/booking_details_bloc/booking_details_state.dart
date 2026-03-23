@@ -1,7 +1,7 @@
 part of 'booking_details_bloc.dart';
 
 @freezed
-class BookingDetailsState with _$BookingDetailsState {
+abstract class BookingDetailsState with _$BookingDetailsState {
   const factory BookingDetailsState.loading() = _Loading;
   const factory BookingDetailsState.loaded({
     required BookingDetailsModel booking,

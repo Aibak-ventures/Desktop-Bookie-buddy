@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,2190 +9,992 @@ part of 'all_booking_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$AllBookingEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? status, String? startDate,
-            String? endDate, String? searchQuery)
-        loadBookings,
-    required TResult Function() loadNextPageBookings,
-    required TResult Function(DesktopBookingItemModel? booking,
-            bool shouldRefresh, bool isDeleted)
-        updateBooking,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId) deleteBooking,
-    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
-        markAsCompleted,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult? Function()? loadNextPageBookings,
-    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId)? deleteBooking,
-    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult Function()? loadNextPageBookings,
-    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId)? deleteBooking,
-    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadBookings value) loadBookings,
-    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-    required TResult Function(_UpdateBooking value) updateBooking,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-    required TResult Function(_MarkAsCompleted value) markAsCompleted,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadBookings value)? loadBookings,
-    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult? Function(_UpdateBooking value)? updateBooking,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadBookings value)? loadBookings,
-    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult Function(_UpdateBooking value)? updateBooking,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    TResult Function(_MarkAsCompleted value)? markAsCompleted,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllBookingEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AllBookingEvent()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AllBookingEventCopyWith<$Res> {
-  factory $AllBookingEventCopyWith(
-          AllBookingEvent value, $Res Function(AllBookingEvent) then) =
-      _$AllBookingEventCopyWithImpl<$Res, AllBookingEvent>;
+class $AllBookingEventCopyWith<$Res>  {
+$AllBookingEventCopyWith(AllBookingEvent _, $Res Function(AllBookingEvent) __);
 }
 
-/// @nodoc
-class _$AllBookingEventCopyWithImpl<$Res, $Val extends AllBookingEvent>
-    implements $AllBookingEventCopyWith<$Res> {
-  _$AllBookingEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [AllBookingEvent].
+extension AllBookingEventPatterns on AllBookingEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _LoadBookings value)?  loadBookings,TResult Function( _LoadNextPageBookings value)?  loadNextPageBookings,TResult Function( _UpdateBooking value)?  updateBooking,TResult Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult Function( _DeleteBooking value)?  deleteBooking,TResult Function( _MarkAsCompleted value)?  markAsCompleted,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LoadBookings() when loadBookings != null:
+return loadBookings(_that);case _LoadNextPageBookings() when loadNextPageBookings != null:
+return loadNextPageBookings(_that);case _UpdateBooking() when updateBooking != null:
+return updateBooking(_that);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that);case _MarkAsCompleted() when markAsCompleted != null:
+return markAsCompleted(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _LoadBookings value)  loadBookings,required TResult Function( _LoadNextPageBookings value)  loadNextPageBookings,required TResult Function( _UpdateBooking value)  updateBooking,required TResult Function( _UpdateDeliveryStatus value)  updateDeliveryStatus,required TResult Function( _DeleteBooking value)  deleteBooking,required TResult Function( _MarkAsCompleted value)  markAsCompleted,}){
+final _that = this;
+switch (_that) {
+case _LoadBookings():
+return loadBookings(_that);case _LoadNextPageBookings():
+return loadNextPageBookings(_that);case _UpdateBooking():
+return updateBooking(_that);case _UpdateDeliveryStatus():
+return updateDeliveryStatus(_that);case _DeleteBooking():
+return deleteBooking(_that);case _MarkAsCompleted():
+return markAsCompleted(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _LoadBookings value)?  loadBookings,TResult? Function( _LoadNextPageBookings value)?  loadNextPageBookings,TResult? Function( _UpdateBooking value)?  updateBooking,TResult? Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult? Function( _DeleteBooking value)?  deleteBooking,TResult? Function( _MarkAsCompleted value)?  markAsCompleted,}){
+final _that = this;
+switch (_that) {
+case _LoadBookings() when loadBookings != null:
+return loadBookings(_that);case _LoadNextPageBookings() when loadNextPageBookings != null:
+return loadNextPageBookings(_that);case _UpdateBooking() when updateBooking != null:
+return updateBooking(_that);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that);case _MarkAsCompleted() when markAsCompleted != null:
+return markAsCompleted(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)?  loadBookings,TResult Function()?  loadNextPageBookings,TResult Function( DesktopBookingItemModel? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LoadBookings() when loadBookings != null:
+return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery);case _LoadNextPageBookings() when loadNextPageBookings != null:
+return loadNextPageBookings();case _UpdateBooking() when updateBooking != null:
+return updateBooking(_that.booking,_that.shouldRefresh,_that.isDeleted);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that.bookingId);case _MarkAsCompleted() when markAsCompleted != null:
+return markAsCompleted(_that.bookingId,_that.currentStatus);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)  loadBookings,required TResult Function()  loadNextPageBookings,required TResult Function( DesktopBookingItemModel? booking,  bool shouldRefresh,  bool isDeleted)  updateBooking,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  DeliveryStatus? currentStatus)  markAsCompleted,}) {final _that = this;
+switch (_that) {
+case _LoadBookings():
+return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery);case _LoadNextPageBookings():
+return loadNextPageBookings();case _UpdateBooking():
+return updateBooking(_that.booking,_that.shouldRefresh,_that.isDeleted);case _UpdateDeliveryStatus():
+return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _DeleteBooking():
+return deleteBooking(_that.bookingId);case _MarkAsCompleted():
+return markAsCompleted(_that.bookingId,_that.currentStatus);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)?  loadBookings,TResult? Function()?  loadNextPageBookings,TResult? Function( DesktopBookingItemModel? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,}) {final _that = this;
+switch (_that) {
+case _LoadBookings() when loadBookings != null:
+return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery);case _LoadNextPageBookings() when loadNextPageBookings != null:
+return loadNextPageBookings();case _UpdateBooking() when updateBooking != null:
+return updateBooking(_that.booking,_that.shouldRefresh,_that.isDeleted);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that.bookingId);case _MarkAsCompleted() when markAsCompleted != null:
+return markAsCompleted(_that.bookingId,_that.currentStatus);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$LoadBookingsImplCopyWith<$Res> {
-  factory _$$LoadBookingsImplCopyWith(
-          _$LoadBookingsImpl value, $Res Function(_$LoadBookingsImpl) then) =
-      __$$LoadBookingsImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {String? status,
-      String? startDate,
-      String? endDate,
-      String? searchQuery});
-}
-
-/// @nodoc
-class __$$LoadBookingsImplCopyWithImpl<$Res>
-    extends _$AllBookingEventCopyWithImpl<$Res, _$LoadBookingsImpl>
-    implements _$$LoadBookingsImplCopyWith<$Res> {
-  __$$LoadBookingsImplCopyWithImpl(
-      _$LoadBookingsImpl _value, $Res Function(_$LoadBookingsImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? status = freezed,
-    Object? startDate = freezed,
-    Object? endDate = freezed,
-    Object? searchQuery = freezed,
-  }) {
-    return _then(_$LoadBookingsImpl(
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      startDate: freezed == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      endDate: freezed == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      searchQuery: freezed == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$LoadBookingsImpl implements _LoadBookings {
-  const _$LoadBookingsImpl(
-      {this.status, this.startDate, this.endDate, this.searchQuery});
-
-  @override
-  final String? status;
-  @override
-  final String? startDate;
-  @override
-  final String? endDate;
-  @override
-  final String? searchQuery;
-
-  @override
-  String toString() {
-    return 'AllBookingEvent.loadBookings(status: $status, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadBookingsImpl &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.startDate, startDate) ||
-                other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate) &&
-            (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, status, startDate, endDate, searchQuery);
-
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadBookingsImplCopyWith<_$LoadBookingsImpl> get copyWith =>
-      __$$LoadBookingsImplCopyWithImpl<_$LoadBookingsImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? status, String? startDate,
-            String? endDate, String? searchQuery)
-        loadBookings,
-    required TResult Function() loadNextPageBookings,
-    required TResult Function(DesktopBookingItemModel? booking,
-            bool shouldRefresh, bool isDeleted)
-        updateBooking,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId) deleteBooking,
-    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
-        markAsCompleted,
-  }) {
-    return loadBookings(status, startDate, endDate, searchQuery);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult? Function()? loadNextPageBookings,
-    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId)? deleteBooking,
-    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-  }) {
-    return loadBookings?.call(status, startDate, endDate, searchQuery);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult Function()? loadNextPageBookings,
-    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId)? deleteBooking,
-    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (loadBookings != null) {
-      return loadBookings(status, startDate, endDate, searchQuery);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadBookings value) loadBookings,
-    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-    required TResult Function(_UpdateBooking value) updateBooking,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-    required TResult Function(_MarkAsCompleted value) markAsCompleted,
-  }) {
-    return loadBookings(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadBookings value)? loadBookings,
-    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult? Function(_UpdateBooking value)? updateBooking,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
-  }) {
-    return loadBookings?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadBookings value)? loadBookings,
-    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult Function(_UpdateBooking value)? updateBooking,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    TResult Function(_MarkAsCompleted value)? markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (loadBookings != null) {
-      return loadBookings(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _LoadBookings implements AllBookingEvent {
-  const factory _LoadBookings(
-      {final String? status,
-      final String? startDate,
-      final String? endDate,
-      final String? searchQuery}) = _$LoadBookingsImpl;
-
-  String? get status;
-  String? get startDate;
-  String? get endDate;
-  String? get searchQuery;
-
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadBookingsImplCopyWith<_$LoadBookingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$LoadNextPageBookingsImplCopyWith<$Res> {
-  factory _$$LoadNextPageBookingsImplCopyWith(_$LoadNextPageBookingsImpl value,
-          $Res Function(_$LoadNextPageBookingsImpl) then) =
-      __$$LoadNextPageBookingsImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadNextPageBookingsImplCopyWithImpl<$Res>
-    extends _$AllBookingEventCopyWithImpl<$Res, _$LoadNextPageBookingsImpl>
-    implements _$$LoadNextPageBookingsImplCopyWith<$Res> {
-  __$$LoadNextPageBookingsImplCopyWithImpl(_$LoadNextPageBookingsImpl _value,
-      $Res Function(_$LoadNextPageBookingsImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$LoadNextPageBookingsImpl implements _LoadNextPageBookings {
-  const _$LoadNextPageBookingsImpl();
 
-  @override
-  String toString() {
-    return 'AllBookingEvent.loadNextPageBookings()';
-  }
+class _LoadBookings implements AllBookingEvent {
+  const _LoadBookings({this.status, this.startDate, this.endDate, this.searchQuery});
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadNextPageBookingsImpl);
-  }
+ final  String? status;
+ final  String? startDate;
+ final  String? endDate;
+ final  String? searchQuery;
 
-  @override
-  int get hashCode => runtimeType.hashCode;
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadBookingsCopyWith<_LoadBookings> get copyWith => __$LoadBookingsCopyWithImpl<_LoadBookings>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? status, String? startDate,
-            String? endDate, String? searchQuery)
-        loadBookings,
-    required TResult Function() loadNextPageBookings,
-    required TResult Function(DesktopBookingItemModel? booking,
-            bool shouldRefresh, bool isDeleted)
-        updateBooking,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId) deleteBooking,
-    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
-        markAsCompleted,
-  }) {
-    return loadNextPageBookings();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult? Function()? loadNextPageBookings,
-    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId)? deleteBooking,
-    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-  }) {
-    return loadNextPageBookings?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult Function()? loadNextPageBookings,
-    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId)? deleteBooking,
-    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (loadNextPageBookings != null) {
-      return loadNextPageBookings();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadBookings value) loadBookings,
-    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-    required TResult Function(_UpdateBooking value) updateBooking,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-    required TResult Function(_MarkAsCompleted value) markAsCompleted,
-  }) {
-    return loadNextPageBookings(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadBookings value)? loadBookings,
-    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult? Function(_UpdateBooking value)? updateBooking,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
-  }) {
-    return loadNextPageBookings?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadBookings value)? loadBookings,
-    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult Function(_UpdateBooking value)? updateBooking,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    TResult Function(_MarkAsCompleted value)? markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (loadNextPageBookings != null) {
-      return loadNextPageBookings(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadBookings&&(identical(other.status, status) || other.status == status)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery));
 }
 
-abstract class _LoadNextPageBookings implements AllBookingEvent {
-  const factory _LoadNextPageBookings() = _$LoadNextPageBookingsImpl;
+
+@override
+int get hashCode => Object.hash(runtimeType,status,startDate,endDate,searchQuery);
+
+@override
+String toString() {
+  return 'AllBookingEvent.loadBookings(status: $status, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$UpdateBookingImplCopyWith<$Res> {
-  factory _$$UpdateBookingImplCopyWith(
-          _$UpdateBookingImpl value, $Res Function(_$UpdateBookingImpl) then) =
-      __$$UpdateBookingImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {DesktopBookingItemModel? booking, bool shouldRefresh, bool isDeleted});
+abstract mixin class _$LoadBookingsCopyWith<$Res> implements $AllBookingEventCopyWith<$Res> {
+  factory _$LoadBookingsCopyWith(_LoadBookings value, $Res Function(_LoadBookings) _then) = __$LoadBookingsCopyWithImpl;
+@useResult
+$Res call({
+ String? status, String? startDate, String? endDate, String? searchQuery
+});
 
-  $DesktopBookingItemModelCopyWith<$Res>? get booking;
+
+
+
+}
+/// @nodoc
+class __$LoadBookingsCopyWithImpl<$Res>
+    implements _$LoadBookingsCopyWith<$Res> {
+  __$LoadBookingsCopyWithImpl(this._self, this._then);
+
+  final _LoadBookings _self;
+  final $Res Function(_LoadBookings) _then;
+
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? searchQuery = freezed,}) {
+  return _then(_LoadBookings(
+status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
+as String?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-class __$$UpdateBookingImplCopyWithImpl<$Res>
-    extends _$AllBookingEventCopyWithImpl<$Res, _$UpdateBookingImpl>
-    implements _$$UpdateBookingImplCopyWith<$Res> {
-  __$$UpdateBookingImplCopyWithImpl(
-      _$UpdateBookingImpl _value, $Res Function(_$UpdateBookingImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? booking = freezed,
-    Object? shouldRefresh = null,
-    Object? isDeleted = null,
-  }) {
-    return _then(_$UpdateBookingImpl(
-      freezed == booking
-          ? _value.booking
-          : booking // ignore: cast_nullable_to_non_nullable
-              as DesktopBookingItemModel?,
-      shouldRefresh: null == shouldRefresh
-          ? _value.shouldRefresh
-          : shouldRefresh // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isDeleted: null == isDeleted
-          ? _value.isDeleted
-          : isDeleted // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $DesktopBookingItemModelCopyWith<$Res>? get booking {
-    if (_value.booking == null) {
-      return null;
-    }
-
-    return $DesktopBookingItemModelCopyWith<$Res>(_value.booking!, (value) {
-      return _then(_value.copyWith(booking: value));
-    });
-  }
 }
 
 /// @nodoc
 
-class _$UpdateBookingImpl implements _UpdateBooking {
-  const _$UpdateBookingImpl(this.booking,
-      {this.shouldRefresh = false, this.isDeleted = false});
 
-  @override
-  final DesktopBookingItemModel? booking;
-  @override
-  @JsonKey()
-  final bool shouldRefresh;
-  @override
-  @JsonKey()
-  final bool isDeleted;
+class _LoadNextPageBookings implements AllBookingEvent {
+  const _LoadNextPageBookings();
+  
 
-  @override
-  String toString() {
-    return 'AllBookingEvent.updateBooking(booking: $booking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$UpdateBookingImpl &&
-            (identical(other.booking, booking) || other.booking == booking) &&
-            (identical(other.shouldRefresh, shouldRefresh) ||
-                other.shouldRefresh == shouldRefresh) &&
-            (identical(other.isDeleted, isDeleted) ||
-                other.isDeleted == isDeleted));
-  }
 
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, booking, shouldRefresh, isDeleted);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$UpdateBookingImplCopyWith<_$UpdateBookingImpl> get copyWith =>
-      __$$UpdateBookingImplCopyWithImpl<_$UpdateBookingImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? status, String? startDate,
-            String? endDate, String? searchQuery)
-        loadBookings,
-    required TResult Function() loadNextPageBookings,
-    required TResult Function(DesktopBookingItemModel? booking,
-            bool shouldRefresh, bool isDeleted)
-        updateBooking,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId) deleteBooking,
-    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
-        markAsCompleted,
-  }) {
-    return updateBooking(booking, shouldRefresh, isDeleted);
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult? Function()? loadNextPageBookings,
-    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId)? deleteBooking,
-    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-  }) {
-    return updateBooking?.call(booking, shouldRefresh, isDeleted);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult Function()? loadNextPageBookings,
-    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId)? deleteBooking,
-    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (updateBooking != null) {
-      return updateBooking(booking, shouldRefresh, isDeleted);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadBookings value) loadBookings,
-    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-    required TResult Function(_UpdateBooking value) updateBooking,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-    required TResult Function(_MarkAsCompleted value) markAsCompleted,
-  }) {
-    return updateBooking(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadBookings value)? loadBookings,
-    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult? Function(_UpdateBooking value)? updateBooking,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
-  }) {
-    return updateBooking?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadBookings value)? loadBookings,
-    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult Function(_UpdateBooking value)? updateBooking,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    TResult Function(_MarkAsCompleted value)? markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (updateBooking != null) {
-      return updateBooking(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextPageBookings);
 }
 
-abstract class _UpdateBooking implements AllBookingEvent {
-  const factory _UpdateBooking(final DesktopBookingItemModel? booking,
-      {final bool shouldRefresh, final bool isDeleted}) = _$UpdateBookingImpl;
 
-  DesktopBookingItemModel? get booking;
-  bool get shouldRefresh;
-  bool get isDeleted;
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateBookingImplCopyWith<_$UpdateBookingImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AllBookingEvent.loadNextPageBookings()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _UpdateBooking implements AllBookingEvent {
+  const _UpdateBooking(this.booking, {this.shouldRefresh = false, this.isDeleted = false});
+  
+
+ final  DesktopBookingItemModel? booking;
+@JsonKey() final  bool shouldRefresh;
+@JsonKey() final  bool isDeleted;
+
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateBookingCopyWith<_UpdateBooking> get copyWith => __$UpdateBookingCopyWithImpl<_UpdateBooking>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateBooking&&(identical(other.booking, booking) || other.booking == booking)&&(identical(other.shouldRefresh, shouldRefresh) || other.shouldRefresh == shouldRefresh)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,booking,shouldRefresh,isDeleted);
+
+@override
+String toString() {
+  return 'AllBookingEvent.updateBooking(booking: $booking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$UpdateDeliveryStatusImplCopyWith<$Res> {
-  factory _$$UpdateDeliveryStatusImplCopyWith(_$UpdateDeliveryStatusImpl value,
-          $Res Function(_$UpdateDeliveryStatusImpl) then) =
-      __$$UpdateDeliveryStatusImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int bookingId, DeliveryStatus deliveryStatus});
+abstract mixin class _$UpdateBookingCopyWith<$Res> implements $AllBookingEventCopyWith<$Res> {
+  factory _$UpdateBookingCopyWith(_UpdateBooking value, $Res Function(_UpdateBooking) _then) = __$UpdateBookingCopyWithImpl;
+@useResult
+$Res call({
+ DesktopBookingItemModel? booking, bool shouldRefresh, bool isDeleted
+});
+
+
+$DesktopBookingItemModelCopyWith<$Res>? get booking;
+
+}
+/// @nodoc
+class __$UpdateBookingCopyWithImpl<$Res>
+    implements _$UpdateBookingCopyWith<$Res> {
+  __$UpdateBookingCopyWithImpl(this._self, this._then);
+
+  final _UpdateBooking _self;
+  final $Res Function(_UpdateBooking) _then;
+
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? booking = freezed,Object? shouldRefresh = null,Object? isDeleted = null,}) {
+  return _then(_UpdateBooking(
+freezed == booking ? _self.booking : booking // ignore: cast_nullable_to_non_nullable
+as DesktopBookingItemModel?,shouldRefresh: null == shouldRefresh ? _self.shouldRefresh : shouldRefresh // ignore: cast_nullable_to_non_nullable
+as bool,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-class __$$UpdateDeliveryStatusImplCopyWithImpl<$Res>
-    extends _$AllBookingEventCopyWithImpl<$Res, _$UpdateDeliveryStatusImpl>
-    implements _$$UpdateDeliveryStatusImplCopyWith<$Res> {
-  __$$UpdateDeliveryStatusImplCopyWithImpl(_$UpdateDeliveryStatusImpl _value,
-      $Res Function(_$UpdateDeliveryStatusImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-    Object? deliveryStatus = null,
-  }) {
-    return _then(_$UpdateDeliveryStatusImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-      deliveryStatus: null == deliveryStatus
-          ? _value.deliveryStatus
-          : deliveryStatus // ignore: cast_nullable_to_non_nullable
-              as DeliveryStatus,
-    ));
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DesktopBookingItemModelCopyWith<$Res>? get booking {
+    if (_self.booking == null) {
+    return null;
   }
+
+  return $DesktopBookingItemModelCopyWith<$Res>(_self.booking!, (value) {
+    return _then(_self.copyWith(booking: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
-  const _$UpdateDeliveryStatusImpl(
-      {required this.bookingId, required this.deliveryStatus});
 
-  @override
-  final int bookingId;
-  @override
-  final DeliveryStatus deliveryStatus;
+class _UpdateDeliveryStatus implements AllBookingEvent {
+  const _UpdateDeliveryStatus({required this.bookingId, required this.deliveryStatus});
+  
 
-  @override
-  String toString() {
-    return 'AllBookingEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
-  }
+ final  int bookingId;
+ final  DeliveryStatus deliveryStatus;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$UpdateDeliveryStatusImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId) &&
-            (identical(other.deliveryStatus, deliveryStatus) ||
-                other.deliveryStatus == deliveryStatus));
-  }
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateDeliveryStatusCopyWith<_UpdateDeliveryStatus> get copyWith => __$UpdateDeliveryStatusCopyWithImpl<_UpdateDeliveryStatus>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, bookingId, deliveryStatus);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$UpdateDeliveryStatusImplCopyWith<_$UpdateDeliveryStatusImpl>
-      get copyWith =>
-          __$$UpdateDeliveryStatusImplCopyWithImpl<_$UpdateDeliveryStatusImpl>(
-              this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? status, String? startDate,
-            String? endDate, String? searchQuery)
-        loadBookings,
-    required TResult Function() loadNextPageBookings,
-    required TResult Function(DesktopBookingItemModel? booking,
-            bool shouldRefresh, bool isDeleted)
-        updateBooking,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId) deleteBooking,
-    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
-        markAsCompleted,
-  }) {
-    return updateDeliveryStatus(bookingId, deliveryStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult? Function()? loadNextPageBookings,
-    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId)? deleteBooking,
-    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-  }) {
-    return updateDeliveryStatus?.call(bookingId, deliveryStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult Function()? loadNextPageBookings,
-    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId)? deleteBooking,
-    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (updateDeliveryStatus != null) {
-      return updateDeliveryStatus(bookingId, deliveryStatus);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadBookings value) loadBookings,
-    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-    required TResult Function(_UpdateBooking value) updateBooking,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-    required TResult Function(_MarkAsCompleted value) markAsCompleted,
-  }) {
-    return updateDeliveryStatus(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadBookings value)? loadBookings,
-    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult? Function(_UpdateBooking value)? updateBooking,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
-  }) {
-    return updateDeliveryStatus?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadBookings value)? loadBookings,
-    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult Function(_UpdateBooking value)? updateBooking,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    TResult Function(_MarkAsCompleted value)? markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (updateDeliveryStatus != null) {
-      return updateDeliveryStatus(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateDeliveryStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus));
 }
 
-abstract class _UpdateDeliveryStatus implements AllBookingEvent {
-  const factory _UpdateDeliveryStatus(
-          {required final int bookingId,
-          required final DeliveryStatus deliveryStatus}) =
-      _$UpdateDeliveryStatusImpl;
 
-  int get bookingId;
-  DeliveryStatus get deliveryStatus;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,deliveryStatus);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateDeliveryStatusImplCopyWith<_$UpdateDeliveryStatusImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AllBookingEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$DeleteBookingImplCopyWith<$Res> {
-  factory _$$DeleteBookingImplCopyWith(
-          _$DeleteBookingImpl value, $Res Function(_$DeleteBookingImpl) then) =
-      __$$DeleteBookingImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int bookingId});
+abstract mixin class _$UpdateDeliveryStatusCopyWith<$Res> implements $AllBookingEventCopyWith<$Res> {
+  factory _$UpdateDeliveryStatusCopyWith(_UpdateDeliveryStatus value, $Res Function(_UpdateDeliveryStatus) _then) = __$UpdateDeliveryStatusCopyWithImpl;
+@useResult
+$Res call({
+ int bookingId, DeliveryStatus deliveryStatus
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateDeliveryStatusCopyWithImpl<$Res>
+    implements _$UpdateDeliveryStatusCopyWith<$Res> {
+  __$UpdateDeliveryStatusCopyWithImpl(this._self, this._then);
+
+  final _UpdateDeliveryStatus _self;
+  final $Res Function(_UpdateDeliveryStatus) _then;
+
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? deliveryStatus = null,}) {
+  return _then(_UpdateDeliveryStatus(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,deliveryStatus: null == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
+as DeliveryStatus,
+  ));
 }
 
-/// @nodoc
-class __$$DeleteBookingImplCopyWithImpl<$Res>
-    extends _$AllBookingEventCopyWithImpl<$Res, _$DeleteBookingImpl>
-    implements _$$DeleteBookingImplCopyWith<$Res> {
-  __$$DeleteBookingImplCopyWithImpl(
-      _$DeleteBookingImpl _value, $Res Function(_$DeleteBookingImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-  }) {
-    return _then(_$DeleteBookingImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$DeleteBookingImpl implements _DeleteBooking {
-  const _$DeleteBookingImpl({required this.bookingId});
 
-  @override
-  final int bookingId;
+class _DeleteBooking implements AllBookingEvent {
+  const _DeleteBooking({required this.bookingId});
+  
 
-  @override
-  String toString() {
-    return 'AllBookingEvent.deleteBooking(bookingId: $bookingId)';
-  }
+ final  int bookingId;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeleteBookingImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId));
-  }
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeleteBookingCopyWith<_DeleteBooking> get copyWith => __$DeleteBookingCopyWithImpl<_DeleteBooking>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, bookingId);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeleteBookingImplCopyWith<_$DeleteBookingImpl> get copyWith =>
-      __$$DeleteBookingImplCopyWithImpl<_$DeleteBookingImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? status, String? startDate,
-            String? endDate, String? searchQuery)
-        loadBookings,
-    required TResult Function() loadNextPageBookings,
-    required TResult Function(DesktopBookingItemModel? booking,
-            bool shouldRefresh, bool isDeleted)
-        updateBooking,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId) deleteBooking,
-    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
-        markAsCompleted,
-  }) {
-    return deleteBooking(bookingId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult? Function()? loadNextPageBookings,
-    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId)? deleteBooking,
-    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-  }) {
-    return deleteBooking?.call(bookingId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult Function()? loadNextPageBookings,
-    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId)? deleteBooking,
-    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (deleteBooking != null) {
-      return deleteBooking(bookingId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadBookings value) loadBookings,
-    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-    required TResult Function(_UpdateBooking value) updateBooking,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-    required TResult Function(_MarkAsCompleted value) markAsCompleted,
-  }) {
-    return deleteBooking(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadBookings value)? loadBookings,
-    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult? Function(_UpdateBooking value)? updateBooking,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
-  }) {
-    return deleteBooking?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadBookings value)? loadBookings,
-    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult Function(_UpdateBooking value)? updateBooking,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    TResult Function(_MarkAsCompleted value)? markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (deleteBooking != null) {
-      return deleteBooking(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
 }
 
-abstract class _DeleteBooking implements AllBookingEvent {
-  const factory _DeleteBooking({required final int bookingId}) =
-      _$DeleteBookingImpl;
 
-  int get bookingId;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DeleteBookingImplCopyWith<_$DeleteBookingImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AllBookingEvent.deleteBooking(bookingId: $bookingId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$MarkAsCompletedImplCopyWith<$Res> {
-  factory _$$MarkAsCompletedImplCopyWith(_$MarkAsCompletedImpl value,
-          $Res Function(_$MarkAsCompletedImpl) then) =
-      __$$MarkAsCompletedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int bookingId, DeliveryStatus? currentStatus});
+abstract mixin class _$DeleteBookingCopyWith<$Res> implements $AllBookingEventCopyWith<$Res> {
+  factory _$DeleteBookingCopyWith(_DeleteBooking value, $Res Function(_DeleteBooking) _then) = __$DeleteBookingCopyWithImpl;
+@useResult
+$Res call({
+ int bookingId
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeleteBookingCopyWithImpl<$Res>
+    implements _$DeleteBookingCopyWith<$Res> {
+  __$DeleteBookingCopyWithImpl(this._self, this._then);
+
+  final _DeleteBooking _self;
+  final $Res Function(_DeleteBooking) _then;
+
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? bookingId = null,}) {
+  return _then(_DeleteBooking(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-class __$$MarkAsCompletedImplCopyWithImpl<$Res>
-    extends _$AllBookingEventCopyWithImpl<$Res, _$MarkAsCompletedImpl>
-    implements _$$MarkAsCompletedImplCopyWith<$Res> {
-  __$$MarkAsCompletedImplCopyWithImpl(
-      _$MarkAsCompletedImpl _value, $Res Function(_$MarkAsCompletedImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-    Object? currentStatus = freezed,
-  }) {
-    return _then(_$MarkAsCompletedImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentStatus: freezed == currentStatus
-          ? _value.currentStatus
-          : currentStatus // ignore: cast_nullable_to_non_nullable
-              as DeliveryStatus?,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$MarkAsCompletedImpl implements _MarkAsCompleted {
-  const _$MarkAsCompletedImpl(
-      {required this.bookingId, required this.currentStatus});
 
-  @override
-  final int bookingId;
-  @override
-  final DeliveryStatus? currentStatus;
+class _MarkAsCompleted implements AllBookingEvent {
+  const _MarkAsCompleted({required this.bookingId, required this.currentStatus});
+  
 
-  @override
-  String toString() {
-    return 'AllBookingEvent.markAsCompleted(bookingId: $bookingId, currentStatus: $currentStatus)';
-  }
+ final  int bookingId;
+ final  DeliveryStatus? currentStatus;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MarkAsCompletedImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId) &&
-            (identical(other.currentStatus, currentStatus) ||
-                other.currentStatus == currentStatus));
-  }
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MarkAsCompletedCopyWith<_MarkAsCompleted> get copyWith => __$MarkAsCompletedCopyWithImpl<_MarkAsCompleted>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, bookingId, currentStatus);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MarkAsCompletedImplCopyWith<_$MarkAsCompletedImpl> get copyWith =>
-      __$$MarkAsCompletedImplCopyWithImpl<_$MarkAsCompletedImpl>(
-          this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String? status, String? startDate,
-            String? endDate, String? searchQuery)
-        loadBookings,
-    required TResult Function() loadNextPageBookings,
-    required TResult Function(DesktopBookingItemModel? booking,
-            bool shouldRefresh, bool isDeleted)
-        updateBooking,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId) deleteBooking,
-    required TResult Function(int bookingId, DeliveryStatus? currentStatus)
-        markAsCompleted,
-  }) {
-    return markAsCompleted(bookingId, currentStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult? Function()? loadNextPageBookings,
-    TResult? Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId)? deleteBooking,
-    TResult? Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-  }) {
-    return markAsCompleted?.call(bookingId, currentStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? status, String? startDate, String? endDate,
-            String? searchQuery)?
-        loadBookings,
-    TResult Function()? loadNextPageBookings,
-    TResult Function(DesktopBookingItemModel? booking, bool shouldRefresh,
-            bool isDeleted)?
-        updateBooking,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId)? deleteBooking,
-    TResult Function(int bookingId, DeliveryStatus? currentStatus)?
-        markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (markAsCompleted != null) {
-      return markAsCompleted(bookingId, currentStatus);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadBookings value) loadBookings,
-    required TResult Function(_LoadNextPageBookings value) loadNextPageBookings,
-    required TResult Function(_UpdateBooking value) updateBooking,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-    required TResult Function(_MarkAsCompleted value) markAsCompleted,
-  }) {
-    return markAsCompleted(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadBookings value)? loadBookings,
-    TResult? Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult? Function(_UpdateBooking value)? updateBooking,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-    TResult? Function(_MarkAsCompleted value)? markAsCompleted,
-  }) {
-    return markAsCompleted?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadBookings value)? loadBookings,
-    TResult Function(_LoadNextPageBookings value)? loadNextPageBookings,
-    TResult Function(_UpdateBooking value)? updateBooking,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    TResult Function(_MarkAsCompleted value)? markAsCompleted,
-    required TResult orElse(),
-  }) {
-    if (markAsCompleted != null) {
-      return markAsCompleted(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkAsCompleted&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus));
 }
 
-abstract class _MarkAsCompleted implements AllBookingEvent {
-  const factory _MarkAsCompleted(
-      {required final int bookingId,
-      required final DeliveryStatus? currentStatus}) = _$MarkAsCompletedImpl;
 
-  int get bookingId;
-  DeliveryStatus? get currentStatus;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,currentStatus);
 
-  /// Create a copy of AllBookingEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MarkAsCompletedImplCopyWith<_$MarkAsCompletedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AllBookingEvent.markAsCompleted(bookingId: $bookingId, currentStatus: $currentStatus)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MarkAsCompletedCopyWith<$Res> implements $AllBookingEventCopyWith<$Res> {
+  factory _$MarkAsCompletedCopyWith(_MarkAsCompleted value, $Res Function(_MarkAsCompleted) _then) = __$MarkAsCompletedCopyWithImpl;
+@useResult
+$Res call({
+ int bookingId, DeliveryStatus? currentStatus
+});
+
+
+
+
+}
+/// @nodoc
+class __$MarkAsCompletedCopyWithImpl<$Res>
+    implements _$MarkAsCompletedCopyWith<$Res> {
+  __$MarkAsCompletedCopyWithImpl(this._self, this._then);
+
+  final _MarkAsCompleted _self;
+  final $Res Function(_MarkAsCompleted) _then;
+
+/// Create a copy of AllBookingEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? currentStatus = freezed,}) {
+  return _then(_MarkAsCompleted(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
+as DeliveryStatus?,
+  ));
+}
+
+
 }
 
 /// @nodoc
 mixin _$AllBookingState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)
-        loaded,
-    required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllBookingState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AllBookingState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AllBookingStateCopyWith<$Res> {
-  factory $AllBookingStateCopyWith(
-          AllBookingState value, $Res Function(AllBookingState) then) =
-      _$AllBookingStateCopyWithImpl<$Res, AllBookingState>;
+class $AllBookingStateCopyWith<$Res>  {
+$AllBookingStateCopyWith(AllBookingState _, $Res Function(AllBookingState) __);
 }
 
-/// @nodoc
-class _$AllBookingStateCopyWithImpl<$Res, $Val extends AllBookingState>
-    implements $AllBookingStateCopyWith<$Res> {
-  _$AllBookingStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [AllBookingState].
+extension AllBookingStatePatterns on AllBookingState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Error value)?  error,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Error() when error != null:
+return error(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Error value)  error,}){
+final _that = this;
+switch (_that) {
+case _Initial():
+return initial(_that);case _Loading():
+return loading(_that);case _Loaded():
+return loaded(_that);case _Error():
+return error(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Error value)?  error,}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Error() when error != null:
+return error(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DesktopBookingItemModel> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsModel? statusCounts,  String? actionError)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.bookings,_that.nextPageUrl,_that.isPaginating,_that.startDate,_that.endDate,_that.searchQuery,_that.status,_that.statusCounts,_that.actionError);case _Error() when error != null:
+return error(_that.error);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DesktopBookingItemModel> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsModel? statusCounts,  String? actionError)  loaded,required TResult Function( String error)  error,}) {final _that = this;
+switch (_that) {
+case _Initial():
+return initial();case _Loading():
+return loading();case _Loaded():
+return loaded(_that.bookings,_that.nextPageUrl,_that.isPaginating,_that.startDate,_that.endDate,_that.searchQuery,_that.status,_that.statusCounts,_that.actionError);case _Error():
+return error(_that.error);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DesktopBookingItemModel> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsModel? statusCounts,  String? actionError)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.bookings,_that.nextPageUrl,_that.isPaginating,_that.startDate,_that.endDate,_that.searchQuery,_that.status,_that.statusCounts,_that.actionError);case _Error() when error != null:
+return error(_that.error);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$AllBookingStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$InitialImpl implements _Initial {
-  const _$InitialImpl();
-
-  @override
-  String toString() {
-    return 'AllBookingState.initial()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)
-        loaded,
-    required TResult Function(String error) error,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Initial implements AllBookingState {
-  const factory _Initial() = _$InitialImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$AllBookingStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
 
-  @override
-  String toString() {
-    return 'AllBookingState.loading()';
-  }
+class _Initial implements AllBookingState {
+  const _Initial();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)
-        loaded,
-    required TResult Function(String error) error,
-  }) {
-    return loading();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return loading?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
-abstract class _Loading implements AllBookingState {
-  const factory _Loading() = _$LoadingImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AllBookingState.initial()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Loading implements AllBookingState {
+  const _Loading();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AllBookingState.loading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Loaded implements AllBookingState {
+  const _Loaded({required final  List<DesktopBookingItemModel> bookings, this.nextPageUrl, this.isPaginating = false, this.startDate, this.endDate, this.searchQuery, this.status, this.statusCounts, this.actionError}): _bookings = bookings;
+  
+
+ final  List<DesktopBookingItemModel> _bookings;
+ List<DesktopBookingItemModel> get bookings {
+  if (_bookings is EqualUnmodifiableListView) return _bookings;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_bookings);
+}
+
+ final  String? nextPageUrl;
+@JsonKey() final  bool isPaginating;
+ final  String? startDate;
+ final  String? endDate;
+ final  String? searchQuery;
+ final  String? status;
+ final  StatusCountsModel? statusCounts;
+ final  String? actionError;
+
+/// Create a copy of AllBookingState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._bookings, _bookings)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.status, status) || other.status == status)&&(identical(other.statusCounts, statusCounts) || other.statusCounts == statusCounts)&&(identical(other.actionError, actionError) || other.actionError == actionError));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_bookings),nextPageUrl,isPaginating,startDate,endDate,searchQuery,status,statusCounts,actionError);
+
+@override
+String toString() {
+  return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, status: $status, statusCounts: $statusCounts, actionError: $actionError)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$LoadedImplCopyWith<$Res> {
-  factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
-      __$$LoadedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {List<DesktopBookingItemModel> bookings,
-      String? nextPageUrl,
-      bool isPaginating,
-      String? startDate,
-      String? endDate,
-      String? searchQuery,
-      String? status,
-      StatusCountsModel? statusCounts,
-      String? actionError});
+abstract mixin class _$LoadedCopyWith<$Res> implements $AllBookingStateCopyWith<$Res> {
+  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
+@useResult
+$Res call({
+ List<DesktopBookingItemModel> bookings, String? nextPageUrl, bool isPaginating, String? startDate, String? endDate, String? searchQuery, String? status, StatusCountsModel? statusCounts, String? actionError
+});
 
-  $StatusCountsModelCopyWith<$Res>? get statusCounts;
+
+$StatusCountsModelCopyWith<$Res>? get statusCounts;
+
+}
+/// @nodoc
+class __$LoadedCopyWithImpl<$Res>
+    implements _$LoadedCopyWith<$Res> {
+  __$LoadedCopyWithImpl(this._self, this._then);
+
+  final _Loaded _self;
+  final $Res Function(_Loaded) _then;
+
+/// Create a copy of AllBookingState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? bookings = null,Object? nextPageUrl = freezed,Object? isPaginating = null,Object? startDate = freezed,Object? endDate = freezed,Object? searchQuery = freezed,Object? status = freezed,Object? statusCounts = freezed,Object? actionError = freezed,}) {
+  return _then(_Loaded(
+bookings: null == bookings ? _self._bookings : bookings // ignore: cast_nullable_to_non_nullable
+as List<DesktopBookingItemModel>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
+as String?,isPaginating: null == isPaginating ? _self.isPaginating : isPaginating // ignore: cast_nullable_to_non_nullable
+as bool,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
+as String?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,statusCounts: freezed == statusCounts ? _self.statusCounts : statusCounts // ignore: cast_nullable_to_non_nullable
+as StatusCountsModel?,actionError: freezed == actionError ? _self.actionError : actionError // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$AllBookingStateCopyWithImpl<$Res, _$LoadedImpl>
-    implements _$$LoadedImplCopyWith<$Res> {
-  __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookings = null,
-    Object? nextPageUrl = freezed,
-    Object? isPaginating = null,
-    Object? startDate = freezed,
-    Object? endDate = freezed,
-    Object? searchQuery = freezed,
-    Object? status = freezed,
-    Object? statusCounts = freezed,
-    Object? actionError = freezed,
-  }) {
-    return _then(_$LoadedImpl(
-      bookings: null == bookings
-          ? _value._bookings
-          : bookings // ignore: cast_nullable_to_non_nullable
-              as List<DesktopBookingItemModel>,
-      nextPageUrl: freezed == nextPageUrl
-          ? _value.nextPageUrl
-          : nextPageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPaginating: null == isPaginating
-          ? _value.isPaginating
-          : isPaginating // ignore: cast_nullable_to_non_nullable
-              as bool,
-      startDate: freezed == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      endDate: freezed == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      searchQuery: freezed == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      statusCounts: freezed == statusCounts
-          ? _value.statusCounts
-          : statusCounts // ignore: cast_nullable_to_non_nullable
-              as StatusCountsModel?,
-      actionError: freezed == actionError
-          ? _value.actionError
-          : actionError // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+/// Create a copy of AllBookingState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$StatusCountsModelCopyWith<$Res>? get statusCounts {
+    if (_self.statusCounts == null) {
+    return null;
   }
 
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $StatusCountsModelCopyWith<$Res>? get statusCounts {
-    if (_value.statusCounts == null) {
-      return null;
-    }
-
-    return $StatusCountsModelCopyWith<$Res>(_value.statusCounts!, (value) {
-      return _then(_value.copyWith(statusCounts: value));
-    });
-  }
+  return $StatusCountsModelCopyWith<$Res>(_self.statusCounts!, (value) {
+    return _then(_self.copyWith(statusCounts: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(
-      {required final List<DesktopBookingItemModel> bookings,
-      this.nextPageUrl,
-      this.isPaginating = false,
-      this.startDate,
-      this.endDate,
-      this.searchQuery,
-      this.status,
-      this.statusCounts,
-      this.actionError})
-      : _bookings = bookings;
 
-  final List<DesktopBookingItemModel> _bookings;
-  @override
-  List<DesktopBookingItemModel> get bookings {
-    if (_bookings is EqualUnmodifiableListView) return _bookings;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_bookings);
-  }
+class _Error implements AllBookingState {
+  const _Error(this.error);
+  
 
-  @override
-  final String? nextPageUrl;
-  @override
-  @JsonKey()
-  final bool isPaginating;
-  @override
-  final String? startDate;
-  @override
-  final String? endDate;
-  @override
-  final String? searchQuery;
-  @override
-  final String? status;
-  @override
-  final StatusCountsModel? statusCounts;
-  @override
-  final String? actionError;
+ final  String error;
 
-  @override
-  String toString() {
-    return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, status: $status, statusCounts: $statusCounts, actionError: $actionError)';
-  }
+/// Create a copy of AllBookingState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(other._bookings, _bookings) &&
-            (identical(other.nextPageUrl, nextPageUrl) ||
-                other.nextPageUrl == nextPageUrl) &&
-            (identical(other.isPaginating, isPaginating) ||
-                other.isPaginating == isPaginating) &&
-            (identical(other.startDate, startDate) ||
-                other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate) &&
-            (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.statusCounts, statusCounts) ||
-                other.statusCounts == statusCounts) &&
-            (identical(other.actionError, actionError) ||
-                other.actionError == actionError));
-  }
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_bookings),
-      nextPageUrl,
-      isPaginating,
-      startDate,
-      endDate,
-      searchQuery,
-      status,
-      statusCounts,
-      actionError);
 
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)
-        loaded,
-    required TResult Function(String error) error,
-  }) {
-    return loaded(bookings, nextPageUrl, isPaginating, startDate, endDate,
-        searchQuery, status, statusCounts, actionError);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return loaded?.call(bookings, nextPageUrl, isPaginating, startDate, endDate,
-        searchQuery, status, statusCounts, actionError);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(bookings, nextPageUrl, isPaginating, startDate, endDate,
-          searchQuery, status, statusCounts, actionError);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return loaded(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loaded?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
-abstract class _Loaded implements AllBookingState {
-  const factory _Loaded(
-      {required final List<DesktopBookingItemModel> bookings,
-      final String? nextPageUrl,
-      final bool isPaginating,
-      final String? startDate,
-      final String? endDate,
-      final String? searchQuery,
-      final String? status,
-      final StatusCountsModel? statusCounts,
-      final String? actionError}) = _$LoadedImpl;
 
-  List<DesktopBookingItemModel> get bookings;
-  String? get nextPageUrl;
-  bool get isPaginating;
-  String? get startDate;
-  String? get endDate;
-  String? get searchQuery;
-  String? get status;
-  StatusCountsModel? get statusCounts;
-  String? get actionError;
+@override
+int get hashCode => Object.hash(runtimeType,error);
 
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AllBookingState.error(error: $error)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String error});
-}
+abstract mixin class _$ErrorCopyWith<$Res> implements $AllBookingStateCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ String error
+});
 
+
+
+
+}
 /// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$AllBookingStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
 
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of AllBookingState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
+  return _then(_Error(
+null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
 
-class _$ErrorImpl implements _Error {
-  const _$ErrorImpl(this.error);
-
-  @override
-  final String error;
-
-  @override
-  String toString() {
-    return 'AllBookingState.error(error: $error)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
-            (identical(other.error, error) || other.error == error));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, error);
-
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)
-        loaded,
-    required TResult Function(String error) error,
-  }) {
-    return error(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return error?.call(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-            List<DesktopBookingItemModel> bookings,
-            String? nextPageUrl,
-            bool isPaginating,
-            String? startDate,
-            String? endDate,
-            String? searchQuery,
-            String? status,
-            StatusCountsModel? statusCounts,
-            String? actionError)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this.error);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _Error implements AllBookingState {
-  const factory _Error(final String error) = _$ErrorImpl;
-
-  String get error;
-
-  /// Create a copy of AllBookingState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

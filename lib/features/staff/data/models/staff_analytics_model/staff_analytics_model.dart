@@ -6,7 +6,7 @@ part 'staff_analytics_model.freezed.dart';
 part 'staff_analytics_model.g.dart';
 
 @freezed
-class StaffAnalyticsModel with _$StaffAnalyticsModel {
+abstract class StaffAnalyticsModel with _$StaffAnalyticsModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory StaffAnalyticsModel({
     required int staffId,

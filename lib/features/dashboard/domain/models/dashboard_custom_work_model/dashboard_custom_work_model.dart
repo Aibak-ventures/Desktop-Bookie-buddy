@@ -5,7 +5,7 @@ part 'dashboard_custom_work_model.freezed.dart';
 part 'dashboard_custom_work_model.g.dart';
 
 @freezed
-class DashboardCustomWorkModel with _$DashboardCustomWorkModel {
+abstract class DashboardCustomWorkModel with _$DashboardCustomWorkModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory DashboardCustomWorkModel({
     required int id,

@@ -6,9 +6,8 @@ part of 'custom_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CustomResponseModelImpl _$$CustomResponseModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CustomResponseModelImpl(
+_CustomResponseModel _$CustomResponseModelFromJson(Map<String, dynamic> json) =>
+    _CustomResponseModel(
       status: CustomResponseStatus.fromString(json['status'] as String),
       message: json['message'] as String? ?? '',
       devMessage: json['dev_message'] ?? '',
@@ -16,12 +15,12 @@ _$CustomResponseModelImpl _$$CustomResponseModelImplFromJson(
       data: json['data'],
     );
 
-Map<String, dynamic> _$$CustomResponseModelImplToJson(
-        _$CustomResponseModelImpl instance) =>
-    <String, dynamic>{
-      'status': CustomResponseStatus.toJson(instance.status),
-      'message': instance.message,
-      'dev_message': instance.devMessage,
-      if (instance.meta case final value?) 'meta': value,
-      'data': instance.data,
-    };
+Map<String, dynamic> _$CustomResponseModelToJson(
+  _CustomResponseModel instance,
+) => <String, dynamic>{
+  'status': CustomResponseStatus.toJson(instance.status),
+  'message': instance.message,
+  'dev_message': instance.devMessage,
+  'meta': ?instance.meta,
+  'data': instance.data,
+};

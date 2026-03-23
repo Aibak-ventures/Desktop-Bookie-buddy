@@ -6,9 +6,8 @@ part of 'shop_settings_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ShopSettingsModelImpl _$$ShopSettingsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ShopSettingsModelImpl(
+_ShopSettingsModel _$ShopSettingsModelFromJson(Map<String, dynamic> json) =>
+    _ShopSettingsModel(
       coolingPeriodDuration: (json['cooling_days'] as num?)?.toInt() ?? 0,
       coolingPeriodMode: json['cooling_period_mode'] == null
           ? CoolingPeriodMode.after
@@ -16,12 +15,12 @@ _$ShopSettingsModelImpl _$$ShopSettingsModelImplFromJson(
       addButtonDefaultAction: json['default_action'] == null
           ? AddButtonDefaultAction.booking
           : AddButtonDefaultAction.fromString(
-              json['default_action'] as String?),
+              json['default_action'] as String?,
+            ),
       searchClient: json['search_client'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$ShopSettingsModelImplToJson(
-        _$ShopSettingsModelImpl instance) =>
+Map<String, dynamic> _$ShopSettingsModelToJson(_ShopSettingsModel instance) =>
     <String, dynamic>{
       'cooling_days': instance.coolingPeriodDuration,
       'cooling_period_mode': instance.coolingPeriodMode,

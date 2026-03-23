@@ -6,9 +6,8 @@ part of 'request_sales_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RequestSalesModelImpl _$$RequestSalesModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RequestSalesModelImpl(
+_RequestSalesModel _$RequestSalesModelFromJson(Map<String, dynamic> json) =>
+    _RequestSalesModel(
       staffId: (json['staff_id'] as num?)?.toInt(),
       clientPhone: json['client_phone'] as String?,
       clientAddress: json['client_address'] as String?,
@@ -19,25 +18,26 @@ _$RequestSalesModelImpl _$$RequestSalesModelImplFromJson(
           ?.map((e) => e as Map<String, dynamic>)
           .toList(),
       paidAmount: (json['paid_amount'] as num?)?.toInt(),
-      paymentMethod:
-          $enumDecodeNullable(_$PaymentMethodEnumMap, json['payment_method']),
+      paymentMethod: $enumDecodeNullable(
+        _$PaymentMethodEnumMap,
+        json['payment_method'],
+      ),
       discount: (json['discount'] as num?)?.toInt(),
       decreaseStock: json['decrease_stock'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$RequestSalesModelImplToJson(
-        _$RequestSalesModelImpl instance) =>
+Map<String, dynamic> _$RequestSalesModelToJson(_RequestSalesModel instance) =>
     <String, dynamic>{
-      if (instance.staffId case final value?) 'staff_id': value,
-      if (instance.clientPhone case final value?) 'client_phone': value,
-      if (instance.clientAddress case final value?) 'client_address': value,
-      if (instance.saleDate case final value?) 'sale_date': value,
-      if (instance.description case final value?) 'description': value,
+      'staff_id': ?instance.staffId,
+      'client_phone': ?instance.clientPhone,
+      'client_address': ?instance.clientAddress,
+      'sale_date': ?instance.saleDate,
+      'description': ?instance.description,
       'send_invoice': instance.sendInvoice,
-      if (instance.variants case final value?) 'variants': value,
-      if (instance.paidAmount case final value?) 'paid_amount': value,
-      if (instance.paymentMethod case final value?) 'payment_method': value,
-      if (instance.discount case final value?) 'discount': value,
+      'variants': ?instance.variants,
+      'paid_amount': ?instance.paidAmount,
+      'payment_method': ?instance.paymentMethod,
+      'discount': ?instance.discount,
       'decrease_stock': instance.decreaseStock,
     };
 

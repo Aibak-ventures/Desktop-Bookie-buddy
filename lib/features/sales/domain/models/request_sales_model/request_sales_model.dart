@@ -6,7 +6,7 @@ part 'request_sales_model.g.dart';
 
 /// Model for creating a sale
 @freezed
-class RequestSalesModel with _$RequestSalesModel {
+abstract class RequestSalesModel with _$RequestSalesModel {
   @JsonSerializable(includeIfNull: false)
   const factory RequestSalesModel({
     @JsonKey(name: 'staff_id') int? staffId,

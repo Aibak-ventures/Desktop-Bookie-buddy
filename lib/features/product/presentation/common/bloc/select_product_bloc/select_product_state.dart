@@ -1,7 +1,7 @@
 part of 'select_product_bloc.dart';
 
 @freezed
-class SelectProductState with _$SelectProductState {
+abstract class SelectProductState with _$SelectProductState {
   const factory SelectProductState.loading() = _Loading;
   const factory SelectProductState.loaded({
     required List<ProductModel> products,

@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,188 +9,272 @@ part of 'client_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$ClientEntity {
-  int? get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  int get phone1 => throw _privateConstructorUsedError;
-  int? get phone2 => throw _privateConstructorUsedError;
 
-  /// Create a copy of ClientEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ClientEntityCopyWith<ClientEntity> get copyWith =>
-      throw _privateConstructorUsedError;
+ int? get id; String get name; int get phone1; int? get phone2;
+/// Create a copy of ClientEntity
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ClientEntityCopyWith<ClientEntity> get copyWith => _$ClientEntityCopyWithImpl<ClientEntity>(this as ClientEntity, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2);
+
+@override
+String toString() {
+  return 'ClientEntity(id: $id, name: $name, phone1: $phone1, phone2: $phone2)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ClientEntityCopyWith<$Res> {
-  factory $ClientEntityCopyWith(
-          ClientEntity value, $Res Function(ClientEntity) then) =
-      _$ClientEntityCopyWithImpl<$Res, ClientEntity>;
-  @useResult
-  $Res call({int? id, String name, int phone1, int? phone2});
-}
+abstract mixin class $ClientEntityCopyWith<$Res>  {
+  factory $ClientEntityCopyWith(ClientEntity value, $Res Function(ClientEntity) _then) = _$ClientEntityCopyWithImpl;
+@useResult
+$Res call({
+ int? id, String name, int phone1, int? phone2
+});
 
+
+
+
+}
 /// @nodoc
-class _$ClientEntityCopyWithImpl<$Res, $Val extends ClientEntity>
+class _$ClientEntityCopyWithImpl<$Res>
     implements $ClientEntityCopyWith<$Res> {
-  _$ClientEntityCopyWithImpl(this._value, this._then);
+  _$ClientEntityCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ClientEntity _self;
+  final $Res Function(ClientEntity) _then;
 
-  /// Create a copy of ClientEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = freezed,
-    Object? name = null,
-    Object? phone1 = null,
-    Object? phone2 = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone1: null == phone1
-          ? _value.phone1
-          : phone1 // ignore: cast_nullable_to_non_nullable
-              as int,
-      phone2: freezed == phone2
-          ? _value.phone2
-          : phone2 // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
-  }
+/// Create a copy of ClientEntity
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? phone1 = null,Object? phone2 = freezed,}) {
+  return _then(_self.copyWith(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,phone1: null == phone1 ? _self.phone1 : phone1 // ignore: cast_nullable_to_non_nullable
+as int,phone2: freezed == phone2 ? _self.phone2 : phone2 // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ClientEntity].
+extension ClientEntityPatterns on ClientEntity {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ClientEntity value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ClientEntity() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ClientEntity value)  $default,){
+final _that = this;
+switch (_that) {
+case _ClientEntity():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ClientEntity value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ClientEntity() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  int phone1,  int? phone2)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ClientEntity() when $default != null:
+return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  int phone1,  int? phone2)  $default,) {final _that = this;
+switch (_that) {
+case _ClientEntity():
+return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  int phone1,  int? phone2)?  $default,) {final _that = this;
+switch (_that) {
+case _ClientEntity() when $default != null:
+return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$ClientEntityImplCopyWith<$Res>
-    implements $ClientEntityCopyWith<$Res> {
-  factory _$$ClientEntityImplCopyWith(
-          _$ClientEntityImpl value, $Res Function(_$ClientEntityImpl) then) =
-      __$$ClientEntityImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int? id, String name, int phone1, int? phone2});
+
+
+class _ClientEntity implements ClientEntity {
+  const _ClientEntity({this.id, required this.name, required this.phone1, this.phone2});
+  
+
+@override final  int? id;
+@override final  String name;
+@override final  int phone1;
+@override final  int? phone2;
+
+/// Create a copy of ClientEntity
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ClientEntityCopyWith<_ClientEntity> get copyWith => __$ClientEntityCopyWithImpl<_ClientEntity>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2);
+
+@override
+String toString() {
+  return 'ClientEntity(id: $id, name: $name, phone1: $phone1, phone2: $phone2)';
+}
+
+
 }
 
 /// @nodoc
-class __$$ClientEntityImplCopyWithImpl<$Res>
-    extends _$ClientEntityCopyWithImpl<$Res, _$ClientEntityImpl>
-    implements _$$ClientEntityImplCopyWith<$Res> {
-  __$$ClientEntityImplCopyWithImpl(
-      _$ClientEntityImpl _value, $Res Function(_$ClientEntityImpl) _then)
-      : super(_value, _then);
+abstract mixin class _$ClientEntityCopyWith<$Res> implements $ClientEntityCopyWith<$Res> {
+  factory _$ClientEntityCopyWith(_ClientEntity value, $Res Function(_ClientEntity) _then) = __$ClientEntityCopyWithImpl;
+@override @useResult
+$Res call({
+ int? id, String name, int phone1, int? phone2
+});
 
-  /// Create a copy of ClientEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = freezed,
-    Object? name = null,
-    Object? phone1 = null,
-    Object? phone2 = freezed,
-  }) {
-    return _then(_$ClientEntityImpl(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone1: null == phone1
-          ? _value.phone1
-          : phone1 // ignore: cast_nullable_to_non_nullable
-              as int,
-      phone2: freezed == phone2
-          ? _value.phone2
-          : phone2 // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
-  }
+
+
+
 }
-
 /// @nodoc
+class __$ClientEntityCopyWithImpl<$Res>
+    implements _$ClientEntityCopyWith<$Res> {
+  __$ClientEntityCopyWithImpl(this._self, this._then);
 
-class _$ClientEntityImpl implements _ClientEntity {
-  const _$ClientEntityImpl(
-      {this.id, required this.name, required this.phone1, this.phone2});
+  final _ClientEntity _self;
+  final $Res Function(_ClientEntity) _then;
 
-  @override
-  final int? id;
-  @override
-  final String name;
-  @override
-  final int phone1;
-  @override
-  final int? phone2;
-
-  @override
-  String toString() {
-    return 'ClientEntity(id: $id, name: $name, phone1: $phone1, phone2: $phone2)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ClientEntityImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.phone1, phone1) || other.phone1 == phone1) &&
-            (identical(other.phone2, phone2) || other.phone2 == phone2));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, id, name, phone1, phone2);
-
-  /// Create a copy of ClientEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ClientEntityImplCopyWith<_$ClientEntityImpl> get copyWith =>
-      __$$ClientEntityImplCopyWithImpl<_$ClientEntityImpl>(this, _$identity);
+/// Create a copy of ClientEntity
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? phone1 = null,Object? phone2 = freezed,}) {
+  return _then(_ClientEntity(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,phone1: null == phone1 ? _self.phone1 : phone1 // ignore: cast_nullable_to_non_nullable
+as int,phone2: freezed == phone2 ? _self.phone2 : phone2 // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
 }
 
-abstract class _ClientEntity implements ClientEntity {
-  const factory _ClientEntity(
-      {final int? id,
-      required final String name,
-      required final int phone1,
-      final int? phone2}) = _$ClientEntityImpl;
 
-  @override
-  int? get id;
-  @override
-  String get name;
-  @override
-  int get phone1;
-  @override
-  int? get phone2;
-
-  /// Create a copy of ClientEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ClientEntityImplCopyWith<_$ClientEntityImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
+
+// dart format on

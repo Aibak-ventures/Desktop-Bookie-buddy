@@ -1,7 +1,7 @@
 part of 'select_product_bloc.dart';
 
 @freezed
-class SelectProductEvent with _$SelectProductEvent {
+abstract class SelectProductEvent with _$SelectProductEvent {
   const factory SelectProductEvent.loadProducts({
     int? serviceId,
     required String pickupDate,

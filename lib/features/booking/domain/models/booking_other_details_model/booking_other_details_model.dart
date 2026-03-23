@@ -4,7 +4,7 @@ part 'booking_other_details_model.freezed.dart';
 part 'booking_other_details_model.g.dart';
 
 @freezed
-class BookingOtherDetailsModel with _$BookingOtherDetailsModel {
+abstract class BookingOtherDetailsModel with _$BookingOtherDetailsModel {
   @JsonSerializable(
     fieldRename: FieldRename.snake,
     includeIfNull: false,

@@ -32,7 +32,7 @@ List<UserPasswordSettingsModel> _passwordSettingsFromJson(
 }
 
 @freezed
-class UserModel with _$UserModel {
+abstract class UserModel with _$UserModel {
   const factory UserModel({
     required int id,
     @JsonKey(name: 'full_name') required String firstName,
@@ -66,7 +66,7 @@ extension UserModelX on UserModel {
 }
 
 @freezed
-class UserSubscriptionModel with _$UserSubscriptionModel {
+abstract class UserSubscriptionModel with _$UserSubscriptionModel {
   const factory UserSubscriptionModel({
     required String plan,
     required String status,
@@ -92,7 +92,7 @@ class UserSubscriptionModel with _$UserSubscriptionModel {
 }
 
 @freezed
-class UserPasswordSettingsModel with _$UserPasswordSettingsModel {
+abstract class UserPasswordSettingsModel with _$UserPasswordSettingsModel {
   const factory UserPasswordSettingsModel({
     required SecretPasswordLocations location,
     required UserPasswordSettingRole role,

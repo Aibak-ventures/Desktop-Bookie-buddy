@@ -5,7 +5,7 @@ part 'shop_model.freezed.dart';
 part 'shop_model.g.dart';
 
 @freezed
-class ShopModel with _$ShopModel {
+abstract class ShopModel with _$ShopModel {
   const factory ShopModel({
     required int id,
     required String name,

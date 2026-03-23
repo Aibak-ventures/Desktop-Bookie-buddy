@@ -4,7 +4,7 @@ part 'custom_response_model.freezed.dart';
 part 'custom_response_model.g.dart';
 
 @freezed
-class CustomResponseModel with _$CustomResponseModel {
+abstract class CustomResponseModel with _$CustomResponseModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory CustomResponseModel({
     @JsonKey(

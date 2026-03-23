@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,274 +9,284 @@ part of 'status_counts_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-StatusCountsModel _$StatusCountsModelFromJson(Map<String, dynamic> json) {
-  return _StatusCountsModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$StatusCountsModel {
-  int get completed => throw _privateConstructorUsedError;
-  int get upcoming => throw _privateConstructorUsedError;
-  int get returns => throw _privateConstructorUsedError;
-  int get pending => throw _privateConstructorUsedError;
-  @JsonKey(name: 'not_returned')
-  int get notReturned => throw _privateConstructorUsedError;
-  int get cancelled => throw _privateConstructorUsedError;
+
+ int get completed; int get upcoming; int get returns; int get pending;@JsonKey(name: 'not_returned') int get notReturned; int get cancelled;
+/// Create a copy of StatusCountsModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StatusCountsModelCopyWith<StatusCountsModel> get copyWith => _$StatusCountsModelCopyWithImpl<StatusCountsModel>(this as StatusCountsModel, _$identity);
 
   /// Serializes this StatusCountsModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of StatusCountsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $StatusCountsModelCopyWith<StatusCountsModel> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusCountsModel&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.returns, returns) || other.returns == returns)&&(identical(other.pending, pending) || other.pending == pending)&&(identical(other.notReturned, notReturned) || other.notReturned == notReturned)&&(identical(other.cancelled, cancelled) || other.cancelled == cancelled));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,completed,upcoming,returns,pending,notReturned,cancelled);
+
+@override
+String toString() {
+  return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $StatusCountsModelCopyWith<$Res> {
-  factory $StatusCountsModelCopyWith(
-          StatusCountsModel value, $Res Function(StatusCountsModel) then) =
-      _$StatusCountsModelCopyWithImpl<$Res, StatusCountsModel>;
-  @useResult
-  $Res call(
-      {int completed,
-      int upcoming,
-      int returns,
-      int pending,
-      @JsonKey(name: 'not_returned') int notReturned,
-      int cancelled});
-}
+abstract mixin class $StatusCountsModelCopyWith<$Res>  {
+  factory $StatusCountsModelCopyWith(StatusCountsModel value, $Res Function(StatusCountsModel) _then) = _$StatusCountsModelCopyWithImpl;
+@useResult
+$Res call({
+ int completed, int upcoming, int returns, int pending,@JsonKey(name: 'not_returned') int notReturned, int cancelled
+});
 
+
+
+
+}
 /// @nodoc
-class _$StatusCountsModelCopyWithImpl<$Res, $Val extends StatusCountsModel>
+class _$StatusCountsModelCopyWithImpl<$Res>
     implements $StatusCountsModelCopyWith<$Res> {
-  _$StatusCountsModelCopyWithImpl(this._value, this._then);
+  _$StatusCountsModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final StatusCountsModel _self;
+  final $Res Function(StatusCountsModel) _then;
 
-  /// Create a copy of StatusCountsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? completed = null,
-    Object? upcoming = null,
-    Object? returns = null,
-    Object? pending = null,
-    Object? notReturned = null,
-    Object? cancelled = null,
-  }) {
-    return _then(_value.copyWith(
-      completed: null == completed
-          ? _value.completed
-          : completed // ignore: cast_nullable_to_non_nullable
-              as int,
-      upcoming: null == upcoming
-          ? _value.upcoming
-          : upcoming // ignore: cast_nullable_to_non_nullable
-              as int,
-      returns: null == returns
-          ? _value.returns
-          : returns // ignore: cast_nullable_to_non_nullable
-              as int,
-      pending: null == pending
-          ? _value.pending
-          : pending // ignore: cast_nullable_to_non_nullable
-              as int,
-      notReturned: null == notReturned
-          ? _value.notReturned
-          : notReturned // ignore: cast_nullable_to_non_nullable
-              as int,
-      cancelled: null == cancelled
-          ? _value.cancelled
-          : cancelled // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of StatusCountsModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? completed = null,Object? upcoming = null,Object? returns = null,Object? pending = null,Object? notReturned = null,Object? cancelled = null,}) {
+  return _then(_self.copyWith(
+completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
+as int,upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
+as int,returns: null == returns ? _self.returns : returns // ignore: cast_nullable_to_non_nullable
+as int,pending: null == pending ? _self.pending : pending // ignore: cast_nullable_to_non_nullable
+as int,notReturned: null == notReturned ? _self.notReturned : notReturned // ignore: cast_nullable_to_non_nullable
+as int,cancelled: null == cancelled ? _self.cancelled : cancelled // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$StatusCountsModelImplCopyWith<$Res>
-    implements $StatusCountsModelCopyWith<$Res> {
-  factory _$$StatusCountsModelImplCopyWith(_$StatusCountsModelImpl value,
-          $Res Function(_$StatusCountsModelImpl) then) =
-      __$$StatusCountsModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {int completed,
-      int upcoming,
-      int returns,
-      int pending,
-      @JsonKey(name: 'not_returned') int notReturned,
-      int cancelled});
 }
 
-/// @nodoc
-class __$$StatusCountsModelImplCopyWithImpl<$Res>
-    extends _$StatusCountsModelCopyWithImpl<$Res, _$StatusCountsModelImpl>
-    implements _$$StatusCountsModelImplCopyWith<$Res> {
-  __$$StatusCountsModelImplCopyWithImpl(_$StatusCountsModelImpl _value,
-      $Res Function(_$StatusCountsModelImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of StatusCountsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? completed = null,
-    Object? upcoming = null,
-    Object? returns = null,
-    Object? pending = null,
-    Object? notReturned = null,
-    Object? cancelled = null,
-  }) {
-    return _then(_$StatusCountsModelImpl(
-      completed: null == completed
-          ? _value.completed
-          : completed // ignore: cast_nullable_to_non_nullable
-              as int,
-      upcoming: null == upcoming
-          ? _value.upcoming
-          : upcoming // ignore: cast_nullable_to_non_nullable
-              as int,
-      returns: null == returns
-          ? _value.returns
-          : returns // ignore: cast_nullable_to_non_nullable
-              as int,
-      pending: null == pending
-          ? _value.pending
-          : pending // ignore: cast_nullable_to_non_nullable
-              as int,
-      notReturned: null == notReturned
-          ? _value.notReturned
-          : notReturned // ignore: cast_nullable_to_non_nullable
-              as int,
-      cancelled: null == cancelled
-          ? _value.cancelled
-          : cancelled // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [StatusCountsModel].
+extension StatusCountsModelPatterns on StatusCountsModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StatusCountsModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _StatusCountsModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StatusCountsModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _StatusCountsModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StatusCountsModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _StatusCountsModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int completed,  int upcoming,  int returns,  int pending, @JsonKey(name: 'not_returned')  int notReturned,  int cancelled)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _StatusCountsModel() when $default != null:
+return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that.notReturned,_that.cancelled);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int completed,  int upcoming,  int returns,  int pending, @JsonKey(name: 'not_returned')  int notReturned,  int cancelled)  $default,) {final _that = this;
+switch (_that) {
+case _StatusCountsModel():
+return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that.notReturned,_that.cancelled);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int completed,  int upcoming,  int returns,  int pending, @JsonKey(name: 'not_returned')  int notReturned,  int cancelled)?  $default,) {final _that = this;
+switch (_that) {
+case _StatusCountsModel() when $default != null:
+return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that.notReturned,_that.cancelled);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$StatusCountsModelImpl implements _StatusCountsModel {
-  const _$StatusCountsModelImpl(
-      {this.completed = 0,
-      this.upcoming = 0,
-      this.returns = 0,
-      this.pending = 0,
-      @JsonKey(name: 'not_returned') this.notReturned = 0,
-      this.cancelled = 0});
 
-  factory _$StatusCountsModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$StatusCountsModelImplFromJson(json);
+class _StatusCountsModel implements StatusCountsModel {
+  const _StatusCountsModel({this.completed = 0, this.upcoming = 0, this.returns = 0, this.pending = 0, @JsonKey(name: 'not_returned') this.notReturned = 0, this.cancelled = 0});
+  factory _StatusCountsModel.fromJson(Map<String, dynamic> json) => _$StatusCountsModelFromJson(json);
 
-  @override
-  @JsonKey()
-  final int completed;
-  @override
-  @JsonKey()
-  final int upcoming;
-  @override
-  @JsonKey()
-  final int returns;
-  @override
-  @JsonKey()
-  final int pending;
-  @override
-  @JsonKey(name: 'not_returned')
-  final int notReturned;
-  @override
-  @JsonKey()
-  final int cancelled;
+@override@JsonKey() final  int completed;
+@override@JsonKey() final  int upcoming;
+@override@JsonKey() final  int returns;
+@override@JsonKey() final  int pending;
+@override@JsonKey(name: 'not_returned') final  int notReturned;
+@override@JsonKey() final  int cancelled;
 
-  @override
-  String toString() {
-    return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled)';
-  }
+/// Create a copy of StatusCountsModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StatusCountsModelCopyWith<_StatusCountsModel> get copyWith => __$StatusCountsModelCopyWithImpl<_StatusCountsModel>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$StatusCountsModelImpl &&
-            (identical(other.completed, completed) ||
-                other.completed == completed) &&
-            (identical(other.upcoming, upcoming) ||
-                other.upcoming == upcoming) &&
-            (identical(other.returns, returns) || other.returns == returns) &&
-            (identical(other.pending, pending) || other.pending == pending) &&
-            (identical(other.notReturned, notReturned) ||
-                other.notReturned == notReturned) &&
-            (identical(other.cancelled, cancelled) ||
-                other.cancelled == cancelled));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, completed, upcoming, returns,
-      pending, notReturned, cancelled);
-
-  /// Create a copy of StatusCountsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$StatusCountsModelImplCopyWith<_$StatusCountsModelImpl> get copyWith =>
-      __$$StatusCountsModelImplCopyWithImpl<_$StatusCountsModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$StatusCountsModelImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$StatusCountsModelToJson(this, );
 }
 
-abstract class _StatusCountsModel implements StatusCountsModel {
-  const factory _StatusCountsModel(
-      {final int completed,
-      final int upcoming,
-      final int returns,
-      final int pending,
-      @JsonKey(name: 'not_returned') final int notReturned,
-      final int cancelled}) = _$StatusCountsModelImpl;
-
-  factory _StatusCountsModel.fromJson(Map<String, dynamic> json) =
-      _$StatusCountsModelImpl.fromJson;
-
-  @override
-  int get completed;
-  @override
-  int get upcoming;
-  @override
-  int get returns;
-  @override
-  int get pending;
-  @override
-  @JsonKey(name: 'not_returned')
-  int get notReturned;
-  @override
-  int get cancelled;
-
-  /// Create a copy of StatusCountsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$StatusCountsModelImplCopyWith<_$StatusCountsModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusCountsModel&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.returns, returns) || other.returns == returns)&&(identical(other.pending, pending) || other.pending == pending)&&(identical(other.notReturned, notReturned) || other.notReturned == notReturned)&&(identical(other.cancelled, cancelled) || other.cancelled == cancelled));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,completed,upcoming,returns,pending,notReturned,cancelled);
+
+@override
+String toString() {
+  return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$StatusCountsModelCopyWith<$Res> implements $StatusCountsModelCopyWith<$Res> {
+  factory _$StatusCountsModelCopyWith(_StatusCountsModel value, $Res Function(_StatusCountsModel) _then) = __$StatusCountsModelCopyWithImpl;
+@override @useResult
+$Res call({
+ int completed, int upcoming, int returns, int pending,@JsonKey(name: 'not_returned') int notReturned, int cancelled
+});
+
+
+
+
+}
+/// @nodoc
+class __$StatusCountsModelCopyWithImpl<$Res>
+    implements _$StatusCountsModelCopyWith<$Res> {
+  __$StatusCountsModelCopyWithImpl(this._self, this._then);
+
+  final _StatusCountsModel _self;
+  final $Res Function(_StatusCountsModel) _then;
+
+/// Create a copy of StatusCountsModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? completed = null,Object? upcoming = null,Object? returns = null,Object? pending = null,Object? notReturned = null,Object? cancelled = null,}) {
+  return _then(_StatusCountsModel(
+completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
+as int,upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
+as int,returns: null == returns ? _self.returns : returns // ignore: cast_nullable_to_non_nullable
+as int,pending: null == pending ? _self.pending : pending // ignore: cast_nullable_to_non_nullable
+as int,notReturned: null == notReturned ? _self.notReturned : notReturned // ignore: cast_nullable_to_non_nullable
+as int,cancelled: null == cancelled ? _self.cancelled : cancelled // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+// dart format on

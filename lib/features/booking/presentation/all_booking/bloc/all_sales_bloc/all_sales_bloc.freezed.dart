@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,1009 +9,628 @@ part of 'all_sales_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$AllSalesEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)
-        loadSales,
-    required TResult Function() loadMoreSales,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)?
-        loadSales,
-    TResult? Function()? loadMoreSales,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)?
-        loadSales,
-    TResult Function()? loadMoreSales,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadSales value) loadSales,
-    required TResult Function(_LoadMoreSales value) loadMoreSales,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadSales value)? loadSales,
-    TResult? Function(_LoadMoreSales value)? loadMoreSales,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadSales value)? loadSales,
-    TResult Function(_LoadMoreSales value)? loadMoreSales,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllSalesEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AllSalesEvent()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AllSalesEventCopyWith<$Res> {
-  factory $AllSalesEventCopyWith(
-          AllSalesEvent value, $Res Function(AllSalesEvent) then) =
-      _$AllSalesEventCopyWithImpl<$Res, AllSalesEvent>;
+class $AllSalesEventCopyWith<$Res>  {
+$AllSalesEventCopyWith(AllSalesEvent _, $Res Function(AllSalesEvent) __);
 }
 
-/// @nodoc
-class _$AllSalesEventCopyWithImpl<$Res, $Val extends AllSalesEvent>
-    implements $AllSalesEventCopyWith<$Res> {
-  _$AllSalesEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [AllSalesEvent].
+extension AllSalesEventPatterns on AllSalesEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of AllSalesEvent
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _LoadSales value)?  loadSales,TResult Function( _LoadMoreSales value)?  loadMoreSales,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LoadSales() when loadSales != null:
+return loadSales(_that);case _LoadMoreSales() when loadMoreSales != null:
+return loadMoreSales(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _LoadSales value)  loadSales,required TResult Function( _LoadMoreSales value)  loadMoreSales,}){
+final _that = this;
+switch (_that) {
+case _LoadSales():
+return loadSales(_that);case _LoadMoreSales():
+return loadMoreSales(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _LoadSales value)?  loadSales,TResult? Function( _LoadMoreSales value)?  loadMoreSales,}){
+final _that = this;
+switch (_that) {
+case _LoadSales() when loadSales != null:
+return loadSales(_that);case _LoadMoreSales() when loadMoreSales != null:
+return loadMoreSales(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int? page,  String? searchQuery,  String? fromDate,  String? toDate)?  loadSales,TResult Function()?  loadMoreSales,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LoadSales() when loadSales != null:
+return loadSales(_that.page,_that.searchQuery,_that.fromDate,_that.toDate);case _LoadMoreSales() when loadMoreSales != null:
+return loadMoreSales();case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int? page,  String? searchQuery,  String? fromDate,  String? toDate)  loadSales,required TResult Function()  loadMoreSales,}) {final _that = this;
+switch (_that) {
+case _LoadSales():
+return loadSales(_that.page,_that.searchQuery,_that.fromDate,_that.toDate);case _LoadMoreSales():
+return loadMoreSales();case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int? page,  String? searchQuery,  String? fromDate,  String? toDate)?  loadSales,TResult? Function()?  loadMoreSales,}) {final _that = this;
+switch (_that) {
+case _LoadSales() when loadSales != null:
+return loadSales(_that.page,_that.searchQuery,_that.fromDate,_that.toDate);case _LoadMoreSales() when loadMoreSales != null:
+return loadMoreSales();case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$LoadSalesImplCopyWith<$Res> {
-  factory _$$LoadSalesImplCopyWith(
-          _$LoadSalesImpl value, $Res Function(_$LoadSalesImpl) then) =
-      __$$LoadSalesImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int? page, String? searchQuery, String? fromDate, String? toDate});
-}
-
-/// @nodoc
-class __$$LoadSalesImplCopyWithImpl<$Res>
-    extends _$AllSalesEventCopyWithImpl<$Res, _$LoadSalesImpl>
-    implements _$$LoadSalesImplCopyWith<$Res> {
-  __$$LoadSalesImplCopyWithImpl(
-      _$LoadSalesImpl _value, $Res Function(_$LoadSalesImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllSalesEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? page = freezed,
-    Object? searchQuery = freezed,
-    Object? fromDate = freezed,
-    Object? toDate = freezed,
-  }) {
-    return _then(_$LoadSalesImpl(
-      page: freezed == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
-              as int?,
-      searchQuery: freezed == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
-              as String?,
-      fromDate: freezed == fromDate
-          ? _value.fromDate
-          : fromDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      toDate: freezed == toDate
-          ? _value.toDate
-          : toDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$LoadSalesImpl implements _LoadSales {
-  const _$LoadSalesImpl(
-      {this.page, this.searchQuery, this.fromDate, this.toDate});
-
-  @override
-  final int? page;
-  @override
-  final String? searchQuery;
-  @override
-  final String? fromDate;
-  @override
-  final String? toDate;
-
-  @override
-  String toString() {
-    return 'AllSalesEvent.loadSales(page: $page, searchQuery: $searchQuery, fromDate: $fromDate, toDate: $toDate)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadSalesImpl &&
-            (identical(other.page, page) || other.page == page) &&
-            (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery) &&
-            (identical(other.fromDate, fromDate) ||
-                other.fromDate == fromDate) &&
-            (identical(other.toDate, toDate) || other.toDate == toDate));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, page, searchQuery, fromDate, toDate);
-
-  /// Create a copy of AllSalesEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadSalesImplCopyWith<_$LoadSalesImpl> get copyWith =>
-      __$$LoadSalesImplCopyWithImpl<_$LoadSalesImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)
-        loadSales,
-    required TResult Function() loadMoreSales,
-  }) {
-    return loadSales(page, searchQuery, fromDate, toDate);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)?
-        loadSales,
-    TResult? Function()? loadMoreSales,
-  }) {
-    return loadSales?.call(page, searchQuery, fromDate, toDate);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)?
-        loadSales,
-    TResult Function()? loadMoreSales,
-    required TResult orElse(),
-  }) {
-    if (loadSales != null) {
-      return loadSales(page, searchQuery, fromDate, toDate);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadSales value) loadSales,
-    required TResult Function(_LoadMoreSales value) loadMoreSales,
-  }) {
-    return loadSales(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadSales value)? loadSales,
-    TResult? Function(_LoadMoreSales value)? loadMoreSales,
-  }) {
-    return loadSales?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadSales value)? loadSales,
-    TResult Function(_LoadMoreSales value)? loadMoreSales,
-    required TResult orElse(),
-  }) {
-    if (loadSales != null) {
-      return loadSales(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _LoadSales implements AllSalesEvent {
-  const factory _LoadSales(
-      {final int? page,
-      final String? searchQuery,
-      final String? fromDate,
-      final String? toDate}) = _$LoadSalesImpl;
-
-  int? get page;
-  String? get searchQuery;
-  String? get fromDate;
-  String? get toDate;
-
-  /// Create a copy of AllSalesEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadSalesImplCopyWith<_$LoadSalesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$LoadMoreSalesImplCopyWith<$Res> {
-  factory _$$LoadMoreSalesImplCopyWith(
-          _$LoadMoreSalesImpl value, $Res Function(_$LoadMoreSalesImpl) then) =
-      __$$LoadMoreSalesImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadMoreSalesImplCopyWithImpl<$Res>
-    extends _$AllSalesEventCopyWithImpl<$Res, _$LoadMoreSalesImpl>
-    implements _$$LoadMoreSalesImplCopyWith<$Res> {
-  __$$LoadMoreSalesImplCopyWithImpl(
-      _$LoadMoreSalesImpl _value, $Res Function(_$LoadMoreSalesImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllSalesEvent
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$LoadMoreSalesImpl implements _LoadMoreSales {
-  const _$LoadMoreSalesImpl();
 
-  @override
-  String toString() {
-    return 'AllSalesEvent.loadMoreSales()';
-  }
+class _LoadSales implements AllSalesEvent {
+  const _LoadSales({this.page, this.searchQuery, this.fromDate, this.toDate});
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadMoreSalesImpl);
-  }
+ final  int? page;
+ final  String? searchQuery;
+ final  String? fromDate;
+ final  String? toDate;
 
-  @override
-  int get hashCode => runtimeType.hashCode;
+/// Create a copy of AllSalesEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadSalesCopyWith<_LoadSales> get copyWith => __$LoadSalesCopyWithImpl<_LoadSales>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)
-        loadSales,
-    required TResult Function() loadMoreSales,
-  }) {
-    return loadMoreSales();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)?
-        loadSales,
-    TResult? Function()? loadMoreSales,
-  }) {
-    return loadMoreSales?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            int? page, String? searchQuery, String? fromDate, String? toDate)?
-        loadSales,
-    TResult Function()? loadMoreSales,
-    required TResult orElse(),
-  }) {
-    if (loadMoreSales != null) {
-      return loadMoreSales();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadSales value) loadSales,
-    required TResult Function(_LoadMoreSales value) loadMoreSales,
-  }) {
-    return loadMoreSales(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadSales value)? loadSales,
-    TResult? Function(_LoadMoreSales value)? loadMoreSales,
-  }) {
-    return loadMoreSales?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadSales value)? loadSales,
-    TResult Function(_LoadMoreSales value)? loadMoreSales,
-    required TResult orElse(),
-  }) {
-    if (loadMoreSales != null) {
-      return loadMoreSales(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadSales&&(identical(other.page, page) || other.page == page)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.fromDate, fromDate) || other.fromDate == fromDate)&&(identical(other.toDate, toDate) || other.toDate == toDate));
 }
 
-abstract class _LoadMoreSales implements AllSalesEvent {
-  const factory _LoadMoreSales() = _$LoadMoreSalesImpl;
+
+@override
+int get hashCode => Object.hash(runtimeType,page,searchQuery,fromDate,toDate);
+
+@override
+String toString() {
+  return 'AllSalesEvent.loadSales(page: $page, searchQuery: $searchQuery, fromDate: $fromDate, toDate: $toDate)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LoadSalesCopyWith<$Res> implements $AllSalesEventCopyWith<$Res> {
+  factory _$LoadSalesCopyWith(_LoadSales value, $Res Function(_LoadSales) _then) = __$LoadSalesCopyWithImpl;
+@useResult
+$Res call({
+ int? page, String? searchQuery, String? fromDate, String? toDate
+});
+
+
+
+
+}
+/// @nodoc
+class __$LoadSalesCopyWithImpl<$Res>
+    implements _$LoadSalesCopyWith<$Res> {
+  __$LoadSalesCopyWithImpl(this._self, this._then);
+
+  final _LoadSales _self;
+  final $Res Function(_LoadSales) _then;
+
+/// Create a copy of AllSalesEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? page = freezed,Object? searchQuery = freezed,Object? fromDate = freezed,Object? toDate = freezed,}) {
+  return _then(_LoadSales(
+page: freezed == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as int?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as String?,fromDate: freezed == fromDate ? _self.fromDate : fromDate // ignore: cast_nullable_to_non_nullable
+as String?,toDate: freezed == toDate ? _self.toDate : toDate // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _LoadMoreSales implements AllSalesEvent {
+  const _LoadMoreSales();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadMoreSales);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AllSalesEvent.loadMoreSales()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 mixin _$AllSalesState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)
-        loaded,
-    required TResult Function(String message) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult? Function(String message)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult Function(String message)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllSalesState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'AllSalesState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AllSalesStateCopyWith<$Res> {
-  factory $AllSalesStateCopyWith(
-          AllSalesState value, $Res Function(AllSalesState) then) =
-      _$AllSalesStateCopyWithImpl<$Res, AllSalesState>;
+class $AllSalesStateCopyWith<$Res>  {
+$AllSalesStateCopyWith(AllSalesState _, $Res Function(AllSalesState) __);
 }
 
-/// @nodoc
-class _$AllSalesStateCopyWithImpl<$Res, $Val extends AllSalesState>
-    implements $AllSalesStateCopyWith<$Res> {
-  _$AllSalesStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [AllSalesState].
+extension AllSalesStatePatterns on AllSalesState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Error value)?  error,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Error() when error != null:
+return error(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Error value)  error,}){
+final _that = this;
+switch (_that) {
+case _Loading():
+return loading(_that);case _Loaded():
+return loaded(_that);case _Error():
+return error(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Error value)?  error,}){
+final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Error() when error != null:
+return error(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( List<SaleModel> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.sales,_that.nextPageUrl,_that.searchQuery,_that.isPaginating,_that.fromDate,_that.toDate);case _Error() when error != null:
+return error(_that.message);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( List<SaleModel> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+switch (_that) {
+case _Loading():
+return loading();case _Loaded():
+return loaded(_that.sales,_that.nextPageUrl,_that.searchQuery,_that.isPaginating,_that.fromDate,_that.toDate);case _Error():
+return error(_that.message);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( List<SaleModel> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.sales,_that.nextPageUrl,_that.searchQuery,_that.isPaginating,_that.fromDate,_that.toDate);case _Error() when error != null:
+return error(_that.message);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$AllSalesStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
-
-  @override
-  String toString() {
-    return 'AllSalesState.loading()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)
-        loaded,
-    required TResult Function(String message) error,
-  }) {
-    return loading();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult? Function(String message)? error,
-  }) {
-    return loading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult Function(String message)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loading implements AllSalesState {
-  const factory _Loading() = _$LoadingImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadedImplCopyWith<$Res> {
-  factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
-      __$$LoadedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {List<SaleModel> sales,
-      String? nextPageUrl,
-      String? searchQuery,
-      bool isPaginating,
-      String? fromDate,
-      String? toDate});
-}
-
-/// @nodoc
-class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$AllSalesStateCopyWithImpl<$Res, _$LoadedImpl>
-    implements _$$LoadedImplCopyWith<$Res> {
-  __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? sales = null,
-    Object? nextPageUrl = freezed,
-    Object? searchQuery = freezed,
-    Object? isPaginating = null,
-    Object? fromDate = freezed,
-    Object? toDate = freezed,
-  }) {
-    return _then(_$LoadedImpl(
-      sales: null == sales
-          ? _value._sales
-          : sales // ignore: cast_nullable_to_non_nullable
-              as List<SaleModel>,
-      nextPageUrl: freezed == nextPageUrl
-          ? _value.nextPageUrl
-          : nextPageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      searchQuery: freezed == searchQuery
-          ? _value.searchQuery
-          : searchQuery // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPaginating: null == isPaginating
-          ? _value.isPaginating
-          : isPaginating // ignore: cast_nullable_to_non_nullable
-              as bool,
-      fromDate: freezed == fromDate
-          ? _value.fromDate
-          : fromDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      toDate: freezed == toDate
-          ? _value.toDate
-          : toDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(
-      {required final List<SaleModel> sales,
-      this.nextPageUrl,
-      this.searchQuery,
-      this.isPaginating = false,
-      this.fromDate,
-      this.toDate})
-      : _sales = sales;
 
-  final List<SaleModel> _sales;
-  @override
-  List<SaleModel> get sales {
-    if (_sales is EqualUnmodifiableListView) return _sales;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_sales);
-  }
+class _Loading implements AllSalesState {
+  const _Loading();
+  
 
-  @override
-  final String? nextPageUrl;
-  @override
-  final String? searchQuery;
-  @override
-  @JsonKey()
-  final bool isPaginating;
-  @override
-  final String? fromDate;
-  @override
-  final String? toDate;
 
-  @override
-  String toString() {
-    return 'AllSalesState.loaded(sales: $sales, nextPageUrl: $nextPageUrl, searchQuery: $searchQuery, isPaginating: $isPaginating, fromDate: $fromDate, toDate: $toDate)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(other._sales, _sales) &&
-            (identical(other.nextPageUrl, nextPageUrl) ||
-                other.nextPageUrl == nextPageUrl) &&
-            (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery) &&
-            (identical(other.isPaginating, isPaginating) ||
-                other.isPaginating == isPaginating) &&
-            (identical(other.fromDate, fromDate) ||
-                other.fromDate == fromDate) &&
-            (identical(other.toDate, toDate) || other.toDate == toDate));
-  }
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_sales),
-      nextPageUrl,
-      searchQuery,
-      isPaginating,
-      fromDate,
-      toDate);
 
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)
-        loaded,
-    required TResult Function(String message) error,
-  }) {
-    return loaded(
-        sales, nextPageUrl, searchQuery, isPaginating, fromDate, toDate);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult? Function(String message)? error,
-  }) {
-    return loaded?.call(
-        sales, nextPageUrl, searchQuery, isPaginating, fromDate, toDate);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult Function(String message)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(
-          sales, nextPageUrl, searchQuery, isPaginating, fromDate, toDate);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return loaded(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loaded?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
-abstract class _Loaded implements AllSalesState {
-  const factory _Loaded(
-      {required final List<SaleModel> sales,
-      final String? nextPageUrl,
-      final String? searchQuery,
-      final bool isPaginating,
-      final String? fromDate,
-      final String? toDate}) = _$LoadedImpl;
 
-  List<SaleModel> get sales;
-  String? get nextPageUrl;
-  String? get searchQuery;
-  bool get isPaginating;
-  String? get fromDate;
-  String? get toDate;
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AllSalesState.loading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Loaded implements AllSalesState {
+  const _Loaded({required final  List<SaleModel> sales, this.nextPageUrl, this.searchQuery, this.isPaginating = false, this.fromDate, this.toDate}): _sales = sales;
+  
+
+ final  List<SaleModel> _sales;
+ List<SaleModel> get sales {
+  if (_sales is EqualUnmodifiableListView) return _sales;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_sales);
+}
+
+ final  String? nextPageUrl;
+ final  String? searchQuery;
+@JsonKey() final  bool isPaginating;
+ final  String? fromDate;
+ final  String? toDate;
+
+/// Create a copy of AllSalesState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._sales, _sales)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.fromDate, fromDate) || other.fromDate == fromDate)&&(identical(other.toDate, toDate) || other.toDate == toDate));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_sales),nextPageUrl,searchQuery,isPaginating,fromDate,toDate);
+
+@override
+String toString() {
+  return 'AllSalesState.loaded(sales: $sales, nextPageUrl: $nextPageUrl, searchQuery: $searchQuery, isPaginating: $isPaginating, fromDate: $fromDate, toDate: $toDate)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String message});
+abstract mixin class _$LoadedCopyWith<$Res> implements $AllSalesStateCopyWith<$Res> {
+  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
+@useResult
+$Res call({
+ List<SaleModel> sales, String? nextPageUrl, String? searchQuery, bool isPaginating, String? fromDate, String? toDate
+});
+
+
+
+
+}
+/// @nodoc
+class __$LoadedCopyWithImpl<$Res>
+    implements _$LoadedCopyWith<$Res> {
+  __$LoadedCopyWithImpl(this._self, this._then);
+
+  final _Loaded _self;
+  final $Res Function(_Loaded) _then;
+
+/// Create a copy of AllSalesState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? sales = null,Object? nextPageUrl = freezed,Object? searchQuery = freezed,Object? isPaginating = null,Object? fromDate = freezed,Object? toDate = freezed,}) {
+  return _then(_Loaded(
+sales: null == sales ? _self._sales : sales // ignore: cast_nullable_to_non_nullable
+as List<SaleModel>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
+as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as String?,isPaginating: null == isPaginating ? _self.isPaginating : isPaginating // ignore: cast_nullable_to_non_nullable
+as bool,fromDate: freezed == fromDate ? _self.fromDate : fromDate // ignore: cast_nullable_to_non_nullable
+as String?,toDate: freezed == toDate ? _self.toDate : toDate // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$AllSalesStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$ErrorImpl implements _Error {
-  const _$ErrorImpl(this.message);
 
-  @override
-  final String message;
+class _Error implements AllSalesState {
+  const _Error(this.message);
+  
 
-  @override
-  String toString() {
-    return 'AllSalesState.error(message: $message)';
-  }
+ final  String message;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
-            (identical(other.message, message) || other.message == message));
-  }
+/// Create a copy of AllSalesState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)
-        loaded,
-    required TResult Function(String message) error,
-  }) {
-    return error(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult? Function(String message)? error,
-  }) {
-    return error?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            List<SaleModel> sales,
-            String? nextPageUrl,
-            String? searchQuery,
-            bool isPaginating,
-            String? fromDate,
-            String? toDate)?
-        loaded,
-    TResult Function(String message)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
 }
 
-abstract class _Error implements AllSalesState {
-  const factory _Error(final String message) = _$ErrorImpl;
 
-  String get message;
+@override
+int get hashCode => Object.hash(runtimeType,message);
 
-  /// Create a copy of AllSalesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'AllSalesState.error(message: $message)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ErrorCopyWith<$Res> implements $AllSalesStateCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of AllSalesState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(_Error(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

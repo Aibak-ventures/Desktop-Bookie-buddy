@@ -6,70 +6,70 @@ part of 'desktop_dashboard_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DesktopDashboardResponseImpl _$$DesktopDashboardResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DesktopDashboardResponseImpl(
-      upcoming: (json['upcoming'] as List<dynamic>)
-          .map((e) => BookingsModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      ongoingBookings: (json['ongoing_bookings'] as List<dynamic>)
-          .map((e) => BookingsModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      upcomingCount: (json['upcoming_count'] as num).toInt(),
-      alterationBookingCount: (json['alteration_booking_count'] as num).toInt(),
-      completedCount: (json['completed_count'] as num).toInt(),
-      expiredCount: (json['expired_count'] as num).toInt(),
-      pagination: DesktopDashboardPagination.fromJson(
-          json['pagination'] as Map<String, dynamic>),
-    );
+_DesktopDashboardResponse _$DesktopDashboardResponseFromJson(
+  Map<String, dynamic> json,
+) => _DesktopDashboardResponse(
+  upcoming: (json['upcoming'] as List<dynamic>)
+      .map((e) => BookingsModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  ongoingBookings: (json['ongoing_bookings'] as List<dynamic>)
+      .map((e) => BookingsModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  upcomingCount: (json['upcoming_count'] as num).toInt(),
+  alterationBookingCount: (json['alteration_booking_count'] as num).toInt(),
+  completedCount: (json['completed_count'] as num).toInt(),
+  expiredCount: (json['expired_count'] as num).toInt(),
+  pagination: DesktopDashboardPagination.fromJson(
+    json['pagination'] as Map<String, dynamic>,
+  ),
+);
 
-Map<String, dynamic> _$$DesktopDashboardResponseImplToJson(
-        _$DesktopDashboardResponseImpl instance) =>
-    <String, dynamic>{
-      'upcoming': instance.upcoming,
-      'ongoing_bookings': instance.ongoingBookings,
-      'upcoming_count': instance.upcomingCount,
-      'alteration_booking_count': instance.alterationBookingCount,
-      'completed_count': instance.completedCount,
-      'expired_count': instance.expiredCount,
-      'pagination': instance.pagination,
-    };
+Map<String, dynamic> _$DesktopDashboardResponseToJson(
+  _DesktopDashboardResponse instance,
+) => <String, dynamic>{
+  'upcoming': instance.upcoming,
+  'ongoing_bookings': instance.ongoingBookings,
+  'upcoming_count': instance.upcomingCount,
+  'alteration_booking_count': instance.alterationBookingCount,
+  'completed_count': instance.completedCount,
+  'expired_count': instance.expiredCount,
+  'pagination': instance.pagination,
+};
 
-_$DesktopDashboardCarouselDataImpl _$$DesktopDashboardCarouselDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DesktopDashboardCarouselDataImpl(
-      upcomingCount: (json['upcomingCount'] as num).toInt(),
-      alterationBookingCount: (json['alterationBookingCount'] as num).toInt(),
-      completedCount: (json['completedCount'] as num).toInt(),
-      expiredCount: (json['expiredCount'] as num).toInt(),
-    );
+_DesktopDashboardCarouselData _$DesktopDashboardCarouselDataFromJson(
+  Map<String, dynamic> json,
+) => _DesktopDashboardCarouselData(
+  upcomingCount: (json['upcomingCount'] as num).toInt(),
+  alterationBookingCount: (json['alterationBookingCount'] as num).toInt(),
+  completedCount: (json['completedCount'] as num).toInt(),
+  expiredCount: (json['expiredCount'] as num).toInt(),
+);
 
-Map<String, dynamic> _$$DesktopDashboardCarouselDataImplToJson(
-        _$DesktopDashboardCarouselDataImpl instance) =>
-    <String, dynamic>{
-      'upcomingCount': instance.upcomingCount,
-      'alterationBookingCount': instance.alterationBookingCount,
-      'completedCount': instance.completedCount,
-      'expiredCount': instance.expiredCount,
-    };
+Map<String, dynamic> _$DesktopDashboardCarouselDataToJson(
+  _DesktopDashboardCarouselData instance,
+) => <String, dynamic>{
+  'upcomingCount': instance.upcomingCount,
+  'alterationBookingCount': instance.alterationBookingCount,
+  'completedCount': instance.completedCount,
+  'expiredCount': instance.expiredCount,
+};
 
-_$DesktopDashboardPaginationImpl _$$DesktopDashboardPaginationImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DesktopDashboardPaginationImpl(
-      upcoming:
-          PaginationInfo.fromJson(json['upcoming'] as Map<String, dynamic>),
-      ongoing: PaginationInfo.fromJson(json['ongoing'] as Map<String, dynamic>),
-    );
+_DesktopDashboardPagination _$DesktopDashboardPaginationFromJson(
+  Map<String, dynamic> json,
+) => _DesktopDashboardPagination(
+  upcoming: PaginationInfo.fromJson(json['upcoming'] as Map<String, dynamic>),
+  ongoing: PaginationInfo.fromJson(json['ongoing'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$$DesktopDashboardPaginationImplToJson(
-        _$DesktopDashboardPaginationImpl instance) =>
-    <String, dynamic>{
-      'upcoming': instance.upcoming,
-      'ongoing': instance.ongoing,
-    };
+Map<String, dynamic> _$DesktopDashboardPaginationToJson(
+  _DesktopDashboardPagination instance,
+) => <String, dynamic>{
+  'upcoming': instance.upcoming,
+  'ongoing': instance.ongoing,
+};
 
-_$PaginationInfoImpl _$$PaginationInfoImplFromJson(Map<String, dynamic> json) =>
-    _$PaginationInfoImpl(
+_PaginationInfo _$PaginationInfoFromJson(Map<String, dynamic> json) =>
+    _PaginationInfo(
       next: json['next'] as String?,
       previous: json['previous'] as String?,
       count: (json['count'] as num).toInt(),
@@ -80,8 +80,7 @@ _$PaginationInfoImpl _$$PaginationInfoImplFromJson(Map<String, dynamic> json) =>
       endIndex: (json['end_index'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$PaginationInfoImplToJson(
-        _$PaginationInfoImpl instance) =>
+Map<String, dynamic> _$PaginationInfoToJson(_PaginationInfo instance) =>
     <String, dynamic>{
       'next': instance.next,
       'previous': instance.previous,

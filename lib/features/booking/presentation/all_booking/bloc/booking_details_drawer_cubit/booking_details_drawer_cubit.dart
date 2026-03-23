@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'booking_details_drawer_cubit.freezed.dart';
 
 @freezed
-class BookingDetailsDrawerState with _$BookingDetailsDrawerState {
+abstract class BookingDetailsDrawerState with _$BookingDetailsDrawerState {
   const factory BookingDetailsDrawerState({
     @Default(false) bool isOpen,
     int? selectedBookingId,

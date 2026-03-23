@@ -6,20 +6,19 @@ part of 'shop_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ShopModelImpl _$$ShopModelImplFromJson(Map<String, dynamic> json) =>
-    _$ShopModelImpl(
-      id: (json['id'] as num).toInt(),
-      name: json['name'] as String,
-      place: json['place'] as String?,
-      phone: json['phone'] as String,
-      email: json['email'] as String?,
-      address: json['address'] as String? ?? 'Address not available',
-      pincode: json['pincode'] as String?,
-      subscriptionStatus: json['subscription_status'] as String?,
-      image: json['img'] as String?,
-    );
+_ShopModel _$ShopModelFromJson(Map<String, dynamic> json) => _ShopModel(
+  id: (json['id'] as num).toInt(),
+  name: json['name'] as String,
+  place: json['place'] as String?,
+  phone: json['phone'] as String,
+  email: json['email'] as String?,
+  address: json['address'] as String? ?? 'Address not available',
+  pincode: json['pincode'] as String?,
+  subscriptionStatus: json['subscription_status'] as String?,
+  image: json['img'] as String?,
+);
 
-Map<String, dynamic> _$$ShopModelImplToJson(_$ShopModelImpl instance) =>
+Map<String, dynamic> _$ShopModelToJson(_ShopModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

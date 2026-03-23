@@ -1,7 +1,7 @@
 part of 'sales_details_bloc.dart';
 
 @freezed
-class SalesDetailsState with _$SalesDetailsState {
+abstract class SalesDetailsState with _$SalesDetailsState {
   const factory SalesDetailsState.initial() = _Initial;
   const factory SalesDetailsState.loading() = _Loading;
   const factory SalesDetailsState.loaded({required SaleDetailsModel sale}) =

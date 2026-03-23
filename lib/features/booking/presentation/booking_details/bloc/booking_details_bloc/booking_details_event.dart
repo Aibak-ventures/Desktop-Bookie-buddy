@@ -1,7 +1,7 @@
 part of 'booking_details_bloc.dart';
 
 @freezed
-class BookingDetailsEvent with _$BookingDetailsEvent {
+abstract class BookingDetailsEvent with _$BookingDetailsEvent {
   const factory BookingDetailsEvent.fetchBookingDetails(int bookingId) =
       _FetchBookingDetails;
 

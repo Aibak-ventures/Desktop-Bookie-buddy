@@ -1,7 +1,7 @@
 part of 'all_booking_bloc.dart';
 
 @freezed
-class AllBookingState with _$AllBookingState {
+abstract class AllBookingState with _$AllBookingState {
   const factory AllBookingState.initial() = _Initial;
   const factory AllBookingState.loading() = _Loading;
   const factory AllBookingState.loaded({

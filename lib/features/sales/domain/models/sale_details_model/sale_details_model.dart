@@ -17,7 +17,7 @@ String _paymentMethodReadValue(Map json, String key) {
 }
 
 @freezed
-class SaleDetailsModel with _$SaleDetailsModel {
+abstract class SaleDetailsModel with _$SaleDetailsModel {
   const factory SaleDetailsModel({
     required int id,
     @JsonKey(name: 'client') ClientModel? client,
@@ -48,7 +48,7 @@ class SaleDetailsModel with _$SaleDetailsModel {
 }
 
 @freezed
-class ProductSaleInfoModel with _$ProductSaleInfoModel {
+abstract class ProductSaleInfoModel with _$ProductSaleInfoModel {
   const factory ProductSaleInfoModel({
     @JsonKey(name: 'id') required int id,
     @JsonKey(name: 'product_id') required int productId,

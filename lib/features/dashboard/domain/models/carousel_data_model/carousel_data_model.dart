@@ -4,7 +4,7 @@ part 'carousel_data_model.freezed.dart';
 part 'carousel_data_model.g.dart';
 
 @freezed
-class CarouselDataModel with _$CarouselDataModel {
+abstract class CarouselDataModel with _$CarouselDataModel {
   factory CarouselDataModel({
     @JsonKey(
       name: 'upcoming_count',

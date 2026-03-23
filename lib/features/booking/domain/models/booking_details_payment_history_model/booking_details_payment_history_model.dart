@@ -10,7 +10,7 @@ String _readDateTime(Map json, String key) {
 }
 
 @freezed
-class BookingDetailsPaymentHistoryModel
+abstract class BookingDetailsPaymentHistoryModel
     with _$BookingDetailsPaymentHistoryModel {
   const factory BookingDetailsPaymentHistoryModel({
     @JsonKey(name: 'amount') required int amount,

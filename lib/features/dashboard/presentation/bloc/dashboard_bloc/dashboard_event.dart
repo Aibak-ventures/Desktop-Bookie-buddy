@@ -1,7 +1,7 @@
 part of 'dashboard_bloc.dart';
 
 @freezed
-class DashboardEvent with _$DashboardEvent {
+abstract class DashboardEvent with _$DashboardEvent {
   /// Load initial desktop dashboard data using v4 API
   const factory DashboardEvent.loadDashboardData({
     UserModel? activeShop,

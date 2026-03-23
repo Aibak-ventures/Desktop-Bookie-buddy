@@ -19,7 +19,7 @@ List<Map<String, dynamic>>? _productsToJson(
     products?.map((e) => e.toCustomJson()).toList();
 
 @freezed
-class RequestBookingModel with _$RequestBookingModel {
+abstract class RequestBookingModel with _$RequestBookingModel {
   @JsonSerializable(includeIfNull: false)
   const factory RequestBookingModel({
     @JsonKey(name: 'client_id') int? clientId,

@@ -11,7 +11,7 @@ String? _salePriceFromJson(dynamic value) {
 }
 
 @freezed
-class ProductModel with _$ProductModel {
+abstract class ProductModel with _$ProductModel {
   const ProductModel._();
 
   const factory ProductModel({

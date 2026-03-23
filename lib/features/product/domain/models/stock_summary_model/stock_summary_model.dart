@@ -4,7 +4,7 @@ part 'stock_summary_model.freezed.dart';
 part 'stock_summary_model.g.dart';
 
 @freezed
-class StockSummaryModel with _$StockSummaryModel {
+abstract class StockSummaryModel with _$StockSummaryModel {
   const factory StockSummaryModel({
     @JsonKey(name: 'total_products') required int totalProducts,
     @JsonKey(name: 'total_categories') required int totalCategories,
@@ -16,7 +16,7 @@ class StockSummaryModel with _$StockSummaryModel {
 }
 
 @freezed
-class CategorySummary with _$CategorySummary {
+abstract class CategorySummary with _$CategorySummary {
   const factory CategorySummary({
     required String name,
     required int count,

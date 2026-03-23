@@ -6,7 +6,7 @@ part 'product_selected_model.freezed.dart';
 part 'product_selected_model.g.dart';
 
 @freezed
-class ProductSelectedModel with _$ProductSelectedModel {
+abstract class ProductSelectedModel with _$ProductSelectedModel {
   const factory ProductSelectedModel({
     required ProductInfoModel variant,
     required int amount,

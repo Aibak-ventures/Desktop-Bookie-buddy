@@ -6,9 +6,8 @@ part of 'product_request_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProductRequestModelImpl _$$ProductRequestModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ProductRequestModelImpl(
+_ProductRequestModel _$ProductRequestModelFromJson(Map<String, dynamic> json) =>
+    _ProductRequestModel(
       productId: (json['productId'] as num?)?.toInt(),
       serviceId: (json['shop_service_id'] as num?)?.toInt(),
       name: json['name'] as String?,
@@ -24,19 +23,18 @@ _$ProductRequestModelImpl _$$ProductRequestModelImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$ProductRequestModelImplToJson(
-        _$ProductRequestModelImpl instance) =>
-    <String, dynamic>{
-      if (instance.productId case final value?) 'productId': value,
-      if (instance.serviceId case final value?) 'shop_service_id': value,
-      if (instance.name case final value?) 'name': value,
-      if (instance.description case final value?) 'description': value,
-      if (instance.color case final value?) 'color': value,
-      if (instance.purchasePrice case final value?) 'purchase_price': value,
-      if (instance.price case final value?) 'price': value,
-      if (instance.salePrice case final value?) 'sale_price': value,
-      if (instance.category case final value?) 'category': value,
-      if (instance.model case final value?) 'model': value,
-      if (_variantsToJson(instance.variants) case final value?)
-        'variants': value,
-    };
+Map<String, dynamic> _$ProductRequestModelToJson(
+  _ProductRequestModel instance,
+) => <String, dynamic>{
+  'productId': ?instance.productId,
+  'shop_service_id': ?instance.serviceId,
+  'name': ?instance.name,
+  'description': ?instance.description,
+  'color': ?instance.color,
+  'purchase_price': ?instance.purchasePrice,
+  'price': ?instance.price,
+  'sale_price': ?instance.salePrice,
+  'category': ?instance.category,
+  'model': ?instance.model,
+  'variants': ?_variantsToJson(instance.variants),
+};

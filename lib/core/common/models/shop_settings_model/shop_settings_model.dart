@@ -5,7 +5,7 @@ part 'shop_settings_model.g.dart';
 part 'shop_settings_model.freezed.dart';
 
 @freezed
-class ShopSettingsModel with _$ShopSettingsModel {
+abstract class ShopSettingsModel with _$ShopSettingsModel {
   const factory ShopSettingsModel({
     @JsonKey(name: 'cooling_days', defaultValue: 0)
     required int coolingPeriodDuration,

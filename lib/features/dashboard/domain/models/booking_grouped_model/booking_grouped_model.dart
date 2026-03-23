@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'booking_grouped_model.freezed.dart';
 
 @freezed
-class BookingGroupedModel with _$BookingGroupedModel {
+abstract class BookingGroupedModel with _$BookingGroupedModel {
   const factory BookingGroupedModel({
     required String date,
     required List<BookingsModel> bookings,

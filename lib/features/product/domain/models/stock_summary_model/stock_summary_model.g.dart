@@ -6,9 +6,8 @@ part of 'stock_summary_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StockSummaryModelImpl _$$StockSummaryModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$StockSummaryModelImpl(
+_StockSummaryModel _$StockSummaryModelFromJson(Map<String, dynamic> json) =>
+    _StockSummaryModel(
       totalProducts: (json['total_products'] as num).toInt(),
       totalCategories: (json['total_categories'] as num).toInt(),
       categories: (json['categories'] as List<dynamic>)
@@ -16,24 +15,18 @@ _$StockSummaryModelImpl _$$StockSummaryModelImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$StockSummaryModelImplToJson(
-        _$StockSummaryModelImpl instance) =>
+Map<String, dynamic> _$StockSummaryModelToJson(_StockSummaryModel instance) =>
     <String, dynamic>{
       'total_products': instance.totalProducts,
       'total_categories': instance.totalCategories,
       'categories': instance.categories,
     };
 
-_$CategorySummaryImpl _$$CategorySummaryImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CategorySummaryImpl(
+_CategorySummary _$CategorySummaryFromJson(Map<String, dynamic> json) =>
+    _CategorySummary(
       name: json['name'] as String,
       count: (json['count'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$CategorySummaryImplToJson(
-        _$CategorySummaryImpl instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'count': instance.count,
-    };
+Map<String, dynamic> _$CategorySummaryToJson(_CategorySummary instance) =>
+    <String, dynamic>{'name': instance.name, 'count': instance.count};

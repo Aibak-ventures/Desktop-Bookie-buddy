@@ -28,7 +28,7 @@ dynamic _bookedItemsCustomRead(Map json, String key) {
 }
 
 @freezed
-class BookingsModel with _$BookingsModel {
+abstract class BookingsModel with _$BookingsModel {
   const factory BookingsModel({
     @JsonKey(name: 'id', readValue: _idCustomRead) int? id,
     @JsonKey(

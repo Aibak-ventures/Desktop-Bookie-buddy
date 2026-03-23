@@ -1,7 +1,7 @@
 part of 'product_search_cubit.dart';
 
 @freezed
-class ProductSearchState with _$ProductSearchState {
+abstract class ProductSearchState with _$ProductSearchState {
   const factory ProductSearchState({
     required List<ProductModel> suggestions,
     required ProductModel? selectedProduct,

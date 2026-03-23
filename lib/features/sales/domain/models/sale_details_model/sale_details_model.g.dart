@@ -6,9 +6,8 @@ part of 'sale_details_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SaleDetailsModelImpl _$$SaleDetailsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SaleDetailsModelImpl(
+_SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
+    _SaleDetailsModel(
       id: (json['id'] as num).toInt(),
       client: json['client'] == null
           ? null
@@ -29,13 +28,13 @@ _$SaleDetailsModelImpl _$$SaleDetailsModelImplFromJson(
       paymentMethod: _paymentMethodReadValue(json, 'method') == null
           ? PaymentMethod.cash
           : PaymentMethod.fromJson(
-              _paymentMethodReadValue(json, 'method') as String?),
+              _paymentMethodReadValue(json, 'method') as String?,
+            ),
       staffId: (json['staff_id'] as num?)?.toInt(),
       staffName: json['staff_name'] as String?,
     );
 
-Map<String, dynamic> _$$SaleDetailsModelImplToJson(
-        _$SaleDetailsModelImpl instance) =>
+Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'client': instance.client,
@@ -55,42 +54,43 @@ Map<String, dynamic> _$$SaleDetailsModelImplToJson(
       'staff_name': instance.staffName,
     };
 
-_$ProductSaleInfoModelImpl _$$ProductSaleInfoModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ProductSaleInfoModelImpl(
-      id: (json['id'] as num).toInt(),
-      productId: (json['product_id'] as num).toInt(),
-      variantId: (json['variant_id'] as num).toInt(),
-      name: json['product_name'] as String,
-      variantAttribute: json['variant'] as String?,
-      quantity: (json['quantity'] as num).toInt(),
-      price: (json['price'] as num).toInt(),
-      subtotal: (json['subtotal'] as num).toInt(),
-      image: json['thumbnail'] as String?,
-      color: json['color'] as String?,
-      category: json['category'] as String?,
-      model: json['model'] as String?,
-      mainServiceType:
-          MainServiceType.fromString(json['main_category_name'] as String?),
-    );
+_ProductSaleInfoModel _$ProductSaleInfoModelFromJson(
+  Map<String, dynamic> json,
+) => _ProductSaleInfoModel(
+  id: (json['id'] as num).toInt(),
+  productId: (json['product_id'] as num).toInt(),
+  variantId: (json['variant_id'] as num).toInt(),
+  name: json['product_name'] as String,
+  variantAttribute: json['variant'] as String?,
+  quantity: (json['quantity'] as num).toInt(),
+  price: (json['price'] as num).toInt(),
+  subtotal: (json['subtotal'] as num).toInt(),
+  image: json['thumbnail'] as String?,
+  color: json['color'] as String?,
+  category: json['category'] as String?,
+  model: json['model'] as String?,
+  mainServiceType: MainServiceType.fromString(
+    json['main_category_name'] as String?,
+  ),
+);
 
-Map<String, dynamic> _$$ProductSaleInfoModelImplToJson(
-        _$ProductSaleInfoModelImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'product_id': instance.productId,
-      'variant_id': instance.variantId,
-      'product_name': instance.name,
-      'variant': instance.variantAttribute,
-      'quantity': instance.quantity,
-      'price': instance.price,
-      'subtotal': instance.subtotal,
-      'thumbnail': instance.image,
-      'color': instance.color,
-      'category': instance.category,
-      'model': instance.model,
-      'main_category_name': _$MainServiceTypeEnumMap[instance.mainServiceType],
-    };
+Map<String, dynamic> _$ProductSaleInfoModelToJson(
+  _ProductSaleInfoModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'product_id': instance.productId,
+  'variant_id': instance.variantId,
+  'product_name': instance.name,
+  'variant': instance.variantAttribute,
+  'quantity': instance.quantity,
+  'price': instance.price,
+  'subtotal': instance.subtotal,
+  'thumbnail': instance.image,
+  'color': instance.color,
+  'category': instance.category,
+  'model': instance.model,
+  'main_category_name': _$MainServiceTypeEnumMap[instance.mainServiceType],
+};
 
 const _$MainServiceTypeEnumMap = {
   MainServiceType.dress: 'dress',

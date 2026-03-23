@@ -6,29 +6,29 @@ part of 'user_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
-    _$UserModelImpl(
-      id: (json['id'] as num).toInt(),
-      firstName: json['full_name'] as String,
-      lastName: json['last_name'] as String? ?? '',
-      phone: json['phone'] as String,
-      role: ShopRole.fromJson(json['role'] as String?),
-      shopRole: ShopRole.fromJson(json['shop_role'] as String?),
-      block: json['block'] as bool? ?? false,
-      haveMultipleShops: json['multiple_shops'] as bool? ?? false,
-      isNotificationActive: json['has_active_notification'] as bool? ?? false,
-      subscription: json['subscription'] == null
-          ? null
-          : UserSubscriptionModel.fromJson(
-              json['subscription'] as Map<String, dynamic>),
-      passwordSettings:
-          _passwordSettingsFromJson(json['password_settings'] as Map),
-      shopSettings: ShopSettingsModel.fromJson(
-          json['shop_settings'] as Map<String, dynamic>),
-      shopDetails: UserShopModel.fromJson(json['shop'] as Map<String, dynamic>),
-    );
+_UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
+  id: (json['id'] as num).toInt(),
+  firstName: json['full_name'] as String,
+  lastName: json['last_name'] as String? ?? '',
+  phone: json['phone'] as String,
+  role: ShopRole.fromJson(json['role'] as String?),
+  shopRole: ShopRole.fromJson(json['shop_role'] as String?),
+  block: json['block'] as bool? ?? false,
+  haveMultipleShops: json['multiple_shops'] as bool? ?? false,
+  isNotificationActive: json['has_active_notification'] as bool? ?? false,
+  subscription: json['subscription'] == null
+      ? null
+      : UserSubscriptionModel.fromJson(
+          json['subscription'] as Map<String, dynamic>,
+        ),
+  passwordSettings: _passwordSettingsFromJson(json['password_settings'] as Map),
+  shopSettings: ShopSettingsModel.fromJson(
+    json['shop_settings'] as Map<String, dynamic>,
+  ),
+  shopDetails: UserShopModel.fromJson(json['shop'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
+Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'full_name': instance.firstName,
@@ -45,44 +45,43 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'shop': instance.shopDetails,
     };
 
-_$UserSubscriptionModelImpl _$$UserSubscriptionModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$UserSubscriptionModelImpl(
-      plan: json['plan'] as String,
-      status: json['status'] as String,
-      expiryDate: json['expiry_date'] as String? ?? '',
-      features: json['features'] == null
-          ? {}
-          : AppPremiumFeatures.fromList(json['features'] as List?),
-      userSpecificFeatures: json['user_features'] == null
-          ? {}
-          : AppPremiumFeatures.fromList(json['user_features'] as List?),
-    );
+_UserSubscriptionModel _$UserSubscriptionModelFromJson(
+  Map<String, dynamic> json,
+) => _UserSubscriptionModel(
+  plan: json['plan'] as String,
+  status: json['status'] as String,
+  expiryDate: json['expiry_date'] as String? ?? '',
+  features: json['features'] == null
+      ? {}
+      : AppPremiumFeatures.fromList(json['features'] as List?),
+  userSpecificFeatures: json['user_features'] == null
+      ? {}
+      : AppPremiumFeatures.fromList(json['user_features'] as List?),
+);
 
-Map<String, dynamic> _$$UserSubscriptionModelImplToJson(
-        _$UserSubscriptionModelImpl instance) =>
-    <String, dynamic>{
-      'plan': instance.plan,
-      'status': instance.status,
-      'expiry_date': instance.expiryDate,
-      'features': AppPremiumFeatures.toJsonList(instance.features),
-      'user_features':
-          AppPremiumFeatures.toJsonList(instance.userSpecificFeatures),
-    };
+Map<String, dynamic> _$UserSubscriptionModelToJson(
+  _UserSubscriptionModel instance,
+) => <String, dynamic>{
+  'plan': instance.plan,
+  'status': instance.status,
+  'expiry_date': instance.expiryDate,
+  'features': AppPremiumFeatures.toJsonList(instance.features),
+  'user_features': AppPremiumFeatures.toJsonList(instance.userSpecificFeatures),
+};
 
-_$UserPasswordSettingsModelImpl _$$UserPasswordSettingsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$UserPasswordSettingsModelImpl(
-      location: $enumDecode(_$SecretPasswordLocationsEnumMap, json['location']),
-      role: $enumDecode(_$UserPasswordSettingRoleEnumMap, json['role']),
-    );
+_UserPasswordSettingsModel _$UserPasswordSettingsModelFromJson(
+  Map<String, dynamic> json,
+) => _UserPasswordSettingsModel(
+  location: $enumDecode(_$SecretPasswordLocationsEnumMap, json['location']),
+  role: $enumDecode(_$UserPasswordSettingRoleEnumMap, json['role']),
+);
 
-Map<String, dynamic> _$$UserPasswordSettingsModelImplToJson(
-        _$UserPasswordSettingsModelImpl instance) =>
-    <String, dynamic>{
-      'location': _$SecretPasswordLocationsEnumMap[instance.location]!,
-      'role': _$UserPasswordSettingRoleEnumMap[instance.role]!,
-    };
+Map<String, dynamic> _$UserPasswordSettingsModelToJson(
+  _UserPasswordSettingsModel instance,
+) => <String, dynamic>{
+  'location': _$SecretPasswordLocationsEnumMap[instance.location]!,
+  'role': _$UserPasswordSettingRoleEnumMap[instance.role]!,
+};
 
 const _$SecretPasswordLocationsEnumMap = {
   SecretPasswordLocations.ledgerView: 'ledgerView',

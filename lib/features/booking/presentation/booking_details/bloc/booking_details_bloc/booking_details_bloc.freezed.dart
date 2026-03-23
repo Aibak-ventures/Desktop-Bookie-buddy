@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,2202 +9,1128 @@ part of 'booking_details_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$BookingDetailsEvent {
-  int get bookingId => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int bookingId) fetchBookingDetails,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId, BookingStatus bookingStatus)
-        updateBookingStatus,
-    required TResult Function(
-            int bookingId, int amount, PaymentMethod paymentMethod)
-        updatePayment,
-    required TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)
-        cancelBooking,
-    required TResult Function(int bookingId) deleteBooking,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int bookingId)? fetchBookingDetails,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult? Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult? Function(int bookingId)? deleteBooking,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int bookingId)? fetchBookingDetails,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult Function(int bookingId)? deleteBooking,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchBookingDetails value) fetchBookingDetails,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_UpdateBookingStatus value) updateBookingStatus,
-    required TResult Function(_UpdatePayment value) updatePayment,
-    required TResult Function(_CancelBooking value) cancelBooking,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult? Function(_UpdatePayment value)? updatePayment,
-    TResult? Function(_CancelBooking value)? cancelBooking,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult Function(_UpdatePayment value)? updatePayment,
-    TResult Function(_CancelBooking value)? cancelBooking,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $BookingDetailsEventCopyWith<BookingDetailsEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+ int get bookingId;
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BookingDetailsEventCopyWith<BookingDetailsEvent> get copyWith => _$BookingDetailsEventCopyWithImpl<BookingDetailsEvent>(this as BookingDetailsEvent, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsEvent&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bookingId);
+
+@override
+String toString() {
+  return 'BookingDetailsEvent(bookingId: $bookingId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BookingDetailsEventCopyWith<$Res> {
-  factory $BookingDetailsEventCopyWith(
-          BookingDetailsEvent value, $Res Function(BookingDetailsEvent) then) =
-      _$BookingDetailsEventCopyWithImpl<$Res, BookingDetailsEvent>;
-  @useResult
-  $Res call({int bookingId});
-}
+abstract mixin class $BookingDetailsEventCopyWith<$Res>  {
+  factory $BookingDetailsEventCopyWith(BookingDetailsEvent value, $Res Function(BookingDetailsEvent) _then) = _$BookingDetailsEventCopyWithImpl;
+@useResult
+$Res call({
+ int bookingId
+});
 
+
+
+
+}
 /// @nodoc
-class _$BookingDetailsEventCopyWithImpl<$Res, $Val extends BookingDetailsEvent>
+class _$BookingDetailsEventCopyWithImpl<$Res>
     implements $BookingDetailsEventCopyWith<$Res> {
-  _$BookingDetailsEventCopyWithImpl(this._value, this._then);
+  _$BookingDetailsEventCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final BookingDetailsEvent _self;
+  final $Res Function(BookingDetailsEvent) _then;
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-  }) {
-    return _then(_value.copyWith(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? bookingId = null,}) {
+  return _then(_self.copyWith(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$FetchBookingDetailsImplCopyWith<$Res>
-    implements $BookingDetailsEventCopyWith<$Res> {
-  factory _$$FetchBookingDetailsImplCopyWith(_$FetchBookingDetailsImpl value,
-          $Res Function(_$FetchBookingDetailsImpl) then) =
-      __$$FetchBookingDetailsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int bookingId});
 }
 
-/// @nodoc
-class __$$FetchBookingDetailsImplCopyWithImpl<$Res>
-    extends _$BookingDetailsEventCopyWithImpl<$Res, _$FetchBookingDetailsImpl>
-    implements _$$FetchBookingDetailsImplCopyWith<$Res> {
-  __$$FetchBookingDetailsImplCopyWithImpl(_$FetchBookingDetailsImpl _value,
-      $Res Function(_$FetchBookingDetailsImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-  }) {
-    return _then(_$FetchBookingDetailsImpl(
-      null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [BookingDetailsEvent].
+extension BookingDetailsEventPatterns on BookingDetailsEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult Function( _UpdatePayment value)?  updatePayment,TResult Function( _CancelBooking value)?  cancelBooking,TResult Function( _DeleteBooking value)?  deleteBooking,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _FetchBookingDetails() when fetchBookingDetails != null:
+return fetchBookingDetails(_that);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that);case _UpdateBookingStatus() when updateBookingStatus != null:
+return updateBookingStatus(_that);case _UpdatePayment() when updatePayment != null:
+return updatePayment(_that);case _CancelBooking() when cancelBooking != null:
+return cancelBooking(_that);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchBookingDetails value)  fetchBookingDetails,required TResult Function( _UpdateDeliveryStatus value)  updateDeliveryStatus,required TResult Function( _UpdateBookingStatus value)  updateBookingStatus,required TResult Function( _UpdatePayment value)  updatePayment,required TResult Function( _CancelBooking value)  cancelBooking,required TResult Function( _DeleteBooking value)  deleteBooking,}){
+final _that = this;
+switch (_that) {
+case _FetchBookingDetails():
+return fetchBookingDetails(_that);case _UpdateDeliveryStatus():
+return updateDeliveryStatus(_that);case _UpdateBookingStatus():
+return updateBookingStatus(_that);case _UpdatePayment():
+return updatePayment(_that);case _CancelBooking():
+return cancelBooking(_that);case _DeleteBooking():
+return deleteBooking(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult? Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult? Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult? Function( _UpdatePayment value)?  updatePayment,TResult? Function( _CancelBooking value)?  cancelBooking,TResult? Function( _DeleteBooking value)?  deleteBooking,}){
+final _that = this;
+switch (_that) {
+case _FetchBookingDetails() when fetchBookingDetails != null:
+return fetchBookingDetails(_that);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that);case _UpdateBookingStatus() when updateBookingStatus != null:
+return updateBookingStatus(_that);case _UpdatePayment() when updatePayment != null:
+return updatePayment(_that);case _CancelBooking() when cancelBooking != null:
+return cancelBooking(_that);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int bookingId)?  fetchBookingDetails,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult Function( int bookingId,  int amount,  PaymentMethod paymentMethod)?  updatePayment,TResult Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)?  cancelBooking,TResult Function( int bookingId)?  deleteBooking,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _FetchBookingDetails() when fetchBookingDetails != null:
+return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus() when updateBookingStatus != null:
+return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment() when updatePayment != null:
+return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _CancelBooking() when cancelBooking != null:
+return cancelBooking(_that.bookingId,_that.refundAmount,_that.paymentMethod);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that.bookingId);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int bookingId)  fetchBookingDetails,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId,  BookingStatus bookingStatus)  updateBookingStatus,required TResult Function( int bookingId,  int amount,  PaymentMethod paymentMethod)  updatePayment,required TResult Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)  cancelBooking,required TResult Function( int bookingId)  deleteBooking,}) {final _that = this;
+switch (_that) {
+case _FetchBookingDetails():
+return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus():
+return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus():
+return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment():
+return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _CancelBooking():
+return cancelBooking(_that.bookingId,_that.refundAmount,_that.paymentMethod);case _DeleteBooking():
+return deleteBooking(_that.bookingId);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int bookingId)?  fetchBookingDetails,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult? Function( int bookingId,  int amount,  PaymentMethod paymentMethod)?  updatePayment,TResult? Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)?  cancelBooking,TResult? Function( int bookingId)?  deleteBooking,}) {final _that = this;
+switch (_that) {
+case _FetchBookingDetails() when fetchBookingDetails != null:
+return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
+return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus() when updateBookingStatus != null:
+return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment() when updatePayment != null:
+return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _CancelBooking() when cancelBooking != null:
+return cancelBooking(_that.bookingId,_that.refundAmount,_that.paymentMethod);case _DeleteBooking() when deleteBooking != null:
+return deleteBooking(_that.bookingId);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-
-class _$FetchBookingDetailsImpl implements _FetchBookingDetails {
-  const _$FetchBookingDetailsImpl(this.bookingId);
-
-  @override
-  final int bookingId;
-
-  @override
-  String toString() {
-    return 'BookingDetailsEvent.fetchBookingDetails(bookingId: $bookingId)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FetchBookingDetailsImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, bookingId);
-
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FetchBookingDetailsImplCopyWith<_$FetchBookingDetailsImpl> get copyWith =>
-      __$$FetchBookingDetailsImplCopyWithImpl<_$FetchBookingDetailsImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int bookingId) fetchBookingDetails,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId, BookingStatus bookingStatus)
-        updateBookingStatus,
-    required TResult Function(
-            int bookingId, int amount, PaymentMethod paymentMethod)
-        updatePayment,
-    required TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)
-        cancelBooking,
-    required TResult Function(int bookingId) deleteBooking,
-  }) {
-    return fetchBookingDetails(bookingId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int bookingId)? fetchBookingDetails,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult? Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult? Function(int bookingId)? deleteBooking,
-  }) {
-    return fetchBookingDetails?.call(bookingId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int bookingId)? fetchBookingDetails,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult Function(int bookingId)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (fetchBookingDetails != null) {
-      return fetchBookingDetails(bookingId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchBookingDetails value) fetchBookingDetails,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_UpdateBookingStatus value) updateBookingStatus,
-    required TResult Function(_UpdatePayment value) updatePayment,
-    required TResult Function(_CancelBooking value) cancelBooking,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-  }) {
-    return fetchBookingDetails(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult? Function(_UpdatePayment value)? updatePayment,
-    TResult? Function(_CancelBooking value)? cancelBooking,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-  }) {
-    return fetchBookingDetails?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult Function(_UpdatePayment value)? updatePayment,
-    TResult Function(_CancelBooking value)? cancelBooking,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (fetchBookingDetails != null) {
-      return fetchBookingDetails(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _FetchBookingDetails implements BookingDetailsEvent {
-  const factory _FetchBookingDetails(final int bookingId) =
-      _$FetchBookingDetailsImpl;
-
-  @override
-  int get bookingId;
-
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FetchBookingDetailsImplCopyWith<_$FetchBookingDetailsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$UpdateDeliveryStatusImplCopyWith<$Res>
-    implements $BookingDetailsEventCopyWith<$Res> {
-  factory _$$UpdateDeliveryStatusImplCopyWith(_$UpdateDeliveryStatusImpl value,
-          $Res Function(_$UpdateDeliveryStatusImpl) then) =
-      __$$UpdateDeliveryStatusImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int bookingId, DeliveryStatus deliveryStatus});
-}
-
-/// @nodoc
-class __$$UpdateDeliveryStatusImplCopyWithImpl<$Res>
-    extends _$BookingDetailsEventCopyWithImpl<$Res, _$UpdateDeliveryStatusImpl>
-    implements _$$UpdateDeliveryStatusImplCopyWith<$Res> {
-  __$$UpdateDeliveryStatusImplCopyWithImpl(_$UpdateDeliveryStatusImpl _value,
-      $Res Function(_$UpdateDeliveryStatusImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-    Object? deliveryStatus = null,
-  }) {
-    return _then(_$UpdateDeliveryStatusImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-      deliveryStatus: null == deliveryStatus
-          ? _value.deliveryStatus
-          : deliveryStatus // ignore: cast_nullable_to_non_nullable
-              as DeliveryStatus,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$UpdateDeliveryStatusImpl implements _UpdateDeliveryStatus {
-  const _$UpdateDeliveryStatusImpl(
-      {required this.bookingId, required this.deliveryStatus});
 
-  @override
-  final int bookingId;
-  @override
-  final DeliveryStatus deliveryStatus;
+class _FetchBookingDetails implements BookingDetailsEvent {
+  const _FetchBookingDetails(this.bookingId);
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
-  }
+@override final  int bookingId;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$UpdateDeliveryStatusImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId) &&
-            (identical(other.deliveryStatus, deliveryStatus) ||
-                other.deliveryStatus == deliveryStatus));
-  }
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FetchBookingDetailsCopyWith<_FetchBookingDetails> get copyWith => __$FetchBookingDetailsCopyWithImpl<_FetchBookingDetails>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, bookingId, deliveryStatus);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$UpdateDeliveryStatusImplCopyWith<_$UpdateDeliveryStatusImpl>
-      get copyWith =>
-          __$$UpdateDeliveryStatusImplCopyWithImpl<_$UpdateDeliveryStatusImpl>(
-              this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int bookingId) fetchBookingDetails,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId, BookingStatus bookingStatus)
-        updateBookingStatus,
-    required TResult Function(
-            int bookingId, int amount, PaymentMethod paymentMethod)
-        updatePayment,
-    required TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)
-        cancelBooking,
-    required TResult Function(int bookingId) deleteBooking,
-  }) {
-    return updateDeliveryStatus(bookingId, deliveryStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int bookingId)? fetchBookingDetails,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult? Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult? Function(int bookingId)? deleteBooking,
-  }) {
-    return updateDeliveryStatus?.call(bookingId, deliveryStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int bookingId)? fetchBookingDetails,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult Function(int bookingId)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (updateDeliveryStatus != null) {
-      return updateDeliveryStatus(bookingId, deliveryStatus);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchBookingDetails value) fetchBookingDetails,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_UpdateBookingStatus value) updateBookingStatus,
-    required TResult Function(_UpdatePayment value) updatePayment,
-    required TResult Function(_CancelBooking value) cancelBooking,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-  }) {
-    return updateDeliveryStatus(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult? Function(_UpdatePayment value)? updatePayment,
-    TResult? Function(_CancelBooking value)? cancelBooking,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-  }) {
-    return updateDeliveryStatus?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult Function(_UpdatePayment value)? updatePayment,
-    TResult Function(_CancelBooking value)? cancelBooking,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (updateDeliveryStatus != null) {
-      return updateDeliveryStatus(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchBookingDetails&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
 }
 
-abstract class _UpdateDeliveryStatus implements BookingDetailsEvent {
-  const factory _UpdateDeliveryStatus(
-          {required final int bookingId,
-          required final DeliveryStatus deliveryStatus}) =
-      _$UpdateDeliveryStatusImpl;
 
-  @override
-  int get bookingId;
-  DeliveryStatus get deliveryStatus;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateDeliveryStatusImplCopyWith<_$UpdateDeliveryStatusImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsEvent.fetchBookingDetails(bookingId: $bookingId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$UpdateBookingStatusImplCopyWith<$Res>
-    implements $BookingDetailsEventCopyWith<$Res> {
-  factory _$$UpdateBookingStatusImplCopyWith(_$UpdateBookingStatusImpl value,
-          $Res Function(_$UpdateBookingStatusImpl) then) =
-      __$$UpdateBookingStatusImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int bookingId, BookingStatus bookingStatus});
+abstract mixin class _$FetchBookingDetailsCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$FetchBookingDetailsCopyWith(_FetchBookingDetails value, $Res Function(_FetchBookingDetails) _then) = __$FetchBookingDetailsCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId
+});
+
+
+
+
+}
+/// @nodoc
+class __$FetchBookingDetailsCopyWithImpl<$Res>
+    implements _$FetchBookingDetailsCopyWith<$Res> {
+  __$FetchBookingDetailsCopyWithImpl(this._self, this._then);
+
+  final _FetchBookingDetails _self;
+  final $Res Function(_FetchBookingDetails) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,}) {
+  return _then(_FetchBookingDetails(
+null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-class __$$UpdateBookingStatusImplCopyWithImpl<$Res>
-    extends _$BookingDetailsEventCopyWithImpl<$Res, _$UpdateBookingStatusImpl>
-    implements _$$UpdateBookingStatusImplCopyWith<$Res> {
-  __$$UpdateBookingStatusImplCopyWithImpl(_$UpdateBookingStatusImpl _value,
-      $Res Function(_$UpdateBookingStatusImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-    Object? bookingStatus = null,
-  }) {
-    return _then(_$UpdateBookingStatusImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-      bookingStatus: null == bookingStatus
-          ? _value.bookingStatus
-          : bookingStatus // ignore: cast_nullable_to_non_nullable
-              as BookingStatus,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$UpdateBookingStatusImpl implements _UpdateBookingStatus {
-  const _$UpdateBookingStatusImpl(
-      {required this.bookingId, required this.bookingStatus});
 
-  @override
-  final int bookingId;
-  @override
-  final BookingStatus bookingStatus;
+class _UpdateDeliveryStatus implements BookingDetailsEvent {
+  const _UpdateDeliveryStatus({required this.bookingId, required this.deliveryStatus});
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsEvent.updateBookingStatus(bookingId: $bookingId, bookingStatus: $bookingStatus)';
-  }
+@override final  int bookingId;
+ final  DeliveryStatus deliveryStatus;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$UpdateBookingStatusImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId) &&
-            (identical(other.bookingStatus, bookingStatus) ||
-                other.bookingStatus == bookingStatus));
-  }
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateDeliveryStatusCopyWith<_UpdateDeliveryStatus> get copyWith => __$UpdateDeliveryStatusCopyWithImpl<_UpdateDeliveryStatus>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, bookingId, bookingStatus);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$UpdateBookingStatusImplCopyWith<_$UpdateBookingStatusImpl> get copyWith =>
-      __$$UpdateBookingStatusImplCopyWithImpl<_$UpdateBookingStatusImpl>(
-          this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int bookingId) fetchBookingDetails,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId, BookingStatus bookingStatus)
-        updateBookingStatus,
-    required TResult Function(
-            int bookingId, int amount, PaymentMethod paymentMethod)
-        updatePayment,
-    required TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)
-        cancelBooking,
-    required TResult Function(int bookingId) deleteBooking,
-  }) {
-    return updateBookingStatus(bookingId, bookingStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int bookingId)? fetchBookingDetails,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult? Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult? Function(int bookingId)? deleteBooking,
-  }) {
-    return updateBookingStatus?.call(bookingId, bookingStatus);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int bookingId)? fetchBookingDetails,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult Function(int bookingId)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (updateBookingStatus != null) {
-      return updateBookingStatus(bookingId, bookingStatus);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchBookingDetails value) fetchBookingDetails,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_UpdateBookingStatus value) updateBookingStatus,
-    required TResult Function(_UpdatePayment value) updatePayment,
-    required TResult Function(_CancelBooking value) cancelBooking,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-  }) {
-    return updateBookingStatus(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult? Function(_UpdatePayment value)? updatePayment,
-    TResult? Function(_CancelBooking value)? cancelBooking,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-  }) {
-    return updateBookingStatus?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult Function(_UpdatePayment value)? updatePayment,
-    TResult Function(_CancelBooking value)? cancelBooking,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (updateBookingStatus != null) {
-      return updateBookingStatus(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateDeliveryStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus));
 }
 
-abstract class _UpdateBookingStatus implements BookingDetailsEvent {
-  const factory _UpdateBookingStatus(
-      {required final int bookingId,
-      required final BookingStatus bookingStatus}) = _$UpdateBookingStatusImpl;
 
-  @override
-  int get bookingId;
-  BookingStatus get bookingStatus;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,deliveryStatus);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateBookingStatusImplCopyWith<_$UpdateBookingStatusImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$UpdatePaymentImplCopyWith<$Res>
-    implements $BookingDetailsEventCopyWith<$Res> {
-  factory _$$UpdatePaymentImplCopyWith(
-          _$UpdatePaymentImpl value, $Res Function(_$UpdatePaymentImpl) then) =
-      __$$UpdatePaymentImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int bookingId, int amount, PaymentMethod paymentMethod});
+abstract mixin class _$UpdateDeliveryStatusCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$UpdateDeliveryStatusCopyWith(_UpdateDeliveryStatus value, $Res Function(_UpdateDeliveryStatus) _then) = __$UpdateDeliveryStatusCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId, DeliveryStatus deliveryStatus
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateDeliveryStatusCopyWithImpl<$Res>
+    implements _$UpdateDeliveryStatusCopyWith<$Res> {
+  __$UpdateDeliveryStatusCopyWithImpl(this._self, this._then);
+
+  final _UpdateDeliveryStatus _self;
+  final $Res Function(_UpdateDeliveryStatus) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? deliveryStatus = null,}) {
+  return _then(_UpdateDeliveryStatus(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,deliveryStatus: null == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
+as DeliveryStatus,
+  ));
 }
 
-/// @nodoc
-class __$$UpdatePaymentImplCopyWithImpl<$Res>
-    extends _$BookingDetailsEventCopyWithImpl<$Res, _$UpdatePaymentImpl>
-    implements _$$UpdatePaymentImplCopyWith<$Res> {
-  __$$UpdatePaymentImplCopyWithImpl(
-      _$UpdatePaymentImpl _value, $Res Function(_$UpdatePaymentImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-    Object? amount = null,
-    Object? paymentMethod = null,
-  }) {
-    return _then(_$UpdatePaymentImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
-      paymentMethod: null == paymentMethod
-          ? _value.paymentMethod
-          : paymentMethod // ignore: cast_nullable_to_non_nullable
-              as PaymentMethod,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$UpdatePaymentImpl implements _UpdatePayment {
-  const _$UpdatePaymentImpl(
-      {required this.bookingId,
-      required this.amount,
-      required this.paymentMethod});
 
-  @override
-  final int bookingId;
-  @override
-  final int amount;
-  @override
-  final PaymentMethod paymentMethod;
+class _UpdateBookingStatus implements BookingDetailsEvent {
+  const _UpdateBookingStatus({required this.bookingId, required this.bookingStatus});
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsEvent.updatePayment(bookingId: $bookingId, amount: $amount, paymentMethod: $paymentMethod)';
-  }
+@override final  int bookingId;
+ final  BookingStatus bookingStatus;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$UpdatePaymentImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId) &&
-            (identical(other.amount, amount) || other.amount == amount) &&
-            (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
-  }
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateBookingStatusCopyWith<_UpdateBookingStatus> get copyWith => __$UpdateBookingStatusCopyWithImpl<_UpdateBookingStatus>(this, _$identity);
 
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, bookingId, amount, paymentMethod);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$UpdatePaymentImplCopyWith<_$UpdatePaymentImpl> get copyWith =>
-      __$$UpdatePaymentImplCopyWithImpl<_$UpdatePaymentImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int bookingId) fetchBookingDetails,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId, BookingStatus bookingStatus)
-        updateBookingStatus,
-    required TResult Function(
-            int bookingId, int amount, PaymentMethod paymentMethod)
-        updatePayment,
-    required TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)
-        cancelBooking,
-    required TResult Function(int bookingId) deleteBooking,
-  }) {
-    return updatePayment(bookingId, amount, paymentMethod);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int bookingId)? fetchBookingDetails,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult? Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult? Function(int bookingId)? deleteBooking,
-  }) {
-    return updatePayment?.call(bookingId, amount, paymentMethod);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int bookingId)? fetchBookingDetails,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult Function(int bookingId)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (updatePayment != null) {
-      return updatePayment(bookingId, amount, paymentMethod);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchBookingDetails value) fetchBookingDetails,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_UpdateBookingStatus value) updateBookingStatus,
-    required TResult Function(_UpdatePayment value) updatePayment,
-    required TResult Function(_CancelBooking value) cancelBooking,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-  }) {
-    return updatePayment(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult? Function(_UpdatePayment value)? updatePayment,
-    TResult? Function(_CancelBooking value)? cancelBooking,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-  }) {
-    return updatePayment?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult Function(_UpdatePayment value)? updatePayment,
-    TResult Function(_CancelBooking value)? cancelBooking,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (updatePayment != null) {
-      return updatePayment(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateBookingStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus));
 }
 
-abstract class _UpdatePayment implements BookingDetailsEvent {
-  const factory _UpdatePayment(
-      {required final int bookingId,
-      required final int amount,
-      required final PaymentMethod paymentMethod}) = _$UpdatePaymentImpl;
 
-  @override
-  int get bookingId;
-  int get amount;
-  PaymentMethod get paymentMethod;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,bookingStatus);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdatePaymentImplCopyWith<_$UpdatePaymentImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsEvent.updateBookingStatus(bookingId: $bookingId, bookingStatus: $bookingStatus)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$CancelBookingImplCopyWith<$Res>
-    implements $BookingDetailsEventCopyWith<$Res> {
-  factory _$$CancelBookingImplCopyWith(
-          _$CancelBookingImpl value, $Res Function(_$CancelBookingImpl) then) =
-      __$$CancelBookingImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int bookingId, int? refundAmount, PaymentMethod? paymentMethod});
+abstract mixin class _$UpdateBookingStatusCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$UpdateBookingStatusCopyWith(_UpdateBookingStatus value, $Res Function(_UpdateBookingStatus) _then) = __$UpdateBookingStatusCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId, BookingStatus bookingStatus
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateBookingStatusCopyWithImpl<$Res>
+    implements _$UpdateBookingStatusCopyWith<$Res> {
+  __$UpdateBookingStatusCopyWithImpl(this._self, this._then);
+
+  final _UpdateBookingStatus _self;
+  final $Res Function(_UpdateBookingStatus) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? bookingStatus = null,}) {
+  return _then(_UpdateBookingStatus(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,bookingStatus: null == bookingStatus ? _self.bookingStatus : bookingStatus // ignore: cast_nullable_to_non_nullable
+as BookingStatus,
+  ));
 }
 
-/// @nodoc
-class __$$CancelBookingImplCopyWithImpl<$Res>
-    extends _$BookingDetailsEventCopyWithImpl<$Res, _$CancelBookingImpl>
-    implements _$$CancelBookingImplCopyWith<$Res> {
-  __$$CancelBookingImplCopyWithImpl(
-      _$CancelBookingImpl _value, $Res Function(_$CancelBookingImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-    Object? refundAmount = freezed,
-    Object? paymentMethod = freezed,
-  }) {
-    return _then(_$CancelBookingImpl(
-      bookingId: null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-      refundAmount: freezed == refundAmount
-          ? _value.refundAmount
-          : refundAmount // ignore: cast_nullable_to_non_nullable
-              as int?,
-      paymentMethod: freezed == paymentMethod
-          ? _value.paymentMethod
-          : paymentMethod // ignore: cast_nullable_to_non_nullable
-              as PaymentMethod?,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$CancelBookingImpl implements _CancelBooking {
-  const _$CancelBookingImpl(
-      {required this.bookingId, this.refundAmount, this.paymentMethod});
 
-  @override
-  final int bookingId;
-  @override
-  final int? refundAmount;
-  @override
-  final PaymentMethod? paymentMethod;
+class _UpdatePayment implements BookingDetailsEvent {
+  const _UpdatePayment({required this.bookingId, required this.amount, required this.paymentMethod});
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, paymentMethod: $paymentMethod)';
-  }
+@override final  int bookingId;
+ final  int amount;
+ final  PaymentMethod paymentMethod;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CancelBookingImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId) &&
-            (identical(other.refundAmount, refundAmount) ||
-                other.refundAmount == refundAmount) &&
-            (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
-  }
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdatePaymentCopyWith<_UpdatePayment> get copyWith => __$UpdatePaymentCopyWithImpl<_UpdatePayment>(this, _$identity);
 
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, bookingId, refundAmount, paymentMethod);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CancelBookingImplCopyWith<_$CancelBookingImpl> get copyWith =>
-      __$$CancelBookingImplCopyWithImpl<_$CancelBookingImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int bookingId) fetchBookingDetails,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId, BookingStatus bookingStatus)
-        updateBookingStatus,
-    required TResult Function(
-            int bookingId, int amount, PaymentMethod paymentMethod)
-        updatePayment,
-    required TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)
-        cancelBooking,
-    required TResult Function(int bookingId) deleteBooking,
-  }) {
-    return cancelBooking(bookingId, refundAmount, paymentMethod);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int bookingId)? fetchBookingDetails,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult? Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult? Function(int bookingId)? deleteBooking,
-  }) {
-    return cancelBooking?.call(bookingId, refundAmount, paymentMethod);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int bookingId)? fetchBookingDetails,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult Function(int bookingId)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (cancelBooking != null) {
-      return cancelBooking(bookingId, refundAmount, paymentMethod);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchBookingDetails value) fetchBookingDetails,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_UpdateBookingStatus value) updateBookingStatus,
-    required TResult Function(_UpdatePayment value) updatePayment,
-    required TResult Function(_CancelBooking value) cancelBooking,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-  }) {
-    return cancelBooking(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult? Function(_UpdatePayment value)? updatePayment,
-    TResult? Function(_CancelBooking value)? cancelBooking,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-  }) {
-    return cancelBooking?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult Function(_UpdatePayment value)? updatePayment,
-    TResult Function(_CancelBooking value)? cancelBooking,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (cancelBooking != null) {
-      return cancelBooking(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod));
 }
 
-abstract class _CancelBooking implements BookingDetailsEvent {
-  const factory _CancelBooking(
-      {required final int bookingId,
-      final int? refundAmount,
-      final PaymentMethod? paymentMethod}) = _$CancelBookingImpl;
 
-  @override
-  int get bookingId;
-  int? get refundAmount;
-  PaymentMethod? get paymentMethod;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,amount,paymentMethod);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CancelBookingImplCopyWith<_$CancelBookingImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsEvent.updatePayment(bookingId: $bookingId, amount: $amount, paymentMethod: $paymentMethod)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$DeleteBookingImplCopyWith<$Res>
-    implements $BookingDetailsEventCopyWith<$Res> {
-  factory _$$DeleteBookingImplCopyWith(
-          _$DeleteBookingImpl value, $Res Function(_$DeleteBookingImpl) then) =
-      __$$DeleteBookingImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int bookingId});
+abstract mixin class _$UpdatePaymentCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$UpdatePaymentCopyWith(_UpdatePayment value, $Res Function(_UpdatePayment) _then) = __$UpdatePaymentCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId, int amount, PaymentMethod paymentMethod
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdatePaymentCopyWithImpl<$Res>
+    implements _$UpdatePaymentCopyWith<$Res> {
+  __$UpdatePaymentCopyWithImpl(this._self, this._then);
+
+  final _UpdatePayment _self;
+  final $Res Function(_UpdatePayment) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? amount = null,Object? paymentMethod = null,}) {
+  return _then(_UpdatePayment(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as PaymentMethod,
+  ));
 }
 
-/// @nodoc
-class __$$DeleteBookingImplCopyWithImpl<$Res>
-    extends _$BookingDetailsEventCopyWithImpl<$Res, _$DeleteBookingImpl>
-    implements _$$DeleteBookingImplCopyWith<$Res> {
-  __$$DeleteBookingImplCopyWithImpl(
-      _$DeleteBookingImpl _value, $Res Function(_$DeleteBookingImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? bookingId = null,
-  }) {
-    return _then(_$DeleteBookingImpl(
-      null == bookingId
-          ? _value.bookingId
-          : bookingId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$DeleteBookingImpl implements _DeleteBooking {
-  const _$DeleteBookingImpl(this.bookingId);
 
-  @override
-  final int bookingId;
+class _CancelBooking implements BookingDetailsEvent {
+  const _CancelBooking({required this.bookingId, this.refundAmount, this.paymentMethod});
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsEvent.deleteBooking(bookingId: $bookingId)';
-  }
+@override final  int bookingId;
+ final  int? refundAmount;
+ final  PaymentMethod? paymentMethod;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeleteBookingImpl &&
-            (identical(other.bookingId, bookingId) ||
-                other.bookingId == bookingId));
-  }
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CancelBookingCopyWith<_CancelBooking> get copyWith => __$CancelBookingCopyWithImpl<_CancelBooking>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, bookingId);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeleteBookingImplCopyWith<_$DeleteBookingImpl> get copyWith =>
-      __$$DeleteBookingImplCopyWithImpl<_$DeleteBookingImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int bookingId) fetchBookingDetails,
-    required TResult Function(int bookingId, DeliveryStatus deliveryStatus)
-        updateDeliveryStatus,
-    required TResult Function(int bookingId, BookingStatus bookingStatus)
-        updateBookingStatus,
-    required TResult Function(
-            int bookingId, int amount, PaymentMethod paymentMethod)
-        updatePayment,
-    required TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)
-        cancelBooking,
-    required TResult Function(int bookingId) deleteBooking,
-  }) {
-    return deleteBooking(bookingId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int bookingId)? fetchBookingDetails,
-    TResult? Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult? Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult? Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult? Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult? Function(int bookingId)? deleteBooking,
-  }) {
-    return deleteBooking?.call(bookingId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int bookingId)? fetchBookingDetails,
-    TResult Function(int bookingId, DeliveryStatus deliveryStatus)?
-        updateDeliveryStatus,
-    TResult Function(int bookingId, BookingStatus bookingStatus)?
-        updateBookingStatus,
-    TResult Function(int bookingId, int amount, PaymentMethod paymentMethod)?
-        updatePayment,
-    TResult Function(
-            int bookingId, int? refundAmount, PaymentMethod? paymentMethod)?
-        cancelBooking,
-    TResult Function(int bookingId)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (deleteBooking != null) {
-      return deleteBooking(bookingId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchBookingDetails value) fetchBookingDetails,
-    required TResult Function(_UpdateDeliveryStatus value) updateDeliveryStatus,
-    required TResult Function(_UpdateBookingStatus value) updateBookingStatus,
-    required TResult Function(_UpdatePayment value) updatePayment,
-    required TResult Function(_CancelBooking value) cancelBooking,
-    required TResult Function(_DeleteBooking value) deleteBooking,
-  }) {
-    return deleteBooking(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult? Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult? Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult? Function(_UpdatePayment value)? updatePayment,
-    TResult? Function(_CancelBooking value)? cancelBooking,
-    TResult? Function(_DeleteBooking value)? deleteBooking,
-  }) {
-    return deleteBooking?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchBookingDetails value)? fetchBookingDetails,
-    TResult Function(_UpdateDeliveryStatus value)? updateDeliveryStatus,
-    TResult Function(_UpdateBookingStatus value)? updateBookingStatus,
-    TResult Function(_UpdatePayment value)? updatePayment,
-    TResult Function(_CancelBooking value)? cancelBooking,
-    TResult Function(_DeleteBooking value)? deleteBooking,
-    required TResult orElse(),
-  }) {
-    if (deleteBooking != null) {
-      return deleteBooking(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CancelBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod));
 }
 
-abstract class _DeleteBooking implements BookingDetailsEvent {
-  const factory _DeleteBooking(final int bookingId) = _$DeleteBookingImpl;
 
-  @override
-  int get bookingId;
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,refundAmount,paymentMethod);
 
-  /// Create a copy of BookingDetailsEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DeleteBookingImplCopyWith<_$DeleteBookingImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, paymentMethod: $paymentMethod)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CancelBookingCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$CancelBookingCopyWith(_CancelBooking value, $Res Function(_CancelBooking) _then) = __$CancelBookingCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId, int? refundAmount, PaymentMethod? paymentMethod
+});
+
+
+
+
+}
+/// @nodoc
+class __$CancelBookingCopyWithImpl<$Res>
+    implements _$CancelBookingCopyWith<$Res> {
+  __$CancelBookingCopyWithImpl(this._self, this._then);
+
+  final _CancelBooking _self;
+  final $Res Function(_CancelBooking) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? refundAmount = freezed,Object? paymentMethod = freezed,}) {
+  return _then(_CancelBooking(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,refundAmount: freezed == refundAmount ? _self.refundAmount : refundAmount // ignore: cast_nullable_to_non_nullable
+as int?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as PaymentMethod?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _DeleteBooking implements BookingDetailsEvent {
+  const _DeleteBooking(this.bookingId);
+  
+
+@override final  int bookingId;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeleteBookingCopyWith<_DeleteBooking> get copyWith => __$DeleteBookingCopyWithImpl<_DeleteBooking>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bookingId);
+
+@override
+String toString() {
+  return 'BookingDetailsEvent.deleteBooking(bookingId: $bookingId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DeleteBookingCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$DeleteBookingCopyWith(_DeleteBooking value, $Res Function(_DeleteBooking) _then) = __$DeleteBookingCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeleteBookingCopyWithImpl<$Res>
+    implements _$DeleteBookingCopyWith<$Res> {
+  __$DeleteBookingCopyWithImpl(this._self, this._then);
+
+  final _DeleteBooking _self;
+  final $Res Function(_DeleteBooking) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,}) {
+  return _then(_DeleteBooking(
+null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
 }
 
 /// @nodoc
 mixin _$BookingDetailsState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(BookingDetailsModel booking) loaded,
-    required TResult Function(String message, bool didPop, bool needRefresh)
-        success,
-    required TResult Function(String message) failed,
-    required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(BookingDetailsModel booking)? loaded,
-    TResult? Function(String message, bool didPop, bool needRefresh)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(BookingDetailsModel booking)? loaded,
-    TResult Function(String message, bool didPop, bool needRefresh)? success,
-    TResult Function(String message)? failed,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'BookingDetailsState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BookingDetailsStateCopyWith<$Res> {
-  factory $BookingDetailsStateCopyWith(
-          BookingDetailsState value, $Res Function(BookingDetailsState) then) =
-      _$BookingDetailsStateCopyWithImpl<$Res, BookingDetailsState>;
+class $BookingDetailsStateCopyWith<$Res>  {
+$BookingDetailsStateCopyWith(BookingDetailsState _, $Res Function(BookingDetailsState) __);
 }
 
-/// @nodoc
-class _$BookingDetailsStateCopyWithImpl<$Res, $Val extends BookingDetailsState>
-    implements $BookingDetailsStateCopyWith<$Res> {
-  _$BookingDetailsStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [BookingDetailsState].
+extension BookingDetailsStatePatterns on BookingDetailsState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Success value)?  success,TResult Function( _Failed value)?  failed,TResult Function( _Error value)?  error,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Success() when success != null:
+return success(_that);case _Failed() when failed != null:
+return failed(_that);case _Error() when error != null:
+return error(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Success value)  success,required TResult Function( _Failed value)  failed,required TResult Function( _Error value)  error,}){
+final _that = this;
+switch (_that) {
+case _Loading():
+return loading(_that);case _Loaded():
+return loaded(_that);case _Success():
+return success(_that);case _Failed():
+return failed(_that);case _Error():
+return error(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Success value)?  success,TResult? Function( _Failed value)?  failed,TResult? Function( _Error value)?  error,}){
+final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Success() when success != null:
+return success(_that);case _Failed() when failed != null:
+return failed(_that);case _Error() when error != null:
+return error(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( BookingDetailsModel booking)?  loaded,TResult Function( String message,  bool didPop,  bool needRefresh)?  success,TResult Function( String message)?  failed,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.booking);case _Success() when success != null:
+return success(_that.message,_that.didPop,_that.needRefresh);case _Failed() when failed != null:
+return failed(_that.message);case _Error() when error != null:
+return error(_that.error);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( BookingDetailsModel booking)  loaded,required TResult Function( String message,  bool didPop,  bool needRefresh)  success,required TResult Function( String message)  failed,required TResult Function( String error)  error,}) {final _that = this;
+switch (_that) {
+case _Loading():
+return loading();case _Loaded():
+return loaded(_that.booking);case _Success():
+return success(_that.message,_that.didPop,_that.needRefresh);case _Failed():
+return failed(_that.message);case _Error():
+return error(_that.error);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( BookingDetailsModel booking)?  loaded,TResult? Function( String message,  bool didPop,  bool needRefresh)?  success,TResult? Function( String message)?  failed,TResult? Function( String error)?  error,}) {final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.booking);case _Success() when success != null:
+return success(_that.message,_that.didPop,_that.needRefresh);case _Failed() when failed != null:
+return failed(_that.message);case _Error() when error != null:
+return error(_that.error);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$BookingDetailsStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
-
-  @override
-  String toString() {
-    return 'BookingDetailsState.loading()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(BookingDetailsModel booking) loaded,
-    required TResult Function(String message, bool didPop, bool needRefresh)
-        success,
-    required TResult Function(String message) failed,
-    required TResult Function(String error) error,
-  }) {
-    return loading();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(BookingDetailsModel booking)? loaded,
-    TResult? Function(String message, bool didPop, bool needRefresh)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function(String error)? error,
-  }) {
-    return loading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(BookingDetailsModel booking)? loaded,
-    TResult Function(String message, bool didPop, bool needRefresh)? success,
-    TResult Function(String message)? failed,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(_Error value) error,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loading implements BookingDetailsState {
-  const factory _Loading() = _$LoadingImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadedImplCopyWith<$Res> {
-  factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
-      __$$LoadedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({BookingDetailsModel booking});
-
-  $BookingDetailsModelCopyWith<$Res> get booking;
-}
-
-/// @nodoc
-class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$BookingDetailsStateCopyWithImpl<$Res, _$LoadedImpl>
-    implements _$$LoadedImplCopyWith<$Res> {
-  __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? booking = null,
-  }) {
-    return _then(_$LoadedImpl(
-      booking: null == booking
-          ? _value.booking
-          : booking // ignore: cast_nullable_to_non_nullable
-              as BookingDetailsModel,
-    ));
-  }
-
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $BookingDetailsModelCopyWith<$Res> get booking {
-    return $BookingDetailsModelCopyWith<$Res>(_value.booking, (value) {
-      return _then(_value.copyWith(booking: value));
-    });
-  }
 }
 
 /// @nodoc
 
-class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({required this.booking});
 
-  @override
-  final BookingDetailsModel booking;
+class _Loading implements BookingDetailsState {
+  const _Loading();
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsState.loaded(booking: $booking)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadedImpl &&
-            (identical(other.booking, booking) || other.booking == booking));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, booking);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(BookingDetailsModel booking) loaded,
-    required TResult Function(String message, bool didPop, bool needRefresh)
-        success,
-    required TResult Function(String message) failed,
-    required TResult Function(String error) error,
-  }) {
-    return loaded(booking);
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(BookingDetailsModel booking)? loaded,
-    TResult? Function(String message, bool didPop, bool needRefresh)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function(String error)? error,
-  }) {
-    return loaded?.call(booking);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(BookingDetailsModel booking)? loaded,
-    TResult Function(String message, bool didPop, bool needRefresh)? success,
-    TResult Function(String message)? failed,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(booking);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(_Error value) error,
-  }) {
-    return loaded(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loaded?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
-abstract class _Loaded implements BookingDetailsState {
-  const factory _Loaded({required final BookingDetailsModel booking}) =
-      _$LoadedImpl;
 
-  BookingDetailsModel get booking;
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsState.loading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Loaded implements BookingDetailsState {
+  const _Loaded({required this.booking});
+  
+
+ final  BookingDetailsModel booking;
+
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.booking, booking) || other.booking == booking));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,booking);
+
+@override
+String toString() {
+  return 'BookingDetailsState.loaded(booking: $booking)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String message, bool didPop, bool needRefresh});
+abstract mixin class _$LoadedCopyWith<$Res> implements $BookingDetailsStateCopyWith<$Res> {
+  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
+@useResult
+$Res call({
+ BookingDetailsModel booking
+});
+
+
+$BookingDetailsModelCopyWith<$Res> get booking;
+
+}
+/// @nodoc
+class __$LoadedCopyWithImpl<$Res>
+    implements _$LoadedCopyWith<$Res> {
+  __$LoadedCopyWithImpl(this._self, this._then);
+
+  final _Loaded _self;
+  final $Res Function(_Loaded) _then;
+
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? booking = null,}) {
+  return _then(_Loaded(
+booking: null == booking ? _self.booking : booking // ignore: cast_nullable_to_non_nullable
+as BookingDetailsModel,
+  ));
 }
 
-/// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$BookingDetailsStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? message = null,
-    Object? didPop = null,
-    Object? needRefresh = null,
-  }) {
-    return _then(_$SuccessImpl(
-      null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      didPop: null == didPop
-          ? _value.didPop
-          : didPop // ignore: cast_nullable_to_non_nullable
-              as bool,
-      needRefresh: null == needRefresh
-          ? _value.needRefresh
-          : needRefresh // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BookingDetailsModelCopyWith<$Res> get booking {
+  
+  return $BookingDetailsModelCopyWith<$Res>(_self.booking, (value) {
+    return _then(_self.copyWith(booking: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$SuccessImpl implements _Success {
-  const _$SuccessImpl(this.message,
-      {this.didPop = false, this.needRefresh = true});
 
-  @override
-  final String message;
-  @override
-  @JsonKey()
-  final bool didPop;
-  @override
-  @JsonKey()
-  final bool needRefresh;
+class _Success implements BookingDetailsState {
+  const _Success(this.message, {this.didPop = false, this.needRefresh = true});
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsState.success(message: $message, didPop: $didPop, needRefresh: $needRefresh)';
-  }
+ final  String message;
+@JsonKey() final  bool didPop;
+@JsonKey() final  bool needRefresh;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SuccessImpl &&
-            (identical(other.message, message) || other.message == message) &&
-            (identical(other.didPop, didPop) || other.didPop == didPop) &&
-            (identical(other.needRefresh, needRefresh) ||
-                other.needRefresh == needRefresh));
-  }
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, message, didPop, needRefresh);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(BookingDetailsModel booking) loaded,
-    required TResult Function(String message, bool didPop, bool needRefresh)
-        success,
-    required TResult Function(String message) failed,
-    required TResult Function(String error) error,
-  }) {
-    return success(message, didPop, needRefresh);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(BookingDetailsModel booking)? loaded,
-    TResult? Function(String message, bool didPop, bool needRefresh)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function(String error)? error,
-  }) {
-    return success?.call(message, didPop, needRefresh);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(BookingDetailsModel booking)? loaded,
-    TResult Function(String message, bool didPop, bool needRefresh)? success,
-    TResult Function(String message)? failed,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(message, didPop, needRefresh);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(_Error value) error,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(_Error value)? error,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.message, message) || other.message == message)&&(identical(other.didPop, didPop) || other.didPop == didPop)&&(identical(other.needRefresh, needRefresh) || other.needRefresh == needRefresh));
 }
 
-abstract class _Success implements BookingDetailsState {
-  const factory _Success(final String message,
-      {final bool didPop, final bool needRefresh}) = _$SuccessImpl;
 
-  String get message;
-  bool get didPop;
-  bool get needRefresh;
+@override
+int get hashCode => Object.hash(runtimeType,message,didPop,needRefresh);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsState.success(message: $message, didPop: $didPop, needRefresh: $needRefresh)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$FailedImplCopyWith<$Res> {
-  factory _$$FailedImplCopyWith(
-          _$FailedImpl value, $Res Function(_$FailedImpl) then) =
-      __$$FailedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String message});
+abstract mixin class _$SuccessCopyWith<$Res> implements $BookingDetailsStateCopyWith<$Res> {
+  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) = __$SuccessCopyWithImpl;
+@useResult
+$Res call({
+ String message, bool didPop, bool needRefresh
+});
+
+
+
+
+}
+/// @nodoc
+class __$SuccessCopyWithImpl<$Res>
+    implements _$SuccessCopyWith<$Res> {
+  __$SuccessCopyWithImpl(this._self, this._then);
+
+  final _Success _self;
+  final $Res Function(_Success) _then;
+
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? didPop = null,Object? needRefresh = null,}) {
+  return _then(_Success(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,didPop: null == didPop ? _self.didPop : didPop // ignore: cast_nullable_to_non_nullable
+as bool,needRefresh: null == needRefresh ? _self.needRefresh : needRefresh // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-class __$$FailedImplCopyWithImpl<$Res>
-    extends _$BookingDetailsStateCopyWithImpl<$Res, _$FailedImpl>
-    implements _$$FailedImplCopyWith<$Res> {
-  __$$FailedImplCopyWithImpl(
-      _$FailedImpl _value, $Res Function(_$FailedImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_$FailedImpl(
-      null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$FailedImpl implements _Failed {
-  const _$FailedImpl(this.message);
 
-  @override
-  final String message;
+class _Failed implements BookingDetailsState {
+  const _Failed(this.message);
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsState.failed(message: $message)';
-  }
+ final  String message;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FailedImpl &&
-            (identical(other.message, message) || other.message == message));
-  }
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FailedCopyWith<_Failed> get copyWith => __$FailedCopyWithImpl<_Failed>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
-      __$$FailedImplCopyWithImpl<_$FailedImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(BookingDetailsModel booking) loaded,
-    required TResult Function(String message, bool didPop, bool needRefresh)
-        success,
-    required TResult Function(String message) failed,
-    required TResult Function(String error) error,
-  }) {
-    return failed(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(BookingDetailsModel booking)? loaded,
-    TResult? Function(String message, bool didPop, bool needRefresh)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function(String error)? error,
-  }) {
-    return failed?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(BookingDetailsModel booking)? loaded,
-    TResult Function(String message, bool didPop, bool needRefresh)? success,
-    TResult Function(String message)? failed,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (failed != null) {
-      return failed(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(_Error value) error,
-  }) {
-    return failed(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(_Error value)? error,
-  }) {
-    return failed?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (failed != null) {
-      return failed(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failed&&(identical(other.message, message) || other.message == message));
 }
 
-abstract class _Failed implements BookingDetailsState {
-  const factory _Failed(final String message) = _$FailedImpl;
 
-  String get message;
+@override
+int get hashCode => Object.hash(runtimeType,message);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsState.failed(message: $message)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String error});
+abstract mixin class _$FailedCopyWith<$Res> implements $BookingDetailsStateCopyWith<$Res> {
+  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) = __$FailedCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class __$FailedCopyWithImpl<$Res>
+    implements _$FailedCopyWith<$Res> {
+  __$FailedCopyWithImpl(this._self, this._then);
+
+  final _Failed _self;
+  final $Res Function(_Failed) _then;
+
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(_Failed(
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$BookingDetailsStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
-class _$ErrorImpl implements _Error {
-  const _$ErrorImpl(this.error);
 
-  @override
-  final String error;
+class _Error implements BookingDetailsState {
+  const _Error(this.error);
+  
 
-  @override
-  String toString() {
-    return 'BookingDetailsState.error(error: $error)';
-  }
+ final  String error;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
-            (identical(other.error, error) || other.error == error));
-  }
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(BookingDetailsModel booking) loaded,
-    required TResult Function(String message, bool didPop, bool needRefresh)
-        success,
-    required TResult Function(String message) failed,
-    required TResult Function(String error) error,
-  }) {
-    return error(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(BookingDetailsModel booking)? loaded,
-    TResult? Function(String message, bool didPop, bool needRefresh)? success,
-    TResult? Function(String message)? failed,
-    TResult? Function(String error)? error,
-  }) {
-    return error?.call(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(BookingDetailsModel booking)? loaded,
-    TResult Function(String message, bool didPop, bool needRefresh)? success,
-    TResult Function(String message)? failed,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this.error);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(_Error value) error,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(_Error value)? error,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
-abstract class _Error implements BookingDetailsState {
-  const factory _Error(final String error) = _$ErrorImpl;
 
-  String get error;
+@override
+int get hashCode => Object.hash(runtimeType,error);
 
-  /// Create a copy of BookingDetailsState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'BookingDetailsState.error(error: $error)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ErrorCopyWith<$Res> implements $BookingDetailsStateCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ String error
+});
+
+
+
+
+}
+/// @nodoc
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of BookingDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
+  return _then(_Error(
+null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -1,7 +1,7 @@
 part of 'shop_list_bloc.dart';
 
 @freezed
-class ShopListState with _$ShopListState {
+abstract class ShopListState with _$ShopListState {
   const factory ShopListState.loading() = _Loading;
   const factory ShopListState.loaded({
     required List<ShopEntity> shops,

@@ -17,7 +17,7 @@ String? _readPhone1E164(Map json, String key) => json[key];
 String? _readPhone2E164(Map json, String key) => json[key];
 
 @freezed
-class ClientModel with _$ClientModel {
+abstract class ClientModel with _$ClientModel {
   const factory ClientModel({
     @JsonKey(
       name: 'id',

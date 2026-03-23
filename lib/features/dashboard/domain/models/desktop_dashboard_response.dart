@@ -5,7 +5,7 @@ part 'desktop_dashboard_response.freezed.dart';
 part 'desktop_dashboard_response.g.dart';
 
 @freezed
-class DesktopDashboardResponse with _$DesktopDashboardResponse {
+abstract class DesktopDashboardResponse with _$DesktopDashboardResponse {
   const factory DesktopDashboardResponse({
     @JsonKey(name: 'upcoming') required List<BookingsModel> upcoming,
     @JsonKey(name: 'ongoing_bookings')
@@ -23,7 +23,8 @@ class DesktopDashboardResponse with _$DesktopDashboardResponse {
 }
 
 @freezed
-class DesktopDashboardCarouselData with _$DesktopDashboardCarouselData {
+abstract class DesktopDashboardCarouselData
+    with _$DesktopDashboardCarouselData {
   const factory DesktopDashboardCarouselData({
     required int upcomingCount,
     required int alterationBookingCount,
@@ -44,7 +45,7 @@ class DesktopDashboardCarouselData with _$DesktopDashboardCarouselData {
 }
 
 @freezed
-class DesktopDashboardPagination with _$DesktopDashboardPagination {
+abstract class DesktopDashboardPagination with _$DesktopDashboardPagination {
   const factory DesktopDashboardPagination({
     @JsonKey(name: 'upcoming') required PaginationInfo upcoming,
     @JsonKey(name: 'ongoing') required PaginationInfo ongoing,
@@ -55,7 +56,7 @@ class DesktopDashboardPagination with _$DesktopDashboardPagination {
 }
 
 @freezed
-class PaginationInfo with _$PaginationInfo {
+abstract class PaginationInfo with _$PaginationInfo {
   const factory PaginationInfo({
     String? next,
     String? previous,

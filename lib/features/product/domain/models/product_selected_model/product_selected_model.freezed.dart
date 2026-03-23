@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,276 +9,305 @@ part of 'product_selected_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ProductSelectedModel _$ProductSelectedModelFromJson(Map<String, dynamic> json) {
-  return _ProductSelectedModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ProductSelectedModel {
-  ProductInfoModel get variant => throw _privateConstructorUsedError;
-  int get amount => throw _privateConstructorUsedError;
-  List<MeasurementValueModel> get measurements =>
-      throw _privateConstructorUsedError;
-  int get quantity => throw _privateConstructorUsedError;
-  String? get runningKilometers => throw _privateConstructorUsedError;
+
+ ProductInfoModel get variant; int get amount; List<MeasurementValueModel> get measurements; int get quantity; String? get runningKilometers;
+/// Create a copy of ProductSelectedModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ProductSelectedModelCopyWith<ProductSelectedModel> get copyWith => _$ProductSelectedModelCopyWithImpl<ProductSelectedModel>(this as ProductSelectedModel, _$identity);
 
   /// Serializes this ProductSelectedModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of ProductSelectedModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ProductSelectedModelCopyWith<ProductSelectedModel> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.measurements, measurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(measurements),quantity,runningKilometers);
+
+@override
+String toString() {
+  return 'ProductSelectedModel(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ProductSelectedModelCopyWith<$Res> {
-  factory $ProductSelectedModelCopyWith(ProductSelectedModel value,
-          $Res Function(ProductSelectedModel) then) =
-      _$ProductSelectedModelCopyWithImpl<$Res, ProductSelectedModel>;
-  @useResult
-  $Res call(
-      {ProductInfoModel variant,
-      int amount,
-      List<MeasurementValueModel> measurements,
-      int quantity,
-      String? runningKilometers});
+abstract mixin class $ProductSelectedModelCopyWith<$Res>  {
+  factory $ProductSelectedModelCopyWith(ProductSelectedModel value, $Res Function(ProductSelectedModel) _then) = _$ProductSelectedModelCopyWithImpl;
+@useResult
+$Res call({
+ ProductInfoModel variant, int amount, List<MeasurementValueModel> measurements, int quantity, String? runningKilometers
+});
 
-  $ProductInfoModelCopyWith<$Res> get variant;
+
+$ProductInfoModelCopyWith<$Res> get variant;
+
 }
-
 /// @nodoc
-class _$ProductSelectedModelCopyWithImpl<$Res,
-        $Val extends ProductSelectedModel>
+class _$ProductSelectedModelCopyWithImpl<$Res>
     implements $ProductSelectedModelCopyWith<$Res> {
-  _$ProductSelectedModelCopyWithImpl(this._value, this._then);
+  _$ProductSelectedModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ProductSelectedModel _self;
+  final $Res Function(ProductSelectedModel) _then;
 
-  /// Create a copy of ProductSelectedModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? variant = null,
-    Object? amount = null,
-    Object? measurements = null,
-    Object? quantity = null,
-    Object? runningKilometers = freezed,
-  }) {
-    return _then(_value.copyWith(
-      variant: null == variant
-          ? _value.variant
-          : variant // ignore: cast_nullable_to_non_nullable
-              as ProductInfoModel,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
-      measurements: null == measurements
-          ? _value.measurements
-          : measurements // ignore: cast_nullable_to_non_nullable
-              as List<MeasurementValueModel>,
-      quantity: null == quantity
-          ? _value.quantity
-          : quantity // ignore: cast_nullable_to_non_nullable
-              as int,
-      runningKilometers: freezed == runningKilometers
-          ? _value.runningKilometers
-          : runningKilometers // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
-
-  /// Create a copy of ProductSelectedModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ProductInfoModelCopyWith<$Res> get variant {
-    return $ProductInfoModelCopyWith<$Res>(_value.variant, (value) {
-      return _then(_value.copyWith(variant: value) as $Val);
-    });
-  }
+/// Create a copy of ProductSelectedModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? variant = null,Object? amount = null,Object? measurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
+  return _then(_self.copyWith(
+variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
+as ProductInfoModel,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as int,measurements: null == measurements ? _self.measurements : measurements // ignore: cast_nullable_to_non_nullable
+as List<MeasurementValueModel>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+/// Create a copy of ProductSelectedModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProductInfoModelCopyWith<$Res> get variant {
+  
+  return $ProductInfoModelCopyWith<$Res>(_self.variant, (value) {
+    return _then(_self.copyWith(variant: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$ProductSelectedModelImplCopyWith<$Res>
-    implements $ProductSelectedModelCopyWith<$Res> {
-  factory _$$ProductSelectedModelImplCopyWith(_$ProductSelectedModelImpl value,
-          $Res Function(_$ProductSelectedModelImpl) then) =
-      __$$ProductSelectedModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {ProductInfoModel variant,
-      int amount,
-      List<MeasurementValueModel> measurements,
-      int quantity,
-      String? runningKilometers});
 
-  @override
-  $ProductInfoModelCopyWith<$Res> get variant;
+/// Adds pattern-matching-related methods to [ProductSelectedModel].
+extension ProductSelectedModelPatterns on ProductSelectedModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProductSelectedModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ProductSelectedModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProductSelectedModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _ProductSelectedModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProductSelectedModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ProductSelectedModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProductInfoModel variant,  int amount,  List<MeasurementValueModel> measurements,  int quantity,  String? runningKilometers)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ProductSelectedModel() when $default != null:
+return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProductInfoModel variant,  int amount,  List<MeasurementValueModel> measurements,  int quantity,  String? runningKilometers)  $default,) {final _that = this;
+switch (_that) {
+case _ProductSelectedModel():
+return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProductInfoModel variant,  int amount,  List<MeasurementValueModel> measurements,  int quantity,  String? runningKilometers)?  $default,) {final _that = this;
+switch (_that) {
+case _ProductSelectedModel() when $default != null:
+return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$ProductSelectedModelImplCopyWithImpl<$Res>
-    extends _$ProductSelectedModelCopyWithImpl<$Res, _$ProductSelectedModelImpl>
-    implements _$$ProductSelectedModelImplCopyWith<$Res> {
-  __$$ProductSelectedModelImplCopyWithImpl(_$ProductSelectedModelImpl _value,
-      $Res Function(_$ProductSelectedModelImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ProductSelectedModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? variant = null,
-    Object? amount = null,
-    Object? measurements = null,
-    Object? quantity = null,
-    Object? runningKilometers = freezed,
-  }) {
-    return _then(_$ProductSelectedModelImpl(
-      variant: null == variant
-          ? _value.variant
-          : variant // ignore: cast_nullable_to_non_nullable
-              as ProductInfoModel,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
-      measurements: null == measurements
-          ? _value._measurements
-          : measurements // ignore: cast_nullable_to_non_nullable
-              as List<MeasurementValueModel>,
-      quantity: null == quantity
-          ? _value.quantity
-          : quantity // ignore: cast_nullable_to_non_nullable
-              as int,
-      runningKilometers: freezed == runningKilometers
-          ? _value.runningKilometers
-          : runningKilometers // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ProductSelectedModelImpl implements _ProductSelectedModel {
-  const _$ProductSelectedModelImpl(
-      {required this.variant,
-      required this.amount,
-      final List<MeasurementValueModel> measurements = const [],
-      required this.quantity,
-      this.runningKilometers})
-      : _measurements = measurements;
 
-  factory _$ProductSelectedModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ProductSelectedModelImplFromJson(json);
+class _ProductSelectedModel implements ProductSelectedModel {
+  const _ProductSelectedModel({required this.variant, required this.amount, final  List<MeasurementValueModel> measurements = const [], required this.quantity, this.runningKilometers}): _measurements = measurements;
+  factory _ProductSelectedModel.fromJson(Map<String, dynamic> json) => _$ProductSelectedModelFromJson(json);
 
-  @override
-  final ProductInfoModel variant;
-  @override
-  final int amount;
-  final List<MeasurementValueModel> _measurements;
-  @override
-  @JsonKey()
-  List<MeasurementValueModel> get measurements {
-    if (_measurements is EqualUnmodifiableListView) return _measurements;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_measurements);
-  }
-
-  @override
-  final int quantity;
-  @override
-  final String? runningKilometers;
-
-  @override
-  String toString() {
-    return 'ProductSelectedModel(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ProductSelectedModelImpl &&
-            (identical(other.variant, variant) || other.variant == variant) &&
-            (identical(other.amount, amount) || other.amount == amount) &&
-            const DeepCollectionEquality()
-                .equals(other._measurements, _measurements) &&
-            (identical(other.quantity, quantity) ||
-                other.quantity == quantity) &&
-            (identical(other.runningKilometers, runningKilometers) ||
-                other.runningKilometers == runningKilometers));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      variant,
-      amount,
-      const DeepCollectionEquality().hash(_measurements),
-      quantity,
-      runningKilometers);
-
-  /// Create a copy of ProductSelectedModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ProductSelectedModelImplCopyWith<_$ProductSelectedModelImpl>
-      get copyWith =>
-          __$$ProductSelectedModelImplCopyWithImpl<_$ProductSelectedModelImpl>(
-              this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ProductSelectedModelImplToJson(
-      this,
-    );
-  }
+@override final  ProductInfoModel variant;
+@override final  int amount;
+ final  List<MeasurementValueModel> _measurements;
+@override@JsonKey() List<MeasurementValueModel> get measurements {
+  if (_measurements is EqualUnmodifiableListView) return _measurements;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_measurements);
 }
 
-abstract class _ProductSelectedModel implements ProductSelectedModel {
-  const factory _ProductSelectedModel(
-      {required final ProductInfoModel variant,
-      required final int amount,
-      final List<MeasurementValueModel> measurements,
-      required final int quantity,
-      final String? runningKilometers}) = _$ProductSelectedModelImpl;
+@override final  int quantity;
+@override final  String? runningKilometers;
 
-  factory _ProductSelectedModel.fromJson(Map<String, dynamic> json) =
-      _$ProductSelectedModelImpl.fromJson;
+/// Create a copy of ProductSelectedModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ProductSelectedModelCopyWith<_ProductSelectedModel> get copyWith => __$ProductSelectedModelCopyWithImpl<_ProductSelectedModel>(this, _$identity);
 
-  @override
-  ProductInfoModel get variant;
-  @override
-  int get amount;
-  @override
-  List<MeasurementValueModel> get measurements;
-  @override
-  int get quantity;
-  @override
-  String? get runningKilometers;
-
-  /// Create a copy of ProductSelectedModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ProductSelectedModelImplCopyWith<_$ProductSelectedModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$ProductSelectedModelToJson(this, );
 }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other._measurements, _measurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(_measurements),quantity,runningKilometers);
+
+@override
+String toString() {
+  return 'ProductSelectedModel(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ProductSelectedModelCopyWith<$Res> implements $ProductSelectedModelCopyWith<$Res> {
+  factory _$ProductSelectedModelCopyWith(_ProductSelectedModel value, $Res Function(_ProductSelectedModel) _then) = __$ProductSelectedModelCopyWithImpl;
+@override @useResult
+$Res call({
+ ProductInfoModel variant, int amount, List<MeasurementValueModel> measurements, int quantity, String? runningKilometers
+});
+
+
+@override $ProductInfoModelCopyWith<$Res> get variant;
+
+}
+/// @nodoc
+class __$ProductSelectedModelCopyWithImpl<$Res>
+    implements _$ProductSelectedModelCopyWith<$Res> {
+  __$ProductSelectedModelCopyWithImpl(this._self, this._then);
+
+  final _ProductSelectedModel _self;
+  final $Res Function(_ProductSelectedModel) _then;
+
+/// Create a copy of ProductSelectedModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? variant = null,Object? amount = null,Object? measurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
+  return _then(_ProductSelectedModel(
+variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
+as ProductInfoModel,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as int,measurements: null == measurements ? _self._measurements : measurements // ignore: cast_nullable_to_non_nullable
+as List<MeasurementValueModel>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+/// Create a copy of ProductSelectedModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProductInfoModelCopyWith<$Res> get variant {
+  
+  return $ProductInfoModelCopyWith<$Res>(_self.variant, (value) {
+    return _then(_self.copyWith(variant: value));
+  });
+}
+}
+
+// dart format on

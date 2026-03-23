@@ -6,9 +6,8 @@ part of 'product_variant_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProductVariantModelImpl _$$ProductVariantModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ProductVariantModelImpl(
+_ProductVariantModel _$ProductVariantModelFromJson(Map<String, dynamic> json) =>
+    _ProductVariantModel(
       id: (json['id'] as num).toInt(),
       attribute: json['attribute'] as String,
       stock: (json['stock'] as num).toInt(),
@@ -18,14 +17,14 @@ _$ProductVariantModelImpl _$$ProductVariantModelImplFromJson(
       externalQrCode: json['external_qr_code'] as String?,
     );
 
-Map<String, dynamic> _$$ProductVariantModelImplToJson(
-        _$ProductVariantModelImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'attribute': instance.attribute,
-      'stock': instance.stock,
-      'remaining_stock': instance.remainingStock,
-      'price': instance.price,
-      'sale_price': instance.salePrice,
-      'external_qr_code': instance.externalQrCode,
-    };
+Map<String, dynamic> _$ProductVariantModelToJson(
+  _ProductVariantModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'attribute': instance.attribute,
+  'stock': instance.stock,
+  'remaining_stock': instance.remainingStock,
+  'price': instance.price,
+  'sale_price': instance.salePrice,
+  'external_qr_code': instance.externalQrCode,
+};

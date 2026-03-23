@@ -15,7 +15,7 @@ int _amountFromJson(dynamic value) {
 }
 
 @freezed
-class AdditionalChargesModel with _$AdditionalChargesModel {
+abstract class AdditionalChargesModel with _$AdditionalChargesModel {
   const factory AdditionalChargesModel({
     @JsonKey(includeIfNull: false) int? id,
     String? name,

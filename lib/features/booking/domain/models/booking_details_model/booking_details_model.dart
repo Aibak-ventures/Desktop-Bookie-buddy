@@ -12,7 +12,7 @@ part 'booking_details_model.freezed.dart';
 part 'booking_details_model.g.dart';
 
 @freezed
-class BookingDetailsModel with _$BookingDetailsModel {
+abstract class BookingDetailsModel with _$BookingDetailsModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory BookingDetailsModel({
     required int id,

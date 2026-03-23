@@ -6,9 +6,8 @@ part of 'staff_analytics_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StaffAnalyticsModelImpl _$$StaffAnalyticsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$StaffAnalyticsModelImpl(
+_StaffAnalyticsModel _$StaffAnalyticsModelFromJson(Map<String, dynamic> json) =>
+    _StaffAnalyticsModel(
       staffId: (json['staff_id'] as num).toInt(),
       staffName: json['staff_name'] as String,
       year: (json['year'] as num).toInt(),
@@ -27,19 +26,19 @@ _$StaffAnalyticsModelImpl _$$StaffAnalyticsModelImplFromJson(
       performancePercent: (json['performance_percent'] as num?)?.toInt() ?? 0,
     );
 
-Map<String, dynamic> _$$StaffAnalyticsModelImplToJson(
-        _$StaffAnalyticsModelImpl instance) =>
-    <String, dynamic>{
-      'staff_id': instance.staffId,
-      'staff_name': instance.staffName,
-      'year': instance.year,
-      'month_name': instance.monthName,
-      'total_bookings_count': instance.totalBookingsCount,
-      'total_sales_count': instance.totalSalesCount,
-      'total_bookings_pending_count': instance.totalPendingsCount,
-      'total_bookings_earned_amount': instance.totalBookingsAmount,
-      'total_sales_earning': instance.totalSalesAmount,
-      'total_bookings_pending_amount': instance.totalPendingAmount,
-      'total_earning': instance.totalAmount,
-      'performance_percent': instance.performancePercent,
-    };
+Map<String, dynamic> _$StaffAnalyticsModelToJson(
+  _StaffAnalyticsModel instance,
+) => <String, dynamic>{
+  'staff_id': instance.staffId,
+  'staff_name': instance.staffName,
+  'year': instance.year,
+  'month_name': instance.monthName,
+  'total_bookings_count': instance.totalBookingsCount,
+  'total_sales_count': instance.totalSalesCount,
+  'total_bookings_pending_count': instance.totalPendingsCount,
+  'total_bookings_earned_amount': instance.totalBookingsAmount,
+  'total_sales_earning': instance.totalSalesAmount,
+  'total_bookings_pending_amount': instance.totalPendingAmount,
+  'total_earning': instance.totalAmount,
+  'performance_percent': instance.performancePercent,
+};

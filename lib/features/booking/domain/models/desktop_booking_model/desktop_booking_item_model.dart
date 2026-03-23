@@ -7,7 +7,7 @@ part 'desktop_booking_item_model.freezed.dart';
 part 'desktop_booking_item_model.g.dart';
 
 @freezed
-class DesktopBookingItemModel with _$DesktopBookingItemModel {
+abstract class DesktopBookingItemModel with _$DesktopBookingItemModel {
   const factory DesktopBookingItemModel({
     required int id,
     @JsonKey(name: 'shop_booking_id') required String shopBookingId,

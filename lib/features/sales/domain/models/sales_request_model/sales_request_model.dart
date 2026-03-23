@@ -26,7 +26,7 @@ List<Map<String, dynamic>>? _variantsToJson(
 String? _paymentMethodToJson(PaymentMethod? method) => method?.value;
 
 @freezed
-class SalesRequestModel with _$SalesRequestModel {
+abstract class SalesRequestModel with _$SalesRequestModel {
   @JsonSerializable(includeIfNull: false)
   const factory SalesRequestModel({
     @JsonKey(includeToJson: false) int? id,

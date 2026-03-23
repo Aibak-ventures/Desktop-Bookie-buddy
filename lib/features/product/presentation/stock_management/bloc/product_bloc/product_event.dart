@@ -1,7 +1,7 @@
 part of 'product_bloc.dart';
 
 @freezed
-class ProductEvent with _$ProductEvent {
+abstract class ProductEvent with _$ProductEvent {
   const factory ProductEvent.loadProducts(int serviceId) = _LoadProducts;
   const factory ProductEvent.loadNextPageProducts(int serviceId) =
       _LoadNextPageProducts;

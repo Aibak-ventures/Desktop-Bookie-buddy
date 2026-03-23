@@ -24,7 +24,7 @@ List<MeasurementValueModel> _parseMeasurements(dynamic json) {
 }
 
 @freezed
-class ProductInfoModel with _$ProductInfoModel {
+abstract class ProductInfoModel with _$ProductInfoModel {
   const factory ProductInfoModel({
     @JsonKey(name: 'id', readValue: _idCustomRead) required int id,
     @JsonKey(name: 'product_id') required int? productId,

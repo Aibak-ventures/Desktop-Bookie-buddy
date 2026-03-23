@@ -5,7 +5,7 @@ part 'measurement_value_model.freezed.dart';
 part 'measurement_value_model.g.dart';
 
 @freezed
-class MeasurementValueModel with _$MeasurementValueModel {
+abstract class MeasurementValueModel with _$MeasurementValueModel {
   const factory MeasurementValueModel({
     required String name,
     required String key,

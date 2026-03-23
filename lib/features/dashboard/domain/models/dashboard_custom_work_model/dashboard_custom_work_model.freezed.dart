@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,297 +9,284 @@ part of 'dashboard_custom_work_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-DashboardCustomWorkModel _$DashboardCustomWorkModelFromJson(
-    Map<String, dynamic> json) {
-  return _DashboardCustomWorkModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$DashboardCustomWorkModel {
-  int get id => throw _privateConstructorUsedError;
-  String get tailorName => throw _privateConstructorUsedError;
-  String get pickupDate => throw _privateConstructorUsedError;
-  @JsonKey(
-      fromJson: CustomizationWorkStatus.fromString,
-      toJson: CustomizationWorkStatus.toJson)
-  CustomizationWorkStatus get status => throw _privateConstructorUsedError;
-  String get products => throw _privateConstructorUsedError;
-  @JsonKey(name: 'staff_color')
-  String? get staffColor => throw _privateConstructorUsedError;
+
+ int get id; String get tailorName; String get pickupDate;@JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson) CustomizationWorkStatus get status; String get products;@JsonKey(name: 'staff_color') String? get staffColor;
+/// Create a copy of DashboardCustomWorkModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DashboardCustomWorkModelCopyWith<DashboardCustomWorkModel> get copyWith => _$DashboardCustomWorkModelCopyWithImpl<DashboardCustomWorkModel>(this as DashboardCustomWorkModel, _$identity);
 
   /// Serializes this DashboardCustomWorkModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of DashboardCustomWorkModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $DashboardCustomWorkModelCopyWith<DashboardCustomWorkModel> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardCustomWorkModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tailorName, tailorName) || other.tailorName == tailorName)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,tailorName,pickupDate,status,products,staffColor);
+
+@override
+String toString() {
+  return 'DashboardCustomWorkModel(id: $id, tailorName: $tailorName, pickupDate: $pickupDate, status: $status, products: $products, staffColor: $staffColor)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DashboardCustomWorkModelCopyWith<$Res> {
-  factory $DashboardCustomWorkModelCopyWith(DashboardCustomWorkModel value,
-          $Res Function(DashboardCustomWorkModel) then) =
-      _$DashboardCustomWorkModelCopyWithImpl<$Res, DashboardCustomWorkModel>;
-  @useResult
-  $Res call(
-      {int id,
-      String tailorName,
-      String pickupDate,
-      @JsonKey(
-          fromJson: CustomizationWorkStatus.fromString,
-          toJson: CustomizationWorkStatus.toJson)
-      CustomizationWorkStatus status,
-      String products,
-      @JsonKey(name: 'staff_color') String? staffColor});
-}
+abstract mixin class $DashboardCustomWorkModelCopyWith<$Res>  {
+  factory $DashboardCustomWorkModelCopyWith(DashboardCustomWorkModel value, $Res Function(DashboardCustomWorkModel) _then) = _$DashboardCustomWorkModelCopyWithImpl;
+@useResult
+$Res call({
+ int id, String tailorName, String pickupDate,@JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson) CustomizationWorkStatus status, String products,@JsonKey(name: 'staff_color') String? staffColor
+});
 
+
+
+
+}
 /// @nodoc
-class _$DashboardCustomWorkModelCopyWithImpl<$Res,
-        $Val extends DashboardCustomWorkModel>
+class _$DashboardCustomWorkModelCopyWithImpl<$Res>
     implements $DashboardCustomWorkModelCopyWith<$Res> {
-  _$DashboardCustomWorkModelCopyWithImpl(this._value, this._then);
+  _$DashboardCustomWorkModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final DashboardCustomWorkModel _self;
+  final $Res Function(DashboardCustomWorkModel) _then;
 
-  /// Create a copy of DashboardCustomWorkModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? tailorName = null,
-    Object? pickupDate = null,
-    Object? status = null,
-    Object? products = null,
-    Object? staffColor = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      tailorName: null == tailorName
-          ? _value.tailorName
-          : tailorName // ignore: cast_nullable_to_non_nullable
-              as String,
-      pickupDate: null == pickupDate
-          ? _value.pickupDate
-          : pickupDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as CustomizationWorkStatus,
-      products: null == products
-          ? _value.products
-          : products // ignore: cast_nullable_to_non_nullable
-              as String,
-      staffColor: freezed == staffColor
-          ? _value.staffColor
-          : staffColor // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
+/// Create a copy of DashboardCustomWorkModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? tailorName = null,Object? pickupDate = null,Object? status = null,Object? products = null,Object? staffColor = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,tailorName: null == tailorName ? _self.tailorName : tailorName // ignore: cast_nullable_to_non_nullable
+as String,pickupDate: null == pickupDate ? _self.pickupDate : pickupDate // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as CustomizationWorkStatus,products: null == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
+as String,staffColor: freezed == staffColor ? _self.staffColor : staffColor // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$DashboardCustomWorkModelImplCopyWith<$Res>
-    implements $DashboardCustomWorkModelCopyWith<$Res> {
-  factory _$$DashboardCustomWorkModelImplCopyWith(
-          _$DashboardCustomWorkModelImpl value,
-          $Res Function(_$DashboardCustomWorkModelImpl) then) =
-      __$$DashboardCustomWorkModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {int id,
-      String tailorName,
-      String pickupDate,
-      @JsonKey(
-          fromJson: CustomizationWorkStatus.fromString,
-          toJson: CustomizationWorkStatus.toJson)
-      CustomizationWorkStatus status,
-      String products,
-      @JsonKey(name: 'staff_color') String? staffColor});
 }
 
-/// @nodoc
-class __$$DashboardCustomWorkModelImplCopyWithImpl<$Res>
-    extends _$DashboardCustomWorkModelCopyWithImpl<$Res,
-        _$DashboardCustomWorkModelImpl>
-    implements _$$DashboardCustomWorkModelImplCopyWith<$Res> {
-  __$$DashboardCustomWorkModelImplCopyWithImpl(
-      _$DashboardCustomWorkModelImpl _value,
-      $Res Function(_$DashboardCustomWorkModelImpl) _then)
-      : super(_value, _then);
 
-  /// Create a copy of DashboardCustomWorkModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? tailorName = null,
-    Object? pickupDate = null,
-    Object? status = null,
-    Object? products = null,
-    Object? staffColor = freezed,
-  }) {
-    return _then(_$DashboardCustomWorkModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      tailorName: null == tailorName
-          ? _value.tailorName
-          : tailorName // ignore: cast_nullable_to_non_nullable
-              as String,
-      pickupDate: null == pickupDate
-          ? _value.pickupDate
-          : pickupDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as CustomizationWorkStatus,
-      products: null == products
-          ? _value.products
-          : products // ignore: cast_nullable_to_non_nullable
-              as String,
-      staffColor: freezed == staffColor
-          ? _value.staffColor
-          : staffColor // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [DashboardCustomWorkModel].
+extension DashboardCustomWorkModelPatterns on DashboardCustomWorkModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DashboardCustomWorkModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DashboardCustomWorkModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DashboardCustomWorkModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _DashboardCustomWorkModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DashboardCustomWorkModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DashboardCustomWorkModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String tailorName,  String pickupDate, @JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson)  CustomizationWorkStatus status,  String products, @JsonKey(name: 'staff_color')  String? staffColor)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DashboardCustomWorkModel() when $default != null:
+return $default(_that.id,_that.tailorName,_that.pickupDate,_that.status,_that.products,_that.staffColor);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String tailorName,  String pickupDate, @JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson)  CustomizationWorkStatus status,  String products, @JsonKey(name: 'staff_color')  String? staffColor)  $default,) {final _that = this;
+switch (_that) {
+case _DashboardCustomWorkModel():
+return $default(_that.id,_that.tailorName,_that.pickupDate,_that.status,_that.products,_that.staffColor);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String tailorName,  String pickupDate, @JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson)  CustomizationWorkStatus status,  String products, @JsonKey(name: 'staff_color')  String? staffColor)?  $default,) {final _that = this;
+switch (_that) {
+case _DashboardCustomWorkModel() when $default != null:
+return $default(_that.id,_that.tailorName,_that.pickupDate,_that.status,_that.products,_that.staffColor);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$DashboardCustomWorkModelImpl implements _DashboardCustomWorkModel {
-  const _$DashboardCustomWorkModelImpl(
-      {required this.id,
-      required this.tailorName,
-      required this.pickupDate,
-      @JsonKey(
-          fromJson: CustomizationWorkStatus.fromString,
-          toJson: CustomizationWorkStatus.toJson)
-      required this.status,
-      required this.products,
-      @JsonKey(name: 'staff_color') this.staffColor});
+class _DashboardCustomWorkModel implements DashboardCustomWorkModel {
+  const _DashboardCustomWorkModel({required this.id, required this.tailorName, required this.pickupDate, @JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson) required this.status, required this.products, @JsonKey(name: 'staff_color') this.staffColor});
+  factory _DashboardCustomWorkModel.fromJson(Map<String, dynamic> json) => _$DashboardCustomWorkModelFromJson(json);
 
-  factory _$DashboardCustomWorkModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DashboardCustomWorkModelImplFromJson(json);
+@override final  int id;
+@override final  String tailorName;
+@override final  String pickupDate;
+@override@JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson) final  CustomizationWorkStatus status;
+@override final  String products;
+@override@JsonKey(name: 'staff_color') final  String? staffColor;
 
-  @override
-  final int id;
-  @override
-  final String tailorName;
-  @override
-  final String pickupDate;
-  @override
-  @JsonKey(
-      fromJson: CustomizationWorkStatus.fromString,
-      toJson: CustomizationWorkStatus.toJson)
-  final CustomizationWorkStatus status;
-  @override
-  final String products;
-  @override
-  @JsonKey(name: 'staff_color')
-  final String? staffColor;
+/// Create a copy of DashboardCustomWorkModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DashboardCustomWorkModelCopyWith<_DashboardCustomWorkModel> get copyWith => __$DashboardCustomWorkModelCopyWithImpl<_DashboardCustomWorkModel>(this, _$identity);
 
-  @override
-  String toString() {
-    return 'DashboardCustomWorkModel(id: $id, tailorName: $tailorName, pickupDate: $pickupDate, status: $status, products: $products, staffColor: $staffColor)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DashboardCustomWorkModelImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.tailorName, tailorName) ||
-                other.tailorName == tailorName) &&
-            (identical(other.pickupDate, pickupDate) ||
-                other.pickupDate == pickupDate) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.products, products) ||
-                other.products == products) &&
-            (identical(other.staffColor, staffColor) ||
-                other.staffColor == staffColor));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, id, tailorName, pickupDate, status, products, staffColor);
-
-  /// Create a copy of DashboardCustomWorkModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DashboardCustomWorkModelImplCopyWith<_$DashboardCustomWorkModelImpl>
-      get copyWith => __$$DashboardCustomWorkModelImplCopyWithImpl<
-          _$DashboardCustomWorkModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DashboardCustomWorkModelImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$DashboardCustomWorkModelToJson(this, );
 }
 
-abstract class _DashboardCustomWorkModel implements DashboardCustomWorkModel {
-  const factory _DashboardCustomWorkModel(
-          {required final int id,
-          required final String tailorName,
-          required final String pickupDate,
-          @JsonKey(
-              fromJson: CustomizationWorkStatus.fromString,
-              toJson: CustomizationWorkStatus.toJson)
-          required final CustomizationWorkStatus status,
-          required final String products,
-          @JsonKey(name: 'staff_color') final String? staffColor}) =
-      _$DashboardCustomWorkModelImpl;
-
-  factory _DashboardCustomWorkModel.fromJson(Map<String, dynamic> json) =
-      _$DashboardCustomWorkModelImpl.fromJson;
-
-  @override
-  int get id;
-  @override
-  String get tailorName;
-  @override
-  String get pickupDate;
-  @override
-  @JsonKey(
-      fromJson: CustomizationWorkStatus.fromString,
-      toJson: CustomizationWorkStatus.toJson)
-  CustomizationWorkStatus get status;
-  @override
-  String get products;
-  @override
-  @JsonKey(name: 'staff_color')
-  String? get staffColor;
-
-  /// Create a copy of DashboardCustomWorkModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DashboardCustomWorkModelImplCopyWith<_$DashboardCustomWorkModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardCustomWorkModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tailorName, tailorName) || other.tailorName == tailorName)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,tailorName,pickupDate,status,products,staffColor);
+
+@override
+String toString() {
+  return 'DashboardCustomWorkModel(id: $id, tailorName: $tailorName, pickupDate: $pickupDate, status: $status, products: $products, staffColor: $staffColor)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DashboardCustomWorkModelCopyWith<$Res> implements $DashboardCustomWorkModelCopyWith<$Res> {
+  factory _$DashboardCustomWorkModelCopyWith(_DashboardCustomWorkModel value, $Res Function(_DashboardCustomWorkModel) _then) = __$DashboardCustomWorkModelCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, String tailorName, String pickupDate,@JsonKey(fromJson: CustomizationWorkStatus.fromString, toJson: CustomizationWorkStatus.toJson) CustomizationWorkStatus status, String products,@JsonKey(name: 'staff_color') String? staffColor
+});
+
+
+
+
+}
+/// @nodoc
+class __$DashboardCustomWorkModelCopyWithImpl<$Res>
+    implements _$DashboardCustomWorkModelCopyWith<$Res> {
+  __$DashboardCustomWorkModelCopyWithImpl(this._self, this._then);
+
+  final _DashboardCustomWorkModel _self;
+  final $Res Function(_DashboardCustomWorkModel) _then;
+
+/// Create a copy of DashboardCustomWorkModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? tailorName = null,Object? pickupDate = null,Object? status = null,Object? products = null,Object? staffColor = freezed,}) {
+  return _then(_DashboardCustomWorkModel(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,tailorName: null == tailorName ? _self.tailorName : tailorName // ignore: cast_nullable_to_non_nullable
+as String,pickupDate: null == pickupDate ? _self.pickupDate : pickupDate // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as CustomizationWorkStatus,products: null == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
+as String,staffColor: freezed == staffColor ? _self.staffColor : staffColor // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

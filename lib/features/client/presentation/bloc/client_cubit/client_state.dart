@@ -1,7 +1,7 @@
 part of 'client_cubit.dart';
 
 @freezed
-class ClientState with _$ClientState {
+abstract class ClientState with _$ClientState {
   const factory ClientState({
     required List<ClientEntity> suggestions,
     required ClientEntity? selectedClient,

@@ -1,7 +1,7 @@
 part of 'all_booking_bloc.dart';
 
 @freezed
-class AllBookingEvent with _$AllBookingEvent {
+abstract class AllBookingEvent with _$AllBookingEvent {
   const factory AllBookingEvent.loadBookings({
     String? status,
     String? startDate,

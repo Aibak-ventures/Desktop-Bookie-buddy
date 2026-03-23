@@ -6,7 +6,7 @@ part 'client_request_model.freezed.dart';
 part 'client_request_model.g.dart';
 
 @freezed
-class ClientRequestModel with _$ClientRequestModel {
+abstract class ClientRequestModel with _$ClientRequestModel {
   const factory ClientRequestModel({
     @JsonKey(name: 'id', includeToJson: false, includeIfNull: false)
     required int? id,

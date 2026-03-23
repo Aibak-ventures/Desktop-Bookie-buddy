@@ -6,16 +6,16 @@ part of 'product_info_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProductInfoModelImpl _$$ProductInfoModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ProductInfoModelImpl(
+_ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) =>
+    _ProductInfoModel(
       id: (_idCustomRead(json, 'id') as num).toInt(),
       productId: (json['product_id'] as num?)?.toInt(),
       variantId: (json['variant_id'] as num?)?.toInt(),
       name: json['product_name'] as String,
       image: json['product_thumbnail'] as String? ?? '',
-      mainServiceType:
-          MainServiceType.fromString(json['main_service_name'] as String?),
+      mainServiceType: MainServiceType.fromString(
+        json['main_service_name'] as String?,
+      ),
       variantAttribute: json['variant_attribute'] as String?,
       color: json['color'] as String?,
       category: json['category'] as String?,
@@ -29,8 +29,7 @@ _$ProductInfoModelImpl _$$ProductInfoModelImplFromJson(
       remainingStock: (json['remaining_stock'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$ProductInfoModelImplToJson(
-        _$ProductInfoModelImpl instance) =>
+Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'product_id': instance.productId,

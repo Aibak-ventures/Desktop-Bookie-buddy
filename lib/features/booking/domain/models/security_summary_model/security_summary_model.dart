@@ -4,7 +4,7 @@ part 'security_summary_model.freezed.dart';
 part 'security_summary_model.g.dart';
 
 @freezed
-class SecuritySummaryModel with _$SecuritySummaryModel {
+abstract class SecuritySummaryModel with _$SecuritySummaryModel {
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory SecuritySummaryModel({
     @Default(0.0) double securityAmount,

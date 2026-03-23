@@ -6,9 +6,8 @@ part of 'request_booking_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RequestBookingModelImpl _$$RequestBookingModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RequestBookingModelImpl(
+_RequestBookingModel _$RequestBookingModelFromJson(Map<String, dynamic> json) =>
+    _RequestBookingModel(
       clientId: (json['client_id'] as num?)?.toInt(),
       staffId: (json['staff_id'] as num?)?.toInt(),
       client: json['client'] == null
@@ -24,57 +23,59 @@ _$RequestBookingModelImpl _$$RequestBookingModelImplFromJson(
       discountAmount: (json['discount_amount'] as num?)?.toInt(),
       purchaseMode: json['purchase_mode'] as String?,
       description: json['description'] as String?,
-      paymentMethod:
-          $enumDecodeNullable(_$PaymentMethodEnumMap, json['payment_method']),
-      deliveryStatus:
-          $enumDecodeNullable(_$DeliveryStatusEnumMap, json['delivery_status']),
-      bookingStatus:
-          $enumDecodeNullable(_$BookingStatusEnumMap, json['booking_status']),
+      paymentMethod: $enumDecodeNullable(
+        _$PaymentMethodEnumMap,
+        json['payment_method'],
+      ),
+      deliveryStatus: $enumDecodeNullable(
+        _$DeliveryStatusEnumMap,
+        json['delivery_status'],
+      ),
+      bookingStatus: $enumDecodeNullable(
+        _$BookingStatusEnumMap,
+        json['booking_status'],
+      ),
       products: (json['variants'] as List<dynamic>?)
           ?.map((e) => ProductSelectedModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       otherDetails: json['details'] == null
           ? null
           : BookingOtherDetailsModel.fromJson(
-              json['details'] as Map<String, dynamic>),
+              json['details'] as Map<String, dynamic>,
+            ),
       additionalCharges: (json['additional_charges'] as List<dynamic>?)
           ?.map(
-              (e) => AdditionalChargesModel.fromJson(e as Map<String, dynamic>))
+            (e) => AdditionalChargesModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
       runningKilometers: json['running_kilometers'] as String?,
     );
 
-Map<String, dynamic> _$$RequestBookingModelImplToJson(
-        _$RequestBookingModelImpl instance) =>
-    <String, dynamic>{
-      if (instance.clientId case final value?) 'client_id': value,
-      if (instance.staffId case final value?) 'staff_id': value,
-      if (_clientToJson(instance.client) case final value?) 'client': value,
-      if (instance.address case final value?) 'client_address': value,
-      if (instance.bookedDate case final value?) 'booked_date': value,
-      if (instance.pickupDate case final value?) 'pickup_date': value,
-      if (instance.returnDate case final value?) 'return_date': value,
-      if (instance.coolingPeriodDate case final value?)
-        'cooling_period_end': value,
-      if (instance.advanceAmount case final value?) 'advance_amount': value,
-      if (instance.securityAmount case final value?) 'security_amount': value,
-      if (instance.discountAmount case final value?) 'discount_amount': value,
-      if (instance.purchaseMode case final value?) 'purchase_mode': value,
-      if (instance.description case final value?) 'description': value,
-      if (instance.paymentMethod case final value?) 'payment_method': value,
-      if (DeliveryStatus.toJson(instance.deliveryStatus) case final value?)
-        'delivery_status': value,
-      if (BookingStatus.toJson(instance.bookingStatus) case final value?)
-        'booking_status': value,
-      if (_productsToJson(instance.products) case final value?)
-        'variants': value,
-      if (instance.otherDetails case final value?) 'details': value,
-      if (instance.additionalCharges case final value?)
-        'additional_charges': value,
-      'send_invoice': instance.sendPdfToWhatsApp,
-      if (instance.runningKilometers case final value?)
-        'running_kilometers': value,
-    };
+Map<String, dynamic> _$RequestBookingModelToJson(
+  _RequestBookingModel instance,
+) => <String, dynamic>{
+  'client_id': ?instance.clientId,
+  'staff_id': ?instance.staffId,
+  'client': ?_clientToJson(instance.client),
+  'client_address': ?instance.address,
+  'booked_date': ?instance.bookedDate,
+  'pickup_date': ?instance.pickupDate,
+  'return_date': ?instance.returnDate,
+  'cooling_period_end': ?instance.coolingPeriodDate,
+  'advance_amount': ?instance.advanceAmount,
+  'security_amount': ?instance.securityAmount,
+  'discount_amount': ?instance.discountAmount,
+  'purchase_mode': ?instance.purchaseMode,
+  'description': ?instance.description,
+  'payment_method': ?instance.paymentMethod,
+  'delivery_status': ?DeliveryStatus.toJson(instance.deliveryStatus),
+  'booking_status': ?BookingStatus.toJson(instance.bookingStatus),
+  'variants': ?_productsToJson(instance.products),
+  'details': ?instance.otherDetails,
+  'additional_charges': ?instance.additionalCharges,
+  'send_invoice': instance.sendPdfToWhatsApp,
+  'running_kilometers': ?instance.runningKilometers,
+};
 
 const _$PaymentMethodEnumMap = {
   PaymentMethod.gPay: 'gPay',

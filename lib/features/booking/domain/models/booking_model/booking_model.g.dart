@@ -6,12 +6,13 @@ part of 'booking_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$BookingsModelImpl _$$BookingsModelImplFromJson(Map<String, dynamic> json) =>
-    _$BookingsModelImpl(
+_BookingsModel _$BookingsModelFromJson(Map<String, dynamic> json) =>
+    _BookingsModel(
       id: (_idCustomRead(json, 'id') as num?)?.toInt(),
       clientName: _clientCustomRead(json, 'client') as String? ?? 'Unknown',
       bookingStatus: BookingStatus.fromString(
-          _bookingStatusCustomRead(json, 'booking_status') as String),
+        _bookingStatusCustomRead(json, 'booking_status') as String,
+      ),
       bookedDate: json['booking_date'] as String?,
       pickupDate: json['pickup_date'] as String?,
       returnDate: json['return_date'] as String?,
@@ -26,13 +27,13 @@ _$BookingsModelImpl _$$BookingsModelImplFromJson(Map<String, dynamic> json) =>
       createdAt: json['created_at'] as String?,
       bookedItems:
           (_bookedItemsCustomRead(json, 'booked_items') as List<dynamic>?)
-                  ?.map((e) => e as String)
-                  .toList() ??
-              const [],
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       type: json['type'] as String?,
     );
 
-Map<String, dynamic> _$$BookingsModelImplToJson(_$BookingsModelImpl instance) =>
+Map<String, dynamic> _$BookingsModelToJson(_BookingsModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'client': instance.clientName,

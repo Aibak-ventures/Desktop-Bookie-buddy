@@ -6,7 +6,7 @@ part 'status_counts_model.freezed.dart';
 part 'status_counts_model.g.dart';
 
 @freezed
-class StatusCountsModel with _$StatusCountsModel {
+abstract class StatusCountsModel with _$StatusCountsModel {
   const factory StatusCountsModel({
     @Default(0) int completed,
     @Default(0) int upcoming,

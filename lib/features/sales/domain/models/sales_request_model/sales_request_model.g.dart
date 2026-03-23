@@ -6,9 +6,8 @@ part of 'sales_request_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SalesRequestModelImpl _$$SalesRequestModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SalesRequestModelImpl(
+_SalesRequestModel _$SalesRequestModelFromJson(Map<String, dynamic> json) =>
+    _SalesRequestModel(
       id: (json['id'] as num?)?.toInt(),
       staffId: (json['staff_id'] as num?)?.toInt(),
       clientPhone: json['client_phone'] as String?,
@@ -23,25 +22,21 @@ _$SalesRequestModelImpl _$$SalesRequestModelImplFromJson(
       paidAmount: (json['paid_amount'] as num?)?.toInt(),
       paymentMethod:
           $enumDecodeNullable(_$PaymentMethodEnumMap, json['payment_method']) ??
-              PaymentMethod.cash,
+          PaymentMethod.cash,
     );
 
-Map<String, dynamic> _$$SalesRequestModelImplToJson(
-        _$SalesRequestModelImpl instance) =>
+Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
     <String, dynamic>{
-      if (instance.staffId case final value?) 'staff_id': value,
-      if (instance.clientPhone case final value?) 'client_phone': value,
-      if (instance.address case final value?) 'client_address': value,
-      if (instance.saleDate case final value?) 'sale_date': value,
-      if (_variantsToJson(instance.products) case final value?)
-        'variants': value,
-      if (instance.stockCountDecrease case final value?)
-        'decrease_stock': value,
-      if (instance.description case final value?) 'description': value,
-      if (instance.discountAmount case final value?) 'discount': value,
-      if (instance.paidAmount case final value?) 'paid_amount': value,
-      if (_paymentMethodToJson(instance.paymentMethod) case final value?)
-        'payment_method': value,
+      'staff_id': ?instance.staffId,
+      'client_phone': ?instance.clientPhone,
+      'client_address': ?instance.address,
+      'sale_date': ?instance.saleDate,
+      'variants': ?_variantsToJson(instance.products),
+      'decrease_stock': ?instance.stockCountDecrease,
+      'description': ?instance.description,
+      'discount': ?instance.discountAmount,
+      'paid_amount': ?instance.paidAmount,
+      'payment_method': ?_paymentMethodToJson(instance.paymentMethod),
       'send_invoice': instance.sendPdfToWhatsApp,
     };
 

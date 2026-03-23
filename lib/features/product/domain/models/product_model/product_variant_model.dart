@@ -4,7 +4,7 @@ part 'product_variant_model.freezed.dart';
 part 'product_variant_model.g.dart';
 
 @freezed
-class ProductVariantModel with _$ProductVariantModel {
+abstract class ProductVariantModel with _$ProductVariantModel {
   const factory ProductVariantModel({
     required int id,
 

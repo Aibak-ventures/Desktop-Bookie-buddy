@@ -4,7 +4,7 @@ part 'product_monthly_data_model.freezed.dart';
 part 'product_monthly_data_model.g.dart';
 
 @freezed
-class ProductMonthlyDataModel with _$ProductMonthlyDataModel {
+abstract class ProductMonthlyDataModel with _$ProductMonthlyDataModel {
   const factory ProductMonthlyDataModel({
     required int year,
     required int month,

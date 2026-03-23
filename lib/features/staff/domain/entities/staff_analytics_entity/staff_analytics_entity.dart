@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'staff_analytics_entity.freezed.dart';
 
 @freezed
-class StaffAnalyticsEntity with _$StaffAnalyticsEntity {
+abstract class StaffAnalyticsEntity with _$StaffAnalyticsEntity {
   const StaffAnalyticsEntity._();
 
   const factory StaffAnalyticsEntity({

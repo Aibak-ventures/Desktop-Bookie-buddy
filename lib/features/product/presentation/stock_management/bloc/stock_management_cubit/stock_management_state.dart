@@ -1,7 +1,7 @@
 part of 'stock_management_cubit.dart';
 
 @freezed
-class StockManagementState with _$StockManagementState {
+abstract class StockManagementState with _$StockManagementState {
   const factory StockManagementState.initial() = _Initial;
 
   const factory StockManagementState.loading() = _Loading;

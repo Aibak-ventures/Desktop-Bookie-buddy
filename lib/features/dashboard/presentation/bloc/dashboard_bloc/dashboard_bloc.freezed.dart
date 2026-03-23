@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,1445 +9,779 @@ part of 'dashboard_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
 /// @nodoc
 mixin _$DashboardEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(UserModel? activeShop, bool useOldState)
-        loadDashboardData,
-    required TResult Function() loadDashboardNextPageData,
-    required TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
-        updateData,
-    required TResult Function() loadIfNot,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult? Function()? loadIfNot,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult Function()? loadDashboardNextPageData,
-    TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult Function()? loadIfNot,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadDashboardData value) loadDashboardData,
-    required TResult Function(_LoadDashboardNextPageData value)
-        loadDashboardNextPageData,
-    required TResult Function(_UpdateData value) updateData,
-    required TResult Function(_LoadIfNot value) loadIfNot,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadDashboardData value)? loadDashboardData,
-    TResult? Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult? Function(_UpdateData value)? updateData,
-    TResult? Function(_LoadIfNot value)? loadIfNot,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadDashboardData value)? loadDashboardData,
-    TResult Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult Function(_UpdateData value)? updateData,
-    TResult Function(_LoadIfNot value)? loadIfNot,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'DashboardEvent()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DashboardEventCopyWith<$Res> {
-  factory $DashboardEventCopyWith(
-          DashboardEvent value, $Res Function(DashboardEvent) then) =
-      _$DashboardEventCopyWithImpl<$Res, DashboardEvent>;
+class $DashboardEventCopyWith<$Res>  {
+$DashboardEventCopyWith(DashboardEvent _, $Res Function(DashboardEvent) __);
 }
 
-/// @nodoc
-class _$DashboardEventCopyWithImpl<$Res, $Val extends DashboardEvent>
-    implements $DashboardEventCopyWith<$Res> {
-  _$DashboardEventCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [DashboardEvent].
+extension DashboardEventPatterns on DashboardEvent {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _LoadDashboardData value)?  loadDashboardData,TResult Function( _LoadDashboardNextPageData value)?  loadDashboardNextPageData,TResult Function( _UpdateData value)?  updateData,TResult Function( _LoadIfNot value)?  loadIfNot,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LoadDashboardData() when loadDashboardData != null:
+return loadDashboardData(_that);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
+return loadDashboardNextPageData(_that);case _UpdateData() when updateData != null:
+return updateData(_that);case _LoadIfNot() when loadIfNot != null:
+return loadIfNot(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _LoadDashboardData value)  loadDashboardData,required TResult Function( _LoadDashboardNextPageData value)  loadDashboardNextPageData,required TResult Function( _UpdateData value)  updateData,required TResult Function( _LoadIfNot value)  loadIfNot,}){
+final _that = this;
+switch (_that) {
+case _LoadDashboardData():
+return loadDashboardData(_that);case _LoadDashboardNextPageData():
+return loadDashboardNextPageData(_that);case _UpdateData():
+return updateData(_that);case _LoadIfNot():
+return loadIfNot(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _LoadDashboardData value)?  loadDashboardData,TResult? Function( _LoadDashboardNextPageData value)?  loadDashboardNextPageData,TResult? Function( _UpdateData value)?  updateData,TResult? Function( _LoadIfNot value)?  loadIfNot,}){
+final _that = this;
+switch (_that) {
+case _LoadDashboardData() when loadDashboardData != null:
+return loadDashboardData(_that);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
+return loadDashboardNextPageData(_that);case _UpdateData() when updateData != null:
+return updateData(_that);case _LoadIfNot() when loadIfNot != null:
+return loadIfNot(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult Function()?  loadDashboardNextPageData,TResult Function( BookingsModel? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult Function()?  loadIfNot,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LoadDashboardData() when loadDashboardData != null:
+return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
+return loadDashboardNextPageData();case _UpdateData() when updateData != null:
+return updateData(_that.updateBooking,_that.shouldRefresh,_that.isDeleted);case _LoadIfNot() when loadIfNot != null:
+return loadIfNot();case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( UserModel? activeShop,  bool useOldState)  loadDashboardData,required TResult Function()  loadDashboardNextPageData,required TResult Function( BookingsModel? updateBooking,  bool shouldRefresh,  bool isDeleted)  updateData,required TResult Function()  loadIfNot,}) {final _that = this;
+switch (_that) {
+case _LoadDashboardData():
+return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData():
+return loadDashboardNextPageData();case _UpdateData():
+return updateData(_that.updateBooking,_that.shouldRefresh,_that.isDeleted);case _LoadIfNot():
+return loadIfNot();case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult? Function()?  loadDashboardNextPageData,TResult? Function( BookingsModel? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult? Function()?  loadIfNot,}) {final _that = this;
+switch (_that) {
+case _LoadDashboardData() when loadDashboardData != null:
+return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
+return loadDashboardNextPageData();case _UpdateData() when updateData != null:
+return updateData(_that.updateBooking,_that.shouldRefresh,_that.isDeleted);case _LoadIfNot() when loadIfNot != null:
+return loadIfNot();case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$LoadDashboardDataImplCopyWith<$Res> {
-  factory _$$LoadDashboardDataImplCopyWith(_$LoadDashboardDataImpl value,
-          $Res Function(_$LoadDashboardDataImpl) then) =
-      __$$LoadDashboardDataImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({UserModel? activeShop, bool useOldState});
-
-  $UserModelCopyWith<$Res>? get activeShop;
-}
-
-/// @nodoc
-class __$$LoadDashboardDataImplCopyWithImpl<$Res>
-    extends _$DashboardEventCopyWithImpl<$Res, _$LoadDashboardDataImpl>
-    implements _$$LoadDashboardDataImplCopyWith<$Res> {
-  __$$LoadDashboardDataImplCopyWithImpl(_$LoadDashboardDataImpl _value,
-      $Res Function(_$LoadDashboardDataImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? activeShop = freezed,
-    Object? useOldState = null,
-  }) {
-    return _then(_$LoadDashboardDataImpl(
-      activeShop: freezed == activeShop
-          ? _value.activeShop
-          : activeShop // ignore: cast_nullable_to_non_nullable
-              as UserModel?,
-      useOldState: null == useOldState
-          ? _value.useOldState
-          : useOldState // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $UserModelCopyWith<$Res>? get activeShop {
-    if (_value.activeShop == null) {
-      return null;
-    }
-
-    return $UserModelCopyWith<$Res>(_value.activeShop!, (value) {
-      return _then(_value.copyWith(activeShop: value));
-    });
-  }
-}
-
-/// @nodoc
-
-class _$LoadDashboardDataImpl implements _LoadDashboardData {
-  const _$LoadDashboardDataImpl({this.activeShop, this.useOldState = false});
-
-  @override
-  final UserModel? activeShop;
-  @override
-  @JsonKey()
-  final bool useOldState;
-
-  @override
-  String toString() {
-    return 'DashboardEvent.loadDashboardData(activeShop: $activeShop, useOldState: $useOldState)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadDashboardDataImpl &&
-            (identical(other.activeShop, activeShop) ||
-                other.activeShop == activeShop) &&
-            (identical(other.useOldState, useOldState) ||
-                other.useOldState == useOldState));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, activeShop, useOldState);
-
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadDashboardDataImplCopyWith<_$LoadDashboardDataImpl> get copyWith =>
-      __$$LoadDashboardDataImplCopyWithImpl<_$LoadDashboardDataImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(UserModel? activeShop, bool useOldState)
-        loadDashboardData,
-    required TResult Function() loadDashboardNextPageData,
-    required TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
-        updateData,
-    required TResult Function() loadIfNot,
-  }) {
-    return loadDashboardData(activeShop, useOldState);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult? Function()? loadIfNot,
-  }) {
-    return loadDashboardData?.call(activeShop, useOldState);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult Function()? loadDashboardNextPageData,
-    TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult Function()? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (loadDashboardData != null) {
-      return loadDashboardData(activeShop, useOldState);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadDashboardData value) loadDashboardData,
-    required TResult Function(_LoadDashboardNextPageData value)
-        loadDashboardNextPageData,
-    required TResult Function(_UpdateData value) updateData,
-    required TResult Function(_LoadIfNot value) loadIfNot,
-  }) {
-    return loadDashboardData(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadDashboardData value)? loadDashboardData,
-    TResult? Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult? Function(_UpdateData value)? updateData,
-    TResult? Function(_LoadIfNot value)? loadIfNot,
-  }) {
-    return loadDashboardData?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadDashboardData value)? loadDashboardData,
-    TResult Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult Function(_UpdateData value)? updateData,
-    TResult Function(_LoadIfNot value)? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (loadDashboardData != null) {
-      return loadDashboardData(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _LoadDashboardData implements DashboardEvent {
-  const factory _LoadDashboardData(
-      {final UserModel? activeShop,
-      final bool useOldState}) = _$LoadDashboardDataImpl;
-
-  UserModel? get activeShop;
-  bool get useOldState;
-
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadDashboardDataImplCopyWith<_$LoadDashboardDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$LoadDashboardNextPageDataImplCopyWith<$Res> {
-  factory _$$LoadDashboardNextPageDataImplCopyWith(
-          _$LoadDashboardNextPageDataImpl value,
-          $Res Function(_$LoadDashboardNextPageDataImpl) then) =
-      __$$LoadDashboardNextPageDataImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadDashboardNextPageDataImplCopyWithImpl<$Res>
-    extends _$DashboardEventCopyWithImpl<$Res, _$LoadDashboardNextPageDataImpl>
-    implements _$$LoadDashboardNextPageDataImplCopyWith<$Res> {
-  __$$LoadDashboardNextPageDataImplCopyWithImpl(
-      _$LoadDashboardNextPageDataImpl _value,
-      $Res Function(_$LoadDashboardNextPageDataImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$LoadDashboardNextPageDataImpl implements _LoadDashboardNextPageData {
-  const _$LoadDashboardNextPageDataImpl();
 
-  @override
-  String toString() {
-    return 'DashboardEvent.loadDashboardNextPageData()';
-  }
+class _LoadDashboardData implements DashboardEvent {
+  const _LoadDashboardData({this.activeShop, this.useOldState = false});
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadDashboardNextPageDataImpl);
-  }
+ final  UserModel? activeShop;
+@JsonKey() final  bool useOldState;
 
-  @override
-  int get hashCode => runtimeType.hashCode;
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadDashboardDataCopyWith<_LoadDashboardData> get copyWith => __$LoadDashboardDataCopyWithImpl<_LoadDashboardData>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(UserModel? activeShop, bool useOldState)
-        loadDashboardData,
-    required TResult Function() loadDashboardNextPageData,
-    required TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
-        updateData,
-    required TResult Function() loadIfNot,
-  }) {
-    return loadDashboardNextPageData();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult? Function()? loadIfNot,
-  }) {
-    return loadDashboardNextPageData?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult Function()? loadDashboardNextPageData,
-    TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult Function()? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (loadDashboardNextPageData != null) {
-      return loadDashboardNextPageData();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadDashboardData value) loadDashboardData,
-    required TResult Function(_LoadDashboardNextPageData value)
-        loadDashboardNextPageData,
-    required TResult Function(_UpdateData value) updateData,
-    required TResult Function(_LoadIfNot value) loadIfNot,
-  }) {
-    return loadDashboardNextPageData(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadDashboardData value)? loadDashboardData,
-    TResult? Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult? Function(_UpdateData value)? updateData,
-    TResult? Function(_LoadIfNot value)? loadIfNot,
-  }) {
-    return loadDashboardNextPageData?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadDashboardData value)? loadDashboardData,
-    TResult Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult Function(_UpdateData value)? updateData,
-    TResult Function(_LoadIfNot value)? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (loadDashboardNextPageData != null) {
-      return loadDashboardNextPageData(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadDashboardData&&(identical(other.activeShop, activeShop) || other.activeShop == activeShop)&&(identical(other.useOldState, useOldState) || other.useOldState == useOldState));
 }
 
-abstract class _LoadDashboardNextPageData implements DashboardEvent {
-  const factory _LoadDashboardNextPageData() = _$LoadDashboardNextPageDataImpl;
+
+@override
+int get hashCode => Object.hash(runtimeType,activeShop,useOldState);
+
+@override
+String toString() {
+  return 'DashboardEvent.loadDashboardData(activeShop: $activeShop, useOldState: $useOldState)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$UpdateDataImplCopyWith<$Res> {
-  factory _$$UpdateDataImplCopyWith(
-          _$UpdateDataImpl value, $Res Function(_$UpdateDataImpl) then) =
-      __$$UpdateDataImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted});
+abstract mixin class _$LoadDashboardDataCopyWith<$Res> implements $DashboardEventCopyWith<$Res> {
+  factory _$LoadDashboardDataCopyWith(_LoadDashboardData value, $Res Function(_LoadDashboardData) _then) = __$LoadDashboardDataCopyWithImpl;
+@useResult
+$Res call({
+ UserModel? activeShop, bool useOldState
+});
 
-  $BookingsModelCopyWith<$Res>? get updateBooking;
+
+$UserModelCopyWith<$Res>? get activeShop;
+
+}
+/// @nodoc
+class __$LoadDashboardDataCopyWithImpl<$Res>
+    implements _$LoadDashboardDataCopyWith<$Res> {
+  __$LoadDashboardDataCopyWithImpl(this._self, this._then);
+
+  final _LoadDashboardData _self;
+  final $Res Function(_LoadDashboardData) _then;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? activeShop = freezed,Object? useOldState = null,}) {
+  return _then(_LoadDashboardData(
+activeShop: freezed == activeShop ? _self.activeShop : activeShop // ignore: cast_nullable_to_non_nullable
+as UserModel?,useOldState: null == useOldState ? _self.useOldState : useOldState // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-class __$$UpdateDataImplCopyWithImpl<$Res>
-    extends _$DashboardEventCopyWithImpl<$Res, _$UpdateDataImpl>
-    implements _$$UpdateDataImplCopyWith<$Res> {
-  __$$UpdateDataImplCopyWithImpl(
-      _$UpdateDataImpl _value, $Res Function(_$UpdateDataImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? updateBooking = freezed,
-    Object? shouldRefresh = null,
-    Object? isDeleted = null,
-  }) {
-    return _then(_$UpdateDataImpl(
-      freezed == updateBooking
-          ? _value.updateBooking
-          : updateBooking // ignore: cast_nullable_to_non_nullable
-              as BookingsModel?,
-      shouldRefresh: null == shouldRefresh
-          ? _value.shouldRefresh
-          : shouldRefresh // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isDeleted: null == isDeleted
-          ? _value.isDeleted
-          : isDeleted // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserModelCopyWith<$Res>? get activeShop {
+    if (_self.activeShop == null) {
+    return null;
   }
 
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $BookingsModelCopyWith<$Res>? get updateBooking {
-    if (_value.updateBooking == null) {
-      return null;
-    }
-
-    return $BookingsModelCopyWith<$Res>(_value.updateBooking!, (value) {
-      return _then(_value.copyWith(updateBooking: value));
-    });
-  }
+  return $UserModelCopyWith<$Res>(_self.activeShop!, (value) {
+    return _then(_self.copyWith(activeShop: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$UpdateDataImpl implements _UpdateData {
-  const _$UpdateDataImpl(this.updateBooking,
-      {this.shouldRefresh = false, this.isDeleted = false});
 
-  @override
-  final BookingsModel? updateBooking;
-  @override
-  @JsonKey()
-  final bool shouldRefresh;
-  @override
-  @JsonKey()
-  final bool isDeleted;
+class _LoadDashboardNextPageData implements DashboardEvent {
+  const _LoadDashboardNextPageData();
+  
 
-  @override
-  String toString() {
-    return 'DashboardEvent.updateData(updateBooking: $updateBooking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$UpdateDataImpl &&
-            (identical(other.updateBooking, updateBooking) ||
-                other.updateBooking == updateBooking) &&
-            (identical(other.shouldRefresh, shouldRefresh) ||
-                other.shouldRefresh == shouldRefresh) &&
-            (identical(other.isDeleted, isDeleted) ||
-                other.isDeleted == isDeleted));
-  }
 
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, updateBooking, shouldRefresh, isDeleted);
 
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$UpdateDataImplCopyWith<_$UpdateDataImpl> get copyWith =>
-      __$$UpdateDataImplCopyWithImpl<_$UpdateDataImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(UserModel? activeShop, bool useOldState)
-        loadDashboardData,
-    required TResult Function() loadDashboardNextPageData,
-    required TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
-        updateData,
-    required TResult Function() loadIfNot,
-  }) {
-    return updateData(updateBooking, shouldRefresh, isDeleted);
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult? Function()? loadIfNot,
-  }) {
-    return updateData?.call(updateBooking, shouldRefresh, isDeleted);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult Function()? loadDashboardNextPageData,
-    TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult Function()? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (updateData != null) {
-      return updateData(updateBooking, shouldRefresh, isDeleted);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadDashboardData value) loadDashboardData,
-    required TResult Function(_LoadDashboardNextPageData value)
-        loadDashboardNextPageData,
-    required TResult Function(_UpdateData value) updateData,
-    required TResult Function(_LoadIfNot value) loadIfNot,
-  }) {
-    return updateData(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadDashboardData value)? loadDashboardData,
-    TResult? Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult? Function(_UpdateData value)? updateData,
-    TResult? Function(_LoadIfNot value)? loadIfNot,
-  }) {
-    return updateData?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadDashboardData value)? loadDashboardData,
-    TResult Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult Function(_UpdateData value)? updateData,
-    TResult Function(_LoadIfNot value)? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (updateData != null) {
-      return updateData(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadDashboardNextPageData);
 }
 
-abstract class _UpdateData implements DashboardEvent {
-  const factory _UpdateData(final BookingsModel? updateBooking,
-      {final bool shouldRefresh, final bool isDeleted}) = _$UpdateDataImpl;
 
-  BookingsModel? get updateBooking;
-  bool get shouldRefresh;
-  bool get isDeleted;
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateDataImplCopyWith<_$UpdateDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'DashboardEvent.loadDashboardNextPageData()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _UpdateData implements DashboardEvent {
+  const _UpdateData(this.updateBooking, {this.shouldRefresh = false, this.isDeleted = false});
+  
+
+ final  BookingsModel? updateBooking;
+@JsonKey() final  bool shouldRefresh;
+@JsonKey() final  bool isDeleted;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateDataCopyWith<_UpdateData> get copyWith => __$UpdateDataCopyWithImpl<_UpdateData>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateData&&(identical(other.updateBooking, updateBooking) || other.updateBooking == updateBooking)&&(identical(other.shouldRefresh, shouldRefresh) || other.shouldRefresh == shouldRefresh)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,updateBooking,shouldRefresh,isDeleted);
+
+@override
+String toString() {
+  return 'DashboardEvent.updateData(updateBooking: $updateBooking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$LoadIfNotImplCopyWith<$Res> {
-  factory _$$LoadIfNotImplCopyWith(
-          _$LoadIfNotImpl value, $Res Function(_$LoadIfNotImpl) then) =
-      __$$LoadIfNotImplCopyWithImpl<$Res>;
+abstract mixin class _$UpdateDataCopyWith<$Res> implements $DashboardEventCopyWith<$Res> {
+  factory _$UpdateDataCopyWith(_UpdateData value, $Res Function(_UpdateData) _then) = __$UpdateDataCopyWithImpl;
+@useResult
+$Res call({
+ BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted
+});
+
+
+$BookingsModelCopyWith<$Res>? get updateBooking;
+
+}
+/// @nodoc
+class __$UpdateDataCopyWithImpl<$Res>
+    implements _$UpdateDataCopyWith<$Res> {
+  __$UpdateDataCopyWithImpl(this._self, this._then);
+
+  final _UpdateData _self;
+  final $Res Function(_UpdateData) _then;
+
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? updateBooking = freezed,Object? shouldRefresh = null,Object? isDeleted = null,}) {
+  return _then(_UpdateData(
+freezed == updateBooking ? _self.updateBooking : updateBooking // ignore: cast_nullable_to_non_nullable
+as BookingsModel?,shouldRefresh: null == shouldRefresh ? _self.shouldRefresh : shouldRefresh // ignore: cast_nullable_to_non_nullable
+as bool,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-class __$$LoadIfNotImplCopyWithImpl<$Res>
-    extends _$DashboardEventCopyWithImpl<$Res, _$LoadIfNotImpl>
-    implements _$$LoadIfNotImplCopyWith<$Res> {
-  __$$LoadIfNotImplCopyWithImpl(
-      _$LoadIfNotImpl _value, $Res Function(_$LoadIfNotImpl) _then)
-      : super(_value, _then);
+/// Create a copy of DashboardEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BookingsModelCopyWith<$Res>? get updateBooking {
+    if (_self.updateBooking == null) {
+    return null;
+  }
 
-  /// Create a copy of DashboardEvent
-  /// with the given fields replaced by the non-null parameter values.
+  return $BookingsModelCopyWith<$Res>(_self.updateBooking!, (value) {
+    return _then(_self.copyWith(updateBooking: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$LoadIfNotImpl implements _LoadIfNot {
-  const _$LoadIfNotImpl();
 
-  @override
-  String toString() {
-    return 'DashboardEvent.loadIfNot()';
-  }
+class _LoadIfNot implements DashboardEvent {
+  const _LoadIfNot();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadIfNotImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(UserModel? activeShop, bool useOldState)
-        loadDashboardData,
-    required TResult Function() loadDashboardNextPageData,
-    required TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)
-        updateData,
-    required TResult Function() loadIfNot,
-  }) {
-    return loadIfNot();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult? Function()? loadDashboardNextPageData,
-    TResult? Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult? Function()? loadIfNot,
-  }) {
-    return loadIfNot?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserModel? activeShop, bool useOldState)?
-        loadDashboardData,
-    TResult Function()? loadDashboardNextPageData,
-    TResult Function(
-            BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted)?
-        updateData,
-    TResult Function()? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (loadIfNot != null) {
-      return loadIfNot();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadDashboardData value) loadDashboardData,
-    required TResult Function(_LoadDashboardNextPageData value)
-        loadDashboardNextPageData,
-    required TResult Function(_UpdateData value) updateData,
-    required TResult Function(_LoadIfNot value) loadIfNot,
-  }) {
-    return loadIfNot(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadDashboardData value)? loadDashboardData,
-    TResult? Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult? Function(_UpdateData value)? updateData,
-    TResult? Function(_LoadIfNot value)? loadIfNot,
-  }) {
-    return loadIfNot?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadDashboardData value)? loadDashboardData,
-    TResult Function(_LoadDashboardNextPageData value)?
-        loadDashboardNextPageData,
-    TResult Function(_UpdateData value)? updateData,
-    TResult Function(_LoadIfNot value)? loadIfNot,
-    required TResult orElse(),
-  }) {
-    if (loadIfNot != null) {
-      return loadIfNot(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadIfNot);
 }
 
-abstract class _LoadIfNot implements DashboardEvent {
-  const factory _LoadIfNot() = _$LoadIfNotImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'DashboardEvent.loadIfNot()';
 }
+
+
+}
+
+
+
 
 /// @nodoc
 mixin _$DashboardState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)
-        loaded,
-    required TResult Function(String error) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'DashboardState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $DashboardStateCopyWith<$Res> {
-  factory $DashboardStateCopyWith(
-          DashboardState value, $Res Function(DashboardState) then) =
-      _$DashboardStateCopyWithImpl<$Res, DashboardState>;
+class $DashboardStateCopyWith<$Res>  {
+$DashboardStateCopyWith(DashboardState _, $Res Function(DashboardState) __);
 }
 
-/// @nodoc
-class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
-    implements $DashboardStateCopyWith<$Res> {
-  _$DashboardStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [DashboardState].
+extension DashboardStatePatterns on DashboardState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Error value)?  error,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Error() when error != null:
+return error(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Error value)  error,}){
+final _that = this;
+switch (_that) {
+case _Loading():
+return loading(_that);case _Loaded():
+return loaded(_that);case _Error():
+return error(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Error value)?  error,}){
+final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading(_that);case _Loaded() when loaded != null:
+return loaded(_that);case _Error() when error != null:
+return error(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( Map<String, List<BookingsModel>> upcomingGrouped,  Map<String, List<BookingsModel>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.upcomingGrouped,_that.returnsGrouped,_that.carouselData,_that.nextPageUrl,_that.currentPage,_that.totalPages,_that.isPaginating);case _Error() when error != null:
+return error(_that.error);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( Map<String, List<BookingsModel>> upcomingGrouped,  Map<String, List<BookingsModel>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)  loaded,required TResult Function( String error)  error,}) {final _that = this;
+switch (_that) {
+case _Loading():
+return loading();case _Loaded():
+return loaded(_that.upcomingGrouped,_that.returnsGrouped,_that.carouselData,_that.nextPageUrl,_that.currentPage,_that.totalPages,_that.isPaginating);case _Error():
+return error(_that.error);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( Map<String, List<BookingsModel>> upcomingGrouped,  Map<String, List<BookingsModel>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
+switch (_that) {
+case _Loading() when loading != null:
+return loading();case _Loaded() when loaded != null:
+return loaded(_that.upcomingGrouped,_that.returnsGrouped,_that.carouselData,_that.nextPageUrl,_that.currentPage,_that.totalPages,_that.isPaginating);case _Error() when error != null:
+return error(_that.error);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$DashboardStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
-
-  @override
-  String toString() {
-    return 'DashboardState.loading()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)
-        loaded,
-    required TResult Function(String error) error,
-  }) {
-    return loading();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return loading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loading implements DashboardState {
-  const factory _Loading() = _$LoadingImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadedImplCopyWith<$Res> {
-  factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
-      __$$LoadedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call(
-      {Map<String, List<BookingsModel>> upcomingGrouped,
-      Map<String, List<BookingsModel>> returnsGrouped,
-      DesktopDashboardCarouselData carouselData,
-      String? nextPageUrl,
-      int currentPage,
-      int totalPages,
-      bool isPaginating});
-
-  $DesktopDashboardCarouselDataCopyWith<$Res> get carouselData;
-}
-
-/// @nodoc
-class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$DashboardStateCopyWithImpl<$Res, _$LoadedImpl>
-    implements _$$LoadedImplCopyWith<$Res> {
-  __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? upcomingGrouped = null,
-    Object? returnsGrouped = null,
-    Object? carouselData = null,
-    Object? nextPageUrl = freezed,
-    Object? currentPage = null,
-    Object? totalPages = null,
-    Object? isPaginating = null,
-  }) {
-    return _then(_$LoadedImpl(
-      upcomingGrouped: null == upcomingGrouped
-          ? _value._upcomingGrouped
-          : upcomingGrouped // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<BookingsModel>>,
-      returnsGrouped: null == returnsGrouped
-          ? _value._returnsGrouped
-          : returnsGrouped // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<BookingsModel>>,
-      carouselData: null == carouselData
-          ? _value.carouselData
-          : carouselData // ignore: cast_nullable_to_non_nullable
-              as DesktopDashboardCarouselData,
-      nextPageUrl: freezed == nextPageUrl
-          ? _value.nextPageUrl
-          : nextPageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      currentPage: null == currentPage
-          ? _value.currentPage
-          : currentPage // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalPages: null == totalPages
-          ? _value.totalPages
-          : totalPages // ignore: cast_nullable_to_non_nullable
-              as int,
-      isPaginating: null == isPaginating
-          ? _value.isPaginating
-          : isPaginating // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $DesktopDashboardCarouselDataCopyWith<$Res> get carouselData {
-    return $DesktopDashboardCarouselDataCopyWith<$Res>(_value.carouselData,
-        (value) {
-      return _then(_value.copyWith(carouselData: value));
-    });
-  }
 }
 
 /// @nodoc
 
-class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl(
-      {required final Map<String, List<BookingsModel>> upcomingGrouped,
-      required final Map<String, List<BookingsModel>> returnsGrouped,
-      required this.carouselData,
-      required this.nextPageUrl,
-      required this.currentPage,
-      required this.totalPages,
-      this.isPaginating = false})
-      : _upcomingGrouped = upcomingGrouped,
-        _returnsGrouped = returnsGrouped;
 
-  final Map<String, List<BookingsModel>> _upcomingGrouped;
-  @override
-  Map<String, List<BookingsModel>> get upcomingGrouped {
-    if (_upcomingGrouped is EqualUnmodifiableMapView) return _upcomingGrouped;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_upcomingGrouped);
-  }
+class _Loading implements DashboardState {
+  const _Loading();
+  
 
-  final Map<String, List<BookingsModel>> _returnsGrouped;
-  @override
-  Map<String, List<BookingsModel>> get returnsGrouped {
-    if (_returnsGrouped is EqualUnmodifiableMapView) return _returnsGrouped;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_returnsGrouped);
-  }
 
-  @override
-  final DesktopDashboardCarouselData carouselData;
-  @override
-  final String? nextPageUrl;
-  @override
-  final int currentPage;
-  @override
-  final int totalPages;
-  @override
-  @JsonKey()
-  final bool isPaginating;
 
-  @override
-  String toString() {
-    return 'DashboardState.loaded(upcomingGrouped: $upcomingGrouped, returnsGrouped: $returnsGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages, isPaginating: $isPaginating)';
-  }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LoadedImpl &&
-            const DeepCollectionEquality()
-                .equals(other._upcomingGrouped, _upcomingGrouped) &&
-            const DeepCollectionEquality()
-                .equals(other._returnsGrouped, _returnsGrouped) &&
-            (identical(other.carouselData, carouselData) ||
-                other.carouselData == carouselData) &&
-            (identical(other.nextPageUrl, nextPageUrl) ||
-                other.nextPageUrl == nextPageUrl) &&
-            (identical(other.currentPage, currentPage) ||
-                other.currentPage == currentPage) &&
-            (identical(other.totalPages, totalPages) ||
-                other.totalPages == totalPages) &&
-            (identical(other.isPaginating, isPaginating) ||
-                other.isPaginating == isPaginating));
-  }
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_upcomingGrouped),
-      const DeepCollectionEquality().hash(_returnsGrouped),
-      carouselData,
-      nextPageUrl,
-      currentPage,
-      totalPages,
-      isPaginating);
 
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)
-        loaded,
-    required TResult Function(String error) error,
-  }) {
-    return loaded(upcomingGrouped, returnsGrouped, carouselData, nextPageUrl,
-        currentPage, totalPages, isPaginating);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return loaded?.call(upcomingGrouped, returnsGrouped, carouselData,
-        nextPageUrl, currentPage, totalPages, isPaginating);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(upcomingGrouped, returnsGrouped, carouselData, nextPageUrl,
-          currentPage, totalPages, isPaginating);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return loaded(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return loaded?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (loaded != null) {
-      return loaded(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
-abstract class _Loaded implements DashboardState {
-  const factory _Loaded(
-      {required final Map<String, List<BookingsModel>> upcomingGrouped,
-      required final Map<String, List<BookingsModel>> returnsGrouped,
-      required final DesktopDashboardCarouselData carouselData,
-      required final String? nextPageUrl,
-      required final int currentPage,
-      required final int totalPages,
-      final bool isPaginating}) = _$LoadedImpl;
 
-  Map<String, List<BookingsModel>> get upcomingGrouped;
-  Map<String, List<BookingsModel>> get returnsGrouped;
-  DesktopDashboardCarouselData get carouselData;
-  String? get nextPageUrl;
-  int get currentPage;
-  int get totalPages;
-  bool get isPaginating;
+@override
+int get hashCode => runtimeType.hashCode;
 
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'DashboardState.loading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Loaded implements DashboardState {
+  const _Loaded({required final  Map<String, List<BookingsModel>> upcomingGrouped, required final  Map<String, List<BookingsModel>> returnsGrouped, required this.carouselData, required this.nextPageUrl, required this.currentPage, required this.totalPages, this.isPaginating = false}): _upcomingGrouped = upcomingGrouped,_returnsGrouped = returnsGrouped;
+  
+
+ final  Map<String, List<BookingsModel>> _upcomingGrouped;
+ Map<String, List<BookingsModel>> get upcomingGrouped {
+  if (_upcomingGrouped is EqualUnmodifiableMapView) return _upcomingGrouped;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_upcomingGrouped);
+}
+
+ final  Map<String, List<BookingsModel>> _returnsGrouped;
+ Map<String, List<BookingsModel>> get returnsGrouped {
+  if (_returnsGrouped is EqualUnmodifiableMapView) return _returnsGrouped;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_returnsGrouped);
+}
+
+ final  DesktopDashboardCarouselData carouselData;
+ final  String? nextPageUrl;
+ final  int currentPage;
+ final  int totalPages;
+@JsonKey() final  bool isPaginating;
+
+/// Create a copy of DashboardState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._upcomingGrouped, _upcomingGrouped)&&const DeepCollectionEquality().equals(other._returnsGrouped, _returnsGrouped)&&(identical(other.carouselData, carouselData) || other.carouselData == carouselData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_upcomingGrouped),const DeepCollectionEquality().hash(_returnsGrouped),carouselData,nextPageUrl,currentPage,totalPages,isPaginating);
+
+@override
+String toString() {
+  return 'DashboardState.loaded(upcomingGrouped: $upcomingGrouped, returnsGrouped: $returnsGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages, isPaginating: $isPaginating)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String error});
+abstract mixin class _$LoadedCopyWith<$Res> implements $DashboardStateCopyWith<$Res> {
+  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, List<BookingsModel>> upcomingGrouped, Map<String, List<BookingsModel>> returnsGrouped, DesktopDashboardCarouselData carouselData, String? nextPageUrl, int currentPage, int totalPages, bool isPaginating
+});
+
+
+$DesktopDashboardCarouselDataCopyWith<$Res> get carouselData;
+
+}
+/// @nodoc
+class __$LoadedCopyWithImpl<$Res>
+    implements _$LoadedCopyWith<$Res> {
+  __$LoadedCopyWithImpl(this._self, this._then);
+
+  final _Loaded _self;
+  final $Res Function(_Loaded) _then;
+
+/// Create a copy of DashboardState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? upcomingGrouped = null,Object? returnsGrouped = null,Object? carouselData = null,Object? nextPageUrl = freezed,Object? currentPage = null,Object? totalPages = null,Object? isPaginating = null,}) {
+  return _then(_Loaded(
+upcomingGrouped: null == upcomingGrouped ? _self._upcomingGrouped : upcomingGrouped // ignore: cast_nullable_to_non_nullable
+as Map<String, List<BookingsModel>>,returnsGrouped: null == returnsGrouped ? _self._returnsGrouped : returnsGrouped // ignore: cast_nullable_to_non_nullable
+as Map<String, List<BookingsModel>>,carouselData: null == carouselData ? _self.carouselData : carouselData // ignore: cast_nullable_to_non_nullable
+as DesktopDashboardCarouselData,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
+as String?,currentPage: null == currentPage ? _self.currentPage : currentPage // ignore: cast_nullable_to_non_nullable
+as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
+as int,isPaginating: null == isPaginating ? _self.isPaginating : isPaginating // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$DashboardStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? error = null,
-  }) {
-    return _then(_$ErrorImpl(
-      null == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Create a copy of DashboardState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DesktopDashboardCarouselDataCopyWith<$Res> get carouselData {
+  
+  return $DesktopDashboardCarouselDataCopyWith<$Res>(_self.carouselData, (value) {
+    return _then(_self.copyWith(carouselData: value));
+  });
+}
 }
 
 /// @nodoc
 
-class _$ErrorImpl implements _Error {
-  const _$ErrorImpl(this.error);
 
-  @override
-  final String error;
+class _Error implements DashboardState {
+  const _Error(this.error);
+  
 
-  @override
-  String toString() {
-    return 'DashboardState.error(error: $error)';
-  }
+ final  String error;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
-            (identical(other.error, error) || other.error == error));
-  }
+/// Create a copy of DashboardState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)
-        loaded,
-    required TResult Function(String error) error,
-  }) {
-    return error(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult? Function(String error)? error,
-  }) {
-    return error?.call(this.error);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(
-            Map<String, List<BookingsModel>> upcomingGrouped,
-            Map<String, List<BookingsModel>> returnsGrouped,
-            DesktopDashboardCarouselData carouselData,
-            String? nextPageUrl,
-            int currentPage,
-            int totalPages,
-            bool isPaginating)?
-        loaded,
-    TResult Function(String error)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this.error);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_Error value) error,
-  }) {
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_Error value)? error,
-  }) {
-    return error?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_Error value)? error,
-    required TResult orElse(),
-  }) {
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
-abstract class _Error implements DashboardState {
-  const factory _Error(final String error) = _$ErrorImpl;
 
-  String get error;
+@override
+int get hashCode => Object.hash(runtimeType,error);
 
-  /// Create a copy of DashboardState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'DashboardState.error(error: $error)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ErrorCopyWith<$Res> implements $DashboardStateCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ String error
+});
+
+
+
+
+}
+/// @nodoc
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of DashboardState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
+  return _then(_Error(
+null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on
