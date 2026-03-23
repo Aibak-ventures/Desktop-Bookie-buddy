@@ -1,14 +1,24 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
+import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 
 class AuthRepositoryImpl implements IAuthRepository {
   final AuthRemoteDatasource _datasource;
+  final SharedPreferenceHelper _prefs;
+  final SessionStorage _sessionStorage;
 
-  AuthRepositoryImpl(this._datasource);
+  AuthRepositoryImpl({
+    required AuthRemoteDatasource datasource,
+    required SharedPreferenceHelper prefs,
+    required SessionStorage sessionStorage,
+  })  : _datasource = datasource,
+        _prefs = prefs,
+        _sessionStorage = sessionStorage;
 
   @override
   Future<void> login({
@@ -28,10 +38,11 @@ class AuthRepositoryImpl implements IAuthRepository {
         final responseData = response.data as Map<String, dynamic>;
         final String accessToken = responseData['access'];
         final String refreshToken = responseData['refresh'];
-        await SessionStorage.saveTokens(
+        await _sessionStorage.saveTokens(
           accessToken: accessToken,
           refreshToken: refreshToken,
         );
+        await _prefs.instance.setBool(AppConstants.onboardingKey, true);
         log('Login successful, ${response.devMessage}');
       } else {
         log('Login failed: ${response.devMessage}');
@@ -74,13 +85,13 @@ class AuthRepositoryImpl implements IAuthRepository {
   @override
   Future<bool> refreshToken() async {
     try {
-      final refreshToken = SessionStorage.refreshToken;
+      final refreshToken = _sessionStorage.refreshToken;
       final newAccessToken = await safeApiCall(
         () => _datasource.refreshToken(refreshToken: refreshToken),
       );
 
       // Persist new tokens
-      await SessionStorage.saveTokens(accessToken: newAccessToken);
+      await _sessionStorage.saveTokens(accessToken: newAccessToken);
       return true;
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);

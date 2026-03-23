@@ -10,19 +10,27 @@ import 'package:bookie_buddy_web/features/auth/presentation/pages/onboarding_scr
 import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
 
 class SplashInitializationUseCase {
+  SplashInitializationUseCase({
+    required SharedPreferenceHelper prefs,
+    required SessionStorage sessionStorage,
+  })  : _prefs = prefs,
+        _sessionStorage = sessionStorage;
+
+  final SharedPreferenceHelper _prefs;
+  final SessionStorage _sessionStorage;
+
   Future<void> call() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    final onboarding =
-        SharedPreferenceHelper.getBool(AppConstants.onboardingKey);
+    final onboarding = _prefs.instance.getBool(AppConstants.onboardingKey);
     log('onboarding: $onboarding');
 
     final initialScreen = !(onboarding ?? false)
         ? const OnboardingScreen()
-        : SessionStorage.refreshToken != null &&
-                SessionStorage.accessToken != null
+        : _sessionStorage.refreshToken != null &&
+                _sessionStorage.accessToken != null
             ? const BottomBarScreen()
-            : LoginScreen();
+            : const LoginScreen();
 
     navigatorKey.currentContext!.pushReplacement(initialScreen);
   }

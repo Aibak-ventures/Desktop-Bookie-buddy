@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/core/session/token_refresh_manager.dart';
 import 'package:bookie_buddy_web/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
@@ -41,6 +42,7 @@ import 'package:bookie_buddy_web/features/shop/data/repositories/shop_repository
 import 'package:bookie_buddy_web/features/shop/domain/repositories/i_shop_repository.dart';
 import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shops_usecase.dart';
 import 'package:bookie_buddy_web/features/shop/domain/usecases/get_shop_services_usecase.dart';
+import 'package:bookie_buddy_web/features/splash/domain/usecases/splash_initialization_usecase.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_email_support_usecase.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/repositories/i_dashboard_repository.dart';
@@ -90,6 +92,7 @@ import 'package:bookie_buddy_web/features/dashboard/data/repositories/dashboard_
 import 'package:bookie_buddy_web/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
@@ -98,8 +101,8 @@ class AppDependencies {
   static final _get = getIt.get;
 
   /// register feature specific dependencies
-  static void _registerFeatures() {
-    _registerCommon();
+  static void _registerFeatures(SharedPreferences prefs) {
+    _registerCommon(prefs);
     _registerShopFeature();
     _registerAuthFeature();
     _registerClientFeature();
@@ -111,13 +114,23 @@ class AppDependencies {
   }
 
   // ================== feature specific ==================
-  static void _registerCommon() {
+  static void _registerCommon(SharedPreferences prefs) {
+    _registerLazy(() => SharedPreferenceHelper(prefs));
+    _registerLazy(() => SessionStorage(_get()));
     _registerLazy<TokenRefreshManager>(
-      () => TokenRefreshManager(authRepository: _get<IAuthRepository>()),
+      () => TokenRefreshManager(
+        authRepository: _get<IAuthRepository>(),
+        sessionStorage: getIt<SessionStorage>(),
+      ),
     );
-    _registerLazy(SharedPreferenceHelper.new);
     _registerLazy(() => LaunchEmailSupportUsecase());
     _registerLazy(() => LaunchWhatsappSupportUsecase());
+    _registerLazy(
+      () => SplashInitializationUseCase(
+        prefs: _get<SharedPreferenceHelper>(),
+        sessionStorage: _get<SessionStorage>(),
+      ),
+    );
   }
 
   static void _registerShopFeature() {
@@ -130,9 +143,17 @@ class AppDependencies {
   /// register auth use cases
   static void _registerAuthFeature() {
     // auth
-    _registerLazy(() =>
-        AuthRemoteDatasource(dio: DioClient.dio, tokenRefreshManager: getIt()));
-    _registerLazy<IAuthRepository>(() => AuthRepositoryImpl(_get()));
+    _registerLazy(() => AuthRemoteDatasource(
+          dio: DioClient.dio,
+          prefs: _get<SharedPreferenceHelper>(),
+          tokenRefreshManager: _get<TokenRefreshManager>(),
+          sessionStorage: _get<SessionStorage>(),
+        ));
+    _registerLazy<IAuthRepository>(() => AuthRepositoryImpl(
+          datasource: _get(),
+          prefs: _get<SharedPreferenceHelper>(),
+          sessionStorage: _get<SessionStorage>(),
+        ));
     _registerLazy(() => LoginUseCase(_get<IAuthRepository>()));
     _registerLazy(() => ChangeAccountPasswordUseCase(_get<IAuthRepository>()));
     _registerLazy(() => ChangeSecretPasswordUseCase(_get<IAuthRepository>()));
@@ -143,6 +164,7 @@ class AppDependencies {
         datasource: _get(),
         prefs: _get<SharedPreferenceHelper>(),
         authRepository: _get<IAuthRepository>(),
+        sessionStorage: _get<SessionStorage>(),
       ),
     );
     _registerLazy(() => GetUserUseCase(_get<IUserRepository>()));
@@ -258,7 +280,7 @@ class AppDependencies {
 
   /// Initializes the dependencies for the application by registering
   /// the BookingController using Get.lazyPut for dependency injection.
-  static void init() {
-    _registerFeatures();
+  static void init(SharedPreferences prefs) {
+    _registerFeatures(prefs);
   }
 }

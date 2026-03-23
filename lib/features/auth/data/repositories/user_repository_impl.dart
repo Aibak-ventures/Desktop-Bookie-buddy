@@ -16,14 +16,17 @@ class UserRepositoryImpl implements IUserRepository {
   final UserRemoteDatasource _datasource;
   final SharedPreferenceHelper _prefs;
   final IAuthRepository _authRepository;
+  final SessionStorage _sessionStorage;
 
   UserRepositoryImpl({
     required UserRemoteDatasource datasource,
     required SharedPreferenceHelper prefs,
     required IAuthRepository authRepository,
+    required SessionStorage sessionStorage,
   })  : _datasource = datasource,
         _prefs = prefs,
-        _authRepository = authRepository;
+        _authRepository = authRepository,
+        _sessionStorage = sessionStorage;
 
   @override
   Future<UserModel> fetchUserData() async {
@@ -48,8 +51,8 @@ class UserRepositoryImpl implements IUserRepository {
       await _authRepository.clearSession();
       SecureActionAuthSessionManager.reset();
       await CachedNetworkImageProvider.defaultCacheManager.emptyCache();
-      await SessionStorage.clearTokens();
-      await SharedPreferenceHelper.clearAll();
+      await _sessionStorage.clearTokens();
+      await _prefs.clearAll();
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
     }
@@ -70,7 +73,7 @@ class UserRepositoryImpl implements IUserRepository {
   @override
   Future<void> registerFCMToken(String token) async {
     try {
-      if (SessionStorage.refreshToken.isNullOrEmpty) {
+      if (_sessionStorage.refreshToken.isNullOrEmpty) {
         log('No refresh token available, skipping FCM token registration');
         return;
       }

@@ -3,7 +3,6 @@ import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_us
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
@@ -185,16 +184,17 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    context.read<AuthBloc>().add(AuthEvent.loginRequested(
-          phone: phoneController.text.trim(),
-          password: passwordController.text.trim(),
-        ));
+    context.read<AuthBloc>().add(
+          AuthEvent.loginRequested(
+            phone: phoneController.text.trim(),
+            password: passwordController.text.trim(),
+          ),
+        );
   }
 
   void _authListener(BuildContext context, AuthState state) {
     state.maybeWhen(
       authenticated: () async {
-        await SharedPreferenceHelper.setBool('onboarding', true);
         context.read<UserCubit>().loadUserData();
         context
             .read<DashboardBloc>()

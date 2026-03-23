@@ -4,21 +4,25 @@ import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 
 class TokenRefreshManager {
-  TokenRefreshManager({required IAuthRepository authRepository})
-      : _authRepository = authRepository;
+  TokenRefreshManager(
+      {required IAuthRepository authRepository,
+      required SessionStorage sessionStorage})
+      : _authRepository = authRepository,
+        _sessionStorage = sessionStorage;
 
   final IAuthRepository _authRepository;
+  final SessionStorage _sessionStorage;
   Timer? _refreshTimer;
   bool _isRefreshing = false; // To prevent concurrent refreshes
 
   bool get isTokenValid =>
-      (SessionStorage.accessToken != null &&
-          SessionStorage.accessToken!.isNotEmpty) &&
-      (SessionStorage.refreshToken != null &&
-          SessionStorage.refreshToken!.isNotEmpty);
+      (_sessionStorage.accessToken != null &&
+          _sessionStorage.accessToken!.isNotEmpty) &&
+      (_sessionStorage.refreshToken != null &&
+          _sessionStorage.refreshToken!.isNotEmpty);
 
   void startProactiveRefresh() async {
-    await SessionStorage.loadTokenExpiry();
+    await _sessionStorage.loadTokenExpiry();
     log('Proactive token refresh started');
     _refreshTimer?.cancel();
     await _checkTokenExpiry();
@@ -38,11 +42,11 @@ class TokenRefreshManager {
 
     log('Proactive token refresh checking...');
 
-    if (SessionStorage.refreshToken == null) {
+    if (_sessionStorage.refreshToken == null) {
       log('No refresh token available, skipping proactive refresh');
       return;
     }
-    if (SessionStorage.isTokenExpiringSoon) {
+    if (_sessionStorage.isTokenExpiringSoon) {
       _isRefreshing = true;
       log('Proactive token refresh triggered');
       try {

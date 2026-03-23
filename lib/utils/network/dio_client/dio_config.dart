@@ -1,4 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/auth_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -24,7 +26,7 @@ class DioClient {
       },
     ),
   )..interceptors.addAll([
-      AuthInterceptor(),
+      AuthInterceptor(getIt<SessionStorage>()),
       if (kDebugMode)
         LogInterceptor(
           requestBody: true,

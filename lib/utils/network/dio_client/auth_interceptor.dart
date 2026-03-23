@@ -25,6 +25,10 @@ class _QueuedRequest {
 }
 
 class AuthInterceptor extends Interceptor {
+  final SessionStorage _sessionStorage;
+
+  const AuthInterceptor(this._sessionStorage);
+
   static bool _isRefreshing = false;
   static final List<_QueuedRequest> _requestQueue = [];
   static bool _isSessionExpiredDialogShowing = false;
@@ -65,7 +69,7 @@ class AuthInterceptor extends Interceptor {
       handler.next(options);
       return;
     }
-    final token = SessionStorage.accessToken;
+    final token = _sessionStorage.accessToken;
 
     final shopId = getIt.get<SharedPreferenceHelper>().getShopId;
     if (token != null && token.isNotEmpty) {
@@ -127,7 +131,7 @@ class AuthInterceptor extends Interceptor {
         !_isAuthEndpoint(err.requestOptions.path)) {
       // If there is no refresh token, the user isn't logged in yet (fresh install/logged out).
       // Don't show session-expired UX or attempt refresh; let the caller route to login/onboarding.
-      final hasRefreshToken = SessionStorage.refreshToken?.isNotEmpty ?? false;
+      final hasRefreshToken = _sessionStorage.refreshToken?.isNotEmpty ?? false;
       if (!hasRefreshToken) {
         log(
           '401 received without refresh token — likely first launch or logged-out state. Skipping session-expired handling.',
@@ -275,7 +279,7 @@ class AuthInterceptor extends Interceptor {
       if (!queued.completer.isCompleted) {
         if (success) {
           // Update the request with new token
-          final token = SessionStorage.accessToken;
+          final token = _sessionStorage.accessToken;
           if (token != null && token.isNotEmpty) {
             // Complete with updated options
             queued.completer.complete(queued.requestOptions);
@@ -292,14 +296,14 @@ class AuthInterceptor extends Interceptor {
 
   Future<bool> _attemptTokenRefresh() async {
     try {
-      final refreshToken = SessionStorage.refreshToken;
+      final refreshToken = _sessionStorage.refreshToken;
       if (refreshToken == null || refreshToken.isEmpty) {
         log('No refresh token available');
         return false;
       }
 
       final isRefreshed = await getIt<IAuthRepository>().refreshToken();
-      final newAccessToken = SessionStorage.accessToken;
+      final newAccessToken = _sessionStorage.accessToken;
 
       if (isRefreshed && newAccessToken != null && newAccessToken.isNotEmpty) {
         log('Token refresh completed successfully');
@@ -319,7 +323,7 @@ class AuthInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     try {
-      final newAccessToken = SessionStorage.accessToken;
+      final newAccessToken = _sessionStorage.accessToken;
       if (newAccessToken == null || newAccessToken.isEmpty) {
         throw 'No valid access token after refresh';
       }
@@ -367,7 +371,7 @@ class AuthInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     try {
-      final newAccessToken = SessionStorage.accessToken;
+      final newAccessToken = _sessionStorage.accessToken;
       if (newAccessToken == null || newAccessToken.isEmpty) {
         throw 'No valid access token after refresh';
       }

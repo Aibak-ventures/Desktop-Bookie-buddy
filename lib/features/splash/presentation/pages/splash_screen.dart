@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/splash/domain/usecases/splash_initialization_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    SplashInitializationUseCase().call();
+    getIt<SplashInitializationUseCase>().call();
   }
 
   @override
