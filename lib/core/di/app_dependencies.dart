@@ -36,6 +36,7 @@ import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usec
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/send_sale_invoice_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/shop/data/datasources/shop_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/shop/data/repositories/shop_repository_impl.dart';
@@ -213,6 +214,7 @@ class AppDependencies {
     _registerLazy(() => UpdateSaleUseCase(_get<ISalesRepository>()));
     _registerLazy(() => DeleteSaleUseCase(_get<ISalesRepository>()));
     _registerLazy(() => GetSaleInvoicePdfUseCase(_get<ISalesRepository>()));
+    _registerLazy(() => SendSaleInvoiceUsecase(_get<ISalesRepository>()));
   }
 
   static void _registerProductFeature() {

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
-import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
@@ -3507,12 +3507,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             builder: (context, _) {
               final products = selectedProductsNotifier.value;
               final additionalCharges = additionalChargesNotifier.value;
-              final advanceAmount =
-                  advanceAmountController.text.trim().toIntOrNull() ?? 0;
+              final isSaleType = selectedBookingType == BookingType.sales;
+              final advanceAmount = isSaleType
+                  ? 0
+                  : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
-              final isSaleType = selectedBookingType == BookingType.sales;
               final summaryRentalDays =
                   !isSaleType ? _calculateRentalDays() : 1;
               final productTotal = products.fold<int>(
@@ -3538,21 +3539,30 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
               return Column(
                 children: [
-                  _buildSummaryRow('Product total', productTotal),
-                  if (additionalTotal > 0)
-                    _buildSummaryRow('Additional charges', additionalTotal),
-                  if (discountAmount > 0)
-                    _buildSummaryRow('- Discount', discountAmount,
-                        isNegative: true),
-                  const Divider(height: 6),
-                  _buildSummaryRow('Paid', advanceAmount,
-                      valueColor: const Color(0xFF1AB000)),
-                  _buildSummaryRow(
-                    'Total payable',
-                    remainingAmount > 0 ? remainingAmount : 0,
-                    valueColor: const Color(0xFFD30000),
-                    isBold: true,
-                  ),
+                  if (isSaleType)
+                    _buildSummaryRow(
+                      'Total amount',
+                      remainingAmount > 0 ? remainingAmount : 0,
+                      valueColor: const Color(0xFF6132E4),
+                      isBold: true,
+                    )
+                  else ...[
+                    _buildSummaryRow('Product total', productTotal),
+                    if (additionalTotal > 0)
+                      _buildSummaryRow('Additional charges', additionalTotal),
+                    if (discountAmount > 0)
+                      _buildSummaryRow('- Discount', discountAmount,
+                          isNegative: true),
+                    const Divider(height: 6),
+                    _buildSummaryRow('Paid', advanceAmount,
+                        valueColor: const Color(0xFF1AB000)),
+                    _buildSummaryRow(
+                      'Total payable',
+                      remainingAmount > 0 ? remainingAmount : 0,
+                      valueColor: const Color(0xFFD30000),
+                      isBold: true,
+                    ),
+                  ],
                 ],
               );
             },
@@ -3991,7 +4001,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// Build sales request for creating a sale
   RequestSalesModel _buildSalesRequest() {
     final products = selectedProductsNotifier.value;
-
+    final discount = discountAmountController.text.trim().toIntOrNull() ?? 0;
     // Build variants array with id, quantity, and amount (total = per-unit price × quantity)
     final variants = products.map((product) {
       return {
@@ -4000,6 +4010,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         'amount': product.amount * product.quantity,
       };
     }).toList();
+    final grossTotal = variants.fold<int>(
+      0,
+      (sum, item) => sum + ((item['amount'] as int?) ?? 0),
+    );
+    final finalTotal =
+        (grossTotal - discount) > 0 ? (grossTotal - discount) : 0;
 
     // Get staff ID from cubit
     final staffState = context.read<StaffSearchCubit>().state;
@@ -4020,9 +4036,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           : descriptionController.text.trim(),
       sendInvoice: sendPdfToWhatsApp,
       variants: variants,
-      paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+      // Sales flow has no paid field in UI; mark as fully paid by default.
+      paidAmount: finalTotal,
       paymentMethod: paymentMethod,
-      discount: discountAmountController.text.trim().toIntOrNull() ?? 0,
+      discount: discount,
       // Default to true, or use checkbox value if past date
       decreaseStock: decreaseStockForPastDate || !_isPastDate(),
     );
@@ -4768,12 +4785,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               if (products.isEmpty) return const SizedBox.shrink();
 
               final additionalCharges = additionalChargesNotifier.value;
-              final advanceAmount =
-                  advanceAmountController.text.trim().toIntOrNull() ?? 0;
+              final isSaleType = selectedBookingType == BookingType.sales;
+              final advanceAmount = isSaleType
+                  ? 0
+                  : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
-              final isSaleType = selectedBookingType == BookingType.sales;
               final rentalDays = !isSaleType ? _calculateRentalDays() : 1;
               final productTotal = products.fold<int>(
                 0,
@@ -4878,7 +4896,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 _buildSummaryRow('- Discount', discountAmount,
                                     isNegative: true),
                               const Divider(height: 12, thickness: 1),
-                              if (advanceAmount > 0)
+                              if (!isSaleType && advanceAmount > 0)
                                 _buildSummaryRow('Paid', advanceAmount,
                                     valueColor: const Color(0xFF1AB000)),
                             ],
@@ -5028,8 +5046,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                           if (isSale) {
                             // For sales, use sales API endpoint
-                            final repo = getIt<ISalesRepository>();
-                            final pdfBytes = await repo.getInvoicePdfBytes(id);
+                            final getSaleInvoice =
+                                getIt<GetSaleInvoicePdfUseCase>();
+                            final pdfBytes = await getSaleInvoice(id);
 
                             GlobalLoadingOverlay.hide();
 

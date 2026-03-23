@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/send_sale_invoice_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
@@ -9,14 +13,17 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/generate_sales_pdf.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/pages/edit_sales_screen.dart';
+import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab_stub.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SalesDetailsDrawer extends StatelessWidget {
@@ -899,20 +906,97 @@ class SalesDetailsDrawer extends StatelessWidget {
             icon: Icons.download_outlined,
             color: AppColors.purple,
             onTap: () async {
-              final user = context.read<UserCubit>().state;
-              final shop = user?.shopDetails;
-
-              if (shop == null) {
-                context.showSnackBar('Shop info not found', isError: true);
-                return;
-              }
-
-              await GenerateSalesPdf.shareInvoice(
-                context: context,
-                saleDetails: sale,
-                shopDetails: shop,
-              );
+              _showInvoiceActionsModal(context, sale);
             },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showInvoiceActionsModal(BuildContext context, SaleDetailsModel sale) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Invoice'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.message, color: Color(0xFF25D366)),
+              title: const Text('Send via WhatsApp'),
+              subtitle: Text(
+                'Send invoice PDF to ${sale.clientPhone}',
+              ),
+              onTap: () async {
+                Navigator.of(ctx).pop();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  final sendSaleInvoice = getIt<SendSaleInvoiceUsecase>();
+                  await sendSaleInvoice(
+                    sale.id,
+                    sendWhatsApp: true,
+                  );
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar(
+                      'Invoice sent to ${sale.clientPhone} via WhatsApp',
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to send invoice: $e',
+                        isError: true);
+                  }
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.print, color: AppColors.purple),
+              title: const Text('Print'),
+              subtitle: const Text('Download and open invoice PDF'),
+              onTap: () async {
+                Navigator.of(ctx).pop();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  final getSaleInvoice = getIt<GetSaleInvoicePdfUseCase>();
+                  final pdfBytes = await getSaleInvoice(sale.id);
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (kIsWeb) {
+                    openPdfInNewTab(pdfBytes, 'sales_invoice_${sale.id}.pdf');
+                  } else {
+                    final dir = await getTemporaryDirectory();
+                    final file =
+                        File('${dir.path}/sales_invoice_${sale.id}.pdf');
+                    await file.writeAsBytes(pdfBytes);
+                    await OpenFile.open(file.path);
+                  }
+                } catch (e) {
+                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) {
+                    context.showSnackBar('Failed to open invoice: $e',
+                        isError: true);
+                  }
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
           ),
         ],
       ),

@@ -22,4 +22,6 @@ abstract class ISalesRepository {
   Future<void> deleteSale(int saleId);
 
   Future<Uint8List> getInvoicePdfBytes(int saleId);
+
+  Future<void> sendInvoice({required int saleId, required bool sendWhatsApp});
 }

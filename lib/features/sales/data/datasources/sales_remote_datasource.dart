@@ -155,4 +155,22 @@ class SalesRemoteDatasource {
       rethrow;
     }
   }
+
+  /// Send invoice to WhatsApp
+  Future<CustomResponseModel> sendInvoice({
+    required int saleId,
+    required bool sendWhatsApp,
+  }) async {
+    try {
+      final url = ApiEndpoints.sales.downloadInvoice(saleId);
+      final response = await _dio.get(
+        url,
+        queryParameters: {'send_whatsapp': sendWhatsApp},
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error sending sale invoice: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
 }
