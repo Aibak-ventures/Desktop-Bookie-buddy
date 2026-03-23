@@ -23,8 +23,8 @@ class AppAssets {
   static const String product3d = '${_images}product_3d.webp';
   static const String onboardingPersonImage =
       '${_images}onboarding_person_image.png';
-      static const String revenueOrMoney = '${_images}revenue_or_money.png';
-      static const String financialGrowth = '${_images}financial_growth.png';
+  static const String revenueOrMoney = '${_images}revenue_or_money.png';
+  static const String financialGrowth = '${_images}financial_growth.png';
   static const String onboardingPersonSvg =
       '${_images}onboarding_person_image.svg';
   static const String user = '${_icons}user.png';
@@ -32,7 +32,8 @@ class AppAssets {
   static const String calendarPlus = '${_icons}calendar_plus.png';
   static const String cartPlus = '${_icons}cart_plus.png';
   static const String financialAndPayment =
-      '${_images}financial_and_payment.png'; static const String investment = '${_images}Investment.png';
+      '${_images}financial_and_payment.png';
+  static const String investment = '${_images}Investment.png';
   // widgets
   static final Image upi = Image.asset(upiIcon, height: 38.w, width: 38.w);
   static final Image cash = Image.asset(cashIcon, width: 38.w, height: 38.w);

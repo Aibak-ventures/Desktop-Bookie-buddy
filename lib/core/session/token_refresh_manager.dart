@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
-import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 
 class TokenRefreshManager {
-  TokenRefreshManager(
-      {required IAuthRepository authRepository,
-      required SessionStorage sessionStorage})
-      : _authRepository = authRepository,
+  TokenRefreshManager({
+    required Future<bool> Function() refreshCallback,
+    required SessionStorage sessionStorage,
+  })  : _refreshCallback = refreshCallback,
         _sessionStorage = sessionStorage;
 
-  final IAuthRepository _authRepository;
+  final Future<bool> Function() _refreshCallback;
   final SessionStorage _sessionStorage;
   Timer? _refreshTimer;
-  bool _isRefreshing = false; // To prevent concurrent refreshes
+  bool _isRefreshing = false;
 
   bool get isTokenValid =>
       (_sessionStorage.accessToken != null &&
@@ -27,7 +26,7 @@ class TokenRefreshManager {
     _refreshTimer?.cancel();
     await _checkTokenExpiry();
     _refreshTimer = Timer.periodic(
-      const Duration(minutes: 5), // Check every 5 minutes
+      const Duration(minutes: 5),
       (_) async {
         await _checkTokenExpiry();
       },
@@ -50,7 +49,7 @@ class TokenRefreshManager {
       _isRefreshing = true;
       log('Proactive token refresh triggered');
       try {
-        await _authRepository.refreshToken();
+        await _refreshCallback();
         log('Proactive token refresh completed successfully');
       } catch (e) {
         log('Proactive token refresh failed: $e');

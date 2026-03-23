@@ -26,9 +26,9 @@ void main() async {
     // Silently ignore keyboard errors as they don't affect functionality
   };
 
-  DioClient.init();
   final prefs = await SharedPreferences.getInstance();
   AppDependencies.init(prefs);
+  DioClient.init();
   if (!kIsWeb) {
     getIt<TokenRefreshManager>().startProactiveRefresh();
     FilePicker.platform;

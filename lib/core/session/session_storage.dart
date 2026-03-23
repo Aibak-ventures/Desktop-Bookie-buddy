@@ -3,11 +3,11 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionStorage {
-  final SharedPreferences _preferences;
+  final SharedPreferenceHelper _preferences;
   DateTime? _tokenExpiryTime;
 
   SessionStorage(this._preferences);
@@ -33,14 +33,15 @@ class SessionStorage {
   Future<void> setTokenExpiry(DateTime expiryTime) async {
     log('Token expiry time set to $expiryTime');
     _tokenExpiryTime = expiryTime;
-    await _preferences.setString(
+    await _preferences.instance.setString(
       AppConstants.tokenExpiryKey,
       expiryTime.toIso8601String(),
     ); // Persist it
   }
 
   Future<void> loadTokenExpiry() async {
-    final expiryString = _preferences.getString(AppConstants.tokenExpiryKey);
+    final expiryString =
+        _preferences.instance.getString(AppConstants.tokenExpiryKey);
     if (expiryString != null) {
       final parsed = DateTime.tryParse(expiryString);
       if (parsed != null) {
@@ -57,13 +58,14 @@ class SessionStorage {
   }) async {
     try {
       if (accessToken != null) {
-        await _preferences.setString(AppConstants.accessTokenKey, accessToken);
+        await _preferences.instance
+            .setString(AppConstants.accessTokenKey, accessToken);
         final expiryTime = getTokenExpiry(accessToken) ??
             DateTime.now().add(const Duration(minutes: 30));
         await setTokenExpiry(expiryTime);
       }
       if (refreshToken != null) {
-        await _preferences.setString(
+        await _preferences.instance.setString(
           AppConstants.refreshTokenKey,
           refreshToken,
         );
@@ -75,17 +77,17 @@ class SessionStorage {
 
   /// Get access token
   String? get accessToken =>
-      _preferences.getString(AppConstants.accessTokenKey);
+      _preferences.instance.getString(AppConstants.accessTokenKey);
 
   /// Get refresh token
   String? get refreshToken =>
-      _preferences.getString(AppConstants.refreshTokenKey);
+      _preferences.instance.getString(AppConstants.refreshTokenKey);
 
   /// Clear SharedPreferences
   Future<void> clearTokens() async {
-    await _preferences.remove(AppConstants.accessTokenKey);
-    await _preferences.remove(AppConstants.refreshTokenKey);
-    await _preferences.remove(AppConstants.tokenExpiryKey);
+    await _preferences.instance.remove(AppConstants.accessTokenKey);
+    await _preferences.instance.remove(AppConstants.refreshTokenKey);
+    await _preferences.instance.remove(AppConstants.tokenExpiryKey);
     _tokenExpiryTime = null;
   }
 

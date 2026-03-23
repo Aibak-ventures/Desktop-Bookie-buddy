@@ -116,11 +116,11 @@ class AppDependencies {
   // ================== feature specific ==================
   static void _registerCommon(SharedPreferences prefs) {
     _registerLazy(() => SharedPreferenceHelper(prefs));
-    _registerLazy(() => SessionStorage(_get()));
+    _registerLazy(() => SessionStorage(_get<SharedPreferenceHelper>()));
     _registerLazy<TokenRefreshManager>(
       () => TokenRefreshManager(
-        authRepository: _get<IAuthRepository>(),
-        sessionStorage: getIt<SessionStorage>(),
+        refreshCallback: () => _get<IAuthRepository>().refreshToken(),
+        sessionStorage: _get<SessionStorage>(),
       ),
     );
     _registerLazy(() => LaunchEmailSupportUsecase());
