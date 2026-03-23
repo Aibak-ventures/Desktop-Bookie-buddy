@@ -97,12 +97,13 @@ class GenerateSaleDetailsPdf {
     final ttfMalayalam = pw.Font.ttf(fontMalayalam);
 
     // Load the SVG header graphic
-    final headerSvg = await rootBundle.loadString(
-      AppAssets.bookingPdfLayoutHeaderSvg,
-    );
-    final footerSvg = await rootBundle.loadString(
-      AppAssets.bookingPdfLayoutFooterSvg,
-    );
+    // COMMENTED OUT: SVG files don't exist in assets
+    // final headerSvg = await rootBundle.loadString(
+    //   AppAssets.bookingPdfLayoutHeaderSvg,
+    // );
+    // final footerSvg = await rootBundle.loadString(
+    //   AppAssets.bookingPdfLayoutFooterSvg,
+    // );
 
     final pdf = pw.Document(
       creator: 'Bookie Buddy',
@@ -137,34 +138,34 @@ class GenerateSaleDetailsPdf {
         // Page theme with background SVG used as header background
         pageTheme: pw.PageTheme(
           margin: const pw.EdgeInsets.fromLTRB(24, 60, 24, 40),
-          buildBackground: (context) {
-            if (context.pageNumber == 1) {
-              return pw.FullPage(
-                ignoreMargins: true,
-                child: pw.Column(
-                  children: [
-                    pw.SvgImage(
-                      svg: headerSvg,
-                      fit: pw.BoxFit.cover,
-                      alignment: pw.Alignment.topCenter,
-                    ),
-                    pw.Spacer(),
-                    pw.SvgImage(
-                      svg: footerSvg,
-                      alignment: pw.Alignment.bottomCenter,
-                    ),
-                  ],
-                ),
-              );
-            }
-            return pw.FullPage(
-              ignoreMargins: true,
-              child: pw.SvgImage(
-                svg: footerSvg,
-                alignment: pw.Alignment.bottomCenter,
-              ),
-            );
-          },
+          // buildBackground: (context) {
+          //   if (context.pageNumber == 1) {
+          //     return pw.FullPage(
+          //       ignoreMargins: true,
+          //       child: pw.Column(
+          //         children: [
+          //           pw.SvgImage(
+          //             svg: headerSvg,
+          //             fit: pw.BoxFit.cover,
+          //             alignment: pw.Alignment.topCenter,
+          //           ),
+          //           pw.Spacer(),
+          //           pw.SvgImage(
+          //             svg: footerSvg,
+          //             alignment: pw.Alignment.bottomCenter,
+          //           ),
+          //         ],
+          //       ),
+          //     );
+          //   }
+          //   return pw.FullPage(
+          //     ignoreMargins: true,
+          //     child: pw.SvgImage(
+          //       svg: footerSvg,
+          //       alignment: pw.Alignment.bottomCenter,
+          //     ),
+          //   );
+          // },
         ),
         // Footer for every page
         footer: (context) => context.pagesCount == context.pageNumber
