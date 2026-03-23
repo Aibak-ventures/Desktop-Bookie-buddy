@@ -16,8 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ClientState {
-  List<ClientModel> get suggestions => throw _privateConstructorUsedError;
-  ClientModel? get selectedClient => throw _privateConstructorUsedError;
+  List<ClientEntity> get suggestions => throw _privateConstructorUsedError;
+  ClientEntity? get selectedClient => throw _privateConstructorUsedError;
   String get searchQuery => throw _privateConstructorUsedError;
   String? get nextPageUrl => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
@@ -36,13 +36,13 @@ abstract class $ClientStateCopyWith<$Res> {
       _$ClientStateCopyWithImpl<$Res, ClientState>;
   @useResult
   $Res call(
-      {List<ClientModel> suggestions,
-      ClientModel? selectedClient,
+      {List<ClientEntity> suggestions,
+      ClientEntity? selectedClient,
       String searchQuery,
       String? nextPageUrl,
       bool isLoading});
 
-  $ClientModelCopyWith<$Res>? get selectedClient;
+  $ClientEntityCopyWith<$Res>? get selectedClient;
 }
 
 /// @nodoc
@@ -70,11 +70,11 @@ class _$ClientStateCopyWithImpl<$Res, $Val extends ClientState>
       suggestions: null == suggestions
           ? _value.suggestions
           : suggestions // ignore: cast_nullable_to_non_nullable
-              as List<ClientModel>,
+              as List<ClientEntity>,
       selectedClient: freezed == selectedClient
           ? _value.selectedClient
           : selectedClient // ignore: cast_nullable_to_non_nullable
-              as ClientModel?,
+              as ClientEntity?,
       searchQuery: null == searchQuery
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
@@ -94,12 +94,12 @@ class _$ClientStateCopyWithImpl<$Res, $Val extends ClientState>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ClientModelCopyWith<$Res>? get selectedClient {
+  $ClientEntityCopyWith<$Res>? get selectedClient {
     if (_value.selectedClient == null) {
       return null;
     }
 
-    return $ClientModelCopyWith<$Res>(_value.selectedClient!, (value) {
+    return $ClientEntityCopyWith<$Res>(_value.selectedClient!, (value) {
       return _then(_value.copyWith(selectedClient: value) as $Val);
     });
   }
@@ -114,14 +114,14 @@ abstract class _$$ClientStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<ClientModel> suggestions,
-      ClientModel? selectedClient,
+      {List<ClientEntity> suggestions,
+      ClientEntity? selectedClient,
       String searchQuery,
       String? nextPageUrl,
       bool isLoading});
 
   @override
-  $ClientModelCopyWith<$Res>? get selectedClient;
+  $ClientEntityCopyWith<$Res>? get selectedClient;
 }
 
 /// @nodoc
@@ -147,11 +147,11 @@ class __$$ClientStateImplCopyWithImpl<$Res>
       suggestions: null == suggestions
           ? _value._suggestions
           : suggestions // ignore: cast_nullable_to_non_nullable
-              as List<ClientModel>,
+              as List<ClientEntity>,
       selectedClient: freezed == selectedClient
           ? _value.selectedClient
           : selectedClient // ignore: cast_nullable_to_non_nullable
-              as ClientModel?,
+              as ClientEntity?,
       searchQuery: null == searchQuery
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
@@ -172,23 +172,23 @@ class __$$ClientStateImplCopyWithImpl<$Res>
 
 class _$ClientStateImpl implements _ClientState {
   const _$ClientStateImpl(
-      {required final List<ClientModel> suggestions,
+      {required final List<ClientEntity> suggestions,
       required this.selectedClient,
       required this.searchQuery,
       this.nextPageUrl,
       this.isLoading = false})
       : _suggestions = suggestions;
 
-  final List<ClientModel> _suggestions;
+  final List<ClientEntity> _suggestions;
   @override
-  List<ClientModel> get suggestions {
+  List<ClientEntity> get suggestions {
     if (_suggestions is EqualUnmodifiableListView) return _suggestions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_suggestions);
   }
 
   @override
-  final ClientModel? selectedClient;
+  final ClientEntity? selectedClient;
   @override
   final String searchQuery;
   @override
@@ -239,16 +239,16 @@ class _$ClientStateImpl implements _ClientState {
 
 abstract class _ClientState implements ClientState {
   const factory _ClientState(
-      {required final List<ClientModel> suggestions,
-      required final ClientModel? selectedClient,
+      {required final List<ClientEntity> suggestions,
+      required final ClientEntity? selectedClient,
       required final String searchQuery,
       final String? nextPageUrl,
       final bool isLoading}) = _$ClientStateImpl;
 
   @override
-  List<ClientModel> get suggestions;
+  List<ClientEntity> get suggestions;
   @override
-  ClientModel? get selectedClient;
+  ClientEntity? get selectedClient;
   @override
   String get searchQuery;
   @override

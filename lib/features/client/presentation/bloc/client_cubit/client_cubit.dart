@@ -1,7 +1,7 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
-import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,9 +21,9 @@ class ClientCubit extends Cubit<ClientState> {
           ),
         );
 
-  ClientModel? _clientModel;
+  ClientEntity? _clientModel;
 
-  Future<List<ClientModel>> searchClient(String query) async {
+  Future<List<ClientEntity>> searchClient(String query) async {
     try {
       final result = await _getClients.call(searchName: query);
 
@@ -50,7 +50,7 @@ class ClientCubit extends Cubit<ClientState> {
     }
   }
 
-  void selectClient(ClientModel selectedClient) {
+  void selectClient(ClientEntity selectedClient) {
     _clientModel = selectedClient;
     emit(
       ClientState(
@@ -72,5 +72,5 @@ class ClientCubit extends Cubit<ClientState> {
     });
   }
 
-  ClientModel? getSelectedClient() => _clientModel;
+  ClientEntity? getSelectedClient() => _clientModel;
 }

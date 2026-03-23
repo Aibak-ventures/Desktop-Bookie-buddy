@@ -11,7 +11,13 @@ import 'package:dio/dio.dart';
 class AuthRemoteDatasource {
   final Dio _dio;
 
-  AuthRemoteDatasource({required Dio dio}) : _dio = dio;
+  AuthRemoteDatasource({
+    required Dio dio,
+    required TokenRefreshManager tokenRefreshManager,
+  })  : _dio = dio,
+        _tokenRefreshManager = tokenRefreshManager;
+
+  final TokenRefreshManager _tokenRefreshManager;
 
   Future<CustomResponseModel> userLogin({
     required String phone,
@@ -50,7 +56,7 @@ class AuthRemoteDatasource {
     try {
       await SessionStorage.clearTokens();
       await SharedPreferenceHelper.clearShopId();
-      TokenRefreshManager.stopProactiveRefresh();
+      _tokenRefreshManager.stopProactiveRefresh();
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
     }

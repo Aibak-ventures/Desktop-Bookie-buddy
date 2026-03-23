@@ -1,20 +1,20 @@
-import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 
 abstract interface class IClientRepository {
-  Future<PaginationModel<ClientModel>> getClients({
+  Future<PaginationModel<ClientEntity>> getClients({
     int page = 1,
     String? searchName,
     String? searchPhone,
   });
 
-  Future<ClientModel> addClient(
-    ClientRequestModel client, {
+  Future<ClientEntity> addClient(
+    ClientRequestEntity client, {
     bool allowExisting = true,
   });
 
-  Future<ClientModel> updateClient(ClientRequestModel client);
+  Future<ClientEntity> updateClient(ClientRequestEntity client);
 
   Future<void> deleteClient(int clientId);
 }

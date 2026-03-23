@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'client_request_model.freezed.dart';
@@ -15,6 +16,23 @@ class ClientRequestModel with _$ClientRequestModel {
 
   factory ClientRequestModel.fromJson(Map<String, dynamic> json) =>
       _$ClientRequestModelFromJson(json);
+
+  factory ClientRequestModel.fromEntity(ClientRequestEntity entity) =>
+      ClientRequestModel(
+        id: entity.id,
+        name: entity.name,
+        phone1: entity.phone1,
+        phone2: entity.phone2,
+      );
+}
+
+extension ClientRequestModelMapper on ClientRequestModel {
+  ClientRequestEntity toEntity() => ClientRequestEntity(
+        id: id,
+        name: name,
+        phone1: phone1,
+        phone2: phone2,
+      );
 }
 
 extension ClientRequestModelX on ClientRequestModel {

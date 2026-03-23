@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
-import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -27,13 +27,13 @@ class ClientSearchNameField extends StatelessWidget {
   final bool isSearchEnabled;
   final FocusNode? focusNode;
   final String? errorText;
-  final ValueChanged<ClientModel>? onClientSelected;
+  final ValueChanged<ClientEntity>? onClientSelected;
 
   @override
   Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TypeAheadField<ClientModel>(
+          TypeAheadField<ClientEntity>(
             controller: nameController,
             focusNode: focusNode,
             scrollController: scrollController,
@@ -171,7 +171,7 @@ class ClientSearchNameField extends StatelessWidget {
               if (results.isEmpty) {
                 // Return dummy to show "No client found" while keeping hideOnEmpty: true logic for valid empty search on selection
                 return [
-                  const ClientModel(id: -1, name: 'No client found', phone1: 0)
+                  const ClientEntity(id: -1, name: 'No client found', phone1: 0)
                 ];
               }
               return results;

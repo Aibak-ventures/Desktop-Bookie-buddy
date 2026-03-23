@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 
 class AddClientUseCase {
@@ -7,8 +7,8 @@ class AddClientUseCase {
 
   AddClientUseCase(this._repository);
 
-  Future<ClientModel> call(
-    ClientRequestModel client, {
+  Future<ClientEntity> call(
+    ClientRequestEntity client, {
     bool allowExisting = true,
   }) async {
     return await _repository.addClient(

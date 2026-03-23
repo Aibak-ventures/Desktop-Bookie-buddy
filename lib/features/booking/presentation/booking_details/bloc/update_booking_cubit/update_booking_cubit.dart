@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
-import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -25,11 +25,11 @@ class UpdateBookingCubit extends Cubit<UpdateBookingState> {
   void updateBooking({
     required int bookingId,
     required RequestBookingModel updatedBooking,
-    ClientRequestModel? client,
+    ClientRequestEntity? client,
   }) async {
     emit(const _Submitting());
     try {
-      ClientModel? newClient;
+      ClientEntity? newClient;
       // 3. Then add client if provided
       if (client != null) {
         newClient = await _addClient.call(client);

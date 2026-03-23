@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/features/booking/domain/models/booking_other_de
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/security_summary_model/security_summary_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/client/domain/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -74,52 +74,6 @@ class BookingDetailsModel with _$BookingDetailsModel {
 
   factory BookingDetailsModel.fromJson(Map<String, dynamic> json) =>
       _$BookingDetailsModelFromJson(json);
-
-  // factory BookingDetailsModel.fromCustomJson(Map<String, dynamic> json) {
-  //   final booking = json as Map<String, dynamic>? ?? {};
-  //   final bookedItemsJson = json['booked_items'] as List? ?? [];
-
-  //   return BookingDetailsModel(
-  //     id: booking['id'] ?? 0,
-  //     invoiceId: booking['shop_booking_id'] ?? '',
-  //     client: ClientModel.fromJson(booking['client'] ?? {}),
-  //     totalAmount: _getIntFromJson(booking['total_amount']),
-  //     paidAmount: _getIntFromJson(booking['advance_amount']),
-  //     securityAmount: _getIntFromJson(booking['security_amount']),
-  //     discountAmount: _getIntFromJson(booking['discount_amount']),
-  //     pickupDate: booking['pickup_date'],
-  //     returnDate: booking['return_date'] ?? '',
-  //     coolingPeriodDate: booking['cooling_period_end'],
-  //     purchaseMode: PurchaseMode.fromString(booking['purchase_mode']),
-  //     bookingStatus: BookingStatus.fromString(
-  //       booking['booking_status'] ?? 'upcoming',
-  //     ),
-  //     description: booking['description'] ?? '',
-  //     paymentStatus: PaymentStatus.fromBool(booking['payment_status']),
-  //     staffName: booking['staff_name'] ?? 'Not Added',
-  //     bookedDate: booking['created_at'] ?? '',
-  //     bookingCompletedDate: booking['completed_at'],
-  //     bookedItems: bookedItemsJson
-  //         .map((item) => ProductInfoModel.fromJson(item))
-  //         .toList(),
-  //     address: booking['client_address'],
-  //     deliveryStatus: DeliveryStatus.fromString(
-  //       booking['delivery_status'] ?? 'booked',
-  //     ),
-  //     otherDetails: booking['details'] ?? {},
-  //     additionalCharges:
-  //         (json['additional_charges'] as List?)
-  //             ?.map((e) => AdditionalChargesModel.fromJson(e))
-  //             .toList() ??
-  //         [],
-  //   );
-  // }
-
-  // static int _getIntFromJson(dynamic value) {
-  //   if (value is int) return value;
-  //   if (value is double) return value.toInt();
-  //   return 0;
-  // }
 }
 
 extension BookingDetailsModelX on BookingDetailsModel {

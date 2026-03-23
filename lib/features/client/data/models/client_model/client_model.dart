@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'client_model.freezed.dart';
@@ -39,4 +40,13 @@ class ClientModel with _$ClientModel {
 
   factory ClientModel.fromJson(Map<String, dynamic> json) =>
       _$ClientModelFromJson(json);
+}
+
+extension ClientModelMapper on ClientModel {
+  ClientEntity toEntity() => ClientEntity(
+        id: id,
+        name: name,
+        phone1: phone1,
+        phone2: phone2,
+      );
 }

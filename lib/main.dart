@@ -71,7 +71,7 @@ void main() async {
   await SharedPreferenceHelper.init();
   AppDependencies.init();
   if (!kIsWeb) {
-    TokenRefreshManager.startProactiveRefresh();
+    getIt<TokenRefreshManager>().startProactiveRefresh();
     FilePicker.platform;
   }
 

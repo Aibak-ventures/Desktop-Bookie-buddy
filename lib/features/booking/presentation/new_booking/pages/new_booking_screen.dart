@@ -20,7 +20,7 @@ import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_searc
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
 import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/features/client/domain/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
