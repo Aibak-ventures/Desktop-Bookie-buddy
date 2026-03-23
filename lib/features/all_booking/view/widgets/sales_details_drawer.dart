@@ -511,13 +511,16 @@ class SalesDetailsDrawer extends StatelessWidget {
   }
 
   Widget _buildCustomerDetails(SaleDetailsModel sale) {
-    // Get phone number from client or clientPhone field
-    final phone1 =
-        sale.client?.phone1?.toString() ?? sale.clientPhone.toString();
-    final phone2 = sale.client?.phone2?.toString();
+    final phone1 = _preferredPhone(
+      sale.client?.phone1E164,
+      sale.client?.phone1?.toString(),
+      fallback: sale.clientPhone?.toString(),
+    );
+    final phone2 =
+        _preferredPhone(sale.client?.phone2E164, sale.client?.phone2?.toString());
     final name = sale.client?.name;
 
-    if (phone1.isEmpty) return const SizedBox.shrink();
+    if (phone1 == null || phone1.isEmpty) return const SizedBox.shrink();
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -610,7 +613,7 @@ class SalesDetailsDrawer extends StatelessWidget {
             const SizedBox(width: 8),
             InkWell(
               onTap: () async {
-                final uri = Uri.parse('https://wa.me/$phone');
+                final uri = Uri.parse('https://wa.me/${_waPhone(phone)}');
                 if (await canLaunchUrl(uri)) {
                   await launchUrl(uri);
                 }
@@ -623,6 +626,19 @@ class SalesDetailsDrawer extends StatelessWidget {
       ],
     );
   }
+
+  String? _preferredPhone(String? e164Phone, String? rawPhone, {String? fallback}) {
+    final candidates = [e164Phone, rawPhone, fallback];
+    for (final value in candidates) {
+      final cleaned = value?.trim();
+      if (cleaned != null && cleaned.isNotEmpty && cleaned != '0') {
+        return cleaned;
+      }
+    }
+    return null;
+  }
+
+  String _waPhone(String phone) => phone.replaceAll(RegExp(r'[^0-9]'), '');
 
   Widget _buildNotesSection(SaleDetailsModel sale) {
     return Container(
@@ -893,9 +909,7 @@ class SalesDetailsDrawer extends StatelessWidget {
             context,
             icon: Icons.download_outlined,
             color: AppColors.purple,
-            onTap: () async {
-              _showInvoiceActionsModal(context, sale);
-            },
+            onTap: () => _openInvoicePdf(context, sale),
           ),
         ],
       ),
@@ -921,6 +935,38 @@ class SalesDetailsDrawer extends StatelessWidget {
         child: Icon(icon, color: color, size: 24),
       ),
     );
+  }
+
+  Future<void> _openInvoicePdf(
+    BuildContext context,
+    SaleDetailsModel sale,
+  ) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final repository = getIt<SalesRepository>();
+      final pdfBytes = await repository.getInvoicePdfBytes(sale.id);
+      if (context.mounted) Navigator.of(context).pop();
+
+      if (kIsWeb) {
+        openPdfInNewTab(pdfBytes, 'sales_invoice_${sale.id}.pdf');
+        return;
+      }
+
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/sales_invoice_${sale.id}.pdf');
+      await file.writeAsBytes(pdfBytes);
+      await OpenFile.open(file.path);
+    } catch (e) {
+      if (context.mounted) Navigator.of(context).pop();
+      if (context.mounted) {
+        context.showSnackBar('Failed to open invoice: $e', isError: true);
+      }
+    }
   }
 
   void _showInvoiceActionsModal(BuildContext context, SaleDetailsModel sale) {

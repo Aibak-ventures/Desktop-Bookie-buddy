@@ -11,6 +11,10 @@ int _readPhone1(Map json, String key) =>
 
 int? _readPhone2(Map json, String key) => json[key] ?? json['client_phone_2'];
 
+String? _readPhone1E164(Map json, String key) => json[key];
+
+String? _readPhone2E164(Map json, String key) => json[key];
+
 @freezed
 class ClientModel with _$ClientModel {
   const factory ClientModel({
@@ -34,6 +38,16 @@ class ClientModel with _$ClientModel {
       readValue: _readPhone2,
     )
     int? phone2,
+    @JsonKey(
+      name: 'phone_1_e164',
+      readValue: _readPhone1E164,
+    )
+    String? phone1E164,
+    @JsonKey(
+      name: 'phone_2_e164',
+      readValue: _readPhone2E164,
+    )
+    String? phone2E164,
     // @JsonKey(name: 'client_address') required String address,
   }) = _ClientModel;
 

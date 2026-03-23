@@ -86,6 +86,8 @@ class ClientSearchNameField extends StatelessWidget {
                       controller: controller,
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).nextFocus(),
                       style:
                           const TextStyle(fontSize: 13, color: Colors.black87),
                       decoration: InputDecoration(

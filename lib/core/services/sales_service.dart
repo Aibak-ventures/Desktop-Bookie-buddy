@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:bookie_buddy_web/config/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/core/api/api_paths.dart';
 import 'package:bookie_buddy_web/core/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/utils/phone_number_utils.dart';
 import 'package:bookie_buddy_web/features/add_or_edit_sales/models/sales_request_model/sales_request_model.dart';
 import 'package:dio/dio.dart';
 
@@ -54,9 +55,15 @@ class SalesService {
 
   Future<CustomResponseModel> createSale(SalesRequestModel salesRequest) async {
     try {
+      final data = salesRequest.toJson();
+      final phone1E164 = toPhone1E164(salesRequest.clientPhone);
+      if (phone1E164 != null) {
+        data['phone_1_e164'] = phone1E164;
+      }
+
       final response = await _dio.post(
         ApiPaths.sales.salesV4,
-        data: salesRequest.toJson(),
+        data: data,
       );
       log('Sales create response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
@@ -68,9 +75,15 @@ class SalesService {
 
   Future<CustomResponseModel> updateSale(SalesRequestModel salesRequest) async {
     try {
+      final data = salesRequest.toJson();
+      final phone1E164 = toPhone1E164(salesRequest.clientPhone);
+      if (phone1E164 != null) {
+        data['phone_1_e164'] = phone1E164;
+      }
+
       final response = await _dio.patch(
         ApiPaths.sales.updateSaleV4(salesRequest.id!),
-        data: salesRequest.toJson(),
+        data: data,
       );
       log('Sales update response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);

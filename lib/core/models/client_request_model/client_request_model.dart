@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:bookie_buddy_web/core/utils/phone_number_utils.dart';
 
 part 'client_request_model.freezed.dart';
 part 'client_request_model.g.dart';
@@ -22,5 +23,7 @@ extension ClientRequestModelX on ClientRequestModel {
         'client_name': name,
         'client_phone_1': phone1,
         'client_phone_2': phone2,
+        if (phone1 != null) 'phone_1_e164': toPhone1E164(phone1.toString()),
+        if (phone2 != null) 'phone_2_e164': toPhone1E164(phone2.toString()),
       };
 }
