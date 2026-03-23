@@ -1485,8 +1485,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         // Edit mode: update existing product
         // For edit, we need to create a variant from the stock field if it's not a dress type
         List<ProductVariantModel>? editVariants;
-        if (mainServiceType?.isDress == true) {
-          // Dress type: variants already loaded
+        if (mainServiceType?.needsVariantsSection == true) {
+          // Variant-based service types: use all edited variants with their IDs
           editVariants = variantList.isEmpty ? null : variantList;
         } else {
           // Other types: create variant from stock field

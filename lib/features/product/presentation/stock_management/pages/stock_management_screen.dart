@@ -1057,14 +1057,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: totalStock > 0
-                              ? Colors.green.shade50
-                              : Colors.red.shade50,
+                          color: Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
-                            color: totalStock > 0
-                                ? Colors.green.shade200
-                                : Colors.red.shade200,
+                            color: Colors.grey.shade300,
                             width: 1,
                           ),
                         ),
@@ -1073,9 +1069,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
-                            color: totalStock > 0
-                                ? Colors.green.shade800
-                                : Colors.red.shade800,
+                            color: Colors.grey.shade800,
                           ),
                           textAlign: TextAlign.center,
                         ),
