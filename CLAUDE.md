@@ -6,15 +6,15 @@
 
 ## What is this project?
 
-**Bookie Buddy** is a Flutter desktop application (Windows/macOS/Linux) for business management — bookings, sales, products, clients, staff, financials, and ledger. Package name: `bookie_buddy_web`, Dart 3.5.1+.
+**Bookie Buddy** is a Flutter web application for business management — bookings, sales, products, clients, staff, financials, and ledger. Package name: `bookie_buddy_web`.
+
+Flutter version is managed via **fvm** (Flutter Version Manager). The pinned version is in `.fvmrc` / `.fvm/fvm_config.json`. Always use `fvm flutter` instead of `flutter` when running commands.
 
 ---
 
-## Current State: Mid-Migration to Clean Architecture
+## Current State: Clean Architecture (Complete)
 
-The project is **actively being migrated** to Clean Architecture on branch `afnan/refactor/clean-arc`. About 13 of 17 features are done. Do not assume all features follow the same pattern — check the feature folder before working on it.
-
-See [`clean_arch_migration_todo.md`](clean_arch_migration_todo.md) for the full checklist.
+All 9 features are fully migrated to Clean Architecture with entity/model separation. One known violation remains (see Migration Status). All new features must follow the established pattern.
 
 ---
 
@@ -22,13 +22,12 @@ See [`clean_arch_migration_todo.md`](clean_arch_migration_todo.md) for the full 
 
 | Concern | Library |
 |---|---|
-| Framework | Flutter + Dart 3.5.1+ |
+| Framework | Flutter (via fvm — see `.fvmrc`) |
 | State management | `flutter_bloc` — BLoC and Cubit |
 | Dependency injection | `get_it` (lazy singletons) |
 | Immutable models | `freezed` + `json_serializable` |
-| Functional types | `dartz` — `Either`, `Option` |
 | HTTP | `dio` |
-| Routing | `go_router` (named routes via enum) |
+| Routing | Flutter `Navigator` (imperative) — `go_router` planned for future |
 | Local storage | `shared_preferences`, `flutter_secure_storage` |
 | Analytics / Push | Firebase (Crashlytics, Analytics, Messaging) |
 
@@ -42,31 +41,113 @@ Every migrated feature has exactly three layers:
 features/<feature>/
 ├── data/
 │   ├── datasources/         # API calls only — no business logic
-│   └── repositories/        # Implements domain interface, wraps errors
+│   ├── models/              # JSON-aware Freezed classes; live only in data layer
+│   └── repositories/        # Implements domain interface; converts models → entities
 ├── domain/
-│   ├── models/              # Pure Dart, Freezed, no Flutter imports
+│   ├── entities/            # Pure Dart, Freezed, no JSON, no Flutter imports
 │   ├── repositories/        # Abstract interface (I<Name>Repository)
 │   └── usecases/            # One use case per file, single public call()
 └── presentation/
     ├── bloc/ or cubit/      # BLoC/Cubit per screen or logical group
     ├── pages/               # Full-screen Scaffold widgets
-    └── widgets/             # Feature-scoped reusable components
+    ├── widgets/             # Feature-scoped reusable components
+    └── common/
+        └── models/          # UI-only state/form classes (e.g., MeasurementFieldFormState)
 ```
 
-### Layer rules
+---
 
-- **Datasource** — only Dio calls, converts HTTP errors to typed exceptions
-- **Repository impl** — wraps datasource, converts exceptions → `Either<Failure, T>` via `safe_api_call`
-- **Domain interface** — abstract class, no concrete types
-- **Use case** — `class XUseCase { Future<Either<...>> call(...) }`, no state
-- **BLoC/Cubit** — calls use cases via `getIt.get()`, never touches repository or datasource directly
-- **Models** — `@freezed` classes with `.fromJson()` / `.toJson()`; generated files (`*.freezed.dart`, `*.g.dart`) are never edited manually
+## Entity / Model Separation
 
-### Naming conventions
+This is the most important architectural rule. Every data type has two representations:
+
+| Aspect | Entity (`domain/entities/`) | Model (`data/models/`) |
+|---|---|---|
+| Purpose | Business data used across domain + presentation | JSON serialization for API I/O |
+| JSON | ❌ No `.fromJson()`, no `@JsonKey` | ✅ `.fromJson()`, `@JsonKey`, custom converters |
+| Business logic | ✅ Computed getters, helpers | ❌ API mapping only |
+| Freezed | ✅ `@freezed` | ✅ `@freezed` |
+| Flutter imports | ❌ Never | ❌ Never |
+| Layer usage | Domain, use cases, repository interfaces, presentation | Data layer only (datasources, repository impl) |
+| Conversion | — | `extension XModelMapper { XEntity toEntity() }` |
+
+### Conversion pattern
+
+**Model → Entity (GET):** API JSON → `XModel.fromJson()` → `.toEntity()` → domain/presentation
+**Entity → Model (POST/PUT):** Build `XEntity` in presentation → `XModel.fromEntity(entity)` → `.toJson()` → API
+
+```dart
+// Model with JSON mapping
+@freezed
+abstract class SaleModel with _$SaleModel {
+  const factory SaleModel({
+    required int id,
+    @JsonKey(name: 'client_phone') String? clientPhone,
+  }) = _SaleModel;
+
+  factory SaleModel.fromJson(Map<String, dynamic> json) =>
+      _$SaleModelFromJson(json);
+}
+
+extension SaleModelMapper on SaleModel {
+  SaleEntity toEntity() => SaleEntity(id: id, clientPhone: clientPhone);
+}
+
+// Entity — clean, no JSON concerns
+@freezed
+abstract class SaleEntity with _$SaleEntity {
+  const factory SaleEntity({
+    required int id,
+    String? clientPhone,
+  }) = _SaleEntity;
+}
+```
+
+### Request model pattern
+
+For write operations, models include a `fromEntity()` factory:
+
+```dart
+@freezed
+abstract class SalesRequestModel with _$SalesRequestModel {
+  @JsonSerializable(includeIfNull: false)
+  const factory SalesRequestModel({
+    @JsonKey(name: 'staff_id') int? staffId,
+    @JsonKey(name: 'client_phone') String? clientPhone,
+  }) = _SalesRequestModel;
+
+  factory SalesRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$SalesRequestModelFromJson(json);
+
+  factory SalesRequestModel.fromEntity(SalesRequestEntity entity) =>
+      SalesRequestModel(staffId: entity.staffId, clientPhone: entity.clientPhone);
+}
+```
+
+Presentation constructs the **entity**; the repository impl calls `fromEntity()` to build the model before sending to the API.
+
+---
+
+## Layer Rules
+
+- **Datasource** — only Dio calls; no business logic; returns raw models
+- **Repository impl** — calls datasource, maps models → entities via `toEntity()`, wraps errors via `safeApiCall`; throws on failure
+- **Domain interface** — abstract class; uses entities only; no model types
+- **Use case** — `class XUseCase { Future<T> call(...) }`, no state
+- **BLoC/Cubit** — calls use cases via `getIt.get()`; works with entities; never touches repository or datasource directly
+- **Entities** — `@freezed`, pure Dart; may have computed getters (e.g., `String get fullName`); never contain Flutter imports or UI concerns
+- **Presentation models** — classes that hold UI/form state (e.g., `MeasurementFieldFormState`) belong in `presentation/common/models/`, not in `domain/entities/`; they may import Flutter and have `TextEditingController` or similar fields
+- **Models** — `@freezed` with `json_serializable`; generated files (`*.freezed.dart`, `*.g.dart`) never edited manually
+
+---
+
+## Naming Conventions
 
 | Thing | Convention | Example |
 |---|---|---|
 | Files | `snake_case.dart` | `add_booking_bloc.dart` |
+| Entity | `PascalCaseEntity` | `BookingEntity` |
+| Model | `PascalCaseModel` | `BookingModel` |
 | BLoC | `PascalCaseBloc` | `AddBookingBloc` |
 | Cubit | `PascalCaseCubit` | `AllShopSummaryCubit` |
 | Use case | `PascalCaseUseCase` | `GetBookingUseCase` |
@@ -74,8 +155,40 @@ features/<feature>/
 | Repo interface | `IPascalCaseRepository` | `IBookingRepository` |
 | Repo impl | `PascalCaseRepositoryImpl` | `BookingRepositoryImpl` |
 | Screen | `PascalCaseScreen` | `BookingDetailsScreen` |
-| Model | `PascalCaseModel` | `RequestBookingModel` |
 | Freezed state variants | private prefixed | `_Initial`, `_Loading`, `_Loaded`, `_Error` |
+
+---
+
+## Core Directory
+
+Shared infrastructure in `lib/core/`:
+
+- `di/` — centralized GetIt registration
+- `app/` — app-level widgets (e.g., bottom bar, shop switcher)
+- `config/` — logger configuration
+- `common/entities/` — shared entities: `UserEntity`, `UserShopEntity`, `ShopSettingsEntity`
+- `common/models/` — shared models: `UserModel`, `PaginationModel`, API response wrappers
+- `common/usecases/` — shared use cases (e.g., `LaunchEmailSupportUseCase`)
+- `common/widgets/` — shared UI components
+- `constants/enums/` — shared enums (`BookingStatus`, `PaymentMethod`, etc.)
+- `constants/endpoints/` — API endpoint constants
+- `session/` — token refresh manager, secure action auth, session storage
+- `theme/` — colors, typography, app theme (includes `theme/widgets/`)
+
+---
+
+## Utils Directory
+
+Shared utilities in `lib/utils/`:
+
+- `network/dio_client/` — Dio setup (`DioConfig`) and auth interceptor; this is where `DioClient.dio` comes from
+- `error/` — typed exceptions per feature (`AuthException`, `BookingException`, etc.) and `Failures`
+- `extensions/` — Dart/Flutter extensions (string, date, list, context, widget, etc.)
+- `safe_api_call.dart` — wraps datasource calls; used in every repository impl
+- `shared_preference_helper.dart` — SharedPreferences wrapper
+- `responsive_*.dart` — responsive layout helpers and mixins
+- `app_date_utils.dart`, `app_input_validators.dart`, `debouncer.dart` — general-purpose utilities
+- `download_file*.dart`, `open_pdf_in_new_tab*.dart`, `share_file.dart` — platform-specific file/PDF helpers (web + stub implementations)
 
 ---
 
@@ -101,52 +214,21 @@ When adding a new feature, add a `_register<Feature>Feature()` method and call i
 
 ## Routing
 
-**Route definitions:** `lib/core/routing/app_routes.dart` — enum with `.path` and `.buildPath()`
-**Router config:** `lib/core/routing/app_router.dart` — Go Router with nested routes
+Navigation uses Flutter's built-in `Navigator` (imperative push/pop). There is no `go_router` in active use — a few remnants exist in older files but should not be followed.
 
-```dart
-// Navigate to a named route
-context.goNamed(AppRoutes.bookingDetails.name,
-  pathParameters: {'id': bookingId});
-```
-
-Each route wraps its screen in the appropriate `BlocProvider(create: (_) => getIt.get())`.
-
----
-
-## Core Directory
-
-Shared infrastructure in `lib/core/`:
-
-- `di/` — centralized GetIt registration
-- `routing/` — Go Router + route enum
-- `network/` — Dio client config
-- `models/` — shared models (pagination, API response wrappers)
-- `repositories/` — cross-feature repos **not yet migrated** to feature scope (planned in Phase 5)
-- `services/` — legacy service layer (ShopService, UserService, ServiceApi)
-- `storage/` — SharedPreferences helper, token manager
-- `session/` — session state
-- `theme/` — colors, typography, app theme
-- `ui/` — shared screens and widgets
-- `view_model/` — shared BLoC/Cubit (user, shop list, service/category, booking selection)
-- `constants/enums/` — shared enums (BookingStatus, PaymentMethod, etc.)
+`go_router` is planned as a future migration; do not introduce it in new code until that migration is underway.
 
 ---
 
 ## Migration Status
 
-### ✅ Migrated (Clean Architecture)
-`auth`, `booking`, `client`, `dashboard`, `expense`, `ledger`, `product`, `profile`, `sales`, `search`, `settings`, `splash`, `staff`
+### ✅ Migrated (Clean Architecture + Entity/Model Separation)
+`auth`, `booking`, `client`, `dashboard`, `product`, `sales`, `shop`, `splash`, `staff`
 
-### ⏳ Not Yet Migrated
-| Feature | Current Pattern | Notes |
-|---|---|---|
-| `all_shop_summary` | `models/` + `view_models/` + `view/` | Cubit calls `ShopRepository` from core directly |
-| `select_product_booking` | Mixed BLoC/Cubit inside `view/` | No data or domain layers |
-| `in_app_update` | `repository/` + `services/` + `view/` | 3 files, no domain layer |
-| `notifications` | 2 standalone service files | Candidate for `core/services` or minimal feature |
+### 🔧 Known Violations (Phase 4 — needs cleanup)
+- **`SalesRequestModel` constructed in presentation** — screens should build the entity; repository builds the model
 
-When working on an unmigrated feature, migrate it to the standard pattern before adding new logic. See a migrated feature (e.g., `ledger` or `booking`) as the reference.
+When working on a feature, see `booking` or `shop` as the reference implementation.
 
 ---
 
@@ -165,7 +247,6 @@ Never manually edit `*.freezed.dart` or `*.g.dart` files.
 ## Branch Strategy
 
 - `main` — production
-- `afnan/refactor/clean-arc` — active migration branch
 - Feature branches: `<name>/feature/<description>` or `<name>/fix/<description>`
 - Commit format: `type(scope): message` (conventional commits)
   - e.g. `refactor(booking): migrate to clean architecture`
