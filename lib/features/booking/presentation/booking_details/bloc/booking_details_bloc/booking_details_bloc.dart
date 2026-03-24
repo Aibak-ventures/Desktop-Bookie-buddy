@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
@@ -196,7 +196,7 @@ class BookingDetailsBloc
     }
   }
 
-  BookingDetailsModel? getBooking() {
+  BookingDetailsEntity? getBooking() {
     final state = this.state;
     if (state is _Loaded) {
       return state.booking;

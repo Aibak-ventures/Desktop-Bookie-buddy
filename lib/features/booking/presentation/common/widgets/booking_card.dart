@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/app_date_utils.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BookingCard extends StatelessWidget {
-  final BookingsModel booking;
+  final BookingEntity booking;
   final VoidCallback onTap;
   final bool useReturnDate;
 

@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/status_counts_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 
@@ -8,21 +8,22 @@ class LoadDesktopBookingsPaginationUseCase {
   LoadDesktopBookingsPaginationUseCase(this._repository);
 
   Future<
-      ({
-        PaginationModel<DesktopBookingItemModel> pagination,
-        StatusCountsModel? statusCounts,
-      })> call({
+    ({
+      PaginationModel<DesktopBookingItemEntity> pagination,
+      StatusCountsEntity? statusCounts,
+    })
+  >
+  call({
     required String status,
     String? startDate,
     String? endDate,
     String? searchQuery,
     int page = 1,
-  }) =>
-      _repository.loadDesktopBookingsPagination(
-        status: status,
-        startDate: startDate,
-        endDate: endDate,
-        searchQuery: searchQuery,
-        page: page,
-      );
+  }) => _repository.loadDesktopBookingsPagination(
+    status: status,
+    startDate: startDate,
+    endDate: endDate,
+    searchQuery: searchQuery,
+    page: page,
+  );
 }

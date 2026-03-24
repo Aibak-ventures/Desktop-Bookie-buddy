@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/features/client/domain/entities/client_request_
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -24,7 +24,7 @@ class UpdateBookingCubit extends Cubit<UpdateBookingState> {
 
   void updateBooking({
     required int bookingId,
-    required RequestBookingModel updatedBooking,
+    required BookingRequestEntity updatedBooking,
     ClientRequestEntity? client,
   }) async {
     emit(const _Submitting());

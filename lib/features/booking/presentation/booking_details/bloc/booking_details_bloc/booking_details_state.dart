@@ -4,7 +4,7 @@ part of 'booking_details_bloc.dart';
 abstract class BookingDetailsState with _$BookingDetailsState {
   const factory BookingDetailsState.loading() = _Loading;
   const factory BookingDetailsState.loaded({
-    required BookingDetailsModel booking,
+    required BookingDetailsEntity booking,
   }) = _Loaded;
 
   const factory BookingDetailsState.success(
@@ -22,7 +22,7 @@ extension BookingDetailsStateX on BookingDetailsState {
   bool get isFailure => this is _Failed;
   bool get isError => this is _Error;
 
-  BookingDetailsModel? get booking => maybeWhen(
+  BookingDetailsEntity? get booking => maybeWhen(
         loaded: (booking) => booking,
         orElse: () => null,
       );

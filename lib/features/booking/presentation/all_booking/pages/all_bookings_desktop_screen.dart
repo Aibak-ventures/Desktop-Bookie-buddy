@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_sales_bloc/all_sales_bloc.dart';
@@ -594,7 +594,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     );
   }
 
-  Widget _buildTable(List<DesktopBookingItemModel> bookings) {
+  Widget _buildTable(List<DesktopBookingItemEntity> bookings) {
     return BlocBuilder<AllBookingBloc, AllBookingState>(
       builder: (context, state) {
         final isPaginating = state.maybeWhen(
@@ -869,7 +869,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     );
   }
 
-  Widget _buildTableRow(DesktopBookingItemModel booking) {
+  Widget _buildTableRow(DesktopBookingItemEntity booking) {
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
@@ -1014,7 +1014,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   // }
 
   /// Display-only delivery status (no dropdown action)
-  Widget _buildDeliveryStatusDisplay(DesktopBookingItemModel booking) {
+  Widget _buildDeliveryStatusDisplay(DesktopBookingItemEntity booking) {
     final status = booking.deliveryStatus ?? DeliveryStatus.booked;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
@@ -1209,7 +1209,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
 // Stateful widget for delivery status dropdown with instant color update
 class _DeliveryStatusDropdown extends StatefulWidget {
-  final DesktopBookingItemModel booking;
+  final DesktopBookingItemEntity booking;
 
   const _DeliveryStatusDropdown({required this.booking});
 

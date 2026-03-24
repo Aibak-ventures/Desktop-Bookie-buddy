@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

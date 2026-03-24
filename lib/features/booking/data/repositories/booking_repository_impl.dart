@@ -3,18 +3,24 @@ import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_details_model/booking_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/status_counts_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/desktop_booking_model/desktop_booking_item_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_request_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 
@@ -24,13 +30,13 @@ class BookingRepositoryImpl implements IBookingRepository {
 
   // Get a single booking
   @override
-  Future<BookingDetailsModel> getBooking(int bookingId) async {
+  Future<BookingDetailsEntity> getBooking(int bookingId) async {
     try {
       final response = await safeApiCall(
         () => _datasource.getBooking(bookingId),
       );
       if (response.status.isSuccess) {
-        return BookingDetailsModel.fromJson(response.data);
+        return BookingDetailsModel.fromJson(response.data).toEntity();
       }
       log('Error fetching booking: ${response.devMessage}');
       throw response.message ?? 'Failed to fetch booking';
@@ -42,10 +48,11 @@ class BookingRepositoryImpl implements IBookingRepository {
 
   // Create a booking
   @override
-  Future<int> addBooking(RequestBookingModel bookingData) async {
+  Future<int> addBooking(BookingRequestEntity bookingData) async {
     try {
       final response = await safeApiCall(
-        () => _datasource.addBooking(bookingData),
+        () =>
+            _datasource.addBooking(BookingRequestModel.fromEntity(bookingData)),
       );
       if (response.status.isSuccess) {
         if (response.data is Map) {
@@ -91,10 +98,12 @@ class BookingRepositoryImpl implements IBookingRepository {
 
   // Create old booking
   @override
-  Future<void> createOldBooking(RequestBookingModel bookingData) async {
+  Future<void> createOldBooking(BookingRequestEntity bookingData) async {
     try {
       final response = await safeApiCall(
-        () => _datasource.createOldBooking(bookingData),
+        () => _datasource.createOldBooking(
+          BookingRequestModel.fromEntity(bookingData),
+        ),
       );
       if (response.status.isSuccess) {
         return;
@@ -137,11 +146,14 @@ class BookingRepositoryImpl implements IBookingRepository {
   @override
   Future<CustomResponseModel> updateBooking(
     int bookingId,
-    RequestBookingModel updatedBooking,
+    BookingRequestEntity updatedBooking,
   ) async {
     try {
       final response = await safeApiCall(
-        () => _datasource.updateBooking(bookingId, updatedBooking),
+        () => _datasource.updateBooking(
+          bookingId,
+          BookingRequestModel.fromEntity(updatedBooking),
+        ),
       );
       if (response.status.isSuccess || response.status.isInsufficientStock) {
         return response;
@@ -293,7 +305,7 @@ class BookingRepositoryImpl implements IBookingRepository {
 
   // Fetch bookings list with pagination support
   @override
-  Future<PaginationModel<BookingsModel>> loadBookingsPagination({
+  Future<PaginationModel<BookingEntity>> loadBookingsPagination({
     required LoadBookingType status,
     String? startDate,
     String? endDate,
@@ -313,12 +325,13 @@ class BookingRepositoryImpl implements IBookingRepository {
       if (response.status.isSuccess) {
         return PaginationModel.fromJson(
           response.data,
-          (json) => BookingsModel.fromJson(json as Map<String, dynamic>),
+          (json) =>
+              BookingsModel.fromJson(json as Map<String, dynamic>).toEntity(),
           customJsonParser: (dataJson, itemFromJson) =>
               (dataJson as List<dynamic>?)
                   ?.map((item) => itemFromJson(item))
                   .toList() ??
-              <BookingsModel>[],
+              <BookingEntity>[],
         );
       }
       log('Error fetching bookings pagination: ${response.devMessage}');
@@ -332,10 +345,12 @@ class BookingRepositoryImpl implements IBookingRepository {
   /// Fetch desktop bookings list with pagination support and status counts
   @override
   Future<
-      ({
-        PaginationModel<DesktopBookingItemModel> pagination,
-        StatusCountsModel? statusCounts,
-      })> loadDesktopBookingsPagination({
+    ({
+      PaginationModel<DesktopBookingItemEntity> pagination,
+      StatusCountsEntity? statusCounts,
+    })
+  >
+  loadDesktopBookingsPagination({
     required String status,
     String? startDate,
     String? endDate,
@@ -355,23 +370,25 @@ class BookingRepositoryImpl implements IBookingRepository {
       if (response.status.isSuccess) {
         final pagination = PaginationModel.fromJson(
           response.data,
-          (json) =>
-              DesktopBookingItemModel.fromJson(json as Map<String, dynamic>),
+          (json) => DesktopBookingItemModel.fromJson(
+            json as Map<String, dynamic>,
+          ).toEntity(),
           customJsonParser: (dataJson, itemFromJson) {
             // dataJson is already the List of bookings from json['data']
             final dataList = dataJson as List<dynamic>?;
             return dataList
                     ?.map((item) => itemFromJson(item))
                     .toList()
-                    .cast<DesktopBookingItemModel>() ??
-                <DesktopBookingItemModel>[];
+                    .cast<DesktopBookingItemEntity>() ??
+                <DesktopBookingItemEntity>[];
           },
         );
 
         final statusCountsJson = response.data['status_counts'];
         final statusCounts = statusCountsJson != null
             ? StatusCountsModel.fromJson(
-                statusCountsJson as Map<String, dynamic>)
+                statusCountsJson as Map<String, dynamic>,
+              ).toEntity()
             : null;
 
         return (pagination: pagination, statusCounts: statusCounts);
@@ -456,7 +473,7 @@ class BookingRepositoryImpl implements IBookingRepository {
   // }
 
   @override
-  Future<List<BookingDetailsPaymentHistoryModel>> getPaymentHistory(
+  Future<List<BookingPaymentHistoryEntity>> getPaymentHistory(
     int bookingId,
   ) async {
     try {
@@ -464,10 +481,13 @@ class BookingRepositoryImpl implements IBookingRepository {
         () => _datasource.fetchPaymentHistory(bookingId),
       );
       if (response.status.isSuccess) {
-        final paymentData = (response.data as Map<String, dynamic>)['payments']
-            as List<dynamic>;
+        final paymentData =
+            (response.data as Map<String, dynamic>)['payments']
+                as List<dynamic>;
         return paymentData
-            .map((e) => BookingDetailsPaymentHistoryModel.fromJson(e))
+            .map(
+              (e) => BookingDetailsPaymentHistoryModel.fromJson(e).toEntity(),
+            )
             .toList();
       }
       log('Error fetching payment history: ${response.devMessage}');

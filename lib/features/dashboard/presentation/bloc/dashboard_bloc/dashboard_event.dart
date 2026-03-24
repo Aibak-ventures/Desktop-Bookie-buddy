@@ -13,7 +13,7 @@ abstract class DashboardEvent with _$DashboardEvent {
       _LoadDashboardNextPageData;
 
   const factory DashboardEvent.updateData(
-    BookingsModel? updateBooking, {
+    BookingEntity? updateBooking, {
     @Default(false) bool shouldRefresh,
     @Default(false) bool isDeleted,
   }) = _UpdateData;

@@ -134,7 +134,7 @@ return markAsCompleted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)?  loadBookings,TResult Function()?  loadNextPageBookings,TResult Function( DesktopBookingItemModel? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)?  loadBookings,TResult Function()?  loadNextPageBookings,TResult Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoadBookings() when loadBookings != null:
 return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery);case _LoadNextPageBookings() when loadNextPageBookings != null:
@@ -160,7 +160,7 @@ return markAsCompleted(_that.bookingId,_that.currentStatus);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)  loadBookings,required TResult Function()  loadNextPageBookings,required TResult Function( DesktopBookingItemModel? booking,  bool shouldRefresh,  bool isDeleted)  updateBooking,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  DeliveryStatus? currentStatus)  markAsCompleted,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)  loadBookings,required TResult Function()  loadNextPageBookings,required TResult Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)  updateBooking,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  DeliveryStatus? currentStatus)  markAsCompleted,}) {final _that = this;
 switch (_that) {
 case _LoadBookings():
 return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery);case _LoadNextPageBookings():
@@ -185,7 +185,7 @@ return markAsCompleted(_that.bookingId,_that.currentStatus);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)?  loadBookings,TResult? Function()?  loadNextPageBookings,TResult? Function( DesktopBookingItemModel? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? status,  String? startDate,  String? endDate,  String? searchQuery)?  loadBookings,TResult? Function()?  loadNextPageBookings,TResult? Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,}) {final _that = this;
 switch (_that) {
 case _LoadBookings() when loadBookings != null:
 return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery);case _LoadNextPageBookings() when loadNextPageBookings != null:
@@ -312,7 +312,7 @@ class _UpdateBooking implements AllBookingEvent {
   const _UpdateBooking(this.booking, {this.shouldRefresh = false, this.isDeleted = false});
   
 
- final  DesktopBookingItemModel? booking;
+ final  DesktopBookingItemEntity? booking;
 @JsonKey() final  bool shouldRefresh;
 @JsonKey() final  bool isDeleted;
 
@@ -346,11 +346,11 @@ abstract mixin class _$UpdateBookingCopyWith<$Res> implements $AllBookingEventCo
   factory _$UpdateBookingCopyWith(_UpdateBooking value, $Res Function(_UpdateBooking) _then) = __$UpdateBookingCopyWithImpl;
 @useResult
 $Res call({
- DesktopBookingItemModel? booking, bool shouldRefresh, bool isDeleted
+ DesktopBookingItemEntity? booking, bool shouldRefresh, bool isDeleted
 });
 
 
-$DesktopBookingItemModelCopyWith<$Res>? get booking;
+$DesktopBookingItemEntityCopyWith<$Res>? get booking;
 
 }
 /// @nodoc
@@ -366,7 +366,7 @@ class __$UpdateBookingCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? booking = freezed,Object? shouldRefresh = null,Object? isDeleted = null,}) {
   return _then(_UpdateBooking(
 freezed == booking ? _self.booking : booking // ignore: cast_nullable_to_non_nullable
-as DesktopBookingItemModel?,shouldRefresh: null == shouldRefresh ? _self.shouldRefresh : shouldRefresh // ignore: cast_nullable_to_non_nullable
+as DesktopBookingItemEntity?,shouldRefresh: null == shouldRefresh ? _self.shouldRefresh : shouldRefresh // ignore: cast_nullable_to_non_nullable
 as bool,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -376,12 +376,12 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$DesktopBookingItemModelCopyWith<$Res>? get booking {
+$DesktopBookingItemEntityCopyWith<$Res>? get booking {
     if (_self.booking == null) {
     return null;
   }
 
-  return $DesktopBookingItemModelCopyWith<$Res>(_self.booking!, (value) {
+  return $DesktopBookingItemEntityCopyWith<$Res>(_self.booking!, (value) {
     return _then(_self.copyWith(booking: value));
   });
 }
@@ -706,7 +706,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DesktopBookingItemModel> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsModel? statusCounts,  String? actionError)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsEntity? statusCounts,  String? actionError)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -730,7 +730,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DesktopBookingItemModel> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsModel? statusCounts,  String? actionError)  loaded,required TResult Function( String error)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsEntity? statusCounts,  String? actionError)  loaded,required TResult Function( String error)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -753,7 +753,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DesktopBookingItemModel> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsModel? statusCounts,  String? actionError)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  StatusCountsEntity? statusCounts,  String? actionError)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -835,11 +835,11 @@ String toString() {
 
 
 class _Loaded implements AllBookingState {
-  const _Loaded({required final  List<DesktopBookingItemModel> bookings, this.nextPageUrl, this.isPaginating = false, this.startDate, this.endDate, this.searchQuery, this.status, this.statusCounts, this.actionError}): _bookings = bookings;
+  const _Loaded({required final  List<DesktopBookingItemEntity> bookings, this.nextPageUrl, this.isPaginating = false, this.startDate, this.endDate, this.searchQuery, this.status, this.statusCounts, this.actionError}): _bookings = bookings;
   
 
- final  List<DesktopBookingItemModel> _bookings;
- List<DesktopBookingItemModel> get bookings {
+ final  List<DesktopBookingItemEntity> _bookings;
+ List<DesktopBookingItemEntity> get bookings {
   if (_bookings is EqualUnmodifiableListView) return _bookings;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_bookings);
@@ -851,7 +851,7 @@ class _Loaded implements AllBookingState {
  final  String? endDate;
  final  String? searchQuery;
  final  String? status;
- final  StatusCountsModel? statusCounts;
+ final  StatusCountsEntity? statusCounts;
  final  String? actionError;
 
 /// Create a copy of AllBookingState
@@ -884,11 +884,11 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $AllBookingStateCopyWith<
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- List<DesktopBookingItemModel> bookings, String? nextPageUrl, bool isPaginating, String? startDate, String? endDate, String? searchQuery, String? status, StatusCountsModel? statusCounts, String? actionError
+ List<DesktopBookingItemEntity> bookings, String? nextPageUrl, bool isPaginating, String? startDate, String? endDate, String? searchQuery, String? status, StatusCountsEntity? statusCounts, String? actionError
 });
 
 
-$StatusCountsModelCopyWith<$Res>? get statusCounts;
+$StatusCountsEntityCopyWith<$Res>? get statusCounts;
 
 }
 /// @nodoc
@@ -904,14 +904,14 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? bookings = null,Object? nextPageUrl = freezed,Object? isPaginating = null,Object? startDate = freezed,Object? endDate = freezed,Object? searchQuery = freezed,Object? status = freezed,Object? statusCounts = freezed,Object? actionError = freezed,}) {
   return _then(_Loaded(
 bookings: null == bookings ? _self._bookings : bookings // ignore: cast_nullable_to_non_nullable
-as List<DesktopBookingItemModel>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
+as List<DesktopBookingItemEntity>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,isPaginating: null == isPaginating ? _self.isPaginating : isPaginating // ignore: cast_nullable_to_non_nullable
 as bool,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as String?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,statusCounts: freezed == statusCounts ? _self.statusCounts : statusCounts // ignore: cast_nullable_to_non_nullable
-as StatusCountsModel?,actionError: freezed == actionError ? _self.actionError : actionError // ignore: cast_nullable_to_non_nullable
+as StatusCountsEntity?,actionError: freezed == actionError ? _self.actionError : actionError // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -920,12 +920,12 @@ as String?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$StatusCountsModelCopyWith<$Res>? get statusCounts {
+$StatusCountsEntityCopyWith<$Res>? get statusCounts {
     if (_self.statusCounts == null) {
     return null;
   }
 
-  return $StatusCountsModelCopyWith<$Res>(_self.statusCounts!, (value) {
+  return $StatusCountsEntityCopyWith<$Res>(_self.statusCounts!, (value) {
     return _then(_self.copyWith(statusCounts: value));
   });
 }

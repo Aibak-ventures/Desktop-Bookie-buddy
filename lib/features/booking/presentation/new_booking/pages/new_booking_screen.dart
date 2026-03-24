@@ -20,7 +20,7 @@ import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_searc
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
 import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
@@ -33,15 +33,15 @@ import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/request_sales_model/request_sales_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -107,9 +107,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   );
 
   // Additional charges
-  final additionalChargesNotifier = ValueNotifier<List<AdditionalChargesModel>>(
-    [],
-  );
+  final additionalChargesNotifier =
+      ValueNotifier<List<AdditionalChargesEntity>>([]);
 
   // Documents
   final documentsNotifier = ValueNotifier<List<DocumentFile>>([]);
@@ -4027,7 +4026,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final nameController = TextEditingController();
     final amountController = TextEditingController();
 
-    final result = await showDialog<AdditionalChargesModel>(
+    final result = await showDialog<AdditionalChargesEntity>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Charge', style: TextStyle(fontSize: 16)),
@@ -4082,7 +4081,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
               Navigator.pop(
                 context,
-                AdditionalChargesModel(name: name, amount: amount),
+                AdditionalChargesEntity(name: name, amount: amount),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -4095,7 +4094,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     if (result != null) {
-      final charges = List<AdditionalChargesModel>.from(
+      final charges = List<AdditionalChargesEntity>.from(
         additionalChargesNotifier.value,
       );
       charges.add(result);
@@ -4103,8 +4102,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  void _removeCharge(AdditionalChargesModel charge) {
-    final charges = List<AdditionalChargesModel>.from(
+  void _removeCharge(AdditionalChargesEntity charge) {
+    final charges = List<AdditionalChargesEntity>.from(
       additionalChargesNotifier.value,
     );
     charges.remove(charge);
@@ -4172,7 +4171,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       } else {
         // Build booking request
         final bookingRequest = _buildBookingRequest();
-        log('Booking Request: ${bookingRequest.toJson()}');
+        log('Booking Request: ${bookingRequest.toString()}');
 
         // Call the API to create booking
         final bookingId = await getIt<AddBookingUseCase>()(bookingRequest);
@@ -4210,7 +4209,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  RequestBookingModel _buildBookingRequest() {
+  BookingRequestEntity _buildBookingRequest() {
     final products = selectedProductsNotifier.value;
     final additionalCharges = additionalChargesNotifier.value;
 
@@ -4219,12 +4218,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final staffId = staffState.selectedStaff?.id;
 
     // If there's no client ID, we need to send client data
-    ClientRequestModel? clientData;
+    ClientRequestEntity? clientData;
     if (selectedClientId == null) {
       final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
       final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
 
-      clientData = ClientRequestModel(
+      clientData = ClientRequestEntity(
         id: null,
         name: clientNameController.text.trim().isEmpty
             ? null
@@ -4234,7 +4233,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       );
     }
 
-    return RequestBookingModel(
+    return BookingRequestEntity(
       clientId: selectedClientId,
       staffId: staffId,
       client: clientData,
@@ -5640,7 +5639,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: 6),
                   // Additional charges list
-                  ValueListenableBuilder<List<AdditionalChargesModel>>(
+                  ValueListenableBuilder<List<AdditionalChargesEntity>>(
                     valueListenable: additionalChargesNotifier,
                     builder: (context, charges, _) {
                       if (charges.isEmpty) return const SizedBox();
@@ -6059,7 +6058,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     try {
       final request = _buildOldBookingRequest();
-      log('Old Booking Request: ${request.toJson()}');
+      log('Old Booking Request: ${request.toString()}');
       await getIt<CreateOldBookingUseCase>()(request);
 
       if (mounted) Navigator.of(context).pop();
@@ -6083,7 +6082,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  RequestBookingModel _buildOldBookingRequest() {
+  BookingRequestEntity _buildOldBookingRequest() {
     final products = selectedProductsNotifier.value;
     final totalAmount = products.fold<int>(
       0,
@@ -6093,11 +6092,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final staffState = context.read<StaffSearchCubit>().state;
     final staffId = staffState.selectedStaff?.id;
 
-    return RequestBookingModel(
+    return BookingRequestEntity(
       clientId: selectedClientId,
       staffId: staffId,
       client: selectedClientId == null
-          ? ClientRequestModel(
+          ? ClientRequestEntity(
               id: null,
               name: clientNameController.text.trim().isEmpty
                   ? null

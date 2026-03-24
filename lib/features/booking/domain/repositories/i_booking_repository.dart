@@ -2,24 +2,24 @@ import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/status_counts_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 
 abstract interface class IBookingRepository {
-  Future<BookingDetailsModel> getBooking(int bookingId);
+  Future<BookingDetailsEntity> getBooking(int bookingId);
 
-  Future<int> addBooking(RequestBookingModel bookingData);
+  Future<int> addBooking(BookingRequestEntity bookingData);
 
   Future<int> createSale(Map<String, dynamic> saleData);
 
-  Future<void> createOldBooking(RequestBookingModel bookingData);
+  Future<void> createOldBooking(BookingRequestEntity bookingData);
 
   Future<void> updatePayment({
     required int bookingId,
@@ -29,7 +29,7 @@ abstract interface class IBookingRepository {
 
   Future<CustomResponseModel> updateBooking(
     int bookingId,
-    RequestBookingModel updatedBooking,
+    BookingRequestEntity updatedBooking,
   );
 
   Future<CustomResponseModel> updateBookingPartial(
@@ -47,17 +47,14 @@ abstract interface class IBookingRepository {
     PaymentMethod? paymentMethod,
   });
 
-  Future<void> updateBookingStatus(
-    int bookingId,
-    BookingStatus bookingStatus,
-  );
+  Future<void> updateBookingStatus(int bookingId, BookingStatus bookingStatus);
 
   Future<void> updateDeliveryStatus(
     int bookingId,
     DeliveryStatus deliveryStatus,
   );
 
-  Future<PaginationModel<BookingsModel>> loadBookingsPagination({
+  Future<PaginationModel<BookingEntity>> loadBookingsPagination({
     required LoadBookingType status,
     String? startDate,
     String? endDate,
@@ -66,10 +63,12 @@ abstract interface class IBookingRepository {
   });
 
   Future<
-      ({
-        PaginationModel<DesktopBookingItemModel> pagination,
-        StatusCountsModel? statusCounts,
-      })> loadDesktopBookingsPagination({
+    ({
+      PaginationModel<DesktopBookingItemEntity> pagination,
+      StatusCountsEntity? statusCounts,
+    })
+  >
+  loadDesktopBookingsPagination({
     required String status,
     String? startDate,
     String? endDate,
@@ -82,9 +81,7 @@ abstract interface class IBookingRepository {
     required String fileName,
   });
 
-  Future<List<BookingDetailsPaymentHistoryModel>> getPaymentHistory(
-    int bookingId,
-  );
+  Future<List<BookingPaymentHistoryEntity>> getPaymentHistory(int bookingId);
 
   Future<void> sendInvoice(int bookingId, bool sendWhatsApp);
 

@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 
 class BookingSelectionState {
-  final BookingsModel? selectedBooking;
+  final BookingEntity? selectedBooking;
   final bool isModified;
   final bool shouldRefresh;
 
@@ -12,13 +12,12 @@ class BookingSelectionState {
   });
 
   BookingSelectionState copyWith({
-    BookingsModel? selectedBooking,
+    BookingEntity? selectedBooking,
     bool? isModified,
     bool? shouldRefresh,
-  }) =>
-      BookingSelectionState(
-        selectedBooking: selectedBooking ?? this.selectedBooking,
-        isModified: isModified ?? this.isModified,
-        shouldRefresh: shouldRefresh ?? this.shouldRefresh,
-      );
+  }) => BookingSelectionState(
+    selectedBooking: selectedBooking ?? this.selectedBooking,
+    isModified: isModified ?? this.isModified,
+    shouldRefresh: shouldRefresh ?? this.shouldRefresh,
+  );
 }

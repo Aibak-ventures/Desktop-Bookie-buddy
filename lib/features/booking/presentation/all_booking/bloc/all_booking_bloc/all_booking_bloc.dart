@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/status_counts_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking_usecase.dart';

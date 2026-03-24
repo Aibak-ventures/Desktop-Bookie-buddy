@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'desktop_dashboard_response.freezed.dart';
@@ -75,22 +76,28 @@ abstract class PaginationInfo with _$PaginationInfo {
 /// Extension to provide grouped data by Today/Tomorrow/Upcoming for UI presentation
 extension DesktopDashboardResponseExtensions on DesktopDashboardResponse {
   /// Groups upcoming bookings by Today, Tomorrow, and Upcoming based on pickup date
-  Map<String, List<BookingsModel>> get upcomingGrouped {
-    return _groupBookingsByDate(upcoming, useReturnDate: false);
+  Map<String, List<BookingEntity>> get upcomingGrouped {
+    return _groupBookingsByDate(
+      upcoming.map((e) => e.toEntity()).toList(),
+      useReturnDate: false,
+    );
   }
 
   /// Groups returns (ongoing) bookings by Today, Tomorrow, and Upcoming based on return date
-  Map<String, List<BookingsModel>> get returnsGrouped {
-    return _groupBookingsByDate(ongoingBookings, useReturnDate: true);
+  Map<String, List<BookingEntity>> get returnsGrouped {
+    return _groupBookingsByDate(
+      ongoingBookings.map((e) => e.toEntity()).toList(),
+      useReturnDate: true,
+    );
   }
 
   /// Converts to carousel data for overview cards
   DesktopDashboardCarouselData get carouselData => DesktopDashboardCarouselData(
-        upcomingCount: upcomingCount,
-        alterationBookingCount: alterationBookingCount,
-        completedCount: completedCount,
-        expiredCount: expiredCount,
-      );
+    upcomingCount: upcomingCount,
+    alterationBookingCount: alterationBookingCount,
+    completedCount: completedCount,
+    expiredCount: expiredCount,
+  );
 
   /// Pagination accessors for ongoing bookings (main paginated data)
   String? get nextPageUrl => pagination.ongoing.next;
@@ -99,22 +106,23 @@ extension DesktopDashboardResponseExtensions on DesktopDashboardResponse {
 }
 
 /// Helper function to group bookings by date
-Map<String, List<BookingsModel>> _groupBookingsByDate(
-  List<BookingsModel> bookings, {
+Map<String, List<BookingEntity>> _groupBookingsByDate(
+  List<BookingEntity> bookings, {
   required bool useReturnDate,
 }) {
-  final Map<String, List<BookingsModel>> grouped = {
-    'today': <BookingsModel>[],
-    'tomorrow': <BookingsModel>[],
-    'upcoming': <BookingsModel>[],
+  final Map<String, List<BookingEntity>> grouped = {
+    'today': <BookingEntity>[],
+    'tomorrow': <BookingEntity>[],
+    'upcoming': <BookingEntity>[],
   };
 
   final today = DateTime.now();
   final tomorrow = today.add(const Duration(days: 1));
 
   for (final booking in bookings) {
-    final targetDateString =
-        useReturnDate ? booking.returnDate : booking.pickupDate;
+    final targetDateString = useReturnDate
+        ? booking.returnDate
+        : booking.pickupDate;
 
     // Skip bookings with null dates
     if (targetDateString == null || targetDateString.isEmpty) continue;
@@ -144,11 +152,17 @@ Map<String, List<BookingsModel>> _groupBookingsByDate(
       }
 
       // Reset time to compare dates only
-      final bookingDate =
-          DateTime(targetDate.year, targetDate.month, targetDate.day);
+      final bookingDate = DateTime(
+        targetDate.year,
+        targetDate.month,
+        targetDate.day,
+      );
       final todayDate = DateTime(today.year, today.month, today.day);
-      final tomorrowDate =
-          DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
+      final tomorrowDate = DateTime(
+        tomorrow.year,
+        tomorrow.month,
+        tomorrow.day,
+      );
 
       if (bookingDate == todayDate) {
         grouped['today']!.add(booking);

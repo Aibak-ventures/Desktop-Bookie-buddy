@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 
 class UpdateBookingUseCase {
@@ -8,7 +8,6 @@ class UpdateBookingUseCase {
 
   Future<CustomResponseModel> call(
     int bookingId,
-    RequestBookingModel updatedBooking,
-  ) =>
-      _repository.updateBooking(bookingId, updatedBooking);
+    BookingRequestEntity updatedBooking,
+  ) => _repository.updateBooking(bookingId, updatedBooking);
 }

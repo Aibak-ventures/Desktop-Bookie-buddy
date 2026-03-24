@@ -128,7 +128,7 @@ return expanded(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  collapsed,TResult Function()?  loading,TResult Function( String error)?  error,TResult Function( List<BookingDetailsPaymentHistoryModel> paymentHistory)?  expanded,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  collapsed,TResult Function()?  loading,TResult Function( String error)?  error,TResult Function( List<BookingPaymentHistoryEntity> paymentHistory)?  expanded,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Collapsed() when collapsed != null:
 return collapsed();case _Loading() when loading != null:
@@ -152,7 +152,7 @@ return expanded(_that.paymentHistory);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  collapsed,required TResult Function()  loading,required TResult Function( String error)  error,required TResult Function( List<BookingDetailsPaymentHistoryModel> paymentHistory)  expanded,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  collapsed,required TResult Function()  loading,required TResult Function( String error)  error,required TResult Function( List<BookingPaymentHistoryEntity> paymentHistory)  expanded,}) {final _that = this;
 switch (_that) {
 case _Collapsed():
 return collapsed();case _Loading():
@@ -175,7 +175,7 @@ return expanded(_that.paymentHistory);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  collapsed,TResult? Function()?  loading,TResult? Function( String error)?  error,TResult? Function( List<BookingDetailsPaymentHistoryModel> paymentHistory)?  expanded,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  collapsed,TResult? Function()?  loading,TResult? Function( String error)?  error,TResult? Function( List<BookingPaymentHistoryEntity> paymentHistory)?  expanded,}) {final _that = this;
 switch (_that) {
 case _Collapsed() when collapsed != null:
 return collapsed();case _Loading() when loading != null:
@@ -323,11 +323,11 @@ as String,
 
 
 class _Expanded implements BookingDetailsPaymentHistoryState {
-  const _Expanded(final  List<BookingDetailsPaymentHistoryModel> paymentHistory): _paymentHistory = paymentHistory;
+  const _Expanded(final  List<BookingPaymentHistoryEntity> paymentHistory): _paymentHistory = paymentHistory;
   
 
- final  List<BookingDetailsPaymentHistoryModel> _paymentHistory;
- List<BookingDetailsPaymentHistoryModel> get paymentHistory {
+ final  List<BookingPaymentHistoryEntity> _paymentHistory;
+ List<BookingPaymentHistoryEntity> get paymentHistory {
   if (_paymentHistory is EqualUnmodifiableListView) return _paymentHistory;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_paymentHistory);
@@ -364,7 +364,7 @@ abstract mixin class _$ExpandedCopyWith<$Res> implements $BookingDetailsPaymentH
   factory _$ExpandedCopyWith(_Expanded value, $Res Function(_Expanded) _then) = __$ExpandedCopyWithImpl;
 @useResult
 $Res call({
- List<BookingDetailsPaymentHistoryModel> paymentHistory
+ List<BookingPaymentHistoryEntity> paymentHistory
 });
 
 
@@ -384,7 +384,7 @@ class __$ExpandedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? paymentHistory = null,}) {
   return _then(_Expanded(
 null == paymentHistory ? _self._paymentHistory : paymentHistory // ignore: cast_nullable_to_non_nullable
-as List<BookingDetailsPaymentHistoryModel>,
+as List<BookingPaymentHistoryEntity>,
   ));
 }
 

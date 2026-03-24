@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -153,7 +153,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   Widget _buildContent(
     BuildContext context,
     ProductModel product,
-    List<BookingsModel> bookings,
+    List<BookingEntity> bookings,
     List<ProductMonthlyDataModel> monthlySummary,
   ) {
     return Padding(
@@ -658,7 +658,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   Widget _buildRightPanel(
     ProductModel product,
-    List<BookingsModel> bookings,
+    List<BookingEntity> bookings,
     List<ProductMonthlyDataModel> monthlySummary,
   ) {
     return Container(
@@ -1271,7 +1271,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  Widget _buildBookingsList(List<BookingsModel> bookings, String emptyMessage,
+  Widget _buildBookingsList(List<BookingEntity> bookings, String emptyMessage,
       {bool isOngoing = false}) {
     if (bookings.isEmpty) {
       return Center(
@@ -1349,7 +1349,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     }
   }
 
-  // void _showBookingDetailsDrawerOLD(BookingsModel booking) {
+  // void _showBookingDetailsDrawerOLD(BookingEntity booking) {
   //   showGeneralDialog(
   //     context: context,
   //     barrierDismissible: true,

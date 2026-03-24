@@ -11,14 +11,14 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_other_details_model/booking_other_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/widgets/edit_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
-import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
+import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
@@ -32,8 +32,10 @@ import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
+
 import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_document_upload_section.dart';
@@ -43,11 +45,10 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selec
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/variant_chip.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/features/sales/data/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
@@ -62,8 +63,8 @@ enum BookingType { booking, sales, customWork }
 
 class EditNewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
-  final BookingDetailsModel? bookingDetails;
-  final SaleDetailsModel? saleDetails;
+  final BookingDetailsEntity? bookingDetails;
+  final SaleDetailsEntity? saleDetails;
   final int? bookingId;
 
   const EditNewBookingScreen({
@@ -118,9 +119,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   );
 
   // Additional charges
-  final additionalChargesNotifier = ValueNotifier<List<AdditionalChargesModel>>(
-    [],
-  );
+  final additionalChargesNotifier =
+      ValueNotifier<List<AdditionalChargesEntity>>([]);
 
   // Documents
   final documentsNotifier = ValueNotifier<List<DocumentFile>>([]);
@@ -180,7 +180,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final _clientAddressFocusNode = FocusNode();
 
   // Original values for change tracking (incremental updates)
-  BookingDetailsModel? _originalBooking;
+  BookingDetailsEntity? _originalBooking;
   DateTime? _originalPickupDate;
   DateTime? _originalReturnDate;
   TimeOfDay? _originalPickupTime;
@@ -193,7 +193,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   int? _originalAdvanceAmount;
   int? _originalSecurityAmount;
   int? _originalDiscountAmount;
-  List<AdditionalChargesModel>? _originalAdditionalCharges;
+  List<AdditionalChargesEntity>? _originalAdditionalCharges;
   List<DocumentFile>?
   _originalDocuments; // Track original documents for removal detection
   String? _originalRunningKm; // Track original running kilometers
@@ -262,7 +262,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Initialize form from existing booking
-  void _initializeFromBooking(BookingDetailsModel booking) {
+  void _initializeFromBooking(BookingDetailsEntity booking) {
     selectedBookingType = BookingType.booking;
 
     // Set dates
@@ -414,7 +414,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Store original values to track changes for incremental updates
-  void _storeOriginalValues(BookingDetailsModel booking) {
+  void _storeOriginalValues(BookingDetailsEntity booking) {
     _originalBooking = booking;
     _originalPickupDate = booking.pickupDate?.parseToDateTime();
     _originalReturnDate = booking.returnDate.parseToDateTime();
@@ -440,7 +440,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     _originalAdditionalCharges = additionalChargesNotifier.value
         .map(
           (c) =>
-              AdditionalChargesModel(id: c.id, name: c.name, amount: c.amount),
+              AdditionalChargesEntity(id: c.id, name: c.name, amount: c.amount),
         )
         .toList();
 
@@ -712,7 +712,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Initialize form from existing sale
-  void _initializeFromSale(SaleDetailsModel sale) {
+  void _initializeFromSale(SaleDetailsEntity sale) {
     selectedBookingType = BookingType.sales;
 
     // Set sale date
@@ -3020,7 +3020,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             ],
           ),
           // Additional charges list (if any)
-          ValueListenableBuilder<List<AdditionalChargesModel>>(
+          ValueListenableBuilder<List<AdditionalChargesEntity>>(
             valueListenable: additionalChargesNotifier,
             builder: (context, charges, _) {
               if (charges.isEmpty) return const SizedBox();
@@ -3804,7 +3804,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       // Check stock before incrementing quantity
       final existing = products[existingIndex];
       final newQuantity = existing.quantity + 1;
-      final availableStock = variant.remainingStock ?? variant.stock ?? 0;
+      final availableStock = variant.remainingStock ?? variant.stock;
       if (availableStock > 0 && newQuantity > availableStock) {
         context.showSnackBar(
           'Cannot add more. Only $availableStock items available in stock',
@@ -3815,7 +3815,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       products[existingIndex] = existing.copyWith(quantity: newQuantity);
     } else {
       // Check stock before adding a new entry
-      final availableStock = variant.remainingStock ?? variant.stock ?? 0;
+      final availableStock = variant.remainingStock ?? variant.stock;
       if (availableStock == 0) {
         context.showSnackBar('This item is out of stock', isError: true);
         return;
@@ -4311,7 +4311,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 // Product Name only
                 Expanded(
                   child: Text(
-                    product.variant.name ?? '',
+                    product.variant.name,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -4830,7 +4830,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           ],
         ),
         const SizedBox(height: 4),
-        ValueListenableBuilder<List<AdditionalChargesModel>>(
+        ValueListenableBuilder<List<AdditionalChargesEntity>>(
           valueListenable: additionalChargesNotifier,
           builder: (context, charges, _) {
             if (charges.isEmpty) {
@@ -5326,7 +5326,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     final nameController = TextEditingController();
     final amountController = TextEditingController();
 
-    final result = await showDialog<AdditionalChargesModel>(
+    final result = await showDialog<AdditionalChargesEntity>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Charge', style: TextStyle(fontSize: 16)),
@@ -5363,7 +5363,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               if (name.isNotEmpty && amount != null && amount > 0) {
                 Navigator.pop(
                   context,
-                  AdditionalChargesModel(name: name, amount: amount),
+                  AdditionalChargesEntity(name: name, amount: amount),
                 );
               }
             },
@@ -5377,7 +5377,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
 
     if (result != null) {
-      final charges = List<AdditionalChargesModel>.from(
+      final charges = List<AdditionalChargesEntity>.from(
         additionalChargesNotifier.value,
       );
       charges.add(result);
@@ -5385,8 +5385,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
   }
 
-  void _removeCharge(AdditionalChargesModel charge) {
-    final charges = List<AdditionalChargesModel>.from(
+  void _removeCharge(AdditionalChargesEntity charge) {
+    final charges = List<AdditionalChargesEntity>.from(
       additionalChargesNotifier.value,
     );
     charges.remove(charge);
@@ -5522,7 +5522,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       } else {
         // Build booking request
         final bookingRequest = _buildBookingRequest();
-        log('Booking Request: ${bookingRequest.toJson()}');
+        log('Booking Request: ${bookingRequest.toString()}');
 
         // Call the API to create booking
         final bookingId = await getIt<AddBookingUseCase>()(bookingRequest);
@@ -5560,17 +5560,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
   }
 
-  RequestBookingModel _buildBookingRequest() {
+  BookingRequestEntity _buildBookingRequest() {
     final products = selectedProductsNotifier.value;
     final additionalCharges = additionalChargesNotifier.value;
 
     // If there's no client ID, we need to send client data
-    ClientRequestModel? clientData;
+    ClientRequestEntity? clientData;
     if (selectedClientId == null) {
       final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
       final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
 
-      clientData = ClientRequestModel(
+      clientData = ClientRequestEntity(
         id: null,
         name: clientNameController.text.trim().isEmpty
             ? null
@@ -5580,7 +5580,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       );
     }
 
-    return RequestBookingModel(
+    return BookingRequestEntity(
       clientId: selectedClientId,
       staffId: selectedStaffId,
       client: clientData,
@@ -5609,7 +5609,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           : null,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
-      otherDetails: BookingOtherDetailsModel(
+      otherDetails: BookingOtherDetailsEntity(
         locationStart: startLocationController.text.trim().nullIfEmpty,
         locationFrom: pickupLocationController.text.trim().nullIfEmpty,
         locationTo: destinationLocationController.text.trim().nullIfEmpty,
@@ -6449,7 +6449,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   ),
                   const SizedBox(height: 6),
                   // Additional charges list
-                  ValueListenableBuilder<List<AdditionalChargesModel>>(
+                  ValueListenableBuilder<List<AdditionalChargesEntity>>(
                     valueListenable: additionalChargesNotifier,
                     builder: (context, charges, _) {
                       if (charges.isEmpty) return const SizedBox();

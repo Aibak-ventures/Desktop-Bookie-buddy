@@ -17,7 +17,7 @@ abstract class AllBookingEvent with _$AllBookingEvent {
   /// is provided, it updates that booking in the list. Emits an updated
   /// state with the modified bookings list.
   const factory AllBookingEvent.updateBooking(
-    DesktopBookingItemModel? booking, {
+    DesktopBookingItemEntity? booking, {
     @Default(false) bool shouldRefresh,
     @Default(false) bool isDeleted,
   }) = _UpdateBooking;

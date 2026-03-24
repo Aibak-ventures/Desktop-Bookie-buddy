@@ -5,8 +5,8 @@ abstract class DashboardState with _$DashboardState {
   const factory DashboardState.loading() = _Loading;
 
   const factory DashboardState.loaded({
-    required Map<String, List<BookingsModel>> upcomingGrouped,
-    required Map<String, List<BookingsModel>> returnsGrouped,
+    required Map<String, List<BookingEntity>> upcomingGrouped,
+    required Map<String, List<BookingEntity>> returnsGrouped,
     required DesktopDashboardCarouselData carouselData,
     required String? nextPageUrl,
     required int currentPage,

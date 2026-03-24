@@ -8,8 +8,8 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/utils/download_file.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_request_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http_parser/http_parser.dart';
@@ -34,7 +34,7 @@ class BookingRemoteDatasource {
   }
 
   Future<CustomResponseModel> addBooking(
-    RequestBookingModel bookingData,
+    BookingRequestModel bookingData,
   ) async {
     try {
       final data = bookingData.toJson();
@@ -55,9 +55,7 @@ class BookingRemoteDatasource {
     }
   }
 
-  Future<CustomResponseModel> createSale(
-    Map<String, dynamic> saleData,
-  ) async {
+  Future<CustomResponseModel> createSale(Map<String, dynamic> saleData) async {
     try {
       log('Creating sale with data: $saleData');
       final response = await _dio.post(
@@ -137,7 +135,7 @@ class BookingRemoteDatasource {
 
   Future<CustomResponseModel> updateBooking(
     int bookingId,
-    RequestBookingModel updatedBooking,
+    BookingRequestModel updatedBooking,
   ) async {
     try {
       final response = await _dio.patch(
@@ -180,8 +178,9 @@ class BookingRemoteDatasource {
             // formData field  other_details[end] = '50'
             (value as Map<String, dynamic>).forEach((subKey, subValue) {
               if (subValue != null) {
-                formData.fields
-                    .add(MapEntry('$key[$subKey]', subValue.toString()));
+                formData.fields.add(
+                  MapEntry('$key[$subKey]', subValue.toString()),
+                );
               }
             });
           } else {
@@ -196,21 +195,24 @@ class BookingRemoteDatasource {
         for (int i = 0; i < newDocuments.length; i++) {
           final doc = newDocuments[i];
           // Check if it's a new file: has bytes (web upload) or path is not a URL (local file)
-          final isNewFile = doc.bytes != null ||
+          final isNewFile =
+              doc.bytes != null ||
               (doc.path.isNotEmpty && !doc.path.startsWith('http'));
 
           if (isNewFile && (doc.bytes != null || doc.path.isNotEmpty)) {
             // New file upload from web or mobile
             if (doc.bytes != null) {
               // Web: upload from bytes
-              formData.files.add(MapEntry(
-                'documents[${i + 1}]',
-                MultipartFile.fromBytes(
-                  doc.bytes!,
-                  filename: doc.name,
-                  contentType: MediaType('image', 'jpeg'),
+              formData.files.add(
+                MapEntry(
+                  'documents[${i + 1}]',
+                  MultipartFile.fromBytes(
+                    doc.bytes!,
+                    filename: doc.name,
+                    contentType: MediaType('image', 'jpeg'),
+                  ),
                 ),
-              ));
+              );
             }
             // Note: Mobile file upload from path would need different handling
             // For now, web uploads via bytes are supported
@@ -220,8 +222,9 @@ class BookingRemoteDatasource {
 
       // Add removed document URLs
       if (removedDocumentUrls != null && removedDocumentUrls.isNotEmpty) {
-        formData.fields
-            .add(MapEntry('remove_documents', jsonEncode(removedDocumentUrls)));
+        formData.fields.add(
+          MapEntry('remove_documents', jsonEncode(removedDocumentUrls)),
+        );
       }
 
       // 📝 LOG FORM DATA CONTENTS FOR DEBUGGING
@@ -240,7 +243,9 @@ class BookingRemoteDatasource {
         log('├─────────────────────────────────────────────────────────────');
         log('│ 📎 FILES (${formData.files.length} files):');
         for (final file in formData.files) {
-          log('│   ${file.key}: ${file.value.filename} (${file.value.length} bytes)');
+          log(
+            '│   ${file.key}: ${file.value.filename} (${file.value.length} bytes)',
+          );
         }
       }
       log('└─────────────────────────────────────────────────────────────');
@@ -248,9 +253,7 @@ class BookingRemoteDatasource {
       final response = await _dio.patch(
         '${ApiEndpoints.bookings.updateDetails}$bookingId/',
         data: formData,
-        options: Options(
-          contentType: 'multipart/form-data',
-        ),
+        options: Options(contentType: 'multipart/form-data'),
       );
 
       log(
@@ -276,9 +279,7 @@ class BookingRemoteDatasource {
     }
   }
 
-  Future<CustomResponseModel> cancelBooking({
-    required int bookingId,
-  }) async {
+  Future<CustomResponseModel> cancelBooking({required int bookingId}) async {
     try {
       // Update delivery status to cancelled
       final response = await _dio.patch(
@@ -394,7 +395,7 @@ class BookingRemoteDatasource {
   }
 
   Future<CustomResponseModel> createOldBooking(
-    RequestBookingModel bookingData,
+    BookingRequestModel bookingData,
   ) async {
     try {
       final data = bookingData.toJson();
@@ -478,9 +479,7 @@ class BookingRemoteDatasource {
 
       final response = await _dio.get(
         url,
-        queryParameters: {
-          'send_whatsapp': sendWhatsApp,
-        },
+        queryParameters: {'send_whatsapp': sendWhatsApp},
       );
       log('Send invoice response: ${response.realUri.toString()}');
 
@@ -527,7 +526,9 @@ class BookingRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
-        log('Invoice PDF fetched successfully, size: ${response.data.length} bytes');
+        log(
+          'Invoice PDF fetched successfully, size: ${response.data.length} bytes',
+        );
         return Uint8List.fromList(response.data as List<int>);
       } else {
         // Decode the JSON error body from bytes to show the actual backend message
@@ -543,7 +544,9 @@ class BookingRemoteDatasource {
             log('Backend error: $msg | dev: $devMsg');
           }
         } catch (_) {}
-        log('Error fetching invoice PDF: ${response.statusCode} - $errorMessage');
+        log(
+          'Error fetching invoice PDF: ${response.statusCode} - $errorMessage',
+        );
         throw errorMessage;
       }
     } catch (e, stack) {

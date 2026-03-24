@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
@@ -20,9 +21,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc({
     required GetDashboardDesktopDataUseCase getDashboardDesktopDataUseCase,
     UserCubit? userCubit,
-  })  : _getDashboardDesktopDataUseCase = getDashboardDesktopDataUseCase,
-        _userCubit = userCubit,
-        super(const _Loading()) {
+  }) : _getDashboardDesktopDataUseCase = getDashboardDesktopDataUseCase,
+       _userCubit = userCubit,
+       super(const _Loading()) {
     on<_LoadDashboardData>(_onLoadDashboardData);
     on<_LoadDashboardNextPageData>(_onLoadDashboardNextPageData);
     on<_UpdateData>(_onUpdateData);
@@ -34,21 +35,22 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       DesktopDashboardCarouselData.empty();
 
   // Groups bookings into 'today', 'tomorrow', and 'upcoming' based on their pickup or return dates.
-  Map<String, List<BookingsModel>> _groupData(
-    List<BookingsModel> bookings, {
+  Map<String, List<BookingEntity>> _groupData(
+    List<BookingEntity> bookings, {
     required bool useReturnDate,
   }) {
-    final todayList = <BookingsModel>[];
-    final tomorrowList = <BookingsModel>[];
-    final upcomingList = <BookingsModel>[];
+    final todayList = <BookingEntity>[];
+    final tomorrowList = <BookingEntity>[];
+    final upcomingList = <BookingEntity>[];
 
     final today = DateTime.now();
     final tomorrow = today.add(const Duration(days: 1));
 
     for (final booking in bookings) {
       // Determine the relevant date based on whether it's for returns or upcoming
-      final dateString =
-          useReturnDate ? booking.returnDate : booking.pickupDate;
+      final dateString = useReturnDate
+          ? booking.returnDate
+          : booking.pickupDate;
 
       if (dateString == null || dateString.isEmpty) continue;
 
@@ -78,8 +80,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         // Reset time to compare dates only
         final bookingDate = DateTime(date.year, date.month, date.day);
         final todayDate = DateTime(today.year, today.month, today.day);
-        final tomorrowDate =
-            DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
+        final tomorrowDate = DateTime(
+          tomorrow.year,
+          tomorrow.month,
+          tomorrow.day,
+        );
 
         if (bookingDate == todayDate) {
           todayList.add(booking);
@@ -123,10 +128,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       );
 
       // Group data for UI display
-      final upcomingGrouped =
-          _groupData(response.upcoming, useReturnDate: false);
-      final returnsGrouped =
-          _groupData(response.ongoingBookings, useReturnDate: true);
+      final upcomingGrouped = _groupData(
+        response.upcoming.map((e) => e.toEntity()).toList(),
+        useReturnDate: false,
+      );
+      final returnsGrouped = _groupData(
+        response.ongoingBookings.map((e) => e.toEntity()).toList(),
+        useReturnDate: true,
+      );
 
       // Update carousel data
       carouselResponse = response.carouselData;
@@ -177,10 +186,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       );
 
       // Group the new data
-      final newUpcomingGrouped =
-          _groupData(response.upcoming, useReturnDate: false);
-      final newReturnsGrouped =
-          _groupData(response.ongoingBookings, useReturnDate: true);
+      final newUpcomingGrouped = _groupData(
+        response.upcoming.map((e) => e.toEntity()).toList(),
+        useReturnDate: false,
+      );
+      final newReturnsGrouped = _groupData(
+        response.ongoingBookings.map((e) => e.toEntity()).toList(),
+        useReturnDate: true,
+      );
 
       // Merge the existing groups with the new groups
       final mergedUpcomingGrouped = {...s.upcomingGrouped};
@@ -190,7 +203,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         if (mergedUpcomingGrouped.containsKey(key)) {
           mergedUpcomingGrouped[key] = [
             ...mergedUpcomingGrouped[key]!,
-            ...value
+            ...value,
           ];
         } else {
           mergedUpcomingGrouped[key] = value;
@@ -241,11 +254,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     // Create deep copies of the grouped data
     final updatedUpcomingGrouped = {
       for (final entry in s.upcomingGrouped.entries)
-        entry.key: List<BookingsModel>.from(entry.value),
+        entry.key: List<BookingEntity>.from(entry.value),
     };
     final updatedReturnsGrouped = {
       for (final entry in s.returnsGrouped.entries)
-        entry.key: List<BookingsModel>.from(entry.value),
+        entry.key: List<BookingEntity>.from(entry.value),
     };
 
     final eventId = event.updateBooking?.id;
@@ -274,10 +287,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       });
     }
 
-    emit(s.copyWith(
-      upcomingGrouped: updatedUpcomingGrouped,
-      returnsGrouped: updatedReturnsGrouped,
-    ));
+    emit(
+      s.copyWith(
+        upcomingGrouped: updatedUpcomingGrouped,
+        returnsGrouped: updatedReturnsGrouped,
+      ),
+    );
   }
 
   void _loadIfNot(_LoadIfNot event, Emitter<DashboardState> emit) {

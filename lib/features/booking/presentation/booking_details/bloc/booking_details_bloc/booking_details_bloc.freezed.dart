@@ -760,7 +760,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( BookingDetailsModel booking)?  loaded,TResult Function( String message,  bool didPop,  bool needRefresh)?  success,TResult Function( String message)?  failed,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( BookingDetailsEntity booking)?  loaded,TResult Function( String message,  bool didPop,  bool needRefresh)?  success,TResult Function( String message)?  failed,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
@@ -785,7 +785,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( BookingDetailsModel booking)  loaded,required TResult Function( String message,  bool didPop,  bool needRefresh)  success,required TResult Function( String message)  failed,required TResult Function( String error)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( BookingDetailsEntity booking)  loaded,required TResult Function( String message,  bool didPop,  bool needRefresh)  success,required TResult Function( String message)  failed,required TResult Function( String error)  error,}) {final _that = this;
 switch (_that) {
 case _Loading():
 return loading();case _Loaded():
@@ -809,7 +809,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( BookingDetailsModel booking)?  loaded,TResult? Function( String message,  bool didPop,  bool needRefresh)?  success,TResult? Function( String message)?  failed,TResult? Function( String error)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( BookingDetailsEntity booking)?  loaded,TResult? Function( String message,  bool didPop,  bool needRefresh)?  success,TResult? Function( String message)?  failed,TResult? Function( String error)?  error,}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
@@ -863,7 +863,7 @@ class _Loaded implements BookingDetailsState {
   const _Loaded({required this.booking});
   
 
- final  BookingDetailsModel booking;
+ final  BookingDetailsEntity booking;
 
 /// Create a copy of BookingDetailsState
 /// with the given fields replaced by the non-null parameter values.
@@ -895,11 +895,11 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $BookingDetailsStateCopyW
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- BookingDetailsModel booking
+ BookingDetailsEntity booking
 });
 
 
-$BookingDetailsModelCopyWith<$Res> get booking;
+$BookingDetailsEntityCopyWith<$Res> get booking;
 
 }
 /// @nodoc
@@ -915,7 +915,7 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? booking = null,}) {
   return _then(_Loaded(
 booking: null == booking ? _self.booking : booking // ignore: cast_nullable_to_non_nullable
-as BookingDetailsModel,
+as BookingDetailsEntity,
   ));
 }
 
@@ -923,9 +923,9 @@ as BookingDetailsModel,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$BookingDetailsModelCopyWith<$Res> get booking {
+$BookingDetailsEntityCopyWith<$Res> get booking {
   
-  return $BookingDetailsModelCopyWith<$Res>(_self.booking, (value) {
+  return $BookingDetailsEntityCopyWith<$Res>(_self.booking, (value) {
     return _then(_self.copyWith(booking: value));
   });
 }

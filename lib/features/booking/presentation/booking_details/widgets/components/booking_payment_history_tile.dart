@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart'
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -30,7 +30,7 @@ class BookingPaymentHistoryTile extends StatelessWidget {
     this.isLoading = false,
   });
 
-  final List<BookingDetailsPaymentHistoryModel> paymentHistory;
+  final List<BookingPaymentHistoryEntity> paymentHistory;
   final List<dynamic> refunds;
   final bool isLoading;
 

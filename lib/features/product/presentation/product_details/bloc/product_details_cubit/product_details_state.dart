@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -11,12 +11,10 @@ abstract class ProductDetailsState with _$ProductDetailsState {
   const factory ProductDetailsState.loading() = _Loading;
   const factory ProductDetailsState.loaded({
     required ProductModel product,
-    @Default([]) List<BookingsModel> bookings,
+    @Default([]) List<BookingEntity> bookings,
     @Default([]) List<ProductMonthlyDataModel> monthlySummary,
     String? nextPageUrl,
     @Default(false) bool isPaginatingBookings,
   }) = _Loaded;
-  const factory ProductDetailsState.error({
-    required String message,
-  }) = _Error;
+  const factory ProductDetailsState.error({required String message}) = _Error;
 }

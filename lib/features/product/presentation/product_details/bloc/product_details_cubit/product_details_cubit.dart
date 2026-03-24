@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/add_product_variants_usecase.dart';
@@ -25,17 +27,19 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     required AddProductVariantsUseCase addProductVariants,
     required UpdateVariantUseCase updateVariant,
     required DeleteProductUseCase deleteProduct,
-  })  : _getProductInfo = getProductInfo,
-        _getProductBookings = getProductBookings,
-        _getProductGrowthData = getProductGrowthData,
-        _addProductVariants = addProductVariants,
-        _updateVariant = updateVariant,
-        _deleteProduct = deleteProduct,
-        super(const ProductDetailsState.initial());
+  }) : _getProductInfo = getProductInfo,
+       _getProductBookings = getProductBookings,
+       _getProductGrowthData = getProductGrowthData,
+       _addProductVariants = addProductVariants,
+       _updateVariant = updateVariant,
+       _deleteProduct = deleteProduct,
+       super(const ProductDetailsState.initial());
 
   /// Load product details by ID along with bookings and monthly summary
-  Future<void> loadProductDetails(int productId,
-      {String? bookingStatus}) async {
+  Future<void> loadProductDetails(
+    int productId, {
+    String? bookingStatus,
+  }) async {
     try {
       emit(const ProductDetailsState.loading());
 
@@ -50,29 +54,33 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
           log('Error loading bookings: $e');
           return null;
         }),
-        _getProductGrowthData(productId)
-            .then<dynamic>((v) => v)
-            .catchError((e) {
+        _getProductGrowthData(productId).then<dynamic>((v) => v).catchError((
+          e,
+        ) {
           log('Error loading monthly summary: $e');
           return <ProductMonthlyDataModel>[];
         }),
       ]);
 
       final product = results[0] as ProductModel;
-      final bookingsData = results[1] as dynamic;
+      final bookingsData = results[1] as PaginationModel<BookingEntity>?;
       final monthlyData = results[2] as List<ProductMonthlyDataModel>;
 
-      emit(ProductDetailsState.loaded(
-        product: product,
-        bookings: bookingsData?.data ?? [],
-        monthlySummary: monthlyData,
-        nextPageUrl: bookingsData?.nextPageUrl,
-      ));
+      emit(
+        ProductDetailsState.loaded(
+          product: product,
+          bookings: bookingsData?.data ?? [],
+          monthlySummary: monthlyData,
+          nextPageUrl: bookingsData?.nextPageUrl,
+        ),
+      );
     } catch (e) {
       log('Error loading product details: $e');
-      emit(ProductDetailsState.error(
-        message: 'An error occurred: ${e.toString()}',
-      ));
+      emit(
+        ProductDetailsState.error(
+          message: 'An error occurred: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -87,12 +95,14 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
             status: status,
           );
 
-          emit(ProductDetailsState.loaded(
-            product: loadedState.product,
-            bookings: bookingsData.data,
-            monthlySummary: loadedState.monthlySummary,
-            nextPageUrl: bookingsData.nextPageUrl,
-          ));
+          emit(
+            ProductDetailsState.loaded(
+              product: loadedState.product,
+              bookings: bookingsData.data,
+              monthlySummary: loadedState.monthlySummary,
+              nextPageUrl: bookingsData.nextPageUrl,
+            ),
+          );
         } catch (e) {
           log('Error reloading bookings: $e');
           // Keep the current state on error
@@ -103,8 +113,11 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   }
 
   /// Load more bookings (pagination)
-  Future<void> loadMoreBookings(int productId, int page,
-      {String? status}) async {
+  Future<void> loadMoreBookings(
+    int productId,
+    int page, {
+    String? status,
+  }) async {
     state.maybeMap(
       loaded: (loadedState) {
         if (loadedState.isPaginatingBookings ||
@@ -112,37 +125,41 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
           return;
         }
 
-        emit(ProductDetailsState.loaded(
-          product: loadedState.product,
-          bookings: loadedState.bookings,
-          monthlySummary: loadedState.monthlySummary,
-          nextPageUrl: loadedState.nextPageUrl,
-          isPaginatingBookings: true,
-        ));
-
-        // Execute async operation without awaiting in the callback
-        _getProductBookings(
-          productId: productId,
-          page: page,
-          status: status,
-        ).then((moreBookings) {
-          emit(ProductDetailsState.loaded(
-            product: loadedState.product,
-            bookings: [...loadedState.bookings, ...moreBookings.data],
-            monthlySummary: loadedState.monthlySummary,
-            nextPageUrl: moreBookings.nextPageUrl,
-            isPaginatingBookings: false,
-          ));
-        }).catchError((e) {
-          log('Error loading more bookings: $e');
-          emit(ProductDetailsState.loaded(
+        emit(
+          ProductDetailsState.loaded(
             product: loadedState.product,
             bookings: loadedState.bookings,
             monthlySummary: loadedState.monthlySummary,
             nextPageUrl: loadedState.nextPageUrl,
-            isPaginatingBookings: false,
-          ));
-        });
+            isPaginatingBookings: true,
+          ),
+        );
+
+        // Execute async operation without awaiting in the callback
+        _getProductBookings(productId: productId, page: page, status: status)
+            .then((moreBookings) {
+              emit(
+                ProductDetailsState.loaded(
+                  product: loadedState.product,
+                  bookings: [...loadedState.bookings, ...moreBookings.data],
+                  monthlySummary: loadedState.monthlySummary,
+                  nextPageUrl: moreBookings.nextPageUrl,
+                  isPaginatingBookings: false,
+                ),
+              );
+            })
+            .catchError((e) {
+              log('Error loading more bookings: $e');
+              emit(
+                ProductDetailsState.loaded(
+                  product: loadedState.product,
+                  bookings: loadedState.bookings,
+                  monthlySummary: loadedState.monthlySummary,
+                  nextPageUrl: loadedState.nextPageUrl,
+                  isPaginatingBookings: false,
+                ),
+              );
+            });
       },
       orElse: () {},
     );
@@ -193,13 +210,12 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   }
 
   /// Delete a variant from the product
-  Future<void> deleteProductVariant(
-      {required int productId, required int variantId}) async {
+  Future<void> deleteProductVariant({
+    required int productId,
+    required int variantId,
+  }) async {
     try {
-      await _deleteProduct(
-        productId: productId,
-        variantId: variantId,
-      );
+      await _deleteProduct(productId: productId, variantId: variantId);
       // Reload product details to refresh the variants list
       await loadProductDetails(productId);
     } catch (e) {

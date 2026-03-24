@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingGroupedModel {
 
- String get date; List<BookingsModel> get bookings;
+ String get date; List<BookingEntity> get bookings;
 /// Create a copy of BookingGroupedModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $BookingGroupedModelCopyWith<$Res>  {
   factory $BookingGroupedModelCopyWith(BookingGroupedModel value, $Res Function(BookingGroupedModel) _then) = _$BookingGroupedModelCopyWithImpl;
 @useResult
 $Res call({
- String date, List<BookingsModel> bookings
+ String date, List<BookingEntity> bookings
 });
 
 
@@ -66,7 +66,7 @@ class _$BookingGroupedModelCopyWithImpl<$Res>
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,bookings: null == bookings ? _self.bookings : bookings // ignore: cast_nullable_to_non_nullable
-as List<BookingsModel>,
+as List<BookingEntity>,
   ));
 }
 
@@ -151,7 +151,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  List<BookingsModel> bookings)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  List<BookingEntity> bookings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingGroupedModel() when $default != null:
 return $default(_that.date,_that.bookings);case _:
@@ -172,7 +172,7 @@ return $default(_that.date,_that.bookings);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  List<BookingsModel> bookings)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  List<BookingEntity> bookings)  $default,) {final _that = this;
 switch (_that) {
 case _BookingGroupedModel():
 return $default(_that.date,_that.bookings);case _:
@@ -192,7 +192,7 @@ return $default(_that.date,_that.bookings);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  List<BookingsModel> bookings)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  List<BookingEntity> bookings)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingGroupedModel() when $default != null:
 return $default(_that.date,_that.bookings);case _:
@@ -207,12 +207,12 @@ return $default(_that.date,_that.bookings);case _:
 
 
 class _BookingGroupedModel implements BookingGroupedModel {
-  const _BookingGroupedModel({required this.date, required final  List<BookingsModel> bookings}): _bookings = bookings;
+  const _BookingGroupedModel({required this.date, required final  List<BookingEntity> bookings}): _bookings = bookings;
   
 
 @override final  String date;
- final  List<BookingsModel> _bookings;
-@override List<BookingsModel> get bookings {
+ final  List<BookingEntity> _bookings;
+@override List<BookingEntity> get bookings {
   if (_bookings is EqualUnmodifiableListView) return _bookings;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_bookings);
@@ -249,7 +249,7 @@ abstract mixin class _$BookingGroupedModelCopyWith<$Res> implements $BookingGrou
   factory _$BookingGroupedModelCopyWith(_BookingGroupedModel value, $Res Function(_BookingGroupedModel) _then) = __$BookingGroupedModelCopyWithImpl;
 @override @useResult
 $Res call({
- String date, List<BookingsModel> bookings
+ String date, List<BookingEntity> bookings
 });
 
 
@@ -270,7 +270,7 @@ class __$BookingGroupedModelCopyWithImpl<$Res>
   return _then(_BookingGroupedModel(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,bookings: null == bookings ? _self._bookings : bookings // ignore: cast_nullable_to_non_nullable
-as List<BookingsModel>,
+as List<BookingEntity>,
   ));
 }
 

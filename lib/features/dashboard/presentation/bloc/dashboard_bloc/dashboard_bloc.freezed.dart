@@ -128,7 +128,7 @@ return loadIfNot(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult Function()?  loadDashboardNextPageData,TResult Function( BookingsModel? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult Function()?  loadIfNot,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult Function()?  loadDashboardNextPageData,TResult Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult Function()?  loadIfNot,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoadDashboardData() when loadDashboardData != null:
 return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
@@ -152,7 +152,7 @@ return loadIfNot();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( UserModel? activeShop,  bool useOldState)  loadDashboardData,required TResult Function()  loadDashboardNextPageData,required TResult Function( BookingsModel? updateBooking,  bool shouldRefresh,  bool isDeleted)  updateData,required TResult Function()  loadIfNot,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( UserModel? activeShop,  bool useOldState)  loadDashboardData,required TResult Function()  loadDashboardNextPageData,required TResult Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)  updateData,required TResult Function()  loadIfNot,}) {final _that = this;
 switch (_that) {
 case _LoadDashboardData():
 return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData():
@@ -175,7 +175,7 @@ return loadIfNot();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult? Function()?  loadDashboardNextPageData,TResult? Function( BookingsModel? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult? Function()?  loadIfNot,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult? Function()?  loadDashboardNextPageData,TResult? Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult? Function()?  loadIfNot,}) {final _that = this;
 switch (_that) {
 case _LoadDashboardData() when loadDashboardData != null:
 return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
@@ -308,7 +308,7 @@ class _UpdateData implements DashboardEvent {
   const _UpdateData(this.updateBooking, {this.shouldRefresh = false, this.isDeleted = false});
   
 
- final  BookingsModel? updateBooking;
+ final  BookingEntity? updateBooking;
 @JsonKey() final  bool shouldRefresh;
 @JsonKey() final  bool isDeleted;
 
@@ -342,11 +342,11 @@ abstract mixin class _$UpdateDataCopyWith<$Res> implements $DashboardEventCopyWi
   factory _$UpdateDataCopyWith(_UpdateData value, $Res Function(_UpdateData) _then) = __$UpdateDataCopyWithImpl;
 @useResult
 $Res call({
- BookingsModel? updateBooking, bool shouldRefresh, bool isDeleted
+ BookingEntity? updateBooking, bool shouldRefresh, bool isDeleted
 });
 
 
-$BookingsModelCopyWith<$Res>? get updateBooking;
+$BookingEntityCopyWith<$Res>? get updateBooking;
 
 }
 /// @nodoc
@@ -362,7 +362,7 @@ class __$UpdateDataCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? updateBooking = freezed,Object? shouldRefresh = null,Object? isDeleted = null,}) {
   return _then(_UpdateData(
 freezed == updateBooking ? _self.updateBooking : updateBooking // ignore: cast_nullable_to_non_nullable
-as BookingsModel?,shouldRefresh: null == shouldRefresh ? _self.shouldRefresh : shouldRefresh // ignore: cast_nullable_to_non_nullable
+as BookingEntity?,shouldRefresh: null == shouldRefresh ? _self.shouldRefresh : shouldRefresh // ignore: cast_nullable_to_non_nullable
 as bool,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -372,12 +372,12 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$BookingsModelCopyWith<$Res>? get updateBooking {
+$BookingEntityCopyWith<$Res>? get updateBooking {
     if (_self.updateBooking == null) {
     return null;
   }
 
-  return $BookingsModelCopyWith<$Res>(_self.updateBooking!, (value) {
+  return $BookingEntityCopyWith<$Res>(_self.updateBooking!, (value) {
     return _then(_self.copyWith(updateBooking: value));
   });
 }
@@ -529,7 +529,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( Map<String, List<BookingsModel>> upcomingGrouped,  Map<String, List<BookingsModel>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( Map<String, List<BookingEntity>> upcomingGrouped,  Map<String, List<BookingEntity>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
@@ -552,7 +552,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( Map<String, List<BookingsModel>> upcomingGrouped,  Map<String, List<BookingsModel>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)  loaded,required TResult Function( String error)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( Map<String, List<BookingEntity>> upcomingGrouped,  Map<String, List<BookingEntity>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)  loaded,required TResult Function( String error)  error,}) {final _that = this;
 switch (_that) {
 case _Loading():
 return loading();case _Loaded():
@@ -574,7 +574,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( Map<String, List<BookingsModel>> upcomingGrouped,  Map<String, List<BookingsModel>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( Map<String, List<BookingEntity>> upcomingGrouped,  Map<String, List<BookingEntity>> returnsGrouped,  DesktopDashboardCarouselData carouselData,  String? nextPageUrl,  int currentPage,  int totalPages,  bool isPaginating)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
@@ -623,18 +623,18 @@ String toString() {
 
 
 class _Loaded implements DashboardState {
-  const _Loaded({required final  Map<String, List<BookingsModel>> upcomingGrouped, required final  Map<String, List<BookingsModel>> returnsGrouped, required this.carouselData, required this.nextPageUrl, required this.currentPage, required this.totalPages, this.isPaginating = false}): _upcomingGrouped = upcomingGrouped,_returnsGrouped = returnsGrouped;
+  const _Loaded({required final  Map<String, List<BookingEntity>> upcomingGrouped, required final  Map<String, List<BookingEntity>> returnsGrouped, required this.carouselData, required this.nextPageUrl, required this.currentPage, required this.totalPages, this.isPaginating = false}): _upcomingGrouped = upcomingGrouped,_returnsGrouped = returnsGrouped;
   
 
- final  Map<String, List<BookingsModel>> _upcomingGrouped;
- Map<String, List<BookingsModel>> get upcomingGrouped {
+ final  Map<String, List<BookingEntity>> _upcomingGrouped;
+ Map<String, List<BookingEntity>> get upcomingGrouped {
   if (_upcomingGrouped is EqualUnmodifiableMapView) return _upcomingGrouped;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_upcomingGrouped);
 }
 
- final  Map<String, List<BookingsModel>> _returnsGrouped;
- Map<String, List<BookingsModel>> get returnsGrouped {
+ final  Map<String, List<BookingEntity>> _returnsGrouped;
+ Map<String, List<BookingEntity>> get returnsGrouped {
   if (_returnsGrouped is EqualUnmodifiableMapView) return _returnsGrouped;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_returnsGrouped);
@@ -676,7 +676,7 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $DashboardStateCopyWith<$
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- Map<String, List<BookingsModel>> upcomingGrouped, Map<String, List<BookingsModel>> returnsGrouped, DesktopDashboardCarouselData carouselData, String? nextPageUrl, int currentPage, int totalPages, bool isPaginating
+ Map<String, List<BookingEntity>> upcomingGrouped, Map<String, List<BookingEntity>> returnsGrouped, DesktopDashboardCarouselData carouselData, String? nextPageUrl, int currentPage, int totalPages, bool isPaginating
 });
 
 
@@ -696,8 +696,8 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? upcomingGrouped = null,Object? returnsGrouped = null,Object? carouselData = null,Object? nextPageUrl = freezed,Object? currentPage = null,Object? totalPages = null,Object? isPaginating = null,}) {
   return _then(_Loaded(
 upcomingGrouped: null == upcomingGrouped ? _self._upcomingGrouped : upcomingGrouped // ignore: cast_nullable_to_non_nullable
-as Map<String, List<BookingsModel>>,returnsGrouped: null == returnsGrouped ? _self._returnsGrouped : returnsGrouped // ignore: cast_nullable_to_non_nullable
-as Map<String, List<BookingsModel>>,carouselData: null == carouselData ? _self.carouselData : carouselData // ignore: cast_nullable_to_non_nullable
+as Map<String, List<BookingEntity>>,returnsGrouped: null == returnsGrouped ? _self._returnsGrouped : returnsGrouped // ignore: cast_nullable_to_non_nullable
+as Map<String, List<BookingEntity>>,carouselData: null == carouselData ? _self.carouselData : carouselData // ignore: cast_nullable_to_non_nullable
 as DesktopDashboardCarouselData,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,currentPage: null == currentPage ? _self.currentPage : currentPage // ignore: cast_nullable_to_non_nullable
 as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable

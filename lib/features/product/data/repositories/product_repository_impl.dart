@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_action_remote_datasource.dart';
@@ -18,8 +19,8 @@ class ProductRepositoryImpl implements IProductRepository {
   ProductRepositoryImpl({
     required ProductQueryRemoteDatasource queryDatasource,
     required ProductActionRemoteDatasource actionDatasource,
-  })  : _queryDatasource = queryDatasource,
-        _actionDatasource = actionDatasource;
+  }) : _queryDatasource = queryDatasource,
+       _actionDatasource = actionDatasource;
 
   // CREATE or UPDATE Product
   @override
@@ -202,7 +203,7 @@ class ProductRepositoryImpl implements IProductRepository {
 
   // Fetch booked dates
   @override
-  Future<PaginationModel<BookingsModel>> getProductBookings({
+  Future<PaginationModel<BookingEntity>> getProductBookings({
     required int productId,
     int page = 1,
     String? status,
@@ -216,9 +217,10 @@ class ProductRepositoryImpl implements IProductRepository {
         ),
       );
       if (response.status.isSuccess) {
-        return PaginationModel<BookingsModel>.fromJson(
+        return PaginationModel<BookingEntity>.fromJson(
           response.data,
-          (json) => BookingsModel.fromJson(json as Map<String, dynamic>),
+          (json) =>
+              BookingsModel.fromJson(json as Map<String, dynamic>).toEntity(),
         );
       }
       log('Fetch product bookings failed: ${response.devMessage}');
@@ -361,7 +363,10 @@ class ProductRepositoryImpl implements IProductRepository {
     try {
       final response = await safeApiCall(
         () => _queryDatasource.searchAllProducts(
-            page: page, query: query, includeInStockOnly: includeInStockOnly),
+          page: page,
+          query: query,
+          includeInStockOnly: includeInStockOnly,
+        ),
       );
 
       if (response.status.isSuccess) {
@@ -480,7 +485,9 @@ class ProductRepositoryImpl implements IProductRepository {
             }
           }
         }
-        log('checkVariantAvailability: variants with remaining_stock=0: $unavailableIds');
+        log(
+          'checkVariantAvailability: variants with remaining_stock=0: $unavailableIds',
+        );
         return unavailableIds;
       }
       log('checkVariantAvailability failed: ${response.devMessage}');

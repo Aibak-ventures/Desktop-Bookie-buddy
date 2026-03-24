@@ -7,5 +7,6 @@ abstract class BookingDetailsPaymentHistoryState
   const factory BookingDetailsPaymentHistoryState.loading() = _Loading;
   const factory BookingDetailsPaymentHistoryState.error(String error) = _Error;
   const factory BookingDetailsPaymentHistoryState.expanded(
-      List<BookingDetailsPaymentHistoryModel> paymentHistory) = _Expanded;
+    List<BookingPaymentHistoryEntity> paymentHistory,
+  ) = _Expanded;
 }

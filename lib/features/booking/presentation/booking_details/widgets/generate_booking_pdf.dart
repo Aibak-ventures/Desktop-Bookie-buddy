@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
@@ -25,7 +25,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 class GenerateBookingPdf {
   static Future<void> shareInvoice({
     required BuildContext context,
-    required BookingDetailsModel bookingDetails,
+    required BookingDetailsEntity bookingDetails,
     required UserShopModel shopDetails,
   }) async {
     try {
@@ -51,8 +51,9 @@ class GenerateBookingPdf {
         // For Windows desktop, save to Downloads folder and open
         if (Platform.isWindows) {
           // Get Downloads folder path
-          final downloadsDir =
-              Directory('${Platform.environment['USERPROFILE']}\\Downloads');
+          final downloadsDir = Directory(
+            '${Platform.environment['USERPROFILE']}\\Downloads',
+          );
           if (!downloadsDir.existsSync()) {
             downloadsDir.createSync(recursive: true);
           }
@@ -92,7 +93,7 @@ class GenerateBookingPdf {
 
   static Future<void> printInvoice({
     required BuildContext context,
-    required BookingDetailsModel bookingDetails,
+    required BookingDetailsEntity bookingDetails,
     required UserShopModel shopDetails,
   }) async {
     try {
@@ -138,7 +139,7 @@ class GenerateBookingPdf {
   static final _customColor = const PdfColor.fromInt(0xFF6C5CE7);
 
   static Future<Uint8List> generateInvoice(
-    BookingDetailsModel bookingDetails,
+    BookingDetailsEntity bookingDetails,
     UserShopModel shopDetails,
   ) async {
     // Font loading logic
@@ -259,49 +260,48 @@ class GenerateBookingPdf {
     String? shopPhone2,
     String shopAddress,
     pw.Font fontBold,
-  ) =>
-      pw.Row(
+  ) => pw.Row(
+    children: [
+      pw.Image(shopImage, width: 60, height: 60),
+      pw.SizedBox(width: 12),
+      pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          pw.Image(shopImage, width: 60, height: 60),
-          pw.SizedBox(width: 12),
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                shopName,
-                style: pw.TextStyle(
-                  fontWeight: pw.FontWeight.bold,
-                  color: _customColor,
-                  fontSize: 16,
-                  fontBold: fontBold,
-                ),
-              ),
-              pw.Text(shopPhone),
-              if (shopPhone2.isNotNullOrEmpty) pw.Text(shopPhone2!),
-              ...shopAddress.splitByWords(4).map(pw.Text.new),
-            ],
-          ),
-        ],
-      );
-
-  // Invoice details
-  static pw.Widget _buildInvoiceDetails(BookingDetailsModel bookingDetails) {
-    pw.RichText text(String text, String secondText) => pw.RichText(
-          text: pw.TextSpan(
-            text: text,
-            children: [
-              pw.TextSpan(
-                text: secondText,
-                style: const pw.TextStyle(color: PdfColors.grey500),
-              ),
-            ],
+          pw.Text(
+            shopName,
             style: pw.TextStyle(
               fontWeight: pw.FontWeight.bold,
-              color: PdfColors.grey800,
-              letterSpacing: _letterSpacing,
+              color: _customColor,
+              fontSize: 16,
+              fontBold: fontBold,
             ),
           ),
-        );
+          pw.Text(shopPhone),
+          if (shopPhone2.isNotNullOrEmpty) pw.Text(shopPhone2!),
+          ...shopAddress.splitByWords(4).map(pw.Text.new),
+        ],
+      ),
+    ],
+  );
+
+  // Invoice details
+  static pw.Widget _buildInvoiceDetails(BookingDetailsEntity bookingDetails) {
+    pw.RichText text(String text, String secondText) => pw.RichText(
+      text: pw.TextSpan(
+        text: text,
+        children: [
+          pw.TextSpan(
+            text: secondText,
+            style: const pw.TextStyle(color: PdfColors.grey500),
+          ),
+        ],
+        style: pw.TextStyle(
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.grey800,
+          letterSpacing: _letterSpacing,
+        ),
+      ),
+    );
 
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -320,7 +320,7 @@ class GenerateBookingPdf {
   }
 
   // Client block
-  static pw.Widget _buildClientBlock(BookingDetailsModel bookingDetails) {
+  static pw.Widget _buildClientBlock(BookingDetailsEntity bookingDetails) {
     final client = bookingDetails.client;
     final clientAddress = bookingDetails.address;
     return pw.Column(
@@ -332,9 +332,8 @@ class GenerateBookingPdf {
         if (client.phone1 != 0) pw.Text(client.phone1.toString()),
         if ((clientAddress ?? '').isNotEmpty)
           ...clientAddress!.splitByWords().map(
-                (line) =>
-                    pw.Text(line, style: const pw.TextStyle(lineSpacing: 2)),
-              ),
+            (line) => pw.Text(line, style: const pw.TextStyle(lineSpacing: 2)),
+          ),
       ],
     );
   }
@@ -343,22 +342,21 @@ class GenerateBookingPdf {
 
   // Product items table
   static pw.Widget _buildItemsTable(
-    BookingDetailsModel bookingDetails,
+    BookingDetailsEntity bookingDetails,
     List<pw.ImageProvider> productImages,
   ) {
     pw.Text tableHeadingText(
       String text, {
       pw.TextAlign textAlign = pw.TextAlign.left,
-    }) =>
-        pw.Text(
-          text,
-          style: pw.TextStyle(
-            fontWeight: pw.FontWeight.bold,
-            color: PdfColors.black,
-            letterSpacing: _letterSpacing,
-          ),
-          textAlign: textAlign,
-        );
+    }) => pw.Text(
+      text,
+      style: pw.TextStyle(
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.black,
+        letterSpacing: _letterSpacing,
+      ),
+      textAlign: textAlign,
+    );
 
     return pw.Container(
       decoration: pw.BoxDecoration(border: pw.Border.all(color: _pdfGreyColor)),
@@ -494,7 +492,7 @@ class GenerateBookingPdf {
 
   /// Builds the summary and terms section of the PDF.
   static pw.Widget _buildSummaryAndTerms(
-    BookingDetailsModel bookingDetails,
+    BookingDetailsEntity bookingDetails,
     pw.Font? fontBold,
   ) {
     final locationStart = bookingDetails.otherDetails.locationStart ?? '';
@@ -540,7 +538,10 @@ class GenerateBookingPdf {
               pw.SizedBox(height: lineSpacing),
               if (bookingDetails.bookedItems.isNotEmpty &&
                   bookingDetails
-                      .bookedItems.first.mainServiceType.isVehicle) ...[
+                      .bookedItems
+                      .first
+                      .mainServiceType
+                      .isVehicle) ...[
                 if (locationStart.isNotEmpty)
                   pw.Padding(
                     padding: const pw.EdgeInsets.only(bottom: lineSpacing),
@@ -689,14 +690,13 @@ class GenerateBookingPdf {
 
   static Iterable<pw.Padding> _generateTermsAndConditions(
     List<String> termsAndConditions,
-  ) =>
-      termsAndConditions.map(
-        (e) => pw.Padding(
-          padding: const pw.EdgeInsets.only(bottom: 3),
-          child: pw.Text(
-            '- $e',
-            style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
-          ),
-        ),
-      );
+  ) => termsAndConditions.map(
+    (e) => pw.Padding(
+      padding: const pw.EdgeInsets.only(bottom: 3),
+      child: pw.Text(
+        '- $e',
+        style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+      ),
+    ),
+  );
 }

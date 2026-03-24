@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,7 +12,7 @@ class BookingDetailsPaymentHistoryCubit
   /// Show payment history using data from booking details API
   /// No separate API call needed - data comes from booking.payments and booking.refunds
   void showPaymentHistory(
-    List<BookingDetailsPaymentHistoryModel> payments,
+    List<BookingPaymentHistoryEntity> payments,
     List<dynamic> refunds,
   ) {
     emit(const _Loading());

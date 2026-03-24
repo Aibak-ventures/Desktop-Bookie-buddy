@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/common/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carousel_dashboard.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
@@ -377,7 +377,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     BuildContext context, {
     required String title,
     required IconData icon,
-    required Map<String, List<BookingsModel>> groupedBookings,
+    required Map<String, List<BookingEntity>> groupedBookings,
     required int totalCount,
     required Color color,
     required bool useReturnDate,
@@ -488,7 +488,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildDateSection(
     BuildContext context, {
     required String title,
-    required List<BookingsModel> bookings,
+    required List<BookingEntity> bookings,
     required Color color,
     required bool useReturnDate,
   }) {
