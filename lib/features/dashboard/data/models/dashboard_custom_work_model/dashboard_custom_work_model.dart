@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/customization_work_enums.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/entities/dashboard_custom_work_entity/dashboard_custom_work_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dashboard_custom_work_model.freezed.dart';
@@ -22,4 +23,15 @@ abstract class DashboardCustomWorkModel with _$DashboardCustomWorkModel {
 
   factory DashboardCustomWorkModel.fromJson(Map<String, dynamic> json) =>
       _$DashboardCustomWorkModelFromJson(json);
+}
+
+extension DashboardCustomWorkModelMapper on DashboardCustomWorkModel {
+  DashboardCustomWorkEntity toEntity() => DashboardCustomWorkEntity(
+        id: id,
+        tailorName: tailorName,
+        pickupDate: pickupDate,
+        status: status,
+        products: products,
+        staffColor: staffColor,
+      );
 }

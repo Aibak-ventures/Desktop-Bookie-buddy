@@ -36,17 +36,17 @@ Map<String, dynamic> _$DesktopDashboardResponseToJson(
   'pagination': instance.pagination,
 };
 
-_DesktopDashboardCarouselData _$DesktopDashboardCarouselDataFromJson(
+_DesktopDashboardCarouselModel _$DesktopDashboardCarouselModelFromJson(
   Map<String, dynamic> json,
-) => _DesktopDashboardCarouselData(
+) => _DesktopDashboardCarouselModel(
   upcomingCount: (json['upcomingCount'] as num).toInt(),
   alterationBookingCount: (json['alterationBookingCount'] as num).toInt(),
   completedCount: (json['completedCount'] as num).toInt(),
   expiredCount: (json['expiredCount'] as num).toInt(),
 );
 
-Map<String, dynamic> _$DesktopDashboardCarouselDataToJson(
-  _DesktopDashboardCarouselData instance,
+Map<String, dynamic> _$DesktopDashboardCarouselModelToJson(
+  _DesktopDashboardCarouselModel instance,
 ) => <String, dynamic>{
   'upcomingCount': instance.upcomingCount,
   'alterationBookingCount': instance.alterationBookingCount,

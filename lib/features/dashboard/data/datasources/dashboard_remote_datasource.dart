@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/utils/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/booking_exceptions.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/network_exceptions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/data/models/desktop_dashboard_response/desktop_dashboard_response.dart';
 import 'package:dio/dio.dart';
 
 class DashboardRemoteDatasource {
@@ -23,9 +23,7 @@ class DashboardRemoteDatasource {
       // Use the new desktop-dashboard endpoint
       final response = await _dio.get(
         '/api/v4/bookings/desktop-dashboard/',
-        queryParameters: {
-          'page': page,
-        },
+        queryParameters: {'page': page},
         options: Options(
           headers: {
             if (activeShopId != null && activeShopId.isNotEmpty)
@@ -60,10 +58,7 @@ class DashboardRemoteDatasource {
     try {
       final response = await _dio.get(
         ApiEndpoints.bookings.dashboard,
-        queryParameters: {
-          'page': page,
-          if (isOngoing) 'type': 'ongoing',
-        },
+        queryParameters: {'page': page, if (isOngoing) 'type': 'ongoing'},
       );
 
       if (response.statusCode != 200) {
@@ -97,7 +92,9 @@ class DashboardRemoteDatasource {
 
       case 400:
         throw FailedBookingException(
-            "Bad request. Please check your input.", 400);
+          "Bad request. Please check your input.",
+          400,
+        );
 
       case 401:
         throw TokenExpiredException("Session expired. Please log in again.");

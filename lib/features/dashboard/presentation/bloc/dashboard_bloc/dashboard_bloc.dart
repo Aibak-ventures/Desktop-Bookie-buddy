@@ -3,9 +3,8 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -30,9 +29,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<_LoadIfNot>(_loadIfNot);
   }
 
-  DesktopDashboardCarouselData? previousCarousel;
-  DesktopDashboardCarouselData carouselResponse =
-      DesktopDashboardCarouselData.empty();
+  DesktopDashboardCarouselEntity? previousCarousel;
+  DesktopDashboardCarouselEntity carouselResponse =
+      DesktopDashboardCarouselEntity.empty();
 
   // Groups bookings into 'today', 'tomorrow', and 'upcoming' based on their pickup or return dates.
   Map<String, List<BookingEntity>> _groupData(
@@ -47,7 +46,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final tomorrow = today.add(const Duration(days: 1));
 
     for (final booking in bookings) {
-      // Determine the relevant date based on whether it's for returns or upcoming
       final dateString = useReturnDate
           ? booking.returnDate
           : booking.pickupDate;
@@ -55,11 +53,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       if (dateString == null || dateString.isEmpty) continue;
 
       try {
-        // Parse the string date - handle DD-MM-YYYY HH:mm:ss format from API
         DateTime date;
 
         if (dateString.contains('-') && dateString.split('-').length == 3) {
-          // Handle DD-MM-YYYY HH:mm:ss format from API
           final parts = dateString.split(' ');
           final datePart = parts[0];
           final dateComponents = datePart.split('-');
@@ -70,14 +66,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             final year = int.parse(dateComponents[2]);
             date = DateTime(year, month, day);
           } else {
-            continue; // Skip invalid date format
+            continue;
           }
         } else {
-          // Try to parse as ISO format (fallback)
           date = DateTime.parse(dateString);
         }
 
-        // Reset time to compare dates only
         final bookingDate = DateTime(date.year, date.month, date.day);
         final todayDate = DateTime(today.year, today.month, today.day);
         final tomorrowDate = DateTime(
@@ -94,7 +88,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           upcomingList.add(booking);
         }
       } catch (e) {
-        // Skip bookings with invalid date formats
         log('Error parsing date: $dateString - $e');
         continue;
       }
@@ -107,12 +100,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     };
   }
 
-  /// Loads the first page of desktop dashboard data using the new v4 API.
-  ///
-  /// If the loading succeeds, it will emit [DashboardState.loaded] with the
-  /// loaded bookings grouped by Today/Tomorrow/Upcoming and carousel response.
-  ///
-  /// If the loading fails, it will emit [DashboardState.error] with the error.
   Future<void> _onLoadDashboardData(
     _LoadDashboardData event,
     Emitter<DashboardState> emit,
@@ -122,32 +109,30 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     try {
       final activeShop = event.activeShop ?? _userCubit?.state;
-      final response = await _getDashboardDesktopDataUseCase.call(
+      final entity = await _getDashboardDesktopDataUseCase.call(
         page: 1,
         activeShop: activeShop,
       );
 
-      // Group data for UI display
       final upcomingGrouped = _groupData(
-        response.upcoming.map((e) => e.toEntity()).toList(),
+        entity.upcoming,
         useReturnDate: false,
       );
       final returnsGrouped = _groupData(
-        response.ongoingBookings.map((e) => e.toEntity()).toList(),
+        entity.ongoingBookings,
         useReturnDate: true,
       );
 
-      // Update carousel data
-      carouselResponse = response.carouselData;
+      carouselResponse = entity.carouselData;
 
       emit(
         _Loaded(
           upcomingGrouped: upcomingGrouped,
           returnsGrouped: returnsGrouped,
-          nextPageUrl: response.nextPageUrl,
+          nextPageUrl: entity.nextPageUrl,
           carouselData: carouselResponse,
-          currentPage: response.currentPage,
-          totalPages: response.totalPages,
+          currentPage: entity.currentPage,
+          totalPages: entity.totalPages,
           isPaginating: false,
         ),
       );
@@ -156,16 +141,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  /// Loads the next page of dashboard data using the new v4 API.
-  ///
-  /// If the state is not [_Loaded], it will do nothing.
-  ///
-  /// If the next page url is null or the state is already paginating, it will do
-  /// nothing.
-  ///
-  /// It will emit [_Loaded] with the new bookings merged with existing data.
-  ///
-  /// If the loading fails, it will emit [_Error] with the error.
   Future<void> _onLoadDashboardNextPageData(
     _LoadDashboardNextPageData event,
     Emitter<DashboardState> emit,
@@ -180,22 +155,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
       final activeShop = _userCubit?.state;
-      final response = await _getDashboardDesktopDataUseCase.call(
+      final entity = await _getDashboardDesktopDataUseCase.call(
         page: page,
         activeShop: activeShop,
       );
 
-      // Group the new data
       final newUpcomingGrouped = _groupData(
-        response.upcoming.map((e) => e.toEntity()).toList(),
+        entity.upcoming,
         useReturnDate: false,
       );
       final newReturnsGrouped = _groupData(
-        response.ongoingBookings.map((e) => e.toEntity()).toList(),
+        entity.ongoingBookings,
         useReturnDate: true,
       );
 
-      // Merge the existing groups with the new groups
       final mergedUpcomingGrouped = {...s.upcomingGrouped};
       final mergedReturnsGrouped = {...s.returnsGrouped};
 
@@ -222,10 +195,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         s.copyWith(
           upcomingGrouped: mergedUpcomingGrouped,
           returnsGrouped: mergedReturnsGrouped,
-          nextPageUrl: response.nextPageUrl,
-          carouselData: response.carouselData,
-          currentPage: response.currentPage,
-          totalPages: response.totalPages,
+          nextPageUrl: entity.nextPageUrl,
+          carouselData: entity.carouselData,
+          currentPage: entity.currentPage,
+          totalPages: entity.totalPages,
           isPaginating: false,
         ),
       );
@@ -251,7 +224,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
     final s = state as _Loaded;
 
-    // Create deep copies of the grouped data
     final updatedUpcomingGrouped = {
       for (final entry in s.upcomingGrouped.entries)
         entry.key: List<BookingEntity>.from(entry.value),
@@ -264,7 +236,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final eventId = event.updateBooking?.id;
 
     if (event.isDeleted) {
-      // Remove from both upcoming and returns groups
       updatedUpcomingGrouped.forEach((key, bookingList) {
         bookingList.removeWhere((b) => b.id == eventId);
       });
@@ -272,7 +243,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         bookingList.removeWhere((b) => b.id == eventId);
       });
     } else {
-      // Update in both groups if found
       updatedUpcomingGrouped.forEach((key, bookingList) {
         final index = bookingList.indexWhere((b) => b.id == eventId);
         if (index != -1) {
@@ -303,6 +273,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   void reset() {
     previousCarousel = null;
-    carouselResponse = DesktopDashboardCarouselData.empty();
+    carouselResponse = DesktopDashboardCarouselEntity.empty();
   }
 }

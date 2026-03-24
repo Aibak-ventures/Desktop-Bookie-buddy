@@ -324,22 +324,22 @@ $DesktopDashboardPaginationCopyWith<$Res> get pagination {
 
 
 /// @nodoc
-mixin _$DesktopDashboardCarouselData {
+mixin _$DesktopDashboardCarouselModel {
 
  int get upcomingCount; int get alterationBookingCount; int get completedCount; int get expiredCount;
-/// Create a copy of DesktopDashboardCarouselData
+/// Create a copy of DesktopDashboardCarouselModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$DesktopDashboardCarouselDataCopyWith<DesktopDashboardCarouselData> get copyWith => _$DesktopDashboardCarouselDataCopyWithImpl<DesktopDashboardCarouselData>(this as DesktopDashboardCarouselData, _$identity);
+$DesktopDashboardCarouselModelCopyWith<DesktopDashboardCarouselModel> get copyWith => _$DesktopDashboardCarouselModelCopyWithImpl<DesktopDashboardCarouselModel>(this as DesktopDashboardCarouselModel, _$identity);
 
-  /// Serializes this DesktopDashboardCarouselData to a JSON map.
+  /// Serializes this DesktopDashboardCarouselModel to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardCarouselData&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardCarouselModel&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -348,15 +348,15 @@ int get hashCode => Object.hash(runtimeType,upcomingCount,alterationBookingCount
 
 @override
 String toString() {
-  return 'DesktopDashboardCarouselData(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
+  return 'DesktopDashboardCarouselModel(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $DesktopDashboardCarouselDataCopyWith<$Res>  {
-  factory $DesktopDashboardCarouselDataCopyWith(DesktopDashboardCarouselData value, $Res Function(DesktopDashboardCarouselData) _then) = _$DesktopDashboardCarouselDataCopyWithImpl;
+abstract mixin class $DesktopDashboardCarouselModelCopyWith<$Res>  {
+  factory $DesktopDashboardCarouselModelCopyWith(DesktopDashboardCarouselModel value, $Res Function(DesktopDashboardCarouselModel) _then) = _$DesktopDashboardCarouselModelCopyWithImpl;
 @useResult
 $Res call({
  int upcomingCount, int alterationBookingCount, int completedCount, int expiredCount
@@ -367,14 +367,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$DesktopDashboardCarouselDataCopyWithImpl<$Res>
-    implements $DesktopDashboardCarouselDataCopyWith<$Res> {
-  _$DesktopDashboardCarouselDataCopyWithImpl(this._self, this._then);
+class _$DesktopDashboardCarouselModelCopyWithImpl<$Res>
+    implements $DesktopDashboardCarouselModelCopyWith<$Res> {
+  _$DesktopDashboardCarouselModelCopyWithImpl(this._self, this._then);
 
-  final DesktopDashboardCarouselData _self;
-  final $Res Function(DesktopDashboardCarouselData) _then;
+  final DesktopDashboardCarouselModel _self;
+  final $Res Function(DesktopDashboardCarouselModel) _then;
 
-/// Create a copy of DesktopDashboardCarouselData
+/// Create a copy of DesktopDashboardCarouselModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? upcomingCount = null,Object? alterationBookingCount = null,Object? completedCount = null,Object? expiredCount = null,}) {
   return _then(_self.copyWith(
@@ -389,8 +389,8 @@ as int,
 }
 
 
-/// Adds pattern-matching-related methods to [DesktopDashboardCarouselData].
-extension DesktopDashboardCarouselDataPatterns on DesktopDashboardCarouselData {
+/// Adds pattern-matching-related methods to [DesktopDashboardCarouselModel].
+extension DesktopDashboardCarouselModelPatterns on DesktopDashboardCarouselModel {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -403,10 +403,10 @@ extension DesktopDashboardCarouselDataPatterns on DesktopDashboardCarouselData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DesktopDashboardCarouselData value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DesktopDashboardCarouselModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _DesktopDashboardCarouselData() when $default != null:
+case _DesktopDashboardCarouselModel() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -425,10 +425,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DesktopDashboardCarouselData value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DesktopDashboardCarouselModel value)  $default,){
 final _that = this;
 switch (_that) {
-case _DesktopDashboardCarouselData():
+case _DesktopDashboardCarouselModel():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -446,10 +446,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DesktopDashboardCarouselData value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DesktopDashboardCarouselModel value)?  $default,){
 final _that = this;
 switch (_that) {
-case _DesktopDashboardCarouselData() when $default != null:
+case _DesktopDashboardCarouselModel() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -469,7 +469,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int upcomingCount,  int alterationBookingCount,  int completedCount,  int expiredCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _DesktopDashboardCarouselData() when $default != null:
+case _DesktopDashboardCarouselModel() when $default != null:
 return $default(_that.upcomingCount,_that.alterationBookingCount,_that.completedCount,_that.expiredCount);case _:
   return orElse();
 
@@ -490,7 +490,7 @@ return $default(_that.upcomingCount,_that.alterationBookingCount,_that.completed
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int upcomingCount,  int alterationBookingCount,  int completedCount,  int expiredCount)  $default,) {final _that = this;
 switch (_that) {
-case _DesktopDashboardCarouselData():
+case _DesktopDashboardCarouselModel():
 return $default(_that.upcomingCount,_that.alterationBookingCount,_that.completedCount,_that.expiredCount);case _:
   throw StateError('Unexpected subclass');
 
@@ -510,7 +510,7 @@ return $default(_that.upcomingCount,_that.alterationBookingCount,_that.completed
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int upcomingCount,  int alterationBookingCount,  int completedCount,  int expiredCount)?  $default,) {final _that = this;
 switch (_that) {
-case _DesktopDashboardCarouselData() when $default != null:
+case _DesktopDashboardCarouselModel() when $default != null:
 return $default(_that.upcomingCount,_that.alterationBookingCount,_that.completedCount,_that.expiredCount);case _:
   return null;
 
@@ -522,29 +522,29 @@ return $default(_that.upcomingCount,_that.alterationBookingCount,_that.completed
 /// @nodoc
 @JsonSerializable()
 
-class _DesktopDashboardCarouselData implements DesktopDashboardCarouselData {
-  const _DesktopDashboardCarouselData({required this.upcomingCount, required this.alterationBookingCount, required this.completedCount, required this.expiredCount});
-  factory _DesktopDashboardCarouselData.fromJson(Map<String, dynamic> json) => _$DesktopDashboardCarouselDataFromJson(json);
+class _DesktopDashboardCarouselModel implements DesktopDashboardCarouselModel {
+  const _DesktopDashboardCarouselModel({required this.upcomingCount, required this.alterationBookingCount, required this.completedCount, required this.expiredCount});
+  factory _DesktopDashboardCarouselModel.fromJson(Map<String, dynamic> json) => _$DesktopDashboardCarouselModelFromJson(json);
 
 @override final  int upcomingCount;
 @override final  int alterationBookingCount;
 @override final  int completedCount;
 @override final  int expiredCount;
 
-/// Create a copy of DesktopDashboardCarouselData
+/// Create a copy of DesktopDashboardCarouselModel
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$DesktopDashboardCarouselDataCopyWith<_DesktopDashboardCarouselData> get copyWith => __$DesktopDashboardCarouselDataCopyWithImpl<_DesktopDashboardCarouselData>(this, _$identity);
+_$DesktopDashboardCarouselModelCopyWith<_DesktopDashboardCarouselModel> get copyWith => __$DesktopDashboardCarouselModelCopyWithImpl<_DesktopDashboardCarouselModel>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$DesktopDashboardCarouselDataToJson(this, );
+  return _$DesktopDashboardCarouselModelToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardCarouselData&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardCarouselModel&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -553,15 +553,15 @@ int get hashCode => Object.hash(runtimeType,upcomingCount,alterationBookingCount
 
 @override
 String toString() {
-  return 'DesktopDashboardCarouselData(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
+  return 'DesktopDashboardCarouselModel(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$DesktopDashboardCarouselDataCopyWith<$Res> implements $DesktopDashboardCarouselDataCopyWith<$Res> {
-  factory _$DesktopDashboardCarouselDataCopyWith(_DesktopDashboardCarouselData value, $Res Function(_DesktopDashboardCarouselData) _then) = __$DesktopDashboardCarouselDataCopyWithImpl;
+abstract mixin class _$DesktopDashboardCarouselModelCopyWith<$Res> implements $DesktopDashboardCarouselModelCopyWith<$Res> {
+  factory _$DesktopDashboardCarouselModelCopyWith(_DesktopDashboardCarouselModel value, $Res Function(_DesktopDashboardCarouselModel) _then) = __$DesktopDashboardCarouselModelCopyWithImpl;
 @override @useResult
 $Res call({
  int upcomingCount, int alterationBookingCount, int completedCount, int expiredCount
@@ -572,17 +572,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$DesktopDashboardCarouselDataCopyWithImpl<$Res>
-    implements _$DesktopDashboardCarouselDataCopyWith<$Res> {
-  __$DesktopDashboardCarouselDataCopyWithImpl(this._self, this._then);
+class __$DesktopDashboardCarouselModelCopyWithImpl<$Res>
+    implements _$DesktopDashboardCarouselModelCopyWith<$Res> {
+  __$DesktopDashboardCarouselModelCopyWithImpl(this._self, this._then);
 
-  final _DesktopDashboardCarouselData _self;
-  final $Res Function(_DesktopDashboardCarouselData) _then;
+  final _DesktopDashboardCarouselModel _self;
+  final $Res Function(_DesktopDashboardCarouselModel) _then;
 
-/// Create a copy of DesktopDashboardCarouselData
+/// Create a copy of DesktopDashboardCarouselModel
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? upcomingCount = null,Object? alterationBookingCount = null,Object? completedCount = null,Object? expiredCount = null,}) {
-  return _then(_DesktopDashboardCarouselData(
+  return _then(_DesktopDashboardCarouselModel(
 upcomingCount: null == upcomingCount ? _self.upcomingCount : upcomingCount // ignore: cast_nullable_to_non_nullable
 as int,alterationBookingCount: null == alterationBookingCount ? _self.alterationBookingCount : alterationBookingCount // ignore: cast_nullable_to_non_nullable
 as int,completedCount: null == completedCount ? _self.completedCount : completedCount // ignore: cast_nullable_to_non_nullable

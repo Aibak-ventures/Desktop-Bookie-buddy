@@ -8,12 +8,12 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarouselDashboard extends StatelessWidget {
-  final DesktopDashboardCarouselData data;
+  final DesktopDashboardCarouselEntity data;
   final void Function(String statusTab)? onNavigateToBookings;
 
   const CarouselDashboard({
@@ -35,10 +35,7 @@ class CarouselDashboard extends StatelessWidget {
                 context,
                 title: 'Upcoming',
                 value: data.upcomingCount.toString(),
-                gradient: const [
-                  Color(0xFF4C0FFF),
-                  Color(0xFF8A63FE),
-                ],
+                gradient: const [Color(0xFF4C0FFF), Color(0xFF8A63FE)],
                 icon: Icons.schedule,
                 onTap: () => _openAllBookingsWithTab(context, 'upcoming'),
               ),
@@ -49,10 +46,7 @@ class CarouselDashboard extends StatelessWidget {
                 context,
                 title: 'Completed',
                 value: data.completedCount.toString(),
-                gradient: const [
-                  Color(0xFF015DFF),
-                  Color(0xFF05ADFF),
-                ],
+                gradient: const [Color(0xFF015DFF), Color(0xFF05ADFF)],
                 icon: Icons.check_circle,
                 onTap: () => _openAllBookingsWithTab(context, 'completed'),
               ),
@@ -63,10 +57,7 @@ class CarouselDashboard extends StatelessWidget {
                 context,
                 title: 'Expired',
                 value: data.expiredCount.toString(),
-                gradient: const [
-                  Color(0xFFFF4757),
-                  Color(0xFFFF6B7A),
-                ],
+                gradient: const [Color(0xFFFF4757), Color(0xFFFF6B7A)],
                 icon: Icons.event_busy,
                 onTap: () => _openAllBookingsWithTab(context, 'not_returned'),
               ),
@@ -167,9 +158,7 @@ class CarouselDashboard extends StatelessWidget {
                 loadDesktopBookings: getIt.get(),
               ),
             ),
-            BlocProvider(
-              create: (_) => BookingDetailsDrawerCubit(),
-            ),
+            BlocProvider(create: (_) => BookingDetailsDrawerCubit()),
             BlocProvider(
               create: (_) => BookingDetailsBloc(
                 getBooking: getIt.get(),
@@ -180,17 +169,11 @@ class CarouselDashboard extends StatelessWidget {
                 deleteBooking: getIt.get(),
               ),
             ),
+            BlocProvider(create: (_) => BookingDetailsPaymentHistoryCubit()),
             BlocProvider(
-              create: (_) => BookingDetailsPaymentHistoryCubit(),
+              create: (_) => AllSalesBloc(getSalesUseCase: getIt.get()),
             ),
-            BlocProvider(
-              create: (_) => AllSalesBloc(
-                getSalesUseCase: getIt.get(),
-              ),
-            ),
-            BlocProvider(
-              create: (_) => SalesDetailsDrawerCubit(),
-            ),
+            BlocProvider(create: (_) => SalesDetailsDrawerCubit()),
             BlocProvider(
               create: (_) => SalesDetailsBloc(
                 getSaleDetailsUseCase: getIt.get(),

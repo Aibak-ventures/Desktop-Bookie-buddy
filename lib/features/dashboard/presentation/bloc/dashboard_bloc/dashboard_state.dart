@@ -7,7 +7,7 @@ abstract class DashboardState with _$DashboardState {
   const factory DashboardState.loaded({
     required Map<String, List<BookingEntity>> upcomingGrouped,
     required Map<String, List<BookingEntity>> returnsGrouped,
-    required DesktopDashboardCarouselData carouselData,
+    required DesktopDashboardCarouselEntity carouselData,
     required String? nextPageUrl,
     required int currentPage,
     required int totalPages,

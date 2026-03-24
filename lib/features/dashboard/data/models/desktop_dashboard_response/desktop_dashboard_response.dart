@@ -1,5 +1,7 @@
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_entity/desktop_dashboard_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'desktop_dashboard_response.freezed.dart';
@@ -24,20 +26,20 @@ abstract class DesktopDashboardResponse with _$DesktopDashboardResponse {
 }
 
 @freezed
-abstract class DesktopDashboardCarouselData
-    with _$DesktopDashboardCarouselData {
-  const factory DesktopDashboardCarouselData({
+abstract class DesktopDashboardCarouselModel
+    with _$DesktopDashboardCarouselModel {
+  const factory DesktopDashboardCarouselModel({
     required int upcomingCount,
     required int alterationBookingCount,
     required int completedCount,
     required int expiredCount,
-  }) = _DesktopDashboardCarouselData;
+  }) = _DesktopDashboardCarouselModel;
 
-  factory DesktopDashboardCarouselData.fromJson(Map<String, dynamic> json) =>
-      _$DesktopDashboardCarouselDataFromJson(json);
+  factory DesktopDashboardCarouselModel.fromJson(Map<String, dynamic> json) =>
+      _$DesktopDashboardCarouselModelFromJson(json);
 
-  factory DesktopDashboardCarouselData.empty() =>
-      const DesktopDashboardCarouselData(
+  factory DesktopDashboardCarouselModel.empty() =>
+      const DesktopDashboardCarouselModel(
         upcomingCount: 0,
         alterationBookingCount: 0,
         completedCount: 0,
@@ -92,12 +94,13 @@ extension DesktopDashboardResponseExtensions on DesktopDashboardResponse {
   }
 
   /// Converts to carousel data for overview cards
-  DesktopDashboardCarouselData get carouselData => DesktopDashboardCarouselData(
-    upcomingCount: upcomingCount,
-    alterationBookingCount: alterationBookingCount,
-    completedCount: completedCount,
-    expiredCount: expiredCount,
-  );
+  DesktopDashboardCarouselModel get carouselData =>
+      DesktopDashboardCarouselModel(
+        upcomingCount: upcomingCount,
+        alterationBookingCount: alterationBookingCount,
+        completedCount: completedCount,
+        expiredCount: expiredCount,
+      );
 
   /// Pagination accessors for ongoing bookings (main paginated data)
   String? get nextPageUrl => pagination.ongoing.next;
@@ -178,4 +181,24 @@ Map<String, List<BookingEntity>> _groupBookingsByDate(
   }
 
   return grouped;
+}
+
+extension DesktopDashboardCarouselModelMapper on DesktopDashboardCarouselModel {
+  DesktopDashboardCarouselEntity toEntity() => DesktopDashboardCarouselEntity(
+    upcomingCount: upcomingCount,
+    alterationBookingCount: alterationBookingCount,
+    completedCount: completedCount,
+    expiredCount: expiredCount,
+  );
+}
+
+extension DesktopDashboardResponseMapper on DesktopDashboardResponse {
+  DesktopDashboardEntity toEntity() => DesktopDashboardEntity(
+    upcoming: upcoming.map((e) => e.toEntity()).toList(),
+    ongoingBookings: ongoingBookings.map((e) => e.toEntity()).toList(),
+    carouselData: carouselData.toEntity(),
+    nextPageUrl: nextPageUrl,
+    currentPage: currentPage,
+    totalPages: totalPages,
+  );
 }

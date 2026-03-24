@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/core/common/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/features/dashboard/domain/models/desktop_dashboard_response.dart';
+import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carousel_dashboard.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
@@ -35,11 +35,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         state.maybeWhen(
           loaded:
               (_, __, ___, ____, _____, ______, _______, ________, _________) {
-            // Refresh dashboard when bookings are updated
-            context.read<DashboardBloc>().add(
+                // Refresh dashboard when bookings are updated
+                context.read<DashboardBloc>().add(
                   const DashboardEvent.loadDashboardData(useOldState: true),
                 );
-          },
+              },
           orElse: () {},
         );
       });
@@ -63,10 +63,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // When drawer opens with a booking ID, fetch the booking details
           if (drawerState.isOpen && drawerState.selectedBookingId != null) {
             context.read<BookingDetailsBloc>().add(
-                  BookingDetailsEvent.fetchBookingDetails(
-                    drawerState.selectedBookingId!,
-                  ),
-                );
+              BookingDetailsEvent.fetchBookingDetails(
+                drawerState.selectedBookingId!,
+              ),
+            );
           }
         },
         child: Scaffold(
@@ -99,9 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: RefreshIndicator(
                   onRefresh: () async {
                     bloc.add(
-                      const DashboardEvent.loadDashboardData(
-                        useOldState: true,
-                      ),
+                      const DashboardEvent.loadDashboardData(useOldState: true),
                     );
                   },
                   child: SingleChildScrollView(
@@ -114,21 +112,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: BlocBuilder<DashboardBloc, DashboardState>(
                             builder: (context, state) {
                               return state.maybeWhen(
-                                loaded: (_, __, carouselData, ___, ____, _____,
-                                    ______) {
-                                  return SizedBox(
-                                    height: 120,
-                                    child: CarouselDashboard(
-                                      data: carouselData,
-                                      onNavigateToBookings:
-                                          widget.onNavigateToBookings,
-                                    ),
-                                  );
-                                },
+                                loaded:
+                                    (
+                                      _,
+                                      __,
+                                      carouselData,
+                                      ___,
+                                      ____,
+                                      _____,
+                                      ______,
+                                    ) {
+                                      return SizedBox(
+                                        height: 120,
+                                        child: CarouselDashboard(
+                                          data: carouselData,
+                                          onNavigateToBookings:
+                                              widget.onNavigateToBookings,
+                                        ),
+                                      );
+                                    },
                                 orElse: () => SizedBox(
                                   height: 120,
                                   child: CarouselDashboard(
-                                    data: DesktopDashboardCarouselData.empty(),
+                                    data:
+                                        DesktopDashboardCarouselEntity.empty(),
                                     onNavigateToBookings:
                                         widget.onNavigateToBookings,
                                   ),
@@ -193,10 +200,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Have a nice day',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
               ],
             );
@@ -204,9 +208,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         IconButton(
           onPressed: () {
-            bloc.add(
-              const DashboardEvent.loadDashboardData(useOldState: true),
-            );
+            bloc.add(const DashboardEvent.loadDashboardData(useOldState: true));
           },
           icon: const Icon(Icons.refresh),
         ),
@@ -214,10 +216,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildCard({
-    required String title,
-    required Widget child,
-  }) {
+  Widget _buildCard({required String title, required Widget child}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -288,10 +287,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const Expanded(
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: BookingListShimmer(
-                itemCount: 4,
-                alwaysScrollable: false,
-              ),
+              child: BookingListShimmer(itemCount: 4, alwaysScrollable: false),
             ),
           ),
         ],
@@ -300,9 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   /// Two column layout showing Upcoming and Returns bookings with Today/Tomorrow/Upcoming grouping
-  Widget _buildTwoColumnBookings(
-    BuildContext context,
-  ) {
+  Widget _buildTwoColumnBookings(BuildContext context) {
     return SizedBox(
       height: 600, // Fixed height for scrollable columns
       child: BlocBuilder<DashboardBloc, DashboardState>(
@@ -330,10 +324,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             loaded: (upcomingGrouped, returnsGrouped, _, __, ___, ____, _____) {
               // Calculate total counts
-              final upcomingCount = upcomingGrouped.values
-                  .fold<int>(0, (sum, list) => sum + list.length);
-              final returnsCount = returnsGrouped.values
-                  .fold<int>(0, (sum, list) => sum + list.length);
+              final upcomingCount = upcomingGrouped.values.fold<int>(
+                0,
+                (sum, list) => sum + list.length,
+              );
+              final returnsCount = returnsGrouped.values.fold<int>(
+                0,
+                (sum, list) => sum + list.length,
+              );
 
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,8 +413,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: color,
                     borderRadius: BorderRadius.circular(12),
@@ -535,19 +535,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(height: 8),
         // Bookings list
-        ...bookings.map((booking) => Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: BookingCard(
-                booking: booking,
-                useReturnDate: useReturnDate,
-                onTap: () {
-                  // Open booking details drawer
-                  context
-                      .read<BookingDetailsDrawerCubit>()
-                      .openDrawer(booking.id!);
-                },
-              ),
-            )),
+        ...bookings.map(
+          (booking) => Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: BookingCard(
+              booking: booking,
+              useReturnDate: useReturnDate,
+              onTap: () {
+                // Open booking details drawer
+                context.read<BookingDetailsDrawerCubit>().openDrawer(
+                  booking.id!,
+                );
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
