@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart'
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -28,7 +28,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     PaymentMethod? paymentMethod,
     DeliveryStatus? deliveryStatus,
     BookingStatus? bookingStatus,
-    List<ProductSelectedModel>? products,
+    List<ProductSelectedEntity>? products,
     BookingOtherDetailsEntity? otherDetails,
     List<AdditionalChargesEntity>? additionalCharges,
     int? serviceId,

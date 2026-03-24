@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SalesRequestEntity {
 
- int? get id; int? get staffId; String? get clientPhone; String? get address; String? get saleDate; List<ProductSelectedModel>? get products; bool? get stockCountDecrease; String? get description; int? get discountAmount; int? get paidAmount; PaymentMethod? get paymentMethod; bool get sendPdfToWhatsApp;
+ int? get id; int? get staffId; String? get clientPhone; String? get address; String? get saleDate; List<ProductSelectedEntity>? get products; bool? get stockCountDecrease; String? get description; int? get discountAmount; int? get paidAmount; PaymentMethod? get paymentMethod; bool get sendPdfToWhatsApp;
 /// Create a copy of SalesRequestEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $SalesRequestEntityCopyWith<$Res>  {
   factory $SalesRequestEntityCopyWith(SalesRequestEntity value, $Res Function(SalesRequestEntity) _then) = _$SalesRequestEntityCopyWithImpl;
 @useResult
 $Res call({
- int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedModel>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, PaymentMethod? paymentMethod, bool sendPdfToWhatsApp
+ int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedEntity>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, PaymentMethod? paymentMethod, bool sendPdfToWhatsApp
 });
 
 
@@ -70,7 +70,7 @@ as int?,clientPhone: freezed == clientPhone ? _self.clientPhone : clientPhone //
 as String?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String?,saleDate: freezed == saleDate ? _self.saleDate : saleDate // ignore: cast_nullable_to_non_nullable
 as String?,products: freezed == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
-as List<ProductSelectedModel>?,stockCountDecrease: freezed == stockCountDecrease ? _self.stockCountDecrease : stockCountDecrease // ignore: cast_nullable_to_non_nullable
+as List<ProductSelectedEntity>?,stockCountDecrease: freezed == stockCountDecrease ? _self.stockCountDecrease : stockCountDecrease // ignore: cast_nullable_to_non_nullable
 as bool?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,discountAmount: freezed == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
 as int?,paidAmount: freezed == paidAmount ? _self.paidAmount : paidAmount // ignore: cast_nullable_to_non_nullable
@@ -161,7 +161,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedModel>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  PaymentMethod? paymentMethod,  bool sendPdfToWhatsApp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  PaymentMethod? paymentMethod,  bool sendPdfToWhatsApp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SalesRequestEntity() when $default != null:
 return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.paymentMethod,_that.sendPdfToWhatsApp);case _:
@@ -182,7 +182,7 @@ return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.sal
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedModel>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  PaymentMethod? paymentMethod,  bool sendPdfToWhatsApp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  PaymentMethod? paymentMethod,  bool sendPdfToWhatsApp)  $default,) {final _that = this;
 switch (_that) {
 case _SalesRequestEntity():
 return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.paymentMethod,_that.sendPdfToWhatsApp);case _:
@@ -202,7 +202,7 @@ return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.sal
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedModel>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  PaymentMethod? paymentMethod,  bool sendPdfToWhatsApp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  PaymentMethod? paymentMethod,  bool sendPdfToWhatsApp)?  $default,) {final _that = this;
 switch (_that) {
 case _SalesRequestEntity() when $default != null:
 return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.paymentMethod,_that.sendPdfToWhatsApp);case _:
@@ -217,7 +217,7 @@ return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.sal
 
 
 class _SalesRequestEntity implements SalesRequestEntity {
-  const _SalesRequestEntity({this.id, this.staffId, this.clientPhone, this.address, this.saleDate, final  List<ProductSelectedModel>? products, this.stockCountDecrease, this.description, this.discountAmount, this.paidAmount, this.paymentMethod, this.sendPdfToWhatsApp = false}): _products = products;
+  const _SalesRequestEntity({this.id, this.staffId, this.clientPhone, this.address, this.saleDate, final  List<ProductSelectedEntity>? products, this.stockCountDecrease, this.description, this.discountAmount, this.paidAmount, this.paymentMethod, this.sendPdfToWhatsApp = false}): _products = products;
   
 
 @override final  int? id;
@@ -225,8 +225,8 @@ class _SalesRequestEntity implements SalesRequestEntity {
 @override final  String? clientPhone;
 @override final  String? address;
 @override final  String? saleDate;
- final  List<ProductSelectedModel>? _products;
-@override List<ProductSelectedModel>? get products {
+ final  List<ProductSelectedEntity>? _products;
+@override List<ProductSelectedEntity>? get products {
   final value = _products;
   if (value == null) return null;
   if (_products is EqualUnmodifiableListView) return _products;
@@ -271,7 +271,7 @@ abstract mixin class _$SalesRequestEntityCopyWith<$Res> implements $SalesRequest
   factory _$SalesRequestEntityCopyWith(_SalesRequestEntity value, $Res Function(_SalesRequestEntity) _then) = __$SalesRequestEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedModel>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, PaymentMethod? paymentMethod, bool sendPdfToWhatsApp
+ int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedEntity>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, PaymentMethod? paymentMethod, bool sendPdfToWhatsApp
 });
 
 
@@ -296,7 +296,7 @@ as int?,clientPhone: freezed == clientPhone ? _self.clientPhone : clientPhone //
 as String?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String?,saleDate: freezed == saleDate ? _self.saleDate : saleDate // ignore: cast_nullable_to_non_nullable
 as String?,products: freezed == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
-as List<ProductSelectedModel>?,stockCountDecrease: freezed == stockCountDecrease ? _self.stockCountDecrease : stockCountDecrease // ignore: cast_nullable_to_non_nullable
+as List<ProductSelectedEntity>?,stockCountDecrease: freezed == stockCountDecrease ? _self.stockCountDecrease : stockCountDecrease // ignore: cast_nullable_to_non_nullable
 as bool?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,discountAmount: freezed == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
 as int?,paidAmount: freezed == paidAmount ? _self.paidAmount : paidAmount // ignore: cast_nullable_to_non_nullable

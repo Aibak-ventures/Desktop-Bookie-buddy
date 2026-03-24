@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sales_request_entity.freezed.dart';
@@ -12,7 +12,7 @@ abstract class SalesRequestEntity with _$SalesRequestEntity {
     String? clientPhone,
     String? address,
     String? saleDate,
-    List<ProductSelectedModel>? products,
+    List<ProductSelectedEntity>? products,
     bool? stockCountDecrease,
     String? description,
     int? discountAmount,

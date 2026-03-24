@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
@@ -26,7 +26,7 @@ class ProductSearchFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<ProductSearchCubit, ProductSearchState>(
-        builder: (context, state) => TypeAheadField<ProductModel>(
+        builder: (context, state) => TypeAheadField<ProductEntity>(
           controller: nameController,
           scrollController: scrollController,
           hideWithKeyboard: false,
@@ -57,8 +57,8 @@ class ProductSearchFieldWidget extends StatelessWidget {
               prefixIcon: const Icon(Icons.category_outlined),
               suffixIcon: ValueListenableBuilder(
                 valueListenable: controller,
-                builder: (context, searchValue, child) => searchValue
-                        .text.isEmpty
+                builder: (context, searchValue, child) =>
+                    searchValue.text.isEmpty
                     ? const SizedBox.shrink()
                     : IconButton(
                         onPressed: () {
@@ -95,30 +95,30 @@ class ProductSearchFieldWidget extends StatelessWidget {
 class _ItemListTile extends StatelessWidget {
   const _ItemListTile({required this.product});
 
-  final ProductModel product;
+  final ProductEntity product;
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: AspectRatio(
-          aspectRatio: 1,
-          child: ClipRRect(
-            borderRadius: 5.radiusBorder,
-            child: CustomNetworkImage(
-              imageUrl: product.image ?? '',
-              errorWidget: (context, url, error) =>
-                  Image.asset(AppAssets.unknownProduct),
-            ),
-          ),
+    leading: AspectRatio(
+      aspectRatio: 1,
+      child: ClipRRect(
+        borderRadius: 5.radiusBorder,
+        child: CustomNetworkImage(
+          imageUrl: product.image ?? '',
+          errorWidget: (context, url, error) =>
+              Image.asset(AppAssets.unknownProduct),
         ),
-        title: Text(product.name),
-        subtitle: Text(
-          product.model?.toString() ??
-              product.category?.toString() ??
-              product.color?.toString() ??
-              '',
-        ),
-        trailing: Text(product.price?.toCurrency() ?? ''),
-      );
+      ),
+    ),
+    title: Text(product.name),
+    subtitle: Text(
+      product.model?.toString() ??
+          product.category?.toString() ??
+          product.color?.toString() ??
+          '',
+    ),
+    trailing: Text(product.price?.toCurrency() ?? ''),
+  );
 }
 
 class _LoadingBuilder extends StatelessWidget {
@@ -126,13 +126,13 @@ class _LoadingBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-        shrinkWrap: true,
-        itemCount: 4,
-        itemBuilder: (context, index) => const ListTile(
-          leading: CustomShimmerBox(width: 60, height: 60),
-          title: CustomShimmerBox(width: 50, height: 15),
-          subtitle: CustomShimmerBox(width: 30, height: 10),
-          trailing: CustomShimmerBox(width: 35, height: 15),
-        ),
-      );
+    shrinkWrap: true,
+    itemCount: 4,
+    itemBuilder: (context, index) => const ListTile(
+      leading: CustomShimmerBox(width: 60, height: 60),
+      title: CustomShimmerBox(width: 50, height: 15),
+      subtitle: CustomShimmerBox(width: 30, height: 10),
+      trailing: CustomShimmerBox(width: 35, height: 15),
+    ),
+  );
 }

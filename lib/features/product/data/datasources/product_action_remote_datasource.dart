@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/product_exceptions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_request_model/product_request_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_request_model/product_request_model.dart';
 
 import 'package:dio/dio.dart';
 
@@ -47,7 +47,9 @@ class ProductActionRemoteDatasource {
 
       print('\n📋 Form Files:');
       formData.files.forEach((file) {
-        log('   ${file.key}: ${file.value.filename} (${file.value.length} bytes)');
+        log(
+          '   ${file.key}: ${file.value.filename} (${file.value.length} bytes)',
+        );
       });
 
       if (!isAdding &&

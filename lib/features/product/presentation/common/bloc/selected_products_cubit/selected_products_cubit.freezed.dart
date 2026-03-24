@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SelectedProductsState {
 
- List<ProductSelectedModel> get selectedProductsWithAmount;
+ List<ProductSelectedEntity> get selectedProductsWithAmount;
 /// Create a copy of SelectedProductsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $SelectedProductsStateCopyWith<$Res>  {
   factory $SelectedProductsStateCopyWith(SelectedProductsState value, $Res Function(SelectedProductsState) _then) = _$SelectedProductsStateCopyWithImpl;
 @useResult
 $Res call({
- List<ProductSelectedModel> selectedProductsWithAmount
+ List<ProductSelectedEntity> selectedProductsWithAmount
 });
 
 
@@ -65,7 +65,7 @@ class _$SelectedProductsStateCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? selectedProductsWithAmount = null,}) {
   return _then(_self.copyWith(
 selectedProductsWithAmount: null == selectedProductsWithAmount ? _self.selectedProductsWithAmount : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
-as List<ProductSelectedModel>,
+as List<ProductSelectedEntity>,
   ));
 }
 
@@ -150,7 +150,7 @@ return selected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( List<ProductSelectedModel> selectedProductsWithAmount)?  selected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( List<ProductSelectedEntity> selectedProductsWithAmount)?  selected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Selected() when selected != null:
 return selected(_that.selectedProductsWithAmount);case _:
@@ -171,7 +171,7 @@ return selected(_that.selectedProductsWithAmount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( List<ProductSelectedModel> selectedProductsWithAmount)  selected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( List<ProductSelectedEntity> selectedProductsWithAmount)  selected,}) {final _that = this;
 switch (_that) {
 case _Selected():
 return selected(_that.selectedProductsWithAmount);case _:
@@ -191,7 +191,7 @@ return selected(_that.selectedProductsWithAmount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( List<ProductSelectedModel> selectedProductsWithAmount)?  selected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( List<ProductSelectedEntity> selectedProductsWithAmount)?  selected,}) {final _that = this;
 switch (_that) {
 case _Selected() when selected != null:
 return selected(_that.selectedProductsWithAmount);case _:
@@ -206,11 +206,11 @@ return selected(_that.selectedProductsWithAmount);case _:
 
 
 class _Selected implements SelectedProductsState {
-  const _Selected(final  List<ProductSelectedModel> selectedProductsWithAmount): _selectedProductsWithAmount = selectedProductsWithAmount;
+  const _Selected(final  List<ProductSelectedEntity> selectedProductsWithAmount): _selectedProductsWithAmount = selectedProductsWithAmount;
   
 
- final  List<ProductSelectedModel> _selectedProductsWithAmount;
-@override List<ProductSelectedModel> get selectedProductsWithAmount {
+ final  List<ProductSelectedEntity> _selectedProductsWithAmount;
+@override List<ProductSelectedEntity> get selectedProductsWithAmount {
   if (_selectedProductsWithAmount is EqualUnmodifiableListView) return _selectedProductsWithAmount;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_selectedProductsWithAmount);
@@ -247,7 +247,7 @@ abstract mixin class _$SelectedCopyWith<$Res> implements $SelectedProductsStateC
   factory _$SelectedCopyWith(_Selected value, $Res Function(_Selected) _then) = __$SelectedCopyWithImpl;
 @override @useResult
 $Res call({
- List<ProductSelectedModel> selectedProductsWithAmount
+ List<ProductSelectedEntity> selectedProductsWithAmount
 });
 
 
@@ -267,7 +267,7 @@ class __$SelectedCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? selectedProductsWithAmount = null,}) {
   return _then(_Selected(
 null == selectedProductsWithAmount ? _self._selectedProductsWithAmount : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
-as List<ProductSelectedModel>,
+as List<ProductSelectedEntity>,
   ));
 }
 

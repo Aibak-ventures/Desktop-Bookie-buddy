@@ -1,5 +1,6 @@
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_selected_model.freezed.dart';
@@ -17,6 +18,35 @@ abstract class ProductSelectedModel with _$ProductSelectedModel {
 
   factory ProductSelectedModel.fromJson(Map<String, dynamic> json) =>
       _$ProductSelectedModelFromJson(json);
+
+  factory ProductSelectedModel.fromEntity(ProductSelectedEntity entity) =>
+      ProductSelectedModel(
+        variant: ProductInfoModel.fromEntity(entity.variant),
+        amount: entity.amount,
+        measurements: entity.measurements.map((e) => e.toModel()).toList(),
+        quantity: entity.quantity,
+        runningKilometers: entity.runningKilometers,
+      );
+}
+
+extension ProductSelectedModelMapper on ProductSelectedModel {
+  ProductSelectedEntity toEntity() => ProductSelectedEntity(
+    variant: variant.toEntity(),
+    amount: amount,
+    measurements: measurements.map((e) => e.toEntity()).toList(),
+    quantity: quantity,
+    runningKilometers: runningKilometers,
+  );
+}
+
+extension ProductSelectedEntityMapper on ProductSelectedEntity {
+  ProductSelectedModel toModel() => ProductSelectedModel(
+    variant: ProductInfoModel.fromEntity(variant),
+    amount: amount,
+    measurements: measurements.map((e) => e.toModel()).toList(),
+    quantity: quantity,
+    runningKilometers: runningKilometers,
+  );
 }
 
 extension ProductSelectedModelToJsonExtension on ProductSelectedModel {

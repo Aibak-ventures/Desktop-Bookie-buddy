@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/variant_size_type_text_field.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/variant_tile.dart';
@@ -11,12 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VariantsWidget extends StatelessWidget {
-  VariantsWidget({
-    required this.variantsNotifier,
-    super.key,
-  });
+  VariantsWidget({required this.variantsNotifier, super.key});
 
-  final ValueNotifier<List<ProductVariantModel>> variantsNotifier;
+  final ValueNotifier<List<ProductVariantEntity>> variantsNotifier;
 
   final variantAttributeController = TextEditingController();
 
@@ -51,9 +48,7 @@ class VariantsWidget extends StatelessWidget {
                   validator: AppInputValidators.quantity,
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: AppColors.grey400,
-                      ),
+                      borderSide: BorderSide(color: AppColors.grey400),
                     ),
                     hintText: 'quantity',
                     hintStyle: const TextStyle(
@@ -64,63 +59,60 @@ class VariantsWidget extends StatelessWidget {
                 ),
               ),
               ValueListenableBuilder(
-                  valueListenable: variantAttributeController,
-                  builder: (context, variantAttribute, child) {
-                    return Container(
-                      margin: 5.paddingOnly(left: true),
-                      padding: 5.padding,
-                      decoration: BoxDecoration(
-                        color: variantAttribute.text.trim().isEmpty
-                            ? AppColors.grey400
-                            : AppColors.purple,
-                        borderRadius: 4.radiusBorder,
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: AppColors.white,
-                      ),
-                    ).onTap(
-                      variantAttribute.text.trim().isEmpty
-                          ? null
-                          : () {
-                              if (!_formKey.currentState!.validate()) {
-                                context.showSnackBar(
-                                  'Please fill variant all fields',
-                                  isError: true,
-                                );
-                                return;
-                              }
-                              final attribute = variantAttribute.text.trim();
+                valueListenable: variantAttributeController,
+                builder: (context, variantAttribute, child) {
+                  return Container(
+                    margin: 5.paddingOnly(left: true),
+                    padding: 5.padding,
+                    decoration: BoxDecoration(
+                      color: variantAttribute.text.trim().isEmpty
+                          ? AppColors.grey400
+                          : AppColors.purple,
+                      borderRadius: 4.radiusBorder,
+                    ),
+                    child: const Icon(Icons.add, color: AppColors.white),
+                  ).onTap(
+                    variantAttribute.text.trim().isEmpty
+                        ? null
+                        : () {
+                            if (!_formKey.currentState!.validate()) {
+                              context.showSnackBar(
+                                'Please fill variant all fields',
+                                isError: true,
+                              );
+                              return;
+                            }
+                            final attribute = variantAttribute.text.trim();
 
-                              final quantity =
-                                  variantQuantityController.text.trim();
+                            final quantity = variantQuantityController.text
+                                .trim();
 
-                              final isFreeSize =
-                                  VariantSizeType.isFreeSize(attribute);
+                            final isFreeSize = VariantSizeType.isFreeSize(
+                              attribute,
+                            );
 
-                              // if free size remove other variants and only add this
-                              if (isFreeSize) {
-                                variantsNotifier.value = [
-                                  ProductVariantModel(
-                                    id: DateTime.now().millisecondsSinceEpoch,
-                                    attribute: attribute,
-                                    stock: quantity.toInt(),
-                                    remainingStock: quantity.toInt(),
-                                  )
-                                ];
-                                variantQuantityController.clear();
-                                return;
-                              }
+                            // if free size remove other variants and only add this
+                            if (isFreeSize) {
+                              variantsNotifier.value = [
+                                ProductVariantEntity(
+                                  id: DateTime.now().millisecondsSinceEpoch,
+                                  attribute: attribute,
+                                  stock: quantity.toInt(),
+                                  remainingStock: quantity.toInt(),
+                                ),
+                              ];
+                              variantQuantityController.clear();
+                              return;
+                            }
 
-                              // check if variant already exists
-                              if (variantsNotifier.value.any(
-                                (element) => element.attribute == attribute,
-                              )) {
-                                variantsNotifier.value =
-                                    variantsNotifier.value.map(
-                                  (e) {
+                            // check if variant already exists
+                            if (variantsNotifier.value.any(
+                              (element) => element.attribute == attribute,
+                            )) {
+                              variantsNotifier.value = variantsNotifier.value
+                                  .map((e) {
                                     if (e.attribute == attribute) {
-                                      return ProductVariantModel(
+                                      return ProductVariantEntity(
                                         id: e.id,
                                         attribute: e.attribute,
                                         stock: quantity.toInt(),
@@ -128,29 +120,30 @@ class VariantsWidget extends StatelessWidget {
                                       );
                                     }
                                     return e;
-                                  },
-                                ).toList();
+                                  })
+                                  .toList();
 
-                                variantAttributeController.clear();
-                                variantQuantityController.clear();
-                                return;
-                              }
-
-                              // add variant
-                              variantsNotifier.value = [
-                                ProductVariantModel(
-                                  id: DateTime.now().millisecondsSinceEpoch,
-                                  attribute: attribute,
-                                  stock: quantity.toInt(),
-                                  remainingStock: quantity.toInt(),
-                                ),
-                                ...variantsNotifier.value,
-                              ];
                               variantAttributeController.clear();
                               variantQuantityController.clear();
-                            },
-                    );
-                  })
+                              return;
+                            }
+
+                            // add variant
+                            variantsNotifier.value = [
+                              ProductVariantEntity(
+                                id: DateTime.now().millisecondsSinceEpoch,
+                                attribute: attribute,
+                                stock: quantity.toInt(),
+                                remainingStock: quantity.toInt(),
+                              ),
+                              ...variantsNotifier.value,
+                            ];
+                            variantAttributeController.clear();
+                            variantQuantityController.clear();
+                          },
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -171,14 +164,12 @@ class VariantsWidget extends StatelessWidget {
                         variant: variant,
                         onEdit: () {
                           variantAttributeController.text = variant.attribute;
-                          variantQuantityController.text =
-                              variant.stock.toString();
+                          variantQuantityController.text = variant.stock
+                              .toString();
                         },
                         onDelete: () {
                           variantsNotifier.value = variantsNotifier.value
-                              .where(
-                                (element) => element.id != variant.id,
-                              )
+                              .where((element) => element.id != variant.id)
                               .toList();
                         },
                       ),
@@ -187,7 +178,7 @@ class VariantsWidget extends StatelessWidget {
               ),
             );
           },
-        )
+        ),
       ],
     );
   }

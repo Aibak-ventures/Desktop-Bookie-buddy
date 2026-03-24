@@ -128,7 +128,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( ProductModel product,  List<BookingEntity> bookings,  List<ProductMonthlyDataModel> monthlySummary,  String? nextPageUrl,  bool isPaginatingBookings)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( ProductEntity product,  List<BookingEntity> bookings,  List<ProductMonthlyDataEntity> monthlySummary,  String? nextPageUrl,  bool isPaginatingBookings)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -152,7 +152,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( ProductModel product,  List<BookingEntity> bookings,  List<ProductMonthlyDataModel> monthlySummary,  String? nextPageUrl,  bool isPaginatingBookings)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( ProductEntity product,  List<BookingEntity> bookings,  List<ProductMonthlyDataEntity> monthlySummary,  String? nextPageUrl,  bool isPaginatingBookings)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -175,7 +175,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( ProductModel product,  List<BookingEntity> bookings,  List<ProductMonthlyDataModel> monthlySummary,  String? nextPageUrl,  bool isPaginatingBookings)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( ProductEntity product,  List<BookingEntity> bookings,  List<ProductMonthlyDataEntity> monthlySummary,  String? nextPageUrl,  bool isPaginatingBookings)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -257,10 +257,10 @@ String toString() {
 
 
 class _Loaded implements ProductDetailsState {
-  const _Loaded({required this.product, final  List<BookingEntity> bookings = const [], final  List<ProductMonthlyDataModel> monthlySummary = const [], this.nextPageUrl, this.isPaginatingBookings = false}): _bookings = bookings,_monthlySummary = monthlySummary;
+  const _Loaded({required this.product, final  List<BookingEntity> bookings = const [], final  List<ProductMonthlyDataEntity> monthlySummary = const [], this.nextPageUrl, this.isPaginatingBookings = false}): _bookings = bookings,_monthlySummary = monthlySummary;
   
 
- final  ProductModel product;
+ final  ProductEntity product;
  final  List<BookingEntity> _bookings;
 @JsonKey() List<BookingEntity> get bookings {
   if (_bookings is EqualUnmodifiableListView) return _bookings;
@@ -268,8 +268,8 @@ class _Loaded implements ProductDetailsState {
   return EqualUnmodifiableListView(_bookings);
 }
 
- final  List<ProductMonthlyDataModel> _monthlySummary;
-@JsonKey() List<ProductMonthlyDataModel> get monthlySummary {
+ final  List<ProductMonthlyDataEntity> _monthlySummary;
+@JsonKey() List<ProductMonthlyDataEntity> get monthlySummary {
   if (_monthlySummary is EqualUnmodifiableListView) return _monthlySummary;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_monthlySummary);
@@ -308,11 +308,11 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $ProductDetailsStateCopyW
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- ProductModel product, List<BookingEntity> bookings, List<ProductMonthlyDataModel> monthlySummary, String? nextPageUrl, bool isPaginatingBookings
+ ProductEntity product, List<BookingEntity> bookings, List<ProductMonthlyDataEntity> monthlySummary, String? nextPageUrl, bool isPaginatingBookings
 });
 
 
-$ProductModelCopyWith<$Res> get product;
+$ProductEntityCopyWith<$Res> get product;
 
 }
 /// @nodoc
@@ -328,9 +328,9 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? product = null,Object? bookings = null,Object? monthlySummary = null,Object? nextPageUrl = freezed,Object? isPaginatingBookings = null,}) {
   return _then(_Loaded(
 product: null == product ? _self.product : product // ignore: cast_nullable_to_non_nullable
-as ProductModel,bookings: null == bookings ? _self._bookings : bookings // ignore: cast_nullable_to_non_nullable
+as ProductEntity,bookings: null == bookings ? _self._bookings : bookings // ignore: cast_nullable_to_non_nullable
 as List<BookingEntity>,monthlySummary: null == monthlySummary ? _self._monthlySummary : monthlySummary // ignore: cast_nullable_to_non_nullable
-as List<ProductMonthlyDataModel>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
+as List<ProductMonthlyDataEntity>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,isPaginatingBookings: null == isPaginatingBookings ? _self.isPaginatingBookings : isPaginatingBookings // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -340,9 +340,9 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProductModelCopyWith<$Res> get product {
+$ProductEntityCopyWith<$Res> get product {
   
-  return $ProductModelCopyWith<$Res>(_self.product, (value) {
+  return $ProductEntityCopyWith<$Res>(_self.product, (value) {
     return _then(_self.copyWith(product: value));
   });
 }

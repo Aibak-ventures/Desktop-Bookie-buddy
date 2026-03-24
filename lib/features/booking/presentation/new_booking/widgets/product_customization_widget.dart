@@ -3,8 +3,8 @@ import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_field_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 
 class ProductCustomizationWidget extends StatefulWidget {
@@ -16,9 +16,12 @@ class ProductCustomizationWidget extends StatefulWidget {
   });
 
   final VoidCallback onBack;
-  final Function(ProductSelectedModel product,
-      List<MeasurementValueModel> measurements) onSaveForProduct;
-  final List<ProductSelectedModel> selectedProducts;
+  final Function(
+    ProductSelectedEntity product,
+    List<MeasurementValueEntity> measurements,
+  )
+  onSaveForProduct;
+  final List<ProductSelectedEntity> selectedProducts;
 
   @override
   State<ProductCustomizationWidget> createState() =>
@@ -34,7 +37,7 @@ class _ProductCustomizationWidgetState
   final formKey = GlobalKey<FormState>();
 
   // Currently selected product for customization
-  ProductSelectedModel? selectedProduct;
+  ProductSelectedEntity? selectedProduct;
   int? selectedProductIndex;
 
   @override
@@ -80,8 +83,9 @@ class _ProductCustomizationWidgetState
 
     if (productMeasurements.isNotEmpty) {
       final genders = productMeasurements.map((e) => e.gender).toSet();
-      final filteredGenders =
-          genders.where((g) => g != GenderType.unisex).toSet();
+      final filteredGenders = genders
+          .where((g) => g != GenderType.unisex)
+          .toSet();
 
       if (filteredGenders.length == 1) {
         genderNotifier.value = filteredGenders.first ?? GenderType.unisex;
@@ -95,7 +99,7 @@ class _ProductCustomizationWidgetState
     final updatedMeasurements = baseMeasurements.map((field) {
       final existing = productMeasurements.firstWhere(
         (e) => e.key == field.key,
-        orElse: () => MeasurementValueModel(
+        orElse: () => MeasurementValueEntity(
           name: field.name,
           key: field.key,
           value: '',
@@ -129,8 +133,9 @@ class _ProductCustomizationWidgetState
   @override
   void dispose() {
     genderNotifier.dispose();
-    measurementsNotifier.value
-        .forEach((element) => element.controller.dispose());
+    measurementsNotifier.value.forEach(
+      (element) => element.controller.dispose(),
+    );
     customCustomizationController.dispose();
     super.dispose();
   }
@@ -142,7 +147,7 @@ class _ProductCustomizationWidgetState
       final filteredMeasurements = measurementsNotifier.value
           .where((field) => field.controller.text.trim().isNotEmpty)
           .map(
-            (field) => MeasurementValueModel(
+            (field) => MeasurementValueEntity(
               name: field.name,
               key: field.key,
               value: field.controller.text.trim(),
@@ -182,8 +187,9 @@ class _ProductCustomizationWidgetState
         .toLowerCase()
         .replaceAll(' ', '_');
 
-    final alreadyExists =
-        measurementsNotifier.value.any((e) => e.key == newKey);
+    final alreadyExists = measurementsNotifier.value.any(
+      (e) => e.key == newKey,
+    );
 
     if (alreadyExists) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -220,9 +226,7 @@ class _ProductCustomizationWidgetState
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border(
-                bottom: BorderSide(color: Colors.grey.shade200),
-              ),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
             ),
             child: Row(
               children: [
@@ -264,8 +268,11 @@ class _ProductCustomizationWidgetState
                       onPressed: selectedProduct != null
                           ? () => _saveMeasurements()
                           : null,
-                      icon:
-                          const Icon(Icons.save, size: 16, color: Colors.white),
+                      icon: const Icon(
+                        Icons.save,
+                        size: 16,
+                        color: Colors.white,
+                      ),
                       label: const Text(
                         'Save',
                         style: TextStyle(color: Colors.white, fontSize: 13),
@@ -275,7 +282,9 @@ class _ProductCustomizationWidgetState
                             ? const Color(0xFF27AE60)
                             : Colors.grey,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                         elevation: 0,
                       ),
                     ),
@@ -284,8 +293,11 @@ class _ProductCustomizationWidgetState
                       onPressed: selectedProduct != null
                           ? () => _saveMeasurements(moveToNext: true)
                           : null,
-                      icon: const Icon(Icons.skip_next,
-                          size: 16, color: Colors.white),
+                      icon: const Icon(
+                        Icons.skip_next,
+                        size: 16,
+                        color: Colors.white,
+                      ),
                       label: const Text(
                         'Save & Next',
                         style: TextStyle(color: Colors.white, fontSize: 13),
@@ -295,7 +307,9 @@ class _ProductCustomizationWidgetState
                             ? const Color(0xFF6C5CE7)
                             : Colors.grey,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                         elevation: 0,
                       ),
                     ),
@@ -311,22 +325,13 @@ class _ProductCustomizationWidgetState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // LEFT: Selected products list
-                SizedBox(
-                  width: 350,
-                  child: _buildProductsList(),
-                ),
+                SizedBox(width: 350, child: _buildProductsList()),
 
                 // Divider
-                Container(
-                  width: 1,
-                  color: Colors.grey.shade200,
-                ),
+                Container(width: 1, color: Colors.grey.shade200),
 
                 // RIGHT: Measurement fields
-                Expanded(
-                  flex: 3,
-                  child: _buildMeasurementSection(),
-                ),
+                Expanded(flex: 3, child: _buildMeasurementSection()),
               ],
             ),
           ),
@@ -404,7 +409,9 @@ class _ProductCustomizationWidgetState
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(6),
@@ -507,17 +514,18 @@ class _ProductCustomizationWidgetState
                                   child: IgnorePointer(
                                     ignoring: selectedProduct == null,
                                     child: Opacity(
-                                      opacity:
-                                          selectedProduct != null ? 1.0 : 0.5,
+                                      opacity: selectedProduct != null
+                                          ? 1.0
+                                          : 0.5,
                                       child: CustomTextField(
                                         controller: field.controller,
                                         hintText: 'e.g., 32 inches',
                                         validator: (value) =>
                                             AppInputValidators.basicText(
-                                          value,
-                                          isRequired: false,
-                                          fieldName: field.name,
-                                        ),
+                                              value,
+                                              isRequired: false,
+                                              fieldName: field.name,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -563,9 +571,9 @@ class _ProductCustomizationWidgetState
                               child: CustomTextField(
                                 validator: (value) =>
                                     AppInputValidators.basicText(
-                                  value,
-                                  isRequired: false,
-                                ),
+                                      value,
+                                      isRequired: false,
+                                    ),
                                 controller: customCustomizationController,
                                 hintText: 'e.g., Shoulder Width',
                               ),
@@ -577,15 +585,21 @@ class _ProductCustomizationWidgetState
                           onPressed: selectedProduct != null
                               ? _addCustomMeasurement
                               : null,
-                          icon: const Icon(Icons.add,
-                              size: 16, color: Colors.white),
-                          label: const Text('Add',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13)),
+                          icon: const Icon(
+                            Icons.add,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            'Add',
+                            style: TextStyle(color: Colors.white, fontSize: 13),
+                          ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF6C5CE7),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
                             elevation: 0,
                           ),
                         ),
@@ -612,9 +626,7 @@ class _ProductCustomizationWidgetState
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border(
-                bottom: BorderSide(color: Colors.grey.shade200),
-              ),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
             ),
             child: Row(
               children: [
@@ -646,8 +658,11 @@ class _ProductCustomizationWidgetState
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.inventory_2_outlined,
-                            size: 48, color: Colors.grey.shade400),
+                        Icon(
+                          Icons.inventory_2_outlined,
+                          size: 48,
+                          color: Colors.grey.shade400,
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           'No products selected',
@@ -691,7 +706,8 @@ class _ProductCustomizationWidgetState
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              child: product.variant.image != null &&
+                              child:
+                                  product.variant.image != null &&
                                       product.variant.image!.isNotEmpty
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(6),
@@ -704,8 +720,10 @@ class _ProductCustomizationWidgetState
                                         ),
                                       ),
                                     )
-                                  : Icon(Icons.image,
-                                      color: Colors.grey.shade400),
+                                  : Icon(
+                                      Icons.image,
+                                      color: Colors.grey.shade400,
+                                    ),
                             ),
                             const SizedBox(width: 12),
 
@@ -732,26 +750,32 @@ class _ProductCustomizationWidgetState
                                     children: [
                                       if (product.variant.variantAttribute !=
                                               null &&
-                                          product.variant.variantAttribute!
+                                          product
+                                              .variant
+                                              .variantAttribute!
                                               .isNotEmpty)
                                         _buildVariantChip(
-                                            product.variant.variantAttribute!,
-                                            Icons.label),
+                                          product.variant.variantAttribute!,
+                                          Icons.label,
+                                        ),
                                       if (product.variant.color != null &&
                                           product.variant.color!.isNotEmpty)
                                         _buildVariantChip(
-                                            product.variant.color!,
-                                            Icons.palette),
+                                          product.variant.color!,
+                                          Icons.palette,
+                                        ),
                                       if (product.variant.model != null &&
                                           product.variant.model!.isNotEmpty)
                                         _buildVariantChip(
-                                            product.variant.model!,
-                                            Icons.style),
+                                          product.variant.model!,
+                                          Icons.style,
+                                        ),
                                       if (product.variant.category != null &&
                                           product.variant.category!.isNotEmpty)
                                         _buildVariantChip(
-                                            product.variant.category!,
-                                            Icons.category),
+                                          product.variant.category!,
+                                          Icons.category,
+                                        ),
                                     ],
                                   ),
                                 ],
@@ -766,7 +790,9 @@ class _ProductCustomizationWidgetState
                                   Container(
                                     margin: const EdgeInsets.only(right: 8),
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF27AE60),
                                       borderRadius: BorderRadius.circular(12),
@@ -803,12 +829,15 @@ class _ProductCustomizationWidgetState
                                     backgroundColor: isSelected
                                         ? const Color(0xFF6C5CE7)
                                         : product.measurements.isNotEmpty
-                                            ? const Color(0xFF6C5CE7)
-                                                .withOpacity(0.7)
-                                            : const Color(0xFF636E72),
+                                        ? const Color(
+                                            0xFF6C5CE7,
+                                          ).withOpacity(0.7)
+                                        : const Color(0xFF636E72),
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 8),
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
                                     minimumSize: const Size(50, 32),
                                     elevation: 0,
                                   ),
@@ -816,8 +845,8 @@ class _ProductCustomizationWidgetState
                                     isSelected
                                         ? 'Active'
                                         : product.measurements.isNotEmpty
-                                            ? 'Edit'
-                                            : 'Add',
+                                        ? 'Edit'
+                                        : 'Add',
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                 ),
@@ -835,105 +864,105 @@ class _ProductCustomizationWidgetState
   }
 
   List<MeasurementFieldModel> _getMeasurements() => [
-        // Female Measurements
-        MeasurementFieldModel(
-          name: 'Top Round',
-          key: 'top_round',
-          description: 'Round measurement around top',
-          gender: GenderType.female,
-        ),
-        MeasurementFieldModel(
-          name: 'Top Length',
-          key: 'top_length',
-          description: 'Vertical length of the top',
-          gender: GenderType.female,
-        ),
-        MeasurementFieldModel(
-          name: 'Chest',
-          key: 'chest',
-          description: 'Fullest part of the chest',
-          gender: GenderType.unisex,
-        ),
-        MeasurementFieldModel(
-          name: 'Shape',
-          key: 'shape',
-          description: 'Garment shape',
-          gender: GenderType.female,
-        ),
-        MeasurementFieldModel(
-          name: 'Sleeve Length',
-          key: 'sleeve_length',
-          description: 'Shoulder to desired sleeve end',
-          gender: GenderType.unisex,
-        ),
-        MeasurementFieldModel(
-          name: 'Sleeve Arm',
-          key: 'sleeve_arm',
-          description: 'Around the upper arm',
-          gender: GenderType.female,
-        ),
-        MeasurementFieldModel(
-          name: 'Front Neck',
-          key: 'front_neck',
-          description: 'Depth of the front neckline',
-          gender: GenderType.female,
-        ),
-        MeasurementFieldModel(
-          name: 'Back Neck',
-          key: 'back_neck',
-          description: 'Depth of the back neckline',
-          gender: GenderType.female,
-        ),
-        // Male Measurements
-        MeasurementFieldModel(
-          name: 'Neck Circumference',
-          key: 'neck_circumference',
-          description: 'Around the base of the neck',
-          gender: GenderType.male,
-        ),
-        MeasurementFieldModel(
-          name: 'Shirt/Kurta Length',
-          key: 'shirt_length',
-          description: 'Shoulder to desired bottom length',
-          gender: GenderType.male,
-        ),
-        MeasurementFieldModel(
-          name: 'Armhole',
-          key: 'armhole',
-          description: 'Around the arm socket',
-          gender: GenderType.male,
-        ),
-        MeasurementFieldModel(
-          name: 'Upper Arm',
-          key: 'upper_arm',
-          description: 'Fullest part of the upper arm',
-          gender: GenderType.male,
-        ),
-        MeasurementFieldModel(
-          name: 'Wrist',
-          key: 'wrist',
-          description: 'Circumference of the wrist',
-          gender: GenderType.male,
-        ),
-        MeasurementFieldModel(
-          name: 'Pant Length',
-          key: 'pant_length',
-          description: 'Waist to ankle',
-          gender: GenderType.male,
-        ),
-        MeasurementFieldModel(
-          name: 'Inseam',
-          key: 'inseam',
-          description: 'Crotch to ankle inside the leg',
-          gender: GenderType.male,
-        ),
-        MeasurementFieldModel(
-          name: 'Thigh',
-          key: 'thigh',
-          description: 'Fullest part of the thigh',
-          gender: GenderType.male,
-        ),
-      ];
+    // Female Measurements
+    MeasurementFieldModel(
+      name: 'Top Round',
+      key: 'top_round',
+      description: 'Round measurement around top',
+      gender: GenderType.female,
+    ),
+    MeasurementFieldModel(
+      name: 'Top Length',
+      key: 'top_length',
+      description: 'Vertical length of the top',
+      gender: GenderType.female,
+    ),
+    MeasurementFieldModel(
+      name: 'Chest',
+      key: 'chest',
+      description: 'Fullest part of the chest',
+      gender: GenderType.unisex,
+    ),
+    MeasurementFieldModel(
+      name: 'Shape',
+      key: 'shape',
+      description: 'Garment shape',
+      gender: GenderType.female,
+    ),
+    MeasurementFieldModel(
+      name: 'Sleeve Length',
+      key: 'sleeve_length',
+      description: 'Shoulder to desired sleeve end',
+      gender: GenderType.unisex,
+    ),
+    MeasurementFieldModel(
+      name: 'Sleeve Arm',
+      key: 'sleeve_arm',
+      description: 'Around the upper arm',
+      gender: GenderType.female,
+    ),
+    MeasurementFieldModel(
+      name: 'Front Neck',
+      key: 'front_neck',
+      description: 'Depth of the front neckline',
+      gender: GenderType.female,
+    ),
+    MeasurementFieldModel(
+      name: 'Back Neck',
+      key: 'back_neck',
+      description: 'Depth of the back neckline',
+      gender: GenderType.female,
+    ),
+    // Male Measurements
+    MeasurementFieldModel(
+      name: 'Neck Circumference',
+      key: 'neck_circumference',
+      description: 'Around the base of the neck',
+      gender: GenderType.male,
+    ),
+    MeasurementFieldModel(
+      name: 'Shirt/Kurta Length',
+      key: 'shirt_length',
+      description: 'Shoulder to desired bottom length',
+      gender: GenderType.male,
+    ),
+    MeasurementFieldModel(
+      name: 'Armhole',
+      key: 'armhole',
+      description: 'Around the arm socket',
+      gender: GenderType.male,
+    ),
+    MeasurementFieldModel(
+      name: 'Upper Arm',
+      key: 'upper_arm',
+      description: 'Fullest part of the upper arm',
+      gender: GenderType.male,
+    ),
+    MeasurementFieldModel(
+      name: 'Wrist',
+      key: 'wrist',
+      description: 'Circumference of the wrist',
+      gender: GenderType.male,
+    ),
+    MeasurementFieldModel(
+      name: 'Pant Length',
+      key: 'pant_length',
+      description: 'Waist to ankle',
+      gender: GenderType.male,
+    ),
+    MeasurementFieldModel(
+      name: 'Inseam',
+      key: 'inseam',
+      description: 'Crotch to ankle inside the leg',
+      gender: GenderType.male,
+    ),
+    MeasurementFieldModel(
+      name: 'Thigh',
+      key: 'thigh',
+      description: 'Fullest part of the thigh',
+      gender: GenderType.male,
+    ),
+  ];
 
   // Helper method to build variant chips
   Widget _buildVariantChip(String label, IconData icon) {

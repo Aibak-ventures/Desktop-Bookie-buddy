@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class VariantTile extends StatelessWidget {
     super.key,
   });
 
-  final ProductVariantModel variant;
+  final ProductVariantEntity variant;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -31,17 +31,14 @@ class VariantTile extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Expanded(child: Text(variant.attribute)),
+                const Expanded(child: Text(':', textAlign: TextAlign.center)),
                 Expanded(
-                  child: Text(variant.attribute),
+                  child: Text(
+                    variant.stock.toString(),
+                    textAlign: TextAlign.end,
+                  ),
                 ),
-                const Expanded(
-                  child: Text(':', textAlign: TextAlign.center),
-                ),
-                Expanded(
-                    child: Text(
-                  variant.stock.toString(),
-                  textAlign: TextAlign.end,
-                )),
               ],
             ),
           ),
@@ -53,11 +50,7 @@ class VariantTile extends StatelessWidget {
             color: AppColors.purpleLight,
             borderRadius: 5.radiusBorder,
           ),
-          child: const Icon(
-            Icons.edit,
-            color: AppColors.purple,
-            size: 18,
-          ),
+          child: const Icon(Icons.edit, color: AppColors.purple, size: 18),
         ).onTap(onEdit),
         Container(
           margin: 5.paddingOnly(left: true),
@@ -66,11 +59,7 @@ class VariantTile extends StatelessWidget {
             color: AppColors.redLight,
             borderRadius: 5.radiusBorder,
           ),
-          child: const Icon(
-            Icons.close,
-            color: AppColors.redTomato,
-            size: 18,
-          ),
+          child: const Icon(Icons.close, color: AppColors.redTomato, size: 18),
         ).onTap(onDelete),
       ],
     );

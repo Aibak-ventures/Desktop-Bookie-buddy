@@ -128,7 +128,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<ProductModel> products,  int totalProducts,  int totalCategories,  String? nextPageUrl,  bool isPaginating,  int? selectedServiceId,  String searchQuery,  int? selectedProductId)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<ProductEntity> products,  int totalProducts,  int totalCategories,  String? nextPageUrl,  bool isPaginating,  int? selectedServiceId,  String searchQuery,  int? selectedProductId)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -152,7 +152,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<ProductModel> products,  int totalProducts,  int totalCategories,  String? nextPageUrl,  bool isPaginating,  int? selectedServiceId,  String searchQuery,  int? selectedProductId)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<ProductEntity> products,  int totalProducts,  int totalCategories,  String? nextPageUrl,  bool isPaginating,  int? selectedServiceId,  String searchQuery,  int? selectedProductId)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -175,7 +175,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<ProductModel> products,  int totalProducts,  int totalCategories,  String? nextPageUrl,  bool isPaginating,  int? selectedServiceId,  String searchQuery,  int? selectedProductId)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<ProductEntity> products,  int totalProducts,  int totalCategories,  String? nextPageUrl,  bool isPaginating,  int? selectedServiceId,  String searchQuery,  int? selectedProductId)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -257,11 +257,11 @@ String toString() {
 
 
 class _Loaded implements StockManagementState {
-  const _Loaded({required final  List<ProductModel> products, required this.totalProducts, required this.totalCategories, required this.nextPageUrl, required this.isPaginating, this.selectedServiceId, required this.searchQuery, this.selectedProductId}): _products = products;
+  const _Loaded({required final  List<ProductEntity> products, required this.totalProducts, required this.totalCategories, required this.nextPageUrl, required this.isPaginating, this.selectedServiceId, required this.searchQuery, this.selectedProductId}): _products = products;
   
 
- final  List<ProductModel> _products;
- List<ProductModel> get products {
+ final  List<ProductEntity> _products;
+ List<ProductEntity> get products {
   if (_products is EqualUnmodifiableListView) return _products;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_products);
@@ -272,7 +272,6 @@ class _Loaded implements StockManagementState {
  final  String? nextPageUrl;
  final  bool isPaginating;
  final  int? selectedServiceId;
-// Changed from String selectedCategory to int? selectedServiceId (-1 means All Services)
  final  String searchQuery;
  final  int? selectedProductId;
 
@@ -306,7 +305,7 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $StockManagementStateCopy
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- List<ProductModel> products, int totalProducts, int totalCategories, String? nextPageUrl, bool isPaginating, int? selectedServiceId, String searchQuery, int? selectedProductId
+ List<ProductEntity> products, int totalProducts, int totalCategories, String? nextPageUrl, bool isPaginating, int? selectedServiceId, String searchQuery, int? selectedProductId
 });
 
 
@@ -326,7 +325,7 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? products = null,Object? totalProducts = null,Object? totalCategories = null,Object? nextPageUrl = freezed,Object? isPaginating = null,Object? selectedServiceId = freezed,Object? searchQuery = null,Object? selectedProductId = freezed,}) {
   return _then(_Loaded(
 products: null == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
-as List<ProductModel>,totalProducts: null == totalProducts ? _self.totalProducts : totalProducts // ignore: cast_nullable_to_non_nullable
+as List<ProductEntity>,totalProducts: null == totalProducts ? _self.totalProducts : totalProducts // ignore: cast_nullable_to_non_nullable
 as int,totalCategories: null == totalCategories ? _self.totalCategories : totalCategories // ignore: cast_nullable_to_non_nullable
 as int,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,isPaginating: null == isPaginating ? _self.isPaginating : isPaginating // ignore: cast_nullable_to_non_nullable

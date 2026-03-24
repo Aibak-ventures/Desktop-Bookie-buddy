@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
@@ -39,9 +39,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
   void initState() {
     super.initState();
     // Force reload services when entering stock screen
-    context
-        .read<ServiceBloc>()
-        .add(const ServiceEvent.loadServices(force: true));
+    context.read<ServiceBloc>().add(
+      const ServiceEvent.loadServices(force: true),
+    );
 
     // Load initial data
     context.read<StockManagementCubit>().loadProducts();
@@ -69,15 +69,19 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
   }
 
   /// Show add/edit product modal dialog
-  Future<void> _showAddEditProductDialog(BuildContext context,
-      {ProductModel? product}) async {
+  Future<void> _showAddEditProductDialog(
+    BuildContext context, {
+    ProductEntity? product,
+  }) async {
     // Get current selected service ID from state
-    final selectedServiceId =
-        await context.read<StockManagementCubit>().state.maybeWhen(
-              loaded: (_, __, ___, ____, _____, serviceId, ______, _______) =>
-                  serviceId,
-              orElse: () => null,
-            );
+    final selectedServiceId = await context
+        .read<StockManagementCubit>()
+        .state
+        .maybeWhen(
+          loaded: (_, __, ___, ____, _____, serviceId, ______, _______) =>
+              serviceId,
+          orElse: () => null,
+        );
 
     if (!mounted) return;
 
@@ -87,7 +91,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       builder: (dialogContext) => MultiBlocProvider(
         providers: [
           BlocProvider(
-              create: (context) => SaveProductCubit(saveProduct: getIt.get())),
+            create: (context) => SaveProductCubit(saveProduct: getIt.get()),
+          ),
           BlocProvider.value(value: context.read<ServiceBloc>()),
         ],
         child: AddEditProductDialog(
@@ -102,10 +107,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       // For new products, reload without service filter to ensure visibility
       // For edited products, keep the current filter
       context.read<StockManagementCubit>().loadProducts(
-            serviceId: product != null ? selectedServiceId : null,
-            searchQuery: _searchController.text,
-            page: 1,
-          );
+        serviceId: product != null ? selectedServiceId : null,
+        searchQuery: _searchController.text,
+        page: 1,
+      );
     }
   }
 
@@ -116,9 +121,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
         // Reload products and services when shop switches
         if (user != null) {
           // Force reload services
-          context
-              .read<ServiceBloc>()
-              .add(const ServiceEvent.loadServices(force: true));
+          context.read<ServiceBloc>().add(
+            const ServiceEvent.loadServices(force: true),
+          );
           // Reload products
           context.read<StockManagementCubit>().loadProducts();
         }
@@ -137,10 +142,19 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   BlocBuilder<StockManagementCubit, StockManagementState>(
                     builder: (context, state) {
                       final showingProductDetails = state.maybeWhen(
-                        loaded: (_, __, ___, ____, _____, ______, _______,
-                            selectedProductId) {
-                          return selectedProductId != null;
-                        },
+                        loaded:
+                            (
+                              _,
+                              __,
+                              ___,
+                              ____,
+                              _____,
+                              ______,
+                              _______,
+                              selectedProductId,
+                            ) {
+                              return selectedProductId != null;
+                            },
                         orElse: () => false,
                       );
 
@@ -158,45 +172,58 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   Expanded(
                     child:
                         BlocBuilder<StockManagementCubit, StockManagementState>(
-                      builder: (context, state) {
-                        // Check if we should show product details
-                        return state.maybeWhen(
-                          loaded: (products, __, ___, ____, _____,
-                              selectedServiceId, _______, selectedProductId) {
-                            if (selectedProductId != null) {
-                              // Find the product to get its serviceId
-                              final selectedProduct = products.firstWhere(
-                                (p) => p.id == selectedProductId,
-                                orElse: () => products.first,
-                              );
+                          builder: (context, state) {
+                            // Check if we should show product details
+                            return state.maybeWhen(
+                              loaded:
+                                  (
+                                    products,
+                                    __,
+                                    ___,
+                                    ____,
+                                    _____,
+                                    selectedServiceId,
+                                    _______,
+                                    selectedProductId,
+                                  ) {
+                                    if (selectedProductId != null) {
+                                      // Find the product to get its serviceId
+                                      final selectedProduct = products
+                                          .firstWhere(
+                                            (p) => p.id == selectedProductId,
+                                            orElse: () => products.first,
+                                          );
 
-                              // Show product details
-                              return BlocProvider(
-                                create: (context) => ProductDetailsCubit(
-                                  getProductInfo: getIt.get(),
-                                  updateVariant: getIt.get(),
-                                  deleteProduct: getIt.get(),
-                                  addProductVariants: getIt.get(),
-                                  getProductBookings: getIt.get(),
-                                  getProductGrowthData: getIt.get(),
-                                )..loadProductDetails(selectedProductId),
-                                child: ProductDetailsScreen(
-                                  productId: selectedProductId,
-                                  serviceId: selectedServiceId,
-                                  mainServiceType:
-                                      selectedProduct.mainServiceType,
-                                  productForEdit: selectedProduct,
-                                ),
-                              );
-                            } else {
-                              // Show product list
-                              return _buildProductList();
-                            }
+                                      // Show product details
+                                      return BlocProvider(
+                                        create: (context) =>
+                                            ProductDetailsCubit(
+                                              getProductInfo: getIt.get(),
+                                              updateVariant: getIt.get(),
+                                              deleteProduct: getIt.get(),
+                                              addProductVariants: getIt.get(),
+                                              getProductBookings: getIt.get(),
+                                              getProductGrowthData: getIt.get(),
+                                            )..loadProductDetails(
+                                              selectedProductId,
+                                            ),
+                                        child: ProductDetailsScreen(
+                                          productId: selectedProductId,
+                                          serviceId: selectedServiceId,
+                                          mainServiceType:
+                                              selectedProduct.mainServiceType,
+                                          productForEdit: selectedProduct,
+                                        ),
+                                      );
+                                    } else {
+                                      // Show product list
+                                      return _buildProductList();
+                                    }
+                                  },
+                              orElse: () => _buildProductList(),
+                            );
                           },
-                          orElse: () => _buildProductList(),
-                        );
-                      },
-                    ),
+                        ),
                   ),
                 ],
               ),
@@ -222,10 +249,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.grey.shade200,
-                width: 1.5,
-              ),
+              border: Border.all(color: Colors.grey.shade200, width: 1.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.changeOpacity(0.04),
@@ -280,27 +304,37 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     return BlocBuilder<StockManagementCubit, StockManagementState>(
       builder: (context, state) {
         return state.maybeWhen(
-          loaded: (_, totalProducts, totalCategories, __, ___, ____, _____,
-              ______) {
-            final serviceCount =
-                context.read<ServiceBloc>().getServices().length;
-            return Row(
-              children: [
-                _summaryCard(
-                  'Total Products',
-                  NumberFormat('#,###').format(totalProducts),
-                ),
-                const SizedBox(width: 16),
-                _summaryCard(
-                  'Total Categories',
-                  serviceCount.toString(),
-                ),
-              ],
-            );
-          },
+          loaded:
+              (
+                _,
+                totalProducts,
+                totalCategories,
+                __,
+                ___,
+                ____,
+                _____,
+                ______,
+              ) {
+                final serviceCount = context
+                    .read<ServiceBloc>()
+                    .getServices()
+                    .length;
+                return Row(
+                  children: [
+                    _summaryCard(
+                      'Total Products',
+                      NumberFormat('#,###').format(totalProducts),
+                    ),
+                    const SizedBox(width: 16),
+                    _summaryCard('Total Categories', serviceCount.toString()),
+                  ],
+                );
+              },
           orElse: () {
-            final serviceCount =
-                context.read<ServiceBloc>().getServices().length;
+            final serviceCount = context
+                .read<ServiceBloc>()
+                .getServices()
+                .length;
             return Row(
               children: [
                 SizedBox(
@@ -312,8 +346,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                 SizedBox(
                   width: 227,
                   height: 98,
-                  child:
-                      _summaryCard('Total Services', serviceCount.toString()),
+                  child: _summaryCard(
+                    'Total Services',
+                    serviceCount.toString(),
+                  ),
                 ),
               ],
             );
@@ -341,15 +377,11 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       ),
       child: Row(
         children: [
-          SizedBox(
-            width: 40,
-          ),
+          SizedBox(width: 40),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               Text(
                 title,
                 style: TextStyle(
@@ -406,7 +438,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                           'name',
                           'category',
                           'model',
-                          'color'
+                          'color',
                         ];
                         final searchType = searchTypes[searchTypeIndex];
                         return TextField(
@@ -421,25 +453,25 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                             contentPadding: EdgeInsets.zero,
                             isDense: true,
                           ),
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
+                          style: const TextStyle(fontSize: 14),
                           onChanged: (value) {
                             // Debounce search — use _applyProductFilters so
                             // the selected search_by type is always respected
-                            Future.delayed(const Duration(milliseconds: 500),
-                                () {
-                              if (_searchController.text == value) {
-                                _applyProductFilters(
-                                  selectedServiceId == -1
-                                      ? null
-                                      : selectedServiceId,
-                                  _selectedSearchTypeIndex.value,
-                                  _priceRange.value,
-                                  _isPriceFilterEnabled.value,
-                                );
-                              }
-                            });
+                            Future.delayed(
+                              const Duration(milliseconds: 500),
+                              () {
+                                if (_searchController.text == value) {
+                                  _applyProductFilters(
+                                    selectedServiceId == -1
+                                        ? null
+                                        : selectedServiceId,
+                                    _selectedSearchTypeIndex.value,
+                                    _priceRange.value,
+                                    _isPriceFilterEnabled.value,
+                                  );
+                                }
+                              },
+                            );
                           },
                         );
                       },
@@ -451,8 +483,11 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                       onPressed: () {
                         _showProductFilterBottomSheet();
                       },
-                      icon: Icon(Icons.tune,
-                          color: Colors.grey.shade600, size: 20),
+                      icon: Icon(
+                        Icons.tune,
+                        color: Colors.grey.shade600,
+                        size: 20,
+                      ),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
@@ -473,8 +508,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.purple,
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -631,10 +668,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                 child: const Center(
                   child: Text(
                     'No products found',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 ),
               );
@@ -677,15 +711,15 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
             child: Center(
               child: Column(
                 children: [
-                  Icon(Icons.error_outline,
-                      size: 48, color: Colors.red.shade300),
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: Colors.red.shade300,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     message,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.red.shade400,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.red.shade400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
@@ -834,7 +868,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     );
   }
 
-  Widget _buildProductRow(ProductModel product) {
+  Widget _buildProductRow(ProductEntity product) {
     final totalStock = product.variants.fold<int>(
       0,
       (sum, variant) => sum + variant.stock,
@@ -847,19 +881,16 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
         height: 80,
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(
-              color: Colors.grey.shade100,
-              width: 1,
-            ),
+            bottom: BorderSide(color: Colors.grey.shade100, width: 1),
           ),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              context
-                  .read<StockManagementCubit>()
-                  .showProductDetails(product.id);
+              context.read<StockManagementCubit>().showProductDetails(
+                product.id,
+              );
             },
             hoverColor: AppColors.purple.withOpacity(0.08),
             splashColor: AppColors.purple.withOpacity(0.12),
@@ -892,12 +923,14 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                               width: 1,
                             ),
                           ),
-                          child: (product.thumbnailImage != null ||
+                          child:
+                              (product.thumbnailImage != null ||
                                   product.image != null)
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: CustomNetworkImage(
-                                    imageUrl: product.thumbnailImage ??
+                                    imageUrl:
+                                        product.thumbnailImage ??
                                         product.image!,
                                     width: 60,
                                     height: 60,
@@ -1122,8 +1155,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                               context,
                               SecretPasswordLocations.productEdit,
                               onSuccess: () {
-                                _showAddEditProductDialog(context,
-                                    product: product);
+                                _showAddEditProductDialog(
+                                  context,
+                                  product: product,
+                                );
                               },
                             );
                           },
@@ -1180,23 +1215,18 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           decoration: BoxDecoration(
             color: color.withOpacity(0.08),
             borderRadius: BorderRadius.circular(6),
-            border: Border.all(
-              color: color.withOpacity(0.2),
-              width: 1,
-            ),
+            border: Border.all(color: color.withOpacity(0.2), width: 1),
           ),
-          child: Icon(
-            icon,
-            size: 18,
-            color: color,
-          ),
+          child: Icon(icon, size: 18, color: color),
         ),
       ),
     );
   }
 
   void _showDeleteConfirmationDialog(
-      BuildContext context, ProductModel product) {
+    BuildContext context,
+    ProductEntity product,
+  ) {
     performSecureActionDialog(
       context,
       SecretPasswordLocations.productDeletion,
@@ -1228,7 +1258,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     final currentState = context.read<StockManagementCubit>().state;
     final currentProducts = currentState.maybeWhen(
       loaded: (products, _, __, ___, ____, _____, ______, _______) => products,
-      orElse: () => <ProductModel>[],
+      orElse: () => <ProductEntity>[],
     );
 
     if (currentProducts.isNotEmpty) {
@@ -1266,11 +1296,13 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
     // Setup local state for dialog
     final TextEditingController maxPriceController = TextEditingController();
-    final isPriceFilterEnabledWidgetNotifier =
-        ValueNotifier(_isPriceFilterEnabled.value);
+    final isPriceFilterEnabledWidgetNotifier = ValueNotifier(
+      _isPriceFilterEnabled.value,
+    );
     final tempSelectedServiceId = ValueNotifier<int?>(selectedServiceId);
-    final tempSelectedSearchTypeIndex =
-        ValueNotifier<int>(_selectedSearchTypeIndex.value);
+    final tempSelectedSearchTypeIndex = ValueNotifier<int>(
+      _selectedSearchTypeIndex.value,
+    );
     final tempPriceRange = ValueNotifier<RangeValues>(_priceRange.value);
 
     final searchTypes = ['Name', 'Category', 'Model', 'Color'];
@@ -1284,10 +1316,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
         elevation: 0,
         child: Container(
           width: 500,
-          constraints: const BoxConstraints(
-            maxWidth: 500,
-            maxHeight: 700,
-          ),
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -1304,8 +1333,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
             children: [
               // Header
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF8F9FA),
                   borderRadius: const BorderRadius.vertical(
@@ -1376,8 +1407,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                           return Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children:
-                                List.generate(searchTypes.length, (index) {
+                            children: List.generate(searchTypes.length, (
+                              index,
+                            ) {
                               final isSelected = index == selectedIndex;
                               return GestureDetector(
                                 onTap: () {
@@ -1390,8 +1422,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? const Color(0xFF6132E4)
-                                            .withOpacity(0.1)
+                                        ? const Color(
+                                            0xFF6132E4,
+                                          ).withOpacity(0.1)
                                         : Colors.grey.shade50,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
@@ -1442,20 +1475,21 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                             valueListenable: isPriceFilterEnabledWidgetNotifier,
                             builder: (context, isEnabled, child) =>
                                 Transform.scale(
-                              scale: 0.85,
-                              child: Switch(
-                                value: isEnabled,
-                                onChanged: (value) {
-                                  isPriceFilterEnabledWidgetNotifier.value =
-                                      value;
-                                },
-                                activeThumbColor: const Color(0xFF6132E4),
-                                activeTrackColor:
-                                    const Color(0xFF6132E4).withOpacity(0.3),
-                                inactiveThumbColor: Colors.grey.shade400,
-                                inactiveTrackColor: Colors.grey.shade200,
-                              ),
-                            ),
+                                  scale: 0.85,
+                                  child: Switch(
+                                    value: isEnabled,
+                                    onChanged: (value) {
+                                      isPriceFilterEnabledWidgetNotifier.value =
+                                          value;
+                                    },
+                                    activeThumbColor: const Color(0xFF6132E4),
+                                    activeTrackColor: const Color(
+                                      0xFF6132E4,
+                                    ).withOpacity(0.3),
+                                    inactiveThumbColor: Colors.grey.shade400,
+                                    inactiveTrackColor: Colors.grey.shade200,
+                                  ),
+                                ),
                           ),
                         ],
                       ),
@@ -1487,17 +1521,20 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.05),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.1),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
+                                                color: const Color(
+                                                  0xFF6132E4,
+                                                ).withOpacity(0.3),
                                               ),
                                             ),
                                             child: Text(
@@ -1512,7 +1549,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 12),
+                                              horizontal: 12,
+                                            ),
                                             child: Icon(
                                               Icons.arrow_forward,
                                               size: 18,
@@ -1527,17 +1565,20 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.05),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.1),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
+                                                color: const Color(
+                                                  0xFF6132E4,
+                                                ).withOpacity(0.3),
                                               ),
                                             ),
                                             child: Text(
@@ -1561,40 +1602,47 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                       valueListenable: tempPriceRange,
                                       builder: (context, range, child) =>
                                           ValueListenableBuilder<double>(
-                                        valueListenable: _maxPriceNotifier,
-                                        builder:
-                                            (context, currentMaxPrice, child) =>
-                                                SliderTheme(
-                                          data: SliderThemeData(
-                                            activeTrackColor:
-                                                const Color(0xFF6132E4),
-                                            inactiveTrackColor:
-                                                Colors.grey.shade200,
-                                            thumbColor: const Color(0xFF6132E4),
-                                            overlayColor:
-                                                const Color(0xFF6132E4)
-                                                    .withOpacity(0.2),
-                                            trackHeight: 4,
-                                            thumbShape:
-                                                const RoundSliderThumbShape(
-                                              enabledThumbRadius: 8,
-                                            ),
-                                            overlayShape:
-                                                const RoundSliderOverlayShape(
-                                              overlayRadius: 16,
-                                            ),
+                                            valueListenable: _maxPriceNotifier,
+                                            builder:
+                                                (
+                                                  context,
+                                                  currentMaxPrice,
+                                                  child,
+                                                ) => SliderTheme(
+                                                  data: SliderThemeData(
+                                                    activeTrackColor:
+                                                        const Color(0xFF6132E4),
+                                                    inactiveTrackColor:
+                                                        Colors.grey.shade200,
+                                                    thumbColor: const Color(
+                                                      0xFF6132E4,
+                                                    ),
+                                                    overlayColor: const Color(
+                                                      0xFF6132E4,
+                                                    ).withOpacity(0.2),
+                                                    trackHeight: 4,
+                                                    thumbShape:
+                                                        const RoundSliderThumbShape(
+                                                          enabledThumbRadius: 8,
+                                                        ),
+                                                    overlayShape:
+                                                        const RoundSliderOverlayShape(
+                                                          overlayRadius: 16,
+                                                        ),
+                                                  ),
+                                                  child: RangeSlider(
+                                                    values: range,
+                                                    min: 0,
+                                                    max: currentMaxPrice,
+                                                    divisions: 20,
+                                                    onChanged:
+                                                        (RangeValues newRange) {
+                                                          tempPriceRange.value =
+                                                              newRange;
+                                                        },
+                                                  ),
+                                                ),
                                           ),
-                                          child: RangeSlider(
-                                            values: range,
-                                            min: 0,
-                                            max: currentMaxPrice,
-                                            divisions: 20,
-                                            onChanged: (RangeValues newRange) {
-                                              tempPriceRange.value = newRange;
-                                            },
-                                          ),
-                                        ),
-                                      ),
                                     ),
 
                                     const SizedBox(height: 16),
@@ -1633,9 +1681,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                                 border: InputBorder.none,
                                                 contentPadding:
                                                     EdgeInsets.symmetric(
-                                                  horizontal: 12,
-                                                  vertical: 12,
-                                                ),
+                                                      horizontal: 12,
+                                                      vertical: 12,
+                                                    ),
                                               ),
                                               style: const TextStyle(
                                                 fontSize: 14,
@@ -1653,10 +1701,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                             if (newMax != null && newMax > 0) {
                                               _maxPriceNotifier.value = newMax;
                                               tempPriceRange.value =
-                                                  RangeValues(
-                                                0,
-                                                newMax,
-                                              );
+                                                  RangeValues(0, newMax);
                                               maxPriceController.clear();
                                             }
                                           },
@@ -1665,8 +1710,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                               horizontal: 16,
                                               vertical: 12,
                                             ),
-                                            backgroundColor:
-                                                const Color(0xFF6132E4),
+                                            backgroundColor: const Color(
+                                              0xFF6132E4,
+                                            ),
                                             foregroundColor: Colors.white,
                                             elevation: 0,
                                             shape: RoundedRectangleBorder(
@@ -1703,27 +1749,31 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                                       valueListenable: _maxPriceNotifier,
                                       builder:
                                           (context, currentMaxPrice, child) {
-                                        final quickFilters =
-                                            _generateQuickFilters(
-                                          0,
-                                          currentMaxPrice,
-                                        );
+                                            final quickFilters =
+                                                _generateQuickFilters(
+                                                  0,
+                                                  currentMaxPrice,
+                                                );
 
-                                        return Wrap(
-                                          spacing: 8,
-                                          runSpacing: 8,
-                                          children: quickFilters
-                                              .map((filter) =>
-                                                  _buildQuickFilterChip(
-                                                    filter['label'],
-                                                    filter['range'],
-                                                    tempPriceRange,
-                                                    (val) => tempPriceRange
-                                                        .value = val,
-                                                  ))
-                                              .toList(),
-                                        );
-                                      },
+                                            return Wrap(
+                                              spacing: 8,
+                                              runSpacing: 8,
+                                              children: quickFilters
+                                                  .map(
+                                                    (
+                                                      filter,
+                                                    ) => _buildQuickFilterChip(
+                                                      filter['label'],
+                                                      filter['range'],
+                                                      tempPriceRange,
+                                                      (val) =>
+                                                          tempPriceRange.value =
+                                                              val,
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            );
+                                          },
                                     ),
                                   ],
                                 )
@@ -1754,8 +1804,10 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                         onPressed: () {
                           tempSelectedSearchTypeIndex.value = 0;
                           tempSelectedServiceId.value = -1;
-                          tempPriceRange.value =
-                              RangeValues(0, _maxPriceNotifier.value);
+                          tempPriceRange.value = RangeValues(
+                            0,
+                            _maxPriceNotifier.value,
+                          );
                           isPriceFilterEnabledWidgetNotifier.value = false;
                         },
                         style: OutlinedButton.styleFrom(
@@ -1855,7 +1907,9 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
   // Helper function to generate dynamic quick filters based on max price
   List<Map<String, dynamic>> _generateQuickFilters(
-      double minPrice, double maxPrice) {
+    double minPrice,
+    double maxPrice,
+  ) {
     final List<Map<String, dynamic>> filters = [];
 
     // Calculate dynamic ranges based on maxPrice
@@ -1940,42 +1994,40 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     RangeValues range,
     ValueNotifier<RangeValues> currentRange,
     void Function(RangeValues) onChanged,
-  ) =>
-      ValueListenableBuilder<RangeValues>(
-        valueListenable: currentRange,
-        builder: (context, current, child) {
-          final isSelected =
-              current.start == range.start && current.end == range.end;
+  ) => ValueListenableBuilder<RangeValues>(
+    valueListenable: currentRange,
+    builder: (context, current, child) {
+      final isSelected =
+          current.start == range.start && current.end == range.end;
 
-          return GestureDetector(
-            onTap: () {
-              currentRange.value = range;
-              onChanged(range);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade300,
-                ),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isSelected ? Colors.white : Colors.grey.shade700,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                ),
-              ),
-            ),
-          );
+      return GestureDetector(
+        onTap: () {
+          currentRange.value = range;
+          onChanged(range);
         },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFF6132E4)
+                  : Colors.grey.shade300,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isSelected ? Colors.white : Colors.grey.shade700,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+        ),
       );
+    },
+  );
 
   /// Apply product filters based on selection
   void _applyProductFilters(
@@ -2005,12 +2057,12 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
     // Apply filter with service ID, search parameters, and price range
     context.read<StockManagementCubit>().loadProducts(
-          serviceId: serviceId,
-          searchQuery: searchTerm,
-          searchType: searchType,
-          startPrice: isPriceEnabled ? priceRange.start.toInt() : null,
-          endPrice: isPriceEnabled ? priceRange.end.toInt() : null,
-          page: 1,
-        );
+      serviceId: serviceId,
+      searchQuery: searchTerm,
+      searchType: searchType,
+      startPrice: isPriceEnabled ? priceRange.start.toInt() : null,
+      endPrice: isPriceEnabled ? priceRange.end.toInt() : null,
+      page: 1,
+    );
   }
 }

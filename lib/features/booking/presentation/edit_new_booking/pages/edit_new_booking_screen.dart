@@ -3,6 +3,8 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
@@ -19,9 +21,7 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/widgets/edit_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_partial_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
@@ -40,7 +40,7 @@ import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
@@ -114,7 +114,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   bool sendPdfToWhatsApp = true;
 
   // Products/Services
-  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedModel>>(
+  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
     [],
   );
 
@@ -138,7 +138,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
   // Reactive overlay state — updated without recreating the OverlayEntry
-  final _overlayProducts = ValueNotifier<List<ProductModel>>([]);
+  final _overlayProducts = ValueNotifier<List<ProductEntity>>([]);
   final _overlayIsLoading = ValueNotifier<bool>(false);
 
   // Product search filter state
@@ -201,7 +201,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
-  // ProductSelectedModel? _selectedProductForCustomization;
+  // ProductSelectedEntity? _selectedProductForCustomization;
 
   @override
   void initState() {
@@ -347,8 +347,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       log(
         '📦 Product: ${item.name}, Measurements: ${item.measurements.length}',
       );
-      return ProductSelectedModel(
-        variant: ProductInfoModel(
+      return ProductSelectedEntity(
+        variant: ProductInfoEntity(
           id: item.id,
           variantId: item.variantId,
           productId: item.productId,
@@ -366,7 +366,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           remainingStock: null,
         ),
         measurements: item
-            .measurements, // CRITICAL: Copy measurements to ProductSelectedModel
+            .measurements, // CRITICAL: Copy measurements to ProductSelectedEntity
         quantity: item.quantity,
         amount: item.amount,
       );
@@ -741,8 +741,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Set products
     final products = sale.products.map((item) {
-      return ProductSelectedModel(
-        variant: ProductInfoModel(
+      return ProductSelectedEntity(
+        variant: ProductInfoEntity(
           id: item.id,
           variantId: item.variantId,
           productId: item.productId,
@@ -956,7 +956,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             useAvailableProductsApi,
             isSales,
           ) => products,
-      orElse: () => <ProductModel>[],
+      orElse: () => <ProductEntity>[],
     );
 
     if (currentProducts.isNotEmpty) {
@@ -2251,7 +2251,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                   );
                               if (index != -1) {
                                 final updatedProducts =
-                                    List<ProductSelectedModel>.from(
+                                    List<ProductSelectedEntity>.from(
                                       selectedProductsNotifier.value,
                                     );
                                 updatedProducts[index] = product.copyWith(
@@ -2927,7 +2927,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           const SizedBox(height: 20),
 
           // Locations (Optional) - Only for Vehicles
-          ValueListenableBuilder<List<ProductSelectedModel>>(
+          ValueListenableBuilder<List<ProductSelectedEntity>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
               final hasVehicles = products.any(
@@ -3144,7 +3144,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   Widget _buildStepTwoSummary() {
-    return ValueListenableBuilder<List<ProductSelectedModel>>(
+    return ValueListenableBuilder<List<ProductSelectedEntity>>(
       valueListenable: selectedProductsNotifier,
       builder: (context, products, _) {
         final productTotal = products.fold<int>(
@@ -3286,7 +3286,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // Align to left
         children: [
-          ValueListenableBuilder<List<ProductSelectedModel>>(
+          ValueListenableBuilder<List<ProductSelectedEntity>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
               return Text(
@@ -3422,7 +3422,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                               .firstWhere(
                                 (v) =>
                                     v.id == selectedProduct.variant.variantId,
-                                orElse: () => ProductVariantModel(
+                                orElse: () => ProductVariantEntity(
                                   id: 0,
                                   attribute: '',
                                   price: null,
@@ -3584,7 +3584,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 child: ValueListenableBuilder<bool>(
                   valueListenable: _overlayIsLoading,
                   builder: (context, isLoading, _) {
-                    return ValueListenableBuilder<List<ProductModel>>(
+                    return ValueListenableBuilder<List<ProductEntity>>(
                       valueListenable: _overlayProducts,
                       builder: (context, productList, _) {
                         return Container(
@@ -3754,7 +3754,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Builds search item for the overlay - requires variant selection before adding
-  Widget _buildOverlaySearchItem(ProductModel product) {
+  Widget _buildOverlaySearchItem(ProductEntity product) {
     return _OverlaySearchItem(
       product: product,
       onAddProduct: (selectedVariant) {
@@ -3767,8 +3767,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   /// Add product from search with specific variant
   void _addProductFromSearchWithVariant(
-    ProductModel product,
-    ProductVariantModel variant,
+    ProductEntity product,
+    ProductVariantEntity variant,
   ) {
     log(
       '_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}',
@@ -3791,7 +3791,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       'Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)',
     );
 
-    final products = List<ProductSelectedModel>.from(
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
 
@@ -3826,8 +3826,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           : variant.attribute;
 
       products.add(
-        ProductSelectedModel(
-          variant: ProductInfoModel(
+        ProductSelectedEntity(
+          variant: ProductInfoEntity(
             id: variant.id,
             variantId: variant.id,
             productId: product.id,
@@ -3856,7 +3856,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Builds individual search result item - tapping opens variant selection dialog
-  Widget _buildSearchResultItem(ProductModel product) {
+  Widget _buildSearchResultItem(ProductEntity product) {
     // Check if product is already in selected list
     final selectedProducts = selectedProductsNotifier.value;
     final isAdded = selectedProducts.any(
@@ -4051,7 +4051,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           orElse: () => variants.first,
         );
 
-        final products = List<ProductSelectedModel>.from(
+        final products = List<ProductSelectedEntity>.from(
           selectedProductsNotifier.value,
         );
 
@@ -4066,8 +4066,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           );
         } else {
           products.add(
-            ProductSelectedModel(
-              variant: ProductInfoModel(
+            ProductSelectedEntity(
+              variant: ProductInfoEntity(
                 id: id,
                 variantId: id,
                 productId: product.id,
@@ -4203,7 +4203,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   Widget _buildSelectedProductsList() {
-    return ValueListenableBuilder<List<ProductSelectedModel>>(
+    return ValueListenableBuilder<List<ProductSelectedEntity>>(
       valueListenable: selectedProductsNotifier,
       builder: (context, products, _) {
         if (products.isEmpty) {
@@ -4257,7 +4257,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         serviceType == MainServiceType.costume;
   }
 
-  Widget _buildProductRow(ProductSelectedModel product) {
+  Widget _buildProductRow(ProductSelectedEntity product) {
     final isSales = selectedBookingType == BookingType.sales;
     final rentalDays = !isSales ? _calculateRentalDays() : 0;
     // Only multiply price by days for qualifying service types
@@ -4548,7 +4548,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Increment quantity of a product with stock validation
-  void _incrementQuantity(ProductSelectedModel product) {
+  void _incrementQuantity(ProductSelectedEntity product) {
     // Check available stock using remainingStock with fallback to stock
     final availableStock =
         product.variant.remainingStock ?? product.variant.stock ?? 0;
@@ -4562,7 +4562,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       return;
     }
 
-    final products = List<ProductSelectedModel>.from(
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -4577,8 +4577,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Decrement quantity of a product
-  void _decrementQuantity(ProductSelectedModel product) {
-    final products = List<ProductSelectedModel>.from(
+  void _decrementQuantity(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -4596,7 +4596,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
   }
 
-  void _startEditingPrice(ProductSelectedModel product) {
+  void _startEditingPrice(ProductSelectedEntity product) {
     setState(() {
       _editingVariantId = product.variant.variantId;
       _inlinePriceController.text = product.amount.toString();
@@ -4607,7 +4607,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     });
   }
 
-  void _saveEditingPrice(ProductSelectedModel product) {
+  void _saveEditingPrice(ProductSelectedEntity product) {
     if (_editingVariantId == null) return;
 
     final newPrice = int.tryParse(_inlinePriceController.text);
@@ -4623,8 +4623,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Remove a product from the selected list
-  void _removeProduct(ProductSelectedModel product) {
-    final products = List<ProductSelectedModel>.from(
+  void _removeProduct(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     products.removeWhere(
@@ -4634,7 +4634,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Show dialog to edit product price
-  void _showPriceEditDialog(ProductSelectedModel product) {
+  void _showPriceEditDialog(ProductSelectedEntity product) {
     final priceController = TextEditingController(
       text: product.amount.toString(),
     );
@@ -4696,8 +4696,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Update the price of a product
-  void _updateProductPrice(ProductSelectedModel product, int newPrice) {
-    final products = List<ProductSelectedModel>.from(
+  void _updateProductPrice(ProductSelectedEntity product, int newPrice) {
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -5048,7 +5048,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
           // const SizedBox(height: 3),
           // Add/Edit customization button - Only for Dresses
-          ValueListenableBuilder<List<ProductSelectedModel>>(
+          ValueListenableBuilder<List<ProductSelectedEntity>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
               final hasDresses = products.any(
@@ -5289,7 +5289,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   //   // If "All Services" is selected (-1), pass null to the screen
   //   final serviceIdToUse = selectedServiceId == -1 ? null : selectedServiceId;
 
-  //   final result = await Navigator.push<List<ProductSelectedModel>>(
+  //   final result = await Navigator.push<List<ProductSelectedEntity>>(
   //     context,
   //     MaterialPageRoute(
   //       builder: (_) => MultiBlocProvider(
@@ -6119,7 +6119,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   const SizedBox(height: 7),
 
                   // Running Kilometers - Only for Vehicles
-                  ValueListenableBuilder<List<ProductSelectedModel>>(
+                  ValueListenableBuilder<List<ProductSelectedEntity>>(
                     valueListenable: selectedProductsNotifier,
                     builder: (context, products, _) {
                       final hasVehicles = products.any(
@@ -6354,7 +6354,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   const SizedBox(height: 20),
 
                   // Locations - Only for Vehicles
-                  ValueListenableBuilder<List<ProductSelectedModel>>(
+                  ValueListenableBuilder<List<ProductSelectedEntity>>(
                     valueListenable: selectedProductsNotifier,
                     builder: (context, products, _) {
                       final hasVehicles = products.any(
@@ -6530,7 +6530,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   // Helper methods replaced - Using BookingTextFieldBuilder
 
   Widget _buildFinalSummary() {
-    return ValueListenableBuilder<List<ProductSelectedModel>>(
+    return ValueListenableBuilder<List<ProductSelectedEntity>>(
       valueListenable: selectedProductsNotifier,
       builder: (context, products, _) {
         final productTotal = products.fold<int>(
@@ -6681,8 +6681,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
 // Stateful widget for overlay search item with variant selection
 class _OverlaySearchItem extends StatefulWidget {
-  final ProductModel product;
-  final Function(ProductVariantModel) onAddProduct;
+  final ProductEntity product;
+  final Function(ProductVariantEntity) onAddProduct;
 
   const _OverlaySearchItem({required this.product, required this.onAddProduct});
 
@@ -6691,7 +6691,7 @@ class _OverlaySearchItem extends StatefulWidget {
 }
 
 class _OverlaySearchItemState extends State<_OverlaySearchItem> {
-  ProductVariantModel? selectedVariant;
+  ProductVariantEntity? selectedVariant;
 
   @override
   void initState() {

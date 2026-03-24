@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,12 +8,8 @@ part 'product_request_model.freezed.dart';
 part 'product_request_model.g.dart';
 
 List<Map<String, dynamic>>? _variantsToJson(
-        List<ProductVariantModel>? variants) =>
-    variants
-        ?.map(
-          (e) => e.toJsonOnly(),
-        )
-        .toList();
+  List<ProductVariantModel>? variants,
+) => variants?.map((e) => e.toJsonOnly()).toList();
 
 @freezed
 abstract class ProductRequestModel with _$ProductRequestModel {
@@ -47,6 +44,39 @@ abstract class ProductRequestModel with _$ProductRequestModel {
 
   factory ProductRequestModel.fromJson(Map<String, dynamic> json) =>
       _$ProductRequestModelFromJson(json);
+
+  factory ProductRequestModel.fromEntity(ProductRequestEntity entity) =>
+      ProductRequestModel(
+        productId: entity.productId,
+        serviceId: entity.serviceId,
+        name: entity.name,
+        description: entity.description,
+        color: entity.color,
+        purchasePrice: entity.purchasePrice,
+        price: entity.price,
+        salePrice: entity.salePrice,
+        category: entity.category,
+        model: entity.model,
+        registrationNumber: entity.registrationNumber,
+        pollutionExpiry: entity.pollutionExpiry,
+        insuranceExpiry: entity.insuranceExpiry,
+        fitnessExpiry: entity.fitnessExpiry,
+        barcode: entity.barcode,
+        variants: entity.variants
+            ?.map(
+              (e) => ProductVariantModel(
+                id: e.id,
+                attribute: e.attribute,
+                stock: e.stock,
+                remainingStock: e.remainingStock,
+                price: e.price,
+                salePrice: e.salePrice,
+                externalQrCode: e.externalQrCode,
+              ),
+            )
+            .toList(),
+        image: entity.image,
+      );
 }
 
 extension ProductRequestModelExtension on ProductRequestModel {
@@ -63,21 +93,26 @@ extension ProductRequestModelExtension on ProductRequestModel {
       print('🔧 toFormJson - Added registration_number to attributes');
     }
     if (pollutionExpiry != null && pollutionExpiry!.isNotEmpty) {
-      json['attributes[pollution_expiry]'] =
-          _convertDateFormat(pollutionExpiry!);
+      json['attributes[pollution_expiry]'] = _convertDateFormat(
+        pollutionExpiry!,
+      );
       print(
-          '🔧 toFormJson - Added pollution_expiry to attributes: ${_convertDateFormat(pollutionExpiry!)}');
+        '🔧 toFormJson - Added pollution_expiry to attributes: ${_convertDateFormat(pollutionExpiry!)}',
+      );
     }
     if (insuranceExpiry != null && insuranceExpiry!.isNotEmpty) {
-      json['attributes[insurance_expiry]'] =
-          _convertDateFormat(insuranceExpiry!);
+      json['attributes[insurance_expiry]'] = _convertDateFormat(
+        insuranceExpiry!,
+      );
       print(
-          '🔧 toFormJson - Added insurance_expiry to attributes: ${_convertDateFormat(insuranceExpiry!)}');
+        '🔧 toFormJson - Added insurance_expiry to attributes: ${_convertDateFormat(insuranceExpiry!)}',
+      );
     }
     if (fitnessExpiry != null && fitnessExpiry!.isNotEmpty) {
       json['attributes[permit_expiry]'] = _convertDateFormat(fitnessExpiry!);
       print(
-          '🔧 toFormJson - Added permit_expiry to attributes: ${_convertDateFormat(fitnessExpiry!)}');
+        '🔧 toFormJson - Added permit_expiry to attributes: ${_convertDateFormat(fitnessExpiry!)}',
+      );
     }
     // Note: barcode is NOT added because it's not valid for Car Rentals service
 
@@ -94,12 +129,10 @@ extension ProductRequestModelExtension on ProductRequestModel {
           print('⚠️ toFormJson - Empty filename, using: $filename');
         }
 
-        json['image'] = MultipartFile.fromBytes(
-          bytes,
-          filename: filename,
-        );
+        json['image'] = MultipartFile.fromBytes(bytes, filename: filename);
         print(
-            '✅ toFormJson - Image added to FormData with filename: $filename');
+          '✅ toFormJson - Image added to FormData with filename: $filename',
+        );
       } catch (e) {
         print('❌ toFormJson - Error reading image: $e');
       }

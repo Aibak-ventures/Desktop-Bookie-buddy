@@ -4,7 +4,7 @@ part of 'select_product_bloc.dart';
 abstract class SelectProductState with _$SelectProductState {
   const factory SelectProductState.loading() = _Loading;
   const factory SelectProductState.loaded({
-    required List<ProductModel> products,
+    required List<ProductEntity> products,
     required String? nextPageUrl,
     int? serviceId,
     required String pickupDate,

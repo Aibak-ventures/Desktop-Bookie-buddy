@@ -1,15 +1,15 @@
 import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_field_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/add_customization_screen.dart'; // For getMeasurements
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 
 class BookingCustomizationSection extends StatefulWidget {
-  final List<ProductSelectedModel> selectedProducts;
-  final Function(ProductSelectedModel, List<MeasurementValueModel>)
-      onUpdateMeasurements;
+  final List<ProductSelectedEntity> selectedProducts;
+  final Function(ProductSelectedEntity, List<MeasurementValueEntity>)
+  onUpdateMeasurements;
   final VoidCallback onBack;
 
   const BookingCustomizationSection({
@@ -27,13 +27,14 @@ class BookingCustomizationSection extends StatefulWidget {
 class _BookingCustomizationSectionState
     extends State<BookingCustomizationSection> {
   // Currently selected product for customization
-  ProductSelectedModel? _selectedProduct;
+  ProductSelectedEntity? _selectedProduct;
 
   // Controllers for the right panel
   final ValueNotifier<List<MeasurementFieldModel>> _measurementsNotifier =
       ValueNotifier([]);
-  final ValueNotifier<GenderType> _genderNotifier =
-      ValueNotifier(GenderType.female);
+  final ValueNotifier<GenderType> _genderNotifier = ValueNotifier(
+    GenderType.female,
+  );
   final TextEditingController _customMeasurementController =
       TextEditingController();
   // final GlobalKey<FormState> _customMeasurementFormKey = GlobalKey<FormState>();
@@ -61,20 +62,21 @@ class _BookingCustomizationSectionState
     }
   }
 
-  void _selectProduct(ProductSelectedModel product) {
+  void _selectProduct(ProductSelectedEntity product) {
     setState(() {
       _selectedProduct = product;
     });
     _loadMeasurementsForProduct(product);
   }
 
-  void _loadMeasurementsForProduct(ProductSelectedModel product) {
+  void _loadMeasurementsForProduct(ProductSelectedEntity product) {
     // 1. Determine Gender
     // Try to infer gender from existing measurements or default to Female/Unisex
     if (product.measurements.isNotEmpty) {
       final genders = product.measurements.map((e) => e.gender).toSet();
-      final filteredGenders =
-          genders.where((g) => g != GenderType.unisex).toSet();
+      final filteredGenders = genders
+          .where((g) => g != GenderType.unisex)
+          .toSet();
 
       if (filteredGenders.length == 1) {
         _genderNotifier.value = filteredGenders.first ?? GenderType.female;
@@ -97,7 +99,7 @@ class _BookingCustomizationSectionState
       // Find saved value if any
       final existing = savedMeasurements.firstWhere(
         (e) => e.key == field.key,
-        orElse: () => MeasurementValueModel(
+        orElse: () => MeasurementValueEntity(
           name: field.name,
           key: field.key,
           value: '',
@@ -135,7 +137,7 @@ class _BookingCustomizationSectionState
     final filteredMeasurements = _measurementsNotifier.value
         .where((field) => field.controller.text.trim().isNotEmpty)
         .map(
-          (field) => MeasurementValueModel(
+          (field) => MeasurementValueEntity(
             name: field.name,
             key: field.key,
             value: field.controller.text.trim(),
@@ -163,10 +165,7 @@ class _BookingCustomizationSectionState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Left Side: Product List
-          Expanded(
-            flex: 5,
-            child: _buildProductList(),
-          ),
+          Expanded(flex: 5, child: _buildProductList()),
           const SizedBox(width: 16),
           // Right Side: Customization Form
           SizedBox(
@@ -211,8 +210,10 @@ class _BookingCustomizationSectionState
                   child: Center(
                     child: Text(
                       'Variants',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -227,8 +228,10 @@ class _BookingCustomizationSectionState
                     // ),
                     child: const Text(
                       'Customization',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -254,7 +257,7 @@ class _BookingCustomizationSectionState
     );
   }
 
-  Widget _buildProductRow(ProductSelectedModel product, bool isSelected) {
+  Widget _buildProductRow(ProductSelectedEntity product, bool isSelected) {
     return Container(
       color: isSelected ? const Color(0xFFEBE4FF) : Colors.white, // Highlight
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -342,8 +345,9 @@ class _BookingCustomizationSectionState
                   child: Text(
                     isSelected ? 'Edit' : 'Add',
                     style: TextStyle(
-                      color:
-                          isSelected ? const Color(0xFF6132E4) : Colors.green,
+                      color: isSelected
+                          ? const Color(0xFF6132E4)
+                          : Colors.green,
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
@@ -425,11 +429,14 @@ class _BookingCustomizationSectionState
                             decoration: const InputDecoration(
                               hintText: 'Eg: Neck, Sleeve',
                               hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13), // Fixed font size
+                                color: Colors.grey,
+                                fontSize: 13,
+                              ), // Fixed font size
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 12), // Adjusted
+                                horizontal: 10,
+                                vertical: 12,
+                              ), // Adjusted
                             ),
                           ),
                         ),
@@ -440,11 +447,13 @@ class _BookingCustomizationSectionState
                           if (_customMeasurementController.text
                               .trim()
                               .isNotEmpty) {
-                            final name =
-                                _customMeasurementController.text.trim();
+                            final name = _customMeasurementController.text
+                                .trim();
                             // Add logic to add controller
-                            final newKey =
-                                name.toLowerCase().trim().replaceAll(' ', '_');
+                            final newKey = name.toLowerCase().trim().replaceAll(
+                              ' ',
+                              '_',
+                            );
                             setState(() {
                               _measurementsNotifier.value = [
                                 ..._measurementsNotifier.value,
@@ -454,7 +463,7 @@ class _BookingCustomizationSectionState
                                   description: '',
                                   gender: GenderType.unisex,
                                   controller: TextEditingController(),
-                                )
+                                ),
                               ];
                             });
                             _customMeasurementController.clear();
@@ -528,8 +537,10 @@ class _BookingCustomizationSectionState
                 style: TextStyle(fontSize: 13, color: Colors.black87),
               ),
             ),
-            const Text(" : ",
-                style: TextStyle(fontSize: 13, color: Colors.black87)),
+            const Text(
+              " : ",
+              style: TextStyle(fontSize: 13, color: Colors.black87),
+            ),
             const SizedBox(width: 10),
             SizedBox(
               width: 140,
@@ -547,11 +558,15 @@ class _BookingCustomizationSectionState
                     isExpanded: true,
                     icon: const Icon(Icons.keyboard_arrow_down, size: 18),
                     items: GenderType.values
-                        .map((g) => DropdownMenuItem(
-                              value: g,
-                              child: Text(g.name.toUpperCase(),
-                                  style: const TextStyle(fontSize: 12)),
-                            ))
+                        .map(
+                          (g) => DropdownMenuItem(
+                            value: g,
+                            child: Text(
+                              g.name.toUpperCase(),
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        )
                         .toList(),
                     onChanged: (val) {
                       if (val != null) _genderNotifier.value = val;
@@ -587,12 +602,16 @@ class _BookingCustomizationSectionState
                     width: 110,
                     child: Text(
                       field.name,
-                      style:
-                          const TextStyle(fontSize: 13, color: Colors.black87),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
-                  const Text(" : ",
-                      style: TextStyle(fontSize: 13, color: Colors.black87)),
+                  const Text(
+                    " : ",
+                    style: TextStyle(fontSize: 13, color: Colors.black87),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Container(
@@ -608,7 +627,9 @@ class _BookingCustomizationSectionState
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 12), // Adjusted
+                            horizontal: 10,
+                            vertical: 12,
+                          ), // Adjusted
                         ),
                       ),
                     ),

@@ -3,13 +3,16 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_monthly_expense_model/product_monthly_data_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_request_model/product_request_model.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_action_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_query_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_request_model/product_request_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductRepositoryImpl implements IProductRepository {
@@ -22,17 +25,16 @@ class ProductRepositoryImpl implements IProductRepository {
   }) : _queryDatasource = queryDatasource,
        _actionDatasource = actionDatasource;
 
-  // CREATE or UPDATE Product
   @override
-  Future<void> saveProduct({required ProductRequestModel product}) async {
+  Future<void> saveProduct({required ProductRequestEntity product}) async {
     try {
       final response = await safeApiCall(
-        () => _actionDatasource.addOrUpdateProduct(product: product),
+        () => _actionDatasource.addOrUpdateProduct(
+          product: ProductRequestModel.fromEntity(product),
+        ),
       );
       log('Save product response: ${response.toJson()}');
-      if (response.status.isSuccess) {
-        return;
-      }
+      if (response.status.isSuccess) return;
       log('Save product failed: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
@@ -41,25 +43,6 @@ class ProductRepositoryImpl implements IProductRepository {
     }
   }
 
-  // Delete expense
-  // Future<void> deleteExpense(int expenseId) async {
-  //   try {
-  //     final response = await safeApiCall(
-  //       () => _actionService.deleteExpense(expenseId),
-  //     );
-  //     log('Delete expense response: ${response.toJson()}');
-  //     if (response.status.isSuccess) {
-  //       return;
-  //     }
-  //     log('Delete expense failed: ${response.devMessage}');
-  //     throw response.message ?? 'Failed to complete operation';
-  //   } catch (e, stack) {
-  //     log('Error deleting expense: $e', stackTrace: stack);
-  //     rethrow;
-  //   }
-  // }
-
-  // Delete product
   @override
   Future<void> deleteProduct({required int productId, int? variantId}) async {
     try {
@@ -70,9 +53,7 @@ class ProductRepositoryImpl implements IProductRepository {
         ),
       );
       log('Delete product response: ${response.toJson()}');
-      if (response.status.isSuccess) {
-        return;
-      }
+      if (response.status.isSuccess) return;
       log('Delete product failed: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
@@ -99,9 +80,7 @@ class ProductRepositoryImpl implements IProductRepository {
           externalQrCode: externalQrCode,
         ),
       );
-      if (response.status.isSuccess) {
-        return;
-      }
+      if (response.status.isSuccess) return;
       log('Error updating variant: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
@@ -124,9 +103,7 @@ class ProductRepositoryImpl implements IProductRepository {
           stock: stock,
         ),
       );
-      if (response.status.isSuccess) {
-        return;
-      }
+      if (response.status.isSuccess) return;
       log('Error adding product variants: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
@@ -135,16 +112,14 @@ class ProductRepositoryImpl implements IProductRepository {
     }
   }
 
-  // Fetch product info
   @override
-  Future<ProductModel> getProductInfo(int productId) async {
+  Future<ProductEntity> getProductInfo(int productId) async {
     try {
       final response = await safeApiCall(
         () => _queryDatasource.fetchProductInfo(productId),
       );
-      // log('Fetch product info response: ${response.toJson()}');
       if (response.status.isSuccess) {
-        return ProductModel.fromJson(response.data);
+        return ProductModel.fromJson(response.data).toEntity();
       }
       log('Fetch product info failed: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
@@ -154,9 +129,8 @@ class ProductRepositoryImpl implements IProductRepository {
     }
   }
 
-  // Search products
   @override
-  Future<PaginationModel<ProductModel>> searchAndFilterProducts({
+  Future<PaginationModel<ProductEntity>> searchAndFilterProducts({
     int? serviceId,
     required String? query,
     required String? type,
@@ -177,11 +151,11 @@ class ProductRepositoryImpl implements IProductRepository {
           includeInStockOnly: includeInStockOnly,
         ),
       );
-      // log('Search and filter products response: ${response.toJson()}');
       if (response.status.isSuccess) {
-        return PaginationModel<ProductModel>.fromJson(
+        return PaginationModel<ProductEntity>.fromJson(
           response.data,
-          (json) => ProductModel.fromJson(json as Map<String, dynamic>),
+          (json) =>
+              ProductModel.fromJson(json as Map<String, dynamic>).toEntity(),
           listFromJson: (data) {
             if (startPrice != null || endPrice != null) {
               return data.where((e) {
@@ -201,7 +175,6 @@ class ProductRepositoryImpl implements IProductRepository {
     }
   }
 
-  // Fetch booked dates
   @override
   Future<PaginationModel<BookingEntity>> getProductBookings({
     required int productId,
@@ -231,9 +204,8 @@ class ProductRepositoryImpl implements IProductRepository {
     }
   }
 
-  // 📦 Fetch paginated products
   @override
-  Future<PaginationModel<ProductModel>> getProductsPaginated({
+  Future<PaginationModel<ProductEntity>> getProductsPaginated({
     int? serviceId,
     required int page,
     bool includeInStockOnly = false,
@@ -246,11 +218,11 @@ class ProductRepositoryImpl implements IProductRepository {
           includeInStockOnly: includeInStockOnly,
         ),
       );
-      // log('Fetch products response: ${response.toJson()}');
       if (response.status.isSuccess) {
-        return PaginationModel<ProductModel>.fromJson(
+        return PaginationModel<ProductEntity>.fromJson(
           response.data,
-          (json) => ProductModel.fromJson(json as Map<String, dynamic>),
+          (json) =>
+              ProductModel.fromJson(json as Map<String, dynamic>).toEntity(),
         );
       }
       log('Fetch products failed: ${response.devMessage}');
@@ -262,7 +234,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }
 
   @override
-  Future<PaginationModel<ProductModel>> getAvailableProductsPaginated({
+  Future<PaginationModel<ProductEntity>> getAvailableProductsPaginated({
     int? serviceId,
     required int page,
     required String pickupDate,
@@ -274,8 +246,8 @@ class ProductRepositoryImpl implements IProductRepository {
     int? endPrice,
     TimeOfDay? pickupTime,
     TimeOfDay? returnTime,
-    int? bookingId, // For edit mode
-    List<int>? variantIds, // For edit mode
+    int? bookingId,
+    List<int>? variantIds,
   }) async {
     try {
       final response = await safeApiCall(
@@ -295,15 +267,13 @@ class ProductRepositoryImpl implements IProductRepository {
           variantIds: variantIds,
         ),
       );
-
       if (response.status.isSuccess) {
-        return PaginationModel<ProductModel>.fromJson(
+        return PaginationModel<ProductEntity>.fromJson(
           response.data,
-          (json) => ProductModel.fromJson(json as Map<String, dynamic>),
+          (json) =>
+              ProductModel.fromJson(json as Map<String, dynamic>).toEntity(),
           customJsonParser: (dataJson, itemFromJson) {
             final dataMap = dataJson as Map<String, dynamic>;
-            // Products list is nested: data.products[]
-            // Each product already contains main_service_name, so we don't override it
             final data = (dataMap['products'] as List<dynamic>?)?.map(
               (item) => itemFromJson(item as Map<String, dynamic>),
             );
@@ -319,22 +289,8 @@ class ProductRepositoryImpl implements IProductRepository {
     }
   }
 
-  // Future<CheckAvailabilityModel> checkAvailability({
-  //   required String eventDate,
-  //   required String returnDate,
-  //   required List<int> productIds,
-  // }) async {
-  //   final response = await safeApiCall(
-  //     () => _queryService.checkAvailability(
-  //       eventDate: eventDate,
-  //       returnDate: returnDate,
-  //       productIds: productIds,
-  //     ),
-  //   );
-  // }
-
   @override
-  Future<List<ProductMonthlyDataModel>> getProductGrowthData(
+  Future<List<ProductMonthlyDataEntity>> getProductGrowthData(
     int productId,
   ) async {
     try {
@@ -343,7 +299,11 @@ class ProductRepositoryImpl implements IProductRepository {
       );
       if (response.status.isSuccess) {
         return (response.data as List<dynamic>)
-            .map((item) => ProductMonthlyDataModel.fromJson(item))
+            .map(
+              (item) => ProductMonthlyDataModel.fromJson(
+                item as Map<String, dynamic>,
+              ).toEntity(),
+            )
             .toList();
       }
       log('Fetch product growth data failed: ${response.devMessage}');
@@ -355,7 +315,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }
 
   @override
-  Future<PaginationModel<ProductModel>> searchAllProducts({
+  Future<PaginationModel<ProductEntity>> searchAllProducts({
     required String? query,
     required int page,
     bool includeInStockOnly = false,
@@ -368,11 +328,11 @@ class ProductRepositoryImpl implements IProductRepository {
           includeInStockOnly: includeInStockOnly,
         ),
       );
-
       if (response.status.isSuccess) {
-        return PaginationModel<ProductModel>.fromJson(
+        return PaginationModel<ProductEntity>.fromJson(
           response.data,
-          (json) => ProductModel.fromJson(json as Map<String, dynamic>),
+          (json) =>
+              ProductModel.fromJson(json as Map<String, dynamic>).toEntity(),
         );
       }
       log('Fetch all products failed: ${response.devMessage}');
@@ -384,7 +344,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }
 
   @override
-  Future<PaginationModel<ProductModel>> getMatchingProductsFromAnotherShop({
+  Future<PaginationModel<ProductEntity>> getMatchingProductsFromAnotherShop({
     required int fromVariantId,
     required int toShopId,
     int page = 1,
@@ -397,11 +357,11 @@ class ProductRepositoryImpl implements IProductRepository {
           page: page,
         ),
       );
-
       if (response.status.isSuccess) {
-        return PaginationModel<ProductModel>.fromJson(
+        return PaginationModel<ProductEntity>.fromJson(
           response.data,
-          (json) => ProductModel.fromJson(json as Map<String, dynamic>),
+          (json) =>
+              ProductModel.fromJson(json as Map<String, dynamic>).toEntity(),
         );
       }
       log('Fetch matching products failed: ${response.devMessage}');
@@ -428,9 +388,7 @@ class ProductRepositoryImpl implements IProductRepository {
           toProductId: toProductId,
         ),
       );
-      if (response.status.isSuccess) {
-        return;
-      }
+      if (response.status.isSuccess) return;
       log('Error transferring product: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
     } catch (e, stack) {
@@ -439,11 +397,6 @@ class ProductRepositoryImpl implements IProductRepository {
     }
   }
 
-  /// Check which variant IDs from [variantIds] are NOT available for the
-  /// given [pickupDate] / [returnDate] range (optionally excluding [bookingId]).
-  ///
-  /// Returns a list of variant IDs that are **not available** (not_found_ids
-  /// from the API meta field).
   @override
   Future<List<int>> checkVariantAvailability({
     required String pickupDate,
@@ -465,12 +418,10 @@ class ProductRepositoryImpl implements IProductRepository {
         ),
       );
       if (response.status.isSuccess) {
-        // Response structure: data.data.products[].variants[].remaining_stock
         final dataMap = response.data as Map<String, dynamic>?;
         final innerData = dataMap?['data'] as Map<String, dynamic>?;
         final products = (innerData?['products'] as List<dynamic>?) ?? [];
 
-        // Collect variant IDs where remaining_stock == 0
         final unavailableIds = <int>[];
         for (final product in products) {
           final productMap = product as Map<String, dynamic>?;

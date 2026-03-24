@@ -7,14 +7,14 @@ import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_field_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddCustomizationScreen extends StatefulWidget {
   const AddCustomizationScreen({super.key, this.addedMeasurements = const []});
 
-  final List<MeasurementValueModel> addedMeasurements;
+  final List<MeasurementValueEntity> addedMeasurements;
 
   @override
   State<AddCustomizationScreen> createState() => _AddCustomizationScreenState();
@@ -55,7 +55,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
     final updatedMeasurements = baseMeasurements.map((field) {
       final existing = widget.addedMeasurements.firstWhere(
         (e) => e.key == field.key,
-        orElse: () => MeasurementValueModel(
+        orElse: () => MeasurementValueEntity(
           name: field.name,
           key: field.key,
           value: '',
@@ -116,7 +116,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                   final filteredMeasurements = measurementsNotifier.value
                       .where((field) => field.controller.text.trim().isNotEmpty)
                       .map(
-                        (field) => MeasurementValueModel(
+                        (field) => MeasurementValueEntity(
                           name: field.name,
                           key: field.key,
                           value: field.controller.text.trim(),

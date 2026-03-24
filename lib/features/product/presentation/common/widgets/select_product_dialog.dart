@@ -1,15 +1,15 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/variant_size_type_text_field.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,13 +17,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SizeAmountDialog extends StatefulWidget {
   final MainServiceType mainServiceType;
   final String productImageUrl;
-  final List<ProductVariantModel> availableVariants;
-  final List<ProductSelectedModel> alreadySelectedVariants;
+  final List<ProductVariantEntity> availableVariants;
+  final List<ProductSelectedEntity> alreadySelectedVariants;
   final String? initialAmount;
   final int? initialQuantity;
   final bool isSales;
   final Function(int variantId, String? size, String amount, int quantity)?
-      onConfirm;
+  onConfirm;
 
   const SizeAmountDialog({
     required this.mainServiceType,
@@ -42,7 +42,7 @@ class SizeAmountDialog extends StatefulWidget {
 }
 
 class _SizeAmountDialogState extends State<SizeAmountDialog> {
-  ProductVariantModel? selectedVariant;
+  ProductVariantEntity? selectedVariant;
   late final TextEditingController quantityController;
   final amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -115,10 +115,7 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 24,
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       backgroundColor: Colors.white,
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -169,7 +166,8 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                 if (widget.availableVariants.isNotEmpty &&
                     widget.mainServiceType.isDress &&
                     !VariantSizeType.isFreeSize(
-                        widget.availableVariants.first.attribute))
+                      widget.availableVariants.first.attribute,
+                    ))
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -191,13 +189,15 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
                           decoration: BoxDecoration(
                             color: isDisabled
                                 ? Colors.grey.shade300
                                 : isSelected
-                                    ? AppColors.purpleLight
-                                    : const Color(0xFFF8F7FF),
+                                ? AppColors.purpleLight
+                                : const Color(0xFFF8F7FF),
                             // Conditional border radius based on text length
                             borderRadius: BorderRadius.circular(
                               variant.attribute.length > 3 ? 8 : 25,
@@ -260,10 +260,12 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                         },
                         textAlign: TextAlign.center,
                         textInputFormatter: [
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly,
                         ],
-                        validator: (value) => AppInputValidators.quantity(value,
-                            allowZero: false),
+                        validator: (value) => AppInputValidators.quantity(
+                          value,
+                          allowZero: false,
+                        ),
                         fillColor: AppColors.purpleLight,
                         isDense: true,
                         contentPadding: const EdgeInsets.symmetric(
@@ -287,9 +289,13 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                       ? const SizedBox.shrink()
                       : Padding(
                           padding: const EdgeInsets.only(top: 4),
-                          child: Text(error,
-                              style: TextStyle(
-                                  color: Colors.red, fontSize: 12.sp)),
+                          child: Text(
+                            error,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12.sp,
+                            ),
+                          ),
                         ),
                 ),
 
@@ -300,10 +306,16 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                   hintText: 'Enter amount',
                   controller: amountController,
                   keyboardType: TextInputType.number,
-                  validator: (v) => AppInputValidators.amount(v,
-                      allowZero: true, fieldName: 'Amount'),
-                  prefixIcon: const Icon(Icons.currency_rupee,
-                      color: AppColors.grey, size: 20),
+                  validator: (v) => AppInputValidators.amount(
+                    v,
+                    allowZero: true,
+                    fieldName: 'Amount',
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.currency_rupee,
+                    color: AppColors.grey,
+                    size: 20,
+                  ),
                   fillColor: AppColors.purpleLight,
                 ),
 
@@ -325,9 +337,12 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6C5CE7),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
                       ),
                       onPressed: _onConfirmPressed,
                       child: const Text(
@@ -397,16 +412,16 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
   }
 
   Widget _qtyButton(IconData icon, VoidCallback onPressed) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: IconButton(
-          onPressed: onPressed,
-          style: IconButton.styleFrom(
-            backgroundColor: AppColors.purpleLight,
-            minimumSize: const Size(45, 45),
-          ),
-          icon: Icon(icon, color: AppColors.black),
-        ),
-      );
+    padding: const EdgeInsets.all(8.0),
+    child: IconButton(
+      onPressed: onPressed,
+      style: IconButton.styleFrom(
+        backgroundColor: AppColors.purpleLight,
+        minimumSize: const Size(45, 45),
+      ),
+      icon: Icon(icon, color: AppColors.black),
+    ),
+  );
 }
 
 // Helper function to show the dialog
@@ -414,13 +429,13 @@ void showSizeAmountDialog({
   required BuildContext context,
   required MainServiceType mainServiceType,
   required String productImageUrl,
-  List<ProductVariantModel> availableVariants = const [],
-  List<ProductSelectedModel> alreadySelectedVariants = const [],
+  List<ProductVariantEntity> availableVariants = const [],
+  List<ProductSelectedEntity> alreadySelectedVariants = const [],
   String? initialAmount,
   int? initialQuantity,
   bool isSales = false,
   void Function(int variantId, String? size, String amount, int quantity)?
-      onConfirm,
+  onConfirm,
 }) {
   showDialog(
     context: context,

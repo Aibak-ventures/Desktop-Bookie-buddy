@@ -4,16 +4,16 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:flutter/material.dart';
 
-Future<MeasurementValueModel?> showVehicleCustomizationDialog(
+Future<MeasurementValueEntity?> showVehicleCustomizationDialog(
   BuildContext context,
-  MeasurementValueModel? initialValue,
+  MeasurementValueEntity? initialValue,
 ) {
   final controller = TextEditingController(
       text: initialValue?.value.replaceAll('Km', '').trim());
-  return showDialog<MeasurementValueModel>(
+  return showDialog<MeasurementValueEntity>(
     context: context,
     builder: (dialogCtx) => AlertDialog(
       title: const Text('Add Details'),
@@ -51,7 +51,7 @@ Future<MeasurementValueModel?> showVehicleCustomizationDialog(
           onPressed: () {
             final km = controller.text.trim().toIntOrNull();
             if (km != null) {
-              final result = MeasurementValueModel(
+              final result = MeasurementValueEntity(
                 name: 'Running Kilometers',
                 key: 'km',
                 value: '$km Km',

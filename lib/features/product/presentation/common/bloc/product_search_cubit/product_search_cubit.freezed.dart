@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProductSearchState {
 
- List<ProductModel> get suggestions; ProductModel? get selectedProduct; String get searchQuery; String? get nextPageUrl; bool get isLoading;
+ List<ProductEntity> get suggestions; ProductEntity? get selectedProduct; String get searchQuery; String? get nextPageUrl; bool get isLoading;
 /// Create a copy of ProductSearchState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,11 +45,11 @@ abstract mixin class $ProductSearchStateCopyWith<$Res>  {
   factory $ProductSearchStateCopyWith(ProductSearchState value, $Res Function(ProductSearchState) _then) = _$ProductSearchStateCopyWithImpl;
 @useResult
 $Res call({
- List<ProductModel> suggestions, ProductModel? selectedProduct, String searchQuery, String? nextPageUrl, bool isLoading
+ List<ProductEntity> suggestions, ProductEntity? selectedProduct, String searchQuery, String? nextPageUrl, bool isLoading
 });
 
 
-$ProductModelCopyWith<$Res>? get selectedProduct;
+$ProductEntityCopyWith<$Res>? get selectedProduct;
 
 }
 /// @nodoc
@@ -65,8 +65,8 @@ class _$ProductSearchStateCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? suggestions = null,Object? selectedProduct = freezed,Object? searchQuery = null,Object? nextPageUrl = freezed,Object? isLoading = null,}) {
   return _then(_self.copyWith(
 suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
-as List<ProductModel>,selectedProduct: freezed == selectedProduct ? _self.selectedProduct : selectedProduct // ignore: cast_nullable_to_non_nullable
-as ProductModel?,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as List<ProductEntity>,selectedProduct: freezed == selectedProduct ? _self.selectedProduct : selectedProduct // ignore: cast_nullable_to_non_nullable
+as ProductEntity?,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -76,12 +76,12 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProductModelCopyWith<$Res>? get selectedProduct {
+$ProductEntityCopyWith<$Res>? get selectedProduct {
     if (_self.selectedProduct == null) {
     return null;
   }
 
-  return $ProductModelCopyWith<$Res>(_self.selectedProduct!, (value) {
+  return $ProductEntityCopyWith<$Res>(_self.selectedProduct!, (value) {
     return _then(_self.copyWith(selectedProduct: value));
   });
 }
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ProductModel> suggestions,  ProductModel? selectedProduct,  String searchQuery,  String? nextPageUrl,  bool isLoading)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ProductEntity> suggestions,  ProductEntity? selectedProduct,  String searchQuery,  String? nextPageUrl,  bool isLoading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductSearchState() when $default != null:
 return $default(_that.suggestions,_that.selectedProduct,_that.searchQuery,_that.nextPageUrl,_that.isLoading);case _:
@@ -187,7 +187,7 @@ return $default(_that.suggestions,_that.selectedProduct,_that.searchQuery,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ProductModel> suggestions,  ProductModel? selectedProduct,  String searchQuery,  String? nextPageUrl,  bool isLoading)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ProductEntity> suggestions,  ProductEntity? selectedProduct,  String searchQuery,  String? nextPageUrl,  bool isLoading)  $default,) {final _that = this;
 switch (_that) {
 case _ProductSearchState():
 return $default(_that.suggestions,_that.selectedProduct,_that.searchQuery,_that.nextPageUrl,_that.isLoading);case _:
@@ -207,7 +207,7 @@ return $default(_that.suggestions,_that.selectedProduct,_that.searchQuery,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ProductModel> suggestions,  ProductModel? selectedProduct,  String searchQuery,  String? nextPageUrl,  bool isLoading)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ProductEntity> suggestions,  ProductEntity? selectedProduct,  String searchQuery,  String? nextPageUrl,  bool isLoading)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductSearchState() when $default != null:
 return $default(_that.suggestions,_that.selectedProduct,_that.searchQuery,_that.nextPageUrl,_that.isLoading);case _:
@@ -222,17 +222,17 @@ return $default(_that.suggestions,_that.selectedProduct,_that.searchQuery,_that.
 
 
 class _ProductSearchState implements ProductSearchState {
-  const _ProductSearchState({required final  List<ProductModel> suggestions, required this.selectedProduct, required this.searchQuery, this.nextPageUrl, this.isLoading = false}): _suggestions = suggestions;
+  const _ProductSearchState({required final  List<ProductEntity> suggestions, required this.selectedProduct, required this.searchQuery, this.nextPageUrl, this.isLoading = false}): _suggestions = suggestions;
   
 
- final  List<ProductModel> _suggestions;
-@override List<ProductModel> get suggestions {
+ final  List<ProductEntity> _suggestions;
+@override List<ProductEntity> get suggestions {
   if (_suggestions is EqualUnmodifiableListView) return _suggestions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_suggestions);
 }
 
-@override final  ProductModel? selectedProduct;
+@override final  ProductEntity? selectedProduct;
 @override final  String searchQuery;
 @override final  String? nextPageUrl;
 @override@JsonKey() final  bool isLoading;
@@ -267,11 +267,11 @@ abstract mixin class _$ProductSearchStateCopyWith<$Res> implements $ProductSearc
   factory _$ProductSearchStateCopyWith(_ProductSearchState value, $Res Function(_ProductSearchState) _then) = __$ProductSearchStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<ProductModel> suggestions, ProductModel? selectedProduct, String searchQuery, String? nextPageUrl, bool isLoading
+ List<ProductEntity> suggestions, ProductEntity? selectedProduct, String searchQuery, String? nextPageUrl, bool isLoading
 });
 
 
-@override $ProductModelCopyWith<$Res>? get selectedProduct;
+@override $ProductEntityCopyWith<$Res>? get selectedProduct;
 
 }
 /// @nodoc
@@ -287,8 +287,8 @@ class __$ProductSearchStateCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? suggestions = null,Object? selectedProduct = freezed,Object? searchQuery = null,Object? nextPageUrl = freezed,Object? isLoading = null,}) {
   return _then(_ProductSearchState(
 suggestions: null == suggestions ? _self._suggestions : suggestions // ignore: cast_nullable_to_non_nullable
-as List<ProductModel>,selectedProduct: freezed == selectedProduct ? _self.selectedProduct : selectedProduct // ignore: cast_nullable_to_non_nullable
-as ProductModel?,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as List<ProductEntity>,selectedProduct: freezed == selectedProduct ? _self.selectedProduct : selectedProduct // ignore: cast_nullable_to_non_nullable
+as ProductEntity?,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -299,12 +299,12 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProductModelCopyWith<$Res>? get selectedProduct {
+$ProductEntityCopyWith<$Res>? get selectedProduct {
     if (_self.selectedProduct == null) {
     return null;
   }
 
-  return $ProductModelCopyWith<$Res>(_self.selectedProduct!, (value) {
+  return $ProductEntityCopyWith<$Res>(_self.selectedProduct!, (value) {
     return _then(_self.copyWith(selectedProduct: value));
   });
 }

@@ -6,13 +6,13 @@ import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/variant_size_type_text_field.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_details/widgets/monthly_bar_chart.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_details/bloc/product_details_cubit/product_details_cubit.dart';
@@ -30,8 +30,8 @@ class ProductDetailsScreen extends StatefulWidget {
   final int productId;
   final int? serviceId; // Service ID passed from navigation
   final MainServiceType? mainServiceType;
-  final ProductModel?
-      productForEdit; // Optional product model for direct data access
+  final ProductEntity?
+  productForEdit; // Optional product model for direct data access
   const ProductDetailsScreen({
     super.key,
     required this.productId,
@@ -62,13 +62,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         if (newStatus != _currentBookingStatus) {
           _currentBookingStatus = newStatus;
           context.read<ProductDetailsCubit>().reloadBookingsWithStatus(
-              widget.productId, _currentBookingStatus);
+            widget.productId,
+            _currentBookingStatus,
+          );
         }
       }
     });
 
-    context.read<ProductDetailsCubit>().loadProductDetails(widget.productId,
-        bookingStatus: _currentBookingStatus);
+    context.read<ProductDetailsCubit>().loadProductDetails(
+      widget.productId,
+      bookingStatus: _currentBookingStatus,
+    );
   }
 
   @override
@@ -88,10 +92,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           // When drawer opens with a booking ID, fetch the booking details
           if (drawerState.isOpen && drawerState.selectedBookingId != null) {
             context.read<BookingDetailsBloc>().add(
-                  BookingDetailsEvent.fetchBookingDetails(
-                    drawerState.selectedBookingId!,
-                  ),
-                );
+              BookingDetailsEvent.fetchBookingDetails(
+                drawerState.selectedBookingId!,
+              ),
+            );
           }
         },
         child: Scaffold(
@@ -105,29 +109,45 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     loading: () => const Center(
                       child: CircularProgressIndicator(color: AppColors.purple),
                     ),
-                    loaded: (product, bookings, monthlySummary, nextPageUrl,
-                            isPaginatingBookings) =>
-                        _buildContent(
-                            context, product, bookings, monthlySummary),
+                    loaded:
+                        (
+                          product,
+                          bookings,
+                          monthlySummary,
+                          nextPageUrl,
+                          isPaginatingBookings,
+                        ) => _buildContent(
+                          context,
+                          product,
+                          bookings,
+                          monthlySummary,
+                        ),
                     error: (message) => Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.error_outline,
-                              size: 64, color: Colors.red.shade300),
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: Colors.red.shade300,
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             message,
                             style: TextStyle(
-                                fontSize: 16, color: Colors.red.shade600),
+                              fontSize: 16,
+                              color: Colors.red.shade600,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () {
                               context
                                   .read<ProductDetailsCubit>()
-                                  .loadProductDetails(widget.productId,
-                                      bookingStatus: _currentBookingStatus);
+                                  .loadProductDetails(
+                                    widget.productId,
+                                    bookingStatus: _currentBookingStatus,
+                                  );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.purple,
@@ -152,9 +172,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   Widget _buildContent(
     BuildContext context,
-    ProductModel product,
+    ProductEntity product,
     List<BookingEntity> bookings,
-    List<ProductMonthlyDataModel> monthlySummary,
+    List<ProductMonthlyDataEntity> monthlySummary,
   ) {
     return Padding(
       padding: const EdgeInsets.all(3),
@@ -167,10 +187,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 2,
-                  child: _buildLeftPanel(product),
-                ),
+                Expanded(flex: 2, child: _buildLeftPanel(product)),
                 const SizedBox(width: 24),
                 Expanded(
                   flex: 3,
@@ -184,7 +201,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  Widget _buildHeader(BuildContext context, ProductModel product) {
+  Widget _buildHeader(BuildContext context, ProductEntity product) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -240,17 +257,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 onPressed: () {
                   _showDeleteProductDialog(product);
                 },
-                icon: Icon(Icons.delete_outline,
-                    size: 16, color: Colors.red.shade600),
-                label: const Text('Delete',
-                    style:
-                        TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                icon: Icon(
+                  Icons.delete_outline,
+                  size: 16,
+                  color: Colors.red.shade600,
+                ),
+                label: const Text(
+                  'Delete',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red.shade600,
                   side: BorderSide(color: Colors.red.shade200, width: 1.5),
                   backgroundColor: Colors.red.shade50,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 14,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -263,22 +286,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     context,
                     SecretPasswordLocations.productEdit,
                     onSuccess: () {
-                      _showAddEditProductDialog(context,
-                          product: widget.productForEdit);
+                      _showAddEditProductDialog(
+                        context,
+                        product: widget.productForEdit,
+                      );
                     },
                   );
                 },
                 icon: const Icon(Icons.edit_outlined, size: 16),
-                label: const Text('Edit Product',
-                    style:
-                        TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                label: const Text(
+                  'Edit Product',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.purple,
                   side: BorderSide(
-                      color: AppColors.purple.withOpacity(0.3), width: 1.5),
+                    color: AppColors.purple.withOpacity(0.3),
+                    width: 1.5,
+                  ),
                   backgroundColor: AppColors.purple.withOpacity(0.05),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 14,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -292,7 +322,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  Widget _buildLeftPanel(ProductModel product) {
+  Widget _buildLeftPanel(ProductEntity product) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -384,8 +414,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                       builder: (context) {
                         int? salePrice;
                         if (product.variants.isNotEmpty) {
-                          salePrice =
-                              double.parse(product.salePrice ?? '0').toInt();
+                          salePrice = double.parse(
+                            product.salePrice ?? '0',
+                          ).toInt();
                         }
                         // first.salePrice
                         return Text.rich(
@@ -425,10 +456,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             const SizedBox(height: 12),
 
             // Divider
-            Container(
-              height: 1,
-              color: Colors.grey.shade300,
-            ),
+            Container(height: 1, color: Colors.grey.shade300),
             const SizedBox(height: 12),
 
             // Available Serial Numbers (hide for non-variant service products)
@@ -452,8 +480,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.inventory_2_outlined,
-                            size: 20, color: AppColors.purple),
+                        Icon(
+                          Icons.inventory_2_outlined,
+                          size: 20,
+                          color: AppColors.purple,
+                        ),
                         const SizedBox(width: 12),
                         const Text(
                           'Total Stock:',
@@ -467,7 +498,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.purple,
                         borderRadius: BorderRadius.circular(20),
@@ -508,9 +541,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     if (product.category != null &&
                         product.category!.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(
-                          right: 12,
-                        ),
+                        padding: const EdgeInsets.only(right: 12),
                         child: _specChip(Icons.category, product.category!),
                       ),
                     if (product.model != null && product.model!.isNotEmpty)
@@ -546,8 +577,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.app_registration,
-                        size: 18, color: Colors.grey.shade600),
+                    Icon(
+                      Icons.app_registration,
+                      size: 18,
+                      color: Colors.grey.shade600,
+                    ),
                     const SizedBox(width: 12),
                     const Text(
                       'Registration No:',
@@ -564,7 +598,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                           ? product.effectiveRegistrationNumber!
                           : 'N/A',
                       style: TextStyle(
-                        color: product.effectiveRegistrationNumber != null &&
+                        color:
+                            product.effectiveRegistrationNumber != null &&
                                 product.effectiveRegistrationNumber!.isNotEmpty
                             ? Colors.black
                             : Colors.grey.shade400,
@@ -590,8 +625,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.verified_user_outlined,
-                            size: 18, color: AppColors.purple),
+                        Icon(
+                          Icons.verified_user_outlined,
+                          size: 18,
+                          color: AppColors.purple,
+                        ),
                         const SizedBox(width: 8),
                         const Text(
                           'Valid Upto',
@@ -605,22 +643,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     ),
                     const SizedBox(height: 12),
                     _buildExpiryRow(
-                        'Pollution',
-                        product.effectivePollutionExpiry?.isNotEmpty == true
-                            ? product.effectivePollutionExpiry!
-                            : 'N/A'),
+                      'Pollution',
+                      product.effectivePollutionExpiry?.isNotEmpty == true
+                          ? product.effectivePollutionExpiry!
+                          : 'N/A',
+                    ),
                     const SizedBox(height: 8),
                     _buildExpiryRow(
-                        'Insurance',
-                        product.effectiveInsuranceExpiry?.isNotEmpty == true
-                            ? product.effectiveInsuranceExpiry!
-                            : 'N/A'),
+                      'Insurance',
+                      product.effectiveInsuranceExpiry?.isNotEmpty == true
+                          ? product.effectiveInsuranceExpiry!
+                          : 'N/A',
+                    ),
                     const SizedBox(height: 8),
                     _buildExpiryRow(
-                        'Permit',
-                        product.effectiveFitnessExpiry?.isNotEmpty == true
-                            ? product.effectiveFitnessExpiry!
-                            : 'N/A'),
+                      'Permit',
+                      product.effectiveFitnessExpiry?.isNotEmpty == true
+                          ? product.effectiveFitnessExpiry!
+                          : 'N/A',
+                    ),
                   ],
                 ),
               ),
@@ -657,9 +698,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   }
 
   Widget _buildRightPanel(
-    ProductModel product,
+    ProductEntity product,
     List<BookingEntity> bookings,
-    List<ProductMonthlyDataModel> monthlySummary,
+    List<ProductMonthlyDataEntity> monthlySummary,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -698,10 +739,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           // Monthly summary bar chart
           SizedBox(
             width: double.infinity,
-            child: MonthlyBarChart(
-              monthlyData: monthlySummary,
-              height: 180,
-            ),
+            child: MonthlyBarChart(monthlyData: monthlySummary, height: 180),
           ),
 
           const SizedBox(height: 16),
@@ -722,7 +760,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           //     ),
           //   ],
           // ),
-
           const SizedBox(height: 16),
 
           // Bookings Section with Tabs
@@ -772,10 +809,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               controller: _tabController,
               children: [
                 // Upcoming Bookings (API filtered)
-                _buildBookingsList(
-                  bookings,
-                  'No upcoming bookings',
-                ),
+                _buildBookingsList(bookings, 'No upcoming bookings'),
                 // Completed Bookings (API filtered)
                 _buildBookingsList(
                   bookings,
@@ -797,10 +831,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(
-            width: 0.50,
-            color: Color(0xFFE0E0E0),
-          ),
+          side: const BorderSide(width: 0.50, color: Color(0xFFE0E0E0)),
           borderRadius: BorderRadius.circular(5),
         ),
       ),
@@ -809,11 +840,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 14,
-            color: Colors.black,
-          ),
+          Icon(icon, size: 14, color: Colors.black),
           const SizedBox(width: 4),
           Flexible(
             child: Text(
@@ -858,7 +885,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  Widget _variantCard(ProductVariantModel variant, ProductModel product) {
+  Widget _variantCard(ProductVariantEntity variant, ProductEntity product) {
     // For gadgets, use wider rectangular design to accommodate serial numbers
     final isGadget = product.mainServiceType?.isGadget == true;
     final cardWidth = isGadget ? 200.0 : 102.0;
@@ -875,10 +902,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
-              side: const BorderSide(
-                width: 1,
-                color: Color(0xFFE0E0E0),
-              ),
+              side: const BorderSide(width: 1, color: Color(0xFFE0E0E0)),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -931,11 +955,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 color: AppColors.purple,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.edit,
-                size: 12,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.edit, size: 12, color: Colors.white),
             ),
           ),
         ),
@@ -943,7 +963,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  void _showDeleteProductDialog(ProductModel product) {
+  void _showDeleteProductDialog(ProductEntity product) {
     performSecureActionDialog(
       context,
       SecretPasswordLocations.productDeletion,
@@ -963,27 +983,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  void _showDeleteVariantDialog(ProductVariantModel variant) {
+  void _showDeleteVariantDialog(ProductVariantEntity variant) {
     performSecureActionDialog(
       context,
       SecretPasswordLocations.productDeletion,
       onSuccess: () async {
         await context.read<ProductDetailsCubit>().deleteProductVariant(
-              productId: widget.productId,
-              variantId: variant.id,
-            );
+          productId: widget.productId,
+          variantId: variant.id,
+        );
       },
     );
   }
 
   // Helper method to build variants section (only if product has variants)
-  List<Widget> _buildVariantsSection(ProductModel product) {
+  List<Widget> _buildVariantsSection(ProductEntity product) {
     final isGadget = product.mainServiceType?.isGadget == true;
     // Filter out any auto-created single variant whose attribute equals the product name
     final displayVariants = product.variants
-        .where((v) =>
-            v.attribute.trim().toLowerCase() !=
-            product.name.trim().toLowerCase())
+        .where(
+          (v) =>
+              v.attribute.trim().toLowerCase() !=
+              product.name.trim().toLowerCase(),
+        )
         .toList();
 
     if (displayVariants.isEmpty) return [];
@@ -1004,10 +1026,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            ...displayVariants.map((variant) => Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: _variantCard(variant, product),
-                )),
+            ...displayVariants.map(
+              (variant) => Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: _variantCard(variant, product),
+              ),
+            ),
             _addVariantButton(),
           ],
         ),
@@ -1024,7 +1048,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-            color: AppColors.purple, width: 2, style: BorderStyle.solid),
+          color: AppColors.purple,
+          width: 2,
+          style: BorderStyle.solid,
+        ),
       ),
       child: IconButton(
         onPressed: () {
@@ -1042,24 +1069,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
     // Get current product from state to initialize variantsNotifier
     final currentState = context.read<ProductDetailsCubit>().state;
-    List<ProductVariantModel> currentVariants = [];
+    List<ProductVariantEntity> currentVariants = [];
     currentState.maybeWhen(
       loaded: (product, _, __, ___, ____) => currentVariants = product.variants,
       orElse: () {},
     );
 
-    final variantsNotifier =
-        ValueNotifier<List<ProductVariantModel>>(List.from(currentVariants));
+    final variantsNotifier = ValueNotifier<List<ProductVariantEntity>>(
+      List.from(currentVariants),
+    );
 
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text(
           'Add Variant',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         content: Form(
           key: formKey,
@@ -1104,10 +1129,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 try {
                   // Show loading or something if needed
                   await context.read<ProductDetailsCubit>().addProductVariant(
-                        productId: widget.productId,
-                        attribute: attribute,
-                        stock: quantity,
-                      );
+                    productId: widget.productId,
+                    attribute: attribute,
+                    stock: quantity,
+                  );
 
                   if (context.mounted) {
                     Navigator.of(dialogContext).pop();
@@ -1115,8 +1140,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    context.showSnackBar('Failed to add variant: $e',
-                        isError: true);
+                    context.showSnackBar(
+                      'Failed to add variant: $e',
+                      isError: true,
+                    );
                   }
                 }
               }
@@ -1132,36 +1159,38 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  void _showEditVariantDialog(ProductVariantModel variant) {
-    final variantAttributeController =
-        TextEditingController(text: variant.attribute);
-    final variantQuantityController =
-        TextEditingController(text: variant.stock.toString());
-    final externalBarcodeController =
-        TextEditingController(text: variant.externalQrCode ?? '');
+  void _showEditVariantDialog(ProductVariantEntity variant) {
+    final variantAttributeController = TextEditingController(
+      text: variant.attribute,
+    );
+    final variantQuantityController = TextEditingController(
+      text: variant.stock.toString(),
+    );
+    final externalBarcodeController = TextEditingController(
+      text: variant.externalQrCode ?? '',
+    );
     final formKey = GlobalKey<FormState>();
 
     // Get current product from state to initialize variantsNotifier (excluding current variant)
     final currentState = context.read<ProductDetailsCubit>().state;
-    List<ProductVariantModel> currentVariants = [];
+    List<ProductVariantEntity> currentVariants = [];
     currentState.maybeWhen(
-      loaded: (product, _, __, ___, ____) => currentVariants =
-          product.variants.where((v) => v.id != variant.id).toList(),
+      loaded: (product, _, __, ___, ____) => currentVariants = product.variants
+          .where((v) => v.id != variant.id)
+          .toList(),
       orElse: () {},
     );
 
-    final variantsNotifier =
-        ValueNotifier<List<ProductVariantModel>>(List.from(currentVariants));
+    final variantsNotifier = ValueNotifier<List<ProductVariantEntity>>(
+      List.from(currentVariants),
+    );
 
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text(
           'Edit Variant',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         content: Form(
           key: formKey,
@@ -1213,8 +1242,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   Navigator.of(dialogContext).pop();
                   _showDeleteVariantDialog(variant);
                 },
-                child:
-                    const Text('Delete', style: TextStyle(color: Colors.red)),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
               const Spacer(),
               TextButton(
@@ -1228,9 +1259,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     final attribute = variantAttributeController.text.trim();
                     final quantity =
                         int.tryParse(variantQuantityController.text.trim()) ??
-                            0;
-                    final externalBarcode =
-                        externalBarcodeController.text.trim();
+                        0;
+                    final externalBarcode = externalBarcodeController.text
+                        .trim();
 
                     try {
                       // Update variant
@@ -1252,8 +1283,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        context.showSnackBar('Failed to update variant: $e',
-                            isError: true);
+                        context.showSnackBar(
+                          'Failed to update variant: $e',
+                          isError: true,
+                        );
                       }
                     }
                   }
@@ -1271,8 +1304,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     );
   }
 
-  Widget _buildBookingsList(List<BookingEntity> bookings, String emptyMessage,
-      {bool isOngoing = false}) {
+  Widget _buildBookingsList(
+    List<BookingEntity> bookings,
+    String emptyMessage, {
+    bool isOngoing = false,
+  }) {
     if (bookings.isEmpty) {
       return Center(
         child: Container(
@@ -1324,15 +1360,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   }
 
   /// Show add/edit product dialog (same as stock management screen)
-  Future<void> _showAddEditProductDialog(BuildContext context,
-      {ProductModel? product}) async {
+  Future<void> _showAddEditProductDialog(
+    BuildContext context, {
+    ProductEntity? product,
+  }) async {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => MultiBlocProvider(
         providers: [
           BlocProvider(
-              create: (context) => SaveProductCubit(saveProduct: getIt.get())),
+            create: (context) => SaveProductCubit(saveProduct: getIt.get()),
+          ),
           BlocProvider.value(value: context.read<ServiceBloc>()),
         ],
         child: AddEditProductDialog(
@@ -1344,8 +1383,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
     // Refresh product details if a product was edited
     if (result == true && mounted) {
-      context.read<ProductDetailsCubit>().loadProductDetails(widget.productId,
-          bookingStatus: _currentBookingStatus);
+      context.read<ProductDetailsCubit>().loadProductDetails(
+        widget.productId,
+        bookingStatus: _currentBookingStatus,
+      );
     }
   }
 

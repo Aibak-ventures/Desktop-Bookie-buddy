@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_products_paginated_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/search_and_filter_products_usecase.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
@@ -17,42 +17,34 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc({
     required GetProductsPaginatedUseCase getProducts,
     required SearchAndFilterProductsUseCase searchAndFilterProducts,
-  })  : _getProducts = getProducts,
-        _searchAndFilterProducts = searchAndFilterProducts,
-        super(const _Loading()) {
+  }) : _getProducts = getProducts,
+       _searchAndFilterProducts = searchAndFilterProducts,
+       super(const _Loading()) {
     on<_LoadProducts>(_onLoadProducts);
     on<_LoadNextPageProducts>(
       _onLoadNextPageProducts,
       transformer: throttleDroppable(),
     );
-    on<_SearchProducts>(
-      _onSearchProducts,
-      transformer: debounceDroppable(),
-    );
+    on<_SearchProducts>(_onSearchProducts, transformer: debounceDroppable());
   }
 
   Future<void> _onLoadProducts(
-      _LoadProducts event, Emitter<ProductState> emit) async {
+    _LoadProducts event,
+    Emitter<ProductState> emit,
+  ) async {
     emit(const _Loading());
     try {
-      final result = await _getProducts(
-        serviceId: event.serviceId,
-        page: 1,
-      );
-
-      emit(
-        _Loaded(
-          products: result.data,
-          nextPageUrl: result.nextPageUrl,
-        ),
-      );
+      final result = await _getProducts(serviceId: event.serviceId, page: 1);
+      emit(_Loaded(products: result.data, nextPageUrl: result.nextPageUrl));
     } catch (e) {
       emit(_Error(e.toString()));
     }
   }
 
   Future<void> _onLoadNextPageProducts(
-      _LoadNextPageProducts event, Emitter<ProductState> emit) async {
+    _LoadNextPageProducts event,
+    Emitter<ProductState> emit,
+  ) async {
     if (state is! _Loaded) return;
     final s = state as _Loaded;
     if (s.isPaginating || s.nextPageUrl == null) return;
@@ -70,10 +62,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
               startPrice: s.startPrice,
               endPrice: s.endPrice,
             )
-          : await _getProducts(
-              serviceId: event.serviceId,
-              page: page,
-            );
+          : await _getProducts(serviceId: event.serviceId, page: page);
 
       emit(
         s.copyWith(
@@ -88,7 +77,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future<void> _onSearchProducts(
-      _SearchProducts event, Emitter<ProductState> emit) async {
+    _SearchProducts event,
+    Emitter<ProductState> emit,
+  ) async {
     emit(const _Loading());
     try {
       final result = await _searchAndFilterProducts(

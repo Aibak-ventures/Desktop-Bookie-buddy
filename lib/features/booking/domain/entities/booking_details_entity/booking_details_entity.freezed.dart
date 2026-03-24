@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingDetailsEntity {
 
- int get id; String get invoiceId; String? get pickupDate; String get returnDate; String? get coolingPeriodDate; int get totalAmount; int? get discountAmount; int get paidAmount; int? get securityAmount; PurchaseMode get purchaseMode; BookingStatus get bookingStatus; PaymentStatus get paymentStatus; DeliveryStatus get deliveryStatus; String? get staffName; int? get staffId; BookingOtherDetailsEntity get otherDetails; String get bookedDate; String? get bookingCompletedDate; String? get address; ClientEntity get client; String? get description; List<dynamic> get documents; List<ProductInfoModel> get bookedItems; List<AdditionalChargesEntity> get additionalCharges; List<BookingPaymentHistoryEntity> get payments; List<dynamic> get refunds; double get totalRefunded; double get refundableBalance; SecuritySummaryEntity get securitySummary;
+ int get id; String get invoiceId; String? get pickupDate; String get returnDate; String? get coolingPeriodDate; int get totalAmount; int? get discountAmount; int get paidAmount; int? get securityAmount; PurchaseMode get purchaseMode; BookingStatus get bookingStatus; PaymentStatus get paymentStatus; DeliveryStatus get deliveryStatus; String? get staffName; int? get staffId; BookingOtherDetailsEntity get otherDetails; String get bookedDate; String? get bookingCompletedDate; String? get address; ClientEntity get client; String? get description; List<dynamic> get documents; List<ProductInfoEntity> get bookedItems; List<AdditionalChargesEntity> get additionalCharges; List<BookingPaymentHistoryEntity> get payments; List<dynamic> get refunds; double get totalRefunded; double get refundableBalance; SecuritySummaryEntity get securitySummary;
 /// Create a copy of BookingDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $BookingDetailsEntityCopyWith<$Res>  {
   factory $BookingDetailsEntityCopyWith(BookingDetailsEntity value, $Res Function(BookingDetailsEntity) _then) = _$BookingDetailsEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String invoiceId, String? pickupDate, String returnDate, String? coolingPeriodDate, int totalAmount, int? discountAmount, int paidAmount, int? securityAmount, PurchaseMode purchaseMode, BookingStatus bookingStatus, PaymentStatus paymentStatus, DeliveryStatus deliveryStatus, String? staffName, int? staffId, BookingOtherDetailsEntity otherDetails, String bookedDate, String? bookingCompletedDate, String? address, ClientEntity client, String? description, List<dynamic> documents, List<ProductInfoModel> bookedItems, List<AdditionalChargesEntity> additionalCharges, List<BookingPaymentHistoryEntity> payments, List<dynamic> refunds, double totalRefunded, double refundableBalance, SecuritySummaryEntity securitySummary
+ int id, String invoiceId, String? pickupDate, String returnDate, String? coolingPeriodDate, int totalAmount, int? discountAmount, int paidAmount, int? securityAmount, PurchaseMode purchaseMode, BookingStatus bookingStatus, PaymentStatus paymentStatus, DeliveryStatus deliveryStatus, String? staffName, int? staffId, BookingOtherDetailsEntity otherDetails, String bookedDate, String? bookingCompletedDate, String? address, ClientEntity client, String? description, List<dynamic> documents, List<ProductInfoEntity> bookedItems, List<AdditionalChargesEntity> additionalCharges, List<BookingPaymentHistoryEntity> payments, List<dynamic> refunds, double totalRefunded, double refundableBalance, SecuritySummaryEntity securitySummary
 });
 
 
@@ -87,7 +87,7 @@ as String?,client: null == client ? _self.client : client // ignore: cast_nullab
 as ClientEntity,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,documents: null == documents ? _self.documents : documents // ignore: cast_nullable_to_non_nullable
 as List<dynamic>,bookedItems: null == bookedItems ? _self.bookedItems : bookedItems // ignore: cast_nullable_to_non_nullable
-as List<ProductInfoModel>,additionalCharges: null == additionalCharges ? _self.additionalCharges : additionalCharges // ignore: cast_nullable_to_non_nullable
+as List<ProductInfoEntity>,additionalCharges: null == additionalCharges ? _self.additionalCharges : additionalCharges // ignore: cast_nullable_to_non_nullable
 as List<AdditionalChargesEntity>,payments: null == payments ? _self.payments : payments // ignore: cast_nullable_to_non_nullable
 as List<BookingPaymentHistoryEntity>,refunds: null == refunds ? _self.refunds : refunds // ignore: cast_nullable_to_non_nullable
 as List<dynamic>,totalRefunded: null == totalRefunded ? _self.totalRefunded : totalRefunded // ignore: cast_nullable_to_non_nullable
@@ -205,7 +205,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String invoiceId,  String? pickupDate,  String returnDate,  String? coolingPeriodDate,  int totalAmount,  int? discountAmount,  int paidAmount,  int? securityAmount,  PurchaseMode purchaseMode,  BookingStatus bookingStatus,  PaymentStatus paymentStatus,  DeliveryStatus deliveryStatus,  String? staffName,  int? staffId,  BookingOtherDetailsEntity otherDetails,  String bookedDate,  String? bookingCompletedDate,  String? address,  ClientEntity client,  String? description,  List<dynamic> documents,  List<ProductInfoModel> bookedItems,  List<AdditionalChargesEntity> additionalCharges,  List<BookingPaymentHistoryEntity> payments,  List<dynamic> refunds,  double totalRefunded,  double refundableBalance,  SecuritySummaryEntity securitySummary)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String invoiceId,  String? pickupDate,  String returnDate,  String? coolingPeriodDate,  int totalAmount,  int? discountAmount,  int paidAmount,  int? securityAmount,  PurchaseMode purchaseMode,  BookingStatus bookingStatus,  PaymentStatus paymentStatus,  DeliveryStatus deliveryStatus,  String? staffName,  int? staffId,  BookingOtherDetailsEntity otherDetails,  String bookedDate,  String? bookingCompletedDate,  String? address,  ClientEntity client,  String? description,  List<dynamic> documents,  List<ProductInfoEntity> bookedItems,  List<AdditionalChargesEntity> additionalCharges,  List<BookingPaymentHistoryEntity> payments,  List<dynamic> refunds,  double totalRefunded,  double refundableBalance,  SecuritySummaryEntity securitySummary)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingDetailsEntity() when $default != null:
 return $default(_that.id,_that.invoiceId,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.securityAmount,_that.purchaseMode,_that.bookingStatus,_that.paymentStatus,_that.deliveryStatus,_that.staffName,_that.staffId,_that.otherDetails,_that.bookedDate,_that.bookingCompletedDate,_that.address,_that.client,_that.description,_that.documents,_that.bookedItems,_that.additionalCharges,_that.payments,_that.refunds,_that.totalRefunded,_that.refundableBalance,_that.securitySummary);case _:
@@ -226,7 +226,7 @@ return $default(_that.id,_that.invoiceId,_that.pickupDate,_that.returnDate,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String invoiceId,  String? pickupDate,  String returnDate,  String? coolingPeriodDate,  int totalAmount,  int? discountAmount,  int paidAmount,  int? securityAmount,  PurchaseMode purchaseMode,  BookingStatus bookingStatus,  PaymentStatus paymentStatus,  DeliveryStatus deliveryStatus,  String? staffName,  int? staffId,  BookingOtherDetailsEntity otherDetails,  String bookedDate,  String? bookingCompletedDate,  String? address,  ClientEntity client,  String? description,  List<dynamic> documents,  List<ProductInfoModel> bookedItems,  List<AdditionalChargesEntity> additionalCharges,  List<BookingPaymentHistoryEntity> payments,  List<dynamic> refunds,  double totalRefunded,  double refundableBalance,  SecuritySummaryEntity securitySummary)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String invoiceId,  String? pickupDate,  String returnDate,  String? coolingPeriodDate,  int totalAmount,  int? discountAmount,  int paidAmount,  int? securityAmount,  PurchaseMode purchaseMode,  BookingStatus bookingStatus,  PaymentStatus paymentStatus,  DeliveryStatus deliveryStatus,  String? staffName,  int? staffId,  BookingOtherDetailsEntity otherDetails,  String bookedDate,  String? bookingCompletedDate,  String? address,  ClientEntity client,  String? description,  List<dynamic> documents,  List<ProductInfoEntity> bookedItems,  List<AdditionalChargesEntity> additionalCharges,  List<BookingPaymentHistoryEntity> payments,  List<dynamic> refunds,  double totalRefunded,  double refundableBalance,  SecuritySummaryEntity securitySummary)  $default,) {final _that = this;
 switch (_that) {
 case _BookingDetailsEntity():
 return $default(_that.id,_that.invoiceId,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.securityAmount,_that.purchaseMode,_that.bookingStatus,_that.paymentStatus,_that.deliveryStatus,_that.staffName,_that.staffId,_that.otherDetails,_that.bookedDate,_that.bookingCompletedDate,_that.address,_that.client,_that.description,_that.documents,_that.bookedItems,_that.additionalCharges,_that.payments,_that.refunds,_that.totalRefunded,_that.refundableBalance,_that.securitySummary);case _:
@@ -246,7 +246,7 @@ return $default(_that.id,_that.invoiceId,_that.pickupDate,_that.returnDate,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String invoiceId,  String? pickupDate,  String returnDate,  String? coolingPeriodDate,  int totalAmount,  int? discountAmount,  int paidAmount,  int? securityAmount,  PurchaseMode purchaseMode,  BookingStatus bookingStatus,  PaymentStatus paymentStatus,  DeliveryStatus deliveryStatus,  String? staffName,  int? staffId,  BookingOtherDetailsEntity otherDetails,  String bookedDate,  String? bookingCompletedDate,  String? address,  ClientEntity client,  String? description,  List<dynamic> documents,  List<ProductInfoModel> bookedItems,  List<AdditionalChargesEntity> additionalCharges,  List<BookingPaymentHistoryEntity> payments,  List<dynamic> refunds,  double totalRefunded,  double refundableBalance,  SecuritySummaryEntity securitySummary)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String invoiceId,  String? pickupDate,  String returnDate,  String? coolingPeriodDate,  int totalAmount,  int? discountAmount,  int paidAmount,  int? securityAmount,  PurchaseMode purchaseMode,  BookingStatus bookingStatus,  PaymentStatus paymentStatus,  DeliveryStatus deliveryStatus,  String? staffName,  int? staffId,  BookingOtherDetailsEntity otherDetails,  String bookedDate,  String? bookingCompletedDate,  String? address,  ClientEntity client,  String? description,  List<dynamic> documents,  List<ProductInfoEntity> bookedItems,  List<AdditionalChargesEntity> additionalCharges,  List<BookingPaymentHistoryEntity> payments,  List<dynamic> refunds,  double totalRefunded,  double refundableBalance,  SecuritySummaryEntity securitySummary)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingDetailsEntity() when $default != null:
 return $default(_that.id,_that.invoiceId,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.securityAmount,_that.purchaseMode,_that.bookingStatus,_that.paymentStatus,_that.deliveryStatus,_that.staffName,_that.staffId,_that.otherDetails,_that.bookedDate,_that.bookingCompletedDate,_that.address,_that.client,_that.description,_that.documents,_that.bookedItems,_that.additionalCharges,_that.payments,_that.refunds,_that.totalRefunded,_that.refundableBalance,_that.securitySummary);case _:
@@ -261,7 +261,7 @@ return $default(_that.id,_that.invoiceId,_that.pickupDate,_that.returnDate,_that
 
 
 class _BookingDetailsEntity implements BookingDetailsEntity {
-  const _BookingDetailsEntity({required this.id, required this.invoiceId, required this.pickupDate, required this.returnDate, this.coolingPeriodDate, required this.totalAmount, this.discountAmount, required this.paidAmount, this.securityAmount, required this.purchaseMode, required this.bookingStatus, required this.paymentStatus, required this.deliveryStatus, this.staffName, this.staffId, required this.otherDetails, required this.bookedDate, this.bookingCompletedDate, this.address, required this.client, this.description, final  List<dynamic> documents = const [], required final  List<ProductInfoModel> bookedItems, final  List<AdditionalChargesEntity> additionalCharges = const [], final  List<BookingPaymentHistoryEntity> payments = const [], final  List<dynamic> refunds = const [], this.totalRefunded = 0.0, this.refundableBalance = 0.0, this.securitySummary = SecuritySummaryEntity.empty}): _documents = documents,_bookedItems = bookedItems,_additionalCharges = additionalCharges,_payments = payments,_refunds = refunds;
+  const _BookingDetailsEntity({required this.id, required this.invoiceId, required this.pickupDate, required this.returnDate, this.coolingPeriodDate, required this.totalAmount, this.discountAmount, required this.paidAmount, this.securityAmount, required this.purchaseMode, required this.bookingStatus, required this.paymentStatus, required this.deliveryStatus, this.staffName, this.staffId, required this.otherDetails, required this.bookedDate, this.bookingCompletedDate, this.address, required this.client, this.description, final  List<dynamic> documents = const [], required final  List<ProductInfoEntity> bookedItems, final  List<AdditionalChargesEntity> additionalCharges = const [], final  List<BookingPaymentHistoryEntity> payments = const [], final  List<dynamic> refunds = const [], this.totalRefunded = 0.0, this.refundableBalance = 0.0, this.securitySummary = SecuritySummaryEntity.empty}): _documents = documents,_bookedItems = bookedItems,_additionalCharges = additionalCharges,_payments = payments,_refunds = refunds;
   
 
 @override final  int id;
@@ -292,8 +292,8 @@ class _BookingDetailsEntity implements BookingDetailsEntity {
   return EqualUnmodifiableListView(_documents);
 }
 
- final  List<ProductInfoModel> _bookedItems;
-@override List<ProductInfoModel> get bookedItems {
+ final  List<ProductInfoEntity> _bookedItems;
+@override List<ProductInfoEntity> get bookedItems {
   if (_bookedItems is EqualUnmodifiableListView) return _bookedItems;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_bookedItems);
@@ -354,7 +354,7 @@ abstract mixin class _$BookingDetailsEntityCopyWith<$Res> implements $BookingDet
   factory _$BookingDetailsEntityCopyWith(_BookingDetailsEntity value, $Res Function(_BookingDetailsEntity) _then) = __$BookingDetailsEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String invoiceId, String? pickupDate, String returnDate, String? coolingPeriodDate, int totalAmount, int? discountAmount, int paidAmount, int? securityAmount, PurchaseMode purchaseMode, BookingStatus bookingStatus, PaymentStatus paymentStatus, DeliveryStatus deliveryStatus, String? staffName, int? staffId, BookingOtherDetailsEntity otherDetails, String bookedDate, String? bookingCompletedDate, String? address, ClientEntity client, String? description, List<dynamic> documents, List<ProductInfoModel> bookedItems, List<AdditionalChargesEntity> additionalCharges, List<BookingPaymentHistoryEntity> payments, List<dynamic> refunds, double totalRefunded, double refundableBalance, SecuritySummaryEntity securitySummary
+ int id, String invoiceId, String? pickupDate, String returnDate, String? coolingPeriodDate, int totalAmount, int? discountAmount, int paidAmount, int? securityAmount, PurchaseMode purchaseMode, BookingStatus bookingStatus, PaymentStatus paymentStatus, DeliveryStatus deliveryStatus, String? staffName, int? staffId, BookingOtherDetailsEntity otherDetails, String bookedDate, String? bookingCompletedDate, String? address, ClientEntity client, String? description, List<dynamic> documents, List<ProductInfoEntity> bookedItems, List<AdditionalChargesEntity> additionalCharges, List<BookingPaymentHistoryEntity> payments, List<dynamic> refunds, double totalRefunded, double refundableBalance, SecuritySummaryEntity securitySummary
 });
 
 
@@ -396,7 +396,7 @@ as String?,client: null == client ? _self.client : client // ignore: cast_nullab
 as ClientEntity,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,documents: null == documents ? _self._documents : documents // ignore: cast_nullable_to_non_nullable
 as List<dynamic>,bookedItems: null == bookedItems ? _self._bookedItems : bookedItems // ignore: cast_nullable_to_non_nullable
-as List<ProductInfoModel>,additionalCharges: null == additionalCharges ? _self._additionalCharges : additionalCharges // ignore: cast_nullable_to_non_nullable
+as List<ProductInfoEntity>,additionalCharges: null == additionalCharges ? _self._additionalCharges : additionalCharges // ignore: cast_nullable_to_non_nullable
 as List<AdditionalChargesEntity>,payments: null == payments ? _self._payments : payments // ignore: cast_nullable_to_non_nullable
 as List<BookingPaymentHistoryEntity>,refunds: null == refunds ? _self._refunds : refunds // ignore: cast_nullable_to_non_nullable
 as List<dynamic>,totalRefunded: null == totalRefunded ? _self.totalRefunded : totalRefunded // ignore: cast_nullable_to_non_nullable

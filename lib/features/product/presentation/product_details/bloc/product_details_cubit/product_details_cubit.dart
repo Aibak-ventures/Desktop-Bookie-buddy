@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/add_product_variants_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/delete_product_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_product_bookings_usecase.dart';
@@ -35,7 +35,6 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
        _deleteProduct = deleteProduct,
        super(const ProductDetailsState.initial());
 
-  /// Load product details by ID along with bookings and monthly summary
   Future<void> loadProductDetails(
     int productId, {
     String? bookingStatus,
@@ -43,7 +42,6 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     try {
       emit(const ProductDetailsState.loading());
 
-      // Load all data in parallel
       final results = await Future.wait([
         _getProductInfo(productId),
         _getProductBookings(
@@ -54,17 +52,15 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
           log('Error loading bookings: $e');
           return null;
         }),
-        _getProductGrowthData(productId).then<dynamic>((v) => v).catchError((
-          e,
-        ) {
+        _getProductGrowthData(productId).then<dynamic>((v) => v).catchError((e) {
           log('Error loading monthly summary: $e');
-          return <ProductMonthlyDataModel>[];
+          return <ProductMonthlyDataEntity>[];
         }),
       ]);
 
-      final product = results[0] as ProductModel;
+      final product = results[0] as ProductEntity;
       final bookingsData = results[1] as PaginationModel<BookingEntity>?;
-      final monthlyData = results[2] as List<ProductMonthlyDataModel>;
+      final monthlyData = results[2] as List<ProductMonthlyDataEntity>;
 
       emit(
         ProductDetailsState.loaded(
@@ -76,15 +72,10 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
       );
     } catch (e) {
       log('Error loading product details: $e');
-      emit(
-        ProductDetailsState.error(
-          message: 'An error occurred: ${e.toString()}',
-        ),
-      );
+      emit(ProductDetailsState.error(message: 'An error occurred: ${e.toString()}'));
     }
   }
 
-  /// Reload bookings with a specific status filter without reloading product info
   Future<void> reloadBookingsWithStatus(int productId, String? status) async {
     await state.maybeMap(
       loaded: (loadedState) async {
@@ -94,7 +85,6 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
             page: 1,
             status: status,
           );
-
           emit(
             ProductDetailsState.loaded(
               product: loadedState.product,
@@ -105,25 +95,16 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
           );
         } catch (e) {
           log('Error reloading bookings: $e');
-          // Keep the current state on error
         }
       },
       orElse: () async {},
     );
   }
 
-  /// Load more bookings (pagination)
-  Future<void> loadMoreBookings(
-    int productId,
-    int page, {
-    String? status,
-  }) async {
+  Future<void> loadMoreBookings(int productId, int page, {String? status}) async {
     state.maybeMap(
       loaded: (loadedState) {
-        if (loadedState.isPaginatingBookings ||
-            loadedState.nextPageUrl == null) {
-          return;
-        }
+        if (loadedState.isPaginatingBookings || loadedState.nextPageUrl == null) return;
 
         emit(
           ProductDetailsState.loaded(
@@ -135,7 +116,6 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
           ),
         );
 
-        // Execute async operation without awaiting in the callback
         _getProductBookings(productId: productId, page: page, status: status)
             .then((moreBookings) {
               emit(
@@ -165,19 +145,13 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     );
   }
 
-  /// Add a new variant to the product
   Future<void> addProductVariant({
     required int productId,
     required String attribute,
     required int stock,
   }) async {
     try {
-      await _addProductVariants(
-        productId: productId,
-        attribute: attribute,
-        stock: stock,
-      );
-      // Reload product details to show the new variant
+      await _addProductVariants(productId: productId, attribute: attribute, stock: stock);
       await loadProductDetails(productId);
     } catch (e) {
       log('Error adding product variant: $e');
@@ -185,7 +159,6 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
-  /// Update an existing variant
   Future<void> updateProductVariant({
     required int productId,
     required int variantId,
@@ -201,7 +174,6 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
         updatedStock: stock,
         externalQrCode: externalQrCode,
       );
-      // Reload product details to show the updated variant
       await loadProductDetails(productId);
     } catch (e) {
       log('Error updating product variant: $e');
@@ -209,14 +181,12 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
-  /// Delete a variant from the product
   Future<void> deleteProductVariant({
     required int productId,
     required int variantId,
   }) async {
     try {
       await _deleteProduct(productId: productId, variantId: variantId);
-      // Reload product details to refresh the variants list
       await loadProductDetails(productId);
     } catch (e) {
       log('Error deleting product variant: $e');
@@ -224,7 +194,6 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
-  /// Delete the entire product
   Future<void> deleteProduct(int productId) async {
     try {
       await _deleteProduct(productId: productId);

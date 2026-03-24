@@ -1,11 +1,11 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,7 +31,7 @@ class AddOrEditSalesFormStateController {
   final discountController = TextEditingController();
 
   // Notifiers
-  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedModel>>(
+  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
     [],
   );
 
@@ -83,11 +83,11 @@ class AddOrEditSalesFormStateController {
 
     selectedProductsNotifier.value = saleDetails.products
         .map(
-          (e) => ProductSelectedModel(
+          (e) => ProductSelectedEntity(
             amount: e.price,
             quantity: e.quantity,
             // fabricLength: e.fabricLength,
-            variant: ProductInfoModel(
+            variant: ProductInfoEntity(
               id: e.id,
               productId: e.productId,
               variantId: e.variantId,

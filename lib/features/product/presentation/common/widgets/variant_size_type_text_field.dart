@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -10,49 +10,51 @@ class VariantSizeTypeTextField extends StatelessWidget {
   });
 
   final TextEditingController variantAttributeController;
-  final ValueNotifier<List<ProductVariantModel>> variantsNotifier;
-  final variantSizeTypeNotifier =
-      ValueNotifier<VariantSizeType>(VariantSizeType.letter);
+  final ValueNotifier<List<ProductVariantEntity>> variantsNotifier;
+  final variantSizeTypeNotifier = ValueNotifier<VariantSizeType>(
+    VariantSizeType.letter,
+  );
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: variantSizeTypeNotifier,
-        builder: (context, sizeType, child) {
-          final isFreeSize = sizeType == VariantSizeType.freeSize;
+      valueListenable: variantSizeTypeNotifier,
+      builder: (context, sizeType, child) {
+        final isFreeSize = sizeType == VariantSizeType.freeSize;
 
-          return TextFormField(
-            controller: variantAttributeController,
-            readOnly: isFreeSize,
-            validator: sizeType.validate,
-            textCapitalization: sizeType == VariantSizeType.letter
-                ? TextCapitalization.characters
-                : TextCapitalization.none,
-            decoration: InputDecoration(
-              hintText: sizeType.hintText,
-              hintStyle: const TextStyle(
-                color: AppColors.grey,
-                fontWeight: FontWeight.w500,
-              ),
-              suffix: SizeTypeMenuButton(
-                variantsNotifier: variantsNotifier,
-                onSelected: (option) {
-                  variantSizeTypeNotifier.value = option;
-                  variantAttributeController.clear();
-                  if (VariantSizeType.freeSize == option) {
-                    variantAttributeController.text = option.name;
-                  }
-                },
-              ),
+        return TextFormField(
+          controller: variantAttributeController,
+          readOnly: isFreeSize,
+          validator: sizeType.validate,
+          textCapitalization: sizeType == VariantSizeType.letter
+              ? TextCapitalization.characters
+              : TextCapitalization.none,
+          decoration: InputDecoration(
+            hintText: sizeType.hintText,
+            hintStyle: const TextStyle(
+              color: AppColors.grey,
+              fontWeight: FontWeight.w500,
             ),
-          );
-        });
+            suffix: SizeTypeMenuButton(
+              variantsNotifier: variantsNotifier,
+              onSelected: (option) {
+                variantSizeTypeNotifier.value = option;
+                variantAttributeController.clear();
+                if (VariantSizeType.freeSize == option) {
+                  variantAttributeController.text = option.name;
+                }
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
 class SizeTypeMenuButton extends StatelessWidget {
   final Function(VariantSizeType option) onSelected;
-  final ValueNotifier<List<ProductVariantModel>> variantsNotifier;
+  final ValueNotifier<List<ProductVariantEntity>> variantsNotifier;
   const SizeTypeMenuButton({
     required this.onSelected,
     required this.variantsNotifier,
@@ -64,29 +66,27 @@ class SizeTypeMenuButton extends StatelessWidget {
     return PopupMenuButton<VariantSizeType>(
       icon: const Icon(Icons.more_vert),
       onSelected: onSelected,
-      itemBuilder: (BuildContext context) => VariantSizeType.values.map(
-        (e) {
-          final isEmpty = variantsNotifier.value.isEmpty;
-          final isFreeSizeContains = variantsNotifier.value.any(
-            (e) => VariantSizeType.isFreeSize(e.attribute),
-          );
-          return PopupMenuItem<VariantSizeType>(
-            enabled: () {
-              if (isEmpty) return true;
+      itemBuilder: (BuildContext context) => VariantSizeType.values.map((e) {
+        final isEmpty = variantsNotifier.value.isEmpty;
+        final isFreeSizeContains = variantsNotifier.value.any(
+          (e) => VariantSizeType.isFreeSize(e.attribute),
+        );
+        return PopupMenuItem<VariantSizeType>(
+          enabled: () {
+            if (isEmpty) return true;
 
-              if (isFreeSizeContains) {
-                // If Free Size already exists, only allow selecting Free Size again
-                return e == VariantSizeType.freeSize;
-              } else {
-                // If other sizes exist, disable Free Size
-                return e != VariantSizeType.freeSize;
-              }
-            }(), // calling this function from here,
-            value: e,
-            child: Text(e.name),
-          );
-        },
-      ).toList(),
+            if (isFreeSizeContains) {
+              // If Free Size already exists, only allow selecting Free Size again
+              return e == VariantSizeType.freeSize;
+            } else {
+              // If other sizes exist, disable Free Size
+              return e != VariantSizeType.freeSize;
+            }
+          }(), // calling this function from here,
+          value: e,
+          child: Text(e.name),
+        );
+      }).toList(),
     );
   }
 }

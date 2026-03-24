@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,17 +12,21 @@ part 'selected_products_cubit.freezed.dart';
 class SelectedProductsCubit extends Cubit<SelectedProductsState> {
   SelectedProductsCubit() : super(const _Selected([]));
 
-  void loadPreSelected(List<ProductSelectedModel>? preSelected) {
+  void loadPreSelected(List<ProductSelectedEntity>? preSelected) {
     final selected = preSelected ?? [];
-    log('SelectedProductsCubit: Loading pre-selected products: ${selected.length}');
+    log(
+      'SelectedProductsCubit: Loading pre-selected products: ${selected.length}',
+    );
 
     emit(_Selected(selected));
   }
 
-  void addSelectedProduct(ProductInfoModel product, int? amount, int quantity) {
-    log('SelectedProductsCubit: Adding product - ${product.name}, amount: $amount, quantity: $quantity');
+  void addSelectedProduct(ProductInfoEntity product, int? amount, int quantity) {
+    log(
+      'SelectedProductsCubit: Adding product - ${product.name}, amount: $amount, quantity: $quantity',
+    );
 
-    final selected = ProductSelectedModel(
+    final selected = ProductSelectedEntity(
       variant: product,
       amount: amount ?? 0,
       quantity: quantity,
@@ -47,14 +51,20 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
         .where((model) => model.variant.variantId != productId)
         .toList();
 
-    log('SelectedProductsCubit: Updated list length after removal: ${newList.length}');
+    log(
+      'SelectedProductsCubit: Updated list length after removal: ${newList.length}',
+    );
 
     emit(s.copyWith(selectedProductsWithAmount: newList));
   }
 
   void updateProductMeasurements(
-      int productId, List<MeasurementValueModel> measurements) {
-    log('SelectedProductsCubit: Updating measurements for product ID: $productId');
+    int productId,
+    List<MeasurementValueEntity> measurements,
+  ) {
+    log(
+      'SelectedProductsCubit: Updating measurements for product ID: $productId',
+    );
 
     final s = state as _Selected;
     final newList = s.selectedProductsWithAmount.map((model) {

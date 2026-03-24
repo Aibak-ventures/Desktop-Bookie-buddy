@@ -1,14 +1,14 @@
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 
 /// Helper class for managing product operations in booking screen
 class BookingProductHelper {
   /// Increment product quantity
   static void incrementQuantity(
-    ProductSelectedModel product,
-    List<ProductSelectedModel> currentProducts,
-    Function(List<ProductSelectedModel>) updateProducts,
+    ProductSelectedEntity product,
+    List<ProductSelectedEntity> currentProducts,
+    Function(List<ProductSelectedEntity>) updateProducts,
   ) {
-    final products = List<ProductSelectedModel>.from(currentProducts);
+    final products = List<ProductSelectedEntity>.from(currentProducts);
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -22,11 +22,11 @@ class BookingProductHelper {
 
   /// Decrement product quantity (removes if quantity becomes 0)
   static void decrementQuantity(
-    ProductSelectedModel product,
-    List<ProductSelectedModel> currentProducts,
-    Function(List<ProductSelectedModel>) updateProducts,
+    ProductSelectedEntity product,
+    List<ProductSelectedEntity> currentProducts,
+    Function(List<ProductSelectedEntity>) updateProducts,
   ) {
-    final products = List<ProductSelectedModel>.from(currentProducts);
+    final products = List<ProductSelectedEntity>.from(currentProducts);
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -44,12 +44,12 @@ class BookingProductHelper {
 
   /// Update product price
   static void updateProductPrice(
-    ProductSelectedModel product,
+    ProductSelectedEntity product,
     int newPrice,
-    List<ProductSelectedModel> currentProducts,
-    Function(List<ProductSelectedModel>) updateProducts,
+    List<ProductSelectedEntity> currentProducts,
+    Function(List<ProductSelectedEntity>) updateProducts,
   ) {
-    final products = List<ProductSelectedModel>.from(currentProducts);
+    final products = List<ProductSelectedEntity>.from(currentProducts);
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -61,11 +61,11 @@ class BookingProductHelper {
 
   /// Remove product from list
   static void removeProduct(
-    ProductSelectedModel product,
-    List<ProductSelectedModel> currentProducts,
-    Function(List<ProductSelectedModel>) updateProducts,
+    ProductSelectedEntity product,
+    List<ProductSelectedEntity> currentProducts,
+    Function(List<ProductSelectedEntity>) updateProducts,
   ) {
-    final products = List<ProductSelectedModel>.from(currentProducts);
+    final products = List<ProductSelectedEntity>.from(currentProducts);
     products.removeWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -73,7 +73,7 @@ class BookingProductHelper {
   }
 
   /// Calculate total from products
-  static int calculateProductTotal(List<ProductSelectedModel> products) {
+  static int calculateProductTotal(List<ProductSelectedEntity> products) {
     return products.fold<int>(
       0,
       (sum, item) => sum + (item.amount * item.quantity),
@@ -82,7 +82,7 @@ class BookingProductHelper {
 
   /// Check if product already exists
   static bool isProductAlreadySelected(
-    List<ProductSelectedModel> products,
+    List<ProductSelectedEntity> products,
     int? variantId,
   ) {
     if (variantId == null) return false;

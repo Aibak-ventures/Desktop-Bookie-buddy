@@ -1,13 +1,13 @@
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_request_model/product_request_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
 import 'package:flutter/material.dart';
 
 abstract interface class IProductRepository {
   // --- Mutations ---
-  Future<void> saveProduct({required ProductRequestModel product});
+  Future<void> saveProduct({required ProductRequestEntity product});
 
   Future<void> deleteProduct({required int productId, int? variantId});
 
@@ -33,15 +33,15 @@ abstract interface class IProductRepository {
   });
 
   // --- Queries ---
-  Future<ProductModel> getProductInfo(int productId);
+  Future<ProductEntity> getProductInfo(int productId);
 
-  Future<PaginationModel<ProductModel>> getProductsPaginated({
+  Future<PaginationModel<ProductEntity>> getProductsPaginated({
     int? serviceId,
     required int page,
     bool includeInStockOnly,
   });
 
-  Future<PaginationModel<ProductModel>> getAvailableProductsPaginated({
+  Future<PaginationModel<ProductEntity>> getAvailableProductsPaginated({
     int? serviceId,
     required int page,
     required String pickupDate,
@@ -57,7 +57,7 @@ abstract interface class IProductRepository {
     List<int>? variantIds,
   });
 
-  Future<PaginationModel<ProductModel>> searchAndFilterProducts({
+  Future<PaginationModel<ProductEntity>> searchAndFilterProducts({
     int? serviceId,
     required String? query,
     required String? type,
@@ -67,7 +67,7 @@ abstract interface class IProductRepository {
     bool includeInStockOnly,
   });
 
-  Future<PaginationModel<ProductModel>> searchAllProducts({
+  Future<PaginationModel<ProductEntity>> searchAllProducts({
     required String? query,
     required int page,
     bool includeInStockOnly,
@@ -79,9 +79,9 @@ abstract interface class IProductRepository {
     String? status,
   });
 
-  Future<List<ProductMonthlyDataModel>> getProductGrowthData(int productId);
+  Future<List<ProductMonthlyDataEntity>> getProductGrowthData(int productId);
 
-  Future<PaginationModel<ProductModel>> getMatchingProductsFromAnotherShop({
+  Future<PaginationModel<ProductEntity>> getMatchingProductsFromAnotherShop({
     required int fromVariantId,
     required int toShopId,
     int page,

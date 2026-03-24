@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/booking_reques
 import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -81,7 +81,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
         paymentMethod: entity.paymentMethod,
         deliveryStatus: entity.deliveryStatus,
         bookingStatus: entity.bookingStatus,
-        products: entity.products,
+        products: entity.products?.map((e) => e.toModel()).toList(),
         otherDetails: entity.otherDetails?.toModel(),
         additionalCharges: entity.additionalCharges
             ?.map((e) => e.toModel())

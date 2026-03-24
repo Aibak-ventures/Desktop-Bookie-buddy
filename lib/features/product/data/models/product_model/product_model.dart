@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_model.freezed.dart';
@@ -61,4 +62,29 @@ abstract class ProductModel with _$ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json);
+}
+
+extension ProductModelMapper on ProductModel {
+  ProductEntity toEntity() => ProductEntity(
+        id: id,
+        name: name,
+        description: description,
+        mainServiceType: mainServiceType,
+        color: color,
+        model: model,
+        image: image,
+        thumbnailImage: thumbnailImage,
+        category: category,
+        purchaseAmount: purchaseAmount,
+        price: price,
+        salePrice: salePrice,
+        registrationNumber: registrationNumber,
+        pollutionExpiry: pollutionExpiry,
+        insuranceExpiry: insuranceExpiry,
+        fitnessExpiry: fitnessExpiry,
+        barcode: barcode,
+        generalServiceName: generalServiceName,
+        attributes: attributes,
+        variants: variants.map((v) => v.toEntity()).toList(),
+      );
 }

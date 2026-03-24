@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_info_model.freezed.dart';
@@ -50,4 +51,43 @@ abstract class ProductInfoModel with _$ProductInfoModel {
 
   factory ProductInfoModel.fromJson(Map<String, dynamic> json) =>
       _$ProductInfoModelFromJson(json);
+
+  factory ProductInfoModel.fromEntity(ProductInfoEntity entity) =>
+      ProductInfoModel(
+        id: entity.id,
+        productId: entity.productId,
+        variantId: entity.variantId,
+        name: entity.name,
+        image: entity.image,
+        mainServiceType: entity.mainServiceType,
+        variantAttribute: entity.variantAttribute,
+        color: entity.color,
+        category: entity.category,
+        model: entity.model,
+        quantity: entity.quantity,
+        amount: entity.amount,
+        measurements: entity.measurements.map((e) => e.toModel()).toList(),
+        stock: entity.stock,
+        remainingStock: entity.remainingStock,
+      );
+}
+
+extension ProductInfoModelMapper on ProductInfoModel {
+  ProductInfoEntity toEntity() => ProductInfoEntity(
+    id: id,
+    productId: productId,
+    variantId: variantId,
+    name: name,
+    image: image,
+    mainServiceType: mainServiceType,
+    variantAttribute: variantAttribute,
+    color: color,
+    category: category,
+    model: model,
+    quantity: quantity,
+    amount: amount,
+    measurements: measurements.map((e) => e.toEntity()).toList(),
+    stock: stock,
+    remainingStock: remainingStock,
+  );
 }

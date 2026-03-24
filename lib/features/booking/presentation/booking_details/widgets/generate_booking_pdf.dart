@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/utils/download_file.dart';
@@ -441,7 +441,7 @@ class GenerateBookingPdf {
 
   static pw.Row _itemBuilder(
     pw.ImageProvider productImage,
-    ProductInfoModel product,
+    ProductInfoEntity product,
   ) {
     final mainServiceType = product.mainServiceType;
     const textStyle = const pw.TextStyle(

@@ -6,7 +6,7 @@ abstract class ProductState with _$ProductState {
   const factory ProductState.loading() = _Loading;
 
   const factory ProductState.loaded({
-    required List<ProductModel> products,
+    required List<ProductEntity> products,
     required String? nextPageUrl,
     @Default(false) bool isPaginating,
     @Default(false) bool isSearching,

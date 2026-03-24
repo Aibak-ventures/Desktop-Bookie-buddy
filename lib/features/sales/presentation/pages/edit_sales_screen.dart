@@ -3,15 +3,16 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
@@ -21,7 +22,7 @@ import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_c
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/select_product_dialog.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
   // Reactive overlay state — updated without recreating the OverlayEntry
-  final _overlayProducts = ValueNotifier<List<ProductModel>>([]);
+  final _overlayProducts = ValueNotifier<List<ProductEntity>>([]);
   final _overlayIsLoading = ValueNotifier<bool>(false);
 
   // Inline editing state
@@ -638,7 +639,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
             p13,
             p14,
           ) => products,
-      orElse: () => <ProductModel>[],
+      orElse: () => <ProductEntity>[],
     );
 
     if (currentProducts.isNotEmpty) {
@@ -1481,7 +1482,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   }
 
   Widget _buildSelectedProductsList() {
-    return ValueListenableBuilder<List<ProductSelectedModel>>(
+    return ValueListenableBuilder<List<ProductSelectedEntity>>(
       valueListenable: _formController.selectedProductsNotifier,
       builder: (context, products, _) {
         if (products.isEmpty) {
@@ -1533,7 +1534,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     );
   }
 
-  Widget _buildProductRow(ProductSelectedModel product) {
+  Widget _buildProductRow(ProductSelectedEntity product) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -1759,7 +1760,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     );
   }
 
-  String _getProductSpecifications(ProductSelectedModel product) {
+  String _getProductSpecifications(ProductSelectedEntity product) {
     final List<String> specs = [];
 
     if (product.variant.category != null &&
@@ -1780,7 +1781,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     return specs.isNotEmpty ? specs.join(' • ') : '-';
   }
 
-  void _incrementQuantity(ProductSelectedModel product) {
+  void _incrementQuantity(ProductSelectedEntity product) {
     final availableStock =
         product.variant.remainingStock ?? product.variant.stock ?? 999;
     if (product.quantity >= availableStock) {
@@ -1790,7 +1791,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
       );
       return;
     }
-    final products = List<ProductSelectedModel>.from(
+    final products = List<ProductSelectedEntity>.from(
       _formController.selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -1804,8 +1805,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     }
   }
 
-  void _decrementQuantity(ProductSelectedModel product) {
-    final products = List<ProductSelectedModel>.from(
+  void _decrementQuantity(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
       _formController.selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -1823,8 +1824,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     }
   }
 
-  void _removeProduct(ProductSelectedModel product) {
-    final products = List<ProductSelectedModel>.from(
+  void _removeProduct(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
       _formController.selectedProductsNotifier.value,
     );
     products.removeWhere(
@@ -1833,7 +1834,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     _formController.selectedProductsNotifier.value = products;
   }
 
-  void _startEditingPrice(ProductSelectedModel product) {
+  void _startEditingPrice(ProductSelectedEntity product) {
     setState(() {
       _editingVariantId = product.variant.variantId;
       _inlinePriceController.text = product.amount.toString();
@@ -1843,7 +1844,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     });
   }
 
-  void _saveEditingPrice(ProductSelectedModel product) {
+  void _saveEditingPrice(ProductSelectedEntity product) {
     if (_editingVariantId == null) return;
 
     final newPrice = int.tryParse(_inlinePriceController.text);
@@ -1865,8 +1866,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     });
   }
 
-  void _updateProductPrice(ProductSelectedModel product, int newPrice) {
-    final products = List<ProductSelectedModel>.from(
+  void _updateProductPrice(ProductSelectedEntity product, int newPrice) {
+    final products = List<ProductSelectedEntity>.from(
       _formController.selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -1928,7 +1929,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                 child: ValueListenableBuilder<bool>(
                   valueListenable: _overlayIsLoading,
                   builder: (context, isLoading, _) {
-                    return ValueListenableBuilder<List<ProductModel>>(
+                    return ValueListenableBuilder<List<ProductEntity>>(
                       valueListenable: _overlayProducts,
                       builder: (context, productList, _) {
                         return Container(
@@ -2098,7 +2099,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   }
 
   /// Builds search item for the overlay - requires variant selection before adding
-  Widget _buildOverlaySearchItem(ProductModel product) {
+  Widget _buildOverlaySearchItem(ProductEntity product) {
     return _OverlaySearchItem(
       product: product,
       onAddProduct: (selectedVariant) {
@@ -2111,8 +2112,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
 
   /// Add product from search with specific variant
   void _addProductFromSearchWithVariant(
-    ProductModel product,
-    ProductVariantModel variant,
+    ProductEntity product,
+    ProductVariantEntity variant,
   ) {
     // EditSalesScreen is always in sales mode — prefer sale_price over rent price
     final productSalePriceInt = product.salePrice != null
@@ -2125,7 +2126,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         product.price ??
         0;
 
-    final products = List<ProductSelectedModel>.from(
+    final products = List<ProductSelectedEntity>.from(
       _formController.selectedProductsNotifier.value,
     );
 
@@ -2160,8 +2161,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
           : variant.attribute;
 
       products.add(
-        ProductSelectedModel(
-          variant: ProductInfoModel(
+        ProductSelectedEntity(
+          variant: ProductInfoEntity(
             id: variant.id,
             variantId: variant.id,
             productId: product.id,
@@ -2584,7 +2585,9 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
       log('This will clear all products on backend!');
     } else {
       req.products!.asMap().forEach((index, product) {
-        final variantJson = product.toCustomJson(includeMeasurement: false);
+        final variantJson = ProductSelectedModel.fromEntity(
+          product,
+        ).toCustomJson(includeMeasurement: false);
         log('Variant ${index + 1}: ${variantJson}');
         log('  - ID: ${variantJson['id']}');
         log('  - Quantity: ${variantJson['quantity']}');
@@ -2700,8 +2703,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
 
 /// Search result item widget shown in overlay
 class _OverlaySearchItem extends StatefulWidget {
-  final ProductModel product;
-  final Function(ProductVariantModel) onAddProduct;
+  final ProductEntity product;
+  final Function(ProductVariantEntity) onAddProduct;
 
   const _OverlaySearchItem({required this.product, required this.onAddProduct});
 
@@ -2710,7 +2713,7 @@ class _OverlaySearchItem extends StatefulWidget {
 }
 
 class _OverlaySearchItemState extends State<_OverlaySearchItem> {
-  ProductVariantModel? selectedVariant;
+  ProductVariantEntity? selectedVariant;
 
   @override
   void initState() {

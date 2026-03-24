@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_variant_model.freezed.dart';
@@ -32,4 +33,14 @@ extension ProductVariantModelExtension on ProductVariantModel {
         if (externalQrCode != null && externalQrCode!.isNotEmpty)
           'external_qr_code': externalQrCode,
       };
+
+  ProductVariantEntity toEntity() => ProductVariantEntity(
+        id: id,
+        attribute: attribute,
+        stock: stock,
+        remainingStock: remainingStock,
+        price: price,
+        salePrice: salePrice,
+        externalQrCode: externalQrCode,
+      );
 }

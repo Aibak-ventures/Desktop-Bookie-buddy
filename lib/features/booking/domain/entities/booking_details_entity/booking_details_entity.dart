@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/security_summary_entity/security_summary_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_entity.freezed.dart';
@@ -35,7 +35,7 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     required ClientEntity client,
     String? description,
     @Default([]) List<dynamic> documents,
-    required List<ProductInfoModel> bookedItems,
+    required List<ProductInfoEntity> bookedItems,
     @Default([]) List<AdditionalChargesEntity> additionalCharges,
     @Default([]) List<BookingPaymentHistoryEntity> payments,
     @Default([]) List<dynamic> refunds,

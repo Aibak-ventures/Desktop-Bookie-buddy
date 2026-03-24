@@ -2,11 +2,11 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 
 class BookingSummarySection extends StatelessWidget {
-  final ValueNotifier<List<ProductSelectedModel>> selectedProductsNotifier;
+  final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
   final ValueNotifier<List<AdditionalChargesModel>> additionalChargesNotifier;
   final TextEditingController advanceAmountController;
   final TextEditingController discountAmountController;
@@ -69,10 +69,7 @@ class BookingSummarySection extends StatelessWidget {
               ),
               child: const Text(
                 'Confirm booking',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -117,7 +114,6 @@ class BookingSummarySection extends StatelessWidget {
 
             // Hidden: Additional charges
             // _buildSummaryRow('Additional charges', additionalTotal),
-
             if (discountAmount > 0) ...[
               _buildSummaryRow('Discount', -discountAmount, isNegative: true),
               const SizedBox(height: 8),
@@ -135,7 +131,6 @@ class BookingSummarySection extends StatelessWidget {
             //   isBold: true,
             // ),
             // const SizedBox(height: 8),
-
             _buildSummaryRow(
               'Total',
               totalPayable,

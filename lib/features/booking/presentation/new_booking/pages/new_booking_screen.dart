@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
@@ -21,9 +23,7 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
 import 'package:flutter/services.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_old_booking_usecase.dart';
@@ -37,7 +37,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/additional_cha
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/request_sales_model/request_sales_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
@@ -102,7 +102,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   bool decreaseStockForPastDate = false; // Checkbox for past dates in sales
 
   // Products/Services
-  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedModel>>(
+  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
     [],
   );
 
@@ -128,7 +128,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   final ScrollController _searchResultsScrollController = ScrollController();
   // Reactive overlay state — updated without rebuilding the OverlayEntry
-  final _overlayProducts = ValueNotifier<List<ProductModel>>([]);
+  final _overlayProducts = ValueNotifier<List<ProductEntity>>([]);
   final _overlayIsLoading = ValueNotifier<bool>(false);
 
   // Product search filter state
@@ -575,7 +575,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             useAvailableProductsApi,
             isSales,
           ) => products,
-      orElse: () => <ProductModel>[],
+      orElse: () => <ProductEntity>[],
     );
 
     if (currentProducts.isNotEmpty) {
@@ -1704,7 +1704,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Get variant display text for product in table
-  String _getVariantDisplayText(ProductSelectedModel product) {
+  String _getVariantDisplayText(ProductSelectedEntity product) {
     final mainServiceType = product.variant.mainServiceType;
 
     // For multi-variant product types (dress, costume, gadgets),
@@ -1758,7 +1758,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Get service-specific specification text for product
-  String _getProductSpecifications(ProductSelectedModel product) {
+  String _getProductSpecifications(ProductSelectedEntity product) {
     // final mainServiceType = product.variant.mainServiceType;
     final List<String> specs = [];
 
@@ -1837,7 +1837,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             useAvailableProductsApi,
             isSales,
           ) => products,
-      orElse: () => <ProductModel>[],
+      orElse: () => <ProductEntity>[],
     );
 
     if (currentProducts.isEmpty) return;
@@ -2097,7 +2097,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                   );
                               if (index != -1) {
                                 final updatedProducts =
-                                    List<ProductSelectedModel>.from(
+                                    List<ProductSelectedEntity>.from(
                                       selectedProductsNotifier.value,
                                     );
                                 updatedProducts[index] = product.copyWith(
@@ -2400,7 +2400,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ValueListenableBuilder<List<ProductSelectedModel>>(
+              ValueListenableBuilder<List<ProductSelectedEntity>>(
                 valueListenable: selectedProductsNotifier,
                 builder: (context, products, _) {
                   return Text(
@@ -2836,7 +2836,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 child: ValueListenableBuilder<bool>(
                   valueListenable: _overlayIsLoading,
                   builder: (context, isLoading, _) {
-                    return ValueListenableBuilder<List<ProductModel>>(
+                    return ValueListenableBuilder<List<ProductEntity>>(
                       valueListenable: _overlayProducts,
                       builder: (context, productList, _) {
                         return Container(
@@ -3007,7 +3007,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Builds search item for the overlay - requires variant selection before adding
-  Widget _buildOverlaySearchItem(ProductModel product) {
+  Widget _buildOverlaySearchItem(ProductEntity product) {
     return OverlaySearchItem(
       product: product,
       isSales: selectedBookingType == BookingType.sales,
@@ -3021,8 +3021,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Add product from search with specific variant
   void _addProductFromSearchWithVariant(
-    ProductModel product,
-    ProductVariantModel variant,
+    ProductEntity product,
+    ProductVariantEntity variant,
   ) {
     log(
       '_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}',
@@ -3045,7 +3045,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       'Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)',
     );
 
-    final products = List<ProductSelectedModel>.from(
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
 
@@ -3077,8 +3077,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           : variant.attribute;
 
       products.add(
-        ProductSelectedModel(
-          variant: ProductInfoModel(
+        ProductSelectedEntity(
+          variant: ProductInfoEntity(
             id: variant.id,
             variantId: variant.id,
             productId: product.id,
@@ -3178,7 +3178,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   Widget _buildSelectedProductsList() {
-    return ValueListenableBuilder<List<ProductSelectedModel>>(
+    return ValueListenableBuilder<List<ProductSelectedEntity>>(
       valueListenable: selectedProductsNotifier,
       builder: (context, products, _) {
         if (products.isEmpty) {
@@ -3232,7 +3232,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         serviceType == MainServiceType.costume;
   }
 
-  Widget _buildProductRow(ProductSelectedModel product) {
+  Widget _buildProductRow(ProductSelectedEntity product) {
     final isSales = selectedBookingType == BookingType.sales;
     final rentalDays = !isSales ? _calculateRentalDays() : 0;
     // Only multiply price by days for qualifying service types
@@ -3580,7 +3580,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  TextEditingController _getQuantityController(ProductSelectedModel product) {
+  TextEditingController _getQuantityController(ProductSelectedEntity product) {
     final quantityKey = _quantityKey(product);
     final focusNode = _getQuantityFocusNode(quantityKey);
     final controller = _quantityControllers.putIfAbsent(
@@ -3593,7 +3593,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return controller;
   }
 
-  int _quantityKey(ProductSelectedModel product) {
+  int _quantityKey(ProductSelectedEntity product) {
     return product.variant.variantId ?? product.variant.id;
   }
 
@@ -3602,7 +3602,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Increment quantity of a product with stock validation
-  void _incrementQuantity(ProductSelectedModel product) {
+  void _incrementQuantity(ProductSelectedEntity product) {
     // Check available stock using remainingStock with fallback to stock
     final availableStock =
         product.variant.remainingStock ?? product.variant.stock ?? 999;
@@ -3613,7 +3613,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
-    final products = List<ProductSelectedModel>.from(
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -3631,8 +3631,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Decrement quantity of a product
-  void _decrementQuantity(ProductSelectedModel product) {
-    final products = List<ProductSelectedModel>.from(
+  void _decrementQuantity(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -3655,7 +3655,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  void _saveTypedQuantity(ProductSelectedModel product, String value) {
+  void _saveTypedQuantity(ProductSelectedEntity product, String value) {
     final parsedQuantity = int.tryParse(value.trim());
 
     if (parsedQuantity == null || parsedQuantity <= 0) {
@@ -3679,7 +3679,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
-    final products = List<ProductSelectedModel>.from(
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -3695,7 +3695,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _quantityFocusNodes[_quantityKey(product)]?.unfocus();
   }
 
-  void _startEditingPrice(ProductSelectedModel product) {
+  void _startEditingPrice(ProductSelectedEntity product) {
     setState(() {
       _editingVariantId = product.variant.variantId;
       _inlinePriceController.text = product.amount.toString();
@@ -3706,7 +3706,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     });
   }
 
-  void _saveEditingPrice(ProductSelectedModel product) {
+  void _saveEditingPrice(ProductSelectedEntity product) {
     if (_editingVariantId == null) return;
 
     final newPrice = int.tryParse(_inlinePriceController.text);
@@ -3731,8 +3731,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Remove a product from the selected list
-  void _removeProduct(ProductSelectedModel product) {
-    final products = List<ProductSelectedModel>.from(
+  void _removeProduct(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     _quantityControllers.remove(_quantityKey(product))?.dispose();
@@ -3744,8 +3744,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   /// Update the price of a product
-  void _updateProductPrice(ProductSelectedModel product, int newPrice) {
-    final products = List<ProductSelectedModel>.from(
+  void _updateProductPrice(ProductSelectedEntity product, int newPrice) {
+    final products = List<ProductSelectedEntity>.from(
       selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
@@ -3846,7 +3846,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
           // const SizedBox(height: 3),
           // Add customization button - Only for Dresses (not for sales)
-          ValueListenableBuilder<List<ProductSelectedModel>>(
+          ValueListenableBuilder<List<ProductSelectedEntity>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
               // Hide customization button for sales mode
@@ -5076,7 +5076,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 7),
 
                   // Running Kilometers - Only for Vehicles
-                  ValueListenableBuilder<List<ProductSelectedModel>>(
+                  ValueListenableBuilder<List<ProductSelectedEntity>>(
                     valueListenable: selectedProductsNotifier,
                     builder: (context, products, _) {
                       final hasVehicles = products.any(
@@ -5529,7 +5529,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 20),
 
                   // Locations - Only for Vehicles
-                  ValueListenableBuilder<List<ProductSelectedModel>>(
+                  ValueListenableBuilder<List<ProductSelectedEntity>>(
                     valueListenable: selectedProductsNotifier,
                     builder: (context, products, _) {
                       final hasVehicles = products.any(
@@ -5988,7 +5988,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                ValueListenableBuilder<List<ProductSelectedModel>>(
+                ValueListenableBuilder<List<ProductSelectedEntity>>(
                   valueListenable: selectedProductsNotifier,
                   builder: (context, products, _) {
                     final total = products.fold<int>(
@@ -6124,7 +6124,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // Helper methods replaced - Using BookingTextFieldBuilder
 
   // Widget _buildFinalSummary() {
-  //   return ValueListenableBuilder<List<ProductSelectedModel>>(
+  //   return ValueListenableBuilder<List<ProductSelectedEntity>>(
   //     valueListenable: selectedProductsNotifier,
   //     builder: (context, products, _) {
   //       final productTotal = products.fold<int>(

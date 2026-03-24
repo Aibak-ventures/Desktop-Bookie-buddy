@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/search_all_products_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -11,18 +11,18 @@ part 'product_search_cubit.freezed.dart';
 
 class ProductSearchCubit extends Cubit<ProductSearchState> {
   final SearchAllProductsUseCase _searchAllProductsUseCase;
-  ProductSearchCubit(
-      {required SearchAllProductsUseCase searchAllProductsUseCase})
-      : _searchAllProductsUseCase = searchAllProductsUseCase,
-        super(
-          const ProductSearchState(
-            suggestions: [],
-            searchQuery: '',
-            selectedProduct: null,
-          ),
-        );
+  ProductSearchCubit({
+    required SearchAllProductsUseCase searchAllProductsUseCase,
+  }) : _searchAllProductsUseCase = searchAllProductsUseCase,
+       super(
+         const ProductSearchState(
+           suggestions: [],
+           searchQuery: '',
+           selectedProduct: null,
+         ),
+       );
 
-  Future<List<ProductModel>> searchProducts(String query) async {
+  Future<List<ProductEntity>> searchProducts(String query) async {
     try {
       final result = await _searchAllProductsUseCase(page: 1, query: query);
 
@@ -63,9 +63,7 @@ class ProductSearchCubit extends Cubit<ProductSearchState> {
         query: s.searchQuery,
       );
       log('data: ${result.data.length}, next page url: ${result.nextPageUrl}');
-      log(
-        'Updated Suggestions Count: ${s.suggestions.length + result.data.length}',
-      );
+      log('Updated Suggestions Count: ${s.suggestions.length + result.data.length}');
 
       emit(
         s.copyWith(
@@ -80,7 +78,7 @@ class ProductSearchCubit extends Cubit<ProductSearchState> {
     }
   }
 
-  void selectProduct(ProductModel selectedProduct) {
+  void selectProduct(ProductEntity selectedProduct) {
     emit(
       ProductSearchState(
         suggestions: [],

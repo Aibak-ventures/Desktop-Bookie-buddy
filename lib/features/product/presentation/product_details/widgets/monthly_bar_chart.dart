@@ -1,8 +1,8 @@
-import 'package:bookie_buddy_web/features/product/domain/models/product_monthly_expense_model/product_monthly_data_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
 import 'package:flutter/material.dart';
 
 class MonthlyBarChart extends StatelessWidget {
-  final List<ProductMonthlyDataModel> monthlyData;
+  final List<ProductMonthlyDataEntity> monthlyData;
   final double height;
 
   const MonthlyBarChart({
@@ -23,10 +23,7 @@ class MonthlyBarChart extends StatelessWidget {
         child: Center(
           child: Text(
             'No sales data available',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
           ),
         ),
       );
@@ -89,7 +86,7 @@ class MonthlyBarChart extends StatelessWidget {
                   'Sep',
                   'Oct',
                   'Nov',
-                  'Dec'
+                  'Dec',
                 ];
                 final monthName = data.month >= 1 && data.month <= 12
                     ? monthNames[data.month - 1]
@@ -140,8 +137,11 @@ class MonthlyBarChart extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(
-      {required double height, required Color color, required double value}) {
+  Widget _buildBar({
+    required double height,
+    required Color color,
+    required double value,
+  }) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [

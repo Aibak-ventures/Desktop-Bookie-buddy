@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,7 +15,7 @@ class CustomizationExpansionTile extends StatelessWidget {
   });
 
   final String? expansionTitle;
-  final List<MeasurementValueModel> measurements;
+  final List<MeasurementValueEntity> measurements;
   final VoidCallback? onButtonTap;
   final bool isButtonVisible;
   final Widget? trailingWidget;

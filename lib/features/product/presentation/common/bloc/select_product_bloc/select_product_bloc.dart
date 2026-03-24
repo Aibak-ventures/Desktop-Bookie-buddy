@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_available_products_paginated_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_products_paginated_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/search_and_filter_products_usecase.dart';
@@ -45,8 +45,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
   ) async {
     emit(const _Loading());
     try {
-      final PaginationModel<ProductModel> result;
-      // Convert 0 to null for "All Services" mode
+      final PaginationModel<ProductEntity> result;
       final serviceId = event.serviceId == 0 ? null : event.serviceId;
       if (event.useAvailableProductsApi) {
         result = await _getAvailableProducts(
@@ -97,8 +96,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     emit(s.copyWith(isPaginating: true));
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
-      final PaginationModel<ProductModel> result;
-      // Convert 0 to null for "All Services" mode
+      final PaginationModel<ProductEntity> result;
       final serviceId = s.serviceId == 0 ? null : s.serviceId;
       if (s.useAvailableProductsApi) {
         result = await _getAvailableProducts(
@@ -137,17 +135,12 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     Emitter<SelectProductState> emit,
   ) async {
     emit(const _Loading());
-
-    // Debug log for incoming search event
     log('_onSearchProducts -> query: ${event.query}, type: ${event.type}, useAvailable: ${event.useAvailableProductsApi}');
 
     try {
-      late final PaginationModel<ProductModel> result;
-      // Convert 0 to null for "All Services" mode
+      late final PaginationModel<ProductEntity> result;
       final serviceId = event.serviceId == 0 ? null : event.serviceId;
       if (event.useAvailableProductsApi) {
-        // Always pass the typed query through to the available-products API
-        // so the backend receives `search_value` even for short queries.
         result = await _getAvailableProducts(
           serviceId: serviceId,
           page: 1,
@@ -208,8 +201,7 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     emit(s.copyWith(isPaginating: true));
     try {
       final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
-      final PaginationModel<ProductModel> result;
-      // Convert 0 to null for "All Services" mode
+      final PaginationModel<ProductEntity> result;
       final serviceId = s.serviceId == 0 ? null : s.serviceId;
       if (s.useAvailableProductsApi) {
         result = await _getAvailableProducts(

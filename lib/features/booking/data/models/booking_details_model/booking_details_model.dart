@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/security_summary_model/security_summary_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
@@ -131,7 +131,7 @@ extension BookingDetailsModelMapper on BookingDetailsModel {
     client: client.toEntity(),
     description: description,
     documents: documents,
-    bookedItems: bookedItems,
+    bookedItems: bookedItems.map((e) => e.toEntity()).toList(),
     additionalCharges: additionalCharges.map((e) => e.toEntity()).toList(),
     payments: payments.map((e) => e.toEntity()).toList(),
     refunds: refunds,

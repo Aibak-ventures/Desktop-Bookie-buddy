@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingRequestEntity {
 
- int? get clientId; int? get staffId; ClientRequestEntity? get client; String? get address; String? get bookedDate; String? get pickupDate; String? get returnDate; String? get coolingPeriodDate; int? get advanceAmount; int? get securityAmount; int? get discountAmount; String? get purchaseMode; String? get description; PaymentMethod? get paymentMethod; DeliveryStatus? get deliveryStatus; BookingStatus? get bookingStatus; List<ProductSelectedModel>? get products; BookingOtherDetailsEntity? get otherDetails; List<AdditionalChargesEntity>? get additionalCharges; int? get serviceId; TimeOfDay? get pickupTime; TimeOfDay? get returnTime; bool get sendPdfToWhatsApp; String? get runningKilometers;
+ int? get clientId; int? get staffId; ClientRequestEntity? get client; String? get address; String? get bookedDate; String? get pickupDate; String? get returnDate; String? get coolingPeriodDate; int? get advanceAmount; int? get securityAmount; int? get discountAmount; String? get purchaseMode; String? get description; PaymentMethod? get paymentMethod; DeliveryStatus? get deliveryStatus; BookingStatus? get bookingStatus; List<ProductSelectedEntity>? get products; BookingOtherDetailsEntity? get otherDetails; List<AdditionalChargesEntity>? get additionalCharges; int? get serviceId; TimeOfDay? get pickupTime; TimeOfDay? get returnTime; bool get sendPdfToWhatsApp; String? get runningKilometers;
 /// Create a copy of BookingRequestEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $BookingRequestEntityCopyWith<$Res>  {
   factory $BookingRequestEntityCopyWith(BookingRequestEntity value, $Res Function(BookingRequestEntity) _then) = _$BookingRequestEntityCopyWithImpl;
 @useResult
 $Res call({
- int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, PaymentMethod? paymentMethod, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedModel>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers
+ int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, PaymentMethod? paymentMethod, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedEntity>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers
 });
 
 
@@ -81,7 +81,7 @@ as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : payme
 as PaymentMethod?,deliveryStatus: freezed == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
 as DeliveryStatus?,bookingStatus: freezed == bookingStatus ? _self.bookingStatus : bookingStatus // ignore: cast_nullable_to_non_nullable
 as BookingStatus?,products: freezed == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
-as List<ProductSelectedModel>?,otherDetails: freezed == otherDetails ? _self.otherDetails : otherDetails // ignore: cast_nullable_to_non_nullable
+as List<ProductSelectedEntity>?,otherDetails: freezed == otherDetails ? _self.otherDetails : otherDetails // ignore: cast_nullable_to_non_nullable
 as BookingOtherDetailsEntity?,additionalCharges: freezed == additionalCharges ? _self.additionalCharges : additionalCharges // ignore: cast_nullable_to_non_nullable
 as List<AdditionalChargesEntity>?,serviceId: freezed == serviceId ? _self.serviceId : serviceId // ignore: cast_nullable_to_non_nullable
 as int?,pickupTime: freezed == pickupTime ? _self.pickupTime : pickupTime // ignore: cast_nullable_to_non_nullable
@@ -197,7 +197,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedModel>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingRequestEntity() when $default != null:
 return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.paymentMethod,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers);case _:
@@ -218,7 +218,7 @@ return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedModel>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers)  $default,) {final _that = this;
 switch (_that) {
 case _BookingRequestEntity():
 return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.paymentMethod,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers);case _:
@@ -238,7 +238,7 @@ return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedModel>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingRequestEntity() when $default != null:
 return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.paymentMethod,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers);case _:
@@ -253,7 +253,7 @@ return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bo
 
 
 class _BookingRequestEntity implements BookingRequestEntity {
-  const _BookingRequestEntity({this.clientId, this.staffId, this.client, this.address, this.bookedDate, this.pickupDate, this.returnDate, this.coolingPeriodDate, this.advanceAmount, this.securityAmount, this.discountAmount, this.purchaseMode, this.description, this.paymentMethod, this.deliveryStatus, this.bookingStatus, final  List<ProductSelectedModel>? products, this.otherDetails, final  List<AdditionalChargesEntity>? additionalCharges, this.serviceId, this.pickupTime, this.returnTime, this.sendPdfToWhatsApp = false, this.runningKilometers}): _products = products,_additionalCharges = additionalCharges;
+  const _BookingRequestEntity({this.clientId, this.staffId, this.client, this.address, this.bookedDate, this.pickupDate, this.returnDate, this.coolingPeriodDate, this.advanceAmount, this.securityAmount, this.discountAmount, this.purchaseMode, this.description, this.paymentMethod, this.deliveryStatus, this.bookingStatus, final  List<ProductSelectedEntity>? products, this.otherDetails, final  List<AdditionalChargesEntity>? additionalCharges, this.serviceId, this.pickupTime, this.returnTime, this.sendPdfToWhatsApp = false, this.runningKilometers}): _products = products,_additionalCharges = additionalCharges;
   
 
 @override final  int? clientId;
@@ -272,8 +272,8 @@ class _BookingRequestEntity implements BookingRequestEntity {
 @override final  PaymentMethod? paymentMethod;
 @override final  DeliveryStatus? deliveryStatus;
 @override final  BookingStatus? bookingStatus;
- final  List<ProductSelectedModel>? _products;
-@override List<ProductSelectedModel>? get products {
+ final  List<ProductSelectedEntity>? _products;
+@override List<ProductSelectedEntity>? get products {
   final value = _products;
   if (value == null) return null;
   if (_products is EqualUnmodifiableListView) return _products;
@@ -327,7 +327,7 @@ abstract mixin class _$BookingRequestEntityCopyWith<$Res> implements $BookingReq
   factory _$BookingRequestEntityCopyWith(_BookingRequestEntity value, $Res Function(_BookingRequestEntity) _then) = __$BookingRequestEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, PaymentMethod? paymentMethod, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedModel>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers
+ int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, PaymentMethod? paymentMethod, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedEntity>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers
 });
 
 
@@ -363,7 +363,7 @@ as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : payme
 as PaymentMethod?,deliveryStatus: freezed == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
 as DeliveryStatus?,bookingStatus: freezed == bookingStatus ? _self.bookingStatus : bookingStatus // ignore: cast_nullable_to_non_nullable
 as BookingStatus?,products: freezed == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
-as List<ProductSelectedModel>?,otherDetails: freezed == otherDetails ? _self.otherDetails : otherDetails // ignore: cast_nullable_to_non_nullable
+as List<ProductSelectedEntity>?,otherDetails: freezed == otherDetails ? _self.otherDetails : otherDetails // ignore: cast_nullable_to_non_nullable
 as BookingOtherDetailsEntity?,additionalCharges: freezed == additionalCharges ? _self._additionalCharges : additionalCharges // ignore: cast_nullable_to_non_nullable
 as List<AdditionalChargesEntity>?,serviceId: freezed == serviceId ? _self.serviceId : serviceId // ignore: cast_nullable_to_non_nullable
 as int?,pickupTime: freezed == pickupTime ? _self.pickupTime : pickupTime // ignore: cast_nullable_to_non_nullable

@@ -3,14 +3,14 @@ import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_model/product_variant_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_request_model/product_request_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +23,9 @@ import 'package:image_picker/image_picker.dart';
 /// This is a web-optimized modal version of the AddOrEditProductScreen
 class AddEditProductDialog extends StatefulWidget {
   final int? serviceId;
-  final ProductModel? product;
+  final ProductEntity? product;
 
-  const AddEditProductDialog({
-    this.serviceId,
-    this.product,
-    super.key,
-  });
+  const AddEditProductDialog({this.serviceId, this.product, super.key});
 
   @override
   State<AddEditProductDialog> createState() => _AddEditProductDialogState();
@@ -57,7 +53,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _barcodeController = TextEditingController();
 
   final _imageNotifier = ValueNotifier<XFile?>(null);
-  final variantsNotifier = ValueNotifier<List<ProductVariantModel>>([]);
+  final variantsNotifier = ValueNotifier<List<ProductVariantEntity>>([]);
 
   // Variant form controllers
   final _variantSizeController = TextEditingController();
@@ -65,7 +61,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   final _variantBarcodeController = TextEditingController();
   final _variantQrCodeController = TextEditingController();
   final _isAddingVariant = ValueNotifier<bool>(false);
-  ProductVariantModel? _editingVariant;
+  ProductVariantEntity? _editingVariant;
 
   MainServiceType? mainServiceType;
   int? selectedServiceId;
@@ -79,9 +75,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
 
   void _initializeServices() {
     // Force reload services to get latest services for current shop
-    context
-        .read<ServiceBloc>()
-        .add(const ServiceEvent.loadServices(force: true));
+    context.read<ServiceBloc>().add(
+      const ServiceEvent.loadServices(force: true),
+    );
 
     final product = widget.product;
 
@@ -93,13 +89,13 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           // For edit mode, use product's service type
           selectedServiceId = product?.mainServiceType != null
               ? services
-                  .firstWhere(
-                    (s) =>
-                        MainServiceType.fromString(s.mainServiceName) ==
-                        product!.mainServiceType,
-                    orElse: () => services.first,
-                  )
-                  .id
+                    .firstWhere(
+                      (s) =>
+                          MainServiceType.fromString(s.mainServiceName) ==
+                          product!.mainServiceType,
+                      orElse: () => services.first,
+                    )
+                    .id
               : widget.serviceId;
 
           mainServiceType = MainServiceType.fromServiceList(
@@ -186,9 +182,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
                 ),
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey.shade200),
-                ),
+                border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
               ),
               child: Row(
                 children: [
@@ -272,7 +266,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                     return state.maybeWhen(
                       loaded: (services) {
                         // Ensure selectedServiceId is valid or null
-                        final validServiceId = selectedServiceId != null &&
+                        final validServiceId =
+                            selectedServiceId != null &&
                                 services.any((s) => s.id == selectedServiceId)
                             ? selectedServiceId
                             : null;
@@ -300,9 +295,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                                     selectedServiceId = value;
                                     mainServiceType =
                                         MainServiceType.fromServiceList(
-                                      services,
-                                      value,
-                                    );
+                                          services,
+                                          value,
+                                        );
                                   });
                                 }
                               },
@@ -327,9 +322,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
               const SizedBox(width: 24),
 
               // Right column - Dynamic form fields based on service type
-              Expanded(
-                child: _buildDynamicFields(),
-              ),
+              Expanded(child: _buildDynamicFields()),
             ],
           ),
           const SizedBox(height: 20),
@@ -346,8 +339,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                 orElse: () {},
                 error: (error) => context.showSnackBar(error, isError: true),
                 success: () {
-                  Navigator.of(context)
-                      .pop(true); // Return true to refresh list
+                  Navigator.of(
+                    context,
+                  ).pop(true); // Return true to refresh list
                   context.showSnackBar(
                     isEditMode
                         ? "Product updated successfully"
@@ -367,8 +361,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                 children: [
                   CustomElevatedButton(
                     text: 'Cancel',
-                    onPressed:
-                        isLoading ? () {} : () => Navigator.of(context).pop(),
+                    onPressed: isLoading
+                        ? () {}
+                        : () => Navigator.of(context).pop(),
                     width: 140,
                     height: 45,
                     backgroundColor: Colors.grey.shade300,
@@ -404,7 +399,11 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         width: 280,
         child: CustomTextField(
           label:
-              '${mainServiceType!.isVehicle ? 'Vehicle' : mainServiceType!.isMaterial ? 'Material' : 'Product'} Name *',
+              '${mainServiceType!.isVehicle
+                  ? 'Vehicle'
+                  : mainServiceType!.isMaterial
+                  ? 'Material'
+                  : 'Product'} Name *',
           controller: _nameController,
           validator: AppInputValidators.productName,
         ),
@@ -455,8 +454,11 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             controller: _categoryController,
             validator: (value) => AppInputValidators.isEmpty(value)
                 ? null
-                : AppInputValidators.category(value,
-                    fieldName: 'Category', isRequired: false),
+                : AppInputValidators.category(
+                    value,
+                    fieldName: 'Category',
+                    isRequired: false,
+                  ),
           ),
         ),
         SizedBox(
@@ -544,8 +546,11 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             controller: _categoryController,
             validator: (value) => AppInputValidators.isEmpty(value)
                 ? null
-                : AppInputValidators.category(value,
-                    fieldName: 'Category', isRequired: false),
+                : AppInputValidators.category(
+                    value,
+                    fieldName: 'Category',
+                    isRequired: false,
+                  ),
           ),
         ),
         SizedBox(
@@ -722,8 +727,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                 ? null
                 : AppInputValidators.category(
                     value,
-                    fieldName:
-                        mainServiceType!.isVehicle ? 'Brand' : 'Category',
+                    fieldName: mainServiceType!.isVehicle
+                        ? 'Brand'
+                        : 'Category',
                     isRequired: false,
                   ),
           ),
@@ -801,11 +807,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
       );
     }
 
-    return Wrap(
-      runSpacing: 16,
-      spacing: 16,
-      children: commonFields,
-    );
+    return Wrap(runSpacing: 16, spacing: 16, children: commonFields);
   }
 
   /// Build a date picker field for vehicle expiry dates
@@ -832,8 +834,10 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: AppColors.purple, width: 2),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
       onTap: () async {
         final DateTime? pickedDate = await showDatePicker(
@@ -922,7 +926,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                       backgroundColor: AppColors.purple,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -944,7 +950,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           ),
 
           // Variants list
-          ValueListenableBuilder<List<ProductVariantModel>>(
+          ValueListenableBuilder<List<ProductVariantEntity>>(
             valueListenable: variantsNotifier,
             builder: (context, variants, child) {
               if (variants.isEmpty) {
@@ -958,8 +964,11 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                   child: Center(
                     child: Column(
                       children: [
-                        Icon(Icons.inventory_2_outlined,
-                            size: 48, color: Colors.grey.shade400),
+                        Icon(
+                          Icons.inventory_2_outlined,
+                          size: 48,
+                          color: Colors.grey.shade400,
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           mainServiceType?.isDress == true
@@ -1066,15 +1075,19 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                                 IconButton(
                                   onPressed: () =>
                                       _startEditingVariant(variant),
-                                  icon:
-                                      const Icon(Icons.edit_outlined, size: 18),
+                                  icon: const Icon(
+                                    Icons.edit_outlined,
+                                    size: 18,
+                                  ),
                                   tooltip: 'Edit',
                                   color: AppColors.purple,
                                 ),
                                 IconButton(
                                   onPressed: () => _deleteVariant(variant.id),
-                                  icon: const Icon(Icons.delete_outline,
-                                      size: 18),
+                                  icon: const Icon(
+                                    Icons.delete_outline,
+                                    size: 18,
+                                  ),
                                   tooltip: 'Delete',
                                   color: Colors.red,
                                 ),
@@ -1102,7 +1115,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     _isAddingVariant.value = true;
   }
 
-  void _startEditingVariant(ProductVariantModel variant) {
+  void _startEditingVariant(ProductVariantEntity variant) {
     _variantSizeController.text = variant.attribute;
     _variantStockController.text = variant.stock.toString();
     _variantBarcodeController.clear();
@@ -1143,14 +1156,16 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
 
       final serialNumber = _variantQrCodeController.text.trim();
       final barcode = _variantBarcodeController.text.trim();
-      final updatedVariants =
-          List<ProductVariantModel>.from(variantsNotifier.value);
+      final updatedVariants = List<ProductVariantEntity>.from(
+        variantsNotifier.value,
+      );
 
       if (_editingVariant != null) {
-        final index =
-            updatedVariants.indexWhere((v) => v.id == _editingVariant!.id);
+        final index = updatedVariants.indexWhere(
+          (v) => v.id == _editingVariant!.id,
+        );
         if (index != -1) {
-          updatedVariants[index] = ProductVariantModel(
+          updatedVariants[index] = ProductVariantEntity(
             id: _editingVariant!.id,
             attribute: serialNumber,
             stock: 1,
@@ -1160,7 +1175,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         }
       } else {
         updatedVariants.add(
-          ProductVariantModel(
+          ProductVariantEntity(
             id: DateTime.now().millisecondsSinceEpoch,
             attribute: serialNumber,
             stock: 1,
@@ -1198,17 +1213,19 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
       return;
     }
 
-    final updatedVariants =
-        List<ProductVariantModel>.from(variantsNotifier.value);
+    final updatedVariants = List<ProductVariantEntity>.from(
+      variantsNotifier.value,
+    );
 
     final externalQrCode = _variantQrCodeController.text.trim();
 
     if (_editingVariant != null) {
       // Update existing variant
-      final index =
-          updatedVariants.indexWhere((v) => v.id == _editingVariant!.id);
+      final index = updatedVariants.indexWhere(
+        (v) => v.id == _editingVariant!.id,
+      );
       if (index != -1) {
-        updatedVariants[index] = ProductVariantModel(
+        updatedVariants[index] = ProductVariantEntity(
           id: _editingVariant!.id,
           attribute: _variantSizeController.text.trim(),
           stock: stock,
@@ -1219,7 +1236,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     } else {
       // Add new variant
       updatedVariants.add(
-        ProductVariantModel(
+        ProductVariantEntity(
           id: DateTime.now().millisecondsSinceEpoch,
           attribute: _variantSizeController.text.trim(),
           stock: stock,
@@ -1353,8 +1370,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   }
 
   void _deleteVariant(int variantId) {
-    variantsNotifier.value =
-        variantsNotifier.value.where((v) => v.id != variantId).toList();
+    variantsNotifier.value = variantsNotifier.value
+        .where((v) => v.id != variantId)
+        .toList();
   }
 
   Widget _buildImagePicker(BuildContext context) {
@@ -1382,8 +1400,11 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add_photo_alternate_rounded,
-                    size: 32, color: AppColors.purpleLight),
+                Icon(
+                  Icons.add_photo_alternate_rounded,
+                  size: 32,
+                  color: AppColors.purpleLight,
+                ),
                 SizedBox(height: 6),
                 Text(
                   "Add image",
@@ -1453,24 +1474,28 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           widget.product == null) {
         print('❌ No variants for dress');
         context.showSnackBar(
-            "Please add at least one size variant for this dress",
-            isError: true);
+          "Please add at least one size variant for this dress",
+          isError: true,
+        );
         return;
       }
 
       // For new products: use variants if added, otherwise create default variant from stock
-      final variantList =
-          List<ProductVariantModel>.from(variantsNotifier.value);
+      final variantList = List<ProductVariantEntity>.from(
+        variantsNotifier.value,
+      );
 
       if (variantList.isEmpty && widget.product == null) {
         // If no variants added, create a default variant using stock quantity
         if (_stockController.text.trim().isEmpty) {
-          context.showSnackBar("Please enter stock quantity or add variants",
-              isError: true);
+          context.showSnackBar(
+            "Please enter stock quantity or add variants",
+            isError: true,
+          );
           return;
         }
         variantList.add(
-          ProductVariantModel(
+          ProductVariantEntity(
             id: DateTime.now().millisecondsSinceEpoch,
             attribute: _nameController.text.trim(),
             stock: _stockController.text.trim().toInt(),
@@ -1484,7 +1509,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
       if (widget.product != null) {
         // Edit mode: update existing product
         // For edit, we need to create a variant from the stock field if it's not a dress type
-        List<ProductVariantModel>? editVariants;
+        List<ProductVariantEntity>? editVariants;
         if (mainServiceType?.needsVariantsSection == true) {
           // Variant-based service types: use all edited variants with their IDs
           editVariants = variantList.isEmpty ? null : variantList;
@@ -1493,7 +1518,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           if (_stockController.text.trim().isNotEmpty) {
             final existingVariant = widget.product!.variants.first;
             editVariants = [
-              ProductVariantModel(
+              ProductVariantEntity(
                 id: existingVariant.id,
                 attribute: _nameController.text.trim(),
                 stock: _stockController.text.trim().toInt(),
@@ -1503,7 +1528,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
           }
         }
 
-        final product = ProductRequestModel(
+        final product = ProductRequestEntity(
           productId: widget.product!.id, // Use ! since we're in the null check
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
@@ -1534,7 +1559,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
         );
         saveCubit.saveProduct(product: product);
       } else {
-        final product = ProductRequestModel(
+        final product = ProductRequestEntity(
           serviceId: selectedServiceId,
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
@@ -1628,7 +1653,8 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
               mimeType: 'image/jpeg',
             );
             print(
-                '✅ Image set successfully with name: ${_imageNotifier.value?.name}');
+              '✅ Image set successfully with name: ${_imageNotifier.value?.name}',
+            );
           } else {
             print('❌ Failed to compress image');
           }
@@ -1653,16 +1679,16 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
 
   /// Show custom crop dialog (works on all platforms)
   Future<Uint8List?> _showImageCropDialog(
-      Uint8List imageBytes, String fileName) async {
+    Uint8List imageBytes,
+    String fileName,
+  ) async {
     final image = img.decodeImage(imageBytes);
     if (image == null) return null;
 
     return await showDialog<Uint8List>(
       context: context,
-      builder: (context) => _ImageCropDialog(
-        imageBytes: imageBytes,
-        image: image,
-      ),
+      builder: (context) =>
+          _ImageCropDialog(imageBytes: imageBytes, image: image),
     );
   }
 
@@ -1721,10 +1747,7 @@ class _ImageCropDialog extends StatefulWidget {
   final Uint8List imageBytes;
   final img.Image image;
 
-  const _ImageCropDialog({
-    required this.imageBytes,
-    required this.image,
-  });
+  const _ImageCropDialog({required this.imageBytes, required this.image});
 
   @override
   State<_ImageCropDialog> createState() => _ImageCropDialogState();
@@ -1801,8 +1824,9 @@ class _ImageCropDialogState extends State<_ImageCropDialog> {
     final availableWidth = screenSize.width * 0.7;
 
     // Use the smaller dimension to ensure it fits
-    final maxDisplaySize =
-        availableWidth < availableHeight ? availableWidth : availableHeight;
+    final maxDisplaySize = availableWidth < availableHeight
+        ? availableWidth
+        : availableHeight;
 
     // Ensure minimum size
     final displaySize = maxDisplaySize < 300 ? 300.0 : maxDisplaySize;
@@ -2012,33 +2036,49 @@ class _CropOverlayPainter extends CustomPainter {
 
     // Vertical lines
     canvas.drawLine(
-      Offset(displayCropRect.left + displayCropRect.width / 3,
-          displayCropRect.top),
-      Offset(displayCropRect.left + displayCropRect.width / 3,
-          displayCropRect.bottom),
+      Offset(
+        displayCropRect.left + displayCropRect.width / 3,
+        displayCropRect.top,
+      ),
+      Offset(
+        displayCropRect.left + displayCropRect.width / 3,
+        displayCropRect.bottom,
+      ),
       gridPaint,
     );
     canvas.drawLine(
-      Offset(displayCropRect.left + displayCropRect.width * 2 / 3,
-          displayCropRect.top),
-      Offset(displayCropRect.left + displayCropRect.width * 2 / 3,
-          displayCropRect.bottom),
+      Offset(
+        displayCropRect.left + displayCropRect.width * 2 / 3,
+        displayCropRect.top,
+      ),
+      Offset(
+        displayCropRect.left + displayCropRect.width * 2 / 3,
+        displayCropRect.bottom,
+      ),
       gridPaint,
     );
 
     // Horizontal lines
     canvas.drawLine(
-      Offset(displayCropRect.left,
-          displayCropRect.top + displayCropRect.height / 3),
-      Offset(displayCropRect.right,
-          displayCropRect.top + displayCropRect.height / 3),
+      Offset(
+        displayCropRect.left,
+        displayCropRect.top + displayCropRect.height / 3,
+      ),
+      Offset(
+        displayCropRect.right,
+        displayCropRect.top + displayCropRect.height / 3,
+      ),
       gridPaint,
     );
     canvas.drawLine(
-      Offset(displayCropRect.left,
-          displayCropRect.top + displayCropRect.height * 2 / 3),
-      Offset(displayCropRect.right,
-          displayCropRect.top + displayCropRect.height * 2 / 3),
+      Offset(
+        displayCropRect.left,
+        displayCropRect.top + displayCropRect.height * 2 / 3,
+      ),
+      Offset(
+        displayCropRect.right,
+        displayCropRect.top + displayCropRect.height * 2 / 3,
+      ),
       gridPaint,
     );
   }

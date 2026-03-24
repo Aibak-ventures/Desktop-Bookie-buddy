@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:bookie_buddy_web/features/product/domain/models/product_request_model/product_request_model.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/save_product_usecase.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,12 +12,10 @@ class SaveProductCubit extends Cubit<SaveProductState> {
   final SaveProductUseCase _saveProduct;
 
   SaveProductCubit({required SaveProductUseCase saveProduct})
-      : _saveProduct = saveProduct,
-        super(const _Initial());
+    : _saveProduct = saveProduct,
+      super(const _Initial());
 
-  Future<void> saveProduct({
-    required ProductRequestModel product,
-  }) async {
+  Future<void> saveProduct({required ProductRequestEntity product}) async {
     emit(const _Submitted());
     try {
       log('SaveProductCubit: Saving product with ID: ${product.productId}');
