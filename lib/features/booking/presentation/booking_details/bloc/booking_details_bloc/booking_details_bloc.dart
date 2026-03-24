@@ -33,13 +33,13 @@ class BookingDetailsBloc
     required UpdatePaymentUseCase updatePayment,
     required CancelBookingUseCase cancelBooking,
     required DeleteBookingUseCase deleteBooking,
-  })  : _getBooking = getBooking,
-        _updateDeliveryStatus = updateDeliveryStatus,
-        _updateBookingStatus = updateBookingStatus,
-        _updatePayment = updatePayment,
-        _cancelBooking = cancelBooking,
-        _deleteBooking = deleteBooking,
-        super(const BookingDetailsState.loading()) {
+  }) : _getBooking = getBooking,
+       _updateDeliveryStatus = updateDeliveryStatus,
+       _updateBookingStatus = updateBookingStatus,
+       _updatePayment = updatePayment,
+       _cancelBooking = cancelBooking,
+       _deleteBooking = deleteBooking,
+       super(const BookingDetailsState.loading()) {
     on<_FetchBookingDetails>(_onFetchBookingDetails);
     on<_UpdateDeliveryStatus>(_onUpdateDeliveryStatus);
     on<_UpdateBookingStatus>(_onUpdateBookingStatus);
@@ -67,33 +67,21 @@ class BookingDetailsBloc
     _UpdateDeliveryStatus event,
     Emitter<BookingDetailsState> emit,
   ) async {
-    // Store old state for rollback on error
     final oldState = state;
-
-    // Optimistic update - update UI immediately
-    if (oldState is _Loaded) {
-      final updatedBooking = oldState.booking.copyWith(
-        deliveryStatus: event.deliveryStatus,
-      );
-      emit(BookingDetailsState.loaded(booking: updatedBooking));
-    }
-
     try {
-      await _updateDeliveryStatus(
-        event.bookingId,
-        event.deliveryStatus,
-      );
-
-      // Refetch booking details to get updated delivery status from server
-      final booking = await _getBooking(event.bookingId);
-      emit(BookingDetailsState.loaded(booking: booking));
+      await _updateDeliveryStatus(event.bookingId, event.deliveryStatus);
+      if (oldState is _Loaded) {
+        emit(
+          BookingDetailsState.loaded(
+            booking: oldState.booking.copyWith(
+              deliveryStatus: event.deliveryStatus,
+            ),
+          ),
+        );
+      }
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
-      emit(BookingDetailsState.failed(e.toString()));
-      // Rollback to old state on error
-      if (oldState is _Loaded) {
-        emit(oldState);
-      }
+      _emitFailedWithRollback(emit, e.toString(), oldState);
     }
   }
 
@@ -101,22 +89,21 @@ class BookingDetailsBloc
     _UpdateBookingStatus event,
     Emitter<BookingDetailsState> emit,
   ) async {
+    final oldState = state;
     try {
-      await _updateBookingStatus(
-        event.bookingId,
-        event.bookingStatus,
-      );
-
-      // Refetch booking details to get updated booking status
-      final booking = await _getBooking(event.bookingId);
-      emit(BookingDetailsState.loaded(booking: booking));
+      await _updateBookingStatus(event.bookingId, event.bookingStatus);
+      if (oldState is _Loaded) {
+        emit(
+          BookingDetailsState.loaded(
+            booking: oldState.booking.copyWith(
+              bookingStatus: event.bookingStatus,
+            ),
+          ),
+        );
+      }
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
-      final previous = state;
-      emit(BookingDetailsState.failed(e.toString()));
-      if (previous is _Loaded) {
-        emit(previous);
-      }
+      _emitFailedWithRollback(emit, e.toString(), oldState);
     }
   }
 
@@ -124,8 +111,11 @@ class BookingDetailsBloc
     _UpdatePayment event,
     Emitter<BookingDetailsState> emit,
   ) async {
+    final oldState = state;
     try {
-      log('📤 Updating payment: ${event.amount} for booking ${event.bookingId}');
+      log(
+        '📤 Updating payment: ${event.amount} for booking ${event.bookingId}',
+      );
       await _updatePayment(
         bookingId: event.bookingId,
         amount: event.amount,
@@ -133,17 +123,14 @@ class BookingDetailsBloc
       );
 
       log('✅ Payment updated, refetching booking details...');
-      // Refetch booking details to get updated payment information
       final booking = await _getBooking(event.bookingId);
-      log('📥 Fetched booking with ${booking.payments.length} payments, total: ${booking.actualPaidAmount}');
+      log(
+        '📥 Fetched booking with ${booking.payments.length} payments, total: ${booking.actualPaidAmount}',
+      );
       emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
-      final oldState = state;
-      emit(BookingDetailsState.failed(e.toString()));
-      if (oldState is _Loaded) {
-        emit(oldState);
-      }
+      _emitFailedWithRollback(emit, e.toString(), oldState);
     }
   }
 
@@ -151,25 +138,17 @@ class BookingDetailsBloc
     _CancelBooking event,
     Emitter<BookingDetailsState> emit,
   ) async {
+    final oldState = state;
     try {
       await _cancelBooking(
         bookingId: event.bookingId,
         refundAmount: event.refundAmount,
         paymentMethod: event.paymentMethod,
       );
-      emit(
-        const _Success(
-          'Booking cancelled successfully',
-          needRefresh: true,
-        ),
-      );
+      emit(const _Success('Booking cancelled successfully', needRefresh: true));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
-      final oldState = state;
-      emit(BookingDetailsState.failed(e.toString()));
-      if (oldState is _Loaded) {
-        emit(oldState);
-      }
+      _emitFailedWithRollback(emit, e.toString(), oldState);
     }
   }
 
@@ -177,6 +156,7 @@ class BookingDetailsBloc
     _DeleteBooking event,
     Emitter<BookingDetailsState> emit,
   ) async {
+    final oldState = state;
     try {
       await _deleteBooking(event.bookingId);
       emit(
@@ -188,12 +168,17 @@ class BookingDetailsBloc
       );
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
-      final oldState = state;
-      emit(BookingDetailsState.failed(e.toString()));
-      if (oldState is _Loaded) {
-        emit(oldState);
-      }
+      _emitFailedWithRollback(emit, e.toString(), oldState);
     }
+  }
+
+  void _emitFailedWithRollback(
+    Emitter<BookingDetailsState> emit,
+    String message,
+    BookingDetailsState oldState,
+  ) {
+    emit(BookingDetailsState.failed(message));
+    if (oldState is _Loaded) emit(oldState);
   }
 
   BookingDetailsEntity? getBooking() {
