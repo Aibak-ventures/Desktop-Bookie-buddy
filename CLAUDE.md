@@ -194,21 +194,37 @@ Shared utilities in `lib/utils/`:
 
 ## Dependency Injection
 
-**Single file:** `lib/core/di/app_dependencies.dart`
-**Container:** `GetIt.instance` (global `getIt`)
+**Entry point:** `lib/core/di/app_dependencies.dart`
+**Feature files:** `lib/core/di/features/<feature>_dependencies.dart`
+**Container:** `GetIt.instance` (global `getIt`, declared in `app_dependencies.dart`)
 **Pattern:** lazy singletons, interface-bound where applicable
 
+Each feature has a dedicated class with a static `register()` method. All classes reference the global `getIt` directly — no helpers are passed around.
+
 ```dart
-static void _registerBookingsFeature() {
-  _registerLazy(() => BookingRemoteDatasource(dio: DioClient.dio));
-  _registerLazy<IBookingRepository>(() => BookingRepositoryImpl(_get()));
-  _registerLazy(() => GetBookingUseCase(_get<IBookingRepository>()));
-  _registerLazy(() => AddBookingUseCase(_get<IBookingRepository>()));
+// lib/core/di/features/booking_dependencies.dart
+class BookingDependencies {
+  static void register() {
+    getIt.registerLazySingleton(() => BookingRemoteDatasource(dio: DioClient.dio));
+    getIt.registerLazySingleton<IBookingRepository>(() => BookingRepositoryImpl(getIt()));
+    getIt.registerLazySingleton(() => GetBookingUseCase(getIt<IBookingRepository>()));
+    // ...
+  }
+}
+```
+
+`app_dependencies.dart` owns `getIt`, `_registerCommon`, and orchestrates all features:
+
+```dart
+static void _registerFeatures(SharedPreferences prefs) {
+  _registerCommon(prefs);
+  BookingDependencies.register();
+  ShopDependencies.register();
   // ...
 }
 ```
 
-When adding a new feature, add a `_register<Feature>Feature()` method and call it from `init()`.
+When adding a new feature, create `lib/core/di/features/<feature>_dependencies.dart` with a `XDependencies` class and call `XDependencies.register()` from `_registerFeatures()`.
 
 ---
 
