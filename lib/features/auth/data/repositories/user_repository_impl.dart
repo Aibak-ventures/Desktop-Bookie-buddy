@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/session/secure_action_auth_session_manager.dart';
 import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
@@ -29,12 +30,12 @@ class UserRepositoryImpl implements IUserRepository {
         _sessionStorage = sessionStorage;
 
   @override
-  Future<UserModel> fetchUserData() async {
+  Future<UserEntity> fetchUserData() async {
     try {
       final res = await safeApiCall(_datasource.fetchUserData);
       debugPrint('Fetched user data: ${res.toJson()}');
       if (res.status.isSuccess) {
-        return UserModel.fromJson(res.data);
+        return UserModel.fromJson(res.data).toEntity();
       }
       log('Failed to fetch user: ${res.devMessage}');
       throw res.message ?? 'Failed to fetch user data';
@@ -130,7 +131,7 @@ class UserRepositoryImpl implements IUserRepository {
   }
 
   @override
-  Future<UserModel> switchShop(int shopId) async {
+  Future<UserEntity> switchShop(int shopId) async {
     try {
       await setShopId(shopId);
       return await fetchUserData();

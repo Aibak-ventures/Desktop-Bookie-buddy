@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/core/common/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
@@ -51,7 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     print('Current used domain: $baseUrl ✅');
     final bloc = context.read<DashboardBloc>();
 
-    return BlocListener<UserCubit, UserModel?>(
+    return BlocListener<UserCubit, UserEntity?>(
       listener: (context, userState) {
         // When shop changes, reload dashboard data
         if (userState != null) {
@@ -173,7 +173,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        BlocBuilder<UserCubit, UserModel?>(
+        BlocBuilder<UserCubit, UserEntity?>(
           builder: (context, user) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

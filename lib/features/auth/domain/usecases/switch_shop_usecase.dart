@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_user_repository.dart';
 
 class SwitchShopUseCase {
@@ -6,7 +6,7 @@ class SwitchShopUseCase {
 
   SwitchShopUseCase(this._repository);
 
-  Future<UserModel> call({
+  Future<UserEntity> call({
     required int shopId,
     String? fcmToken,
   }) async {

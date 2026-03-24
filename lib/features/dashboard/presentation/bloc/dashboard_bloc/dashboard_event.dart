@@ -4,7 +4,7 @@ part of 'dashboard_bloc.dart';
 abstract class DashboardEvent with _$DashboardEvent {
   /// Load initial desktop dashboard data using v4 API
   const factory DashboardEvent.loadDashboardData({
-    UserModel? activeShop,
+    UserEntity? activeShop,
     @Default(false) bool useOldState,
   }) = _LoadDashboardData;
 

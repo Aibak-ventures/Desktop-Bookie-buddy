@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_shop_model.freezed.dart';
@@ -32,6 +33,24 @@ abstract class UserShopModel with _$UserShopModel {
 
   factory UserShopModel.fromJson(Map<String, dynamic> json) =>
       _$UserShopModelFromJson(json);
+}
+
+extension UserShopModelMapper on UserShopModel {
+  UserShopEntity toEntity() => UserShopEntity(
+        id: id,
+        name: name,
+        phone: phone,
+        phone2: phone2,
+        address: address,
+        gstNumber: gstNumber,
+        image: image,
+        place: place,
+        email: email,
+        city: city,
+        state: state,
+        pincode: pincode,
+        termsAndConditions: termsAndConditions,
+      );
 }
 
 extension UserShopModelX on UserShopModel {

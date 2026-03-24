@@ -128,7 +128,7 @@ return loadIfNot(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult Function()?  loadDashboardNextPageData,TResult Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult Function()?  loadIfNot,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( UserEntity? activeShop,  bool useOldState)?  loadDashboardData,TResult Function()?  loadDashboardNextPageData,TResult Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult Function()?  loadIfNot,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoadDashboardData() when loadDashboardData != null:
 return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
@@ -152,7 +152,7 @@ return loadIfNot();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( UserModel? activeShop,  bool useOldState)  loadDashboardData,required TResult Function()  loadDashboardNextPageData,required TResult Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)  updateData,required TResult Function()  loadIfNot,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( UserEntity? activeShop,  bool useOldState)  loadDashboardData,required TResult Function()  loadDashboardNextPageData,required TResult Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)  updateData,required TResult Function()  loadIfNot,}) {final _that = this;
 switch (_that) {
 case _LoadDashboardData():
 return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData():
@@ -175,7 +175,7 @@ return loadIfNot();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( UserModel? activeShop,  bool useOldState)?  loadDashboardData,TResult? Function()?  loadDashboardNextPageData,TResult? Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult? Function()?  loadIfNot,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( UserEntity? activeShop,  bool useOldState)?  loadDashboardData,TResult? Function()?  loadDashboardNextPageData,TResult? Function( BookingEntity? updateBooking,  bool shouldRefresh,  bool isDeleted)?  updateData,TResult? Function()?  loadIfNot,}) {final _that = this;
 switch (_that) {
 case _LoadDashboardData() when loadDashboardData != null:
 return loadDashboardData(_that.activeShop,_that.useOldState);case _LoadDashboardNextPageData() when loadDashboardNextPageData != null:
@@ -196,7 +196,7 @@ class _LoadDashboardData implements DashboardEvent {
   const _LoadDashboardData({this.activeShop, this.useOldState = false});
   
 
- final  UserModel? activeShop;
+ final  UserEntity? activeShop;
 @JsonKey() final  bool useOldState;
 
 /// Create a copy of DashboardEvent
@@ -229,11 +229,11 @@ abstract mixin class _$LoadDashboardDataCopyWith<$Res> implements $DashboardEven
   factory _$LoadDashboardDataCopyWith(_LoadDashboardData value, $Res Function(_LoadDashboardData) _then) = __$LoadDashboardDataCopyWithImpl;
 @useResult
 $Res call({
- UserModel? activeShop, bool useOldState
+ UserEntity? activeShop, bool useOldState
 });
 
 
-$UserModelCopyWith<$Res>? get activeShop;
+$UserEntityCopyWith<$Res>? get activeShop;
 
 }
 /// @nodoc
@@ -249,7 +249,7 @@ class __$LoadDashboardDataCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? activeShop = freezed,Object? useOldState = null,}) {
   return _then(_LoadDashboardData(
 activeShop: freezed == activeShop ? _self.activeShop : activeShop // ignore: cast_nullable_to_non_nullable
-as UserModel?,useOldState: null == useOldState ? _self.useOldState : useOldState // ignore: cast_nullable_to_non_nullable
+as UserEntity?,useOldState: null == useOldState ? _self.useOldState : useOldState // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -258,12 +258,12 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserModelCopyWith<$Res>? get activeShop {
+$UserEntityCopyWith<$Res>? get activeShop {
     if (_self.activeShop == null) {
     return null;
   }
 
-  return $UserModelCopyWith<$Res>(_self.activeShop!, (value) {
+  return $UserEntityCopyWith<$Res>(_self.activeShop!, (value) {
     return _then(_self.copyWith(activeShop: value));
   });
 }

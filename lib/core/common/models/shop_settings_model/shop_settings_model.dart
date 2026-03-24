@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/entities/shop_settings_entity/shop_settings_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -27,4 +28,13 @@ abstract class ShopSettingsModel with _$ShopSettingsModel {
 
   factory ShopSettingsModel.fromJson(Map<String, dynamic> json) =>
       _$ShopSettingsModelFromJson(json);
+}
+
+extension ShopSettingsModelMapper on ShopSettingsModel {
+  ShopSettingsEntity toEntity() => ShopSettingsEntity(
+        coolingPeriodDuration: coolingPeriodDuration,
+        coolingPeriodMode: coolingPeriodMode,
+        addButtonDefaultAction: addButtonDefaultAction,
+        searchClient: searchClient,
+      );
 }

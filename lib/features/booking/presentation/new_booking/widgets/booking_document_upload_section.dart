@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class BookingDocumentUploadSection extends StatelessWidget {
-  final ValueNotifier<List<DocumentFile>> documentsNotifier;
+  final ValueNotifier<List<DocumentFileEntity>> documentsNotifier;
 
   const BookingDocumentUploadSection({
     super.key,
@@ -61,7 +61,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ValueListenableBuilder<List<DocumentFile>>(
+          ValueListenableBuilder<List<DocumentFileEntity>>(
             valueListenable: documentsNotifier,
             builder: (context, documents, _) {
               if (documents.isEmpty) {
@@ -99,10 +99,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Click to upload documents',
-              style: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
             ),
           ],
         ),
@@ -110,7 +107,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
     );
   }
 
-  Widget _buildDocumentGrid(List<DocumentFile> documents) {
+  Widget _buildDocumentGrid(List<DocumentFileEntity> documents) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -118,7 +115,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
     );
   }
 
-  Widget _buildDocumentThumbnail(DocumentFile document) {
+  Widget _buildDocumentThumbnail(DocumentFileEntity document) {
     final isImage = _isImageFile(document.name);
 
     return Stack(
@@ -191,11 +188,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
                 color: Colors.red,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 12,
-              ),
+              child: const Icon(Icons.close, color: Colors.white, size: 12),
             ),
           ),
         ),
@@ -246,7 +239,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
       );
 
       if (result != null && result.files.isNotEmpty) {
-        final newDocs = <DocumentFile>[];
+        final newDocs = <DocumentFileEntity>[];
 
         for (final file in result.files) {
           // Validate file size (max 10MB)
@@ -268,34 +261,44 @@ class BookingDocumentUploadSection extends StatelessWidget {
           if (isImage && file.bytes != null) {
             // Compress the image (skip on web to avoid UnimplementedError)
             try {
-              final compressedBytes =
-                  await _compressImage(file.bytes!, file.name);
-              newDocs.add(DocumentFile(
-                name: file.name,
-                path: file.path ?? '',
-                bytes: compressedBytes,
-              ));
+              final compressedBytes = await _compressImage(
+                file.bytes!,
+                file.name,
+              );
+              newDocs.add(
+                DocumentFileEntity(
+                  name: file.name,
+                  path: file.path ?? '',
+                  bytes: compressedBytes,
+                ),
+              );
             } catch (e) {
               debugPrint('Error compressing image ${file.name}: $e');
               // If compression fails, use original
-              newDocs.add(DocumentFile(
-                name: file.name,
-                path: file.path ?? '',
-                bytes: file.bytes,
-              ));
+              newDocs.add(
+                DocumentFileEntity(
+                  name: file.name,
+                  path: file.path ?? '',
+                  bytes: file.bytes,
+                ),
+              );
             }
           } else {
             // For non-image files (PDF, DOC, etc.), add directly
-            newDocs.add(DocumentFile(
-              name: file.name,
-              path: file.path ?? '',
-              bytes: file.bytes,
-            ));
+            newDocs.add(
+              DocumentFileEntity(
+                name: file.name,
+                path: file.path ?? '',
+                bytes: file.bytes,
+              ),
+            );
           }
         }
 
         if (newDocs.isNotEmpty) {
-          final currentDocs = List<DocumentFile>.from(documentsNotifier.value);
+          final currentDocs = List<DocumentFileEntity>.from(
+            documentsNotifier.value,
+          );
 
           // Check if adding new docs would exceed limit
           final totalDocs = currentDocs.length + newDocs.length;
@@ -308,7 +311,8 @@ class BookingDocumentUploadSection extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                        'Only $availableSlots document(s) added. Maximum 4 documents allowed.'),
+                      'Only $availableSlots document(s) added. Maximum 4 documents allowed.',
+                    ),
                     backgroundColor: Colors.orange,
                   ),
                 );
@@ -346,7 +350,9 @@ class BookingDocumentUploadSection extends StatelessWidget {
 
   /// Compress image bytes to reduce file size
   Future<List<int>> _compressImage(
-      List<int> imageBytes, String fileName) async {
+    List<int> imageBytes,
+    String fileName,
+  ) async {
     try {
       // Skip compression on web platform to avoid UnimplementedError
       // Web images are already compressed by browser
@@ -366,7 +372,8 @@ class BookingDocumentUploadSection extends StatelessWidget {
       );
 
       debugPrint(
-          'Compressed ${fileName}: ${imageBytes.length} -> ${result.length} bytes');
+        'Compressed ${fileName}: ${imageBytes.length} -> ${result.length} bytes',
+      );
       return result;
     } catch (e) {
       // Silently return original if compression fails
@@ -374,8 +381,8 @@ class BookingDocumentUploadSection extends StatelessWidget {
     }
   }
 
-  void _removeDocument(DocumentFile document) {
-    final docs = List<DocumentFile>.from(documentsNotifier.value);
+  void _removeDocument(DocumentFileEntity document) {
+    final docs = List<DocumentFileEntity>.from(documentsNotifier.value);
     docs.remove(document);
     documentsNotifier.value = docs;
   }

@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_ent
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/send_sale_invoice_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
@@ -31,7 +31,7 @@ class SalesDetailsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserModel?>(
+    return BlocListener<UserCubit, UserEntity?>(
       listenWhen: (previous, current) {
         // Only trigger when shop actually changes
         if (previous == null || current == null) return false;

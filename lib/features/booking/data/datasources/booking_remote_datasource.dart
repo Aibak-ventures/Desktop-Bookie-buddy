@@ -5,11 +5,12 @@ import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/utils/download_file.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_request_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http_parser/http_parser.dart';
@@ -159,7 +160,7 @@ class BookingRemoteDatasource {
   Future<CustomResponseModel> updateBookingPartial(
     int bookingId,
     Map<String, dynamic> partialData, {
-    List<DocumentFile>? newDocuments,
+    List<DocumentFileModel>? newDocuments,
     List<String>? removedDocumentUrls,
   }) async {
     try {

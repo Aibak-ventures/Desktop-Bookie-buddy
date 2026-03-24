@@ -3,11 +3,13 @@ import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_details_model/booking_details_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
@@ -20,7 +22,6 @@ import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 
@@ -173,7 +174,7 @@ class BookingRepositoryImpl implements IBookingRepository {
   Future<CustomResponseModel> updateBookingPartial(
     int bookingId,
     Map<String, dynamic> partialData, {
-    List<DocumentFile>? newDocuments,
+    List<DocumentFileEntity>? newDocuments,
     List<String>? removedDocumentUrls,
   }) async {
     try {
@@ -181,7 +182,9 @@ class BookingRepositoryImpl implements IBookingRepository {
         () => _datasource.updateBookingPartial(
           bookingId,
           partialData,
-          newDocuments: newDocuments,
+          newDocuments: newDocuments
+              ?.map((doc) => DocumentFileModel.fromEntity(doc))
+              .toList(),
           removedDocumentUrls: removedDocumentUrls,
         ),
       );

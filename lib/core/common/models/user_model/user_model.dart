@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/constants/enums/enums.dart'
     show SecretPasswordLocations, UserPasswordSettingRole;
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
     hide UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/shop_settings_model/shop_settings_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -100,6 +101,41 @@ abstract class UserPasswordSettingsModel with _$UserPasswordSettingsModel {
 
   factory UserPasswordSettingsModel.fromJson(Map<String, dynamic> json) =>
       _$UserPasswordSettingsModelFromJson(json);
+}
+
+extension UserPasswordSettingsModelMapper on UserPasswordSettingsModel {
+  UserPasswordSettingsEntity toEntity() => UserPasswordSettingsEntity(
+        location: location,
+        role: role,
+      );
+}
+
+extension UserSubscriptionModelMapper on UserSubscriptionModel {
+  UserSubscriptionEntity toEntity() => UserSubscriptionEntity(
+        plan: plan,
+        status: status,
+        expiryDate: expiryDate,
+        features: features,
+        userSpecificFeatures: userSpecificFeatures,
+      );
+}
+
+extension UserModelMapper on UserModel {
+  UserEntity toEntity() => UserEntity(
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        role: role,
+        shopRole: shopRole,
+        block: block,
+        haveMultipleShops: haveMultipleShops,
+        isNotificationActive: isNotificationActive,
+        subscription: subscription?.toEntity(),
+        passwordSettings: passwordSettings.map((e) => e.toEntity()).toList(),
+        shopSettings: shopSettings.toEntity(),
+        shopDetails: shopDetails.toEntity(),
+      );
 }
 
 extension UserPasswordSettingsModelX on List<UserPasswordSettingsModel> {

@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/utils/get_pdf_image_provider.dart';
 import 'package:dio/dio.dart';
@@ -22,7 +22,7 @@ class GenerateSaleDetailsPdf {
   static Future<void> shareInvoice({
     required BuildContext context,
     required SaleDetailsEntity saleDetails,
-    required UserShopModel shopDetails,
+    required UserShopEntity shopDetails,
   }) async {
     try {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF...');
@@ -84,7 +84,7 @@ class GenerateSaleDetailsPdf {
 
   static Future<Uint8List> generateInvoice(
     SaleDetailsEntity saleDetails,
-    UserShopModel shopDetails,
+    UserShopEntity shopDetails,
   ) async {
     // Font loading logic
     final fontRegular = await rootBundle.load(AppAssets.interRegularFont);

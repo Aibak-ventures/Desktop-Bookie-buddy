@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_field_model.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/models/measurement_field_form_state.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/add_customization_screen.dart'; // For getMeasurements
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
@@ -30,7 +30,7 @@ class _BookingCustomizationSectionState
   ProductSelectedEntity? _selectedProduct;
 
   // Controllers for the right panel
-  final ValueNotifier<List<MeasurementFieldModel>> _measurementsNotifier =
+  final ValueNotifier<List<MeasurementFieldFormState>> _measurementsNotifier =
       ValueNotifier([]);
   final ValueNotifier<GenderType> _genderNotifier = ValueNotifier(
     GenderType.female,
@@ -115,7 +115,7 @@ class _BookingCustomizationSectionState
     final customMeasurements = savedMeasurements
         .where((e) => !baseMeasurements.any((f) => f.key == e.key))
         .map(
-          (e) => MeasurementFieldModel(
+          (e) => MeasurementFieldFormState(
             name: e.name,
             key: e.key,
             description: '',
@@ -457,7 +457,7 @@ class _BookingCustomizationSectionState
                             setState(() {
                               _measurementsNotifier.value = [
                                 ..._measurementsNotifier.value,
-                                MeasurementFieldModel(
+                                MeasurementFieldFormState(
                                   name: name.capitalizeFirstLetter(),
                                   key: newKey,
                                   description: '',

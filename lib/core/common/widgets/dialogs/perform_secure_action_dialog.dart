@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
-// import 'package:bookie_buddy_web/core/constants/enums/enums.dart' show SecretPasswordLocations;
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
     hide UserPasswordSettingRole;
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart' hide ShopRole;
-// show SecretPasswordLocations;
-
-// import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/session/secure_action_auth_session_manager.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
@@ -22,7 +18,7 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-bool _roleCheck(UserPasswordSettingsModel? settings, ShopRole shopRole) {
+bool _roleCheck(UserPasswordSettingsEntity? settings, ShopRole shopRole) {
   if (settings == null) return true;
 
   switch (settings.role) {
@@ -47,17 +43,20 @@ Future<void> performSecureActionDialog(
   required VoidCallback? onSuccess,
 }) async {
   final shopRole = context.read<UserCubit>().state?.shopRole ?? ShopRole.staff;
-  final passwordSetting =
-      context.read<UserCubit>().state?.passwordSettings.firstWhere(
-    (e) => e.location == location,
-    orElse: () {
-      debugPrint('No password setting found for location: $location');
-      return UserPasswordSettingsModel(
-        location: location,
-        role: UserPasswordSettingRole.none,
+  final passwordSetting = context
+      .read<UserCubit>()
+      .state
+      ?.passwordSettings
+      .firstWhere(
+        (e) => e.location == location,
+        orElse: () {
+          debugPrint('No password setting found for location: $location');
+          return UserPasswordSettingsEntity(
+            location: location,
+            role: UserPasswordSettingRole.none,
+          );
+        },
       );
-    },
-  );
   if (!_roleCheck(passwordSetting, shopRole)) {
     log(
       '🟢 User is authorized to perform this action without password, ask for: ${passwordSetting?.role.value}, Location: $location, shopRole: ${shopRole.value}',
@@ -114,8 +113,7 @@ void _verifyPasswordThenPerformActionDialog(
               // Call the reAuth function with the entered password
               try {
                 await getIt.get<IAuthRepository>().secretLogin(password);
-                SecureActionAuthSessionManager
-                    .markVerified(); // Mark as verified for to skip re auth for next 1 min
+                SecureActionAuthSessionManager.markVerified(); // Mark as verified for to skip re auth for next 1 min
                 context.pop();
                 onSuccessfulPasswordVerification(); // Call the callback after successful authentication
               } catch (e) {
@@ -175,10 +173,7 @@ void _verifyPasswordThenPerformActionDialog(
                     // Subtitle
                     Text(
                       'Enter your password to continue',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),

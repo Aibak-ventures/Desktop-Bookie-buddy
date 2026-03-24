@@ -1,17 +1,17 @@
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 
-class DateFilterModel {
+class DateFilter {
   final DateTime? startDate;
   final DateTime? endDate;
 
-  const DateFilterModel({this.startDate, this.endDate});
+  const DateFilter({this.startDate, this.endDate});
 
   bool get hasActiveFilter => startDate != null || endDate != null;
 
-  DateFilterModel copyWith({DateTime? startDate, DateTime? endDate}) =>
-      DateFilterModel(startDate: startDate, endDate: endDate);
+  DateFilter copyWith({DateTime? startDate, DateTime? endDate}) =>
+      DateFilter(startDate: startDate, endDate: endDate);
 
-  DateFilterModel clear() => const DateFilterModel();
+  DateFilter clear() => const DateFilter();
 
   String get getFilterDisplayText {
     // final startDate = dateFilterNotifier.value.startDate;

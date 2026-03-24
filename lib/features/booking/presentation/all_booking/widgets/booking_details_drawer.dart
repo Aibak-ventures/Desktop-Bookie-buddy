@@ -23,7 +23,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/w
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -43,7 +43,7 @@ class BookingDetailsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserModel?>(
+    return BlocListener<UserCubit, UserEntity?>(
       listenWhen: (previous, current) {
         // Listen when shop changes (user switches shop)
         if (previous == null || current == null) return false;

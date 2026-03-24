@@ -5,7 +5,6 @@ import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/check_availability_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -40,8 +39,9 @@ class ProductQueryRemoteDatasource {
 
   Future<CustomResponseModel> fetchProductInfo(int productId) async {
     try {
-      final res =
-          await _dio.get(ApiEndpoints.service.productById('$productId'));
+      final res = await _dio.get(
+        ApiEndpoints.service.productById('$productId'),
+      );
       // log("Fetch product info: ${res.realUri.toString()}, data: ${res.data}");
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
@@ -197,20 +197,17 @@ class ProductQueryRemoteDatasource {
                 if (serviceId != null) 'service_id': serviceId,
                 'page': page,
                 'event_date': pickupDate.parseToDateTime().format(
-                      reverse: true,
-                    ),
-                'return_date': (returnTime != null &&
+                  reverse: true,
+                ),
+                'return_date':
+                    (returnTime != null &&
                         returnTime.hour == 23 &&
                         returnTime.minute == 59)
                     ? returnDate
-                        .parseToDateTime()
-                        .add(const Duration(days: 1))
-                        .format(
-                          reverse: true,
-                        )
-                    : returnDate.parseToDateTime().format(
-                          reverse: true,
-                        ),
+                          .parseToDateTime()
+                          .add(const Duration(days: 1))
+                          .format(reverse: true)
+                    : returnDate.parseToDateTime().format(reverse: true),
                 if (pickupTime != null)
                   'event_time': pickupTime.formatToTime(
                     date: pickupDate.parseToDateTime(),
@@ -228,8 +225,9 @@ class ProductQueryRemoteDatasource {
                 if (endPrice != null) 'max_price': endPrice,
                 if (bookingId != null) 'booking_id': bookingId,
                 if (variantIds != null && variantIds.isNotEmpty)
-                  'variant_ids':
-                      jsonEncode(variantIds), // Send as JSON array string
+                  'variant_ids': jsonEncode(
+                    variantIds,
+                  ), // Send as JSON array string
               },
       );
       // log('Fetch available products response: ${response.realUri.toString()} ${response.data}');
@@ -242,8 +240,9 @@ class ProductQueryRemoteDatasource {
 
   Future<CustomResponseModel> fetchProductGrowthData(int productId) async {
     try {
-      final res =
-          await _dio.get(ApiEndpoints.service.monthlySummary('$productId'));
+      final res = await _dio.get(
+        ApiEndpoints.service.monthlySummary('$productId'),
+      );
       // log("Product growth data: ${res.realUri.toString()}, data: ${res.data}");
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
@@ -268,13 +267,14 @@ class ProductQueryRemoteDatasource {
         queryParameters: {
           'page': 1,
           'event_date': pickupDate.parseToDateTime().format(reverse: true),
-          'return_date': (returnTime != null &&
+          'return_date':
+              (returnTime != null &&
                   returnTime.hour == 23 &&
                   returnTime.minute == 59)
               ? returnDate
-                  .parseToDateTime()
-                  .add(const Duration(days: 1))
-                  .format(reverse: true)
+                    .parseToDateTime()
+                    .add(const Duration(days: 1))
+                    .format(reverse: true)
               : returnDate.parseToDateTime().format(reverse: true),
           if (pickupTime != null)
             'event_time': pickupTime.formatToTime(

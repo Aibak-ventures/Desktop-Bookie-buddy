@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
@@ -116,7 +116,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserModel?>(
+    return BlocListener<UserCubit, UserEntity?>(
       listener: (context, user) {
         // Reload products and services when shop switches
         if (user != null) {

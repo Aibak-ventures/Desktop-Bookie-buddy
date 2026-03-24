@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
-import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/utils/download_file.dart';
 import 'package:bookie_buddy_web/utils/share_file.dart';
@@ -26,7 +26,7 @@ class GenerateBookingPdf {
   static Future<void> shareInvoice({
     required BuildContext context,
     required BookingDetailsEntity bookingDetails,
-    required UserShopModel shopDetails,
+    required UserShopEntity shopDetails,
   }) async {
     try {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF...');
@@ -94,7 +94,7 @@ class GenerateBookingPdf {
   static Future<void> printInvoice({
     required BuildContext context,
     required BookingDetailsEntity bookingDetails,
-    required UserShopModel shopDetails,
+    required UserShopEntity shopDetails,
   }) async {
     try {
       GlobalLoadingOverlay.show(context, text: 'Generating PDF for print...');
@@ -140,7 +140,7 @@ class GenerateBookingPdf {
 
   static Future<Uint8List> generateInvoice(
     BookingDetailsEntity bookingDetails,
-    UserShopModel shopDetails,
+    UserShopEntity shopDetails,
   ) async {
     // Font loading logic
     final fontRegular = await rootBundle.load(AppAssets.interRegularFont);

@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:flutter/material.dart';
 
-class MeasurementFieldModel {
+class MeasurementFieldFormState {
   final String name;
   final String key;
   final String description;
@@ -9,7 +9,7 @@ class MeasurementFieldModel {
   final bool isOptional;
   final TextEditingController controller;
 
-  MeasurementFieldModel({
+  MeasurementFieldFormState({
     required this.name,
     required this.key,
     required this.description,
@@ -18,20 +18,19 @@ class MeasurementFieldModel {
     TextEditingController? controller,
   }) : controller = controller ?? TextEditingController();
 
-  MeasurementFieldModel copyWith({
+  MeasurementFieldFormState copyWith({
     String? name,
     String? key,
     String? description,
     GenderType? gender,
     bool? isOptional,
     TextEditingController? controller,
-  }) =>
-      MeasurementFieldModel(
-        name: name ?? this.name,
-        key: key ?? this.key,
-        description: description ?? this.description,
-        gender: gender ?? this.gender,
-        isOptional: isOptional ?? this.isOptional,
-        controller: controller ?? this.controller,
-      );
+  }) => MeasurementFieldFormState(
+    name: name ?? this.name,
+    key: key ?? this.key,
+    description: description ?? this.description,
+    gender: gender ?? this.gender,
+    isOptional: isOptional ?? this.isOptional,
+    controller: controller ?? this.controller,
+  );
 }

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_user_repository.dart';
 
 class GetUserUseCase {
@@ -6,5 +6,5 @@ class GetUserUseCase {
 
   GetUserUseCase(this._repository);
 
-  Future<UserModel> call() => _repository.fetchUserData();
+  Future<UserEntity> call() => _repository.fetchUserData();
 }

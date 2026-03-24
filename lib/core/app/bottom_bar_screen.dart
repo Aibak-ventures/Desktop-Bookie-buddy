@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/shop_list_bloc.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
@@ -170,7 +170,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   /// Switch to a different shop
   /// Show shop selector as a positioned popup menu, driven by ShopListBloc
-  Future<void> _showShopSelector(BuildContext context, UserModel user) async {
+  Future<void> _showShopSelector(BuildContext context, UserEntity user) async {
     context.read<ShopListBloc>().add(const ShopListEvent.loadShops());
 
     // Show loading indicator while shops are being fetched
@@ -457,7 +457,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   }
 
   Widget _profileHeaderExpanded() {
-    return BlocBuilder<UserCubit, UserModel?>(
+    return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         final userName = user?.firstName ?? 'User';
         final firstLetter =
@@ -495,7 +495,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   }
 
   Widget _profileHeaderCollapsed() {
-    return BlocBuilder<UserCubit, UserModel?>(
+    return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         final userName = user?.firstName ?? 'User';
         final firstLetter =
@@ -544,7 +544,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   /// Shop switcher button for expanded sidebar - styled like logout button
   Widget _shopSwitcherButtonExpanded() {
-    return BlocBuilder<UserCubit, UserModel?>(
+    return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         if (user == null) return const SizedBox.shrink();
         final hasMultipleShops = user.haveMultipleShops;
@@ -637,7 +637,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   /// Shop switcher button for collapsed sidebar
   Widget _shopSwitcherButtonCollapsed() {
-    return BlocBuilder<UserCubit, UserModel?>(
+    return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         if (user == null) return const SizedBox.shrink();
         final hasMultipleShops = user.haveMultipleShops;

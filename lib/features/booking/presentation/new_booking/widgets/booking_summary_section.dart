@@ -1,13 +1,13 @@
+import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 
 class BookingSummarySection extends StatelessWidget {
   final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
-  final ValueNotifier<List<AdditionalChargesModel>> additionalChargesNotifier;
+  final ValueNotifier<List<AdditionalChargesEntity>> additionalChargesNotifier;
   final TextEditingController advanceAmountController;
   final TextEditingController discountAmountController;
   final VoidCallback onConfirmBooking;

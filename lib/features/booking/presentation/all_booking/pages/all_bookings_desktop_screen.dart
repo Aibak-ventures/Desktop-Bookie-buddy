@@ -10,14 +10,14 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/common/models/date_filter_model.dart';
+import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/sales_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
@@ -35,8 +35,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   int _activeActionTab = 0; // 0: Booking, 1: Sales, 2: Custom work
   String _activeStatusTab = 'upcoming'; // API status value
   final TextEditingController _searchController = TextEditingController();
-  final ValueNotifier<DateFilterModel> _dateFilterNotifier = ValueNotifier(
-    const DateFilterModel(),
+  final ValueNotifier<DateFilter> _dateFilterNotifier = ValueNotifier(
+    const DateFilter(),
   );
   final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
@@ -143,7 +143,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserModel?>(
+    return BlocListener<UserCubit, UserEntity?>(
       listenWhen: (previous, current) {
         // Only trigger when shop actually changes
         if (previous == null || current == null) return false;
@@ -450,7 +450,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           const SizedBox(width: 8),
           Container(height: 20, width: 1, color: Colors.grey.shade300),
           const SizedBox(width: 8),
-          ValueListenableBuilder<DateFilterModel>(
+          ValueListenableBuilder<DateFilter>(
             valueListenable: _dateFilterNotifier,
             builder: (context, filter, _) {
               final hasFilter = filter.hasActiveFilter;

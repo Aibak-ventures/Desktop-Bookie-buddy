@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
@@ -41,7 +42,6 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_select
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -111,7 +111,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       ValueNotifier<List<AdditionalChargesEntity>>([]);
 
   // Documents
-  final documentsNotifier = ValueNotifier<List<DocumentFile>>([]);
+  final documentsNotifier = ValueNotifier<List<DocumentFileEntity>>([]);
 
   // Description
   final descriptionController = TextEditingController();

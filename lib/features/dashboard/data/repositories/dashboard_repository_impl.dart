@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_entity/desktop_dashboard_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/repositories/i_dashboard_repository.dart';
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/data/models/desktop_dashboard_response/desktop_dashboard_response.dart';
 import 'package:bookie_buddy_web/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 
@@ -15,7 +15,7 @@ class DashboardRepositoryImpl implements IDashboardRepository {
   @override
   Future<DesktopDashboardEntity> getDashboardDesktopData({
     int page = 1,
-    UserModel? activeShop,
+    UserEntity? activeShop,
   }) async {
     try {
       final response = await _dashboardService.fetchDesktopDashboardData(

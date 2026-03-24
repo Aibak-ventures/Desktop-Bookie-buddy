@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
@@ -45,13 +46,11 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selec
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/variant_chip.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:go_router/go_router.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/generate_booking_pdf.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/select_date_failure_dialog.dart';
 
@@ -123,7 +122,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       ValueNotifier<List<AdditionalChargesEntity>>([]);
 
   // Documents
-  final documentsNotifier = ValueNotifier<List<DocumentFile>>([]);
+  final documentsNotifier = ValueNotifier<List<DocumentFileEntity>>([]);
 
   // Description
   final descriptionController = TextEditingController();
@@ -194,7 +193,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   int? _originalSecurityAmount;
   int? _originalDiscountAmount;
   List<AdditionalChargesEntity>? _originalAdditionalCharges;
-  List<DocumentFile>?
+  List<DocumentFileEntity>?
   _originalDocuments; // Track original documents for removal detection
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
@@ -391,17 +390,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               final url = doc['url'] ?? doc['file'] ?? '';
               final name = doc['name'] ?? _extractFilenameFromUrl(url);
               log('📄 Parsed document - Name: $name, URL: $url');
-              return DocumentFile(name: name, path: url);
+              return DocumentFileEntity(name: name, path: url);
             } else if (doc is String) {
               log('📄 Simple string document: $doc');
               final filename = _extractFilenameFromUrl(doc);
               log('📄 Extracted filename: $filename');
-              return DocumentFile(name: filename, path: doc);
+              return DocumentFileEntity(name: filename, path: doc);
             }
             log('⚠️ Unknown document format: $doc');
             return null;
           })
-          .whereType<DocumentFile>()
+          .whereType<DocumentFileEntity>()
           .toList();
       log('✅ Loaded ${docs.length} documents for preview');
       documentsNotifier.value = docs;
@@ -447,7 +446,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Store deep copy of documents
     _originalDocuments = documentsNotifier.value
         .map(
-          (d) => DocumentFile(
+          (d) => DocumentFileEntity(
             name: d.name,
             path: d.path,
             bytes: d.bytes != null ? List<int>.from(d.bytes!) : null,

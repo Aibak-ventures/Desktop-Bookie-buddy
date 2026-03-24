@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_field_model.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/models/measurement_field_form_state.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +21,7 @@ class AddCustomizationScreen extends StatefulWidget {
 }
 
 class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
-  final ValueNotifier<List<MeasurementFieldModel>> measurementsNotifier =
+  final ValueNotifier<List<MeasurementFieldFormState>> measurementsNotifier =
       ValueNotifier([]);
 
   final customCustomizationController = TextEditingController();
@@ -39,8 +39,9 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
       final genders = widget.addedMeasurements.map((e) => e.gender).toSet();
 
       // Remove unisex for better logic
-      final filteredGenders =
-          genders.where((g) => g != GenderType.unisex).toSet();
+      final filteredGenders = genders
+          .where((g) => g != GenderType.unisex)
+          .toSet();
 
       if (filteredGenders.length == 1) {
         genderNotifier.value = filteredGenders.first ?? GenderType.unisex;
@@ -71,7 +72,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
     final customMeasurements = widget.addedMeasurements
         .where((e) => !baseMeasurements.any((f) => f.key == e.key))
         .map(
-          (e) => MeasurementFieldModel(
+          (e) => MeasurementFieldFormState(
             name: e.name,
             key: e.key,
             description: '',
@@ -133,12 +134,16 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                 }
               },
               icon: const Icon(Icons.save, color: Colors.white),
-              label: const Text('Save Measurements',
-                  style: TextStyle(color: Colors.white)),
+              label: const Text(
+                'Save Measurements',
+                style: TextStyle(color: Colors.white),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
               ),
             ),
           ),
@@ -152,8 +157,9 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
               constraints: BoxConstraints(
                 maxWidth: isWeb ? 1200 : double.infinity,
               ),
-              padding:
-                  isWeb ? const EdgeInsets.all(40) : const EdgeInsets.all(16),
+              padding: isWeb
+                  ? const EdgeInsets.all(40)
+                  : const EdgeInsets.all(16),
               child: Form(
                 key: formKey,
                 child: isWeb
@@ -249,7 +255,9 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.purpleLightShade,
                               borderRadius: BorderRadius.circular(8),
@@ -333,7 +341,8 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                                       color: Colors.grey.shade50,
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                          color: Colors.grey.shade200),
+                                        color: Colors.grey.shade200,
+                                      ),
                                     ),
                                     child: Row(
                                       children: [
@@ -371,10 +380,10 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                                                 'Enter measurement value (e.g., 32 inches)',
                                             validator: (value) =>
                                                 AppInputValidators.basicText(
-                                              value,
-                                              isRequired: false,
-                                              fieldName: field.name,
-                                            ),
+                                                  value,
+                                                  isRequired: false,
+                                                  fieldName: field.name,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -453,10 +462,9 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                                         .toLowerCase()
                                         .replaceAll(' ', '_');
 
-                                    final alreadyExists =
-                                        measurementsNotifier.value.any(
-                                      (e) => e.key == newKey,
-                                    );
+                                    final alreadyExists = measurementsNotifier
+                                        .value
+                                        .any((e) => e.key == newKey);
 
                                     if (alreadyExists) {
                                       context.showSnackBar(
@@ -468,7 +476,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
 
                                     measurementsNotifier.value = [
                                       ...measurementsNotifier.value,
-                                      MeasurementFieldModel(
+                                      MeasurementFieldFormState(
                                         name: customCustomizationController.text
                                             .trim()
                                             .capitalizeFirstLetter(),
@@ -480,14 +488,19 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                                     customCustomizationController.clear();
                                   }
                                 },
-                                icon:
-                                    const Icon(Icons.add, color: Colors.white),
-                                label: const Text('Add Measurement',
-                                    style: TextStyle(color: Colors.white)),
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ),
+                                label: const Text(
+                                  'Add Measurement',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.purple,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                 ),
                               ),
                             ),
@@ -589,10 +602,10 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
                               controller: field.controller,
                               validator: (value) =>
                                   AppInputValidators.basicText(
-                                value,
-                                isRequired: false,
-                                fieldName: field.name,
-                              ),
+                                    value,
+                                    isRequired: false,
+                                    fieldName: field.name,
+                                  ),
                             ),
                           ),
                         ],
@@ -608,10 +621,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
             padding: 10.paddingVertical,
             child: Text(
               'Add Custom Measurements',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16.sp,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
             ),
           ),
           Row(
@@ -657,7 +667,7 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
 
                   measurementsNotifier.value = [
                     ...measurementsNotifier.value,
-                    MeasurementFieldModel(
+                    MeasurementFieldFormState(
                       name: customCustomizationController.text
                           .trim()
                           .capitalizeFirstLetter(),
@@ -678,149 +688,149 @@ class _AddCustomizationScreenState extends State<AddCustomizationScreen> {
   }
 }
 
-List<MeasurementFieldModel> getMeasurements() => [
-      // --- Female Measurements ---
-      MeasurementFieldModel(
-        name: 'Top Round',
-        key: 'top_round',
-        description: 'Round measurement around top',
-        gender: GenderType.female,
-      ),
-      MeasurementFieldModel(
-        name: 'Top Length',
-        key: 'top_length',
-        description: 'Vertical length of the top',
-        gender: GenderType.female,
-      ),
+List<MeasurementFieldFormState> getMeasurements() => [
+  // --- Female Measurements ---
+  MeasurementFieldFormState(
+    name: 'Top Round',
+    key: 'top_round',
+    description: 'Round measurement around top',
+    gender: GenderType.female,
+  ),
+  MeasurementFieldFormState(
+    name: 'Top Length',
+    key: 'top_length',
+    description: 'Vertical length of the top',
+    gender: GenderType.female,
+  ),
 
-      MeasurementFieldModel(
-        name: 'Chest',
-        key: 'chest',
-        description: 'Fullest part of the chest',
-        gender: GenderType.unisex,
-      ),
+  MeasurementFieldFormState(
+    name: 'Chest',
+    key: 'chest',
+    description: 'Fullest part of the chest',
+    gender: GenderType.unisex,
+  ),
 
-      MeasurementFieldModel(
-        name: 'Shape',
-        key: 'shape',
-        description: 'Garment shape (fitted/flared/etc.)',
-        gender: GenderType.female,
-      ),
+  MeasurementFieldFormState(
+    name: 'Shape',
+    key: 'shape',
+    description: 'Garment shape (fitted/flared/etc.)',
+    gender: GenderType.female,
+  ),
 
-      MeasurementFieldModel(
-        name: 'Sleeve Length',
-        key: 'sleeve_length',
-        description: 'Shoulder to desired sleeve end',
-        gender: GenderType.unisex,
-        isOptional: true,
-      ),
+  MeasurementFieldFormState(
+    name: 'Sleeve Length',
+    key: 'sleeve_length',
+    description: 'Shoulder to desired sleeve end',
+    gender: GenderType.unisex,
+    isOptional: true,
+  ),
 
-      MeasurementFieldModel(
-        name: 'Sleeve Arm',
-        key: 'sleeve_arm',
-        description: 'Around the upper arm',
-        gender: GenderType.female,
-      ),
-      MeasurementFieldModel(
-        name: 'Sleeve Width',
-        key: 'sleeve_width',
-        description: 'Width at the end of sleeve',
-        gender: GenderType.female,
-      ),
-      MeasurementFieldModel(
-        name: 'Regal',
-        key: 'regal',
-        description: 'Shoulder to bust line or relevant regal line',
-        gender: GenderType.female,
-      ),
-      MeasurementFieldModel(
-        name: 'Front Neck',
-        key: 'front_neck',
-        description: 'Depth of the front neckline',
-        gender: GenderType.female,
-      ),
-      MeasurementFieldModel(
-        name: 'Back Neck',
-        key: 'back_neck',
-        description: 'Depth of the back neckline',
-        gender: GenderType.female,
-      ),
-      MeasurementFieldModel(
-        name: 'Elbow',
-        key: 'elbow',
-        description: 'Circumference around the elbow',
-        gender: GenderType.female,
-      ),
+  MeasurementFieldFormState(
+    name: 'Sleeve Arm',
+    key: 'sleeve_arm',
+    description: 'Around the upper arm',
+    gender: GenderType.female,
+  ),
+  MeasurementFieldFormState(
+    name: 'Sleeve Width',
+    key: 'sleeve_width',
+    description: 'Width at the end of sleeve',
+    gender: GenderType.female,
+  ),
+  MeasurementFieldFormState(
+    name: 'Regal',
+    key: 'regal',
+    description: 'Shoulder to bust line or relevant regal line',
+    gender: GenderType.female,
+  ),
+  MeasurementFieldFormState(
+    name: 'Front Neck',
+    key: 'front_neck',
+    description: 'Depth of the front neckline',
+    gender: GenderType.female,
+  ),
+  MeasurementFieldFormState(
+    name: 'Back Neck',
+    key: 'back_neck',
+    description: 'Depth of the back neckline',
+    gender: GenderType.female,
+  ),
+  MeasurementFieldFormState(
+    name: 'Elbow',
+    key: 'elbow',
+    description: 'Circumference around the elbow',
+    gender: GenderType.female,
+  ),
 
-      // --- Male Measurements ---
-      MeasurementFieldModel(
-        name: 'Neck Circumference',
-        key: 'neck_circumference',
-        description: 'Around the base of the neck',
-        gender: GenderType.male,
-      ),
-      MeasurementFieldModel(
-        name: 'Shirt/Kurta Length',
-        key: 'shirt_length',
-        description: 'Shoulder to desired bottom length',
-        gender: GenderType.male,
-      ),
-      MeasurementFieldModel(
-        name: 'Armhole',
-        key: 'armhole',
-        description: 'Around the arm socket',
-        gender: GenderType.male,
-      ),
-      MeasurementFieldModel(
-        name: 'Upper Arm',
-        key: 'upper_arm',
-        description: 'Fullest part of the upper arm',
-        gender: GenderType.male,
-      ),
-      MeasurementFieldModel(
-        name: 'Wrist',
-        key: 'wrist',
-        description: 'Circumference of the wrist',
-        gender: GenderType.male,
-      ),
-      MeasurementFieldModel(
-        name: 'Pant Length',
-        key: 'pant_length',
-        description: 'Waist to ankle',
-        gender: GenderType.male,
-      ),
-      MeasurementFieldModel(
-        name: 'Inseam',
-        key: 'inseam',
-        description: 'Crotch to ankle inside the leg',
-        gender: GenderType.male,
-      ),
-      MeasurementFieldModel(
-        name: 'Thigh',
-        key: 'thigh',
-        description: 'Fullest part of the upper leg',
-        gender: GenderType.male,
-      ),
+  // --- Male Measurements ---
+  MeasurementFieldFormState(
+    name: 'Neck Circumference',
+    key: 'neck_circumference',
+    description: 'Around the base of the neck',
+    gender: GenderType.male,
+  ),
+  MeasurementFieldFormState(
+    name: 'Shirt/Kurta Length',
+    key: 'shirt_length',
+    description: 'Shoulder to desired bottom length',
+    gender: GenderType.male,
+  ),
+  MeasurementFieldFormState(
+    name: 'Armhole',
+    key: 'armhole',
+    description: 'Around the arm socket',
+    gender: GenderType.male,
+  ),
+  MeasurementFieldFormState(
+    name: 'Upper Arm',
+    key: 'upper_arm',
+    description: 'Fullest part of the upper arm',
+    gender: GenderType.male,
+  ),
+  MeasurementFieldFormState(
+    name: 'Wrist',
+    key: 'wrist',
+    description: 'Circumference of the wrist',
+    gender: GenderType.male,
+  ),
+  MeasurementFieldFormState(
+    name: 'Pant Length',
+    key: 'pant_length',
+    description: 'Waist to ankle',
+    gender: GenderType.male,
+  ),
+  MeasurementFieldFormState(
+    name: 'Inseam',
+    key: 'inseam',
+    description: 'Crotch to ankle inside the leg',
+    gender: GenderType.male,
+  ),
+  MeasurementFieldFormState(
+    name: 'Thigh',
+    key: 'thigh',
+    description: 'Fullest part of the upper leg',
+    gender: GenderType.male,
+  ),
 
-      // --- Measurements for both genders ---
-      MeasurementFieldModel(
-        name: 'Waist',
-        key: 'waist',
-        description: 'Natural waistline',
-        gender: GenderType.unisex,
-      ),
+  // --- Measurements for both genders ---
+  MeasurementFieldFormState(
+    name: 'Waist',
+    key: 'waist',
+    description: 'Natural waistline',
+    gender: GenderType.unisex,
+  ),
 
-      MeasurementFieldModel(
-        name: 'Shoulder Width',
-        key: 'shoulder_width',
-        description: 'Tip to tip across the back',
-        gender: GenderType.unisex,
-      ),
+  MeasurementFieldFormState(
+    name: 'Shoulder Width',
+    key: 'shoulder_width',
+    description: 'Tip to tip across the back',
+    gender: GenderType.unisex,
+  ),
 
-      MeasurementFieldModel(
-        name: 'Height',
-        key: 'height',
-        description: 'For total garment length',
-        gender: GenderType.unisex,
-      ),
-    ];
+  MeasurementFieldFormState(
+    name: 'Height',
+    key: 'height',
+    description: 'For total garment length',
+    gender: GenderType.unisex,
+  ),
+];

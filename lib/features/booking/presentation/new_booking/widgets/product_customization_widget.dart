@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_field_model.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/models/measurement_field_form_state.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ class ProductCustomizationWidget extends StatefulWidget {
 
 class _ProductCustomizationWidgetState
     extends State<ProductCustomizationWidget> {
-  final ValueNotifier<List<MeasurementFieldModel>> measurementsNotifier =
+  final ValueNotifier<List<MeasurementFieldFormState>> measurementsNotifier =
       ValueNotifier([]);
   final customCustomizationController = TextEditingController();
   final genderNotifier = ValueNotifier<GenderType>(GenderType.male);
@@ -114,7 +114,7 @@ class _ProductCustomizationWidgetState
     final customMeasurements = productMeasurements
         .where((e) => !baseMeasurements.any((f) => f.key == e.key))
         .map(
-          (e) => MeasurementFieldModel(
+          (e) => MeasurementFieldFormState(
             name: e.name,
             key: e.key,
             description: '',
@@ -203,7 +203,7 @@ class _ProductCustomizationWidgetState
 
     measurementsNotifier.value = [
       ...measurementsNotifier.value,
-      MeasurementFieldModel(
+      MeasurementFieldFormState(
         name: customCustomizationController.text.trim().capitalizeFirstLetter(),
         key: newKey,
         description: '',
@@ -863,100 +863,100 @@ class _ProductCustomizationWidgetState
     );
   }
 
-  List<MeasurementFieldModel> _getMeasurements() => [
+  List<MeasurementFieldFormState> _getMeasurements() => [
     // Female Measurements
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Top Round',
       key: 'top_round',
       description: 'Round measurement around top',
       gender: GenderType.female,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Top Length',
       key: 'top_length',
       description: 'Vertical length of the top',
       gender: GenderType.female,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Chest',
       key: 'chest',
       description: 'Fullest part of the chest',
       gender: GenderType.unisex,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Shape',
       key: 'shape',
       description: 'Garment shape',
       gender: GenderType.female,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Sleeve Length',
       key: 'sleeve_length',
       description: 'Shoulder to desired sleeve end',
       gender: GenderType.unisex,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Sleeve Arm',
       key: 'sleeve_arm',
       description: 'Around the upper arm',
       gender: GenderType.female,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Front Neck',
       key: 'front_neck',
       description: 'Depth of the front neckline',
       gender: GenderType.female,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Back Neck',
       key: 'back_neck',
       description: 'Depth of the back neckline',
       gender: GenderType.female,
     ),
     // Male Measurements
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Neck Circumference',
       key: 'neck_circumference',
       description: 'Around the base of the neck',
       gender: GenderType.male,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Shirt/Kurta Length',
       key: 'shirt_length',
       description: 'Shoulder to desired bottom length',
       gender: GenderType.male,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Armhole',
       key: 'armhole',
       description: 'Around the arm socket',
       gender: GenderType.male,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Upper Arm',
       key: 'upper_arm',
       description: 'Fullest part of the upper arm',
       gender: GenderType.male,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Wrist',
       key: 'wrist',
       description: 'Circumference of the wrist',
       gender: GenderType.male,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Pant Length',
       key: 'pant_length',
       description: 'Waist to ankle',
       gender: GenderType.male,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Inseam',
       key: 'inseam',
       description: 'Crotch to ankle inside the leg',
       gender: GenderType.male,
     ),
-    MeasurementFieldModel(
+    MeasurementFieldFormState(
       name: 'Thigh',
       key: 'thigh',
       description: 'Fullest part of the thigh',

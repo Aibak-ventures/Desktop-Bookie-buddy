@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 
 abstract interface class IUserRepository {
-  Future<UserModel> fetchUserData();
+  Future<UserEntity> fetchUserData();
 
   Future<void> logout({String? fcmToken});
 
@@ -18,5 +18,5 @@ abstract interface class IUserRepository {
     required int newShopId,
   });
 
-  Future<UserModel> switchShop(int shopId);
+  Future<UserEntity> switchShop(int shopId);
 }

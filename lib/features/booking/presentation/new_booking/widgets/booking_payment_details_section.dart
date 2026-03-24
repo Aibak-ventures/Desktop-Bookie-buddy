@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/add_additional_charge_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,7 +10,7 @@ class BookingPaymentDetailsSection extends StatelessWidget {
   final TextEditingController advanceAmountController;
   final TextEditingController securityAmountController;
   final TextEditingController discountAmountController;
-  final ValueNotifier<List<AdditionalChargesModel>> additionalChargesNotifier;
+  final ValueNotifier<List<AdditionalChargesEntity>> additionalChargesNotifier;
   final DeliveryStatus deliveryStatus;
   final ValueChanged<DeliveryStatus> onDeliveryStatusChanged;
   final PaymentMethod paymentMethod;
@@ -181,11 +181,7 @@ class BookingPaymentDetailsSection extends StatelessWidget {
             ),
             const Spacer(),
             if (isSelected)
-              Icon(
-                Icons.check_circle,
-                size: 18,
-                color: AppColors.purple,
-              ),
+              Icon(Icons.check_circle, size: 18, color: AppColors.purple),
           ],
         ),
       ),
@@ -207,7 +203,8 @@ class BookingPaymentDetailsSection extends StatelessWidget {
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.allow(
-              RegExp(r'[0-9]')), // Strict regex for digits
+            RegExp(r'[0-9]'),
+          ), // Strict regex for digits
         ],
         onChanged: (value) {
           // Extra layer of protection: remove any non-digit characters if they somehow slip through
@@ -221,25 +218,23 @@ class BookingPaymentDetailsSection extends StatelessWidget {
         },
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyle(
-            color: Colors.grey.shade500,
-            fontSize: 14,
-          ),
+          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(left: 12, right: 8),
             child: Text(
               '₹',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
             ),
           ),
-          prefixIconConstraints:
-              const BoxConstraints(minWidth: 0, minHeight: 0),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+          ),
           border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
       ),
     );
@@ -272,17 +267,13 @@ class BookingPaymentDetailsSection extends StatelessWidget {
                   color: AppColors.purple.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Icon(
-                  Icons.add,
-                  color: AppColors.purple,
-                  size: 18,
-                ),
+                child: const Icon(Icons.add, color: AppColors.purple, size: 18),
               ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        ValueListenableBuilder<List<AdditionalChargesModel>>(
+        ValueListenableBuilder<List<AdditionalChargesEntity>>(
           valueListenable: additionalChargesNotifier,
           builder: (context, charges, _) {
             if (charges.isEmpty) {
@@ -296,17 +287,15 @@ class BookingPaymentDetailsSection extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'No additional charges',
-                    style: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontSize: 13,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
                   ),
                 ),
               );
             }
             return Column(
-              children:
-                  charges.map((charge) => _buildChargeItem(charge)).toList(),
+              children: charges
+                  .map((charge) => _buildChargeItem(charge))
+                  .toList(),
             );
           },
         ),
@@ -314,7 +303,7 @@ class BookingPaymentDetailsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildChargeItem(AdditionalChargesModel charge) {
+  Widget _buildChargeItem(AdditionalChargesEntity charge) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -326,10 +315,7 @@ class BookingPaymentDetailsSection extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            charge.name ?? 'Charge',
-            style: const TextStyle(fontSize: 13),
-          ),
+          Text(charge.name ?? 'Charge', style: const TextStyle(fontSize: 13)),
           Row(
             children: [
               Text(
@@ -342,17 +328,13 @@ class BookingPaymentDetailsSection extends StatelessWidget {
               const SizedBox(width: 8),
               InkWell(
                 onTap: () {
-                  final charges = List<AdditionalChargesModel>.from(
+                  final charges = List<AdditionalChargesEntity>.from(
                     additionalChargesNotifier.value,
                   );
                   charges.remove(charge);
                   additionalChargesNotifier.value = charges;
                 },
-                child: Icon(
-                  Icons.close,
-                  size: 16,
-                  color: Colors.grey.shade500,
-                ),
+                child: Icon(Icons.close, size: 16, color: Colors.grey.shade500),
               ),
             ],
           ),
@@ -386,8 +368,10 @@ class BookingPaymentDetailsSection extends StatelessWidget {
             child: DropdownButton<DeliveryStatus>(
               value: deliveryStatus,
               isExpanded: true,
-              icon:
-                  Icon(Icons.keyboard_arrow_down, color: Colors.grey.shade600),
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.grey.shade600,
+              ),
               items: DeliveryStatus.values
                   .map(
                     (status) => DropdownMenuItem(
