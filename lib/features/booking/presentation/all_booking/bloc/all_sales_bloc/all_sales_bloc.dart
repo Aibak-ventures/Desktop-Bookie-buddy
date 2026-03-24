@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,13 +16,10 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
   final GetSalesUseCase _getSalesUseCase;
 
   AllSalesBloc({required GetSalesUseCase getSalesUseCase})
-      : _getSalesUseCase = getSalesUseCase,
-        super(const AllSalesState.loading()) {
+    : _getSalesUseCase = getSalesUseCase,
+      super(const AllSalesState.loading()) {
     on<_LoadSales>(_onFetchSales);
-    on<_LoadMoreSales>(
-      _onLoadMoreSales,
-      transformer: throttleDroppable(),
-    );
+    on<_LoadMoreSales>(_onLoadMoreSales, transformer: throttleDroppable());
   }
 
   Future<void> _onLoadMoreSales(

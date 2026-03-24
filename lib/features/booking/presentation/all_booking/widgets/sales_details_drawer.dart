@@ -4,10 +4,10 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/send_sale_invoice_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_model/user_model.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
@@ -47,9 +47,9 @@ class SalesDetailsDrawer extends StatelessWidget {
             success: (message, didPop, needRefresh) {
               context.showSnackBar(message);
               if (needRefresh) {
-                context
-                    .read<AllSalesBloc>()
-                    .add(const AllSalesEvent.loadSales());
+                context.read<AllSalesBloc>().add(
+                  const AllSalesEvent.loadSales(),
+                );
               }
               if (didPop) {
                 context.read<SalesDetailsDrawerCubit>().closeDrawer();
@@ -116,9 +116,7 @@ class SalesDetailsDrawer extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Expanded(
-                          child: _buildContent(context, drawerState),
-                        ),
+                        Expanded(child: _buildContent(context, drawerState)),
                       ],
                     ),
                   ),
@@ -132,7 +130,9 @@ class SalesDetailsDrawer extends StatelessWidget {
   }
 
   Widget _buildContent(
-      BuildContext context, SalesDetailsDrawerState drawerState) {
+    BuildContext context,
+    SalesDetailsDrawerState drawerState,
+  ) {
     if (!drawerState.isOpen || drawerState.selectedSaleId == null) {
       return const SizedBox.shrink();
     }
@@ -161,10 +161,10 @@ class SalesDetailsDrawer extends StatelessWidget {
               onRetry: () {
                 if (drawerState.selectedSaleId != null) {
                   context.read<SalesDetailsBloc>().add(
-                        SalesDetailsEvent.fetchSaleDetails(
-                          drawerState.selectedSaleId!,
-                        ),
-                      );
+                    SalesDetailsEvent.fetchSaleDetails(
+                      drawerState.selectedSaleId!,
+                    ),
+                  );
                 }
               },
             ),
@@ -175,8 +175,10 @@ class SalesDetailsDrawer extends StatelessWidget {
               // Scrollable content
               Expanded(
                 child: SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -229,7 +231,7 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildSaleHeader(SaleDetailsModel sale) {
+  Widget _buildSaleHeader(SaleDetailsEntity sale) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -254,7 +256,7 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDatesSection(SaleDetailsModel sale) {
+  Widget _buildDatesSection(SaleDetailsEntity sale) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -327,7 +329,7 @@ class SalesDetailsDrawer extends StatelessWidget {
     }
   }
 
-  Widget _buildItemDetails(SaleDetailsModel sale) {
+  Widget _buildItemDetails(SaleDetailsEntity sale) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -373,8 +375,10 @@ class SalesDetailsDrawer extends StatelessWidget {
                               item.image!,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.image,
-                                      color: Colors.grey.shade400),
+                                  Icon(
+                                    Icons.image,
+                                    color: Colors.grey.shade400,
+                                  ),
                             ),
                           )
                         : Icon(Icons.image, color: Colors.grey.shade400),
@@ -520,15 +524,17 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomerDetails(SaleDetailsModel sale) {
+  Widget _buildCustomerDetails(SaleDetailsEntity sale) {
     // Get phone number from client or clientPhone field
     final phone1 = _preferredPhone(
       sale.client?.phone1E164,
-      sale.client?.phone1?.toString(),
+      sale.client?.phone1.toString(),
       fallback: sale.clientPhone?.toString(),
     );
     final phone2 = _preferredPhone(
-        sale.client?.phone2E164, sale.client?.phone2?.toString());
+      sale.client?.phone2E164,
+      sale.client?.phone2?.toString(),
+    );
     final name = sale.client?.name;
 
     if (phone1 == null || phone1.isEmpty) return const SizedBox.shrink();
@@ -573,10 +579,7 @@ class SalesDetailsDrawer extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
         ),
         Text(
           value,
@@ -596,10 +599,7 @@ class SalesDetailsDrawer extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
         ),
         Row(
           children: [
@@ -629,8 +629,11 @@ class SalesDetailsDrawer extends StatelessWidget {
                   await launchUrl(uri);
                 }
               },
-              child:
-                  Icon(Icons.message, size: 18, color: Colors.green.shade600),
+              child: Icon(
+                Icons.message,
+                size: 18,
+                color: Colors.green.shade600,
+              ),
             ),
           ],
         ),
@@ -638,8 +641,11 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  String? _preferredPhone(String? e164Phone, String? rawPhone,
-      {String? fallback}) {
+  String? _preferredPhone(
+    String? e164Phone,
+    String? rawPhone, {
+    String? fallback,
+  }) {
     final candidates = [e164Phone, rawPhone, fallback];
     for (final value in candidates) {
       final cleaned = value?.trim();
@@ -652,7 +658,7 @@ class SalesDetailsDrawer extends StatelessWidget {
 
   String _waPhone(String phone) => phone.replaceAll(RegExp(r'[^0-9]'), '');
 
-  Widget _buildNotesSection(SaleDetailsModel sale) {
+  Widget _buildNotesSection(SaleDetailsEntity sale) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -691,7 +697,7 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildStaffSection(SaleDetailsModel sale) {
+  Widget _buildStaffSection(SaleDetailsEntity sale) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -729,10 +735,12 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentDetails(SaleDetailsModel sale) {
+  Widget _buildPaymentDetails(SaleDetailsEntity sale) {
     // Calculate subtotal from items
-    final subtotal =
-        sale.products.fold<int>(0, (sum, item) => sum + item.subtotal);
+    final subtotal = sale.products.fold<int>(
+      0,
+      (sum, item) => sum + item.subtotal,
+    );
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -781,21 +789,33 @@ class SalesDetailsDrawer extends StatelessWidget {
           const SizedBox(height: 8),
           // Discount
           if (sale.discountAmount > 0) ...[
-            _buildPaymentRow('Discount', '- ₹${sale.discountAmount}',
-                valueColor: Colors.red.shade600),
+            _buildPaymentRow(
+              'Discount',
+              '- ₹${sale.discountAmount}',
+              valueColor: Colors.red.shade600,
+            ),
             const SizedBox(height: 8),
           ],
           const Divider(height: 24),
-          _buildPaymentRow('Grand Total', '₹${sale.paidAmount}',
-              isBold: true, fontSize: 15),
+          _buildPaymentRow(
+            'Grand Total',
+            '₹${sale.paidAmount}',
+            isBold: true,
+            fontSize: 15,
+          ),
           // Note: Balance row removed as requested
         ],
       ),
     );
   }
 
-  Widget _buildPaymentRow(String label, String value,
-      {bool isBold = false, Color? valueColor, double? fontSize}) {
+  Widget _buildPaymentRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    Color? valueColor,
+    double? fontSize,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -819,14 +839,12 @@ class SalesDetailsDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildStickyActionBar(BuildContext context, SaleDetailsModel sale) {
+  Widget _buildStickyActionBar(BuildContext context, SaleDetailsEntity sale) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.grey.shade200, width: 1),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey.shade200, width: 1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -852,7 +870,8 @@ class SalesDetailsDrawer extends StatelessWidget {
                     builder: (context) => AlertDialog(
                       title: const Text('Delete Sale'),
                       content: const Text(
-                          'Are you sure you want to delete this sale? This action cannot be undone.'),
+                        'Are you sure you want to delete this sale? This action cannot be undone.',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
@@ -860,8 +879,9 @@ class SalesDetailsDrawer extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () => Navigator.pop(context, true),
-                          style:
-                              TextButton.styleFrom(foregroundColor: Colors.red),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.red,
+                          ),
                           child: const Text('Delete'),
                         ),
                       ],
@@ -870,8 +890,8 @@ class SalesDetailsDrawer extends StatelessWidget {
 
                   if (confirm == true && context.mounted) {
                     context.read<SalesDetailsBloc>().add(
-                          SalesDetailsEvent.deleteSale(sale.id),
-                        );
+                      SalesDetailsEvent.deleteSale(sale.id),
+                    );
                   }
                 },
               );
@@ -894,24 +914,23 @@ class SalesDetailsDrawer extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => BlocProvider(
                         create: (_) => SaveSalesCubit(
-                            createSaleUseCase: getIt.get(),
-                            updateSaleUseCase: getIt.get()),
-                        child: EditSalesScreen(
-                          saleDetails: sale,
+                          createSaleUseCase: getIt.get(),
+                          updateSaleUseCase: getIt.get(),
                         ),
+                        child: EditSalesScreen(saleDetails: sale),
                       ),
                     ),
                   );
 
                   // If sale was updated, refresh the sales list
                   if (result == true && context.mounted) {
-                    context
-                        .read<AllSalesBloc>()
-                        .add(const AllSalesEvent.loadSales());
+                    context.read<AllSalesBloc>().add(
+                      const AllSalesEvent.loadSales(),
+                    );
                     // Refresh the drawer content
                     context.read<SalesDetailsBloc>().add(
-                          SalesDetailsEvent.fetchSaleDetails(sale.id),
-                        );
+                      SalesDetailsEvent.fetchSaleDetails(sale.id),
+                    );
                   }
                 },
               );
@@ -932,7 +951,7 @@ class SalesDetailsDrawer extends StatelessWidget {
 
   Future<void> _openInvoicePdf(
     BuildContext context,
-    SaleDetailsModel sale,
+    SaleDetailsEntity sale,
   ) async {
     showDialog(
       context: context,
@@ -962,7 +981,7 @@ class SalesDetailsDrawer extends StatelessWidget {
     }
   }
 
-  void _showInvoiceActionsModal(BuildContext context, SaleDetailsModel sale) {
+  void _showInvoiceActionsModal(BuildContext context, SaleDetailsEntity sale) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -973,9 +992,7 @@ class SalesDetailsDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.message, color: Color(0xFF25D366)),
               title: const Text('Send via WhatsApp'),
-              subtitle: Text(
-                'Send invoice PDF to ${sale.clientPhone}',
-              ),
+              subtitle: Text('Send invoice PDF to ${sale.clientPhone}'),
               onTap: () async {
                 Navigator.of(ctx).pop();
                 showDialog(
@@ -986,10 +1003,7 @@ class SalesDetailsDrawer extends StatelessWidget {
                 );
                 try {
                   final sendSaleInvoice = getIt<SendSaleInvoiceUsecase>();
-                  await sendSaleInvoice(
-                    sale.id,
-                    sendWhatsApp: true,
-                  );
+                  await sendSaleInvoice(sale.id, sendWhatsApp: true);
                   if (context.mounted) Navigator.of(context).pop();
                   if (context.mounted) {
                     context.showSnackBar(
@@ -999,8 +1013,10 @@ class SalesDetailsDrawer extends StatelessWidget {
                 } catch (e) {
                   if (context.mounted) Navigator.of(context).pop();
                   if (context.mounted) {
-                    context.showSnackBar('Failed to send invoice: $e',
-                        isError: true);
+                    context.showSnackBar(
+                      'Failed to send invoice: $e',
+                      isError: true,
+                    );
                   }
                 }
               },
@@ -1025,16 +1041,19 @@ class SalesDetailsDrawer extends StatelessWidget {
                     openPdfInNewTab(pdfBytes, 'sales_invoice_${sale.id}.pdf');
                   } else {
                     final dir = await getTemporaryDirectory();
-                    final file =
-                        File('${dir.path}/sales_invoice_${sale.id}.pdf');
+                    final file = File(
+                      '${dir.path}/sales_invoice_${sale.id}.pdf',
+                    );
                     await file.writeAsBytes(pdfBytes);
                     await OpenFile.open(file.path);
                   }
                 } catch (e) {
                   if (context.mounted) Navigator.of(context).pop();
                   if (context.mounted) {
-                    context.showSnackBar('Failed to open invoice: $e',
-                        isError: true);
+                    context.showSnackBar(
+                      'Failed to open invoice: $e',
+                      isError: true,
+                    );
                   }
                 }
               },

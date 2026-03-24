@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:dio/dio.dart';
 
@@ -20,7 +20,9 @@ class SalesRemoteDatasource {
     String? toDate,
   }) async {
     try {
-      log('🔄 Fetching sales - Page: $page, Search: $search, From: $fromDate, To: $toDate');
+      log(
+        '🔄 Fetching sales - Page: $page, Search: $search, From: $fromDate, To: $toDate',
+      );
 
       final response = await _dio.get(
         ApiEndpoints.sales.sales,
@@ -62,10 +64,7 @@ class SalesRemoteDatasource {
         data['phone_1_e164'] = phone1E164;
       }
 
-      final response = await _dio.post(
-        ApiEndpoints.sales.salesV4,
-        data: data,
-      );
+      final response = await _dio.post(ApiEndpoints.sales.salesV4, data: data);
       log('Sales create response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -117,8 +116,9 @@ class SalesRemoteDatasource {
 
   Future<CustomResponseModel> deleteSale(int saleId) async {
     try {
-      final response =
-          await _dio.delete(ApiEndpoints.sales.deleteSaleV4(saleId));
+      final response = await _dio.delete(
+        ApiEndpoints.sales.deleteSaleV4(saleId),
+      );
       log('Sales delete response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -144,7 +144,9 @@ class SalesRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
-        log('Invoice PDF fetched successfully, size: ${response.data.length} bytes');
+        log(
+          'Invoice PDF fetched successfully, size: ${response.data.length} bytes',
+        );
         return Uint8List.fromList(response.data as List<int>);
       } else {
         // Decode the JSON error body from bytes to show the actual backend message
@@ -160,7 +162,9 @@ class SalesRemoteDatasource {
             log('Backend error: $msg | dev: $devMsg');
           }
         } catch (_) {}
-        log('Error fetching invoice PDF: ${response.statusCode} - $errorMessage');
+        log(
+          'Error fetching invoice PDF: ${response.statusCode} - $errorMessage',
+        );
         throw errorMessage;
       }
     } catch (e, stack) {

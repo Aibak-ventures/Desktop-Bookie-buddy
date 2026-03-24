@@ -9,5 +9,7 @@ abstract class ClientEntity with _$ClientEntity {
     required String name,
     required int phone1,
     int? phone2,
+    String? phone1E164,
+    String? phone2E164,
   }) = _ClientEntity;
 }

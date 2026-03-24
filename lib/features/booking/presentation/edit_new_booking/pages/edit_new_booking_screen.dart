@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
@@ -33,7 +34,7 @@ import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_calendar_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
@@ -46,7 +47,7 @@ import 'package:bookie_buddy_web/features/booking/domain/models/document_file_mo
 
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/variant_chip.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_details_model/booking_details_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sale_details_model/sale_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
@@ -112,12 +113,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   bool sendPdfToWhatsApp = true;
 
   // Products/Services
-  final selectedProductsNotifier =
-      ValueNotifier<List<ProductSelectedModel>>([]);
+  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedModel>>(
+    [],
+  );
 
   // Additional charges
-  final additionalChargesNotifier =
-      ValueNotifier<List<AdditionalChargesModel>>([]);
+  final additionalChargesNotifier = ValueNotifier<List<AdditionalChargesModel>>(
+    [],
+  );
 
   // Documents
   final documentsNotifier = ValueNotifier<List<DocumentFile>>([]);
@@ -192,7 +195,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   int? _originalDiscountAmount;
   List<AdditionalChargesModel>? _originalAdditionalCharges;
   List<DocumentFile>?
-      _originalDocuments; // Track original documents for removal detection
+  _originalDocuments; // Track original documents for removal detection
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
 
@@ -234,18 +237,20 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           name: bookingStaffName ?? 'Staff',
           phoneNumber: '',
         );
-        context
-            .read<StaffSearchCubit>()
-            .getAllStaffs(bookingStaffId, existingStaff);
+        context.read<StaffSearchCubit>().getAllStaffs(
+          bookingStaffId,
+          existingStaff,
+        );
       } else if (saleStaffId != null) {
         final existingStaff = StaffEntity(
           id: saleStaffId,
           name: saleStaffName ?? 'Staff',
           phoneNumber: '',
         );
-        context
-            .read<StaffSearchCubit>()
-            .getAllStaffs(saleStaffId, existingStaff);
+        context.read<StaffSearchCubit>().getAllStaffs(
+          saleStaffId,
+          existingStaff,
+        );
       } else {
         context.read<StaffSearchCubit>().getAllStaffs();
       }
@@ -273,7 +278,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       // Calculate cooling period days from the dates
       final coolingDate = booking.coolingPeriodDate!.parseToDateTime();
       coolingPeriodDays = coolingDate.difference(returnDate).inDays.abs();
-      log('🔧 Cooling period: $coolingPeriodDays days (Return: $returnDate, Cooling: $coolingDate)');
+      log(
+        '🔧 Cooling period: $coolingPeriodDays days (Return: $returnDate, Cooling: $coolingDate)',
+      );
     } else {
       // No cooling period set
       coolingPeriodDays = 0;
@@ -337,7 +344,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Set products
     log('🔧 Loading ${booking.bookedItems.length} products from booking');
     final products = booking.bookedItems.map((item) {
-      log('📦 Product: ${item.name}, Measurements: ${item.measurements.length}');
+      log(
+        '📦 Product: ${item.name}, Measurements: ${item.measurements.length}',
+      );
       return ProductSelectedModel(
         variant: ProductInfoModel(
           id: item.id,
@@ -362,14 +371,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         amount: item.amount,
       );
     }).toList();
-    log('✅ Loaded ${products.length} products. Products with measurements: ${products.where((p) => p.measurements.isNotEmpty).length}');
+    log(
+      '✅ Loaded ${products.length} products. Products with measurements: ${products.where((p) => p.measurements.isNotEmpty).length}',
+    );
     selectedProductsNotifier.value = products;
 
     // Set additional charges
     additionalChargesNotifier.value = booking.additionalCharges;
 
     // Load existing documents for preview
-    log('📄 Loading documents from booking. Total documents: ${booking.documents.length}');
+    log(
+      '📄 Loading documents from booking. Total documents: ${booking.documents.length}',
+    );
     if (booking.documents.isNotEmpty) {
       log('📄 Raw documents data: ${booking.documents}');
       final docs = booking.documents
@@ -408,8 +421,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     _originalPickupTime = booking.pickupDate != null
         ? TimeOfDay.fromDateTime(booking.pickupDate!.parseToDateTime())
         : null;
-    _originalReturnTime =
-        TimeOfDay.fromDateTime(booking.returnDate.parseToDateTime());
+    _originalReturnTime = TimeOfDay.fromDateTime(
+      booking.returnDate.parseToDateTime(),
+    );
 
     _originalClientName = booking.client.name;
     _originalClientPhone1 = booking.client.phone1.toString();
@@ -424,20 +438,21 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Store deep copy of additional charges
     _originalAdditionalCharges = additionalChargesNotifier.value
-        .map((c) => AdditionalChargesModel(
-              id: c.id,
-              name: c.name,
-              amount: c.amount,
-            ))
+        .map(
+          (c) =>
+              AdditionalChargesModel(id: c.id, name: c.name, amount: c.amount),
+        )
         .toList();
 
     // Store deep copy of documents
     _originalDocuments = documentsNotifier.value
-        .map((d) => DocumentFile(
-              name: d.name,
-              path: d.path,
-              bytes: d.bytes != null ? List<int>.from(d.bytes!) : null,
-            ))
+        .map(
+          (d) => DocumentFile(
+            name: d.name,
+            path: d.path,
+            bytes: d.bytes != null ? List<int>.from(d.bytes!) : null,
+          ),
+        )
         .toList();
 
     // Store original running kilometers and delivery status
@@ -451,10 +466,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   bool _haveDatesChanged() {
     if (_originalBooking == null) return true; // New booking, send all
 
-    final currentPickupDate =
-        pickupDate.format().appendTimeToDate(time: pickupTime);
-    final currentReturnDate =
-        returnDate.format().appendTimeToDate(time: returnTime);
+    final currentPickupDate = pickupDate.format().appendTimeToDate(
+      time: pickupTime,
+    );
+    final currentReturnDate = returnDate.format().appendTimeToDate(
+      time: returnTime,
+    );
     final originalPickupDateStr = _originalPickupDate
         ?.format()
         .appendTimeToDate(time: _originalPickupTime);
@@ -484,8 +501,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   /// Check if staff has changed (reads directly from cubit to avoid timing issues)
   bool _hasStaffChanged() {
     if (_originalBooking == null) return true;
-    final currentStaffId =
-        context.read<StaffSearchCubit>().state.selectedStaff?.id;
+    final currentStaffId = context
+        .read<StaffSearchCubit>()
+        .state
+        .selectedStaff
+        ?.id;
     return currentStaffId != _originalStaffId;
   }
 
@@ -546,17 +566,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Only include dates if changed
     if (_haveDatesChanged()) {
-      updates['pickup_date'] =
-          pickupDate.format().appendTimeToDate(time: pickupTime);
-      updates['return_date'] =
-          returnDate.format().appendTimeToDate(time: returnTime);
+      updates['pickup_date'] = pickupDate.format().appendTimeToDate(
+        time: pickupTime,
+      );
+      updates['return_date'] = returnDate.format().appendTimeToDate(
+        time: returnTime,
+      );
       // If coolingPeriodDays is 0 (None), use exact return date and time
       updates['cooling_period_date'] = coolingPeriodDays == 0
           ? returnDate.format().appendTimeToDate(time: returnTime)
           : returnDate
-              .add(Duration(days: coolingPeriodDays))
-              .format()
-              .appendTimeToDate(time: returnTime);
+                .add(Duration(days: coolingPeriodDays))
+                .format()
+                .appendTimeToDate(time: returnTime);
     }
 
     // Include client entirely if any client field changed
@@ -585,20 +607,26 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
 
     // Include staff if changed (read directly from cubit — reliable, no listener timing issues)
-    final currentStaffId =
-        context.read<StaffSearchCubit>().state.selectedStaff?.id;
+    final currentStaffId = context
+        .read<StaffSearchCubit>()
+        .state
+        .selectedStaff
+        ?.id;
     if (_hasStaffChanged()) {
       updates['staff_id'] = currentStaffId;
     }
 
     // Include amounts if changed
     if (_haveAmountsChanged()) {
-      updates['advance_amount'] =
-          advanceAmountController.text.trim().toIntOrNull();
-      updates['security_amount'] =
-          securityAmountController.text.trim().toIntOrNull();
-      updates['discount_amount'] =
-          discountAmountController.text.trim().toIntOrNull();
+      updates['advance_amount'] = advanceAmountController.text
+          .trim()
+          .toIntOrNull();
+      updates['security_amount'] = securityAmountController.text
+          .trim()
+          .toIntOrNull();
+      updates['discount_amount'] = discountAmountController.text
+          .trim()
+          .toIntOrNull();
     }
 
     // Always include products (variants) to ensure server state matches current selection.
@@ -662,9 +690,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       if (runningKm != null) {
         updates['running_km'] = runningKm;
       }
-      updates['other_details'] = {
-        'end': runningKm ?? '',
-      };
+      updates['other_details'] = {'end': runningKm ?? ''};
     }
 
     log('📝 Partial update payload: $updates');
@@ -912,24 +938,24 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
     final currentProducts = _selectProductBloc.state.maybeWhen(
-      loaded: (
-        products,
-        nextPageUrl,
-        serviceId,
-        pickupDate,
-        returnDate,
-        isPaginating,
-        isSearching,
-        searchQuery,
-        searchType,
-        startPrice,
-        endPrice,
-        pickupTime,
-        returnTime,
-        useAvailableProductsApi,
-        isSales,
-      ) =>
-          products,
+      loaded:
+          (
+            products,
+            nextPageUrl,
+            serviceId,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            useAvailableProductsApi,
+            isSales,
+          ) => products,
       orElse: () => <ProductModel>[],
     );
 
@@ -961,11 +987,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
     // Setup local state for dialog
     final TextEditingController maxPriceController = TextEditingController();
-    final isPriceFilterEnabledWidgetNotifier =
-        ValueNotifier(_isPriceFilterEnabled.value);
+    final isPriceFilterEnabledWidgetNotifier = ValueNotifier(
+      _isPriceFilterEnabled.value,
+    );
     final tempSelectedServiceId = ValueNotifier<int?>(selectedServiceId);
-    final tempSelectedSearchTypeIndex =
-        ValueNotifier<int>(_selectedSearchTypeIndex.value);
+    final tempSelectedSearchTypeIndex = ValueNotifier<int>(
+      _selectedSearchTypeIndex.value,
+    );
     final tempPriceRange = ValueNotifier<RangeValues>(_priceRange.value);
 
     showDialog(
@@ -977,10 +1005,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         elevation: 0,
         child: Container(
           width: 500,
-          constraints: const BoxConstraints(
-            maxWidth: 500,
-            maxHeight: 700,
-          ),
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -997,8 +1022,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             children: [
               // Header
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF8F9FA),
                   borderRadius: const BorderRadius.vertical(
@@ -1066,76 +1093,82 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       ),
                       const SizedBox(height: 12),
                       ValueListenableBuilder<int?>(
-                          valueListenable: tempSelectedServiceId,
-                          builder: (context, selectedId, _) {
-                            // Combine "All Services" (-1) and actual services
-                            final allOptions = [
-                              {'id': -1, 'name': 'All Services'},
-                              ...services
-                                  .map((s) => {'id': s.id, 'name': s.name})
-                            ];
+                        valueListenable: tempSelectedServiceId,
+                        builder: (context, selectedId, _) {
+                          // Combine "All Services" (-1) and actual services
+                          final allOptions = [
+                            {'id': -1, 'name': 'All Services'},
+                            ...services.map(
+                              (s) => {'id': s.id, 'name': s.name},
+                            ),
+                          ];
 
-                            return Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: allOptions.map((option) {
-                                final id = option['id'] as int;
-                                final name = option['name'] as String;
-                                // Map -1 to "null" or keep logic consistent.
-                                // Here selectedServiceId stores -1 for "All" or null.
-                                // Let's assume -1 for "All".
-                                final isSelected = selectedId == id ||
-                                    (selectedId == null && id == -1);
+                          return Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: allOptions.map((option) {
+                              final id = option['id'] as int;
+                              final name = option['name'] as String;
+                              // Map -1 to "null" or keep logic consistent.
+                              // Here selectedServiceId stores -1 for "All" or null.
+                              // Let's assume -1 for "All".
+                              final isSelected =
+                                  selectedId == id ||
+                                  (selectedId == null && id == -1);
 
-                                return InkWell(
-                                  onTap: () {
-                                    tempSelectedServiceId.value = id;
-                                  },
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
-                                    decoration: BoxDecoration(
+                              return InkWell(
+                                onTap: () {
+                                  tempSelectedServiceId.value = id;
+                                },
+                                borderRadius: BorderRadius.circular(12),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? const Color(0xFF6132E4)
+                                        : Colors.grey.shade50,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
                                       color: isSelected
                                           ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade50,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? const Color(0xFF6132E4)
-                                            : Colors.grey.shade300,
-                                        width: 1.5,
-                                      ),
-                                      boxShadow: isSelected
-                                          ? [
-                                              BoxShadow(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ]
-                                          : null,
+                                          : Colors.grey.shade300,
+                                      width: 1.5,
                                     ),
-                                    child: Text(
-                                      name,
-                                      style: TextStyle(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
-                                        fontWeight: isSelected
-                                            ? FontWeight.w600
-                                            : FontWeight.w500,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                      ),
+                                    boxShadow: isSelected
+                                        ? [
+                                            BoxShadow(
+                                              color: const Color(
+                                                0xFF6132E4,
+                                              ).withOpacity(0.3),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Text(
+                                    name,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                      fontSize: 14,
+                                      fontFamily: 'Inter',
                                     ),
                                   ),
-                                );
-                              }).toList(),
-                            );
-                          }),
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
 
                       const SizedBox(height: 28),
                       const Divider(height: 1),
@@ -1186,8 +1219,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                     boxShadow: isSelected
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFF6132E4)
-                                                  .withOpacity(0.3),
+                                              color: const Color(
+                                                0xFF6132E4,
+                                              ).withOpacity(0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 4),
                                             ),
@@ -1249,20 +1283,21 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                             valueListenable: isPriceFilterEnabledWidgetNotifier,
                             builder: (context, isEnabled, child) =>
                                 Transform.scale(
-                              scale: 0.85,
-                              child: Switch(
-                                value: isEnabled,
-                                onChanged: (value) {
-                                  isPriceFilterEnabledWidgetNotifier.value =
-                                      value;
-                                },
-                                activeThumbColor: const Color(0xFF6132E4),
-                                activeTrackColor:
-                                    const Color(0xFF6132E4).withOpacity(0.3),
-                                inactiveThumbColor: Colors.grey.shade400,
-                                inactiveTrackColor: Colors.grey.shade200,
-                              ),
-                            ),
+                                  scale: 0.85,
+                                  child: Switch(
+                                    value: isEnabled,
+                                    onChanged: (value) {
+                                      isPriceFilterEnabledWidgetNotifier.value =
+                                          value;
+                                    },
+                                    activeThumbColor: const Color(0xFF6132E4),
+                                    activeTrackColor: const Color(
+                                      0xFF6132E4,
+                                    ).withOpacity(0.3),
+                                    inactiveThumbColor: Colors.grey.shade400,
+                                    inactiveTrackColor: Colors.grey.shade200,
+                                  ),
+                                ),
                           ),
                         ],
                       ),
@@ -1293,81 +1328,103 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                         const Spacer(),
                                         ValueListenableBuilder<double>(
                                           valueListenable: _maxPriceNotifier,
-                                          builder: (context, currentMaxPrice,
-                                              child) {
-                                            maxPriceController.text =
-                                                currentMaxPrice
-                                                    .toInt()
-                                                    .toString();
-                                            return Container(
-                                              width: 130,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 14,
-                                                vertical: 10,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFFF8F9FA),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: Colors.grey.shade300,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: TextField(
-                                                controller: maxPriceController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                onTapOutside: (_) {
-                                                  FocusScope.of(context)
-                                                      .unfocus();
-                                                },
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
-                                                ),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.zero,
-                                                  isDense: true,
-                                                  prefixText: '₹ ',
-                                                  prefixStyle: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Color(0xFF6132E4),
+                                          builder:
+                                              (
+                                                context,
+                                                currentMaxPrice,
+                                                child,
+                                              ) {
+                                                maxPriceController.text =
+                                                    currentMaxPrice
+                                                        .toInt()
+                                                        .toString();
+                                                return Container(
+                                                  width: 130,
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 14,
+                                                        vertical: 10,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: const Color(
+                                                      0xFFF8F9FA,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
+                                                    border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      width: 1,
+                                                    ),
                                                   ),
-                                                ),
-                                                onChanged: (value) {
-                                                  if (value.isNotEmpty) {
-                                                    final newMaxPrice =
-                                                        double.tryParse(
-                                                                value) ??
+                                                  child: TextField(
+                                                    controller:
+                                                        maxPriceController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    onTapOutside: (_) {
+                                                      FocusScope.of(
+                                                        context,
+                                                      ).unfocus();
+                                                    },
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontFamily: 'Inter',
+                                                    ),
+                                                    decoration:
+                                                        const InputDecoration(
+                                                          border:
+                                                              InputBorder.none,
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          isDense: true,
+                                                          prefixText: '₹ ',
+                                                          prefixStyle:
+                                                              TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color: Color(
+                                                                  0xFF6132E4,
+                                                                ),
+                                                              ),
+                                                        ),
+                                                    onChanged: (value) {
+                                                      if (value.isNotEmpty) {
+                                                        final newMaxPrice =
+                                                            double.tryParse(
+                                                              value,
+                                                            ) ??
                                                             currentMaxPrice;
-                                                    _maxPriceNotifier.value =
-                                                        newMaxPrice;
-                                                    if (tempPriceRange
-                                                            .value.end >
-                                                        newMaxPrice) {
-                                                      tempPriceRange.value =
-                                                          RangeValues(
-                                                              tempPriceRange
-                                                                          .value
-                                                                          .start >
-                                                                      newMaxPrice
-                                                                  ? 0
-                                                                  : tempPriceRange
+                                                        _maxPriceNotifier
+                                                                .value =
+                                                            newMaxPrice;
+                                                        if (tempPriceRange
+                                                                .value
+                                                                .end >
+                                                            newMaxPrice) {
+                                                          tempPriceRange
+                                                              .value = RangeValues(
+                                                            tempPriceRange
+                                                                        .value
+                                                                        .start >
+                                                                    newMaxPrice
+                                                                ? 0
+                                                                : tempPriceRange
                                                                       .value
                                                                       .start,
-                                                              newMaxPrice);
-                                                    }
-                                                  }
-                                                },
-                                              ),
-                                            );
-                                          },
+                                                            newMaxPrice,
+                                                          );
+                                                        }
+                                                      }
+                                                    },
+                                                  ),
+                                                );
+                                              },
                                         ),
                                       ],
                                     ),
@@ -1389,17 +1446,20 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.05),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.1),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
+                                                color: const Color(
+                                                  0xFF6132E4,
+                                                ).withOpacity(0.3),
                                               ),
                                             ),
                                             child: Text(
@@ -1414,7 +1474,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 12),
+                                              horizontal: 12,
+                                            ),
                                             child: Icon(
                                               Icons.arrow_forward,
                                               size: 18,
@@ -1429,17 +1490,20 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.05),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.1),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
+                                                color: const Color(
+                                                  0xFF6132E4,
+                                                ).withOpacity(0.3),
                                               ),
                                             ),
                                             child: Text(
@@ -1463,40 +1527,47 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                       valueListenable: tempPriceRange,
                                       builder: (context, range, child) =>
                                           ValueListenableBuilder<double>(
-                                        valueListenable: _maxPriceNotifier,
-                                        builder:
-                                            (context, currentMaxPrice, child) =>
-                                                SliderTheme(
-                                          data: SliderThemeData(
-                                            activeTrackColor:
-                                                const Color(0xFF6132E4),
-                                            inactiveTrackColor:
-                                                Colors.grey.shade200,
-                                            thumbColor: const Color(0xFF6132E4),
-                                            overlayColor:
-                                                const Color(0xFF6132E4)
-                                                    .withOpacity(0.2),
-                                            trackHeight: 4,
-                                            thumbShape:
-                                                const RoundSliderThumbShape(
-                                              enabledThumbRadius: 8,
-                                            ),
-                                            overlayShape:
-                                                const RoundSliderOverlayShape(
-                                              overlayRadius: 16,
-                                            ),
+                                            valueListenable: _maxPriceNotifier,
+                                            builder:
+                                                (
+                                                  context,
+                                                  currentMaxPrice,
+                                                  child,
+                                                ) => SliderTheme(
+                                                  data: SliderThemeData(
+                                                    activeTrackColor:
+                                                        const Color(0xFF6132E4),
+                                                    inactiveTrackColor:
+                                                        Colors.grey.shade200,
+                                                    thumbColor: const Color(
+                                                      0xFF6132E4,
+                                                    ),
+                                                    overlayColor: const Color(
+                                                      0xFF6132E4,
+                                                    ).withOpacity(0.2),
+                                                    trackHeight: 4,
+                                                    thumbShape:
+                                                        const RoundSliderThumbShape(
+                                                          enabledThumbRadius: 8,
+                                                        ),
+                                                    overlayShape:
+                                                        const RoundSliderOverlayShape(
+                                                          overlayRadius: 16,
+                                                        ),
+                                                  ),
+                                                  child: RangeSlider(
+                                                    values: range,
+                                                    min: 0,
+                                                    max: currentMaxPrice,
+                                                    divisions: 20,
+                                                    onChanged:
+                                                        (RangeValues newRange) {
+                                                          tempPriceRange.value =
+                                                              newRange;
+                                                        },
+                                                  ),
+                                                ),
                                           ),
-                                          child: RangeSlider(
-                                            values: range,
-                                            min: 0,
-                                            max: currentMaxPrice,
-                                            divisions: 20,
-                                            onChanged: (RangeValues newRange) {
-                                              tempPriceRange.value = newRange;
-                                            },
-                                          ),
-                                        ),
-                                      ),
                                     ),
 
                                     const SizedBox(height: 20),
@@ -1517,27 +1588,31 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                       valueListenable: _maxPriceNotifier,
                                       builder:
                                           (context, currentMaxPrice, child) {
-                                        final quickFilters =
-                                            _generateQuickFilters(
-                                          0,
-                                          currentMaxPrice,
-                                        );
+                                            final quickFilters =
+                                                _generateQuickFilters(
+                                                  0,
+                                                  currentMaxPrice,
+                                                );
 
-                                        return Wrap(
-                                          spacing: 8,
-                                          runSpacing: 8,
-                                          children: quickFilters
-                                              .map((filter) =>
-                                                  _buildQuickFilterChip(
-                                                    filter['label'],
-                                                    filter['range'],
-                                                    tempPriceRange,
-                                                    (val) => tempPriceRange
-                                                        .value = val,
-                                                  ))
-                                              .toList(),
-                                        );
-                                      },
+                                            return Wrap(
+                                              spacing: 8,
+                                              runSpacing: 8,
+                                              children: quickFilters
+                                                  .map(
+                                                    (
+                                                      filter,
+                                                    ) => _buildQuickFilterChip(
+                                                      filter['label'],
+                                                      filter['range'],
+                                                      tempPriceRange,
+                                                      (val) =>
+                                                          tempPriceRange.value =
+                                                              val,
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            );
+                                          },
                                     ),
                                   ],
                                 )
@@ -1568,8 +1643,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         onPressed: () {
                           tempSelectedSearchTypeIndex.value = 0;
                           tempSelectedServiceId.value = -1;
-                          tempPriceRange.value =
-                              RangeValues(0, _maxPriceNotifier.value);
+                          tempPriceRange.value = RangeValues(
+                            0,
+                            _maxPriceNotifier.value,
+                          );
                           isPriceFilterEnabledWidgetNotifier.value = false;
                         },
                         style: OutlinedButton.styleFrom(
@@ -1669,7 +1746,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   // Helper function to generate dynamic quick filters based on max price
   List<Map<String, dynamic>> _generateQuickFilters(
-      double minPrice, double maxPrice) {
+    double minPrice,
+    double maxPrice,
+  ) {
     final List<Map<String, dynamic>> filters = [];
 
     // Calculate dynamic ranges based on maxPrice
@@ -1754,46 +1833,47 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     RangeValues range,
     ValueNotifier<RangeValues> currentRange,
     void Function(RangeValues) onChanged,
-  ) =>
-      ValueListenableBuilder<RangeValues>(
-        valueListenable: currentRange,
-        builder: (context, current, child) {
-          final isSelected =
-              current.start == range.start && current.end == range.end;
+  ) => ValueListenableBuilder<RangeValues>(
+    valueListenable: currentRange,
+    builder: (context, current, child) {
+      final isSelected =
+          current.start == range.start && current.end == range.end;
 
-          return GestureDetector(
-            onTap: () {
-              currentRange.value = range;
-              onChanged(range);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade300,
-                ),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isSelected ? Colors.white : Colors.grey.shade700,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                ),
-              ),
-            ),
-          );
+      return GestureDetector(
+        onTap: () {
+          currentRange.value = range;
+          onChanged(range);
         },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFF6132E4)
+                  : Colors.grey.shade300,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isSelected ? Colors.white : Colors.grey.shade700,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+        ),
       );
+    },
+  );
 
   /// Apply product filters based on selection
   void _applyProductFilters(
-      int searchTypeIndex, RangeValues priceRange, bool isPriceEnabled) {
+    int searchTypeIndex,
+    RangeValues priceRange,
+    bool isPriceEnabled,
+  ) {
     _isPriceFilterEnabled.value = isPriceEnabled;
     final searchTerm = serviceSearchController.text.trim();
     final isSales = selectedBookingType == BookingType.sales;
@@ -1859,8 +1939,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // If "All Services" is selected, serviceId will be -1, so we pass null to API
     final serviceIdToUse =
         (selectedServiceId == null || selectedServiceId == -1)
-            ? null
-            : selectedServiceId;
+        ? null
+        : selectedServiceId;
 
     final hasFilters =
         _isPriceFilterEnabled.value || _selectedSearchTypeIndex.value != 0;
@@ -1920,8 +2000,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   void _loadProductsForService(int? serviceId) {
     final isSales = selectedBookingType == BookingType.sales;
     // If "All Services" is selected (-1), pass null to API
-    final serviceIdToUse =
-        (serviceId == null || serviceId == -1) ? null : serviceId;
+    final serviceIdToUse = (serviceId == null || serviceId == -1)
+        ? null
+        : serviceId;
 
     _selectProductBloc.add(
       SelectProductEvent.loadProducts(
@@ -1957,7 +2038,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 // Edit booking app bar
                 EditBookingAppBar(
                   onSave: _handleSaveBooking,
-                  bookingId: widget.bookingId ??
+                  bookingId:
+                      widget.bookingId ??
                       widget.bookingDetails?.id ??
                       widget.saleDetails?.id ??
                       0,
@@ -2025,8 +2107,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.arrow_back_ios,
-                      size: 14, color: Colors.grey.shade600),
+                  Icon(
+                    Icons.arrow_back_ios,
+                    size: 14,
+                    color: Colors.grey.shade600,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     'Back',
@@ -2109,17 +2194,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   Widget _buildMainContent() {
     if (selectedBookingType == BookingType.customWork) {
-      return Container(
-        child: Center(
-          child: Text('Custom Work - Coming Soon'),
-        ),
-      );
+      return Container(child: Center(child: Text('Custom Work - Coming Soon')));
     }
     // Same UI for both booking and sales
     return _buildBookingContent();
   }
 
-// BOOKING & SALES - Same UI with conditional fields
+  // BOOKING & SALES - Same UI with conditional fields
   Widget _buildBookingContent() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2137,8 +2218,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   duration: const Duration(milliseconds: 400),
                   switchInCurve: Curves.easeInOut,
                   switchOutCurve: Curves.easeInOut,
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
+                  transitionBuilder: (Widget child, Animation<double> animation) {
                     // Product search slides left, customization slides in from right
                     final offsetAnimation = Tween<Offset>(
                       begin: child.key == const ValueKey('customization')
@@ -2163,17 +2243,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                           onSaveForProduct: (product, measurements) {
                             setState(() {
                               // Find and update the specific product with measurements
-                              final index =
-                                  selectedProductsNotifier.value.indexWhere(
-                                (p) =>
-                                    p.variant.variantId ==
-                                    product.variant.variantId,
-                              );
+                              final index = selectedProductsNotifier.value
+                                  .indexWhere(
+                                    (p) =>
+                                        p.variant.variantId ==
+                                        product.variant.variantId,
+                                  );
                               if (index != -1) {
                                 final updatedProducts =
                                     List<ProductSelectedModel>.from(
-                                  selectedProductsNotifier.value,
-                                );
+                                      selectedProductsNotifier.value,
+                                    );
                                 updatedProducts[index] = product.copyWith(
                                   measurements: measurements,
                                 );
@@ -2197,10 +2277,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         const SizedBox(width: 16),
 
         // Right panel: Client, Docs, Staff
-        SizedBox(
-          width: 340,
-          child: _buildRightSidePanel(),
-        ),
+        SizedBox(width: 340, child: _buildRightSidePanel()),
       ],
     );
   }
@@ -2310,9 +2387,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               side: BorderSide(
-                                  color: Colors.grey.shade300, width: 1.5),
+                                color: Colors.grey.shade300,
+                                width: 1.5,
+                              ),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
                             child: const Text(
                               'Cancel',
@@ -2334,7 +2414,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
                             child: const Text(
                               'Switch & Discard',
@@ -2449,18 +2530,26 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             ),
             child: Row(
               children: [
-                Icon(Icons.calendar_today_outlined,
-                    size: 14, color: AppColors.purple),
+                Icon(
+                  Icons.calendar_today_outlined,
+                  size: 14,
+                  color: AppColors.purple,
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     value,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 16, color: Colors.grey.shade500),
+                Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 16,
+                  color: Colors.grey.shade500,
+                ),
               ],
             ),
           ),
@@ -2497,7 +2586,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   child: Text(
                     value,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 Icon(Icons.access_time, size: 14, color: Colors.grey.shade500),
@@ -2576,8 +2667,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     final isSales = selectedBookingType == BookingType.sales;
     final serviceIdToUse =
         (selectedServiceId == null || selectedServiceId == -1)
-            ? null
-            : selectedServiceId;
+        ? null
+        : selectedServiceId;
 
     // Extract variant IDs from currently selected products for edit mode
     final currentVariantIds = selectedProductsNotifier.value
@@ -2615,8 +2706,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     final selected = selectedProductsNotifier.value;
     if (selected.isEmpty) return;
 
-    final variantIds =
-        selected.map((p) => p.variant.variantId).whereType<int>().toList();
+    final variantIds = selected
+        .map((p) => p.variant.variantId)
+        .whereType<int>()
+        .toList();
     if (variantIds.isEmpty) return;
 
     try {
@@ -2675,15 +2768,15 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.calendar_today,
-                      size: 16, color: Colors.grey.shade600),
+                  Icon(
+                    Icons.calendar_today,
+                    size: 16,
+                    color: Colors.grey.shade600,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     pickupDate.format(),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black87,
-                    ),
+                    style: const TextStyle(fontSize: 13, color: Colors.black87),
                   ),
                 ],
               ),
@@ -2768,14 +2861,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6132E4),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 elevation: 0,
               ),
-              child: const Text('Continue',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white)),
+              child: const Text(
+                'Continue',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ],
@@ -2809,8 +2906,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 borderRadius: BorderRadius.circular(20),
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Icon(Icons.arrow_back,
-                      size: 20, color: Colors.grey.shade700),
+                  child: Icon(
+                    Icons.arrow_back,
+                    size: 20,
+                    color: Colors.grey.shade700,
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -2840,13 +2940,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   _buildStepSectionHeader('Locations', optional: true),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildSimpleTextField(
-                      startLocationController, 'Start location'),
+                    startLocationController,
+                    'Start location',
+                  ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildSimpleTextField(
-                      pickupLocationController, 'Pickup location'),
+                    pickupLocationController,
+                    'Pickup location',
+                  ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildSimpleTextField(
-                      destinationLocationController, 'Destination'),
+                    destinationLocationController,
+                    'Destination',
+                  ),
                   const SizedBox(height: _fieldSpacing),
                 ],
               );
@@ -2857,16 +2963,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           _buildStepSectionHeader('Payment details', optional: true),
           const SizedBox(height: 12),
           BookingTextFieldBuilder.buildSimpleTextField(
-              advanceAmountController, 'Advance amount',
-              isNumber: true),
+            advanceAmountController,
+            'Advance amount',
+            isNumber: true,
+          ),
           const SizedBox(height: 12),
           BookingTextFieldBuilder.buildSimpleTextField(
-              securityAmountController, 'Security amount',
-              isNumber: true),
+            securityAmountController,
+            'Security amount',
+            isNumber: true,
+          ),
           const SizedBox(height: 12),
           BookingTextFieldBuilder.buildSimpleTextField(
-              discountAmountController, 'Discount amount',
-              isNumber: true),
+            discountAmountController,
+            'Discount amount',
+            isNumber: true,
+          ),
 
           const SizedBox(height: 24),
           _buildStepSectionHeader('Payment Method'),
@@ -2898,8 +3010,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     color: const Color(0xFF6132E4).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child:
-                      const Icon(Icons.add, size: 16, color: Color(0xFF6132E4)),
+                  child: const Icon(
+                    Icons.add,
+                    size: 16,
+                    color: Color(0xFF6132E4),
+                  ),
                 ),
               ),
             ],
@@ -2911,24 +3026,33 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               if (charges.isEmpty) return const SizedBox();
               return Column(
                 children: charges
-                    .map((c) => Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Row(
-                            children: [
-                              Text(c.name ?? '',
-                                  style: const TextStyle(fontSize: 12)),
-                              const Spacer(),
-                              Text('₹${c.amount}',
-                                  style: const TextStyle(fontSize: 12)),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () => _removeCharge(c),
-                                child: Icon(Icons.close,
-                                    size: 14, color: Colors.grey.shade500),
+                    .map(
+                      (c) => Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          children: [
+                            Text(
+                              c.name ?? '',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '₹${c.amount}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            const SizedBox(width: 8),
+                            GestureDetector(
+                              onTap: () => _removeCharge(c),
+                              child: Icon(
+                                Icons.close,
+                                size: 14,
+                                color: Colors.grey.shade500,
                               ),
-                            ],
-                          ),
-                        ))
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                     .toList(),
               );
             },
@@ -2954,12 +3078,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Colors.grey.shade300),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: Text('Add customization',
-                      style:
-                          TextStyle(fontSize: 13, color: Colors.grey.shade700)),
+                  child: Text(
+                    'Add customization',
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                  ),
                 ),
               ),
             ],
@@ -2972,14 +3098,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6132E4),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              child: const Text('Save Changes',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white)),
+              child: const Text(
+                'Save Changes',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ],
@@ -3018,9 +3148,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       valueListenable: selectedProductsNotifier,
       builder: (context, products, _) {
         final productTotal = products.fold<int>(
-            0, (sum, item) => sum + (item.amount * item.quantity));
+          0,
+          (sum, item) => sum + (item.amount * item.quantity),
+        );
         final additional = additionalChargesNotifier.value.fold<double>(
-            0, (sum, item) => sum + (item.amount?.toDouble() ?? 0));
+          0,
+          (sum, item) => sum + (item.amount?.toDouble() ?? 0),
+        );
 
         final advance = double.tryParse(advanceAmountController.text) ?? 0;
         final discount = double.tryParse(discountAmountController.text) ?? 0;
@@ -3039,16 +3173,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Product total',
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF2D2D2D),
-                          fontWeight: FontWeight.w500)),
-                  Text('₹${productTotal.toCurrency()}',
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A1A1A))),
+                  const Text(
+                    'Product total',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF2D2D2D),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    '₹${productTotal.toCurrency()}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1A1A1A),
+                    ),
+                  ),
                 ],
               ),
               if (additional > 0) ...[
@@ -3056,16 +3196,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Additional charges',
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF2D2D2D),
-                            fontWeight: FontWeight.w500)),
-                    Text('₹${additional.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1A1A1A))),
+                    const Text(
+                      'Additional charges',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF2D2D2D),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '₹${additional.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1A1A1A),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -3076,32 +3222,44 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Paid',
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF2D2D2D),
-                          fontWeight: FontWeight.w500)),
-                  Text('₹${advance.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF27AE60))),
+                  const Text(
+                    'Paid',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF2D2D2D),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    '₹${advance.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF27AE60),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Total payable',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Color(0xFF1A1A1A),
-                          fontWeight: FontWeight.w600)),
-                  Text('₹${totalPayable.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFEB5757))),
+                  const Text(
+                    'Total payable',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF1A1A1A),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    '₹${totalPayable.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFEB5757),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -3131,11 +3289,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           ValueListenableBuilder<List<ProductSelectedModel>>(
             valueListenable: selectedProductsNotifier,
             builder: (context, products, _) {
-              return Text('Select Products (${products.length})',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800));
+              return Text(
+                'Select Products (${products.length})',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade800,
+                ),
+              );
             },
           ),
           const SizedBox(height: 5),
@@ -3157,8 +3318,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             border: Border.all(
-              color:
-                  isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+              color: isSelected
+                  ? const Color(0xFF6132E4)
+                  : Colors.grey.shade300,
               width: isSelected ? 1.5 : 1,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -3172,8 +3334,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               Icon(
                 icon,
                 size: 20,
-                color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+                color: isSelected
+                    ? const Color(0xFF6132E4)
+                    : Colors.grey.shade700,
               ),
               const SizedBox(width: 8),
               Text(
@@ -3230,59 +3393,83 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           listener: (context, state) {
             //Update existing products' stock from availability API
             state.maybeWhen(
-              loaded: (products, p1, p2, p3, p4, p5, isSearching, p7, p8, p9,
-                  p10, p11, p12, p13, p14) {
-                // Update stock for already selected products from fresh availability data
-                if (widget.bookingId != null && products.isNotEmpty) {
-                  final currentProducts = selectedProductsNotifier.value;
-                  final updatedProducts =
-                      currentProducts.map((selectedProduct) {
-                    for (final freshProduct in products) {
-                      final matchingVariant = freshProduct.variants.firstWhere(
-                        (v) => v.id == selectedProduct.variant.variantId,
-                        orElse: () => ProductVariantModel(
-                          id: 0,
-                          attribute: '',
-                          price: null,
-                          stock: 0,
-                          remainingStock: null,
-                        ),
-                      );
-                      if (matchingVariant.id != 0) {
-                        return selectedProduct.copyWith(
-                          variant: selectedProduct.variant.copyWith(
-                            stock: matchingVariant.stock,
-                            remainingStock: matchingVariant.remainingStock,
-                          ),
+              loaded:
+                  (
+                    products,
+                    p1,
+                    p2,
+                    p3,
+                    p4,
+                    p5,
+                    isSearching,
+                    p7,
+                    p8,
+                    p9,
+                    p10,
+                    p11,
+                    p12,
+                    p13,
+                    p14,
+                  ) {
+                    // Update stock for already selected products from fresh availability data
+                    if (widget.bookingId != null && products.isNotEmpty) {
+                      final currentProducts = selectedProductsNotifier.value;
+                      final updatedProducts = currentProducts.map((
+                        selectedProduct,
+                      ) {
+                        for (final freshProduct in products) {
+                          final matchingVariant = freshProduct.variants
+                              .firstWhere(
+                                (v) =>
+                                    v.id == selectedProduct.variant.variantId,
+                                orElse: () => ProductVariantModel(
+                                  id: 0,
+                                  attribute: '',
+                                  price: null,
+                                  stock: 0,
+                                  remainingStock: null,
+                                ),
+                              );
+                          if (matchingVariant.id != 0) {
+                            return selectedProduct.copyWith(
+                              variant: selectedProduct.variant.copyWith(
+                                stock: matchingVariant.stock,
+                                remainingStock: matchingVariant.remainingStock,
+                              ),
+                            );
+                          }
+                        }
+                        return selectedProduct;
+                      }).toList();
+                      if (updatedProducts.toString() !=
+                          currentProducts.toString()) {
+                        selectedProductsNotifier.value = updatedProducts;
+                        log(
+                          '✅ Updated stock values for ${updatedProducts.length} selected products',
                         );
                       }
                     }
-                    return selectedProduct;
-                  }).toList();
-                  if (updatedProducts.toString() !=
-                      currentProducts.toString()) {
-                    selectedProductsNotifier.value = updatedProducts;
-                    log('✅ Updated stock values for ${updatedProducts.length} selected products');
-                  }
-                }
 
-                // Reactive overlay update — show/hide overlay based on search state
-                final hasSearchText = serviceSearchController.text.isNotEmpty;
-                final hasFilters = _isPriceFilterEnabled.value ||
-                    _selectedSearchTypeIndex.value != 0;
-                final hasAnyFilter = hasSearchText || hasFilters;
+                    // Reactive overlay update — show/hide overlay based on search state
+                    final hasSearchText =
+                        serviceSearchController.text.isNotEmpty;
+                    final hasFilters =
+                        _isPriceFilterEnabled.value ||
+                        _selectedSearchTypeIndex.value != 0;
+                    final hasAnyFilter = hasSearchText || hasFilters;
 
-                if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
-                  _overlayIsLoading.value = false;
-                  _overlayProducts.value = products;
-                  if (_searchOverlayEntry == null) _showSearchOverlay();
-                } else {
-                  _removeSearchOverlay();
-                }
-              },
+                    if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
+                      _overlayIsLoading.value = false;
+                      _overlayProducts.value = products;
+                      if (_searchOverlayEntry == null) _showSearchOverlay();
+                    } else {
+                      _removeSearchOverlay();
+                    }
+                  },
               loading: () {
                 final hasQuery = serviceSearchController.text.isNotEmpty;
-                final hasFilters = _isPriceFilterEnabled.value ||
+                final hasFilters =
+                    _isPriceFilterEnabled.value ||
                     _selectedSearchTypeIndex.value != 0;
                 if (hasQuery || hasFilters) {
                   _overlayIsLoading.value = true;
@@ -3327,7 +3514,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                           prefixIcon: const Icon(Icons.search, size: 18),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 14),
+                            horizontal: 12,
+                            vertical: 14,
+                          ),
                         ),
                         onChanged: (value) {
                           _onSearchChanged();
@@ -3411,7 +3600,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                               // Header
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade50,
                                   borderRadius: const BorderRadius.only(
@@ -3471,8 +3662,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                               // Body
                               if (isLoading)
                                 Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 36),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 36,
+                                  ),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -3495,14 +3687,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                               else if (productList.isEmpty)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 32, horizontal: 16),
+                                    vertical: 32,
+                                    horizontal: 16,
+                                  ),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.search_off_rounded,
-                                          size: 48,
-                                          color: Colors.grey.shade300),
+                                      Icon(
+                                        Icons.search_off_rounded,
+                                        size: 48,
+                                        color: Colors.grey.shade300,
+                                      ),
                                       const SizedBox(height: 16),
                                       Text(
                                         'No results found',
@@ -3528,8 +3724,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                 Flexible(
                                   child: ListView.separated(
                                     shrinkWrap: true,
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
                                     itemCount: productList.length,
                                     separatorBuilder: (_, __) => Divider(
                                       height: 1,
@@ -3570,8 +3767,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   /// Add product from search with specific variant
   void _addProductFromSearchWithVariant(
-      ProductModel product, ProductVariantModel variant) {
-    log('_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}');
+    ProductModel product,
+    ProductVariantModel variant,
+  ) {
+    log(
+      '_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}',
+    );
 
     // For sales mode, use sale_price if available, otherwise fall back to rent price
     final isSales = selectedBookingType == BookingType.sales;
@@ -3581,15 +3782,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         : null;
     final price = isSales
         ? (variant.salePrice ??
-            productSalePriceInt ??
-            variant.price ??
-            product.price ??
-            0)
+              productSalePriceInt ??
+              variant.price ??
+              product.price ??
+              0)
         : (variant.price ?? product.price ?? 0);
-    log('Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)');
+    log(
+      'Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)',
+    );
 
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
 
     // Check if this variant already exists
     final existingIndex = products.indexWhere(
@@ -3617,30 +3821,33 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         return;
       }
       // Add new product with selected variant
-      final attribute =
-          variant.attribute.isEmpty ? (product.model ?? '') : variant.attribute;
+      final attribute = variant.attribute.isEmpty
+          ? (product.model ?? '')
+          : variant.attribute;
 
-      products.add(ProductSelectedModel(
-        variant: ProductInfoModel(
-          id: variant.id,
-          variantId: variant.id,
-          productId: product.id,
-          name: product.name,
-          image: product.image,
-          amount: price,
-          category: product.category,
-          color: product.color,
-          model: product.model,
-          mainServiceType: product.mainServiceType,
-          variantAttribute: attribute,
-          measurements: [],
+      products.add(
+        ProductSelectedModel(
+          variant: ProductInfoModel(
+            id: variant.id,
+            variantId: variant.id,
+            productId: product.id,
+            name: product.name,
+            image: product.image,
+            amount: price,
+            category: product.category,
+            color: product.color,
+            model: product.model,
+            mainServiceType: product.mainServiceType,
+            variantAttribute: attribute,
+            measurements: [],
+            quantity: 1,
+            stock: variant.stock,
+            remainingStock: variant.remainingStock,
+          ),
           quantity: 1,
-          stock: variant.stock,
-          remainingStock: variant.remainingStock,
+          amount: price,
         ),
-        quantity: 1,
-        amount: price,
-      ));
+      );
     }
 
     selectedProductsNotifier.value = products;
@@ -3672,8 +3879,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         .map((v) => v.attribute)
         .where((attr) => attr.isNotEmpty)
         .toList();
-    final variantText =
-        variantNames.isNotEmpty ? variantNames.join(', ') : 'No variants';
+    final variantText = variantNames.isNotEmpty
+        ? variantNames.join(', ')
+        : 'No variants';
 
     // Get price
     final price = product.price ?? 0;
@@ -3755,8 +3963,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             // Status indicator
             if (isAdded)
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.green.shade50,
                   borderRadius: BorderRadius.circular(6),
@@ -3782,8 +3992,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               GestureDetector(
                 onTap: () => _showVariantSelectionDialog(product),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF6132E4),
                     borderRadius: BorderRadius.circular(6),
@@ -3822,14 +4034,15 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       productImageUrl: product.image!,
       availableVariants: variants,
       // Pass sale_price as initialAmount so dialog pre-populates the sale price in sales mode
-      initialAmount:
-          selectedBookingType == BookingType.sales ? product.salePrice : null,
+      initialAmount: selectedBookingType == BookingType.sales
+          ? product.salePrice
+          : null,
       initialQuantity: null,
       onConfirm: (id, size, amount, quantity) {
         final attribute = size == null || size.isEmpty
             ? (variants.first.attribute.isEmpty
-                ? product.model
-                : variants.first.attribute)
+                  ? product.model
+                  : variants.first.attribute)
             : size;
 
         // Find the selected variant to get stock info
@@ -3838,38 +4051,43 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           orElse: () => variants.first,
         );
 
-        final products =
-            List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+        final products = List<ProductSelectedModel>.from(
+          selectedProductsNotifier.value,
+        );
 
-        final existingIndex =
-            products.indexWhere((p) => p.variant.variantId == id);
+        final existingIndex = products.indexWhere(
+          (p) => p.variant.variantId == id,
+        );
 
         if (existingIndex != -1) {
           final existing = products[existingIndex];
-          products[existingIndex] =
-              existing.copyWith(quantity: existing.quantity + quantity);
+          products[existingIndex] = existing.copyWith(
+            quantity: existing.quantity + quantity,
+          );
         } else {
-          products.add(ProductSelectedModel(
-            variant: ProductInfoModel(
-              id: id,
-              variantId: id,
-              productId: product.id,
-              name: product.name,
-              image: product.image,
-              amount: amount.toInt(),
-              category: product.category,
-              color: product.color,
-              model: product.model,
-              mainServiceType: product.mainServiceType,
-              variantAttribute: attribute,
-              measurements: [],
+          products.add(
+            ProductSelectedModel(
+              variant: ProductInfoModel(
+                id: id,
+                variantId: id,
+                productId: product.id,
+                name: product.name,
+                image: product.image,
+                amount: amount.toInt(),
+                category: product.category,
+                color: product.color,
+                model: product.model,
+                mainServiceType: product.mainServiceType,
+                variantAttribute: attribute,
+                measurements: [],
+                quantity: quantity,
+                stock: selectedVariant.stock,
+                remainingStock: selectedVariant.remainingStock,
+              ),
               quantity: quantity,
-              stock: selectedVariant.stock,
-              remainingStock: selectedVariant.remainingStock,
+              amount: amount.toInt(),
             ),
-            quantity: quantity,
-            amount: amount.toInt(),
-          ));
+          );
         }
 
         selectedProductsNotifier.value = products;
@@ -3932,15 +4150,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          Expanded(
-            flex: 3,
-            child: _buildHeaderCell('items', alignLeft: true),
-          ),
+          Expanded(flex: 3, child: _buildHeaderCell('items', alignLeft: true)),
           const SizedBox(width: 4),
-          Expanded(
-            flex: 2,
-            child: _buildHeaderCell('Specifications'),
-          ),
+          Expanded(flex: 2, child: _buildHeaderCell('Specifications')),
           const SizedBox(width: 4),
           if (hasVariants) ...[
             Expanded(child: _buildHeaderCell('Variants')),
@@ -4001,8 +4213,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shopping_cart_outlined,
-                      size: 48, color: Colors.grey.shade200),
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 48,
+                    color: Colors.grey.shade200,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'No items selected',
@@ -4015,10 +4230,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Select a service and click on products to add them',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade400,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                   ),
                 ],
               ),
@@ -4051,8 +4263,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Only multiply price by days for qualifying service types
     final effectiveDaysMultiplier =
         (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
-            ? (rentalDays > 0 ? rentalDays : 1)
-            : 1;
+        ? (rentalDays > 0 ? rentalDays : 1)
+        : 1;
     final hasVariants = _hasAnyProductWithVariants();
 
     return Container(
@@ -4076,7 +4288,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     borderRadius: BorderRadius.circular(6),
                     color: Colors.grey.shade100,
                     border: Border.all(color: Colors.grey.shade200),
-                    image: product.variant.image != null &&
+                    image:
+                        product.variant.image != null &&
                             product.variant.image!.isNotEmpty
                         ? DecorationImage(
                             image: NetworkImage(product.variant.image!),
@@ -4084,10 +4297,14 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                           )
                         : null,
                   ),
-                  child: product.variant.image == null ||
+                  child:
+                      product.variant.image == null ||
                           product.variant.image!.isEmpty
-                      ? const Icon(Icons.image_not_supported,
-                          size: 20, color: Colors.grey)
+                      ? const Icon(
+                          Icons.image_not_supported,
+                          size: 20,
+                          color: Colors.grey,
+                        )
                       : null,
                 ),
                 const SizedBox(width: 16),
@@ -4118,10 +4335,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   product.variant.category,
                   product.variant.model,
                 ].where((e) => e != null && e.isNotEmpty).take(2).join(', '),
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade600,
-                ),
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -4167,8 +4381,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           Expanded(
             child: Center(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 11,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0x1C1FD300),
                   borderRadius: BorderRadius.circular(3),
@@ -4205,8 +4421,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildQuantityBtn(
-                    icon: Icons.remove,
-                    onTap: () => _decrementQuantity(product)),
+                  icon: Icons.remove,
+                  onTap: () => _decrementQuantity(product),
+                ),
                 const SizedBox(width: 6),
                 Text(
                   '${product.quantity}',
@@ -4218,7 +4435,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 ),
                 const SizedBox(width: 6),
                 _buildQuantityBtn(
-                    icon: Icons.add, onTap: () => _incrementQuantity(product)),
+                  icon: Icons.add,
+                  onTap: () => _incrementQuantity(product),
+                ),
               ],
             ),
           ),
@@ -4241,15 +4460,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         ),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 0),
+                            horizontal: 8,
+                            vertical: 0,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(4),
                             borderSide: BorderSide(color: Colors.grey.shade400),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(4),
-                            borderSide:
-                                const BorderSide(color: Color(0xFF6132E4)),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF6132E4),
+                            ),
                           ),
                         ),
                         onSubmitted: (_) => _saveEditingPrice(product),
@@ -4270,8 +4492,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Icon(Icons.edit_outlined,
-                            size: 16, color: const Color(0xFF6132E4)),
+                        Icon(
+                          Icons.edit_outlined,
+                          size: 16,
+                          color: const Color(0xFF6132E4),
+                        ),
                       ],
                     ),
                   ),
@@ -4303,8 +4528,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
   }
 
-  Widget _buildQuantityBtn(
-      {required IconData icon, required VoidCallback onTap}) {
+  Widget _buildQuantityBtn({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(4),
@@ -4335,8 +4562,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       return;
     }
 
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -4350,8 +4578,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   /// Decrement quantity of a product
   void _decrementQuantity(ProductSelectedModel product) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -4395,8 +4624,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   /// Remove a product from the selected list
   void _removeProduct(ProductSelectedModel product) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     products.removeWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -4467,8 +4697,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   /// Update the price of a product
   void _updateProductPrice(ProductSelectedModel product, int newPrice) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -4589,8 +4820,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   color: const Color(0xFF6132E4).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child:
-                    const Icon(Icons.add, size: 14, color: Color(0xFF6132E4)),
+                child: const Icon(
+                  Icons.add,
+                  size: 14,
+                  color: Color(0xFF6132E4),
+                ),
               ),
             ),
           ],
@@ -4619,8 +4853,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               children: charges.map((charge) {
                 return Container(
                   margin: const EdgeInsets.only(bottom: 4),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade50,
                     borderRadius: BorderRadius.circular(8),
@@ -4650,8 +4886,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                           const SizedBox(width: 4),
                           InkWell(
                             onTap: () => _removeCharge(charge),
-                            child: Icon(Icons.close,
-                                size: 12, color: Colors.grey.shade500),
+                            child: Icon(
+                              Icons.close,
+                              size: 12,
+                              color: Colors.grey.shade500,
+                            ),
                           ),
                         ],
                       ),
@@ -4668,7 +4907,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   Widget _buildDeliveryStatusSection() {
     // Check if booking is completed or cancelled - disable editing
-    final isBookingFinalized = bookingStatus == BookingStatus.completed ||
+    final isBookingFinalized =
+        bookingStatus == BookingStatus.completed ||
         bookingStatus == BookingStatus.cancelled;
 
     return Column(
@@ -4691,24 +4931,31 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             child: DropdownButton<DeliveryStatus>(
               value: deliveryStatus,
               isExpanded: true,
-              icon: Icon(Icons.keyboard_arrow_down,
-                  size: 18,
-                  color: isBookingFinalized
-                      ? Colors.grey.shade400
-                      : Colors.grey.shade600),
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                size: 18,
+                color: isBookingFinalized
+                    ? Colors.grey.shade400
+                    : Colors.grey.shade600,
+              ),
               style: TextStyle(
                 fontSize: 13,
-                color:
-                    isBookingFinalized ? Colors.grey.shade500 : Colors.black87,
+                color: isBookingFinalized
+                    ? Colors.grey.shade500
+                    : Colors.black87,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
               ),
               items: DeliveryStatus.values
-                  .map((status) => DropdownMenuItem(
-                        value: status,
-                        child: Text(status.name,
-                            style: const TextStyle(fontSize: 12)),
-                      ))
+                  .map(
+                    (status) => DropdownMenuItem(
+                      value: status,
+                      child: Text(
+                        status.name,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  )
                   .toList(),
               onChanged: isBookingFinalized
                   ? null
@@ -4749,21 +4996,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final isSaleType = selectedBookingType == BookingType.sales;
-              final summaryRentalDays =
-                  !isSaleType ? _calculateRentalDays() : 1;
-              final productTotal = products.fold<int>(
-                0,
-                (sum, product) {
-                  // Only multiply by days for qualifying service types
-                  final daysMultiplier = (!isSaleType &&
-                          _shouldMultiplyByDays(
-                              product.variant.mainServiceType))
-                      ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-                      : 1;
-                  return sum +
-                      (product.amount * product.quantity * daysMultiplier);
-                },
-              );
+              final summaryRentalDays = !isSaleType
+                  ? _calculateRentalDays()
+                  : 1;
+              final productTotal = products.fold<int>(0, (sum, product) {
+                // Only multiply by days for qualifying service types
+                final daysMultiplier =
+                    (!isSaleType &&
+                        _shouldMultiplyByDays(product.variant.mainServiceType))
+                    ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
+                    : 1;
+                return sum +
+                    (product.amount * product.quantity * daysMultiplier);
+              });
               final additionalTotal = additionalCharges.fold<int>(
                 0,
                 (sum, charge) => sum + (charge.amount ?? 0),
@@ -4778,11 +5023,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   if (additionalTotal > 0)
                     _buildSummaryRow('Additional charges', additionalTotal),
                   if (discountAmount > 0)
-                    _buildSummaryRow('- Discount', discountAmount,
-                        isNegative: true),
+                    _buildSummaryRow(
+                      '- Discount',
+                      discountAmount,
+                      isNegative: true,
+                    ),
                   const Divider(height: 6),
-                  _buildSummaryRow('Paid', advanceAmount,
-                      valueColor: const Color(0xFF1AB000)),
+                  _buildSummaryRow(
+                    'Paid',
+                    advanceAmount,
+                    valueColor: const Color(0xFF1AB000),
+                  ),
                   _buildSummaryRow(
                     'Total payable',
                     remainingAmount > 0 ? remainingAmount : 0,
@@ -4877,8 +5128,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.check_circle,
-                      color: Color(0xFF4CAF50), size: 20),
+                  const Icon(
+                    Icons.check_circle,
+                    color: Color(0xFF4CAF50),
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
@@ -5116,26 +5370,25 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6132E4),
             ),
-            child: const Text(
-              'Add',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
 
     if (result != null) {
-      final charges =
-          List<AdditionalChargesModel>.from(additionalChargesNotifier.value);
+      final charges = List<AdditionalChargesModel>.from(
+        additionalChargesNotifier.value,
+      );
       charges.add(result);
       additionalChargesNotifier.value = charges;
     }
   }
 
   void _removeCharge(AdditionalChargesModel charge) {
-    final charges =
-        List<AdditionalChargesModel>.from(additionalChargesNotifier.value);
+    final charges = List<AdditionalChargesModel>.from(
+      additionalChargesNotifier.value,
+    );
     charges.remove(charge);
     additionalChargesNotifier.value = charges;
   }
@@ -5168,13 +5421,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         final currentDocPaths = currentDocs.map((d) => d.path).toSet();
 
         // Find removed documents (were in original but not in current)
-        final removedUrls =
-            originalDocPaths.difference(currentDocPaths).toList();
+        final removedUrls = originalDocPaths
+            .difference(currentDocPaths)
+            .toList();
 
         // Find new documents (have bytes = newly uploaded)
         final newDocs = currentDocs.where((d) => d.bytes != null).toList();
 
-        log('📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}');
+        log(
+          '📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}',
+        );
 
         await getIt<UpdateBookingPartialUseCase>()(
           widget.bookingDetails!.id,
@@ -5230,9 +5486,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     try {
@@ -5240,11 +5494,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       if (selectedBookingType == BookingType.sales) {
         // Build sales request
         final salesRequest = _buildSalesRequest();
-        log('Sales Request: ${salesRequest.toJson()}');
+        final saleRequestJson = SalesRequestModel.fromEntity(
+          salesRequest,
+        ).toJson();
+        log('Sales Request: $saleRequestJson');
 
         // Call the API to create sale
-        final saleId =
-            await getIt<CreateSaleBookingUseCase>()(salesRequest.toJson());
+        final saleId = await getIt<CreateSaleBookingUseCase>()(saleRequestJson);
 
         // Close loading dialog
         if (mounted) Navigator.of(context).pop();
@@ -5335,9 +5591,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       coolingPeriodDate: coolingPeriodDays == 0
           ? returnDate.format().appendTimeToDate(time: returnTime)
           : returnDate
-              .add(Duration(days: coolingPeriodDays))
-              .format()
-              .appendTimeToDate(time: returnTime),
+                .add(Duration(days: coolingPeriodDays))
+                .format()
+                .appendTimeToDate(time: returnTime),
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
@@ -5345,8 +5601,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       paymentMethod: paymentMethod,
       deliveryStatus: deliveryStatus,
       products: products,
-      additionalCharges:
-          additionalCharges.isNotEmpty ? additionalCharges : null,
+      additionalCharges: additionalCharges.isNotEmpty
+          ? additionalCharges
+          : null,
       description: descriptionController.text.trim().isNotEmpty
           ? descriptionController.text.trim()
           : null,
@@ -5362,13 +5619,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Build sales request for creating/updating a sale
-  SalesRequestModel _buildSalesRequest() {
+  SalesRequestEntity _buildSalesRequest() {
     final products = selectedProductsNotifier.value;
 
     // Use phone1 as client_phone
     final clientPhone = clientPhone1Controller.text.trim();
 
-    return SalesRequestModel(
+    return SalesRequestEntity(
       id: widget.saleDetails?.id,
       staffId: selectedStaffId,
       clientPhone: clientPhone.isEmpty ? null : clientPhone,
@@ -5501,8 +5758,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                           child: DropdownButton<int>(
                             value: coolingPeriodDays,
                             isExpanded: true,
-                            icon:
-                                const Icon(Icons.keyboard_arrow_down, size: 18),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 18,
+                            ),
                             style: const TextStyle(
                               fontSize: 13,
                               color: Colors.black87,
@@ -5520,8 +5779,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                                 final days = index + 1;
                                 return DropdownMenuItem(
                                   value: days,
-                                  child:
-                                      Text('$days day${days > 1 ? 's' : ''}'),
+                                  child: Text(
+                                    '$days day${days > 1 ? 's' : ''}',
+                                  ),
                                 );
                               }),
                             ],
@@ -5574,8 +5834,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             ),
             child: Row(
               children: [
-                Icon(Icons.calendar_today_outlined,
-                    size: 16, color: const Color(0xFF9A76E8)),
+                Icon(
+                  Icons.calendar_today_outlined,
+                  size: 16,
+                  color: const Color(0xFF9A76E8),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -5588,8 +5851,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     ),
                   ),
                 ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 18, color: Colors.grey.shade500),
+                Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 18,
+                  color: Colors.grey.shade500,
+                ),
               ],
             ),
           ),
@@ -5640,8 +5906,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     ),
                   ),
                 ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 18, color: Colors.grey.shade500),
+                Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 18,
+                  color: Colors.grey.shade500,
+                ),
               ],
             ),
           ),
@@ -5703,8 +5972,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         clientNameController.text = client.name;
                         clientPhone1Controller.text = client.phone1.toString();
                         if (client.phone2 != null) {
-                          clientPhone2Controller.text =
-                              client.phone2.toString();
+                          clientPhone2Controller.text = client.phone2
+                              .toString();
                         }
                         // Store selected client ID
                         selectedClientId = client.id;
@@ -5826,8 +6095,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   // Notes
                   Container(
                     height: 80,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
@@ -5883,7 +6154,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6132E4),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   elevation: 0,
                 ),
                 child: const Text(
@@ -5912,8 +6184,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle_rounded,
-                color: Colors.green, size: 64),
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Colors.green,
+              size: 64,
+            ),
             const SizedBox(height: 16),
             const Text(
               'Successful!',
@@ -5929,10 +6204,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   ? 'Sale has been successfully created.'
                   : 'Booking has been successfully created.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
             ),
             const SizedBox(height: 24),
             Row(
@@ -5951,7 +6223,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       side: BorderSide(color: Colors.grey.shade300),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: Text(
                       'Close',
@@ -5965,8 +6238,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     onPressed: () async {
                       try {
                         GlobalLoadingOverlay.show(context);
-                        final userShop =
-                            context.read<UserCubit>().state?.shopDetails;
+                        final userShop = context
+                            .read<UserCubit>()
+                            .state
+                            ?.shopDetails;
 
                         if (userShop == null) {
                           throw 'Shop details not found';
@@ -6014,8 +6289,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         GlobalLoadingOverlay.hide();
                         log('Error generating PDF: $e');
                         if (mounted) {
-                          context.showSnackBar('Failed to generate invoice: $e',
-                              isError: true);
+                          context.showSnackBar(
+                            'Failed to generate invoice: $e',
+                            isError: true,
+                          );
                         }
                       }
                     },
@@ -6023,7 +6300,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       backgroundColor: const Color(0xFF6132E4),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: Text(
                       isSale ? 'View Sale' : 'View Invoice',
@@ -6056,8 +6334,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     onTap: () => setState(() => _bookingStep = 0),
                     child: Row(
                       children: [
-                        Icon(Icons.arrow_back,
-                            size: 20, color: Colors.grey.shade700),
+                        Icon(
+                          Icons.arrow_back,
+                          size: 20,
+                          color: Colors.grey.shade700,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           'Back',
@@ -6084,20 +6365,24 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BookingTextFieldBuilder.buildSectionHeader(
-                              'Locations',
-                              optional: true),
+                            'Locations',
+                            optional: true,
+                          ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                              controller: startLocationController,
-                              hint: 'Start location'),
+                            controller: startLocationController,
+                            hint: 'Start location',
+                          ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                              controller: pickupLocationController,
-                              hint: 'Pickup location'),
+                            controller: pickupLocationController,
+                            hint: 'Pickup location',
+                          ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                              controller: destinationLocationController,
-                              hint: 'Destination'),
+                            controller: destinationLocationController,
+                            hint: 'Destination',
+                          ),
                           const SizedBox(height: 14),
                         ],
                       );
@@ -6105,8 +6390,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   ),
 
                   // Payment details
-                  BookingTextFieldBuilder.buildSectionHeader('Payment details',
-                      optional: true),
+                  BookingTextFieldBuilder.buildSectionHeader(
+                    'Payment details',
+                    optional: true,
+                  ),
                   const SizedBox(height: _fieldSpacing),
                   // Hide advance amount in edit mode
                   // BookingTextFieldBuilder.buildRightPanelTextField(
@@ -6115,14 +6402,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   //     isNumber: true),
                   // const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: securityAmountController,
-                      hint: 'Security amount',
-                      isNumber: true),
+                    controller: securityAmountController,
+                    hint: 'Security amount',
+                    isNumber: true,
+                  ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: discountAmountController,
-                      hint: 'Discount amount',
-                      isNumber: true),
+                    controller: discountAmountController,
+                    hint: 'Discount amount',
+                    isNumber: true,
+                  ),
 
                   const SizedBox(height: 14),
                   // Payment Method Selection - Hidden in edit mode
@@ -6136,7 +6425,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       Text(
                         'Additional charges',
                         style: TextStyle(
-                            fontSize: 13, color: Colors.grey.shade600),
+                          fontSize: 13,
+                          color: Colors.grey.shade600,
+                        ),
                       ),
                       InkWell(
                         onTap: _addAdditionalCharge,
@@ -6147,8 +6438,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                             color: const Color(0xFF6132E4).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Icon(Icons.add,
-                              size: 16, color: Color(0xFF6132E4)),
+                          child: const Icon(
+                            Icons.add,
+                            size: 16,
+                            color: Color(0xFF6132E4),
+                          ),
                         ),
                       ),
                     ],
@@ -6161,27 +6455,34 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       if (charges.isEmpty) return const SizedBox();
                       return Column(
                         children: charges
-                            .map((c) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(c.name ?? '',
-                                            style:
-                                                const TextStyle(fontSize: 13)),
+                            .map(
+                              (c) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        c.name ?? '',
+                                        style: const TextStyle(fontSize: 13),
                                       ),
-                                      Text('₹${c.amount}',
-                                          style: const TextStyle(fontSize: 13)),
-                                      const SizedBox(width: 8),
-                                      GestureDetector(
-                                        onTap: () => _removeCharge(c),
-                                        child: Icon(Icons.close,
-                                            size: 14,
-                                            color: Colors.grey.shade500),
+                                    ),
+                                    Text(
+                                      '₹${c.amount}',
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    GestureDetector(
+                                      onTap: () => _removeCharge(c),
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 14,
+                                        color: Colors.grey.shade500,
                                       ),
-                                    ],
-                                  ),
-                                ))
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
                             .toList(),
                       );
                     },
@@ -6233,9 +6534,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       valueListenable: selectedProductsNotifier,
       builder: (context, products, _) {
         final productTotal = products.fold<int>(
-            0, (sum, item) => sum + (item.amount * item.quantity));
+          0,
+          (sum, item) => sum + (item.amount * item.quantity),
+        );
         final additional = additionalChargesNotifier.value.fold<double>(
-            0, (sum, item) => sum + (item.amount?.toDouble() ?? 0));
+          0,
+          (sum, item) => sum + (item.amount?.toDouble() ?? 0),
+        );
 
         final advance = double.tryParse(advanceAmountController.text) ?? 0;
         final discount = double.tryParse(discountAmountController.text) ?? 0;
@@ -6255,17 +6560,28 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 children: [
                   Row(
                     children: [
-                      const Text('Product total',
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500)),
+                      const Text(
+                        'Product total',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       const SizedBox(width: 8),
-                      Icon(Icons.keyboard_arrow_down,
-                          size: 16, color: Colors.grey.shade600),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 16,
+                        color: Colors.grey.shade600,
+                      ),
                     ],
                   ),
-                  Text('₹${productTotal.toCurrency()}',
-                      style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w600)),
+                  Text(
+                    '₹${productTotal.toCurrency()}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
               if (additional > 0) ...[
@@ -6273,12 +6589,20 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Additional charges',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w500)),
-                    Text('₹${additional.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Additional charges',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '₹${additional.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -6289,28 +6613,36 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Paid',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-                  Text('₹${advance.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF27AE60))),
+                  const Text(
+                    'Paid',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '₹${advance.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF27AE60),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Total payable',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                  Text('₹${totalPayable.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFEB5757))),
+                  const Text(
+                    'Total payable',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    '₹${totalPayable.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFEB5757),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -6352,10 +6684,7 @@ class _OverlaySearchItem extends StatefulWidget {
   final ProductModel product;
   final Function(ProductVariantModel) onAddProduct;
 
-  const _OverlaySearchItem({
-    required this.product,
-    required this.onAddProduct,
-  });
+  const _OverlaySearchItem({required this.product, required this.onAddProduct});
 
   @override
   State<_OverlaySearchItem> createState() => _OverlaySearchItemState();
@@ -6375,8 +6704,9 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
     } else {
       // Also auto-select when all variants have empty attribute (single unnamed variant)
       // — no chip will render so we must pre-select to allow adding
-      final hasVisibleChip =
-          widget.product.variants.any((v) => v.attribute.isNotEmpty);
+      final hasVisibleChip = widget.product.variants.any(
+        (v) => v.attribute.isNotEmpty,
+      );
       if (!hasVisibleChip && widget.product.variants.isNotEmpty) {
         selectedVariant = widget.product.variants.first;
       } else {
@@ -6401,7 +6731,8 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
               width: 50,
               height: 40,
               color: Colors.grey.shade100,
-              child: widget.product.image != null &&
+              child:
+                  widget.product.image != null &&
                       widget.product.image!.isNotEmpty
                   ? Image.network(
                       widget.product.image!,
@@ -6412,8 +6743,11 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                         color: Colors.grey.shade400,
                       ),
                     )
-                  : Icon(Icons.image_outlined,
-                      size: 20, color: Colors.grey.shade400),
+                  : Icon(
+                      Icons.image_outlined,
+                      size: 20,
+                      color: Colors.grey.shade400,
+                    ),
             ),
           ),
           const SizedBox(width: 10),
@@ -6427,16 +6761,19 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                 Text(
                   widget.product.name,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   widget.product.color ?? 'color',
                   style: const TextStyle(
-                      color: Color(0xFF707070),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
+                    color: Color(0xFF707070),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -6446,11 +6783,7 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
 
           const SizedBox(width: 12),
           // Divider
-          Container(
-            width: 1,
-            height: 30,
-            color: const Color(0xFFA6A6A6),
-          ),
+          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
           const SizedBox(width: 12),
 
           // Variants or Details Section
@@ -6466,21 +6799,22 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                           children: variants
                               .where((v) => v.attribute.isNotEmpty)
                               .map((variant) {
-                            final isSelected =
-                                selectedVariant?.id == variant.id;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 4),
-                              child: _SelectableVariantChip(
-                                text: variant.attribute,
-                                isSelected: isSelected,
-                                onTap: () {
-                                  setState(() {
-                                    selectedVariant = variant;
-                                  });
-                                },
-                              ),
-                            );
-                          }).toList(),
+                                final isSelected =
+                                    selectedVariant?.id == variant.id;
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 4),
+                                  child: _SelectableVariantChip(
+                                    text: variant.attribute,
+                                    isSelected: isSelected,
+                                    onTap: () {
+                                      setState(() {
+                                        selectedVariant = variant;
+                                      });
+                                    },
+                                  ),
+                                );
+                              })
+                              .toList(),
                         ),
                       )
                     : const SizedBox.shrink(),
@@ -6497,7 +6831,9 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                     Text(
                       '${widget.product.mainServiceType.categoryFieldLabel}: ${widget.product.category}',
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w500),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -6505,8 +6841,10 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                       widget.product.model!.isNotEmpty)
                     Text(
                       '${widget.product.mainServiceType.secondaryAttributeLabel ?? "Model"}: ${widget.product.model}',
-                      style:
-                          TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade600,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -6526,11 +6864,7 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
 
           const SizedBox(width: 12),
           // Divider
-          Container(
-            width: 1,
-            height: 30,
-            color: const Color(0xFFA6A6A6),
-          ),
+          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
           const SizedBox(width: 12),
 
           // Price section - Fixed width (equal to button)
@@ -6543,9 +6877,10 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                 Text(
                   'rent price',
                   style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey.shade600),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
                 Text(
                   '₹$price',
@@ -6561,11 +6896,7 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
 
           const SizedBox(width: 12),
           // Divider
-          Container(
-            width: 1,
-            height: 30,
-            color: const Color(0xFFA6A6A6),
-          ),
+          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
           const SizedBox(width: 12),
           // Available Quantity section
           SizedBox(
@@ -6577,16 +6908,17 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                 Text(
                   'avl qty',
                   style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey.shade600),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
                 Text(
                   selectedVariant != null
                       ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock}'
                       : (variants.isNotEmpty
-                          ? '${variants.first.remainingStock ?? variants.first.stock}'
-                          : '0'),
+                            ? '${variants.first.remainingStock ?? variants.first.stock}'
+                            : '0'),
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -6656,8 +6988,9 @@ class _SelectableVariantChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         width: isShortText ? 33 : null,
         height: 33,
-        padding:
-            isShortText ? null : const EdgeInsets.symmetric(horizontal: 12),
+        padding: isShortText
+            ? null
+            : const EdgeInsets.symmetric(horizontal: 12),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: isShortText ? BoxShape.circle : BoxShape.rectangle,

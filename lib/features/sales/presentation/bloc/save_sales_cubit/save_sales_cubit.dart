@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/sales/domain/usecases/create_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usecase.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,12 +16,12 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
   SaveSalesCubit({
     required CreateSaleUseCase createSaleUseCase,
     required UpdateSaleUseCase updateSaleUseCase,
-  })  : _createSaleUseCase = createSaleUseCase,
-        _updateSaleUseCase = updateSaleUseCase,
-        super(const SaveSalesState.initial());
+  }) : _createSaleUseCase = createSaleUseCase,
+       _updateSaleUseCase = updateSaleUseCase,
+       super(const SaveSalesState.initial());
 
   void saveSales({
-    required SalesRequestModel salesRequest,
+    required SalesRequestEntity salesRequest,
     bool isEditMode = false,
   }) async {
     // ✅ VALIDATION FIRST
@@ -34,16 +34,12 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
 
     for (final product in products) {
       if (product.amount <= 0) {
-        emit(const SaveSalesState.failure(
-          'Product price cannot be zero',
-        ));
+        emit(const SaveSalesState.failure('Product price cannot be zero'));
         return;
       }
 
       if (product.quantity <= 0) {
-        emit(const SaveSalesState.failure(
-          'Product quantity cannot be zero',
-        ));
+        emit(const SaveSalesState.failure('Product quantity cannot be zero'));
         return;
       }
     }
@@ -54,9 +50,9 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
     );
 
     if (total <= 0) {
-      emit(const SaveSalesState.failure(
-        'Total amount must be greater than zero',
-      ));
+      emit(
+        const SaveSalesState.failure('Total amount must be greater than zero'),
+      );
       return;
     }
 

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/desktop_booking_model/desktop_booking_item_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_sales_bloc/all_sales_bloc.dart';
@@ -22,7 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
   final String?
-      initialStatusTab; // Optional: 'upcoming', 'completed', 'not_returned'
+  initialStatusTab; // Optional: 'upcoming', 'completed', 'not_returned'
 
   const AllBookingsDesktopScreen({super.key, this.initialStatusTab});
 
@@ -35,8 +35,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   int _activeActionTab = 0; // 0: Booking, 1: Sales, 2: Custom work
   String _activeStatusTab = 'upcoming'; // API status value
   final TextEditingController _searchController = TextEditingController();
-  final ValueNotifier<DateFilterModel> _dateFilterNotifier =
-      ValueNotifier(const DateFilterModel());
+  final ValueNotifier<DateFilterModel> _dateFilterNotifier = ValueNotifier(
+    const DateFilterModel(),
+  );
   final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
 
@@ -78,9 +79,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       if (_activeActionTab == 1) {
         context.read<AllSalesBloc>().add(const AllSalesEvent.loadMoreSales());
       } else {
-        context
-            .read<AllBookingBloc>()
-            .add(const AllBookingEvent.loadNextPageBookings());
+        context.read<AllBookingBloc>().add(
+          const AllBookingEvent.loadNextPageBookings(),
+        );
       }
     }
   }
@@ -105,28 +106,27 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     if (_activeActionTab == 1) {
       // Load sales data
       context.read<AllSalesBloc>().add(
-            AllSalesEvent.loadSales(
-              searchQuery: _searchController.text.trim().isEmpty
-                  ? null
-                  : _searchController.text.trim(),
-              fromDate:
-                  _dateFilterNotifier.value.startDate?.format(reverse: true),
-              toDate: _dateFilterNotifier.value.endDate?.format(reverse: true),
-            ),
-          );
+        AllSalesEvent.loadSales(
+          searchQuery: _searchController.text.trim().isEmpty
+              ? null
+              : _searchController.text.trim(),
+          fromDate: _dateFilterNotifier.value.startDate?.format(reverse: true),
+          toDate: _dateFilterNotifier.value.endDate?.format(reverse: true),
+        ),
+      );
     } else {
       // Load booking data
       // Load booking data
       context.read<AllBookingBloc>().add(
-            AllBookingEvent.loadBookings(
-              status: _activeStatusTab,
-              searchQuery: _searchController.text.trim().isEmpty
-                  ? null
-                  : _searchController.text.trim(),
-              startDate: _dateFilterNotifier.value.startDate?.format(),
-              endDate: _dateFilterNotifier.value.endDate?.format(),
-            ),
-          );
+        AllBookingEvent.loadBookings(
+          status: _activeStatusTab,
+          searchQuery: _searchController.text.trim().isEmpty
+              ? null
+              : _searchController.text.trim(),
+          startDate: _dateFilterNotifier.value.startDate?.format(),
+          endDate: _dateFilterNotifier.value.endDate?.format(),
+        ),
+      );
     }
   }
 
@@ -263,8 +263,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     index == 0
                         ? Icons.calendar_today_outlined
                         : index == 1
-                            ? Icons.shopping_cart_outlined
-                            : Icons.architecture_outlined,
+                        ? Icons.shopping_cart_outlined
+                        : Icons.architecture_outlined,
                     size: 18,
                     color: isActive ? Colors.white : Colors.grey.shade700,
                   ),
@@ -288,12 +288,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   Widget _buildFilterRow() {
     // Hide status tabs when Sales tab is active
     if (_activeActionTab == 1) {
-      return Row(
-        children: [
-          _buildSearchBar(),
-          const Spacer(),
-        ],
-      );
+      return Row(children: [_buildSearchBar(), const Spacer()]);
     }
 
     return BlocBuilder<AllBookingBloc, AllBookingState>(
@@ -355,7 +350,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: isActive
                                   ? const Color(0xFFE7E4FF)
@@ -385,7 +382,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                                 const SizedBox(width: 12),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 4, vertical: 1),
+                                    horizontal: 4,
+                                    vertical: 1,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: isActive
                                         ? const Color(0xFF8A63FE)
@@ -477,9 +476,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
           constraints: const BoxConstraints(maxWidth: 500),
           child: SingleChildScrollView(
@@ -490,11 +487,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 initialStartDate: _dateFilterNotifier.value.startDate,
                 initialEndDate: _dateFilterNotifier.value.endDate,
                 onDateFilterChanged: (startDate, endDate) {
-                  _dateFilterNotifier.value =
-                      _dateFilterNotifier.value.copyWith(
-                    startDate: startDate,
-                    endDate: endDate,
-                  );
+                  _dateFilterNotifier.value = _dateFilterNotifier.value
+                      .copyWith(startDate: startDate, endDate: endDate);
                   _loadData();
                   Navigator.pop(context);
                 },
@@ -520,14 +514,24 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               builder: (context, state) {
                 return state.maybeWhen(
                   loading: () => const Center(
-                      child:
-                          CircularProgressIndicator(color: Color(0xFF8A63FE))),
-                  loaded: (bookings, _, __, ___, ____, _____, ______, _______,
-                      ________) {
-                    if (bookings.isEmpty)
-                      return const Center(child: Text('No bookings found'));
-                    return _buildTable(bookings);
-                  },
+                    child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
+                  ),
+                  loaded:
+                      (
+                        bookings,
+                        _,
+                        __,
+                        ___,
+                        ____,
+                        _____,
+                        ______,
+                        _______,
+                        ________,
+                      ) {
+                        if (bookings.isEmpty)
+                          return const Center(child: Text('No bookings found'));
+                        return _buildTable(bookings);
+                      },
                   error: (msg) => Center(child: Text('Error: $msg')),
                   orElse: () => const SizedBox.shrink(),
                 );
@@ -556,7 +560,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     );
   }
 
-  Widget _buildSalesTable(List<SaleModel> sales) {
+  Widget _buildSalesTable(List<SaleEntity> sales) {
     return BlocBuilder<AllSalesBloc, AllSalesState>(
       builder: (context, state) {
         final isPaginating = state.maybeWhen(
@@ -594,9 +598,18 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     return BlocBuilder<AllBookingBloc, AllBookingState>(
       builder: (context, state) {
         final isPaginating = state.maybeWhen(
-          loaded: (_, __, isPaginating, ___, ____, _____, ______, _______,
-                  ________) =>
-              isPaginating,
+          loaded:
+              (
+                _,
+                __,
+                isPaginating,
+                ___,
+                ____,
+                _____,
+                ______,
+                _______,
+                ________,
+              ) => isPaginating,
           orElse: () => false,
         );
 
@@ -635,7 +648,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         decoration: BoxDecoration(
           color: const Color(0xFFF1F0FF),
           borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
         ),
         child: Row(
           children: [
@@ -735,7 +750,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFFF1F0FF),
         borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
       ),
       child: Row(
         children: [
@@ -865,8 +882,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id);
             // Fetch booking details
             context.read<BookingDetailsBloc>().add(
-                  BookingDetailsEvent.fetchBookingDetails(booking.id),
-                );
+              BookingDetailsEvent.fetchBookingDetails(booking.id),
+            );
           },
           hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
           splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
@@ -891,7 +908,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     child: Text(
                       booking.shopBookingId,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 13),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -907,7 +926,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   child: Text(
                     _formatDateWithLabel(booking.pickupDate),
                     style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w600),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -926,7 +947,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   child: Text(
                     booking.client,
                     style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w500),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -936,7 +959,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   child: Text(
                     '₹${booking.advanceAmount}',
                     style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w600),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -968,8 +993,11 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Icon(Icons.chevron_right,
-                    size: 18, color: Colors.blueAccent),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: Colors.blueAccent,
+                ),
               ],
             ),
           ),
@@ -1070,7 +1098,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     return Colors.grey.shade700;
   }
 
-  Widget _buildSalesTableRow(SaleModel sale) {
+  Widget _buildSalesTableRow(SaleEntity sale) {
     // final balance = sale.totalAmount - sale.paidAmount;
     // final paymentStatus = balance == 0;
 
@@ -1084,8 +1112,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           onTap: () {
             context.read<SalesDetailsDrawerCubit>().openDrawer(sale.id);
             context.read<SalesDetailsBloc>().add(
-                  SalesDetailsEvent.fetchSaleDetails(sale.id),
-                );
+              SalesDetailsEvent.fetchSaleDetails(sale.id),
+            );
           },
           hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
           splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
@@ -1101,7 +1129,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     sale.shopSaleId ??
                         'SL${sale.id.toString().padLeft(5, '0')}',
                     style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 13),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -1120,7 +1150,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   child: Text(
                     sale.clientPhone?.toString() ?? 'N/A',
                     style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w500),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -1161,8 +1193,11 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Icon(Icons.chevron_right,
-                    size: 18, color: Colors.blueAccent),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: Colors.blueAccent,
+                ),
               ],
             ),
           ),
@@ -1197,7 +1232,8 @@ class _DeliveryStatusDropdownState extends State<_DeliveryStatusDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveStatus = _optimisticStatus ??
+    final effectiveStatus =
+        _optimisticStatus ??
         widget.booking.deliveryStatus ??
         DeliveryStatus.booked;
 
@@ -1212,11 +1248,11 @@ class _DeliveryStatusDropdownState extends State<_DeliveryStatusDropdown> {
 
         // Update via bloc
         context.read<AllBookingBloc>().add(
-              AllBookingEvent.updateDeliveryStatus(
-                bookingId: widget.booking.id,
-                deliveryStatus: newStatus,
-              ),
-            );
+          AllBookingEvent.updateDeliveryStatus(
+            bookingId: widget.booking.id,
+            deliveryStatus: newStatus,
+          ),
+        );
       },
       itemBuilder: (context) => DeliveryStatus.values.map((s) {
         return PopupMenuItem<DeliveryStatus>(
@@ -1270,8 +1306,11 @@ class _DeliveryStatusDropdownState extends State<_DeliveryStatusDropdown> {
               ),
             ),
             const SizedBox(width: 2),
-            Icon(Icons.keyboard_arrow_down,
-                size: 12, color: effectiveStatus.color),
+            Icon(
+              Icons.keyboard_arrow_down,
+              size: 12,
+              color: effectiveStatus.color,
+            ),
           ],
         ),
       ),

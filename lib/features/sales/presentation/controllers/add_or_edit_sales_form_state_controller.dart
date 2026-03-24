@@ -2,10 +2,9 @@ import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart'
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-// import 'package:bookie_buddy_web/features/add_booking/view_model/cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,7 +58,7 @@ class AddOrEditSalesFormStateController {
     focusGuard.dispose();
   }
 
-  void setInitialValues(SaleDetailsModel saleDetails, BuildContext context) {
+  void setInitialValues(SaleDetailsEntity saleDetails, BuildContext context) {
     focusGuard.skipTraversal = true;
     saleDateController.text = saleDetails.saleDate.formatToUiDate();
 
@@ -108,9 +107,9 @@ class AddOrEditSalesFormStateController {
         .toList();
   }
 
-  SalesRequestModel? buildRequest({
+  SalesRequestEntity? buildRequest({
     required BuildContext context,
-    required SaleDetailsModel? saleDetails,
+    required SaleDetailsEntity? saleDetails,
   }) {
     if (!(formKey.currentState?.validate() ?? true)) {
       context.showSnackBar(
@@ -201,7 +200,7 @@ class AddOrEditSalesFormStateController {
         productsChanged = true;
       } else {
         for (final p in newProducts) {
-          ProductSaleInfoModel? match;
+          ProductSaleInfoEntity? match;
           for (final op in original.products) {
             if (op.id == p.variant.id && op.variantId == p.variant.variantId) {
               match = op;
@@ -237,26 +236,29 @@ class AddOrEditSalesFormStateController {
 
       // CRITICAL FIX: Always send all products when any field has changed
       // This ensures the backend receives the complete product list
-      return SalesRequestModel(
+      return SalesRequestEntity(
         id: original.id,
         saleDate: saleDateChanged ? currentSaleDate : null,
         staffId: isStaffChanged ? selectedStaff?.id : null,
-        clientPhone:
-            isClientPhoneChanged ? clientPhoneController.text.trim() : null,
+        clientPhone: isClientPhoneChanged
+            ? clientPhoneController.text.trim()
+            : null,
         address: addressChanged ? placeController.text.trim() : null,
         // Send all current products if products changed OR if any other field changed
         // This prevents partial updates that might clear products
         products: newProducts.isNotEmpty ? newProducts : null,
 
-        description:
-            descriptionChanged ? descriptionController.text.trim() : null,
+        description: descriptionChanged
+            ? descriptionController.text.trim()
+            : null,
         discountAmount: discountChanged ? discountAmount : null,
 
-        paymentMethod:
-            paymentMethodChanged ? paymentMethodNotifier.value : null,
+        paymentMethod: paymentMethodChanged
+            ? paymentMethodNotifier.value
+            : null,
       );
     }
-    return SalesRequestModel(
+    return SalesRequestEntity(
       saleDate: saleDateController.text.formatToUiDate(),
       staffId: selectedStaff?.id,
       clientPhone: clientPhoneController.text.trim(),

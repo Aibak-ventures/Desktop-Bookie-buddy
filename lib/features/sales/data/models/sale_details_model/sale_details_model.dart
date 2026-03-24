@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sale_details_model.freezed.dart';
@@ -68,4 +69,43 @@ abstract class ProductSaleInfoModel with _$ProductSaleInfoModel {
 
   factory ProductSaleInfoModel.fromJson(Map<String, dynamic> json) =>
       _$ProductSaleInfoModelFromJson(json);
+}
+
+extension SaleDetailsModelMapper on SaleDetailsModel {
+  SaleDetailsEntity toEntity() => SaleDetailsEntity(
+    id: id,
+    client: client?.toEntity(),
+    clientPhone: clientPhone,
+    address: address,
+    description: description,
+    saleDate: saleDate,
+    createdAt: createdAt,
+    totalAmount: totalAmount,
+    discountAmount: discountAmount,
+    paidAmount: paidAmount,
+    invoiceId: invoiceId,
+    balanceDueAmount: balanceDueAmount,
+    products: products.map((e) => e.toEntity()).toList(),
+    paymentMethod: paymentMethod,
+    staffId: staffId,
+    staffName: staffName,
+  );
+}
+
+extension ProductSaleInfoModelMapper on ProductSaleInfoModel {
+  ProductSaleInfoEntity toEntity() => ProductSaleInfoEntity(
+    id: id,
+    productId: productId,
+    variantId: variantId,
+    name: name,
+    variantAttribute: variantAttribute,
+    quantity: quantity,
+    price: price,
+    subtotal: subtotal,
+    image: image,
+    color: color,
+    category: category,
+    model: model,
+    mainServiceType: mainServiceType,
+  );
 }

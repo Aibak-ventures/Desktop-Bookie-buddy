@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ClientEntity {
 
- int? get id; String get name; int get phone1; int? get phone2;
+ int? get id; String get name; int get phone1; int? get phone2; String? get phone1E164; String? get phone2E164;
 /// Create a copy of ClientEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ClientEntityCopyWith<ClientEntity> get copyWith => _$ClientEntityCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.phone1E164, phone1E164) || other.phone1E164 == phone1E164)&&(identical(other.phone2E164, phone2E164) || other.phone2E164 == phone2E164));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2);
+int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2,phone1E164,phone2E164);
 
 @override
 String toString() {
-  return 'ClientEntity(id: $id, name: $name, phone1: $phone1, phone2: $phone2)';
+  return 'ClientEntity(id: $id, name: $name, phone1: $phone1, phone2: $phone2, phone1E164: $phone1E164, phone2E164: $phone2E164)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ClientEntityCopyWith<$Res>  {
   factory $ClientEntityCopyWith(ClientEntity value, $Res Function(ClientEntity) _then) = _$ClientEntityCopyWithImpl;
 @useResult
 $Res call({
- int? id, String name, int phone1, int? phone2
+ int? id, String name, int phone1, int? phone2, String? phone1E164, String? phone2E164
 });
 
 
@@ -62,13 +62,15 @@ class _$ClientEntityCopyWithImpl<$Res>
 
 /// Create a copy of ClientEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? phone1 = null,Object? phone2 = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? phone1 = null,Object? phone2 = freezed,Object? phone1E164 = freezed,Object? phone2E164 = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,phone1: null == phone1 ? _self.phone1 : phone1 // ignore: cast_nullable_to_non_nullable
 as int,phone2: freezed == phone2 ? _self.phone2 : phone2 // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,phone1E164: freezed == phone1E164 ? _self.phone1E164 : phone1E164 // ignore: cast_nullable_to_non_nullable
+as String?,phone2E164: freezed == phone2E164 ? _self.phone2E164 : phone2E164 // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -153,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  int phone1,  int? phone2)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  int phone1,  int? phone2,  String? phone1E164,  String? phone2E164)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ClientEntity() when $default != null:
-return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+return $default(_that.id,_that.name,_that.phone1,_that.phone2,_that.phone1E164,_that.phone2E164);case _:
   return orElse();
 
 }
@@ -174,10 +176,10 @@ return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  int phone1,  int? phone2)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  int phone1,  int? phone2,  String? phone1E164,  String? phone2E164)  $default,) {final _that = this;
 switch (_that) {
 case _ClientEntity():
-return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+return $default(_that.id,_that.name,_that.phone1,_that.phone2,_that.phone1E164,_that.phone2E164);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +196,10 @@ return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  int phone1,  int? phone2)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  int phone1,  int? phone2,  String? phone1E164,  String? phone2E164)?  $default,) {final _that = this;
 switch (_that) {
 case _ClientEntity() when $default != null:
-return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+return $default(_that.id,_that.name,_that.phone1,_that.phone2,_that.phone1E164,_that.phone2E164);case _:
   return null;
 
 }
@@ -209,13 +211,15 @@ return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
 
 
 class _ClientEntity implements ClientEntity {
-  const _ClientEntity({this.id, required this.name, required this.phone1, this.phone2});
+  const _ClientEntity({this.id, required this.name, required this.phone1, this.phone2, this.phone1E164, this.phone2E164});
   
 
 @override final  int? id;
 @override final  String name;
 @override final  int phone1;
 @override final  int? phone2;
+@override final  String? phone1E164;
+@override final  String? phone2E164;
 
 /// Create a copy of ClientEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +231,16 @@ _$ClientEntityCopyWith<_ClientEntity> get copyWith => __$ClientEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.phone1E164, phone1E164) || other.phone1E164 == phone1E164)&&(identical(other.phone2E164, phone2E164) || other.phone2E164 == phone2E164));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2);
+int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2,phone1E164,phone2E164);
 
 @override
 String toString() {
-  return 'ClientEntity(id: $id, name: $name, phone1: $phone1, phone2: $phone2)';
+  return 'ClientEntity(id: $id, name: $name, phone1: $phone1, phone2: $phone2, phone1E164: $phone1E164, phone2E164: $phone2E164)';
 }
 
 
@@ -247,7 +251,7 @@ abstract mixin class _$ClientEntityCopyWith<$Res> implements $ClientEntityCopyWi
   factory _$ClientEntityCopyWith(_ClientEntity value, $Res Function(_ClientEntity) _then) = __$ClientEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String name, int phone1, int? phone2
+ int? id, String name, int phone1, int? phone2, String? phone1E164, String? phone2E164
 });
 
 
@@ -264,13 +268,15 @@ class __$ClientEntityCopyWithImpl<$Res>
 
 /// Create a copy of ClientEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? phone1 = null,Object? phone2 = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? phone1 = null,Object? phone2 = freezed,Object? phone1E164 = freezed,Object? phone2E164 = freezed,}) {
   return _then(_ClientEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,phone1: null == phone1 ? _self.phone1 : phone1 // ignore: cast_nullable_to_non_nullable
 as int,phone2: freezed == phone2 ? _self.phone2 : phone2 // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,phone1E164: freezed == phone1E164 ? _self.phone1E164 : phone1E164 // ignore: cast_nullable_to_non_nullable
+as String?,phone2E164: freezed == phone2E164 ? _self.phone2E164 : phone2E164 // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

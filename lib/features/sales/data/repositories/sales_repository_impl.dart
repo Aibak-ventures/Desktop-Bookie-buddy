@@ -2,21 +2,24 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/sales/data/datasources/sales_remote_datasource.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sales_request_model/sales_request_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/sales_request_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 
 class SalesRepositoryImpl implements ISalesRepository {
   final SalesRemoteDatasource _service;
 
   SalesRepositoryImpl({required SalesRemoteDatasource service})
-      : _service = service;
+    : _service = service;
 
   @override
-  Future<PaginationModel<SaleModel>> getSalesPagination({
+  Future<PaginationModel<SaleEntity>> getSalesPagination({
     required int page,
     String? search,
     String? fromDate,
@@ -34,7 +37,7 @@ class SalesRepositoryImpl implements ISalesRepository {
       if (response.status.isSuccess) {
         return PaginationModel.fromJson(
           response.data,
-          (json) => SaleModel.fromJson(json as Map<String, dynamic>),
+          (json) => SaleModel.fromJson(json as Map<String, dynamic>).toEntity(),
         );
       }
       log('Failed to get sales pagination: ${response.devMessage}');
@@ -46,12 +49,12 @@ class SalesRepositoryImpl implements ISalesRepository {
   }
 
   @override
-  Future<SaleDetailsModel> getSaleDetails(int saleId) async {
+  Future<SaleDetailsEntity> getSaleDetails(int saleId) async {
     try {
       final response = await safeApiCall(() => _service.getSaleDetails(saleId));
 
       if (response.status.isSuccess) {
-        return SaleDetailsModel.fromJson(response.data);
+        return SaleDetailsModel.fromJson(response.data).toEntity();
       }
 
       log('Failed to get sale: ${response.devMessage}');
@@ -63,10 +66,10 @@ class SalesRepositoryImpl implements ISalesRepository {
   }
 
   @override
-  Future<void> createSale(SalesRequestModel salesRequest) async {
+  Future<void> createSale(SalesRequestEntity salesRequest) async {
     try {
       final response = await safeApiCall(
-        () => _service.createSale(salesRequest),
+        () => _service.createSale(SalesRequestModel.fromEntity(salesRequest)),
       );
 
       if (!response.status.isSuccess) {
@@ -80,14 +83,14 @@ class SalesRepositoryImpl implements ISalesRepository {
   }
 
   @override
-  Future<void> updateSale(SalesRequestModel salesRequest) async {
+  Future<void> updateSale(SalesRequestEntity salesRequest) async {
     try {
       assert(
         salesRequest.id != null,
         'Sale ID must not be null when updating a sale.',
       );
       final response = await safeApiCall(
-        () => _service.updateSale(salesRequest),
+        () => _service.updateSale(SalesRequestModel.fromEntity(salesRequest)),
       );
 
       if (!response.status.isSuccess) {
@@ -132,10 +135,7 @@ class SalesRepositoryImpl implements ISalesRepository {
   }) async {
     try {
       final response = await safeApiCall(
-        () => _service.sendInvoice(
-          saleId: saleId,
-          sendWhatsApp: sendWhatsApp,
-        ),
+        () => _service.sendInvoice(saleId: saleId, sendWhatsApp: sendWhatsApp),
       );
       if (!response.status.isSuccess) {
         log('Failed to send sale invoice: ${response.devMessage}');

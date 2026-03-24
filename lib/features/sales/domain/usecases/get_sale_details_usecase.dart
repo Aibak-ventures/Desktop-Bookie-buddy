@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 
 class GetSaleDetailsUseCase {
@@ -6,5 +6,6 @@ class GetSaleDetailsUseCase {
 
   GetSaleDetailsUseCase(this._repository);
 
-  Future<SaleDetailsModel> call(int saleId) => _repository.getSaleDetails(saleId);
+  Future<SaleDetailsEntity> call(int saleId) =>
+      _repository.getSaleDetails(saleId);
 }

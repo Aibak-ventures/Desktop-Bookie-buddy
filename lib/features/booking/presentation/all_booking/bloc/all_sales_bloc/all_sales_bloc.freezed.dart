@@ -395,7 +395,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( List<SaleModel> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( List<SaleEntity> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
@@ -418,7 +418,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( List<SaleModel> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( List<SaleEntity> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Loading():
 return loading();case _Loaded():
@@ -440,7 +440,7 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( List<SaleModel> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( List<SaleEntity> sales,  String? nextPageUrl,  String? searchQuery,  bool isPaginating,  String? fromDate,  String? toDate)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
@@ -489,11 +489,11 @@ String toString() {
 
 
 class _Loaded implements AllSalesState {
-  const _Loaded({required final  List<SaleModel> sales, this.nextPageUrl, this.searchQuery, this.isPaginating = false, this.fromDate, this.toDate}): _sales = sales;
+  const _Loaded({required final  List<SaleEntity> sales, this.nextPageUrl, this.searchQuery, this.isPaginating = false, this.fromDate, this.toDate}): _sales = sales;
   
 
- final  List<SaleModel> _sales;
- List<SaleModel> get sales {
+ final  List<SaleEntity> _sales;
+ List<SaleEntity> get sales {
   if (_sales is EqualUnmodifiableListView) return _sales;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_sales);
@@ -535,7 +535,7 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $AllSalesStateCopyWith<$R
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- List<SaleModel> sales, String? nextPageUrl, String? searchQuery, bool isPaginating, String? fromDate, String? toDate
+ List<SaleEntity> sales, String? nextPageUrl, String? searchQuery, bool isPaginating, String? fromDate, String? toDate
 });
 
 
@@ -555,7 +555,7 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? sales = null,Object? nextPageUrl = freezed,Object? searchQuery = freezed,Object? isPaginating = null,Object? fromDate = freezed,Object? toDate = freezed,}) {
   return _then(_Loaded(
 sales: null == sales ? _self._sales : sales // ignore: cast_nullable_to_non_nullable
-as List<SaleModel>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
+as List<SaleEntity>,nextPageUrl: freezed == nextPageUrl ? _self.nextPageUrl : nextPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,isPaginating: null == isPaginating ? _self.isPaginating : isPaginating // ignore: cast_nullable_to_non_nullable
 as bool,fromDate: freezed == fromDate ? _self.fromDate : fromDate // ignore: cast_nullable_to_non_nullable

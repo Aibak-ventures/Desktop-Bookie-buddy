@@ -460,7 +460,7 @@ return success(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( SaleDetailsModel sale)?  loaded,TResult Function( String message)?  error,TResult Function( String message,  bool didPop,  bool needRefresh)?  success,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( SaleDetailsEntity sale)?  loaded,TResult Function( String message)?  error,TResult Function( String message,  bool didPop,  bool needRefresh)?  success,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -485,7 +485,7 @@ return success(_that.message,_that.didPop,_that.needRefresh);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( SaleDetailsModel sale)  loaded,required TResult Function( String message)  error,required TResult Function( String message,  bool didPop,  bool needRefresh)  success,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( SaleDetailsEntity sale)  loaded,required TResult Function( String message)  error,required TResult Function( String message,  bool didPop,  bool needRefresh)  success,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -509,7 +509,7 @@ return success(_that.message,_that.didPop,_that.needRefresh);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( SaleDetailsModel sale)?  loaded,TResult? Function( String message)?  error,TResult? Function( String message,  bool didPop,  bool needRefresh)?  success,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( SaleDetailsEntity sale)?  loaded,TResult? Function( String message)?  error,TResult? Function( String message,  bool didPop,  bool needRefresh)?  success,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -595,7 +595,7 @@ class _Loaded implements SalesDetailsState {
   const _Loaded({required this.sale});
   
 
- final  SaleDetailsModel sale;
+ final  SaleDetailsEntity sale;
 
 /// Create a copy of SalesDetailsState
 /// with the given fields replaced by the non-null parameter values.
@@ -627,11 +627,11 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $SalesDetailsStateCopyWit
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- SaleDetailsModel sale
+ SaleDetailsEntity sale
 });
 
 
-$SaleDetailsModelCopyWith<$Res> get sale;
+$SaleDetailsEntityCopyWith<$Res> get sale;
 
 }
 /// @nodoc
@@ -647,7 +647,7 @@ class __$LoadedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? sale = null,}) {
   return _then(_Loaded(
 sale: null == sale ? _self.sale : sale // ignore: cast_nullable_to_non_nullable
-as SaleDetailsModel,
+as SaleDetailsEntity,
   ));
 }
 
@@ -655,9 +655,9 @@ as SaleDetailsModel,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$SaleDetailsModelCopyWith<$Res> get sale {
+$SaleDetailsEntityCopyWith<$Res> get sale {
   
-  return $SaleDetailsModelCopyWith<$Res>(_self.sale, (value) {
+  return $SaleDetailsEntityCopyWith<$Res>(_self.sale, (value) {
     return _then(_self.copyWith(sale: value));
   });
 }

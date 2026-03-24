@@ -15,10 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SalesRequestModel {
 
-@JsonKey(includeToJson: false) int? get id;@JsonKey(name: 'staff_id') int? get staffId;// @JsonKey(name: 'client_id') int? clientId,
-// @JsonKey(name: 'client_name') String? clientName,
-@JsonKey(name: 'client_phone') String? get clientPhone;// @JsonKey(name: 'client_phone_2') String? clientPhone2,
-@JsonKey(name: 'client_address') String? get address;@JsonKey(name: 'sale_date') String? get saleDate;@JsonKey(name: 'variants', toJson: _variantsToJson) List<ProductSelectedModel>? get products;@JsonKey(name: 'decrease_stock') bool? get stockCountDecrease;@JsonKey(name: 'description') String? get description;@JsonKey(name: 'discount') int? get discountAmount;@JsonKey(name: 'paid_amount') int? get paidAmount;@JsonKey(name: 'payment_method', toJson: _paymentMethodToJson) PaymentMethod? get paymentMethod;@JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false) bool get sendPdfToWhatsApp;
+@JsonKey(includeToJson: false) int? get id;@JsonKey(name: 'staff_id') int? get staffId;@JsonKey(name: 'client_phone') String? get clientPhone;@JsonKey(name: 'client_address') String? get address;@JsonKey(name: 'sale_date') String? get saleDate;@JsonKey(name: 'variants', toJson: _variantsToJson) List<ProductSelectedModel>? get products;@JsonKey(name: 'decrease_stock') bool? get stockCountDecrease;@JsonKey(name: 'description') String? get description;@JsonKey(name: 'discount') int? get discountAmount;@JsonKey(name: 'paid_amount') int? get paidAmount;@JsonKey(name: 'payment_method', toJson: _paymentMethodToJson) PaymentMethod? get paymentMethod;@JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false) bool get sendPdfToWhatsApp;
 /// Create a copy of SalesRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -228,10 +225,7 @@ class _SalesRequestModel implements SalesRequestModel {
 
 @override@JsonKey(includeToJson: false) final  int? id;
 @override@JsonKey(name: 'staff_id') final  int? staffId;
-// @JsonKey(name: 'client_id') int? clientId,
-// @JsonKey(name: 'client_name') String? clientName,
 @override@JsonKey(name: 'client_phone') final  String? clientPhone;
-// @JsonKey(name: 'client_phone_2') String? clientPhone2,
 @override@JsonKey(name: 'client_address') final  String? address;
 @override@JsonKey(name: 'sale_date') final  String? saleDate;
  final  List<ProductSelectedModel>? _products;

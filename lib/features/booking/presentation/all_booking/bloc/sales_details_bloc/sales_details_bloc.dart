@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_details_model/sale_details_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,9 +18,9 @@ class SalesDetailsBloc extends Bloc<SalesDetailsEvent, SalesDetailsState> {
   SalesDetailsBloc({
     required GetSaleDetailsUseCase getSaleDetailsUseCase,
     required DeleteSaleUseCase deleteSaleUseCase,
-  })  : _getSaleDetailsUseCase = getSaleDetailsUseCase,
-        _deleteSaleUseCase = deleteSaleUseCase,
-        super(const SalesDetailsState.initial()) {
+  }) : _getSaleDetailsUseCase = getSaleDetailsUseCase,
+       _deleteSaleUseCase = deleteSaleUseCase,
+       super(const SalesDetailsState.initial()) {
     on<_FetchSaleDetails>(_onFetchSaleDetails);
     on<_DeleteSale>(_onDeleteSale);
   }
@@ -45,11 +45,13 @@ class SalesDetailsBloc extends Bloc<SalesDetailsEvent, SalesDetailsState> {
   ) async {
     try {
       await _deleteSaleUseCase(event.saleId);
-      emit(const SalesDetailsState.success(
-        message: 'Sale deleted successfully',
-        needRefresh: true,
-        didPop: true,
-      ));
+      emit(
+        const SalesDetailsState.success(
+          message: 'Sale deleted successfully',
+          needRefresh: true,
+          didPop: true,
+        ),
+      );
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       emit(SalesDetailsState.error(e.toString()));

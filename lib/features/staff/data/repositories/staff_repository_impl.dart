@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_details_model/staff_details_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_request_model/staff_request_model.dart';
@@ -66,11 +66,13 @@ class StaffRepositoryImpl implements IStaffRepository {
   Future<StaffEntity> addStaff(StaffRequestEntity staffData) async {
     try {
       final response = await safeApiCall(
-          () => _service.addStaff(StaffRequestModel.fromEntity(staffData)));
+        () => _service.addStaff(StaffRequestModel.fromEntity(staffData)),
+      );
 
       if (response.status.isSuccess) {
-        return StaffModel.fromJson(response.data as Map<String, dynamic>)
-            .toEntity();
+        return StaffModel.fromJson(
+          response.data as Map<String, dynamic>,
+        ).toEntity();
       }
       log('Error in addStaff: ${response.devMessage}');
       throw response.message ?? 'Failed to add staff';
@@ -100,11 +102,13 @@ class StaffRepositoryImpl implements IStaffRepository {
   Future<StaffEntity> editStaff(StaffRequestEntity staffData) async {
     try {
       final response = await safeApiCall(
-          () => _service.editStaff(StaffRequestModel.fromEntity(staffData)));
+        () => _service.editStaff(StaffRequestModel.fromEntity(staffData)),
+      );
 
       if (response.status.isSuccess) {
-        return StaffModel.fromJson(response.data as Map<String, dynamic>)
-            .toEntity();
+        return StaffModel.fromJson(
+          response.data as Map<String, dynamic>,
+        ).toEntity();
       }
       log('Error in editStaff: ${response.devMessage}');
       throw response.message ?? 'Failed to edit staff';

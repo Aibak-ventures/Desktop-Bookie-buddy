@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/features/booking/domain/models/booking_model/booking_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/sale_model/sale_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_analytics_entity/staff_analytics_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_details_entity/staff_details_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';

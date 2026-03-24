@@ -35,7 +35,7 @@ import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/models/request_booking_model/request_booking_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/models/request_sales_model/request_sales_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/request_sales_model/request_sales_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/product/domain/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
@@ -47,7 +47,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Conditional import for web-specific code
-import 'web_helper_stub.dart' if (dart.library.html) 'web_helper_web.dart'
+import 'web_helper_stub.dart'
+    if (dart.library.html) 'web_helper_web.dart'
     as web_helper;
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/select_date_failure_dialog.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
@@ -101,12 +102,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   bool decreaseStockForPastDate = false; // Checkbox for past dates in sales
 
   // Products/Services
-  final selectedProductsNotifier =
-      ValueNotifier<List<ProductSelectedModel>>([]);
+  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedModel>>(
+    [],
+  );
 
   // Additional charges
-  final additionalChargesNotifier =
-      ValueNotifier<List<AdditionalChargesModel>>([]);
+  final additionalChargesNotifier = ValueNotifier<List<AdditionalChargesModel>>(
+    [],
+  );
 
   // Documents
   final documentsNotifier = ValueNotifier<List<DocumentFile>>([]);
@@ -158,7 +161,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       // Update search types based on service-specific field labels
       final categoryLabel = _currentServiceType
           .categoryFieldLabel; // e.g., "Brand" for vehicle, "Fabric Type" for material
-      final secondaryLabel = _currentServiceType.secondaryAttributeLabel ??
+      final secondaryLabel =
+          _currentServiceType.secondaryAttributeLabel ??
           'Color'; // e.g., "Model" for vehicle, "Color" for dress
 
       if (_currentServiceType.isMultiVariantProductType) {
@@ -302,32 +306,35 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final position = _searchResultsScrollController.position;
     if (position.pixels < position.maxScrollExtent - 180) return;
     _selectProductBloc.state.maybeWhen(
-      loaded: (
-        products,
-        nextPageUrl,
-        serviceId,
-        pickupDate,
-        returnDate,
-        isPaginating,
-        isSearching,
-        searchQuery,
-        searchType,
-        startPrice,
-        endPrice,
-        pickupTime,
-        returnTime,
-        useAvailableProductsApi,
-        isSales,
-      ) {
-        if (isPaginating || nextPageUrl == null) return;
-        if (isSearching) {
-          _selectProductBloc
-              .add(const SelectProductEvent.loadNextSearchResults());
-        } else {
-          _selectProductBloc
-              .add(const SelectProductEvent.loadNextPageProducts());
-        }
-      },
+      loaded:
+          (
+            products,
+            nextPageUrl,
+            serviceId,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            useAvailableProductsApi,
+            isSales,
+          ) {
+            if (isPaginating || nextPageUrl == null) return;
+            if (isSearching) {
+              _selectProductBloc.add(
+                const SelectProductEvent.loadNextSearchResults(),
+              );
+            } else {
+              _selectProductBloc.add(
+                const SelectProductEvent.loadNextPageProducts(),
+              );
+            }
+          },
       orElse: () {},
     );
   }
@@ -551,24 +558,24 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
     final currentProducts = _selectProductBloc.state.maybeWhen(
-      loaded: (
-        products,
-        nextPageUrl,
-        serviceId,
-        pickupDate,
-        returnDate,
-        isPaginating,
-        isSearching,
-        searchQuery,
-        searchType,
-        startPrice,
-        endPrice,
-        pickupTime,
-        returnTime,
-        useAvailableProductsApi,
-        isSales,
-      ) =>
-          products,
+      loaded:
+          (
+            products,
+            nextPageUrl,
+            serviceId,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            useAvailableProductsApi,
+            isSales,
+          ) => products,
       orElse: () => <ProductModel>[],
     );
 
@@ -604,11 +611,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         .toList();
 
     // Setup local state for dialog
-    final isPriceFilterEnabledWidgetNotifier =
-        ValueNotifier(_isPriceFilterEnabled.value);
+    final isPriceFilterEnabledWidgetNotifier = ValueNotifier(
+      _isPriceFilterEnabled.value,
+    );
     final tempSelectedServiceId = ValueNotifier<int?>(selectedServiceId);
-    final tempSelectedSearchTypeIndex =
-        ValueNotifier<int>(_selectedSearchTypeIndex.value);
+    final tempSelectedSearchTypeIndex = ValueNotifier<int>(
+      _selectedSearchTypeIndex.value,
+    );
     final tempPriceRange = ValueNotifier<RangeValues>(_priceRange.value);
     final tempMaxPriceNotifier = ValueNotifier<double>(_maxPriceNotifier.value);
     final maxPriceController = TextEditingController(
@@ -624,10 +633,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         elevation: 0,
         child: Container(
           width: 500,
-          constraints: const BoxConstraints(
-            maxWidth: 500,
-            maxHeight: 700,
-          ),
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -644,8 +650,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             children: [
               // Header
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF8F9FA),
                   borderRadius: const BorderRadius.vertical(
@@ -713,134 +721,142 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       ),
                       const SizedBox(height: 12),
                       ValueListenableBuilder<int?>(
-                          valueListenable: tempSelectedServiceId,
-                          builder: (context, selectedId, _) {
-                            // Combine "All Services" (-1) and actual services
-                            final allOptions = [
-                              {'id': -1, 'name': 'All Services'},
-                              ...services
-                                  .map((s) => {'id': s.id, 'name': s.name})
-                            ];
+                        valueListenable: tempSelectedServiceId,
+                        builder: (context, selectedId, _) {
+                          // Combine "All Services" (-1) and actual services
+                          final allOptions = [
+                            {'id': -1, 'name': 'All Services'},
+                            ...services.map(
+                              (s) => {'id': s.id, 'name': s.name},
+                            ),
+                          ];
 
-                            return Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: allOptions.map((option) {
-                                final id = option['id'] as int;
-                                final name = option['name'] as String;
-                                // Map -1 to "null" or keep logic consistent.
-                                // Here selectedServiceId stores -1 for "All" or null.
-                                // Let's assume -1 for "All".
-                                final isSelected = selectedId == id ||
-                                    (selectedId == null && id == -1);
+                          return Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: allOptions.map((option) {
+                              final id = option['id'] as int;
+                              final name = option['name'] as String;
+                              // Map -1 to "null" or keep logic consistent.
+                              // Here selectedServiceId stores -1 for "All" or null.
+                              // Let's assume -1 for "All".
+                              final isSelected =
+                                  selectedId == id ||
+                                  (selectedId == null && id == -1);
 
-                                return InkWell(
-                                  onTap: () {
-                                    tempSelectedServiceId.value = id;
-                                    // Update search types when service changes
-                                    if (id == -1) {
-                                      _currentServiceType = null;
+                              return InkWell(
+                                onTap: () {
+                                  tempSelectedServiceId.value = id;
+                                  // Update search types when service changes
+                                  if (id == -1) {
+                                    _currentServiceType = null;
+                                    _searchTypes = [
+                                      'Name',
+                                      'Category',
+                                      'Model',
+                                      'Color',
+                                    ];
+                                  } else {
+                                    final service = services.firstWhere(
+                                      (s) => s.id == id,
+                                      orElse: () => services.first,
+                                    );
+                                    _currentServiceType =
+                                        MainServiceType.fromString(
+                                          service.mainServiceName,
+                                        );
+
+                                    // Update search types based on service-specific field labels
+                                    final categoryLabel = _currentServiceType
+                                        .categoryFieldLabel; // e.g., "Brand" for vehicle, "Fabric Type" for material
+                                    final secondaryLabel =
+                                        _currentServiceType
+                                            .secondaryAttributeLabel ??
+                                        'Color'; // e.g., "Model" for vehicle, "Color" for dress
+
+                                    // Update search types based on whether the service has variants
+                                    if (_currentServiceType
+                                        .isMultiVariantProductType) {
+                                      // For multi-variant types: show variant-specific label
+                                      final variantLabel = _currentServiceType
+                                          .variantAttributeLabel;
                                       _searchTypes = [
                                         'Name',
-                                        'Category',
-                                        'Model',
-                                        'Color'
+                                        categoryLabel,
+                                        secondaryLabel,
+                                        variantLabel,
                                       ];
                                     } else {
-                                      final service = services.firstWhere(
-                                        (s) => s.id == id,
-                                        orElse: () => services.first,
-                                      );
-                                      _currentServiceType =
-                                          MainServiceType.fromString(
-                                              service.mainServiceName);
-
-                                      // Update search types based on service-specific field labels
-                                      final categoryLabel = _currentServiceType
-                                          .categoryFieldLabel; // e.g., "Brand" for vehicle, "Fabric Type" for material
-                                      final secondaryLabel = _currentServiceType
-                                              .secondaryAttributeLabel ??
-                                          'Color'; // e.g., "Model" for vehicle, "Color" for dress
-
-                                      // Update search types based on whether the service has variants
-                                      if (_currentServiceType
-                                          .isMultiVariantProductType) {
-                                        // For multi-variant types: show variant-specific label
-                                        final variantLabel = _currentServiceType
-                                            .variantAttributeLabel;
-                                        _searchTypes = [
-                                          'Name',
-                                          categoryLabel,
-                                          secondaryLabel,
-                                          variantLabel
-                                        ];
-                                      } else {
-                                        // For non-multi-variant types: use service-specific labels
-                                        _searchTypes = [
-                                          'Name',
-                                          categoryLabel,
-                                          secondaryLabel,
-                                          'Color'
-                                        ];
-                                      }
+                                      // For non-multi-variant types: use service-specific labels
+                                      _searchTypes = [
+                                        'Name',
+                                        categoryLabel,
+                                        secondaryLabel,
+                                        'Color',
+                                      ];
                                     }
-                                    // Reset search type index if current selection is out of bounds
-                                    if (tempSelectedSearchTypeIndex.value >=
-                                        _searchTypes.length) {
-                                      tempSelectedSearchTypeIndex.value = 0;
-                                    }
-                                    // Force UI rebuild by notifying the ValueNotifier
-                                    final currentIndex =
-                                        tempSelectedSearchTypeIndex.value;
-                                    tempSelectedSearchTypeIndex.value = -1;
-                                    tempSelectedSearchTypeIndex.value =
-                                        currentIndex;
-                                  },
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
-                                    decoration: BoxDecoration(
+                                  }
+                                  // Reset search type index if current selection is out of bounds
+                                  if (tempSelectedSearchTypeIndex.value >=
+                                      _searchTypes.length) {
+                                    tempSelectedSearchTypeIndex.value = 0;
+                                  }
+                                  // Force UI rebuild by notifying the ValueNotifier
+                                  final currentIndex =
+                                      tempSelectedSearchTypeIndex.value;
+                                  tempSelectedSearchTypeIndex.value = -1;
+                                  tempSelectedSearchTypeIndex.value =
+                                      currentIndex;
+                                },
+                                borderRadius: BorderRadius.circular(12),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? const Color(0xFF6132E4)
+                                        : Colors.grey.shade50,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
                                       color: isSelected
                                           ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade50,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? const Color(0xFF6132E4)
-                                            : Colors.grey.shade300,
-                                        width: 1.5,
-                                      ),
-                                      boxShadow: isSelected
-                                          ? [
-                                              BoxShadow(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ]
-                                          : null,
+                                          : Colors.grey.shade300,
+                                      width: 1.5,
                                     ),
-                                    child: Text(
-                                      name,
-                                      style: TextStyle(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.grey.shade700,
-                                        fontWeight: isSelected
-                                            ? FontWeight.w600
-                                            : FontWeight.w500,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                      ),
+                                    boxShadow: isSelected
+                                        ? [
+                                            BoxShadow(
+                                              color: const Color(
+                                                0xFF6132E4,
+                                              ).withOpacity(0.3),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Text(
+                                    name,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                      fontSize: 14,
+                                      fontFamily: 'Inter',
                                     ),
                                   ),
-                                );
-                              }).toList(),
-                            );
-                          }),
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
 
                       const SizedBox(height: 28),
                       const Divider(height: 1),
@@ -891,8 +907,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                     boxShadow: isSelected
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFF6132E4)
-                                                  .withOpacity(0.3),
+                                              color: const Color(
+                                                0xFF6132E4,
+                                              ).withOpacity(0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 4),
                                             ),
@@ -953,20 +970,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             valueListenable: isPriceFilterEnabledWidgetNotifier,
                             builder: (context, isEnabled, child) =>
                                 Transform.scale(
-                              scale: 0.85,
-                              child: Switch(
-                                value: isEnabled,
-                                onChanged: (value) {
-                                  isPriceFilterEnabledWidgetNotifier.value =
-                                      value;
-                                },
-                                activeThumbColor: const Color(0xFF6132E4),
-                                activeTrackColor:
-                                    const Color(0xFF6132E4).withOpacity(0.3),
-                                inactiveThumbColor: Colors.grey.shade400,
-                                inactiveTrackColor: Colors.grey.shade200,
-                              ),
-                            ),
+                                  scale: 0.85,
+                                  child: Switch(
+                                    value: isEnabled,
+                                    onChanged: (value) {
+                                      isPriceFilterEnabledWidgetNotifier.value =
+                                          value;
+                                    },
+                                    activeThumbColor: const Color(0xFF6132E4),
+                                    activeTrackColor: const Color(
+                                      0xFF6132E4,
+                                    ).withOpacity(0.3),
+                                    inactiveThumbColor: Colors.grey.shade400,
+                                    inactiveTrackColor: Colors.grey.shade200,
+                                  ),
+                                ),
                           ),
                         ],
                       ),
@@ -1003,8 +1021,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                           ),
                                           decoration: BoxDecoration(
                                             color: const Color(0xFFF8F9FA),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             border: Border.all(
                                               color: Colors.grey.shade300,
                                               width: 1,
@@ -1042,14 +1061,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                                       newMaxPrice) {
                                                     tempPriceRange.value =
                                                         RangeValues(
-                                                            tempPriceRange.value
-                                                                        .start >
-                                                                    newMaxPrice
-                                                                ? 0
-                                                                : tempPriceRange
+                                                          tempPriceRange
+                                                                      .value
+                                                                      .start >
+                                                                  newMaxPrice
+                                                              ? 0
+                                                              : tempPriceRange
                                                                     .value
                                                                     .start,
-                                                            newMaxPrice);
+                                                          newMaxPrice,
+                                                        );
                                                   }
                                                 }
                                               }
@@ -1076,17 +1097,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.05),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.1),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
+                                                color: const Color(
+                                                  0xFF6132E4,
+                                                ).withOpacity(0.3),
                                               ),
                                             ),
                                             child: Text(
@@ -1101,7 +1125,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 12),
+                                              horizontal: 12,
+                                            ),
                                             child: Icon(
                                               Icons.arrow_forward,
                                               size: 18,
@@ -1116,17 +1141,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 colors: [
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.1),
-                                                  const Color(0xFF6132E4)
-                                                      .withOpacity(0.05),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.1),
+                                                  const Color(
+                                                    0xFF6132E4,
+                                                  ).withOpacity(0.05),
                                                 ],
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: const Color(0xFF6132E4)
-                                                    .withOpacity(0.3),
+                                                color: const Color(
+                                                  0xFF6132E4,
+                                                ).withOpacity(0.3),
                                               ),
                                             ),
                                             child: Text(
@@ -1150,40 +1178,48 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                       valueListenable: tempPriceRange,
                                       builder: (context, range, child) =>
                                           ValueListenableBuilder<double>(
-                                        valueListenable: tempMaxPriceNotifier,
-                                        builder:
-                                            (context, currentMaxPrice, child) =>
-                                                SliderTheme(
-                                          data: SliderThemeData(
-                                            activeTrackColor:
-                                                const Color(0xFF6132E4),
-                                            inactiveTrackColor:
-                                                Colors.grey.shade200,
-                                            thumbColor: const Color(0xFF6132E4),
-                                            overlayColor:
-                                                const Color(0xFF6132E4)
-                                                    .withOpacity(0.2),
-                                            trackHeight: 4,
-                                            thumbShape:
-                                                const RoundSliderThumbShape(
-                                              enabledThumbRadius: 8,
-                                            ),
-                                            overlayShape:
-                                                const RoundSliderOverlayShape(
-                                              overlayRadius: 16,
-                                            ),
+                                            valueListenable:
+                                                tempMaxPriceNotifier,
+                                            builder:
+                                                (
+                                                  context,
+                                                  currentMaxPrice,
+                                                  child,
+                                                ) => SliderTheme(
+                                                  data: SliderThemeData(
+                                                    activeTrackColor:
+                                                        const Color(0xFF6132E4),
+                                                    inactiveTrackColor:
+                                                        Colors.grey.shade200,
+                                                    thumbColor: const Color(
+                                                      0xFF6132E4,
+                                                    ),
+                                                    overlayColor: const Color(
+                                                      0xFF6132E4,
+                                                    ).withOpacity(0.2),
+                                                    trackHeight: 4,
+                                                    thumbShape:
+                                                        const RoundSliderThumbShape(
+                                                          enabledThumbRadius: 8,
+                                                        ),
+                                                    overlayShape:
+                                                        const RoundSliderOverlayShape(
+                                                          overlayRadius: 16,
+                                                        ),
+                                                  ),
+                                                  child: RangeSlider(
+                                                    values: range,
+                                                    min: 0,
+                                                    max: currentMaxPrice,
+                                                    divisions: 20,
+                                                    onChanged:
+                                                        (RangeValues newRange) {
+                                                          tempPriceRange.value =
+                                                              newRange;
+                                                        },
+                                                  ),
+                                                ),
                                           ),
-                                          child: RangeSlider(
-                                            values: range,
-                                            min: 0,
-                                            max: currentMaxPrice,
-                                            divisions: 20,
-                                            onChanged: (RangeValues newRange) {
-                                              tempPriceRange.value = newRange;
-                                            },
-                                          ),
-                                        ),
-                                      ),
                                     ),
 
                                     const SizedBox(height: 20),
@@ -1204,27 +1240,31 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                       valueListenable: tempMaxPriceNotifier,
                                       builder:
                                           (context, currentMaxPrice, child) {
-                                        final quickFilters =
-                                            _generateQuickFilters(
-                                          0,
-                                          currentMaxPrice,
-                                        );
+                                            final quickFilters =
+                                                _generateQuickFilters(
+                                                  0,
+                                                  currentMaxPrice,
+                                                );
 
-                                        return Wrap(
-                                          spacing: 8,
-                                          runSpacing: 8,
-                                          children: quickFilters
-                                              .map((filter) =>
-                                                  _buildQuickFilterChip(
-                                                    filter['label'],
-                                                    filter['range'],
-                                                    tempPriceRange,
-                                                    (val) => tempPriceRange
-                                                        .value = val,
-                                                  ))
-                                              .toList(),
-                                        );
-                                      },
+                                            return Wrap(
+                                              spacing: 8,
+                                              runSpacing: 8,
+                                              children: quickFilters
+                                                  .map(
+                                                    (
+                                                      filter,
+                                                    ) => _buildQuickFilterChip(
+                                                      filter['label'],
+                                                      filter['range'],
+                                                      tempPriceRange,
+                                                      (val) =>
+                                                          tempPriceRange.value =
+                                                              val,
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            );
+                                          },
                                     ),
                                   ],
                                 )
@@ -1256,10 +1296,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           tempSelectedSearchTypeIndex.value = 0;
                           tempSelectedServiceId.value = -1;
                           tempMaxPriceNotifier.value = _maxPriceNotifier.value;
-                          maxPriceController.text =
-                              _maxPriceNotifier.value.toInt().toString();
-                          tempPriceRange.value =
-                              RangeValues(0, tempMaxPriceNotifier.value);
+                          maxPriceController.text = _maxPriceNotifier.value
+                              .toInt()
+                              .toString();
+                          tempPriceRange.value = RangeValues(
+                            0,
+                            tempMaxPriceNotifier.value,
+                          );
                           isPriceFilterEnabledWidgetNotifier.value = false;
                         },
                         style: OutlinedButton.styleFrom(
@@ -1363,7 +1406,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // Helper function to generate dynamic quick filters based on max price
   List<Map<String, dynamic>> _generateQuickFilters(
-      double minPrice, double maxPrice) {
+    double minPrice,
+    double maxPrice,
+  ) {
     final List<Map<String, dynamic>> filters = [];
 
     // Calculate dynamic ranges based on maxPrice
@@ -1448,46 +1493,47 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     RangeValues range,
     ValueNotifier<RangeValues> currentRange,
     void Function(RangeValues) onChanged,
-  ) =>
-      ValueListenableBuilder<RangeValues>(
-        valueListenable: currentRange,
-        builder: (context, current, child) {
-          final isSelected =
-              current.start == range.start && current.end == range.end;
+  ) => ValueListenableBuilder<RangeValues>(
+    valueListenable: currentRange,
+    builder: (context, current, child) {
+      final isSelected =
+          current.start == range.start && current.end == range.end;
 
-          return GestureDetector(
-            onTap: () {
-              currentRange.value = range;
-              onChanged(range);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade300,
-                ),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isSelected ? Colors.white : Colors.grey.shade700,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                ),
-              ),
-            ),
-          );
+      return GestureDetector(
+        onTap: () {
+          currentRange.value = range;
+          onChanged(range);
         },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFF6132E4)
+                  : Colors.grey.shade300,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isSelected ? Colors.white : Colors.grey.shade700,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+        ),
       );
+    },
+  );
 
   /// Apply product filters based on selection
   void _applyProductFilters(
-      int searchTypeIndex, RangeValues priceRange, bool isPriceEnabled) {
+    int searchTypeIndex,
+    RangeValues priceRange,
+    bool isPriceEnabled,
+  ) {
     _isPriceFilterEnabled.value = isPriceEnabled;
     final searchTerm = serviceSearchController.text.trim().toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
@@ -1569,21 +1615,24 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _onSearchChanged([String? newValue]) {
     // Allow search even if selectedServiceId is null (All Services)
-    final query =
-        (newValue ?? serviceSearchController.text).trim().toLowerCase();
+    final query = (newValue ?? serviceSearchController.text)
+        .trim()
+        .toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
     // If "All Services" is selected, serviceId will be -1, so we pass null to API
     final serviceIdToUse =
         (selectedServiceId == null || selectedServiceId == -1)
-            ? null
-            : selectedServiceId;
+        ? null
+        : selectedServiceId;
 
     final hasSearchQuery = query.isNotEmpty;
     final hasPriceFilter = _isPriceFilterEnabled.value;
     final hasAnyFilter = hasSearchQuery || hasPriceFilter;
 
     // Debug log to trace search behavior
-    log('_onSearchChanged -> query: "$query", hasSearchQuery: $hasSearchQuery, hasPriceFilter: $hasPriceFilter, searchTypeIndex: ${_selectedSearchTypeIndex.value}, hasAnyFilter: $hasAnyFilter');
+    log(
+      '_onSearchChanged -> query: "$query", hasSearchQuery: $hasSearchQuery, hasPriceFilter: $hasPriceFilter, searchTypeIndex: ${_selectedSearchTypeIndex.value}, hasAnyFilter: $hasAnyFilter',
+    );
 
     if (!hasAnyFilter) {
       _selectProductBloc.add(
@@ -1738,8 +1787,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _loadProductsForService(int? serviceId) {
     final isSales = selectedBookingType == BookingType.sales;
     // If "All Services" is selected (-1), pass null to API
-    final serviceIdToUse =
-        (serviceId == null || serviceId == -1) ? null : serviceId;
+    final serviceIdToUse = (serviceId == null || serviceId == -1)
+        ? null
+        : serviceId;
 
     // For booking mode only, add cooling period; sales and old booking use actual return date
     final effectiveReturnDate = selectedBookingType == BookingType.booking
@@ -1770,24 +1820,24 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // Get products from current bloc state if available
     final currentProducts = _selectProductBloc.state.maybeWhen(
-      loaded: (
-        products,
-        nextPageUrl,
-        serviceId,
-        pickupDate,
-        returnDate,
-        isPaginating,
-        isSearching,
-        searchQuery,
-        searchType,
-        startPrice,
-        endPrice,
-        pickupTime,
-        returnTime,
-        useAvailableProductsApi,
-        isSales,
-      ) =>
-          products,
+      loaded:
+          (
+            products,
+            nextPageUrl,
+            serviceId,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            useAvailableProductsApi,
+            isSales,
+          ) => products,
       orElse: () => <ProductModel>[],
     );
 
@@ -1798,8 +1848,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       final color = p.color?.toLowerCase() ?? '';
       final category = p.category?.toLowerCase() ?? '';
       final model = p.model?.toLowerCase() ?? '';
-      final variantMatch =
-          p.variants.any((v) => v.attribute.toLowerCase().contains(q));
+      final variantMatch = p.variants.any(
+        (v) => v.attribute.toLowerCase().contains(q),
+      );
 
       // Default to name + variant attribute
       return name.contains(q) ||
@@ -1826,12 +1877,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final selected = selectedProductsNotifier.value;
     if (selected.isEmpty) return;
 
-    final variantIds =
-        selected.map((p) => p.variant.variantId).whereType<int>().toList();
+    final variantIds = selected
+        .map((p) => p.variant.variantId)
+        .whereType<int>()
+        .toList();
     if (variantIds.isEmpty) return;
 
-    final effectiveReturnDate =
-        returnDate.add(Duration(days: coolingPeriodDays)).format();
+    final effectiveReturnDate = returnDate
+        .add(Duration(days: coolingPeriodDays))
+        .format();
 
     try {
       final notFoundIds = await getIt<CheckVariantAvailabilityUseCase>()(
@@ -1984,11 +2038,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   Widget _buildMainContent() {
     if (selectedBookingType == BookingType.customWork) {
-      return Container(
-        child: Center(
-          child: Text('Custom Work - Coming Soon'),
-        ),
-      );
+      return Container(child: Center(child: Text('Custom Work - Coming Soon')));
     }
     if (selectedBookingType == BookingType.oldBooking) {
       return _buildOldBookingContent();
@@ -1997,7 +2047,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return _buildBookingContent();
   }
 
-// BOOKING & SALES - Same UI with conditional fields
+  // BOOKING & SALES - Same UI with conditional fields
   Widget _buildBookingContent() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2015,8 +2065,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   duration: const Duration(milliseconds: 400),
                   switchInCurve: Curves.easeInOut,
                   switchOutCurve: Curves.easeInOut,
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
+                  transitionBuilder: (Widget child, Animation<double> animation) {
                     // Product search slides left, customization slides in from right
                     final offsetAnimation = Tween<Offset>(
                       begin: child.key == const ValueKey('customization')
@@ -2041,17 +2090,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           onSaveForProduct: (product, measurements) {
                             setState(() {
                               // Find and update the specific product with measurements
-                              final index =
-                                  selectedProductsNotifier.value.indexWhere(
-                                (p) =>
-                                    p.variant.variantId ==
-                                    product.variant.variantId,
-                              );
+                              final index = selectedProductsNotifier.value
+                                  .indexWhere(
+                                    (p) =>
+                                        p.variant.variantId ==
+                                        product.variant.variantId,
+                                  );
                               if (index != -1) {
                                 final updatedProducts =
                                     List<ProductSelectedModel>.from(
-                                  selectedProductsNotifier.value,
-                                );
+                                      selectedProductsNotifier.value,
+                                    );
                                 updatedProducts[index] = product.copyWith(
                                   measurements: measurements,
                                 );
@@ -2083,10 +2132,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         const SizedBox(width: 16),
 
         // Right panel: Client, Docs, Staff
-        SizedBox(
-          width: 340,
-          child: _buildRightSidePanel(),
-        ),
+        SizedBox(width: 340, child: _buildRightSidePanel()),
       ],
     );
   }
@@ -2149,8 +2195,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       // RETURN DATE PICKER
       // CRITICAL: Must be today or future, never in the past
       final today = DateTime.now().dateOnly;
-      final minReturnDate =
-          pickupDate.dateOnly.isAfter(today) ? pickupDate.dateOnly : today;
+      final minReturnDate = pickupDate.dateOnly.isAfter(today)
+          ? pickupDate.dateOnly
+          : today;
 
       final picked = await showDatePicker(
         context: context,
@@ -2223,7 +2270,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               returnTime = null; // Clear invalid return time
             });
             _showTimeError(
-                'Return time has been cleared as it was before the new pickup time');
+              'Return time has been cleared as it was before the new pickup time',
+            );
           }
         }
 
@@ -2265,7 +2313,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Helper: Check if return time is after pickup time
   bool _isReturnTimeAfterPickupTime(
-      TimeOfDay pickupTime, TimeOfDay returnTime) {
+    TimeOfDay pickupTime,
+    TimeOfDay returnTime,
+  ) {
     final pickupMinutes = pickupTime.hour * 60 + pickupTime.minute;
     final returnMinutes = returnTime.hour * 60 + returnTime.minute;
     return returnMinutes > pickupMinutes;
@@ -2282,7 +2332,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final userCubit = context.read<UserCubit>();
     final coolingDuration =
         userCubit.state?.shopSettings.coolingPeriodDuration ?? 0;
-    final coolingMode = userCubit.state?.shopSettings.coolingPeriodMode ??
+    final coolingMode =
+        userCubit.state?.shopSettings.coolingPeriodMode ??
         CoolingPeriodMode.after;
 
     if (coolingDuration > 0) {
@@ -2295,8 +2346,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           coolingPeriodDate = returnDate.add(Duration(days: coolingDuration));
         } else {
           // TC-03: Before mode - cooling ends before pickup
-          coolingPeriodDate =
-              pickupDate.subtract(Duration(days: coolingDuration));
+          coolingPeriodDate = pickupDate.subtract(
+            Duration(days: coolingDuration),
+          );
         }
       });
     }
@@ -2308,7 +2360,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final userCubit = context.read<UserCubit>();
     final coolingDuration =
         userCubit.state?.shopSettings.coolingPeriodDuration ?? 0;
-    final coolingMode = userCubit.state?.shopSettings.coolingPeriodMode ??
+    final coolingMode =
+        userCubit.state?.shopSettings.coolingPeriodMode ??
         CoolingPeriodMode.after;
 
     if (coolingDuration > 0) {
@@ -2320,8 +2373,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         } else {
           // TC-15: Before mode (Preparation) - cooling ends before pickup
           // Formula: Cooling Date = Pickup Date - Duration
-          coolingPeriodDate =
-              pickupDate.subtract(Duration(days: coolingDuration));
+          coolingPeriodDate = pickupDate.subtract(
+            Duration(days: coolingDuration),
+          );
         }
       });
     }
@@ -2350,11 +2404,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               ValueListenableBuilder<List<ProductSelectedModel>>(
                 valueListenable: selectedProductsNotifier,
                 builder: (context, products, _) {
-                  return Text('Select Products (${products.length})',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey.shade800));
+                  return Text(
+                    'Select Products (${products.length})',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade800,
+                    ),
+                  );
                 },
               ),
               //TODO: could't find the _openProductSelection method when copying code, need attention.
@@ -2413,8 +2470,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             border: Border.all(
-              color:
-                  isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+              color: isSelected
+                  ? const Color(0xFF6132E4)
+                  : Colors.grey.shade300,
               width: isSelected ? 1.5 : 1,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -2428,8 +2486,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               Icon(
                 icon,
                 size: 20,
-                color:
-                    isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+                color: isSelected
+                    ? const Color(0xFF6132E4)
+                    : Colors.grey.shade700,
               ),
               const SizedBox(width: 8),
               Text(
@@ -2485,7 +2544,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           bloc: _selectProductBloc,
           listener: (context, state) {
             final hasQuery = serviceSearchController.text.isNotEmpty;
-            final hasFilters = _isPriceFilterEnabled.value ||
+            final hasFilters =
+                _isPriceFilterEnabled.value ||
                 _selectedSearchTypeIndex.value != 0;
             final hasAnyFilter = hasQuery || hasFilters;
 
@@ -2500,18 +2560,34 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   }
                 }
               },
-              loaded: (products, p1, p2, p3, p4, p5, isSearching, p7, p8, p9,
-                  p10, p11, p12, p13, p14) {
-                if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
-                  _overlayIsLoading.value = false;
-                  _overlayProducts.value = products;
-                  if (_searchOverlayEntry == null) {
-                    _showSearchOverlay();
-                  }
-                } else {
-                  _removeSearchOverlay();
-                }
-              },
+              loaded:
+                  (
+                    products,
+                    p1,
+                    p2,
+                    p3,
+                    p4,
+                    p5,
+                    isSearching,
+                    p7,
+                    p8,
+                    p9,
+                    p10,
+                    p11,
+                    p12,
+                    p13,
+                    p14,
+                  ) {
+                    if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
+                      _overlayIsLoading.value = false;
+                      _overlayProducts.value = products;
+                      if (_searchOverlayEntry == null) {
+                        _showSearchOverlay();
+                      }
+                    } else {
+                      _removeSearchOverlay();
+                    }
+                  },
               error: (_) {
                 _overlayIsLoading.value = false;
                 _overlayProducts.value = [];
@@ -2577,12 +2653,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                     fontFamily: 'Inter',
                                     color: Color(0xFF8C8C8C),
                                   ),
-                                  prefixIcon:
-                                      const Icon(Icons.search, size: 18),
+                                  prefixIcon: const Icon(
+                                    Icons.search,
+                                    size: 18,
+                                  ),
                                   suffixIcon: filterText != null
                                       ? Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8),
+                                          padding: const EdgeInsets.only(
+                                            right: 8,
+                                          ),
                                           child: Chip(
                                             label: Text(
                                               filterText,
@@ -2592,11 +2671,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                                 color: Color(0xFF6132E4),
                                               ),
                                             ),
-                                            backgroundColor:
-                                                const Color(0xFF6132E4)
-                                                    .withOpacity(0.1),
+                                            backgroundColor: const Color(
+                                              0xFF6132E4,
+                                            ).withOpacity(0.1),
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 4),
+                                              horizontal: 4,
+                                            ),
                                             materialTapTargetSize:
                                                 MaterialTapTargetSize
                                                     .shrinkWrap,
@@ -2605,7 +2685,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                       : null,
                                   border: InputBorder.none,
                                   contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 14),
+                                    horizontal: 12,
+                                    vertical: 14,
+                                  ),
                                 ),
                                 onChanged: (value) {
                                   _onSearchChanged(value);
@@ -2617,15 +2699,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                       _showLocalFilteredResults(value.trim());
                                     }
                                     // Immediate dispatch to ensure backend receives search_value
-                                    final queryValue =
-                                        value.trim().toLowerCase();
-                                    final isSales = selectedBookingType ==
+                                    final queryValue = value
+                                        .trim()
+                                        .toLowerCase();
+                                    final isSales =
+                                        selectedBookingType ==
                                         BookingType.sales;
                                     final serviceIdToUse =
                                         (selectedServiceId == null ||
-                                                selectedServiceId == -1)
-                                            ? null
-                                            : selectedServiceId;
+                                            selectedServiceId == -1)
+                                        ? null
+                                        : selectedServiceId;
                                     String? searchType;
                                     switch (_selectedSearchTypeIndex.value) {
                                       case 0:
@@ -2679,7 +2763,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                         returnTime: returnTime,
                                         useAvailableProductsApi:
                                             selectedBookingType ==
-                                                BookingType.booking,
+                                            BookingType.booking,
                                         isSales: isSales,
                                       ),
                                     );
@@ -2769,7 +2853,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               // ── Header ──────────────────────────────────
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade50,
                                   borderRadius: const BorderRadius.only(
@@ -2829,8 +2915,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               // ── Body ────────────────────────────────────
                               if (isLoading)
                                 Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 36),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 36,
+                                  ),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -2853,14 +2940,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               else if (productList.isEmpty)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 32, horizontal: 16),
+                                    vertical: 32,
+                                    horizontal: 16,
+                                  ),
                                   alignment: Alignment.center,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.search_off_rounded,
-                                          size: 48,
-                                          color: Colors.grey.shade300),
+                                      Icon(
+                                        Icons.search_off_rounded,
+                                        size: 48,
+                                        color: Colors.grey.shade300,
+                                      ),
                                       const SizedBox(height: 16),
                                       Text(
                                         'No results found',
@@ -2887,8 +2978,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                   child: ListView.separated(
                                     controller: _searchResultsScrollController,
                                     shrinkWrap: true,
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
                                     itemCount: productList.length,
                                     separatorBuilder: (_, __) => Divider(
                                       height: 1,
@@ -2930,8 +3022,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Add product from search with specific variant
   void _addProductFromSearchWithVariant(
-      ProductModel product, ProductVariantModel variant) {
-    log('_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}');
+    ProductModel product,
+    ProductVariantModel variant,
+  ) {
+    log(
+      '_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}',
+    );
 
     // For sales mode, use sale_price if available, otherwise fall back to price
     final isSales = selectedBookingType == BookingType.sales;
@@ -2941,15 +3037,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         : null;
     final price = isSales
         ? (variant.salePrice ??
-            productSalePriceInt ??
-            variant.price ??
-            product.price ??
-            0)
+              productSalePriceInt ??
+              variant.price ??
+              product.price ??
+              0)
         : (variant.price ?? product.price ?? 0);
-    log('Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)');
+    log(
+      'Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)',
+    );
 
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
 
     // Check if this variant already exists
     final existingIndex = products.indexWhere(
@@ -2974,30 +3073,33 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       products[existingIndex] = existing.copyWith(quantity: newQuantity);
     } else {
       // Add new product with selected variant
-      final attribute =
-          variant.attribute.isEmpty ? (product.model ?? '') : variant.attribute;
+      final attribute = variant.attribute.isEmpty
+          ? (product.model ?? '')
+          : variant.attribute;
 
-      products.add(ProductSelectedModel(
-        variant: ProductInfoModel(
-          id: variant.id,
-          variantId: variant.id,
-          productId: product.id,
-          name: product.name,
-          image: product.image,
-          amount: price,
-          category: product.category,
-          color: product.color,
-          model: product.model,
-          mainServiceType: product.mainServiceType,
-          variantAttribute: attribute,
-          measurements: [],
+      products.add(
+        ProductSelectedModel(
+          variant: ProductInfoModel(
+            id: variant.id,
+            variantId: variant.id,
+            productId: product.id,
+            name: product.name,
+            image: product.image,
+            amount: price,
+            category: product.category,
+            color: product.color,
+            model: product.model,
+            mainServiceType: product.mainServiceType,
+            variantAttribute: attribute,
+            measurements: [],
+            quantity: 1,
+            stock: variant.stock,
+            remainingStock: variant.remainingStock,
+          ),
           quantity: 1,
-          stock: variant.stock,
-          remainingStock: variant.remainingStock,
+          amount: price,
         ),
-        quantity: 1,
-        amount: price,
-      ));
+      );
     }
 
     selectedProductsNotifier.value = products;
@@ -3013,15 +3115,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          Expanded(
-            flex: 3,
-            child: _buildHeaderCell('items', alignLeft: true),
-          ),
+          Expanded(flex: 3, child: _buildHeaderCell('items', alignLeft: true)),
           const SizedBox(width: 10),
-          Expanded(
-            flex: 2,
-            child: _buildHeaderCell('Specifications'),
-          ),
+          Expanded(flex: 2, child: _buildHeaderCell('Specifications')),
           const SizedBox(width: 4),
           if (hasVariants) ...[
             Expanded(child: _buildHeaderCell('Variants')),
@@ -3093,8 +3189,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shopping_cart_outlined,
-                      size: 48, color: Colors.grey.shade200),
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 48,
+                    color: Colors.grey.shade200,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'No items selected',
@@ -3107,10 +3206,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Select a service and click on products to add them',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade400,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                   ),
                 ],
               ),
@@ -3143,8 +3239,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     // Only multiply price by days for qualifying service types
     final effectiveDaysMultiplier =
         (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
-            ? (rentalDays > 0 ? rentalDays : 1)
-            : 1;
+        ? (rentalDays > 0 ? rentalDays : 1)
+        : 1;
     final hasVariants = _hasAnyProductWithVariants();
 
     return Container(
@@ -3168,7 +3264,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     borderRadius: BorderRadius.circular(6),
                     color: Colors.grey.shade100,
                     border: Border.all(color: Colors.grey.shade200),
-                    image: product.variant.image != null &&
+                    image:
+                        product.variant.image != null &&
                             product.variant.image!.isNotEmpty
                         ? DecorationImage(
                             image: NetworkImage(product.variant.image!),
@@ -3176,10 +3273,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           )
                         : null,
                   ),
-                  child: product.variant.image == null ||
+                  child:
+                      product.variant.image == null ||
                           product.variant.image!.isEmpty
-                      ? const Icon(Icons.image_not_supported,
-                          size: 20, color: Colors.grey)
+                      ? const Icon(
+                          Icons.image_not_supported,
+                          size: 20,
+                          color: Colors.grey,
+                        )
                       : null,
                 ),
                 const SizedBox(width: 16),
@@ -3239,8 +3340,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             Expanded(
               child: Center(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF6132E4).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
@@ -3264,8 +3367,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               child: Container(
                 //  width: 58,
                 // height: 21,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 11,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0x1C1FD300), // Light green bg
                   borderRadius: BorderRadius.circular(3),
@@ -3350,7 +3455,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   icon: Icons.add,
                   onTap: () => _incrementQuantity(product),
                   compact: true,
-                  isDisabled: product.quantity >=
+                  isDisabled:
+                      product.quantity >=
                       (product.variant.remainingStock ??
                           product.variant.stock ??
                           999),
@@ -3380,15 +3486,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         ),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 0),
+                            horizontal: 8,
+                            vertical: 0,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(4),
                             borderSide: BorderSide(color: Colors.grey.shade400),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(4),
-                            borderSide:
-                                const BorderSide(color: Color(0xFF6132E4)),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF6132E4),
+                            ),
                           ),
                         ),
                         onSubmitted: (_) => _saveEditingPrice(product),
@@ -3409,8 +3518,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Icon(Icons.edit_outlined,
-                            size: 16, color: const Color(0xFF6132E4)),
+                        Icon(
+                          Icons.edit_outlined,
+                          size: 16,
+                          color: const Color(0xFF6132E4),
+                        ),
                       ],
                     ),
                   ),
@@ -3502,8 +3614,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -3511,16 +3624,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       products[index] = products[index].copyWith(
         quantity: products[index].quantity + 1,
       );
-      _quantityControllers[_quantityKey(product)]?.text =
-          products[index].quantity.toString();
+      _quantityControllers[_quantityKey(product)]?.text = products[index]
+          .quantity
+          .toString();
       selectedProductsNotifier.value = products;
     }
   }
 
   /// Decrement quantity of a product
   void _decrementQuantity(ProductSelectedModel product) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -3529,8 +3644,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         products[index] = products[index].copyWith(
           quantity: products[index].quantity - 1,
         );
-        _quantityControllers[_quantityKey(product)]?.text =
-            products[index].quantity.toString();
+        _quantityControllers[_quantityKey(product)]?.text = products[index]
+            .quantity
+            .toString();
       } else {
         _quantityControllers.remove(_quantityKey(product))?.dispose();
         _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
@@ -3544,12 +3660,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final parsedQuantity = int.tryParse(value.trim());
 
     if (parsedQuantity == null || parsedQuantity <= 0) {
-      _quantityControllers[_quantityKey(product)]?.text =
-          product.quantity.toString();
-      context.showSnackBar(
-        'Quantity must be greater than 0',
-        isError: true,
-      );
+      _quantityControllers[_quantityKey(product)]?.text = product.quantity
+          .toString();
+      context.showSnackBar('Quantity must be greater than 0', isError: true);
       return;
     }
 
@@ -3558,8 +3671,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         product.variant.remainingStock ?? product.variant.stock ?? 999;
 
     if (!isOldBooking && parsedQuantity > availableStock) {
-      _quantityControllers[_quantityKey(product)]?.text =
-          product.quantity.toString();
+      _quantityControllers[_quantityKey(product)]?.text = product.quantity
+          .toString();
       context.showSnackBar(
         'Quantity cannot be greater than available stock ($availableStock)',
         isError: true,
@@ -3567,8 +3680,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -3576,8 +3690,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (index == -1) return;
 
     products[index] = products[index].copyWith(quantity: parsedQuantity);
-    _quantityControllers[_quantityKey(product)]?.text =
-        parsedQuantity.toString();
+    _quantityControllers[_quantityKey(product)]?.text = parsedQuantity
+        .toString();
     selectedProductsNotifier.value = products;
     _quantityFocusNodes[_quantityKey(product)]?.unfocus();
   }
@@ -3619,8 +3733,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Remove a product from the selected list
   void _removeProduct(ProductSelectedModel product) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     _quantityControllers.remove(_quantityKey(product))?.dispose();
     _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
     products.removeWhere(
@@ -3631,8 +3746,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   /// Update the price of a product
   void _updateProductPrice(ProductSelectedModel product, int newPrice) {
-    final products =
-        List<ProductSelectedModel>.from(selectedProductsNotifier.value);
+    final products = List<ProductSelectedModel>.from(
+      selectedProductsNotifier.value,
+    );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
@@ -3670,21 +3786,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               final discountAmount =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
-              final summaryRentalDays =
-                  !isSaleType ? _calculateRentalDays() : 1;
-              final productTotal = products.fold<int>(
-                0,
-                (sum, product) {
-                  // Only multiply by days for qualifying service types
-                  final daysMultiplier = (!isSaleType &&
-                          _shouldMultiplyByDays(
-                              product.variant.mainServiceType))
-                      ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-                      : 1;
-                  return sum +
-                      (product.amount * product.quantity * daysMultiplier);
-                },
-              );
+              final summaryRentalDays = !isSaleType
+                  ? _calculateRentalDays()
+                  : 1;
+              final productTotal = products.fold<int>(0, (sum, product) {
+                // Only multiply by days for qualifying service types
+                final daysMultiplier =
+                    (!isSaleType &&
+                        _shouldMultiplyByDays(product.variant.mainServiceType))
+                    ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
+                    : 1;
+                return sum +
+                    (product.amount * product.quantity * daysMultiplier);
+              });
               final additionalTotal = additionalCharges.fold<int>(
                 0,
                 (sum, charge) => sum + (charge.amount ?? 0),
@@ -3707,11 +3821,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     if (additionalTotal > 0)
                       _buildSummaryRow('Additional charges', additionalTotal),
                     if (discountAmount > 0)
-                      _buildSummaryRow('- Discount', discountAmount,
-                          isNegative: true),
+                      _buildSummaryRow(
+                        '- Discount',
+                        discountAmount,
+                        isNegative: true,
+                      ),
                     const Divider(height: 6),
-                    _buildSummaryRow('Paid', advanceAmount,
-                        valueColor: const Color(0xFF1AB000)),
+                    _buildSummaryRow(
+                      'Paid',
+                      advanceAmount,
+                      valueColor: const Color(0xFF1AB000),
+                    ),
                     _buildSummaryRow(
                       'Total payable',
                       remainingAmount > 0 ? remainingAmount : 0,
@@ -3954,8 +4074,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               // Validate amount
               if (amount == null || amount <= 0) {
                 context.showSnackBar(
-                    'Please enter a valid amount greater than 0',
-                    isError: true);
+                  'Please enter a valid amount greater than 0',
+                  isError: true,
+                );
                 return;
               }
 
@@ -3967,26 +4088,25 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6132E4),
             ),
-            child: const Text(
-              'Add',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
 
     if (result != null) {
-      final charges =
-          List<AdditionalChargesModel>.from(additionalChargesNotifier.value);
+      final charges = List<AdditionalChargesModel>.from(
+        additionalChargesNotifier.value,
+      );
       charges.add(result);
       additionalChargesNotifier.value = charges;
     }
   }
 
   void _removeCharge(AdditionalChargesModel charge) {
-    final charges =
-        List<AdditionalChargesModel>.from(additionalChargesNotifier.value);
+    final charges = List<AdditionalChargesModel>.from(
+      additionalChargesNotifier.value,
+    );
     charges.remove(charge);
     additionalChargesNotifier.value = charges;
   }
@@ -4017,9 +4137,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     try {
@@ -4030,8 +4148,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         log('Sales Request: ${salesRequest.toJson()}');
 
         // Call the API to create sale
-        final saleId =
-            await getIt<CreateSaleBookingUseCase>()(salesRequest.toJson());
+        final saleId = await getIt<CreateSaleBookingUseCase>()(
+          salesRequest.toJson(),
+        );
 
         // Close loading dialog
         if (mounted) Navigator.of(context).pop();
@@ -4125,16 +4244,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       returnDate: coolingPeriodDays == 0
           ? returnDate.format().appendTimeToDate(time: returnTime)
           : returnDate
-              .add(Duration(days: coolingPeriodDays))
-              .format()
-              .appendTimeToDate(time: returnTime),
+                .add(Duration(days: coolingPeriodDays))
+                .format()
+                .appendTimeToDate(time: returnTime),
       // If cooling period is None (0), do not send cooling period end date
       coolingPeriodDate: coolingPeriodDays == 0
           ? null
           : returnDate
-              .add(Duration(days: coolingPeriodDays))
-              .format()
-              .appendTimeToDate(time: returnTime),
+                .add(Duration(days: coolingPeriodDays))
+                .format()
+                .appendTimeToDate(time: returnTime),
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
@@ -4142,19 +4261,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       paymentMethod: paymentMethod,
       deliveryStatus: deliveryStatus,
       products: products,
-      additionalCharges:
-          additionalCharges.isNotEmpty ? additionalCharges : null,
+      additionalCharges: additionalCharges.isNotEmpty
+          ? additionalCharges
+          : null,
       description: descriptionController.text.trim().isNotEmpty
           ? descriptionController.text.trim()
           : null,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
-      runningKilometers:
-          runningKilometersController.text.trim(), // Added running kilometers
+      runningKilometers: runningKilometersController.text
+          .trim(), // Added running kilometers
     );
   }
 
   /// Build sales request for creating a sale
+  //TODO: check if RequestSaleModel or SaleRequestModel needs to be used here and rename accordingly for consistency
   RequestSalesModel _buildSalesRequest() {
     final products = selectedProductsNotifier.value;
     final discount = discountAmountController.text.trim().toIntOrNull() ?? 0;
@@ -4170,8 +4291,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       0,
       (sum, item) => sum + ((item['amount'] as int?) ?? 0),
     );
-    final finalTotal =
-        (grossTotal - discount) > 0 ? (grossTotal - discount) : 0;
+    final finalTotal = (grossTotal - discount) > 0
+        ? (grossTotal - discount)
+        : 0;
 
     // Get staff ID from cubit
     final staffState = context.read<StaffSearchCubit>().state;
@@ -4270,9 +4392,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   height: 50,
                   width: 2,
                   margin: const EdgeInsets.only(bottom: 0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                  ),
+                  decoration: BoxDecoration(color: Colors.grey.shade400),
                 ),
                 const SizedBox(width: 16),
 
@@ -4303,9 +4423,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   height: 50,
                   width: 2,
                   margin: const EdgeInsets.only(bottom: 0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                  ),
+                  decoration: BoxDecoration(color: Colors.grey.shade400),
                 ),
                 const SizedBox(width: 16),
 
@@ -4336,8 +4454,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           child: DropdownButton<int>(
                             value: coolingPeriodDays,
                             isExpanded: true,
-                            icon:
-                                const Icon(Icons.keyboard_arrow_down, size: 18),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 18,
+                            ),
                             style: const TextStyle(
                               fontSize: 13,
                               color: Colors.black87,
@@ -4355,8 +4475,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 final days = index + 1;
                                 return DropdownMenuItem(
                                   value: days,
-                                  child:
-                                      Text('$days day${days > 1 ? 's' : ''}'),
+                                  child: Text(
+                                    '$days day${days > 1 ? 's' : ''}',
+                                  ),
                                 );
                               }),
                             ],
@@ -4422,8 +4543,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.calendar_today_outlined,
-                      size: 16, color: const Color(0xFF9A76E8)),
+                  Icon(
+                    Icons.calendar_today_outlined,
+                    size: 16,
+                    color: const Color(0xFF9A76E8),
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -4503,8 +4627,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       ),
                     ),
                   ),
-                  Icon(Icons.keyboard_arrow_down,
-                      size: 18, color: Colors.grey.shade500),
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 18,
+                    color: Colors.grey.shade500,
+                  ),
                 ],
               ),
             ),
@@ -4590,8 +4717,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   // Notes
                   Container(
                     height: 80,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
@@ -4626,9 +4755,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 16),
 
                   // WhatsApp Checkbox
-                  if (context
-                      .read<UserCubit>()
-                      .hasFeature(AppPremiumFeatures.whatsappMessage))
+                  if (context.read<UserCubit>().hasFeature(
+                    AppPremiumFeatures.whatsappMessage,
+                  ))
                     Row(
                       children: [
                         SizedBox(
@@ -4640,7 +4769,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 setState(() => sendPdfToWhatsApp = v ?? false),
                             activeColor: Colors.black87,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4)),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -4673,11 +4803,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               height: 24,
                               child: Checkbox(
                                 value: decreaseStockForPastDate,
-                                onChanged: (v) => setState(() =>
-                                    decreaseStockForPastDate = v ?? false),
+                                onChanged: (v) => setState(
+                                  () => decreaseStockForPastDate = v ?? false,
+                                ),
                                 activeColor: Colors.black87,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -4782,11 +4914,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           final client = state.selectedClient!;
                           // Auto-fill fields
                           clientNameController.text = client.name;
-                          clientPhone1Controller.text =
-                              client.phone1.toString();
+                          clientPhone1Controller.text = client.phone1
+                              .toString();
                           if (client.phone2 != null) {
-                            clientPhone2Controller.text =
-                                client.phone2.toString();
+                            clientPhone2Controller.text = client.phone2
+                                .toString();
                           }
                           // Store selected client ID
                           selectedClientId = client.id;
@@ -4843,9 +4975,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: _fieldSpacing),
                   const SizedBox(height: 16),
                   // WhatsApp Checkbox - Only if feature enabled
-                  if (context
-                      .read<UserCubit>()
-                      .hasFeature(AppPremiumFeatures.whatsappMessage))
+                  if (context.read<UserCubit>().hasFeature(
+                    AppPremiumFeatures.whatsappMessage,
+                  ))
                     Row(
                       children: [
                         SizedBox(
@@ -4857,7 +4989,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 setState(() => sendPdfToWhatsApp = v ?? false),
                             activeColor: Colors.black87,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4)),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -4917,8 +5050,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   // Notes - Optional
                   Container(
                     height: 80,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
@@ -4982,18 +5117,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final rentalDays = !isSaleType ? _calculateRentalDays() : 1;
-              final productTotal = products.fold<int>(
-                0,
-                (sum, product) {
-                  final daysMultiplier = (!isSaleType &&
-                          _shouldMultiplyByDays(
-                              product.variant.mainServiceType))
-                      ? (rentalDays > 0 ? rentalDays : 1)
-                      : 1;
-                  return sum +
-                      (product.amount * product.quantity * daysMultiplier);
-                },
-              );
+              final productTotal = products.fold<int>(0, (sum, product) {
+                final daysMultiplier =
+                    (!isSaleType &&
+                        _shouldMultiplyByDays(product.variant.mainServiceType))
+                    ? (rentalDays > 0 ? rentalDays : 1)
+                    : 1;
+                return sum +
+                    (product.amount * product.quantity * daysMultiplier);
+              });
               final additionalTotal = additionalCharges.fold<int>(
                 0,
                 (sum, charge) => sum + (charge.amount ?? 0),
@@ -5003,14 +5135,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               final remainingAmount = totalPayable - advanceAmount;
 
               return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
                 child: Container(
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 245, 242, 254),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: const Color(0xFF6132E4).withOpacity(0.2)),
+                      color: const Color(0xFF6132E4).withOpacity(0.2),
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -5024,14 +5159,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         borderRadius: BorderRadius.circular(10),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  const Icon(Icons.receipt_long_rounded,
-                                      size: 16, color: Color(0xFF6132E4)),
+                                  const Icon(
+                                    Icons.receipt_long_rounded,
+                                    size: 16,
+                                    color: Color(0xFF6132E4),
+                                  ),
                                   const SizedBox(width: 6),
                                   Text(
                                     !isSaleType && rentalDays > 1
@@ -5080,14 +5220,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               _buildSummaryRow('Product total', productTotal),
                               if (additionalTotal > 0)
                                 _buildSummaryRow(
-                                    'Additional charges', additionalTotal),
+                                  'Additional charges',
+                                  additionalTotal,
+                                ),
                               if (discountAmount > 0)
-                                _buildSummaryRow('- Discount', discountAmount,
-                                    isNegative: true),
+                                _buildSummaryRow(
+                                  '- Discount',
+                                  discountAmount,
+                                  isNegative: true,
+                                ),
                               const Divider(height: 12, thickness: 1),
                               if (!isSaleType && advanceAmount > 0)
-                                _buildSummaryRow('Paid', advanceAmount,
-                                    valueColor: const Color(0xFF1AB000)),
+                                _buildSummaryRow(
+                                  'Paid',
+                                  advanceAmount,
+                                  valueColor: const Color(0xFF1AB000),
+                                ),
                             ],
                           ),
                         ),
@@ -5109,7 +5257,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6132E4),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   elevation: 0,
                 ),
                 child: const Text(
@@ -5163,13 +5312,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         });
 
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.check_circle_rounded,
-                  color: Colors.green, size: 64),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: Colors.green,
+                size: 64,
+              ),
               const SizedBox(height: 16),
               const Text(
                 'Successful!',
@@ -5185,10 +5338,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ? 'Sale has been successfully created.'
                     : 'Booking has been successfully created.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
               ),
               const SizedBox(height: 8),
               Text(
@@ -5217,7 +5367,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         side: BorderSide(color: Colors.grey.shade300),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                       child: Text(
                         'Close',
@@ -5230,8 +5381,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         try {
-                          GlobalLoadingOverlay.show(context,
-                              text: 'Loading invoice...');
+                          GlobalLoadingOverlay.show(
+                            context,
+                            text: 'Loading invoice...',
+                          );
 
                           if (isSale) {
                             // For sales, use sales API endpoint
@@ -5245,11 +5398,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               if (kIsWeb) {
                                 // Open PDF in new tab for web
                                 openPdfInNewTab(
-                                    pdfBytes, 'sale_invoice_$id.pdf');
+                                  pdfBytes,
+                                  'sale_invoice_$id.pdf',
+                                );
                               } else {
                                 // For desktop, save and open
                                 final downloadsDir = Directory(
-                                    '${Platform.environment['USERPROFILE']}\\Downloads');
+                                  '${Platform.environment['USERPROFILE']}\\Downloads',
+                                );
                                 if (!downloadsDir.existsSync()) {
                                   downloadsDir.createSync(recursive: true);
                                 }
@@ -5260,14 +5416,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 await file.writeAsBytes(pdfBytes);
                                 await launchUrl(Uri.file(filePath));
                                 context.showSnackBar(
-                                    'Invoice saved to Downloads\\$fileName');
+                                  'Invoice saved to Downloads\\$fileName',
+                                );
                               }
                             }
                           } else {
                             // For bookings, use booking API endpoint
                             final pdfBytes =
                                 await getIt<GetBookingInvoicePdfBytesUseCase>()(
-                                    id);
+                                  id,
+                                );
 
                             GlobalLoadingOverlay.hide();
 
@@ -5275,11 +5433,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               if (kIsWeb) {
                                 // Open PDF in new tab for web
                                 openPdfInNewTab(
-                                    pdfBytes, 'booking_invoice_$id.pdf');
+                                  pdfBytes,
+                                  'booking_invoice_$id.pdf',
+                                );
                               } else {
                                 // For desktop, save and open
                                 final downloadsDir = Directory(
-                                    '${Platform.environment['USERPROFILE']}\\Downloads');
+                                  '${Platform.environment['USERPROFILE']}\\Downloads',
+                                );
                                 if (!downloadsDir.existsSync()) {
                                   downloadsDir.createSync(recursive: true);
                                 }
@@ -5290,7 +5451,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 await file.writeAsBytes(pdfBytes);
                                 await launchUrl(Uri.file(filePath));
                                 context.showSnackBar(
-                                    'Invoice saved to Downloads\\$fileName');
+                                  'Invoice saved to Downloads\\$fileName',
+                                );
                               }
                             }
                           }
@@ -5298,8 +5460,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           GlobalLoadingOverlay.hide();
                           log('Error loading invoice: $e');
                           if (mounted) {
-                            context.showSnackBar('Failed to load invoice: $e',
-                                isError: true);
+                            context.showSnackBar(
+                              'Failed to load invoice: $e',
+                              isError: true,
+                            );
                           }
                         }
                       },
@@ -5307,7 +5471,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         backgroundColor: const Color(0xFF6132E4),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                       child: Text(
                         isSale ? 'View Sale' : 'View Invoice',
@@ -5345,8 +5510,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     },
                     child: Row(
                       children: [
-                        Icon(Icons.arrow_back,
-                            size: 20, color: Colors.grey.shade700),
+                        Icon(
+                          Icons.arrow_back,
+                          size: 20,
+                          color: Colors.grey.shade700,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           'Back',
@@ -5373,20 +5541,24 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BookingTextFieldBuilder.buildSectionHeader(
-                              'Locations',
-                              optional: true),
+                            'Locations',
+                            optional: true,
+                          ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                              controller: startLocationController,
-                              hint: 'Start location'),
+                            controller: startLocationController,
+                            hint: 'Start location',
+                          ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                              controller: pickupLocationController,
-                              hint: 'Pickup location'),
+                            controller: pickupLocationController,
+                            hint: 'Pickup location',
+                          ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                              controller: destinationLocationController,
-                              hint: 'Destination'),
+                            controller: destinationLocationController,
+                            hint: 'Destination',
+                          ),
                           const SizedBox(height: 14),
                         ],
                       );
@@ -5394,30 +5566,36 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
 
                   // Payment details
-                  BookingTextFieldBuilder.buildSectionHeader('Payment details',
-                      optional: true),
+                  BookingTextFieldBuilder.buildSectionHeader(
+                    'Payment details',
+                    optional: true,
+                  ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: advanceAmountController,
-                      hint: 'Advance amount',
-                      isNumber: true),
+                    controller: advanceAmountController,
+                    hint: 'Advance amount',
+                    isNumber: true,
+                  ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: securityAmountController,
-                      hint: 'Security amount',
-                      isNumber: true),
+                    controller: securityAmountController,
+                    hint: 'Security amount',
+                    isNumber: true,
+                  ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: discountAmountController,
-                      hint: 'Discount amount',
-                      isNumber: true),
+                    controller: discountAmountController,
+                    hint: 'Discount amount',
+                    isNumber: true,
+                  ),
 
                   const SizedBox(height: 14),
                   // Payment Method Selection - only show if advance amount has value
                   ValueListenableBuilder<TextEditingValue>(
                     valueListenable: advanceAmountController,
                     builder: (context, value, child) {
-                      final hasAdvanceAmount = value.text.trim().isNotEmpty &&
+                      final hasAdvanceAmount =
+                          value.text.trim().isNotEmpty &&
                           (int.tryParse(value.text.trim()) ?? 0) > 0;
                       if (hasAdvanceAmount) {
                         return Column(
@@ -5438,7 +5616,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       Text(
                         'Additional charges',
                         style: TextStyle(
-                            fontSize: 13, color: Colors.grey.shade600),
+                          fontSize: 13,
+                          color: Colors.grey.shade600,
+                        ),
                       ),
                       InkWell(
                         onTap: _addAdditionalCharge,
@@ -5449,8 +5629,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             color: const Color(0xFF6132E4).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Icon(Icons.add,
-                              size: 16, color: Color(0xFF6132E4)),
+                          child: const Icon(
+                            Icons.add,
+                            size: 16,
+                            color: Color(0xFF6132E4),
+                          ),
                         ),
                       ),
                     ],
@@ -5466,7 +5649,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           return Container(
                             margin: const EdgeInsets.only(bottom: 6),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 10),
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF8F9FA),
                               borderRadius: BorderRadius.circular(10),
@@ -5500,10 +5685,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF6132E4)
-                                            .withOpacity(0.1),
+                                        color: const Color(
+                                          0xFF6132E4,
+                                        ).withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -5601,10 +5789,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         ),
         const SizedBox(width: 16),
         // Right: client details + summary + submit
-        SizedBox(
-          width: 340,
-          child: _buildOldBookingRightPanel(),
-        ),
+        SizedBox(width: 340, child: _buildOldBookingRightPanel()),
       ],
     );
   }
@@ -5645,8 +5830,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.calendar_today,
-                              size: 16, color: Colors.grey.shade500),
+                          Icon(
+                            Icons.calendar_today,
+                            size: 16,
+                            color: Colors.grey.shade500,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -5664,8 +5852,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           if (_bookedDate != null)
                             GestureDetector(
                               onTap: () => setState(() => _bookedDate = null),
-                              child: const Icon(Icons.close,
-                                  size: 16, color: Colors.grey),
+                              child: const Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
                             ),
                         ],
                       ),
@@ -5677,9 +5868,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const Text(
                     'Client',
                     style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   BlocListener<ClientCubit, ClientState>(
@@ -5689,8 +5881,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         clientNameController.text = client.name;
                         clientPhone1Controller.text = client.phone1.toString();
                         if (client.phone2 != null) {
-                          clientPhone2Controller.text =
-                              client.phone2.toString();
+                          clientPhone2Controller.text = client.phone2
+                              .toString();
                         }
                         selectedClientId = client.id;
                       }
@@ -5724,9 +5916,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const Text(
                     'Staff',
                     style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   StaffSearchNameField(
@@ -5742,8 +5935,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   // Notes / Description
                   Container(
                     height: 80,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
@@ -5788,16 +5983,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 const Text(
                   'Total Amount',
                   style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black54),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 ValueListenableBuilder<List<ProductSelectedModel>>(
                   valueListenable: selectedProductsNotifier,
                   builder: (context, products, _) {
                     final total = products.fold<int>(
-                        0, (sum, p) => sum + (p.amount * p.quantity));
+                      0,
+                      (sum, p) => sum + (p.amount * p.quantity),
+                    );
                     return Text(
                       '₹ ${total.toCurrency()}',
                       style: const TextStyle(
@@ -5818,13 +6016,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       elevation: 0,
                     ),
                     child: const Text(
                       'Save Old Booking',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -5873,8 +6074,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     } catch (e) {
       if (mounted) Navigator.of(context).pop();
       if (mounted) {
-        context.showSnackBar('Failed to save old booking: ${e.toString()}',
-            isError: true);
+        context.showSnackBar(
+          'Failed to save old booking: ${e.toString()}',
+          isError: true,
+        );
       }
       log('Error creating old booking: $e');
     }
@@ -5882,8 +6085,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   RequestBookingModel _buildOldBookingRequest() {
     final products = selectedProductsNotifier.value;
-    final totalAmount =
-        products.fold<int>(0, (sum, p) => sum + (p.amount * p.quantity));
+    final totalAmount = products.fold<int>(
+      0,
+      (sum, p) => sum + (p.amount * p.quantity),
+    );
 
     final staffState = context.read<StaffSearchCubit>().state;
     final staffId = staffState.selectedStaff?.id;

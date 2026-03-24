@@ -4,7 +4,7 @@ part of 'all_sales_bloc.dart';
 abstract class AllSalesState with _$AllSalesState {
   const factory AllSalesState.loading() = _Loading;
   const factory AllSalesState.loaded({
-    required List<SaleModel> sales,
+    required List<SaleEntity> sales,
     String? nextPageUrl,
     String? searchQuery,
     @Default(false) bool isPaginating,

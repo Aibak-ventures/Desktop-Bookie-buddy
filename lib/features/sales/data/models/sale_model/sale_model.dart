@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sale_model.freezed.dart';
@@ -30,4 +31,21 @@ abstract class SaleModel with _$SaleModel {
     }
     return _$SaleModelFromJson(json);
   }
+}
+
+extension SaleModelMapper on SaleModel {
+  SaleEntity toEntity() => SaleEntity(
+        id: id,
+        shopSaleId: shopSaleId,
+        clientName: clientName,
+        clientPhone: clientPhone,
+        totalAmount: totalAmount,
+        paidAmount: paidAmount,
+        discountAmount: discountAmount,
+        saleDate: saleDate,
+        createdAt: createdAt,
+        products: products,
+        staffColor: staffColor,
+        staffName: staffName,
+      );
 }
