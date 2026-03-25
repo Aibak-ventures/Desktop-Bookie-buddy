@@ -62,6 +62,83 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     form.additionalChargesNotifier.value = charges;
   }
 
+  void incrementQuantity(ProductSelectedEntity product) {
+    final availableStock =
+        product.variant.remainingStock ?? product.variant.stock ?? 0;
+    final currentQuantity = product.quantity;
+
+    if (currentQuantity >= availableStock) {
+      context.showSnackBar(
+        'Cannot add more. Only $availableStock items available in stock',
+        isError: true,
+      );
+      return;
+    }
+
+    final products = List<ProductSelectedEntity>.from(
+      form.selectedProductsNotifier.value,
+    );
+    final index = products.indexWhere(
+      (p) => p.variant.variantId == product.variant.variantId,
+    );
+    if (index != -1) {
+      products[index] = products[index].copyWith(
+        quantity: products[index].quantity + 1,
+      );
+      form.selectedProductsNotifier.value = products;
+    }
+  }
+
+  void decrementQuantity(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
+      form.selectedProductsNotifier.value,
+    );
+    final index = products.indexWhere(
+      (p) => p.variant.variantId == product.variant.variantId,
+    );
+    if (index != -1) {
+      if (products[index].quantity > 1) {
+        products[index] = products[index].copyWith(
+          quantity: products[index].quantity - 1,
+        );
+      } else {
+        products.removeAt(index);
+      }
+      form.selectedProductsNotifier.value = products;
+    }
+  }
+
+  void removeProduct(ProductSelectedEntity product) {
+    final products = List<ProductSelectedEntity>.from(
+      form.selectedProductsNotifier.value,
+    );
+    products.removeWhere(
+      (p) => p.variant.variantId == product.variant.variantId,
+    );
+    form.selectedProductsNotifier.value = products;
+  }
+
+  void saveEditingPrice(ProductSelectedEntity product) {
+    if (form.editingVariantId == null) return;
+
+    final newPrice = int.tryParse(form.inlinePriceController.text);
+    if (newPrice == null || newPrice <= 0) {
+      context.showSnackBar(
+        'Product price cannot be zero or empty',
+        isError: true,
+      );
+      return;
+    }
+
+    updateProductPrice(product, newPrice);
+
+    setState(() {
+      form.editingVariantId = null;
+      form.inlinePriceController.clear();
+      form.inlinePriceFocusNode.unfocus();
+    });
+  }
+
   void addAdditionalCharge() async {
     final nameController = TextEditingController();
     final amountController = TextEditingController();

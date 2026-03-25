@@ -9,16 +9,16 @@ import 'package:flutter/material.dart';
 
 class BookingPaymentSummaryPanel extends StatefulWidget {
   final BookingFormControllers form;
-  final PaymentMethod selectedPaymentMethod;
-  final ValueChanged<PaymentMethod> onPaymentMethodChanged;
+  final PaymentMethod? selectedPaymentMethod;
+  final ValueChanged<PaymentMethod>? onPaymentMethodChanged;
   final VoidCallback onBack;
   final Widget summarySection;
 
   const BookingPaymentSummaryPanel({
     super.key,
     required this.form,
-    required this.selectedPaymentMethod,
-    required this.onPaymentMethodChanged,
+    this.selectedPaymentMethod,
+    this.onPaymentMethodChanged,
     required this.onBack,
     required this.summarySection,
   });
@@ -141,7 +141,7 @@ class _BookingPaymentSummaryPanelState
                       final hasAdvanceAmount =
                           value.text.trim().isNotEmpty &&
                           (int.tryParse(value.text.trim()) ?? 0) > 0;
-                      if (hasAdvanceAmount) {
+                      if (hasAdvanceAmount && widget.selectedPaymentMethod != null && widget.onPaymentMethodChanged != null) {
                         return Column(
                           children: [
                             _buildPaymentMethodSection(),
@@ -339,7 +339,7 @@ class _BookingPaymentSummaryPanelState
     final isSelected = widget.selectedPaymentMethod == method;
     return Expanded(
       child: InkWell(
-        onTap: () => widget.onPaymentMethodChanged(method),
+        onTap: () => widget.onPaymentMethodChanged?.call(method),
         borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),

@@ -12,11 +12,11 @@ class BookingProductRowWidget extends StatelessWidget {
   final int? editingVariantId;
   final TextEditingController inlinePriceController;
   final FocusNode inlinePriceFocusNode;
-  final TextEditingController quantityController;
-  final FocusNode quantityFocusNode;
+  final TextEditingController? quantityController;
+  final FocusNode? quantityFocusNode;
   final VoidCallback onDecrement;
   final VoidCallback onIncrement;
-  final ValueChanged<String> onSaveTypedQuantity;
+  final ValueChanged<String>? onSaveTypedQuantity;
   final VoidCallback onStartEditingPrice;
   final VoidCallback onSaveEditingPrice;
   final VoidCallback onRemove;
@@ -31,11 +31,11 @@ class BookingProductRowWidget extends StatelessWidget {
     required this.editingVariantId,
     required this.inlinePriceController,
     required this.inlinePriceFocusNode,
-    required this.quantityController,
-    required this.quantityFocusNode,
+    this.quantityController,
+    this.quantityFocusNode,
     required this.onDecrement,
     required this.onIncrement,
-    required this.onSaveTypedQuantity,
+    this.onSaveTypedQuantity,
     required this.onStartEditingPrice,
     required this.onSaveEditingPrice,
     required this.onRemove,
@@ -211,41 +211,51 @@ class BookingProductRowWidget extends StatelessWidget {
                   compact: true,
                 ),
                 const SizedBox(width: 3),
-                SizedBox(
-                  width: 34,
-                  height: 28,
-                  child: TextField(
-                    controller: quantityController,
-                    focusNode: quantityFocusNode,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
-                    textAlign: TextAlign.center,
+                if (quantityController != null && quantityFocusNode != null)
+                  SizedBox(
+                    width: 34,
+                    height: 28,
+                    child: TextField(
+                      controller: quantityController,
+                      focusNode: quantityFocusNode,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 0,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: const BorderSide(color: Color(0xFF6132E4)),
+                        ),
+                      ),
+                      onSubmitted: onSaveTypedQuantity,
+                      onTapOutside: (_) =>
+                          onSaveTypedQuantity?.call(quantityController!.text),
+                    ),
+                  )
+                else
+                  Text(
+                    '${product.quantity}',
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 0,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(color: Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: const BorderSide(color: Color(0xFF6132E4)),
-                      ),
-                    ),
-                    onSubmitted: onSaveTypedQuantity,
-                    onTapOutside: (_) =>
-                        onSaveTypedQuantity(quantityController.text),
                   ),
-                ),
                 const SizedBox(width: 3),
                 _buildQuantityBtn(
                   icon: Icons.add,

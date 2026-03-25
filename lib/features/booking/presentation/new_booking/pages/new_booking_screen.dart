@@ -23,8 +23,7 @@ import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
-import 'package:flutter/services.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
@@ -45,6 +44,9 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selec
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_search_overlay_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_product_list_header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,10 +61,10 @@ import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_client_details_panel.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_payment_summary_panel.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_date_selection_widget.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_product_row_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_client_details_panel.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_payment_summary_panel.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_selection_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_product_row_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/old_booking_right_panel.dart';
 
 class NewBookingScreen extends StatefulWidget {
@@ -1760,215 +1762,12 @@ class NewBookingScreenState extends State<NewBookingScreen>
   }
 
   void _showSearchOverlay() {
-    // Guard: only insert once; subsequent updates go through the ValueNotifiers
-    if (_form.searchOverlayEntry != null) return;
-
-    _form.searchOverlayEntry = OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          // Transparent barrier — tap outside to dismiss
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () {
-                _form.serviceSearchController.clear();
-                _form.removeSearchOverlay();
-              },
-              behavior: HitTestBehavior.opaque,
-              child: const SizedBox.expand(),
-            ),
-          ),
-          // The actual search overlay
-          Positioned(
-            width: 1000,
-            child: CompositedTransformFollower(
-              link: _form.searchLayerLink,
-              showWhenUnlinked: false,
-              offset: const Offset(0, 44),
-              child: Material(
-                elevation: 8,
-                borderRadius: BorderRadius.circular(10),
-                // Wrap both notifiers so the overlay rebuilds reactively
-                child: ValueListenableBuilder<bool>(
-                  valueListenable: _form.overlayIsLoading,
-                  builder: (context, isLoading, _) {
-                    return ValueListenableBuilder<List<ProductEntity>>(
-                      valueListenable: _form.overlayProducts,
-                      builder: (context, productList, _) {
-                        return Container(
-                          constraints: const BoxConstraints(maxHeight: 450),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.shade200),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // ── Header ──────────────────────────────────
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade50,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    if (isLoading)
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 12,
-                                            height: 12,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 1.5,
-                                              color: Colors.grey.shade500,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            'Searching...',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey.shade700,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    else
-                                      Text(
-                                        'Search Results (${productList.length})',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey.shade700,
-                                        ),
-                                      ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        _form.serviceSearchController.clear();
-                                        _form.removeSearchOverlay();
-                                      },
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 18,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // ── Body ────────────────────────────────────
-                              if (isLoading)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 36,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Color(0xFF6132E4),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Text(
-                                        'Loading products...',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey.shade500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              else if (productList.isEmpty)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 32,
-                                    horizontal: 16,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.search_off_rounded,
-                                        size: 48,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        'No results found',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Try adjusting your search or filters',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              else
-                                Flexible(
-                                  child: ListView.separated(
-                                    controller: _searchResultsScrollController,
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                    ),
-                                    itemCount: productList.length,
-                                    separatorBuilder: (_, __) => Divider(
-                                      height: 1,
-                                      color: Colors.grey.shade200,
-                                    ),
-                                    itemBuilder: (_, i) =>
-                                        _buildOverlaySearchItem(productList[i]),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    Overlay.of(context).insert(_form.searchOverlayEntry!);
-  }
-
-  /// Builds search item for the overlay - requires variant selection before adding
-  Widget _buildOverlaySearchItem(ProductEntity product) {
-    return OverlaySearchItem(
-      product: product,
+    BookingSearchOverlayHelper.showSearchOverlay(
+      form: _form,
+      context: context,
       isSales: selectedBookingType == BookingType.sales,
-      onAddProduct: (selectedVariant) {
-        _form.removeSearchOverlay();
-        _form.serviceSearchController.clear();
+      scrollController: _searchResultsScrollController,
+      onAddProduct: (product, selectedVariant) {
         _addProductFromSearchWithVariant(product, selectedVariant);
       },
     );
@@ -2062,35 +1861,9 @@ class NewBookingScreenState extends State<NewBookingScreen>
   }
 
   Widget _buildProductListHeader() {
-    final isSales = selectedBookingType == BookingType.sales;
-    final hasVariants = hasAnyProductWithVariants();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(flex: 3, child: buildHeaderCell('items', alignLeft: true)),
-          const SizedBox(width: 10),
-          Expanded(flex: 2, child: buildHeaderCell('Specifications')),
-          const SizedBox(width: 4),
-          if (hasVariants) ...[
-            Expanded(child: buildHeaderCell('Variants')),
-            const SizedBox(width: 4),
-          ],
-          if (!isSales) ...[
-            Expanded(child: buildHeaderCell('Days')),
-            const SizedBox(width: 4),
-          ],
-          Expanded(child: buildHeaderCell('Available')),
-          const SizedBox(width: 4),
-          Expanded(child: buildHeaderCell('Quantity')),
-          const SizedBox(width: 4),
-          Expanded(child: buildHeaderCell('Price / item')),
-          const SizedBox(width: 4),
-          Expanded(child: buildHeaderCell('Total')),
-          const SizedBox(width: 50), // Matches row close button area
-        ],
-      ),
+    return BookingProductListHeaderWidget(
+      isSales: selectedBookingType == BookingType.sales,
+      hasVariants: hasAnyProductWithVariants(),
     );
   }
 
@@ -2159,7 +1932,7 @@ class NewBookingScreenState extends State<NewBookingScreen>
               onSaveTypedQuantity: (value) =>
                   _saveTypedQuantity(product, value),
               onStartEditingPrice: () => startEditingPrice(product),
-              onSaveEditingPrice: () => _saveEditingPrice(product),
+              onSaveEditingPrice: () => saveEditingPrice(product),
               onRemove: () => _removeProduct(product),
             );
           },
@@ -2283,29 +2056,7 @@ class NewBookingScreenState extends State<NewBookingScreen>
     _quantityFocusNodes[_quantityKey(product)]?.unfocus();
   }
 
-  void _saveEditingPrice(ProductSelectedEntity product) {
-    if (_form.editingVariantId == null) return;
 
-    final newPrice = int.tryParse(_form.inlinePriceController.text);
-
-    // Validate that price is not zero
-    if (newPrice == null || newPrice <= 0) {
-      context.showSnackBar(
-        'Product price cannot be zero or empty',
-        isError: true,
-      );
-      // Keep the field in edit mode
-      return;
-    }
-
-    updateProductPrice(product, newPrice);
-
-    setState(() {
-      _form.editingVariantId = null;
-      _form.inlinePriceController.clear();
-      _form.inlinePriceFocusNode.unfocus();
-    });
-  }
 
   /// Remove a product from the selected list
   void _removeProduct(ProductSelectedEntity product) {
@@ -2321,202 +2072,19 @@ class NewBookingScreenState extends State<NewBookingScreen>
   }
 
   Widget _buildSummarySection() {
-    return Container(
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 245, 242, 254),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white),
-      ),
-      child: Column(
-        children: [
-          // Summary rows
-          ListenableBuilder(
-            listenable: Listenable.merge([
-              _form.selectedProductsNotifier,
-              _form.additionalChargesNotifier,
-              _form.advanceAmountController,
-              _form.discountAmountController,
-            ]),
-            builder: (context, _) {
-              final products = _form.selectedProductsNotifier.value;
-              final additionalCharges = _form.additionalChargesNotifier.value;
-              final isSaleType = selectedBookingType == BookingType.sales;
-              final advanceAmount = isSaleType
-                  ? 0
-                  : (_form.advanceAmountController.text.trim().toIntOrNull() ??
-                        0);
-              final discountAmount =
-                  _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
-
-              final summaryRentalDays = !isSaleType
-                  ? _calculateRentalDays()
-                  : 1;
-              final productTotal = products.fold<int>(0, (sum, product) {
-                // Only multiply by days for qualifying service types
-                final daysMultiplier =
-                    (!isSaleType &&
-                        shouldMultiplyByDays(product.variant.mainServiceType))
-                    ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-                    : 1;
-                return sum +
-                    (product.amount * product.quantity * daysMultiplier);
-              });
-              final additionalTotal = additionalCharges.fold<int>(
-                0,
-                (sum, charge) => sum + (charge.amount ?? 0),
-              );
-              final totalPayable =
-                  productTotal + additionalTotal - discountAmount;
-              final remainingAmount = totalPayable - advanceAmount;
-
-              return Column(
-                children: [
-                  if (isSaleType)
-                    buildSummaryRow(
-                      'Total amount',
-                      remainingAmount > 0 ? remainingAmount : 0,
-                      valueColor: const Color(0xFF6132E4),
-                      isBold: true,
-                    )
-                  else ...[
-                    buildSummaryRow('Product total', productTotal),
-                    if (additionalTotal > 0)
-                      buildSummaryRow('Additional charges', additionalTotal),
-                    if (discountAmount > 0)
-                      buildSummaryRow(
-                        '- Discount',
-                        discountAmount,
-                        isNegative: true,
-                      ),
-                    const Divider(height: 6),
-                    buildSummaryRow(
-                      'Paid',
-                      advanceAmount,
-                      valueColor: const Color(0xFF1AB000),
-                    ),
-                    buildSummaryRow(
-                      'Total payable',
-                      remainingAmount > 0 ? remainingAmount : 0,
-                      valueColor: const Color(0xFFD30000),
-                      isBold: true,
-                    ),
-                  ],
-                ],
-              );
-            },
-          ),
-          // const SizedBox(height: 3),
-
-          // const SizedBox(height: 3),
-          // Add customization button - Only for Dresses (not for sales)
-          ValueListenableBuilder<List<ProductSelectedEntity>>(
-            valueListenable: _form.selectedProductsNotifier,
-            builder: (context, products, _) {
-              // Hide customization button for sales mode
-              if (selectedBookingType == BookingType.sales) {
-                return const SizedBox.shrink();
-              }
-              final hasDressesOrCostumes = products.any(
-                (p) =>
-                    (p.variant.mainServiceType?.isDress ?? false) ||
-                    (p.variant.mainServiceType?.isCostume ?? false),
-              );
-              if (!hasDressesOrCostumes) return const SizedBox.shrink();
-
-              // Check if any dress/costume product has measurements (customizations saved)
-              final hasCustomizations = products.any(
-                (p) =>
-                    ((p.variant.mainServiceType?.isDress ?? false) ||
-                        (p.variant.mainServiceType?.isCostume ?? false)) &&
-                    p.measurements.isNotEmpty,
-              );
-
-              return Column(
-                children: [
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 36,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        setState(() {
-                          showCustomization = true;
-                        });
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: hasCustomizations
-                            ? const Color(0xFFF3F0FF)
-                            : Colors.transparent,
-                        foregroundColor: hasCustomizations
-                            ? const Color(0xFF6132E4)
-                            : Colors.grey.shade600,
-                        side: BorderSide(
-                          color: hasCustomizations
-                              ? const Color(0xFF6132E4)
-                              : Colors.grey.shade300,
-                          width: 1,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            hasCustomizations ? Icons.edit_outlined : Icons.add,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            hasCustomizations
-                                ? 'Edit customization'
-                                : 'Add customization (Optional)',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-          const SizedBox(height: 8),
-          // Confirm button - Color #6132E4
-          SizedBox(
-            width: double.infinity,
-            height: 39, // Balanced height
-            child: ElevatedButton(
-              onPressed: _handleConfirmBooking,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6132E4),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                selectedBookingType == BookingType.sales
-                    ? 'Confirm Sales'
-                    : 'Confirm Booking',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return BookingSummarySection(
+      form: _form,
+      isSales: selectedBookingType == BookingType.sales,
+      calculateRentalDays: _calculateRentalDays,
+      onShowCustomization: () {
+        setState(() {
+          showCustomization = true;
+        });
+      },
+      onConfirm: _handleConfirmBooking,
+      confirmLabel: selectedBookingType == BookingType.sales
+          ? 'Confirm Sales'
+          : 'Confirm Booking',
     );
   }
 
@@ -2731,7 +2299,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
       decreaseStock: decreaseStockForPastDate || !_isPastDate(),
     );
   }
-
 
   Widget _buildRightSidePanel() {
     // For sales mode, show a single simplified panel
@@ -2994,7 +2561,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
     );
   }
 
-
   void _showSuccessDialog(int id, BookingType type) {
     final isSale = type == BookingType.sales;
 
@@ -3206,7 +2772,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
       },
     );
   }
-
 
   // ─── Old Booking ─────────────────────────────────────────────────────────
 
