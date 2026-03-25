@@ -366,6 +366,11 @@ extension StringXNullable on String? {
   }
 }
 
+extension StringXWaPhone on String {
+  /// Strips all non-digit characters — used to build WhatsApp `wa.me` links.
+  String get toWaPhone => replaceAll(RegExp(r'[^0-9]'), '');
+}
+
 extension StringXNumberFieldChangeValidator on String? {
   bool hasNumberChangedComparedTo(String newValue) {
     final oldVal = this?.trim();
@@ -408,4 +413,5 @@ extension StringColorXNullable on String? {
   //   final intVal = int.parse(hex, radix: 16);
   //   return Color(intVal);
   // }
+
 }
