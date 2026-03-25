@@ -1,7 +1,7 @@
+import 'package:bookie_buddy_web/core/app/widgets/shop_switcher_bottom_sheet.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
@@ -52,17 +52,15 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     screens = [
       MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => BookingDetailsDrawerCubit(),
-          ),
+          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              getBooking: getIt.get(),
-              updateDeliveryStatus: getIt.get(),
-              updateBookingStatus: getIt.get(),
-              updatePayment: getIt.get(),
-              cancelBooking: getIt.get(),
-              deleteBooking: getIt.get(),
+              getBooking: getIt(),
+              updateDeliveryStatus: getIt(),
+              updateBookingStatus: getIt(),
+              updatePayment: getIt(),
+              cancelBooking: getIt(),
+              deleteBooking: getIt(),
             ),
           ),
           BlocProvider(
@@ -70,10 +68,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
-              updateDeliveryStatus: getIt.get(),
-              deleteBooking: getIt.get(),
-              updateBookingStatus: getIt.get(),
-              loadDesktopBookings: getIt.get(),
+              updateDeliveryStatus: getIt(),
+              deleteBooking: getIt(),
+              updateBookingStatus: getIt(),
+              loadDesktopBookings: getIt(),
             ),
           ),
         ],
@@ -81,34 +79,29 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       ),
       MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => BookingDetailsDrawerCubit(),
-          ),
+          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              getBooking: getIt.get(),
-              updateDeliveryStatus: getIt.get(),
-              updateBookingStatus: getIt.get(),
-              updatePayment: getIt.get(),
-              cancelBooking: getIt.get(),
-              deleteBooking: getIt.get(),
+              getBooking: getIt(),
+              updateDeliveryStatus: getIt(),
+              updateBookingStatus: getIt(),
+              updatePayment: getIt(),
+              cancelBooking: getIt(),
+              deleteBooking: getIt(),
             ),
           ),
           BlocProvider(
             create: (context) => BookingDetailsPaymentHistoryCubit(),
           ),
           BlocProvider(
-            create: (context) => AllSalesBloc(
-              getSalesUseCase: getIt.get<GetSalesUseCase>(),
-            ),
+            create: (context) =>
+                AllSalesBloc(getSalesUseCase: getIt<GetSalesUseCase>()),
           ),
-          BlocProvider(
-            create: (context) => SalesDetailsDrawerCubit(),
-          ),
+          BlocProvider(create: (context) => SalesDetailsDrawerCubit()),
           BlocProvider(
             create: (context) => SalesDetailsBloc(
-              getSaleDetailsUseCase: getIt.get<GetSaleDetailsUseCase>(),
-              deleteSaleUseCase: getIt.get<DeleteSaleUseCase>(),
+              getSaleDetailsUseCase: getIt<GetSaleDetailsUseCase>(),
+              deleteSaleUseCase: getIt<DeleteSaleUseCase>(),
             ),
           ),
         ],
@@ -116,17 +109,15 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       ),
       MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => BookingDetailsDrawerCubit(),
-          ),
+          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
           BlocProvider(
             create: (context) => BookingDetailsBloc(
-              getBooking: getIt.get(),
-              updateDeliveryStatus: getIt.get(),
-              updateBookingStatus: getIt.get(),
-              updatePayment: getIt.get(),
-              cancelBooking: getIt.get(),
-              deleteBooking: getIt.get(),
+              getBooking: getIt(),
+              updateDeliveryStatus: getIt(),
+              updateBookingStatus: getIt(),
+              updatePayment: getIt(),
+              cancelBooking: getIt(),
+              deleteBooking: getIt(),
             ),
           ),
           BlocProvider(
@@ -134,18 +125,18 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
-              updateDeliveryStatus: getIt.get(),
-              deleteBooking: getIt.get(),
-              updateBookingStatus: getIt.get(),
-              loadDesktopBookings: getIt.get(),
+              updateDeliveryStatus: getIt(),
+              deleteBooking: getIt(),
+              updateBookingStatus: getIt(),
+              loadDesktopBookings: getIt(),
             ),
           ),
           BlocProvider(
             create: (context) => StockManagementCubit(
-              getProducts: getIt.get(),
-              deleteProduct: getIt.get(),
-              searchAllProducts: getIt.get(),
-              searchAndFilterProducts: getIt.get(),
+              getProducts: getIt(),
+              deleteProduct: getIt(),
+              searchAllProducts: getIt(),
+              searchAndFilterProducts: getIt(),
             ),
           ),
         ],
@@ -168,137 +159,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     });
   }
 
-  /// Switch to a different shop
-  /// Show shop selector as a positioned popup menu, driven by ShopListBloc
-  Future<void> _showShopSelector(BuildContext context, UserEntity user) async {
-    context.read<ShopListBloc>().add(const ShopListEvent.loadShops());
-
-    // Show loading indicator while shops are being fetched
-    if (mounted) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => const Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    // Wait for loaded or error state
-    final state = await context.read<ShopListBloc>().stream.firstWhere(
-          (s) => s.maybeWhen(loading: () => false, orElse: () => true),
-        );
-
-    if (!mounted) return;
-    Navigator.pop(context); // close loading dialog
-
-    final shops = state.whenOrNull(loaded: (shops, _) => shops);
-
-    if (shops == null) {
-      // error state
-      final message =
-          state.whenOrNull(error: (msg) => msg) ?? 'Failed to load shops';
-      context.showSnackBar(message, isError: true);
-      return;
-    }
-
-    if (shops.isEmpty) {
-      context.showSnackBar('No shops available');
-      return;
-    }
-
-    final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null) return;
-
-    final position = renderBox.localToGlobal(Offset.zero);
-    final size = renderBox.size;
-
-    final selectedShopId = await showMenu<int>(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        position.dx,
-        position.dy + size.height + 8,
-        position.dx + 300,
-        position.dy,
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      items: shops.map((shop) {
-        final isCurrentShop = shop.id == user.shopDetails.id;
-        return PopupMenuItem<int>(
-          value: shop.id,
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey.shade200,
-                  image: shop.image != null
-                      ? DecorationImage(
-                          image: NetworkImage(shop.image!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                ),
-                child: shop.image == null
-                    ? Icon(Icons.store, color: Colors.grey.shade400, size: 20)
-                    : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      shop.name,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w600),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (shop.address.isNotEmpty)
-                      Text(
-                        shop.address,
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                  ],
-                ),
-              ),
-              if (isCurrentShop)
-                Icon(Icons.check_circle,
-                    color: Colors.green.shade600, size: 20),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-
-    if (selectedShopId != null && selectedShopId != user.shopDetails.id) {
-      if (!mounted) return;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => const Center(child: CircularProgressIndicator()),
-      );
-      try {
-        context.read<ShopListBloc>().add(ShopListEvent.changeAccount(
-            shops.firstWhere((s) => s.id == selectedShopId)));
-        await context.read<UserCubit>().switchShop(selectedShopId, null);
-        if (mounted) {
-          Navigator.pop(context);
-          context.showSnackBar('Shop switched successfully');
-        }
-      } catch (e) {
-        if (mounted) {
-          Navigator.pop(context);
-          context.showSnackBar('Failed to switch shop: $e', isError: true);
-        }
-      }
-    }
-  }
 
   /// Check for unsaved changes before navigating away from NewBookingScreen
   Future<bool> _checkNavigationFromNewBooking() async {
@@ -339,12 +199,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                   ),
           ),
           // Hover-expandable sidebar (positioned absolutely, overlays content)
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: _glassSidebar(),
-          ),
+          Positioned(left: 0, top: 0, bottom: 0, child: _glassSidebar()),
         ],
       ),
     );
@@ -416,7 +271,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
         ),
-        _shopSwitcherButtonExpanded(),
+        const ShopSwitcherButtonExpanded(),
         const SizedBox(height: 12),
         _logoutButtonExpanded(),
         const SizedBox(height: 20),
@@ -448,7 +303,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
         ),
-        _shopSwitcherButtonCollapsed(),
+        const ShopSwitcherButtonCollapsed(),
         const SizedBox(height: 12),
         _logoutButtonCollapsed(),
         const SizedBox(height: 20),
@@ -460,8 +315,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         final userName = user?.firstName ?? 'User';
-        final firstLetter =
-            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+        final firstLetter = userName.isNotEmpty
+            ? userName[0].toUpperCase()
+            : 'U';
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -498,8 +354,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         final userName = user?.firstName ?? 'User';
-        final firstLetter =
-            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+        final firstLetter = userName.isNotEmpty
+            ? userName[0].toUpperCase()
+            : 'U';
 
         return _buildAvatar(firstLetter, 40);
       },
@@ -516,10 +373,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF6C5CE7),
-            Color(0xFF00B4DB),
-          ],
+          colors: [Color(0xFF6C5CE7), Color(0xFF00B4DB)],
         ),
       ),
       child: Container(
@@ -539,138 +393,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  /// Shop switcher button for expanded sidebar - styled like logout button
-  Widget _shopSwitcherButtonExpanded() {
-    return BlocBuilder<UserCubit, UserEntity?>(
-      builder: (context, user) {
-        if (user == null) return const SizedBox.shrink();
-        final hasMultipleShops = user.haveMultipleShops;
-        if (!hasMultipleShops) return const SizedBox.shrink();
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => _showShopSelector(context, user),
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: const Color(0xFF6C5CE7).withOpacity(0.3),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    // Shop logo
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: Colors.grey.shade200,
-                        image: user.shopDetails.image != null
-                            ? DecorationImage(
-                                image: NetworkImage(user.shopDetails.image!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: user.shopDetails.image == null
-                          ? Icon(Icons.store,
-                              color: Colors.grey.shade400, size: 18)
-                          : null,
-                    ),
-                    const SizedBox(width: 12),
-                    // Shop name and location
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            user.shopDetails.name,
-                            style: const TextStyle(
-                              color: Color(0xFF6C5CE7),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            user.shopDetails.place ?? user.shopDetails.address,
-                            style: TextStyle(
-                              color: const Color(0xFF6C5CE7).withOpacity(0.7),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(
-                      Icons.swap_horiz_rounded,
-                      color: const Color(0xFF6C5CE7),
-                      size: 20,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Shop switcher button for collapsed sidebar
-  Widget _shopSwitcherButtonCollapsed() {
-    return BlocBuilder<UserCubit, UserEntity?>(
-      builder: (context, user) {
-        if (user == null) return const SizedBox.shrink();
-        final hasMultipleShops = user.haveMultipleShops;
-        if (!hasMultipleShops) return const SizedBox.shrink();
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => _showShopSelector(context, user),
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: const Color(0xFF6C5CE7).withOpacity(0.3),
-                    width: 1,
-                  ),
-                ),
-                child: Icon(
-                  Icons.swap_horiz_rounded,
-                  color: const Color(0xFF6C5CE7),
-                  size: 20,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -759,7 +481,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             color: const Color(0xFF6C5CE7).withOpacity(0.35),
             blurRadius: 12,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       );
     }
@@ -798,8 +520,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   /// Refresh dashboard data
   void _refreshDashboard() {
     context.read<DashboardBloc>().add(
-          const DashboardEvent.loadDashboardData(useOldState: true),
-        );
+      const DashboardEvent.loadDashboardData(useOldState: true),
+    );
   }
 
   Widget _logoutButtonExpanded() {
@@ -824,8 +546,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.logout_rounded,
-                    color: Colors.red.shade400, size: 20),
+                Icon(
+                  Icons.logout_rounded,
+                  color: Colors.red.shade400,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Logout',
@@ -862,8 +587,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                 width: 1,
               ),
             ),
-            child: Icon(Icons.logout_rounded,
-                color: Colors.red.shade400, size: 20),
+            child: Icon(
+              Icons.logout_rounded,
+              color: Colors.red.shade400,
+              size: 20,
+            ),
           ),
         ),
       ),
@@ -876,31 +604,20 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            Icon(
-              Icons.logout_rounded,
-              color: Colors.red.shade400,
-              size: 28,
-            ),
+            Icon(Icons.logout_rounded, color: Colors.red.shade400, size: 28),
             const SizedBox(width: 12),
             const Text(
               'Logout',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ],
         ),
         content: const Text(
           'Are you sure you want to logout?',
-          style: TextStyle(
-            fontSize: 16,
-          ),
+          style: TextStyle(fontSize: 16),
         ),
         actions: [
           TextButton(
@@ -919,20 +636,14 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red.shade400,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: const Text(
               'Logout',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
         ],

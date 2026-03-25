@@ -37,7 +37,16 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
         widget.product.variants.isNotEmpty) {
       selectedVariant = widget.product.variants.first;
     } else {
-      selectedVariant = null;
+      // Also auto-select when all variants have empty attribute (single unnamed variant)
+      // — no chip will render so we must pre-select to allow adding
+      final hasVisibleChip = widget.product.variants.any(
+        (v) => v.attribute.isNotEmpty,
+      );
+      if (!hasVisibleChip && widget.product.variants.isNotEmpty) {
+        selectedVariant = widget.product.variants.first;
+      } else {
+        selectedVariant = null;
+      }
     }
   }
 

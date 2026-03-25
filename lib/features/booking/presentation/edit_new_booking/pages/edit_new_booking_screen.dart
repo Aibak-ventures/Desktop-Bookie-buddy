@@ -7,11 +7,11 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_entity
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
@@ -20,7 +20,6 @@ import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_partial_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
@@ -44,6 +43,8 @@ import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_search_product_field_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
 
 class EditNewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -232,7 +233,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
     if (booking.discountAmount != null) {
       _form.discountAmountController.text = booking.discountAmount.toString();
     }
-    // paymentMethod = booking.p;
     _form.deliveryStatus = booking.deliveryStatus;
     bookingStatus = booking.bookingStatus; // Load booking status
     bookingCompletedDate = booking.bookingCompletedDate; // Load completed date
@@ -250,7 +250,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
       _form.pickupLocationController.text = booking.otherDetails.locationFrom!;
     }
     if (booking.otherDetails.locationTo != null) {
-      _form.destinationLocationController.text = booking.otherDetails.locationTo!;
+      _form.destinationLocationController.text =
+          booking.otherDetails.locationTo!;
     }
     if (booking.otherDetails.end != null) {
       _form.runningKilometersController.text = booking.otherDetails.end!;
@@ -603,7 +604,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
 
     // Include running kilometers if changed (even if cleared to null/empty)
     if (_hasRunningKmChanged()) {
-      final runningKm = _form.runningKilometersController.text.trim().nullIfEmpty;
+      final runningKm = _form.runningKilometersController.text
+          .trim()
+          .nullIfEmpty;
       // Send as both flat field and nested other_details for API compatibility
       if (runningKm != null) {
         updates['running_km'] = runningKm;
@@ -689,7 +692,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
     _form.dispose();
     super.dispose();
   }
-
 
   /// Check if there are any unsaved changes
   bool hasUnsavedChanges() {
@@ -830,888 +832,179 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
     List<ServiceEntity> services = [];
     servicesState.whenOrNull(loaded: (s) => services = s);
 
-    // Setup local state for dialog
-    final TextEditingController maxPriceController = TextEditingController();
-    final isPriceFilterEnabledWidgetNotifier = ValueNotifier(
-      _form.isPriceFilterEnabled.value,
-    );
-    final tempSelectedServiceId = ValueNotifier<int?>(selectedServiceId);
-    final tempSelectedSearchTypeIndex = ValueNotifier<int>(
-      _form.selectedSearchTypeIndex.value,
-    );
-    final tempPriceRange = ValueNotifier<RangeValues>(_form.priceRange.value);
-
     showDialog(
       context: context,
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.5),
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: Container(
-          width: 500,
-          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
-                  ),
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey.shade200, width: 1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF6132E4).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.tune_rounded,
-                        color: Color(0xFF6132E4),
-                        size: 22,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      'Search & Filter',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Icon(Icons.close, color: Colors.grey.shade600),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.grey.shade100,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Service Selection Section
-                      const Text(
-                        'Category (Service)',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D2D2D),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      ValueListenableBuilder<int?>(
-                        valueListenable: tempSelectedServiceId,
-                        builder: (context, selectedId, _) {
-                          // Combine "All Services" (-1) and actual services
-                          final allOptions = [
-                            {'id': -1, 'name': 'All Services'},
-                            ...services.map(
-                              (s) => {'id': s.id, 'name': s.name},
-                            ),
-                          ];
-
-                          return Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: allOptions.map((option) {
-                              final id = option['id'] as int;
-                              final name = option['name'] as String;
-                              // Map -1 to "null" or keep logic consistent.
-                              // Here selectedServiceId stores -1 for "All" or null.
-                              // Let's assume -1 for "All".
-                              final isSelected =
-                                  selectedId == id ||
-                                  (selectedId == null && id == -1);
-
-                              return InkWell(
-                                onTap: () {
-                                  tempSelectedServiceId.value = id;
-                                },
-                                borderRadius: BorderRadius.circular(12),
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? const Color(0xFF6132E4)
-                                        : Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade300,
-                                      width: 1.5,
-                                    ),
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: const Color(
-                                                0xFF6132E4,
-                                              ).withOpacity(0.3),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Text(
-                                    name,
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.grey.shade700,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.w500,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter',
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 28),
-                      const Divider(height: 1),
-                      const SizedBox(height: 24),
-
-                      // Search Type Section
-                      const Text(
-                        'Search Type',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D2D2D),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      ValueListenableBuilder<int>(
-                        valueListenable: tempSelectedSearchTypeIndex,
-                        builder: (context, selectedIndex, child) {
-                          return Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: _searchTypes.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final type = entry.value;
-                              final isSelected = selectedIndex == index;
-                              return InkWell(
-                                onTap: () =>
-                                    tempSelectedSearchTypeIndex.value = index,
-                                borderRadius: BorderRadius.circular(12),
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? const Color(0xFF6132E4)
-                                        : Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade300,
-                                      width: 1.5,
-                                    ),
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: const Color(
-                                                0xFF6132E4,
-                                              ).withOpacity(0.3),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      if (isSelected)
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 6),
-                                          child: Icon(
-                                            Icons.check_circle_rounded,
-                                            color: Colors.white,
-                                            size: 16,
-                                          ),
-                                        ),
-                                      Text(
-                                        type,
-                                        style: TextStyle(
-                                          color: isSelected
-                                              ? Colors.white
-                                              : Colors.grey.shade700,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w600
-                                              : FontWeight.w500,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 28),
-                      const Divider(height: 1),
-                      const SizedBox(height: 24),
-
-                      // Price Filter Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Price Range',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF2D2D2D),
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                          ValueListenableBuilder<bool>(
-                            valueListenable: isPriceFilterEnabledWidgetNotifier,
-                            builder: (context, isEnabled, child) =>
-                                Transform.scale(
-                                  scale: 0.85,
-                                  child: Switch(
-                                    value: isEnabled,
-                                    onChanged: (value) {
-                                      isPriceFilterEnabledWidgetNotifier.value =
-                                          value;
-                                    },
-                                    activeThumbColor: const Color(0xFF6132E4),
-                                    activeTrackColor: const Color(
-                                      0xFF6132E4,
-                                    ).withOpacity(0.3),
-                                    inactiveThumbColor: Colors.grey.shade400,
-                                    inactiveTrackColor: Colors.grey.shade200,
-                                  ),
-                                ),
-                          ),
-                        ],
-                      ),
-
-                      // Price Range Content
-                      ValueListenableBuilder<bool>(
-                        valueListenable: isPriceFilterEnabledWidgetNotifier,
-                        builder: (context, isEnabled, child) => AnimatedSize(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          child: isEnabled
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 16),
-                                    // Max Price Editor
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'Maximum Price',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xFF6B6B6B),
-                                            fontFamily: 'Inter',
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        ValueListenableBuilder<double>(
-                                          valueListenable: _form.maxPriceNotifier,
-                                          builder:
-                                              (
-                                                context,
-                                                currentMaxPrice,
-                                                child,
-                                              ) {
-                                                maxPriceController.text =
-                                                    currentMaxPrice
-                                                        .toInt()
-                                                        .toString();
-                                                return Container(
-                                                  width: 130,
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 14,
-                                                        vertical: 10,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: const Color(
-                                                      0xFFF8F9FA,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10,
-                                                        ),
-                                                    border: Border.all(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                  child: TextField(
-                                                    controller:
-                                                        maxPriceController,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    onTapOutside: (_) {
-                                                      FocusScope.of(
-                                                        context,
-                                                      ).unfocus();
-                                                    },
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontFamily: 'Inter',
-                                                    ),
-                                                    decoration:
-                                                        const InputDecoration(
-                                                          border:
-                                                              InputBorder.none,
-                                                          contentPadding:
-                                                              EdgeInsets.zero,
-                                                          isDense: true,
-                                                          prefixText: '₹ ',
-                                                          prefixStyle:
-                                                              TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Color(
-                                                                  0xFF6132E4,
-                                                                ),
-                                                              ),
-                                                        ),
-                                                    onChanged: (value) {
-                                                      if (value.isNotEmpty) {
-                                                        final newMaxPrice =
-                                                            double.tryParse(
-                                                              value,
-                                                            ) ??
-                                                            currentMaxPrice;
-                                                        _form.maxPriceNotifier
-                                                                .value =
-                                                            newMaxPrice;
-                                                        if (tempPriceRange
-                                                                .value
-                                                                .end >
-                                                            newMaxPrice) {
-                                                          tempPriceRange
-                                                              .value = RangeValues(
-                                                            tempPriceRange
-                                                                        .value
-                                                                        .start >
-                                                                    newMaxPrice
-                                                                ? 0
-                                                                : tempPriceRange
-                                                                      .value
-                                                                      .start,
-                                                            newMaxPrice,
-                                                          );
-                                                        }
-                                                      }
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                        ),
-                                      ],
-                                    ),
-
-                                    const SizedBox(height: 20),
-
-                                    // Price Range Display
-                                    ValueListenableBuilder<RangeValues>(
-                                      valueListenable: tempPriceRange,
-                                      builder: (context, range, child) => Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.1),
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.05),
-                                                ],
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: const Color(
-                                                  0xFF6132E4,
-                                                ).withOpacity(0.3),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              range.start.toCurrency(),
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xFF6132E4),
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                            ),
-                                            child: Icon(
-                                              Icons.arrow_forward,
-                                              size: 18,
-                                              color: Colors.grey.shade400,
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.1),
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.05),
-                                                ],
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: const Color(
-                                                  0xFF6132E4,
-                                                ).withOpacity(0.3),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              range.end.toCurrency(),
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xFF6132E4),
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: 8),
-
-                                    // Price Range Slider
-                                    ValueListenableBuilder<RangeValues>(
-                                      valueListenable: tempPriceRange,
-                                      builder: (context, range, child) =>
-                                          ValueListenableBuilder<double>(
-                                            valueListenable: _form.maxPriceNotifier,
-                                            builder:
-                                                (
-                                                  context,
-                                                  currentMaxPrice,
-                                                  child,
-                                                ) => SliderTheme(
-                                                  data: SliderThemeData(
-                                                    activeTrackColor:
-                                                        const Color(0xFF6132E4),
-                                                    inactiveTrackColor:
-                                                        Colors.grey.shade200,
-                                                    thumbColor: const Color(
-                                                      0xFF6132E4,
-                                                    ),
-                                                    overlayColor: const Color(
-                                                      0xFF6132E4,
-                                                    ).withOpacity(0.2),
-                                                    trackHeight: 4,
-                                                    thumbShape:
-                                                        const RoundSliderThumbShape(
-                                                          enabledThumbRadius: 8,
-                                                        ),
-                                                    overlayShape:
-                                                        const RoundSliderOverlayShape(
-                                                          overlayRadius: 16,
-                                                        ),
-                                                  ),
-                                                  child: RangeSlider(
-                                                    values: range,
-                                                    min: 0,
-                                                    max: currentMaxPrice,
-                                                    divisions: 20,
-                                                    onChanged:
-                                                        (RangeValues newRange) {
-                                                          tempPriceRange.value =
-                                                              newRange;
-                                                        },
-                                                  ),
-                                                ),
-                                          ),
-                                    ),
-
-                                    const SizedBox(height: 20),
-
-                                    // Quick Filters
-                                    const Text(
-                                      'Quick Filters',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF2D2D2D),
-                                        fontFamily: 'Inter',
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-
-                                    ValueListenableBuilder<double>(
-                                      valueListenable: _form.maxPriceNotifier,
-                                      builder:
-                                          (context, currentMaxPrice, child) {
-                                            final quickFilters =
-                                                _generateQuickFilters(
-                                                  0,
-                                                  currentMaxPrice,
-                                                );
-
-                                            return Wrap(
-                                              spacing: 8,
-                                              runSpacing: 8,
-                                              children: quickFilters
-                                                  .map(
-                                                    (
-                                                      filter,
-                                                    ) => _buildQuickFilterChip(
-                                                      filter['label'],
-                                                      filter['range'],
-                                                      tempPriceRange,
-                                                      (val) =>
-                                                          tempPriceRange.value =
-                                                              val,
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                            );
-                                          },
-                                    ),
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Footer
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(20),
-                  ),
-                  border: Border(
-                    top: BorderSide(color: Colors.grey.shade200, width: 1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          tempSelectedSearchTypeIndex.value = 0;
-                          tempSelectedServiceId.value = -1;
-                          tempPriceRange.value = RangeValues(
-                            0,
-                            _form.maxPriceNotifier.value,
-                          );
-                          isPriceFilterEnabledWidgetNotifier.value = false;
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          side: BorderSide(
-                            color: Colors.grey.shade300,
-                            width: 1.5,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(
-                          'Reset',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade700,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Apply changes
-                          setState(() {
-                            selectedServiceId = tempSelectedServiceId.value;
-                            _form.selectedSearchTypeIndex.value =
-                                tempSelectedSearchTypeIndex.value;
-                            _form.priceRange.value = tempPriceRange.value;
-                            _form.isPriceFilterEnabled.value =
-                                isPriceFilterEnabledWidgetNotifier.value;
-                          });
-
-                          Navigator.of(context).pop();
-
-                          // Trigger Application
-                          _applyProductFilters(
-                            _form.selectedSearchTypeIndex.value,
-                            _form.priceRange.value,
-                            _form.isPriceFilterEnabled.value,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          backgroundColor: const Color(0xFF6132E4),
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shadowColor: const Color(0xFF6132E4).withOpacity(0.3),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.check, size: 18),
-                            SizedBox(width: 8),
-                            Text(
-                              'Apply Filters',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+      builder: (_) => ProductFilterDialog(
+        services: services,
+        searchTypes: _searchTypes,
+        initialServiceId: selectedServiceId,
+        initialSearchTypeIndex: _form.selectedSearchTypeIndex.value,
+        initialPriceRange: _form.priceRange.value,
+        initialMaxPrice: _form.maxPriceNotifier.value,
+        initialIsPriceFilterEnabled: _form.isPriceFilterEnabled.value,
+        onApply:
+            ({
+              required serviceId,
+              required searchTypeIndex,
+              required priceRange,
+              required maxPrice,
+              required isPriceFilterEnabled,
+            }) {
+              setState(() {
+                selectedServiceId = serviceId;
+                _form.selectedSearchTypeIndex.value = searchTypeIndex;
+                _form.priceRange.value = priceRange;
+                _form.maxPriceNotifier.value = maxPrice;
+                _form.isPriceFilterEnabled.value = isPriceFilterEnabled;
+              });
+              _applyProductFilters(
+                searchTypeIndex,
+                priceRange,
+                isPriceFilterEnabled,
+              );
+            },
       ),
     );
   }
 
   // Helper function to round numbers to meaningful values
-  double _roundToMeaningfulNumber(double value) {
-    if (value < 100) {
-      return (value / 10).round() * 10.0;
-    } else if (value < 1000) {
-      return (value / 100).round() * 100.0;
-    } else if (value < 10000) {
-      return (value / 1000).round() * 1000.0;
-    } else {
-      return (value / 5000).round() * 5000.0;
-    }
-  }
+  // double _roundToMeaningfulNumber(double value) {
+  //   if (value < 100) {
+  //     return (value / 10).round() * 10.0;
+  //   } else if (value < 1000) {
+  //     return (value / 100).round() * 100.0;
+  //   } else if (value < 10000) {
+  //     return (value / 1000).round() * 1000.0;
+  //   } else {
+  //     return (value / 5000).round() * 5000.0;
+  //   }
+  // }
 
-  // Helper function to generate dynamic quick filters based on max price
-  List<Map<String, dynamic>> _generateQuickFilters(
-    double minPrice,
-    double maxPrice,
-  ) {
-    final List<Map<String, dynamic>> filters = [];
+  // // Helper function to generate dynamic quick filters based on max price
+  // List<Map<String, dynamic>> _generateQuickFilters(
+  //   double minPrice,
+  //   double maxPrice,
+  // ) {
+  //   final List<Map<String, dynamic>> filters = [];
 
-    // Calculate dynamic ranges based on maxPrice
-    double range1 = maxPrice * 0.1; // 10% of max
-    double range2 = maxPrice * 0.25; // 25% of max
-    double range3 = maxPrice * 0.5; // 50% of max
-    double range4 = maxPrice * 0.75; // 75% of max
+  //   // Calculate dynamic ranges based on maxPrice
+  //   double range1 = maxPrice * 0.1; // 10% of max
+  //   double range2 = maxPrice * 0.25; // 25% of max
+  //   double range3 = maxPrice * 0.5; // 50% of max
+  //   double range4 = maxPrice * 0.75; // 75% of max
 
-    // Round to nearest meaningful number
-    range1 = _roundToMeaningfulNumber(range1);
-    range2 = _roundToMeaningfulNumber(range2);
-    range3 = _roundToMeaningfulNumber(range3);
-    range4 = _roundToMeaningfulNumber(range4);
+  //   // Round to nearest meaningful number
+  //   range1 = _roundToMeaningfulNumber(range1);
+  //   range2 = _roundToMeaningfulNumber(range2);
+  //   range3 = _roundToMeaningfulNumber(range3);
+  //   range4 = _roundToMeaningfulNumber(range4);
 
-    // Ensure ranges are distinct and meaningful
-    if (range1 > minPrice && range1 < maxPrice) {
-      filters.add({
-        'label': 'Under ${range1.toCurrency()}',
-        'range': RangeValues(minPrice, range1),
-      });
-    }
+  //   // Ensure ranges are distinct and meaningful
+  //   if (range1 > minPrice && range1 < maxPrice) {
+  //     filters.add({
+  //       'label': 'Under ${range1.toCurrency()}',
+  //       'range': RangeValues(minPrice, range1),
+  //     });
+  //   }
 
-    if (range2 > range1 && range2 < maxPrice) {
-      filters.add({
-        'label': '${range1.toCurrency()} - ${range2.toCurrency()}',
-        'range': RangeValues(range1, range2),
-      });
-    }
+  //   if (range2 > range1 && range2 < maxPrice) {
+  //     filters.add({
+  //       'label': '${range1.toCurrency()} - ${range2.toCurrency()}',
+  //       'range': RangeValues(range1, range2),
+  //     });
+  //   }
 
-    if (range3 > range2 && range3 < maxPrice) {
-      filters.add({
-        'label': '${range2.toCurrency()} - ${range3.toCurrency()}',
-        'range': RangeValues(range2, range3),
-      });
-    }
+  //   if (range3 > range2 && range3 < maxPrice) {
+  //     filters.add({
+  //       'label': '${range2.toCurrency()} - ${range3.toCurrency()}',
+  //       'range': RangeValues(range2, range3),
+  //     });
+  //   }
 
-    if (range4 > range3 && range4 < maxPrice) {
-      filters.add({
-        'label': '${range3.toCurrency()} - ${range4.toCurrency()}',
-        'range': RangeValues(range3, range4),
-      });
-    }
+  //   if (range4 > range3 && range4 < maxPrice) {
+  //     filters.add({
+  //       'label': '${range3.toCurrency()} - ${range4.toCurrency()}',
+  //       'range': RangeValues(range3, range4),
+  //     });
+  //   }
 
-    // Always add "Above X" filter
-    if (range4 < maxPrice) {
-      filters.add({
-        'label': 'Above ${range4.toCurrency()}',
-        'range': RangeValues(range4, maxPrice),
-      });
-    }
+  //   // Always add "Above X" filter
+  //   if (range4 < maxPrice) {
+  //     filters.add({
+  //       'label': 'Above ${range4.toCurrency()}',
+  //       'range': RangeValues(range4, maxPrice),
+  //     });
+  //   }
 
-    // Fallback: if no meaningful ranges, create simple divisions
-    if (filters.isEmpty) {
-      final quarter = (maxPrice - minPrice) / 4;
-      filters.addAll([
-        {
-          'label': 'Under ${(minPrice + quarter).toCurrency()}',
-          'range': RangeValues(minPrice, minPrice + quarter),
-        },
-        {
-          'label':
-              '${(minPrice + quarter).toCurrency()} - ${(minPrice + 2 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + quarter, minPrice + 2 * quarter),
-        },
-        {
-          'label':
-              '${(minPrice + 2 * quarter).toCurrency()} - ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 2 * quarter, minPrice + 3 * quarter),
-        },
-        {
-          'label': 'Above ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 3 * quarter, maxPrice),
-        },
-      ]);
-    }
+  //   // Fallback: if no meaningful ranges, create simple divisions
+  //   if (filters.isEmpty) {
+  //     final quarter = (maxPrice - minPrice) / 4;
+  //     filters.addAll([
+  //       {
+  //         'label': 'Under ${(minPrice + quarter).toCurrency()}',
+  //         'range': RangeValues(minPrice, minPrice + quarter),
+  //       },
+  //       {
+  //         'label':
+  //             '${(minPrice + quarter).toCurrency()} - ${(minPrice + 2 * quarter).toCurrency()}',
+  //         'range': RangeValues(minPrice + quarter, minPrice + 2 * quarter),
+  //       },
+  //       {
+  //         'label':
+  //             '${(minPrice + 2 * quarter).toCurrency()} - ${(minPrice + 3 * quarter).toCurrency()}',
+  //         'range': RangeValues(minPrice + 2 * quarter, minPrice + 3 * quarter),
+  //       },
+  //       {
+  //         'label': 'Above ${(minPrice + 3 * quarter).toCurrency()}',
+  //         'range': RangeValues(minPrice + 3 * quarter, maxPrice),
+  //       },
+  //     ]);
+  //   }
 
-    return filters;
-  }
+  //   return filters;
+  // }
 
-  Widget _buildQuickFilterChip(
-    String label,
-    RangeValues range,
-    ValueNotifier<RangeValues> currentRange,
-    void Function(RangeValues) onChanged,
-  ) => ValueListenableBuilder<RangeValues>(
-    valueListenable: currentRange,
-    builder: (context, current, child) {
-      final isSelected =
-          current.start == range.start && current.end == range.end;
+  // Widget _buildQuickFilterChip(
+  //   String label,
+  //   RangeValues range,
+  //   ValueNotifier<RangeValues> currentRange,
+  //   void Function(RangeValues) onChanged,
+  // ) => ValueListenableBuilder<RangeValues>(
+  //   valueListenable: currentRange,
+  //   builder: (context, current, child) {
+  //     final isSelected =
+  //         current.start == range.start && current.end == range.end;
 
-      return GestureDetector(
-        onTap: () {
-          currentRange.value = range;
-          onChanged(range);
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF6132E4)
-                  : Colors.grey.shade300,
-            ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected ? Colors.white : Colors.grey.shade700,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
-          ),
-        ),
-      );
-    },
-  );
+  //     return GestureDetector(
+  //       onTap: () {
+  //         currentRange.value = range;
+  //         onChanged(range);
+  //       },
+  //       child: Container(
+  //         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+  //         decoration: BoxDecoration(
+  //           color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
+  //           borderRadius: BorderRadius.circular(10),
+  //           border: Border.all(
+  //             color: isSelected
+  //                 ? const Color(0xFF6132E4)
+  //                 : Colors.grey.shade300,
+  //           ),
+  //         ),
+  //         child: Text(
+  //           label,
+  //           style: TextStyle(
+  //             fontSize: 12,
+  //             color: isSelected ? Colors.white : Colors.grey.shade700,
+  //             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   },
+  // );
 
   /// Apply product filters based on selection
   void _applyProductFilters(
@@ -1788,7 +1081,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
         : selectedServiceId;
 
     final hasFilters =
-        _form.isPriceFilterEnabled.value || _form.selectedSearchTypeIndex.value != 0;
+        _form.isPriceFilterEnabled.value ||
+        _form.selectedSearchTypeIndex.value != 0;
 
     if (query.isEmpty && !hasFilters) {
       _form.selectProductBloc.add(
@@ -1956,7 +1250,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
                               }
                             });
                           },
-                          selectedProducts: _form.selectedProductsNotifier.value,
+                          selectedProducts:
+                              _form.selectedProductsNotifier.value,
                         )
                       : Container(
                           key: const ValueKey('products'),
@@ -2188,7 +1483,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
                   ) {
                     // Update stock for already selected products from fresh availability data
                     if (widget.bookingId != null && products.isNotEmpty) {
-                      final currentProducts = _form.selectedProductsNotifier.value;
+                      final currentProducts =
+                          _form.selectedProductsNotifier.value;
                       final updatedProducts = currentProducts.map((
                         selectedProduct,
                       ) {
@@ -2236,7 +1532,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
                     if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
                       _form.overlayIsLoading.value = false;
                       _form.overlayProducts.value = products;
-                      if (_form.searchOverlayEntry == null) _showSearchOverlay();
+                      if (_form.searchOverlayEntry == null)
+                        _showSearchOverlay();
                     } else {
                       _form.removeSearchOverlay();
                     }
@@ -2257,74 +1554,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
               },
             );
           },
-          child: CompositedTransformTarget(
-            link: _form.searchLayerLink,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                children: [
-                  // Search TextField
-                  Expanded(
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: TextField(
-                        controller: _form.serviceSearchController,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Search products',
-                          hintStyle: const TextStyle(
-                            fontSize: 13,
-                            fontFamily: 'Inter',
-                            color: Color(0xFF8C8C8C),
-                          ),
-                          prefixIcon: const Icon(Icons.search, size: 18),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 14,
-                          ),
-                        ),
-                        onChanged: (value) {
-                          _onSearchChanged();
-                          if (value.isEmpty) {
-                            _form.removeSearchOverlay();
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Filter Button
-                  Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        _form.removeSearchOverlay();
-                        _showProductFilterBottomSheet();
-                      },
-                      icon: const Icon(Icons.tune, size: 20),
-                      color: const Color(0xFF6132E4),
-                      tooltip: 'Filter products',
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          child: BookingSearchProductFieldWidget(
+            form: form,
+            onSearchChanged: _onSearchChanged,
+            showProductFilterDialog: _showProductFilterBottomSheet,
           ),
         );
       },
@@ -2530,7 +1763,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
 
   /// Builds search item for the overlay - requires variant selection before adding
   Widget _buildOverlaySearchItem(ProductEntity product) {
-    return _OverlaySearchItem(
+    return OverlaySearchItem(
       product: product,
       onAddProduct: (selectedVariant) {
         _form.removeSearchOverlay();
@@ -3498,7 +2731,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
       products: products,
       paidAmount: _form.advanceAmountController.text.trim().toIntOrNull() ?? 0,
       paymentMethod: _form.paymentMethod,
-      discountAmount: _form.discountAmountController.text.trim().toIntOrNull() ?? 0,
+      discountAmount:
+          _form.discountAmountController.text.trim().toIntOrNull() ?? 0,
       stockCountDecrease: false,
     );
   }
@@ -3828,7 +3062,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
                         final client = state.selectedClient!;
                         // Auto-fill fields
                         _form.clientNameController.text = client.name;
-                        _form.clientPhone1Controller.text = client.phone1.toString();
+                        _form.clientPhone1Controller.text = client.phone1
+                            .toString();
                         if (client.phone2 != null) {
                           _form.clientPhone2Controller.text = client.phone2
                               .toString();
@@ -4082,12 +3317,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
                     optional: true,
                   ),
                   const SizedBox(height: _fieldSpacing),
-                  // Hide advance amount in edit mode
-                  // BookingTextFieldBuilder.buildRightPanelTextField(
-                  //     controller: _form.advanceAmountController,
-                  //     hint: 'Advance amount',
-                  //     isNumber: true),
-                  // const SizedBox(height: _fieldSpacing),
+
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: _form.securityAmountController,
                     hint: 'Security amount',
@@ -4101,9 +3331,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
                   ),
 
                   const SizedBox(height: 14),
-                  // Payment Method Selection - Hidden in edit mode
-                  // _buildPaymentMethodSection(),
-                  // const SizedBox(height: 14),
 
                   // Additional Charges
                   Row(
@@ -4210,341 +3437,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// Stateful widget for overlay search item with variant selection
-class _OverlaySearchItem extends StatefulWidget {
-  final ProductEntity product;
-  final Function(ProductVariantEntity) onAddProduct;
-
-  const _OverlaySearchItem({required this.product, required this.onAddProduct});
-
-  @override
-  State<_OverlaySearchItem> createState() => _OverlaySearchItemState();
-}
-
-class _OverlaySearchItemState extends State<_OverlaySearchItem> {
-  ProductVariantEntity? selectedVariant;
-
-  @override
-  void initState() {
-    super.initState();
-    // Auto-select first variant for non-multi-variant products (vehicle, equipment, etc.)
-    // Multi-variant products (dress, costume, gadgets) require explicit user selection
-    if (!widget.product.mainServiceType.isMultiVariantProductType &&
-        widget.product.variants.isNotEmpty) {
-      selectedVariant = widget.product.variants.first;
-    } else {
-      // Also auto-select when all variants have empty attribute (single unnamed variant)
-      // — no chip will render so we must pre-select to allow adding
-      final hasVisibleChip = widget.product.variants.any(
-        (v) => v.attribute.isNotEmpty,
-      );
-      if (!hasVisibleChip && widget.product.variants.isNotEmpty) {
-        selectedVariant = widget.product.variants.first;
-      } else {
-        selectedVariant = null;
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final price = widget.product.price ?? 0;
-    final variants = widget.product.variants;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(
-        children: [
-          // Product Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: Container(
-              width: 50,
-              height: 40,
-              color: Colors.grey.shade100,
-              child:
-                  widget.product.image != null &&
-                      widget.product.image!.isNotEmpty
-                  ? Image.network(
-                      widget.product.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Icon(
-                        Icons.image_outlined,
-                        size: 20,
-                        color: Colors.grey.shade400,
-                      ),
-                    )
-                  : Icon(
-                      Icons.image_outlined,
-                      size: 20,
-                      color: Colors.grey.shade400,
-                    ),
-            ),
-          ),
-          const SizedBox(width: 10),
-
-          // Product Info - Fixed width
-          SizedBox(
-            width: 180,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.product.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  widget.product.color ?? 'color',
-                  style: const TextStyle(
-                    color: Color(0xFF707070),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-          const SizedBox(width: 12),
-
-          // Variants or Details Section
-          if (widget.product.mainServiceType.isMultiVariantProductType)
-            Expanded(
-              child: SizedBox(
-                height: 40,
-                child: variants.isNotEmpty
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          // Skip chips for variants with empty attribute
-                          children: variants
-                              .where((v) => v.attribute.isNotEmpty)
-                              .map((variant) {
-                                final isSelected =
-                                    selectedVariant?.id == variant.id;
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 4),
-                                  child: _SelectableVariantChip(
-                                    text: variant.attribute,
-                                    isSelected: isSelected,
-                                    onTap: () {
-                                      setState(() {
-                                        selectedVariant = variant;
-                                      });
-                                    },
-                                  ),
-                                );
-                              })
-                              .toList(),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ),
-            )
-          else
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (widget.product.category != null &&
-                      widget.product.category!.isNotEmpty)
-                    Text(
-                      '${widget.product.mainServiceType.categoryFieldLabel}: ${widget.product.category}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if (widget.product.model != null &&
-                      widget.product.model!.isNotEmpty)
-                    Text(
-                      '${widget.product.mainServiceType.secondaryAttributeLabel ?? "Model"}: ${widget.product.model}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if ((widget.product.category == null ||
-                          widget.product.category!.isEmpty) &&
-                      (widget.product.model == null ||
-                          widget.product.model!.isEmpty))
-                    Text(
-                      widget.product.color ?? '-',
-                      style: const TextStyle(fontSize: 12),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              ),
-            ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-          const SizedBox(width: 12),
-
-          // Price section - Fixed width (equal to button)
-          SizedBox(
-            width: 90,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'rent price',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                Text(
-                  '₹$price',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-          const SizedBox(width: 12),
-          // Available Quantity section
-          SizedBox(
-            width: 80,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'avl qty',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                Text(
-                  selectedVariant != null
-                      ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock}'
-                      : (variants.isNotEmpty
-                            ? '${variants.first.remainingStock ?? variants.first.stock}'
-                            : '0'),
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Add button - Fixed width (equal to price)
-          GestureDetector(
-            onTap: selectedVariant != null
-                ? () => widget.onAddProduct(selectedVariant!)
-                : null,
-            child: Container(
-              width: 90,
-              height: 36,
-              decoration: BoxDecoration(
-                color: selectedVariant != null
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.add, size: 18, color: Colors.white),
-                  SizedBox(width: 4),
-                  Text(
-                    'Add',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Selectable variant chip widget
-class _SelectableVariantChip extends StatelessWidget {
-  final String text;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _SelectableVariantChip({
-    required this.text,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isShortText = text.length <= 3;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: isShortText ? 33 : null,
-        height: 33,
-        padding: isShortText
-            ? null
-            : const EdgeInsets.symmetric(horizontal: 12),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
-          borderRadius: isShortText ? null : BorderRadius.circular(8),
-          color: isSelected ? AppColors.purpleLight : const Color(0xFFF8F7FF),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
-        ),
       ),
     );
   }
