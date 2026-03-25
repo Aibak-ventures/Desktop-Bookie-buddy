@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
@@ -53,11 +52,10 @@ import 'web_helper_stub.dart'
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/select_date_failure_dialog.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
-
-/// Booking types enum for the tab selection
-enum BookingType { booking, sales, customWork, oldBooking }
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
 
 class NewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -68,14 +66,19 @@ class NewBookingScreen extends StatefulWidget {
   State<NewBookingScreen> createState() => NewBookingScreenState();
 }
 
-class NewBookingScreenState extends State<NewBookingScreen> {
-  // Current selected tab
-  BookingType selectedBookingType = BookingType.booking;
+class NewBookingScreenState extends State<NewBookingScreen>
+    with BookingFormMixin<NewBookingScreen> {
+  // ── Shared: controllers, notifiers, overlay, product bloc ─────────────────
+  final _form = BookingFormControllers();
 
-  // Form key
+  @override
+  BookingFormControllers get form => _form;
+
+  // ── Tab & form ─────────────────────────────────────────────────────────────
+  BookingType selectedBookingType = BookingType.booking;
   final _formKey = GlobalKey<FormState>();
 
-  // Date controllers
+  // ── Date / time ────────────────────────────────────────────────────────────
   late DateTime pickupDate;
   late DateTime returnDate;
   DateTime? coolingPeriodDate;
@@ -83,62 +86,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   TimeOfDay? pickupTime;
   TimeOfDay? returnTime;
 
-  // Client details controllers
-  final clientNameController = TextEditingController();
-  final clientPhone1Controller = TextEditingController();
-  final clientPhone2Controller = TextEditingController();
-  final clientAddressController = TextEditingController();
-  final staffNameController = TextEditingController();
-  int? selectedStaffId;
-  int? selectedClientId;
-  bool isSearchClientEnabled = false;
-  // Payment controllers
-  final advanceAmountController = TextEditingController();
-  final securityAmountController = TextEditingController();
-  final discountAmountController = TextEditingController();
-  PaymentMethod paymentMethod = PaymentMethod.gPay;
-  DeliveryStatus deliveryStatus = DeliveryStatus.booked;
-  bool sendPdfToWhatsApp = false; // Unchecked by default
-  bool decreaseStockForPastDate = false; // Checkbox for past dates in sales
-
-  // Products/Services
-  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
-    [],
-  );
-
-  // Additional charges
-  final additionalChargesNotifier =
-      ValueNotifier<List<AdditionalChargesEntity>>([]);
-
-  // Documents
-  final documentsNotifier = ValueNotifier<List<DocumentFileEntity>>([]);
-
-  // Description
-  final descriptionController = TextEditingController();
-
-  int? selectedServiceId = -1; // Initialize to -1 for "All Services" as default
-  final serviceSearchController = TextEditingController();
-
-  // SelectProductBloc for inline search
-  late SelectProductBloc _selectProductBloc;
-
-  // Search overlay management
-  final LayerLink _searchLayerLink = LayerLink();
-  OverlayEntry? _searchOverlayEntry;
-
-  final ScrollController _searchResultsScrollController = ScrollController();
-  // Reactive overlay state — updated without rebuilding the OverlayEntry
-  final _overlayProducts = ValueNotifier<List<ProductEntity>>([]);
-  final _overlayIsLoading = ValueNotifier<bool>(false);
-
-  // Product search filter state
+  // ── Service / search filter ────────────────────────────────────────────────
+  int? selectedServiceId = -1;
   List<String> _searchTypes = ['Name', 'Category', 'Model', 'Color'];
   MainServiceType? _currentServiceType;
-  final _selectedSearchTypeIndex = ValueNotifier<int>(0);
-  final _priceRange = ValueNotifier<RangeValues>(const RangeValues(0, 50000));
-  final _maxPriceNotifier = ValueNotifier<double>(50000);
 
-  final _isPriceFilterEnabled = ValueNotifier<bool>(false);
+  // ── UI state ───────────────────────────────────────────────────────────────
+  bool sendPdfToWhatsApp = false;
+  bool decreaseStockForPastDate = false;
 
   // Update search types based on service type
   void _updateSearchTypesForService(int? serviceId) {
@@ -175,24 +130,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  // New Fields for Redesign
-  int coolingPeriodDays = 0; // Default to None (0 = same as return date)
-  DateTime? _bookedDate; // Optional for old booking entries
-  final runningKilometersController = TextEditingController();
-
   // Step state
+  int coolingPeriodDays = 0;
+  DateTime? _bookedDate;
   int _bookingStep = 0;
   String? _clientNameError;
   String? _staffNameError;
   String? _phoneError;
-  final startLocationController = TextEditingController();
-  final pickupLocationController = TextEditingController();
-  final destinationLocationController = TextEditingController();
 
-  // Inline editing state
-  int? _editingVariantId;
-  final _inlinePriceController = TextEditingController();
-  final _inlinePriceFocusNode = FocusNode();
+  // Scroll / quantity controllers (screen-only)
+  final _searchResultsScrollController = ScrollController();
   final Map<int, TextEditingController> _quantityControllers = {};
   final Map<int, FocusNode> _quantityFocusNodes = {};
 
@@ -201,12 +148,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   // UI Constants
   static const double _fieldSpacing = 8.0;
-
-  // Focus nodes for client details navigation
-  final _clientNameFocusNode = FocusNode();
-  final _clientPhone1FocusNode = FocusNode();
-  final _clientPhone2FocusNode = FocusNode();
-  final _clientAddressFocusNode = FocusNode();
 
   // Customization state
   bool showCustomization = false;
@@ -220,17 +161,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     pickupDate = DateTime.now();
     returnDate = DateTime.now().add(const Duration(days: 1));
 
-    // Initialize SelectProductBloc
-    _selectProductBloc = SelectProductBloc(
-      getAvailableProducts: getIt(),
-      getProducts: getIt(),
-      searchAndFilterProducts: getIt(),
-    );
-
     // Add listener to client name controller to detect manual changes
-    clientNameController.addListener(_onClientNameChanged);
-    clientPhone1Controller.addListener(_onClientPhoneChanged);
-    clientPhone2Controller.addListener(_onClientPhoneChanged);
+    _form.clientNameController.addListener(_onClientNameChanged);
+    _form.clientPhone1Controller.addListener(_onClientPhoneChanged);
+    _form.clientPhone2Controller.addListener(_onClientPhoneChanged);
     _searchResultsScrollController.addListener(_handleSearchOverlayScroll);
     // Set up web beforeUnload listener to prevent accidental browser close
     if (kIsWeb) {
@@ -255,48 +189,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       web_helper.removeBeforeUnloadListener();
     }
 
-    _removeSearchOverlay();
-    clientNameController.removeListener(_onClientNameChanged);
-    clientPhone1Controller.removeListener(_onClientPhoneChanged);
-    clientPhone2Controller.removeListener(_onClientPhoneChanged);
-    clientNameController.dispose();
-    clientPhone1Controller.dispose();
-    clientPhone2Controller.dispose();
-    clientAddressController.dispose();
-    startLocationController.dispose();
-    pickupLocationController.dispose();
-    destinationLocationController.dispose();
-    _inlinePriceController.dispose();
+    _form.clientNameController.removeListener(_onClientNameChanged);
+    _form.clientPhone1Controller.removeListener(_onClientPhoneChanged);
+    _form.clientPhone2Controller.removeListener(_onClientPhoneChanged);
+    _searchResultsScrollController.removeListener(_handleSearchOverlayScroll);
+    _searchResultsScrollController.dispose();
     for (final controller in _quantityControllers.values) {
       controller.dispose();
     }
     for (final focusNode in _quantityFocusNodes.values) {
       focusNode.dispose();
     }
-    _inlinePriceFocusNode.dispose();
-    _clientNameFocusNode.dispose();
-    _clientPhone1FocusNode.dispose();
-    _clientPhone2FocusNode.dispose();
-    _clientAddressFocusNode.dispose();
-    staffNameController.dispose();
-    advanceAmountController.dispose();
-    securityAmountController.dispose();
-    discountAmountController.dispose();
-    descriptionController.dispose();
-    selectedProductsNotifier.dispose();
-    additionalChargesNotifier.dispose();
-    documentsNotifier.dispose();
-    serviceSearchController.dispose();
-    _selectProductBloc.close();
-    _selectedSearchTypeIndex.dispose();
-    _priceRange.dispose();
-    _maxPriceNotifier.dispose();
-    _isPriceFilterEnabled.dispose();
-    runningKilometersController.dispose();
-    _overlayProducts.dispose();
-    _overlayIsLoading.dispose();
-    _searchResultsScrollController.removeListener(_handleSearchOverlayScroll);
-    _searchResultsScrollController.dispose();
+    _form.dispose();
     super.dispose();
   }
 
@@ -304,7 +208,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (!_searchResultsScrollController.hasClients) return;
     final position = _searchResultsScrollController.position;
     if (position.pixels < position.maxScrollExtent - 180) return;
-    _selectProductBloc.state.maybeWhen(
+    _form.selectProductBloc.state.maybeWhen(
       loaded:
           (
             products,
@@ -325,11 +229,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ) {
             if (isPaginating || nextPageUrl == null) return;
             if (isSearching) {
-              _selectProductBloc.add(
+              _form.selectProductBloc.add(
                 const SelectProductEvent.loadNextSearchResults(),
               );
             } else {
-              _selectProductBloc.add(
+              _form.selectProductBloc.add(
                 const SelectProductEvent.loadNextPageProducts(),
               );
             }
@@ -338,38 +242,31 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  void _removeSearchOverlay() {
-    _searchOverlayEntry?.remove();
-    _searchOverlayEntry = null;
-    _overlayProducts.value = [];
-    _overlayIsLoading.value = false;
-  }
-
   /// Check if there are any unsaved changes
   bool hasUnsavedChanges() {
     // Check if products are selected
-    if (selectedProductsNotifier.value.isNotEmpty) return true;
+    if (_form.selectedProductsNotifier.value.isNotEmpty) return true;
 
     // Check if client details are filled
-    if (clientNameController.text.trim().isNotEmpty) return true;
-    if (clientPhone1Controller.text.trim().isNotEmpty) return true;
-    if (clientPhone2Controller.text.trim().isNotEmpty) return true;
-    if (clientAddressController.text.trim().isNotEmpty) return true;
+    if (_form.clientNameController.text.trim().isNotEmpty) return true;
+    if (_form.clientPhone1Controller.text.trim().isNotEmpty) return true;
+    if (_form.clientPhone2Controller.text.trim().isNotEmpty) return true;
+    if (_form.clientAddressController.text.trim().isNotEmpty) return true;
 
     // Check if payment details are filled
-    if (advanceAmountController.text.trim().isNotEmpty) return true;
-    if (securityAmountController.text.trim().isNotEmpty) return true;
-    if (discountAmountController.text.trim().isNotEmpty) return true;
+    if (_form.advanceAmountController.text.trim().isNotEmpty) return true;
+    if (_form.securityAmountController.text.trim().isNotEmpty) return true;
+    if (_form.discountAmountController.text.trim().isNotEmpty) return true;
 
     // Check if additional charges exist
-    if (additionalChargesNotifier.value.isNotEmpty) return true;
+    if (_form.additionalChargesNotifier.value.isNotEmpty) return true;
 
     // Check if documents are uploaded
-    if (documentsNotifier.value.isNotEmpty) return true;
+    if (_form.documentsNotifier.value.isNotEmpty) return true;
 
     // Check if description is filled
-    if (descriptionController.text.trim().isNotEmpty) return true;
-    if (runningKilometersController.text.trim().isNotEmpty) return true;
+    if (_form.descriptionController.text.trim().isNotEmpty) return true;
+    if (_form.runningKilometersController.text.trim().isNotEmpty) return true;
 
     return false;
   }
@@ -377,7 +274,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// Handle back navigation with discard dialog if needed
   Future<void> _handleBackNavigation() async {
     // Close search overlay if open to prevent UI conflict
-    _removeSearchOverlay();
+    _form.removeSearchOverlay();
 
     if (hasUnsavedChanges()) {
       final shouldDiscard = await showDiscardDialog(context);
@@ -404,7 +301,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (selectedBookingType == newType) return;
 
     // Close search overlay if open to prevent UI conflict
-    _removeSearchOverlay();
+    _form.removeSearchOverlay();
 
     if (hasUnsavedChanges()) {
       final shouldDiscard = await showDiscardDialog(context);
@@ -420,22 +317,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   void _resetForm() {
-    clientNameController.clear();
-    clientPhone1Controller.clear();
-    clientPhone2Controller.clear();
-    clientAddressController.clear();
-    staffNameController.clear();
-    selectedStaffId = null;
-    selectedClientId = null;
+    _form.clientNameController.clear();
+    _form.clientPhone1Controller.clear();
+    _form.clientPhone2Controller.clear();
+    _form.clientAddressController.clear();
+    _form.staffNameController.clear();
+    _form.selectedStaffId = null;
+    _form.selectedClientId = null;
     _bookedDate = null;
-    advanceAmountController.clear();
-    securityAmountController.clear();
-    discountAmountController.clear();
-    descriptionController.clear();
-    selectedProductsNotifier.value = [];
-    additionalChargesNotifier.value = [];
-    documentsNotifier.value = [];
-    serviceSearchController.clear();
+    _form.advanceAmountController.clear();
+    _form.securityAmountController.clear();
+    _form.discountAmountController.clear();
+    _form.descriptionController.clear();
+    _form.selectedProductsNotifier.value = [];
+    _form.additionalChargesNotifier.value = [];
+    _form.documentsNotifier.value = [];
+    _form.serviceSearchController.clear();
     context.read<StaffSearchCubit>().clearSelectedStaff();
     context.read<ClientCubit>().clearSelected();
   }
@@ -444,7 +341,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _onClientNameChanged() {
     // Clear validation error when user types
     if (_clientNameError != null &&
-        clientNameController.text.trim().isNotEmpty) {
+        _form.clientNameController.text.trim().isNotEmpty) {
       setState(() {
         _clientNameError = null;
       });
@@ -454,14 +351,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final selectedClient = context.read<ClientCubit>().state.selectedClient;
 
     // If a client is selected but the name has been manually changed
-    if (selectedClient != null && selectedClientId != null) {
-      final currentName = clientNameController.text.trim();
+    if (selectedClient != null && _form.selectedClientId != null) {
+      final currentName = _form.clientNameController.text.trim();
       final selectedClientName = selectedClient.name.trim();
 
       // If the names don't match, user has manually edited - treat as new client
       if (currentName != selectedClientName) {
         setState(() {
-          selectedClientId = null;
+          _form.selectedClientId = null;
         });
         // Clear the selected client in the cubit
         context.read<ClientCubit>().clearSelected();
@@ -473,8 +370,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _onClientPhoneChanged() {
     // Clear validation error when user types
     if (_phoneError != null &&
-        (clientPhone1Controller.text.trim().isNotEmpty ||
-            clientPhone2Controller.text.trim().isNotEmpty)) {
+        (_form.clientPhone1Controller.text.trim().isNotEmpty ||
+            _form.clientPhone2Controller.text.trim().isNotEmpty)) {
       setState(() {
         _phoneError = null;
       });
@@ -484,16 +381,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final selectedClient = context.read<ClientCubit>().state.selectedClient;
 
     // If a client is selected but phone has been manually changed
-    if (selectedClient != null && selectedClientId != null) {
-      final currentPhone1 = clientPhone1Controller.text.trim();
-      final currentPhone2 = clientPhone2Controller.text.trim();
+    if (selectedClient != null && _form.selectedClientId != null) {
+      final currentPhone1 = _form.clientPhone1Controller.text.trim();
+      final currentPhone2 = _form.clientPhone2Controller.text.trim();
       final selectedPhone1 = selectedClient.phone1.toString().trim();
       final selectedPhone2 = selectedClient.phone2?.toString().trim() ?? '';
 
       // If phones don't match, user has manually edited - treat as new client
       if (currentPhone1 != selectedPhone1 || currentPhone2 != selectedPhone2) {
         setState(() {
-          selectedClientId = null;
+          _form.selectedClientId = null;
         });
         // Clear the selected client in the cubit
         context.read<ClientCubit>().clearSelected();
@@ -510,7 +407,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     });
 
     // Validate at least one product has price > 0
-    final selectedProducts = selectedProductsNotifier.value;
+    final selectedProducts = _form.selectedProductsNotifier.value;
     if (selectedProducts.isNotEmpty) {
       final hasProductWithPrice = selectedProducts.any((p) => p.amount > 0);
       if (!hasProductWithPrice) {
@@ -527,19 +424,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final selectedStaff = staffState.selectedStaff;
 
     final validationResult = BookingValidationHelper.validateClientDetailsPanel(
-      clientName: clientNameController.text,
-      phone1: clientPhone1Controller.text,
-      phone2: clientPhone2Controller.text,
-      address: clientAddressController.text,
-      documentsCount: documentsNotifier.value.length,
+      clientName: _form.clientNameController.text,
+      phone1: _form.clientPhone1Controller.text,
+      phone2: _form.clientPhone2Controller.text,
+      address: _form.clientAddressController.text,
+      documentsCount: _form.documentsNotifier.value.length,
       selectedStaffId: selectedStaff?.id,
-      staffName: staffNameController.text,
+      staffName: _form.staffNameController.text,
       isSalesMode: selectedBookingType == BookingType.sales,
     );
 
     if (validationResult.isValid) {
       // Close search overlay before changing steps to prevent UI conflict
-      _removeSearchOverlay();
+      _form.removeSearchOverlay();
       // Move to next step
       setState(() => _bookingStep = 1);
     } else {
@@ -556,7 +453,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// Show product filter bottom sheet
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
-    final currentProducts = _selectProductBloc.state.maybeWhen(
+    final currentProducts = _form.selectProductBloc.state.maybeWhen(
       loaded:
           (
             products,
@@ -593,9 +490,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           }
         }
       }
-      if (maxProductPrice > _maxPriceNotifier.value) {
-        _maxPriceNotifier.value = maxProductPrice;
-        _priceRange.value = RangeValues(0, maxProductPrice);
+      if (maxProductPrice > _form.maxPriceNotifier.value) {
+        _form.maxPriceNotifier.value = maxProductPrice;
+        _form.priceRange.value = RangeValues(0, maxProductPrice);
       }
     }
 
@@ -611,16 +508,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // Setup local state for dialog
     final isPriceFilterEnabledWidgetNotifier = ValueNotifier(
-      _isPriceFilterEnabled.value,
+      _form.isPriceFilterEnabled.value,
     );
     final tempSelectedServiceId = ValueNotifier<int?>(selectedServiceId);
     final tempSelectedSearchTypeIndex = ValueNotifier<int>(
-      _selectedSearchTypeIndex.value,
+      _form.selectedSearchTypeIndex.value,
     );
-    final tempPriceRange = ValueNotifier<RangeValues>(_priceRange.value);
-    final tempMaxPriceNotifier = ValueNotifier<double>(_maxPriceNotifier.value);
+    final tempPriceRange = ValueNotifier<RangeValues>(_form.priceRange.value);
+    final tempMaxPriceNotifier = ValueNotifier<double>(_form.maxPriceNotifier.value);
     final maxPriceController = TextEditingController(
-      text: _maxPriceNotifier.value.toInt().toString(),
+      text: _form.maxPriceNotifier.value.toInt().toString(),
     );
 
     showDialog(
@@ -1294,8 +1191,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         onPressed: () {
                           tempSelectedSearchTypeIndex.value = 0;
                           tempSelectedServiceId.value = -1;
-                          tempMaxPriceNotifier.value = _maxPriceNotifier.value;
-                          maxPriceController.text = _maxPriceNotifier.value
+                          tempMaxPriceNotifier.value = _form.maxPriceNotifier.value;
+                          maxPriceController.text = _form.maxPriceNotifier.value
                               .toInt()
                               .toString();
                           tempPriceRange.value = RangeValues(
@@ -1333,12 +1230,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           // Apply changes
                           setState(() {
                             selectedServiceId = tempSelectedServiceId.value;
-                            _selectedSearchTypeIndex.value =
+                            _form.selectedSearchTypeIndex.value =
                                 tempSelectedSearchTypeIndex.value;
-                            _priceRange.value = tempPriceRange.value;
-                            _maxPriceNotifier.value =
+                            _form.priceRange.value = tempPriceRange.value;
+                            _form.maxPriceNotifier.value =
                                 tempMaxPriceNotifier.value;
-                            _isPriceFilterEnabled.value =
+                            _form.isPriceFilterEnabled.value =
                                 isPriceFilterEnabledWidgetNotifier.value;
                             // Update search types based on the selected service
                             _updateSearchTypesForService(selectedServiceId);
@@ -1348,9 +1245,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                           // Trigger Application
                           _applyProductFilters(
-                            _selectedSearchTypeIndex.value,
-                            _priceRange.value,
-                            _isPriceFilterEnabled.value,
+                            _form.selectedSearchTypeIndex.value,
+                            _form.priceRange.value,
+                            _form.isPriceFilterEnabled.value,
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -1533,8 +1430,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     RangeValues priceRange,
     bool isPriceEnabled,
   ) {
-    _isPriceFilterEnabled.value = isPriceEnabled;
-    final searchTerm = serviceSearchController.text.trim().toLowerCase();
+    _form.isPriceFilterEnabled.value = isPriceEnabled;
+    final searchTerm = _form.serviceSearchController.text.trim().toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
 
     // Determine search type
@@ -1581,7 +1478,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // Trigger search with filters
     if (hasAnyFilter) {
-      _selectProductBloc.add(
+      _form.selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: selectedServiceId == -1 ? null : selectedServiceId,
           query: hasSearchQuery ? searchTerm : null,
@@ -1598,7 +1495,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       );
     } else {
       // No filters applied, load all products
-      _selectProductBloc.add(
+      _form.selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: selectedServiceId == -1 ? null : selectedServiceId,
           pickupDate: pickupDate.format(),
@@ -1614,7 +1511,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _onSearchChanged([String? newValue]) {
     // Allow search even if selectedServiceId is null (All Services)
-    final query = (newValue ?? serviceSearchController.text)
+    final query = (newValue ?? _form.serviceSearchController.text)
         .trim()
         .toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
@@ -1625,16 +1522,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         : selectedServiceId;
 
     final hasSearchQuery = query.isNotEmpty;
-    final hasPriceFilter = _isPriceFilterEnabled.value;
+    final hasPriceFilter = _form.isPriceFilterEnabled.value;
     final hasAnyFilter = hasSearchQuery || hasPriceFilter;
 
     // Debug log to trace search behavior
     log(
-      '_onSearchChanged -> query: "$query", hasSearchQuery: $hasSearchQuery, hasPriceFilter: $hasPriceFilter, searchTypeIndex: ${_selectedSearchTypeIndex.value}, hasAnyFilter: $hasAnyFilter',
+      '_onSearchChanged -> query: "$query", hasSearchQuery: $hasSearchQuery, hasPriceFilter: $hasPriceFilter, searchTypeIndex: ${_form.selectedSearchTypeIndex.value}, hasAnyFilter: $hasAnyFilter',
     );
 
     if (!hasAnyFilter) {
-      _selectProductBloc.add(
+      _form.selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: serviceIdToUse,
           pickupDate: pickupDate.format(),
@@ -1648,7 +1545,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     } else {
       // Determine search type
       String? searchType;
-      switch (_selectedSearchTypeIndex.value) {
+      switch (_form.selectedSearchTypeIndex.value) {
         case 0:
           searchType = 'name';
           break;
@@ -1685,13 +1582,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       searchType ??= 'name';
 
       log('_onSearchChanged -> dispatching searchProducts, type: $searchType');
-      _selectProductBloc.add(
+      _form.selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: serviceIdToUse,
           query: hasSearchQuery ? query : null,
           type: hasSearchQuery ? searchType : null,
-          startPrice: hasPriceFilter ? _priceRange.value.start.round() : null,
-          endPrice: hasPriceFilter ? _priceRange.value.end.round() : null,
+          startPrice: hasPriceFilter ? _form.priceRange.value.start.round() : null,
+          endPrice: hasPriceFilter ? _form.priceRange.value.end.round() : null,
           pickupDate: pickupDate.format(),
           returnDate: returnDate.format(),
           pickupTime: pickupTime,
@@ -1795,7 +1692,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         ? returnDate.add(Duration(days: coolingPeriodDays)).format()
         : returnDate.format();
 
-    _selectProductBloc.add(
+    _form.selectProductBloc.add(
       SelectProductEvent.loadProducts(
         serviceId: serviceIdToUse,
         pickupDate: pickupDate.format(),
@@ -1818,7 +1715,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final q = rawQuery.toLowerCase();
 
     // Get products from current bloc state if available
-    final currentProducts = _selectProductBloc.state.maybeWhen(
+    final currentProducts = _form.selectProductBloc.state.maybeWhen(
       loaded:
           (
             products,
@@ -1859,9 +1756,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           variantMatch;
     }).toList();
 
-    _overlayIsLoading.value = false;
-    _overlayProducts.value = filtered;
-    if (_searchOverlayEntry == null) {
+    _form.overlayIsLoading.value = false;
+    _form.overlayProducts.value = filtered;
+    if (_form.searchOverlayEntry == null) {
       _showSearchOverlay();
     }
   }
@@ -1873,7 +1770,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     // Only check availability for bookings, not sales
     if (isSales) return;
 
-    final selected = selectedProductsNotifier.value;
+    final selected = _form.selectedProductsNotifier.value;
     if (selected.isEmpty) return;
 
     final variantIds = selected
@@ -1901,7 +1798,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           unavailableDateFrom: pickupDate.format(),
           unavailableDateTo: effectiveReturnDate,
           unavailableProducts: notFoundIds,
-          selectedProductsNotifier: selectedProductsNotifier,
+          selectedProductsNotifier: _form.selectedProductsNotifier,
         );
       }
     } catch (e) {
@@ -1980,61 +1877,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-  // String _getTabTitle() {
-  //   switch (selectedBookingType) {
-  //     case BookingType.booking:
-  //       return 'New Booking';
-  //     case BookingType.sales:
-  //       return 'New Sale';
-  //     case BookingType.customWork:
-  //       return 'Custom Work';
-  //     case BookingType.oldBooking:
-  //       return 'Old Booking';
-  //   }
-  // }
-
-  // Widget _buildTabButtons() {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       color: const Color(0xFFF0F0F0),
-  //       borderRadius: BorderRadius.circular(16),
-  //     ),
-  //     padding: const EdgeInsets.all(2),
-  //     child: Row(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         _buildTabButton('Booking', BookingType.booking),
-  //         _buildTabButton('Sales', BookingType.sales),
-  //         _buildTabButton('Old Booking', BookingType.oldBooking),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildTabButton(String label, BookingType type) {
-  //   final isSelected = selectedBookingType == type;
-  //   return GestureDetector(
-  //     onTap: () => _handleTabSwitch(type),
-  //     child: AnimatedContainer(
-  //       duration: const Duration(milliseconds: 200),
-  //       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-  //       decoration: BoxDecoration(
-  //         color: isSelected ? const Color(0xFF6132E4) : Colors.transparent,
-  //         borderRadius: BorderRadius.circular(14),
-  //       ),
-  //       child: Text(
-  //         label,
-  //         style: TextStyle(
-  //           color: isSelected ? Colors.white : Colors.grey.shade700,
-  //           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-  //           fontSize: 13,
-  //           fontFamily: 'Inter',
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _buildMainContent() {
     if (selectedBookingType == BookingType.customWork) {
       return Container(child: Center(child: Text('Custom Work - Coming Soon')));
@@ -2089,7 +1931,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           onSaveForProduct: (product, measurements) {
                             setState(() {
                               // Find and update the specific product with measurements
-                              final index = selectedProductsNotifier.value
+                              final index = _form.selectedProductsNotifier.value
                                   .indexWhere(
                                     (p) =>
                                         p.variant.variantId ==
@@ -2098,17 +1940,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               if (index != -1) {
                                 final updatedProducts =
                                     List<ProductSelectedEntity>.from(
-                                      selectedProductsNotifier.value,
+                                      _form.selectedProductsNotifier.value,
                                     );
                                 updatedProducts[index] = product.copyWith(
                                   measurements: measurements,
                                 );
-                                selectedProductsNotifier.value =
+                                _form.selectedProductsNotifier.value =
                                     updatedProducts;
                               }
                             });
                           },
-                          selectedProducts: selectedProductsNotifier.value
+                          selectedProducts: _form.selectedProductsNotifier.value
                               .where(
                                 (p) =>
                                     (p.variant.mainServiceType?.isDress ??
@@ -2401,7 +2243,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ValueListenableBuilder<List<ProductSelectedEntity>>(
-                valueListenable: selectedProductsNotifier,
+                valueListenable: _form.selectedProductsNotifier,
                 builder: (context, products, _) {
                   return Text(
                     'Select Products (${products.length})',
@@ -2540,12 +2382,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return BlocBuilder<ServiceBloc, ServiceState>(
       builder: (context, serviceState) {
         return BlocListener<SelectProductBloc, SelectProductState>(
-          bloc: _selectProductBloc,
+          bloc: _form.selectProductBloc,
           listener: (context, state) {
-            final hasQuery = serviceSearchController.text.isNotEmpty;
+            final hasQuery = _form.serviceSearchController.text.isNotEmpty;
             final hasFilters =
-                _isPriceFilterEnabled.value ||
-                _selectedSearchTypeIndex.value != 0;
+                _form.isPriceFilterEnabled.value ||
+                _form.selectedSearchTypeIndex.value != 0;
             final hasAnyFilter = hasQuery || hasFilters;
 
             state.maybeWhen(
@@ -2553,8 +2395,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 // While fetching, show the overlay with a spinner so the user
                 // knows something is happening — do NOT remove the overlay.
                 if (hasAnyFilter) {
-                  _overlayIsLoading.value = true;
-                  if (_searchOverlayEntry == null) {
+                  _form.overlayIsLoading.value = true;
+                  if (_form.searchOverlayEntry == null) {
                     _showSearchOverlay();
                   }
                 }
@@ -2578,34 +2420,34 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     p14,
                   ) {
                     if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
-                      _overlayIsLoading.value = false;
-                      _overlayProducts.value = products;
-                      if (_searchOverlayEntry == null) {
+                      _form.overlayIsLoading.value = false;
+                      _form.overlayProducts.value = products;
+                      if (_form.searchOverlayEntry == null) {
                         _showSearchOverlay();
                       }
                     } else {
-                      _removeSearchOverlay();
+                      _form.removeSearchOverlay();
                     }
                   },
               error: (_) {
-                _overlayIsLoading.value = false;
-                _overlayProducts.value = [];
+                _form.overlayIsLoading.value = false;
+                _form.overlayProducts.value = [];
                 if (hasAnyFilter) {
-                  if (_searchOverlayEntry == null) {
+                  if (_form.searchOverlayEntry == null) {
                     _showSearchOverlay();
                   }
                 } else {
-                  _removeSearchOverlay();
+                  _form.removeSearchOverlay();
                 }
               },
               orElse: () {
                 // Error or unknown — only hide if nothing is being searched
-                if (!hasAnyFilter) _removeSearchOverlay();
+                if (!hasAnyFilter) _form.removeSearchOverlay();
               },
             );
           },
           child: CompositedTransformTarget(
-            link: _searchLayerLink,
+            link: _form.searchLayerLink,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
@@ -2620,10 +2462,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: ValueListenableBuilder(
-                        valueListenable: _selectedSearchTypeIndex,
+                        valueListenable: _form.selectedSearchTypeIndex,
                         builder: (context, searchTypeIndex, _) {
                           return ValueListenableBuilder(
-                            valueListenable: _isPriceFilterEnabled,
+                            valueListenable: _form.isPriceFilterEnabled,
                             builder: (context, isPriceEnabled, _) {
                               // Build active filter text
                               String? filterText;
@@ -2639,7 +2481,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                               }
 
                               return TextField(
-                                controller: serviceSearchController,
+                                controller: _form.serviceSearchController,
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontFamily: 'Inter',
@@ -2691,7 +2533,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                 onChanged: (value) {
                                   _onSearchChanged(value);
                                   if (value.isEmpty) {
-                                    _removeSearchOverlay();
+                                    _form.removeSearchOverlay();
                                   } else {
                                     // Show quick local results for single-char input
                                     if (value.trim().length == 1) {
@@ -2710,7 +2552,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                         ? null
                                         : selectedServiceId;
                                     String? searchType;
-                                    switch (_selectedSearchTypeIndex.value) {
+                                    switch (_form.selectedSearchTypeIndex.value) {
                                       case 0:
                                         searchType = 'name';
                                         break;
@@ -2745,16 +2587,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                     }
                                     searchType ??= 'name';
 
-                                    _selectProductBloc.add(
+                                    _form.selectProductBloc.add(
                                       SelectProductEvent.searchProducts(
                                         serviceId: serviceIdToUse,
                                         query: queryValue,
                                         type: searchType,
-                                        startPrice: _isPriceFilterEnabled.value
-                                            ? _priceRange.value.start.round()
+                                        startPrice: _form.isPriceFilterEnabled.value
+                                            ? _form.priceRange.value.start.round()
                                             : null,
-                                        endPrice: _isPriceFilterEnabled.value
-                                            ? _priceRange.value.end.round()
+                                        endPrice: _form.isPriceFilterEnabled.value
+                                            ? _form.priceRange.value.end.round()
                                             : null,
                                         pickupDate: pickupDate.format(),
                                         returnDate: returnDate.format(),
@@ -2787,7 +2629,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ),
                     child: IconButton(
                       onPressed: () {
-                        _removeSearchOverlay();
+                        _form.removeSearchOverlay();
                         _showProductFilterBottomSheet();
                       },
                       icon: const Icon(Icons.tune, size: 20),
@@ -2806,17 +2648,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _showSearchOverlay() {
     // Guard: only insert once; subsequent updates go through the ValueNotifiers
-    if (_searchOverlayEntry != null) return;
+    if (_form.searchOverlayEntry != null) return;
 
-    _searchOverlayEntry = OverlayEntry(
+    _form.searchOverlayEntry = OverlayEntry(
       builder: (context) => Stack(
         children: [
           // Transparent barrier — tap outside to dismiss
           Positioned.fill(
             child: GestureDetector(
               onTap: () {
-                serviceSearchController.clear();
-                _removeSearchOverlay();
+                _form.serviceSearchController.clear();
+                _form.removeSearchOverlay();
               },
               behavior: HitTestBehavior.opaque,
               child: const SizedBox.expand(),
@@ -2826,7 +2668,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           Positioned(
             width: 1000,
             child: CompositedTransformFollower(
-              link: _searchLayerLink,
+              link: _form.searchLayerLink,
               showWhenUnlinked: false,
               offset: const Offset(0, 44),
               child: Material(
@@ -2834,10 +2676,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 borderRadius: BorderRadius.circular(10),
                 // Wrap both notifiers so the overlay rebuilds reactively
                 child: ValueListenableBuilder<bool>(
-                  valueListenable: _overlayIsLoading,
+                  valueListenable: _form.overlayIsLoading,
                   builder: (context, isLoading, _) {
                     return ValueListenableBuilder<List<ProductEntity>>(
-                      valueListenable: _overlayProducts,
+                      valueListenable: _form.overlayProducts,
                       builder: (context, productList, _) {
                         return Container(
                           constraints: const BoxConstraints(maxHeight: 450),
@@ -2899,8 +2741,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                       ),
                                     GestureDetector(
                                       onTap: () {
-                                        serviceSearchController.clear();
-                                        _removeSearchOverlay();
+                                        _form.serviceSearchController.clear();
+                                        _form.removeSearchOverlay();
                                       },
                                       child: Icon(
                                         Icons.close,
@@ -3003,7 +2845,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       ),
     );
 
-    Overlay.of(context).insert(_searchOverlayEntry!);
+    Overlay.of(context).insert(_form.searchOverlayEntry!);
   }
 
   /// Builds search item for the overlay - requires variant selection before adding
@@ -3012,8 +2854,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       product: product,
       isSales: selectedBookingType == BookingType.sales,
       onAddProduct: (selectedVariant) {
-        _removeSearchOverlay();
-        serviceSearchController.clear();
+        _form.removeSearchOverlay();
+        _form.serviceSearchController.clear();
         _addProductFromSearchWithVariant(product, selectedVariant);
       },
     );
@@ -3046,7 +2888,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
+      _form.selectedProductsNotifier.value,
     );
 
     // Check if this variant already exists
@@ -3101,85 +2943,47 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       );
     }
 
-    selectedProductsNotifier.value = products;
+    _form.selectedProductsNotifier.value = products;
     log('Product added. Total selected: ${products.length}');
     setState(() {}); // Refresh to update UI
   }
 
   Widget _buildProductListHeader() {
     final isSales = selectedBookingType == BookingType.sales;
-    final hasVariants = _hasAnyProductWithVariants();
+    final hasVariants = hasAnyProductWithVariants();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          Expanded(flex: 3, child: _buildHeaderCell('items', alignLeft: true)),
+          Expanded(flex: 3, child: buildHeaderCell('items', alignLeft: true)),
           const SizedBox(width: 10),
-          Expanded(flex: 2, child: _buildHeaderCell('Specifications')),
+          Expanded(flex: 2, child: buildHeaderCell('Specifications')),
           const SizedBox(width: 4),
           if (hasVariants) ...[
-            Expanded(child: _buildHeaderCell('Variants')),
+            Expanded(child: buildHeaderCell('Variants')),
             const SizedBox(width: 4),
           ],
           if (!isSales) ...[
-            Expanded(child: _buildHeaderCell('Days')),
+            Expanded(child: buildHeaderCell('Days')),
             const SizedBox(width: 4),
           ],
-          Expanded(child: _buildHeaderCell('Available')),
+          Expanded(child: buildHeaderCell('Available')),
           const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Quantity')),
+          Expanded(child: buildHeaderCell('Quantity')),
           const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Price / item')),
+          Expanded(child: buildHeaderCell('Price / item')),
           const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Total')),
+          Expanded(child: buildHeaderCell('Total')),
           const SizedBox(width: 50), // Matches row close button area
         ],
       ),
     );
   }
 
-  /// Check if any selected product has variant attributes to display
-  bool _hasAnyProductWithVariants() {
-    final products = selectedProductsNotifier.value;
-    return products.any((product) {
-      final mainServiceType = product.variant.mainServiceType;
-      // Only show variants column if product is multi-variant type and has variant attribute
-      return mainServiceType.isMultiVariantProductType &&
-          (product.variant.variantAttribute?.isNotEmpty ?? false);
-    });
-  }
-
-  Widget _buildHeaderCell(String title, {bool alignLeft = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9F9F9), // Very light grey from image
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      alignment: alignLeft ? Alignment.centerLeft : Alignment.center,
-      child: Padding(
-        padding: alignLeft
-            ? const EdgeInsets.only(left: 12)
-            : const EdgeInsets.symmetric(horizontal: 4),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 13,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
-          ),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    );
-  }
-
   Widget _buildSelectedProductsList() {
     return ValueListenableBuilder<List<ProductSelectedEntity>>(
-      valueListenable: selectedProductsNotifier,
+      valueListenable: _form.selectedProductsNotifier,
       builder: (context, products, _) {
         if (products.isEmpty) {
           return Center(
@@ -3223,24 +3027,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  /// Returns true only for service types where the total price
-  /// should be multiplied by rental days (vehicle, gadgets, equipment, costume).
-  bool _shouldMultiplyByDays(MainServiceType? serviceType) {
-    return serviceType == MainServiceType.vehicle ||
-        serviceType == MainServiceType.gadgets ||
-        serviceType == MainServiceType.equipment ||
-        serviceType == MainServiceType.costume;
-  }
-
   Widget _buildProductRow(ProductSelectedEntity product) {
     final isSales = selectedBookingType == BookingType.sales;
     final rentalDays = !isSales ? _calculateRentalDays() : 0;
     // Only multiply price by days for qualifying service types
     final effectiveDaysMultiplier =
-        (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
+        (!isSales && shouldMultiplyByDays(product.variant.mainServiceType))
         ? (rentalDays > 0 ? rentalDays : 1)
         : 1;
-    final hasVariants = _hasAnyProductWithVariants();
+    final hasVariants = hasAnyProductWithVariants();
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -3466,14 +3261,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           const SizedBox(width: 10),
           // Price / item
           Expanded(
-            child: _editingVariantId == product.variant.variantId
+            child: _form.editingVariantId == product.variant.variantId
                 ? Center(
                     child: Container(
                       width: 80,
                       height: 32,
                       child: TextField(
-                        controller: _inlinePriceController,
-                        focusNode: _inlinePriceFocusNode,
+                        controller: _form.inlinePriceController,
+                        focusNode: _form.inlinePriceFocusNode,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -3504,7 +3299,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     ),
                   )
                 : GestureDetector(
-                    onTap: () => _startEditingPrice(product),
+                    onTap: () => startEditingPrice(product),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -3614,7 +3409,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
 
     final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
+      _form.selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
@@ -3626,14 +3421,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       _quantityControllers[_quantityKey(product)]?.text = products[index]
           .quantity
           .toString();
-      selectedProductsNotifier.value = products;
+      _form.selectedProductsNotifier.value = products;
     }
   }
 
   /// Decrement quantity of a product
   void _decrementQuantity(ProductSelectedEntity product) {
     final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
+      _form.selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
@@ -3651,7 +3446,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
         products.removeAt(index);
       }
-      selectedProductsNotifier.value = products;
+      _form.selectedProductsNotifier.value = products;
     }
   }
 
@@ -3680,7 +3475,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
 
     final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
+      _form.selectedProductsNotifier.value,
     );
     final index = products.indexWhere(
       (p) => p.variant.variantId == product.variant.variantId,
@@ -3691,25 +3486,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     products[index] = products[index].copyWith(quantity: parsedQuantity);
     _quantityControllers[_quantityKey(product)]?.text = parsedQuantity
         .toString();
-    selectedProductsNotifier.value = products;
+    _form.selectedProductsNotifier.value = products;
     _quantityFocusNodes[_quantityKey(product)]?.unfocus();
   }
 
-  void _startEditingPrice(ProductSelectedEntity product) {
-    setState(() {
-      _editingVariantId = product.variant.variantId;
-      _inlinePriceController.text = product.amount.toString();
-      // Schedule focus request for next frame
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _inlinePriceFocusNode.requestFocus();
-      });
-    });
-  }
-
   void _saveEditingPrice(ProductSelectedEntity product) {
-    if (_editingVariantId == null) return;
+    if (_form.editingVariantId == null) return;
 
-    final newPrice = int.tryParse(_inlinePriceController.text);
+    final newPrice = int.tryParse(_form.inlinePriceController.text);
 
     // Validate that price is not zero
     if (newPrice == null || newPrice <= 0) {
@@ -3721,40 +3505,26 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
-    _updateProductPrice(product, newPrice);
+    updateProductPrice(product, newPrice);
 
     setState(() {
-      _editingVariantId = null;
-      _inlinePriceController.clear();
-      _inlinePriceFocusNode.unfocus();
+      _form.editingVariantId = null;
+      _form.inlinePriceController.clear();
+      _form.inlinePriceFocusNode.unfocus();
     });
   }
 
   /// Remove a product from the selected list
   void _removeProduct(ProductSelectedEntity product) {
     final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
+      _form.selectedProductsNotifier.value,
     );
     _quantityControllers.remove(_quantityKey(product))?.dispose();
     _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
     products.removeWhere(
       (p) => p.variant.variantId == product.variant.variantId,
     );
-    selectedProductsNotifier.value = products;
-  }
-
-  /// Update the price of a product
-  void _updateProductPrice(ProductSelectedEntity product, int newPrice) {
-    final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
-    );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-    if (index != -1) {
-      products[index] = products[index].copyWith(amount: newPrice);
-      selectedProductsNotifier.value = products;
-    }
+    _form.selectedProductsNotifier.value = products;
   }
 
   Widget _buildSummarySection() {
@@ -3770,20 +3540,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           // Summary rows
           ListenableBuilder(
             listenable: Listenable.merge([
-              selectedProductsNotifier,
-              additionalChargesNotifier,
-              advanceAmountController,
-              discountAmountController,
+              _form.selectedProductsNotifier,
+              _form.additionalChargesNotifier,
+              _form.advanceAmountController,
+              _form.discountAmountController,
             ]),
             builder: (context, _) {
-              final products = selectedProductsNotifier.value;
-              final additionalCharges = additionalChargesNotifier.value;
+              final products = _form.selectedProductsNotifier.value;
+              final additionalCharges = _form.additionalChargesNotifier.value;
               final isSaleType = selectedBookingType == BookingType.sales;
               final advanceAmount = isSaleType
                   ? 0
-                  : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
+                  : (_form.advanceAmountController.text.trim().toIntOrNull() ?? 0);
               final discountAmount =
-                  discountAmountController.text.trim().toIntOrNull() ?? 0;
+                  _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final summaryRentalDays = !isSaleType
                   ? _calculateRentalDays()
@@ -3792,7 +3562,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 // Only multiply by days for qualifying service types
                 final daysMultiplier =
                     (!isSaleType &&
-                        _shouldMultiplyByDays(product.variant.mainServiceType))
+                        shouldMultiplyByDays(product.variant.mainServiceType))
                     ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
                     : 1;
                 return sum +
@@ -3809,29 +3579,29 @@ class NewBookingScreenState extends State<NewBookingScreen> {
               return Column(
                 children: [
                   if (isSaleType)
-                    _buildSummaryRow(
+                    buildSummaryRow(
                       'Total amount',
                       remainingAmount > 0 ? remainingAmount : 0,
                       valueColor: const Color(0xFF6132E4),
                       isBold: true,
                     )
                   else ...[
-                    _buildSummaryRow('Product total', productTotal),
+                    buildSummaryRow('Product total', productTotal),
                     if (additionalTotal > 0)
-                      _buildSummaryRow('Additional charges', additionalTotal),
+                      buildSummaryRow('Additional charges', additionalTotal),
                     if (discountAmount > 0)
-                      _buildSummaryRow(
+                      buildSummaryRow(
                         '- Discount',
                         discountAmount,
                         isNegative: true,
                       ),
                     const Divider(height: 6),
-                    _buildSummaryRow(
+                    buildSummaryRow(
                       'Paid',
                       advanceAmount,
                       valueColor: const Color(0xFF1AB000),
                     ),
-                    _buildSummaryRow(
+                    buildSummaryRow(
                       'Total payable',
                       remainingAmount > 0 ? remainingAmount : 0,
                       valueColor: const Color(0xFFD30000),
@@ -3847,7 +3617,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           // const SizedBox(height: 3),
           // Add customization button - Only for Dresses (not for sales)
           ValueListenableBuilder<List<ProductSelectedEntity>>(
-            valueListenable: selectedProductsNotifier,
+            valueListenable: _form.selectedProductsNotifier,
             builder: (context, products, _) {
               // Hide customization button for sales mode
               if (selectedBookingType == BookingType.sales) {
@@ -3956,167 +3726,13 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Widget _buildSummaryRow(
-    String label,
-    int amount, {
-    Color? valueColor,
-    bool isBold = false,
-    bool isNegative = false,
-  }) {
-    final isTotalPayable = label == 'Total payable';
-    final isPaid = label == 'Paid';
-    final isProductTotal = label == 'Product total';
-
-    double labelSize = 15;
-    double valueSize = 13;
-    FontWeight labelWeight = isBold ? FontWeight.w600 : FontWeight.w400;
-    FontWeight valueWeight = isBold ? FontWeight.w700 : FontWeight.w500;
-    Color labelColor = const Color(0xFF3E3E3E);
-
-    if (isTotalPayable) {
-      labelSize = 15;
-      valueSize = 15;
-      labelWeight = FontWeight.w600;
-      valueWeight = FontWeight.w700;
-      valueColor = const Color(0xFFD30000);
-    } else if (isPaid) {
-      labelSize = 15;
-      valueSize = 15;
-      labelWeight = FontWeight.w500;
-      valueWeight = FontWeight.w600;
-      valueColor = const Color(0xFF1AB000);
-    } else if (isProductTotal) {
-      labelSize = 13;
-      valueSize = 13;
-      labelWeight = FontWeight.w400;
-      valueWeight = FontWeight.w500;
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: labelSize,
-              fontFamily: 'Inter',
-              fontWeight: labelWeight,
-              color: labelColor,
-            ),
-          ),
-          Text(
-            '${isNegative ? '-' : ''}${amount.abs().toCurrency()}',
-            style: TextStyle(
-              fontSize: valueSize,
-              fontFamily: 'Inter',
-              fontWeight: valueWeight,
-              color: valueColor ?? Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Actions
-
-  void _addAdditionalCharge() async {
-    final nameController = TextEditingController();
-    final amountController = TextEditingController();
-
-    final result = await showDialog<AdditionalChargesEntity>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Charge', style: TextStyle(fontSize: 16)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                hintText: 'e.g., Delivery',
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              ],
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-                prefixText: '₹ ',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final name = nameController.text.trim();
-              final amount = int.tryParse(amountController.text);
-
-              // Validate name
-              if (name.isEmpty) {
-                context.showSnackBar('Please enter charge name', isError: true);
-                return;
-              }
-
-              // Validate amount
-              if (amount == null || amount <= 0) {
-                context.showSnackBar(
-                  'Please enter a valid amount greater than 0',
-                  isError: true,
-                );
-                return;
-              }
-
-              Navigator.pop(
-                context,
-                AdditionalChargesEntity(name: name, amount: amount),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
-            ),
-            child: const Text('Add', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-
-    if (result != null) {
-      final charges = List<AdditionalChargesEntity>.from(
-        additionalChargesNotifier.value,
-      );
-      charges.add(result);
-      additionalChargesNotifier.value = charges;
-    }
-  }
-
-  void _removeCharge(AdditionalChargesEntity charge) {
-    final charges = List<AdditionalChargesEntity>.from(
-      additionalChargesNotifier.value,
-    );
-    charges.remove(charge);
-    additionalChargesNotifier.value = charges;
-  }
-
   void _handleConfirmBooking() async {
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;
     }
 
-    final products = selectedProductsNotifier.value;
+    final products = _form.selectedProductsNotifier.value;
     if (products.isEmpty) {
       context.showSnackBar('Please select at least one item', isError: true);
       return;
@@ -4210,8 +3826,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   BookingRequestEntity _buildBookingRequest() {
-    final products = selectedProductsNotifier.value;
-    final additionalCharges = additionalChargesNotifier.value;
+    final products = _form.selectedProductsNotifier.value;
+    final additionalCharges = _form.additionalChargesNotifier.value;
 
     // Get staff ID from cubit
     final staffState = context.read<StaffSearchCubit>().state;
@@ -4219,25 +3835,25 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // If there's no client ID, we need to send client data
     ClientRequestEntity? clientData;
-    if (selectedClientId == null) {
-      final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
-      final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
+    if (_form.selectedClientId == null) {
+      final phone1 = _form.clientPhone1Controller.text.trim().toIntOrNull();
+      final phone2 = _form.clientPhone2Controller.text.trim().toIntOrNull();
 
       clientData = ClientRequestEntity(
         id: null,
-        name: clientNameController.text.trim().isEmpty
+        name: _form.clientNameController.text.trim().isEmpty
             ? null
-            : clientNameController.text.trim(),
+            : _form.clientNameController.text.trim(),
         phone1: phone1,
         phone2: phone2,
       );
     }
 
     return BookingRequestEntity(
-      clientId: selectedClientId,
+      clientId: _form.selectedClientId,
       staffId: staffId,
       client: clientData,
-      address: clientAddressController.text.trim(),
+      address: _form.clientAddressController.text.trim(),
       pickupDate: pickupDate.format().appendTimeToDate(time: pickupTime),
       // If coolingPeriodDays is 0 (None), use exact return date; otherwise add cooling period days
       returnDate: coolingPeriodDays == 0
@@ -4253,22 +3869,22 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 .add(Duration(days: coolingPeriodDays))
                 .format()
                 .appendTimeToDate(time: returnTime),
-      advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
-      securityAmount: securityAmountController.text.trim().toIntOrNull(),
-      discountAmount: discountAmountController.text.trim().toIntOrNull(),
+      advanceAmount: _form.advanceAmountController.text.trim().toIntOrNull(),
+      securityAmount: _form.securityAmountController.text.trim().toIntOrNull(),
+      discountAmount: _form.discountAmountController.text.trim().toIntOrNull(),
       purchaseMode: 'normal',
-      paymentMethod: paymentMethod,
-      deliveryStatus: deliveryStatus,
+      paymentMethod: _form.paymentMethod,
+      deliveryStatus: _form.deliveryStatus,
       products: products,
       additionalCharges: additionalCharges.isNotEmpty
           ? additionalCharges
           : null,
-      description: descriptionController.text.trim().isNotEmpty
-          ? descriptionController.text.trim()
+      description: _form.descriptionController.text.trim().isNotEmpty
+          ? _form.descriptionController.text.trim()
           : null,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
-      runningKilometers: runningKilometersController.text
+      runningKilometers: _form.runningKilometersController.text
           .trim(), // Added running kilometers
     );
   }
@@ -4276,8 +3892,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// Build sales request for creating a sale
   //TODO: check if RequestSaleModel or SaleRequestModel needs to be used here and rename accordingly for consistency
   RequestSalesModel _buildSalesRequest() {
-    final products = selectedProductsNotifier.value;
-    final discount = discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final products = _form.selectedProductsNotifier.value;
+    final discount = _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
     // Build variants array with id, quantity, and amount (total = per-unit price × quantity)
     final variants = products.map((product) {
       return {
@@ -4288,7 +3904,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }).toList();
     final grossTotal = variants.fold<int>(
       0,
-      (sum, item) => sum + ((item['amount'] as int?) ?? 0),
+      (sum, item) => sum + (item['amount'] ?? 0),
     );
     final finalTotal = (grossTotal - discount) > 0
         ? (grossTotal - discount)
@@ -4299,23 +3915,23 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final staffId = staffState.selectedStaff?.id;
 
     // Use phone1 as client_phone
-    final clientPhone = clientPhone1Controller.text.trim();
+    final clientPhone = _form.clientPhone1Controller.text.trim();
 
     return RequestSalesModel(
       staffId: staffId,
       clientPhone: clientPhone.isEmpty ? null : clientPhone,
-      clientAddress: clientAddressController.text.trim().isEmpty
+      clientAddress: _form.clientAddressController.text.trim().isEmpty
           ? null
-          : clientAddressController.text.trim(),
+          : _form.clientAddressController.text.trim(),
       saleDate: pickupDate.format(), // Use pickup date as sale date
-      description: descriptionController.text.trim().isEmpty
+      description: _form.descriptionController.text.trim().isEmpty
           ? null
-          : descriptionController.text.trim(),
+          : _form.descriptionController.text.trim(),
       sendInvoice: sendPdfToWhatsApp,
       variants: variants,
       // Sales flow has no paid field in UI; mark as fully paid by default.
       paidAmount: finalTotal,
-      paymentMethod: paymentMethod,
+      paymentMethod: _form.paymentMethod,
       discount: discount,
       // Default to true, or use checkbox value if past date
       decreaseStock: decreaseStockForPastDate || !_isPastDate(),
@@ -4681,7 +4297,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 children: [
                   // Client Phone
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientPhone1Controller,
+                    controller: _form.clientPhone1Controller,
                     hint: 'Client Phone (WP)',
                     isNumber: true,
                     errorText: _phoneError,
@@ -4691,7 +4307,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Place
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientAddressController,
+                    controller: _form.clientAddressController,
                     hint: 'Place',
                     prefixIcon: Icons.location_on,
                   ),
@@ -4708,7 +4324,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: 7),
                   StaffSearchNameField(
-                    nameController: staffNameController,
+                    nameController: _form.staffNameController,
                     errorText: _staffNameError,
                   ),
                   const SizedBox(height: _fieldSpacing),
@@ -4725,7 +4341,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: TextField(
-                      controller: descriptionController,
+                      controller: _form.descriptionController,
                       maxLines: null,
                       expands: true,
                       textInputAction: TextInputAction.next,
@@ -4743,7 +4359,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Discount
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: discountAmountController,
+                    controller: _form.discountAmountController,
                     hint: 'Discount amount',
                     isNumber: true,
                   ),
@@ -4912,28 +4528,28 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         if (state.selectedClient != null) {
                           final client = state.selectedClient!;
                           // Auto-fill fields
-                          clientNameController.text = client.name;
-                          clientPhone1Controller.text = client.phone1
+                          _form.clientNameController.text = client.name;
+                          _form.clientPhone1Controller.text = client.phone1
                               .toString();
                           if (client.phone2 != null) {
-                            clientPhone2Controller.text = client.phone2
+                            _form.clientPhone2Controller.text = client.phone2
                                 .toString();
                           }
                           // Store selected client ID
-                          selectedClientId = client.id;
+                          _form.selectedClientId = client.id;
                         }
                       },
                       child: ClientSearchNameField(
-                        nameController: clientNameController,
-                        focusNode: _clientNameFocusNode,
+                        nameController: _form.clientNameController,
+                        focusNode: _form.clientNameFocusNode,
                         hitText: 'Type or Search name',
                         onClear: () {
                           // Clear all client fields when search is cleared
-                          clientNameController.clear();
-                          clientPhone1Controller.clear();
-                          clientPhone2Controller.clear();
-                          clientAddressController.clear();
-                          selectedClientId = null;
+                          _form.clientNameController.clear();
+                          _form.clientPhone1Controller.clear();
+                          _form.clientPhone2Controller.clear();
+                          _form.clientAddressController.clear();
+                          _form.selectedClientId = null;
                         },
                         errorText: _clientNameError,
                       ),
@@ -4942,11 +4558,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ], // End of name section for bookings only
                   // Phone 1 (WhatsApp) - Always enabled
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientPhone1Controller,
+                    controller: _form.clientPhone1Controller,
                     hint: 'Whatsapp number',
                     isNumber: true,
-                    focusNode: _clientPhone1FocusNode,
-                    nextFocusNode: _clientPhone2FocusNode,
+                    focusNode: _form.clientPhone1FocusNode,
+                    nextFocusNode: _form.clientPhone2FocusNode,
                     errorText: _phoneError,
                     prefixSvgAsset: AppAssets.whatsAppSvg,
                   ),
@@ -4954,19 +4570,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   // Phone 2 - Optional, only show for bookings, always enabled
                   if (selectedBookingType != BookingType.sales)
                     BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: clientPhone2Controller,
+                      controller: _form.clientPhone2Controller,
                       hint: 'Phone 2',
                       isNumber: true,
-                      focusNode: _clientPhone2FocusNode,
-                      nextFocusNode: _clientAddressFocusNode,
+                      focusNode: _form.clientPhone2FocusNode,
+                      nextFocusNode: _form.clientAddressFocusNode,
                       prefixIcon: Icons.phone,
                     ),
                   const SizedBox(height: _fieldSpacing),
                   // Place - Optional
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientAddressController,
+                    controller: _form.clientAddressController,
                     hint: 'place',
-                    focusNode: _clientAddressFocusNode,
+                    focusNode: _form.clientAddressFocusNode,
                     nextFocusNode: null, // Last field
                     prefixIcon: Icons.location_on,
                   ),
@@ -5010,7 +4626,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   // if (selectedBookingType == BookingType.booking) ...[
                   //   const SizedBox(height: 8),
                   //   BookingDocumentUploadSection(
-                  //     documentsNotifier: documentsNotifier,
+                  //     _form.documentsNotifier: _form.documentsNotifier,
                   //   ),
                   //   const SizedBox(height: 7),
                   // ],
@@ -5040,7 +4656,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 7),
 
                   StaffSearchNameField(
-                    nameController: staffNameController,
+                    nameController: _form.staffNameController,
                     errorText: _staffNameError,
                   ),
 
@@ -5058,7 +4674,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: TextField(
-                      controller: descriptionController,
+                      controller: _form.descriptionController,
                       maxLines: null,
                       expands: true,
                       textInputAction: TextInputAction.next,
@@ -5077,14 +4693,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Running Kilometers - Only for Vehicles
                   ValueListenableBuilder<List<ProductSelectedEntity>>(
-                    valueListenable: selectedProductsNotifier,
+                    valueListenable: _form.selectedProductsNotifier,
                     builder: (context, products, _) {
                       final hasVehicles = products.any(
                         (p) => p.variant.mainServiceType?.isVehicle ?? false,
                       );
                       if (!hasVehicles) return const SizedBox.shrink();
                       return BookingTextFieldBuilder.buildRightPanelTextField(
-                        controller: runningKilometersController,
+                        controller: _form.runningKilometersController,
                         hint: 'Running Kilometers',
                         isNumber: true,
                       );
@@ -5098,28 +4714,28 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           // Expandable summary section in step 1
           ListenableBuilder(
             listenable: Listenable.merge([
-              selectedProductsNotifier,
-              additionalChargesNotifier,
-              advanceAmountController,
-              discountAmountController,
+              _form.selectedProductsNotifier,
+              _form.additionalChargesNotifier,
+              _form.advanceAmountController,
+              _form.discountAmountController,
             ]),
             builder: (context, _) {
-              final products = selectedProductsNotifier.value;
+              final products = _form.selectedProductsNotifier.value;
               if (products.isEmpty) return const SizedBox.shrink();
 
-              final additionalCharges = additionalChargesNotifier.value;
+              final additionalCharges = _form.additionalChargesNotifier.value;
               final isSaleType = selectedBookingType == BookingType.sales;
               final advanceAmount = isSaleType
                   ? 0
-                  : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
+                  : (_form.advanceAmountController.text.trim().toIntOrNull() ?? 0);
               final discountAmount =
-                  discountAmountController.text.trim().toIntOrNull() ?? 0;
+                  _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
 
               final rentalDays = !isSaleType ? _calculateRentalDays() : 1;
               final productTotal = products.fold<int>(0, (sum, product) {
                 final daysMultiplier =
                     (!isSaleType &&
-                        _shouldMultiplyByDays(product.variant.mainServiceType))
+                        shouldMultiplyByDays(product.variant.mainServiceType))
                     ? (rentalDays > 0 ? rentalDays : 1)
                     : 1;
                 return sum +
@@ -5216,21 +4832,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                             children: [
                               const Divider(height: 8, thickness: 1),
                               const SizedBox(height: 4),
-                              _buildSummaryRow('Product total', productTotal),
+                              buildSummaryRow('Product total', productTotal),
                               if (additionalTotal > 0)
-                                _buildSummaryRow(
+                                buildSummaryRow(
                                   'Additional charges',
                                   additionalTotal,
                                 ),
                               if (discountAmount > 0)
-                                _buildSummaryRow(
+                                buildSummaryRow(
                                   '- Discount',
                                   discountAmount,
                                   isNegative: true,
                                 ),
                               const Divider(height: 12, thickness: 1),
                               if (!isSaleType && advanceAmount > 0)
-                                _buildSummaryRow(
+                                buildSummaryRow(
                                   'Paid',
                                   advanceAmount,
                                   valueColor: const Color(0xFF1AB000),
@@ -5504,7 +5120,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   InkWell(
                     onTap: () {
                       // Close search overlay before changing steps
-                      _removeSearchOverlay();
+                      _form.removeSearchOverlay();
                       setState(() => _bookingStep = 0);
                     },
                     child: Row(
@@ -5530,7 +5146,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Locations - Only for Vehicles
                   ValueListenableBuilder<List<ProductSelectedEntity>>(
-                    valueListenable: selectedProductsNotifier,
+                    valueListenable: _form.selectedProductsNotifier,
                     builder: (context, products, _) {
                       final hasVehicles = products.any(
                         (p) => p.variant.mainServiceType?.isVehicle ?? false,
@@ -5545,17 +5161,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                           ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                            controller: startLocationController,
+                            controller: _form.startLocationController,
                             hint: 'Start location',
                           ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                            controller: pickupLocationController,
+                            controller: _form.pickupLocationController,
                             hint: 'Pickup location',
                           ),
                           const SizedBox(height: _fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
-                            controller: destinationLocationController,
+                            controller: _form.destinationLocationController,
                             hint: 'Destination',
                           ),
                           const SizedBox(height: 14),
@@ -5571,19 +5187,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: advanceAmountController,
+                    controller: _form.advanceAmountController,
                     hint: 'Advance amount',
                     isNumber: true,
                   ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: securityAmountController,
+                    controller: _form.securityAmountController,
                     hint: 'Security amount',
                     isNumber: true,
                   ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: discountAmountController,
+                    controller: _form.discountAmountController,
                     hint: 'Discount amount',
                     isNumber: true,
                   ),
@@ -5591,7 +5207,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 14),
                   // Payment Method Selection - only show if advance amount has value
                   ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: advanceAmountController,
+                    valueListenable: _form.advanceAmountController,
                     builder: (context, value, child) {
                       final hasAdvanceAmount =
                           value.text.trim().isNotEmpty &&
@@ -5620,7 +5236,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                         ),
                       ),
                       InkWell(
-                        onTap: _addAdditionalCharge,
+                        onTap: addAdditionalCharge,
                         borderRadius: BorderRadius.circular(4),
                         child: Container(
                           padding: const EdgeInsets.all(4),
@@ -5640,7 +5256,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   const SizedBox(height: 6),
                   // Additional charges list
                   ValueListenableBuilder<List<AdditionalChargesEntity>>(
-                    valueListenable: additionalChargesNotifier,
+                    valueListenable: _form.additionalChargesNotifier,
                     builder: (context, charges, _) {
                       if (charges.isEmpty) return const SizedBox();
                       return Column(
@@ -5705,7 +5321,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                                     ),
                                     const SizedBox(width: 8),
                                     InkWell(
-                                      onTap: () => _removeCharge(charge),
+                                      onTap: () => removeCharge(charge),
                                       child: Container(
                                         padding: const EdgeInsets.all(4),
                                         decoration: BoxDecoration(
@@ -5877,17 +5493,17 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                     listener: (context, state) {
                       if (state.selectedClient != null) {
                         final client = state.selectedClient!;
-                        clientNameController.text = client.name;
-                        clientPhone1Controller.text = client.phone1.toString();
+                        _form.clientNameController.text = client.name;
+                        _form.clientPhone1Controller.text = client.phone1.toString();
                         if (client.phone2 != null) {
-                          clientPhone2Controller.text = client.phone2
+                          _form.clientPhone2Controller.text = client.phone2
                               .toString();
                         }
-                        selectedClientId = client.id;
+                        _form.selectedClientId = client.id;
                       }
                     },
                     child: ClientSearchNameField(
-                      nameController: clientNameController,
+                      nameController: _form.clientNameController,
                       errorText: _clientNameError,
                       hitText: 'Type or search name',
                     ),
@@ -5896,7 +5512,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Client Phone
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientPhone1Controller,
+                    controller: _form.clientPhone1Controller,
                     hint: 'Client Phone',
                     isNumber: true,
                     prefixIcon: Icons.phone,
@@ -5905,7 +5521,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
                   // Address
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientAddressController,
+                    controller: _form.clientAddressController,
                     hint: 'Place / Address',
                     prefixIcon: Icons.location_on,
                   ),
@@ -5922,7 +5538,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                   ),
                   const SizedBox(height: 4),
                   StaffSearchNameField(
-                    nameController: staffNameController,
+                    nameController: _form.staffNameController,
                     errorText: _staffNameError,
                   ),
                   const SizedBox(height: _fieldSpacing),
@@ -5943,7 +5559,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: TextField(
-                      controller: descriptionController,
+                      controller: _form.descriptionController,
                       maxLines: null,
                       expands: true,
                       textInputAction: TextInputAction.next,
@@ -5989,7 +5605,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
                 ),
                 const SizedBox(height: 4),
                 ValueListenableBuilder<List<ProductSelectedEntity>>(
-                  valueListenable: selectedProductsNotifier,
+                  valueListenable: _form.selectedProductsNotifier,
                   builder: (context, products, _) {
                     final total = products.fold<int>(
                       0,
@@ -6037,14 +5653,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   void _handleConfirmOldBooking() async {
-    final products = selectedProductsNotifier.value;
+    final products = _form.selectedProductsNotifier.value;
 
     if (products.isEmpty) {
       context.showSnackBar('Please select at least one item', isError: true);
       return;
     }
 
-    if (clientNameController.text.trim().isEmpty) {
+    if (_form.clientNameController.text.trim().isEmpty) {
       setState(() => _clientNameError = 'Please enter client name');
       context.showSnackBar('Please enter client name', isError: true);
       return;
@@ -6083,7 +5699,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   BookingRequestEntity _buildOldBookingRequest() {
-    final products = selectedProductsNotifier.value;
+    final products = _form.selectedProductsNotifier.value;
     final totalAmount = products.fold<int>(
       0,
       (sum, p) => sum + (p.amount * p.quantity),
@@ -6093,20 +5709,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     final staffId = staffState.selectedStaff?.id;
 
     return BookingRequestEntity(
-      clientId: selectedClientId,
+      clientId: _form.selectedClientId,
       staffId: staffId,
-      client: selectedClientId == null
+      client: _form.selectedClientId == null
           ? ClientRequestEntity(
               id: null,
-              name: clientNameController.text.trim().isEmpty
+              name: _form.clientNameController.text.trim().isEmpty
                   ? null
-                  : clientNameController.text.trim(),
-              phone1: clientPhone1Controller.text.trim().toIntOrNull(),
+                  : _form.clientNameController.text.trim(),
+              phone1: _form.clientPhone1Controller.text.trim().toIntOrNull(),
             )
           : null,
-      address: clientAddressController.text.trim().isEmpty
+      address: _form.clientAddressController.text.trim().isEmpty
           ? null
-          : clientAddressController.text.trim(),
+          : _form.clientAddressController.text.trim(),
       bookedDate: _bookedDate?.format(),
       pickupDate: pickupDate.format(),
       returnDate: returnDate.format(),
@@ -6114,130 +5730,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       paymentMethod: _selectedPaymentMethod,
       deliveryStatus: DeliveryStatus.returned,
       bookingStatus: BookingStatus.completed,
-      description: descriptionController.text.trim().isEmpty
+      description: _form.descriptionController.text.trim().isEmpty
           ? null
-          : descriptionController.text.trim(),
+          : _form.descriptionController.text.trim(),
       products: products,
     );
   }
-
-  // Helper methods replaced - Using BookingTextFieldBuilder
-
-  // Widget _buildFinalSummary() {
-  //   return ValueListenableBuilder<List<ProductSelectedEntity>>(
-  //     valueListenable: selectedProductsNotifier,
-  //     builder: (context, products, _) {
-  //       final productTotal = products.fold<int>(
-  //           0, (sum, item) => sum + (item.amount * item.quantity));
-  //       final additional = additionalChargesNotifier.value.fold<double>(
-  //           0, (sum, item) => sum + (item.amount?.toDouble() ?? 0));
-
-  //       final advance = double.tryParse(advanceAmountController.text) ?? 0;
-  //       final discount = double.tryParse(discountAmountController.text) ?? 0;
-
-  //       final totalPayable = productTotal + additional - advance - discount;
-
-  //       return Container(
-  //         padding: const EdgeInsets.all(16),
-  //         decoration: BoxDecoration(
-  //           color: const Color(0xFFF6F6F6),
-  //           borderRadius: BorderRadius.circular(8),
-  //         ),
-  //         child: Column(
-  //           children: [
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Row(
-  //                   children: [
-  //                     const Text('Product total',
-  //                         style: TextStyle(
-  //                             fontSize: 13, fontWeight: FontWeight.w500)),
-  //                     const SizedBox(width: 8),
-  //                     Icon(Icons.keyboard_arrow_down,
-  //                         size: 16, color: Colors.grey.shade600),
-  //                   ],
-  //                 ),
-  //                 Text('₹${productTotal.toCurrency()}',
-  //                     style: const TextStyle(
-  //                         fontSize: 13, fontWeight: FontWeight.w600)),
-  //               ],
-  //             ),
-  //             if (additional > 0) ...[
-  //               const SizedBox(height: 12),
-  //               Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   const Text('Additional charges',
-  //                       style: TextStyle(
-  //                           fontSize: 13, fontWeight: FontWeight.w500)),
-  //                   Text('₹${additional.toStringAsFixed(0)}',
-  //                       style: const TextStyle(
-  //                           fontSize: 13, fontWeight: FontWeight.w600)),
-  //                 ],
-  //               ),
-  //             ],
-  //             const Padding(
-  //               padding: EdgeInsets.symmetric(vertical: 4),
-  //               child: Divider(height: 1),
-  //             ),
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 const Text('Paid',
-  //                     style:
-  //                         TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-  //                 Text('₹${advance.toStringAsFixed(0)}',
-  //                     style: const TextStyle(
-  //                         fontSize: 13,
-  //                         fontWeight: FontWeight.w600,
-  //                         color: Color(0xFF27AE60))),
-  //               ],
-  //             ),
-  //             const SizedBox(height: 12),
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 const Text('Total payable',
-  //                     style:
-  //                         TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-  //                 Text('₹${totalPayable.toStringAsFixed(0)}',
-  //                     style: const TextStyle(
-  //                         fontSize: 16,
-  //                         fontWeight: FontWeight.w700,
-  //                         color: Color(0xFFEB5757))),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget _buildSimpleTextField(
-  //     {required TextEditingController controller,
-  //     required String hint,
-  //     bool isNumber = false}) {
-  //   return Container(
-  //     height: 42,
-  //     padding: const EdgeInsets.symmetric(horizontal: 12),
-  //     decoration: BoxDecoration(
-  //       border: Border.all(color: Colors.grey.shade300),
-  //       borderRadius: BorderRadius.circular(8),
-  //       color: Colors.white,
-  //     ),
-  //     child: TextField(
-  //       controller: controller,
-  //       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-  //       decoration: InputDecoration(
-  //         border: InputBorder.none,
-  //         hintText: hint,
-  //         hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-  //         contentPadding: const EdgeInsets.only(bottom: 8),
-  //       ),
-  //       style: const TextStyle(fontSize: 13, color: Colors.black87),
-  //     ),
-  //   );
-  // }
 }
