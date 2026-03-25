@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
@@ -57,6 +59,11 @@ import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_client_details_panel.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_payment_summary_panel.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_date_selection_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_product_row_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/old_booking_right_panel.dart';
 
 class NewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -451,7 +458,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
     }
   }
 
-
   /// Show product filter bottom sheet
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
@@ -524,23 +530,28 @@ class NewBookingScreenState extends State<NewBookingScreen>
           _updateSearchTypesForService(serviceId == -1 ? null : serviceId);
           return _searchTypes;
         },
-        onApply: ({
-          required serviceId,
-          required searchTypeIndex,
-          required priceRange,
-          required maxPrice,
-          required isPriceFilterEnabled,
-        }) {
-          setState(() {
-            selectedServiceId = serviceId;
-            _form.selectedSearchTypeIndex.value = searchTypeIndex;
-            _form.priceRange.value = priceRange;
-            _form.maxPriceNotifier.value = maxPrice;
-            _form.isPriceFilterEnabled.value = isPriceFilterEnabled;
-            _updateSearchTypesForService(selectedServiceId);
-          });
-          _applyProductFilters(searchTypeIndex, priceRange, isPriceFilterEnabled);
-        },
+        onApply:
+            ({
+              required serviceId,
+              required searchTypeIndex,
+              required priceRange,
+              required maxPrice,
+              required isPriceFilterEnabled,
+            }) {
+              setState(() {
+                selectedServiceId = serviceId;
+                _form.selectedSearchTypeIndex.value = searchTypeIndex;
+                _form.priceRange.value = priceRange;
+                _form.maxPriceNotifier.value = maxPrice;
+                _form.isPriceFilterEnabled.value = isPriceFilterEnabled;
+                _updateSearchTypesForService(selectedServiceId);
+              });
+              _applyProductFilters(
+                searchTypeIndex,
+                priceRange,
+                isPriceFilterEnabled,
+              );
+            },
       ),
     );
   }
@@ -708,7 +719,9 @@ class NewBookingScreenState extends State<NewBookingScreen>
           serviceId: serviceIdToUse,
           query: hasSearchQuery ? query : null,
           type: hasSearchQuery ? searchType : null,
-          startPrice: hasPriceFilter ? _form.priceRange.value.start.round() : null,
+          startPrice: hasPriceFilter
+              ? _form.priceRange.value.start.round()
+              : null,
           endPrice: hasPriceFilter ? _form.priceRange.value.end.round() : null,
           pickupDate: pickupDate.format(),
           returnDate: returnDate.format(),
@@ -719,22 +732,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
         ),
       );
     }
-  }
-
-  /// Get variant display text for product in table
-  String _getVariantDisplayText(ProductSelectedEntity product) {
-    final mainServiceType = product.variant.mainServiceType;
-
-    // For multi-variant product types (dress, costume, gadgets),
-    // show the variant attribute (size/serial number)
-    if (mainServiceType.isMultiVariantProductType) {
-      return product.variant.variantAttribute?.isNotEmpty ?? false
-          ? product.variant.variantAttribute!
-          : '-';
-    }
-
-    // For non-multi-variant products, keep it blank
-    return '';
   }
 
   /// Calculate number of days between pickup and return dates
@@ -773,32 +770,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
     // Below 24 hours = 1 day
     // Every started 24h block = +1 day
     return hours <= 24 ? 1 : (hours / 24).ceil();
-  }
-
-  /// Get service-specific specification text for product
-  String _getProductSpecifications(ProductSelectedEntity product) {
-    // final mainServiceType = product.variant.mainServiceType;
-    final List<String> specs = [];
-
-    // Add category (with service-specific label)
-    if (product.variant.category != null &&
-        product.variant.category!.isNotEmpty) {
-      specs.add(product.variant.category!);
-    }
-
-    // Add model/secondary attribute if available
-    if (product.variant.model != null && product.variant.model!.isNotEmpty) {
-      specs.add(product.variant.model!);
-    }
-
-    // Add color if not already shown
-    if (product.variant.color != null && product.variant.color!.isNotEmpty) {
-      if (!specs.contains(product.variant.color)) {
-        specs.add(product.variant.color!);
-      }
-    }
-
-    return specs.isNotEmpty ? specs.join(' • ') : '-';
   }
 
   void _loadProductsForService(int? serviceId) {
@@ -1020,7 +991,22 @@ class NewBookingScreenState extends State<NewBookingScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDateSelectionSection(),
+              BookingDateSelectionWidget(
+                isSales: selectedBookingType == BookingType.sales,
+                pickupDate: pickupDate,
+                returnDate: returnDate,
+                pickupTime: pickupTime,
+                returnTime: returnTime,
+                coolingPeriodDays: coolingPeriodDays,
+                onSelectPickupDate: () => _selectDate(isPickup: true),
+                onSelectReturnDate: () => _selectDate(isPickup: false),
+                onSelectPickupTime: () => _selectTime(isPickup: true),
+                onSelectReturnTime: () => _selectTime(isPickup: false),
+                onCoolingPeriodChanged: (val) {
+                  setState(() => coolingPeriodDays = val);
+                  _loadProductsForService(selectedServiceId);
+                },
+              ),
               const SizedBox(height: 16),
               Expanded(
                 child: AnimatedSwitcher(
@@ -1376,8 +1362,9 @@ class NewBookingScreenState extends State<NewBookingScreen>
                   );
                 },
               ),
-              //TODO: could't find the _openProductSelection method when copying code, need attention.
 
+              //TODO: could't find the _openProductSelection method when copying code, need attention.
+              //  NOTE: don't delete this commented code
               // InkWell(
               //   onTap: _openProductSelection,
               //   borderRadius: BorderRadius.circular(8),
@@ -1673,7 +1660,9 @@ class NewBookingScreenState extends State<NewBookingScreen>
                                         ? null
                                         : selectedServiceId;
                                     String? searchType;
-                                    switch (_form.selectedSearchTypeIndex.value) {
+                                    switch (_form
+                                        .selectedSearchTypeIndex
+                                        .value) {
                                       case 0:
                                         searchType = 'name';
                                         break;
@@ -1713,10 +1702,13 @@ class NewBookingScreenState extends State<NewBookingScreen>
                                         serviceId: serviceIdToUse,
                                         query: queryValue,
                                         type: searchType,
-                                        startPrice: _form.isPriceFilterEnabled.value
-                                            ? _form.priceRange.value.start.round()
+                                        startPrice:
+                                            _form.isPriceFilterEnabled.value
+                                            ? _form.priceRange.value.start
+                                                  .round()
                                             : null,
-                                        endPrice: _form.isPriceFilterEnabled.value
+                                        endPrice:
+                                            _form.isPriceFilterEnabled.value
                                             ? _form.priceRange.value.end.round()
                                             : null,
                                         pickupDate: pickupDate.format(),
@@ -2142,357 +2134,37 @@ class NewBookingScreenState extends State<NewBookingScreen>
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: products.length,
-          itemBuilder: (context, index) => _buildProductRow(products[index]),
+          itemBuilder: (context, index) {
+            final product = products[index];
+            final isSales = selectedBookingType == BookingType.sales;
+            final rentalDays = !isSales ? _calculateRentalDays() : 0;
+            final effectiveDaysMultiplier =
+                (!isSales &&
+                    shouldMultiplyByDays(product.variant.mainServiceType))
+                ? (rentalDays > 0 ? rentalDays : 1)
+                : 1;
+            return BookingProductRowWidget(
+              product: product,
+              isSales: isSales,
+              rentalDays: rentalDays,
+              effectiveDaysMultiplier: effectiveDaysMultiplier,
+              hasVariants: hasAnyProductWithVariants(),
+              editingVariantId: _form.editingVariantId,
+              inlinePriceController: _form.inlinePriceController,
+              inlinePriceFocusNode: _form.inlinePriceFocusNode,
+              quantityController: _getQuantityController(product),
+              quantityFocusNode: _getQuantityFocusNode(_quantityKey(product)),
+              onDecrement: () => _decrementQuantity(product),
+              onIncrement: () => _incrementQuantity(product),
+              onSaveTypedQuantity: (value) =>
+                  _saveTypedQuantity(product, value),
+              onStartEditingPrice: () => startEditingPrice(product),
+              onSaveEditingPrice: () => _saveEditingPrice(product),
+              onRemove: () => _removeProduct(product),
+            );
+          },
         );
       },
-    );
-  }
-
-  Widget _buildProductRow(ProductSelectedEntity product) {
-    final isSales = selectedBookingType == BookingType.sales;
-    final rentalDays = !isSales ? _calculateRentalDays() : 0;
-    // Only multiply price by days for qualifying service types
-    final effectiveDaysMultiplier =
-        (!isSales && shouldMultiplyByDays(product.variant.mainServiceType))
-        ? (rentalDays > 0 ? rentalDays : 1)
-        : 1;
-    final hasVariants = hasAnyProductWithVariants();
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-      ),
-      child: Row(
-        children: [
-          // Item Name & Image
-          Expanded(
-            flex: 3,
-            child: Row(
-              children: [
-                // Image
-                Container(
-                  width: 48,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.grey.shade100,
-                    border: Border.all(color: Colors.grey.shade200),
-                    image:
-                        product.variant.image != null &&
-                            product.variant.image!.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(product.variant.image!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                  ),
-                  child:
-                      product.variant.image == null ||
-                          product.variant.image!.isEmpty
-                      ? const Icon(
-                          Icons.image_not_supported,
-                          size: 20,
-                          color: Colors.grey,
-                        )
-                      : null,
-                ),
-                const SizedBox(width: 16),
-                // Text
-                Expanded(
-                  child: Text(
-                    product.variant.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF2D3436),
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 4),
-          // Specifications (service-specific)
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(
-                _getProductSpecifications(product),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade700,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-          const SizedBox(width: 4),
-          // Variant (only for multi-variant products)
-          if (hasVariants) ...[
-            Expanded(
-              child: Center(
-                child: Text(
-                  _getVariantDisplayText(product),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          // Days (only for bookings)
-          if (!isSales) ...[
-            Expanded(
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    '$rentalDays',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF6132E4),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          // Available Badge
-          Expanded(
-            child: Center(
-              child: Container(
-                //  width: 58,
-                // height: 21,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 11,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0x1C1FD300), // Light green bg
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF27AE60), // Green dot
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${product.variant.remainingStock ?? product.variant.stock} left',
-                      style: const TextStyle(
-                        fontSize: 12, // Slightly larger font 12
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF27AE60),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 4),
-          // Quantity Buttons
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildQuantityBtn(
-                  icon: Icons.remove,
-                  onTap: () => _decrementQuantity(product),
-                  compact: true,
-                ),
-                const SizedBox(width: 3),
-                SizedBox(
-                  width: 34,
-                  height: 28,
-                  child: TextField(
-                    controller: _getQuantityController(product),
-                    focusNode: _getQuantityFocusNode(_quantityKey(product)),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 0,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(color: Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: const BorderSide(color: Color(0xFF6132E4)),
-                      ),
-                    ),
-                    onSubmitted: (value) => _saveTypedQuantity(product, value),
-                    onTapOutside: (_) => _saveTypedQuantity(
-                      product,
-                      _getQuantityController(product).text,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 3),
-                _buildQuantityBtn(
-                  icon: Icons.add,
-                  onTap: () => _incrementQuantity(product),
-                  compact: true,
-                  isDisabled:
-                      product.quantity >=
-                      (product.variant.remainingStock ??
-                          product.variant.stock ??
-                          999),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          // Price / item
-          Expanded(
-            child: _form.editingVariantId == product.variant.variantId
-                ? Center(
-                    child: Container(
-                      width: 80,
-                      height: 32,
-                      child: TextField(
-                        controller: _form.inlinePriceController,
-                        focusNode: _form.inlinePriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 0,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: Colors.grey.shade400),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: const BorderSide(
-                              color: Color(0xFF6132E4),
-                            ),
-                          ),
-                        ),
-                        onSubmitted: (_) => _saveEditingPrice(product),
-                      ),
-                    ),
-                  )
-                : GestureDetector(
-                    onTap: () => startEditingPrice(product),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${product.amount}', // format currency if needed
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF2D3436),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.edit_outlined,
-                          size: 16,
-                          color: const Color(0xFF6132E4),
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
-          const SizedBox(width: 4),
-          // Total
-          Expanded(
-            child: Center(
-              child: Text(
-                '${product.amount * product.quantity * effectiveDaysMultiplier}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700, // Bold
-                  color: Color(0xFF2D3436),
-                ),
-              ),
-            ),
-          ),
-          // Remove
-          SizedBox(
-            width: 50,
-            child: IconButton(
-              icon: const Icon(Icons.close, size: 20, color: Colors.black87),
-              onPressed: () => _removeProduct(product),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuantityBtn({
-    required IconData icon,
-    required VoidCallback onTap,
-    bool isDisabled = false,
-    bool compact = false,
-  }) {
-    return InkWell(
-      onTap: isDisabled ? null : onTap,
-      borderRadius: BorderRadius.circular(4),
-      child: Container(
-        width: compact ? 20 : 27,
-        height: compact ? 20 : 22,
-        decoration: BoxDecoration(
-          color: isDisabled
-              ? Colors.grey.shade300
-              : const Color(0xFFF3F0FF), // Light purple bg
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Icon(
-          icon,
-          size: compact ? 12 : 14,
-          color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4),
-        ),
-      ),
     );
   }
 
@@ -2672,7 +2344,8 @@ class NewBookingScreenState extends State<NewBookingScreen>
               final isSaleType = selectedBookingType == BookingType.sales;
               final advanceAmount = isSaleType
                   ? 0
-                  : (_form.advanceAmountController.text.trim().toIntOrNull() ?? 0);
+                  : (_form.advanceAmountController.text.trim().toIntOrNull() ??
+                        0);
               final discountAmount =
                   _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
 
@@ -3011,10 +2684,10 @@ class NewBookingScreenState extends State<NewBookingScreen>
   }
 
   /// Build sales request for creating a sale
-  //TODO: check if RequestSaleModel or SaleRequestModel needs to be used here and rename accordingly for consistency
   RequestSalesModel _buildSalesRequest() {
     final products = _form.selectedProductsNotifier.value;
-    final discount = _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final discount =
+        _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
     // Build variants array with id, quantity, and amount (total = per-unit price × quantity)
     final variants = products.map((product) {
       return {
@@ -3059,323 +2732,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
     );
   }
 
-  Widget _buildDateSelectionSection() {
-    final isSales = selectedBookingType == BookingType.sales;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            isSales ? 'Sale date' : 'Select dates',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 7),
-          if (isSales)
-            // Sales mode - single date only
-            SizedBox(
-              width: 400,
-              child: _buildNewDateField(
-                label: 'Sale date',
-                value: pickupDate.format(),
-                onTap: () => _selectDate(isPickup: true),
-              ),
-            )
-          else
-            // Booking mode - pickup and return dates
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Pickup Date
-                Expanded(
-                  flex: 3,
-                  child: _buildNewDateField(
-                    label: 'Pickup date',
-                    value: pickupDate.format(),
-                    onTap: () => _selectDate(isPickup: true),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                // Pickup Time
-                Expanded(
-                  flex: 2,
-                  child: _buildNewTimeField(
-                    label: 'time',
-                    value: pickupTime?.format(context) ?? '--:--',
-                    onTap: () => _selectTime(isPickup: true),
-                  ),
-                ),
-                const SizedBox(width: 16),
-
-                // Divider between Pickup and Return
-                Container(
-                  height: 50,
-                  width: 2,
-                  margin: const EdgeInsets.only(bottom: 0),
-                  decoration: BoxDecoration(color: Colors.grey.shade400),
-                ),
-                const SizedBox(width: 16),
-
-                // Return Date
-                Expanded(
-                  flex: 3,
-                  child: _buildNewDateField(
-                    label: 'Return date',
-                    value: returnDate.format(),
-                    onTap: () => _selectDate(isPickup: false),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                // Return Time
-                Expanded(
-                  flex: 2,
-                  child: _buildNewTimeField(
-                    label: 'time',
-                    value: returnTime?.format(context) ?? '--:--',
-                    onTap: () => _selectTime(isPickup: false),
-                  ),
-                ),
-
-                const SizedBox(width: 16),
-
-                // Divider between Return and Cooling Period
-                Container(
-                  height: 50,
-                  width: 2,
-                  margin: const EdgeInsets.only(bottom: 0),
-                  decoration: BoxDecoration(color: Colors.grey.shade400),
-                ),
-                const SizedBox(width: 16),
-
-                // Cooling Period (Days)
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cooling period',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 42,
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<int>(
-                            value: coolingPeriodDays,
-                            isExpanded: true,
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 18,
-                            ),
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            items: [
-                              // Add "None" option
-                              const DropdownMenuItem(
-                                value: 0,
-                                child: Text('None'),
-                              ),
-                              // Generate 1-10 days
-                              ...List.generate(10, (index) {
-                                final days = index + 1;
-                                return DropdownMenuItem(
-                                  value: days,
-                                  child: Text(
-                                    '$days day${days > 1 ? 's' : ''}',
-                                  ),
-                                );
-                              }),
-                            ],
-                            onChanged: (val) {
-                              if (val != null) {
-                                setState(() => coolingPeriodDays = val);
-                                // Reload products with new cooling period
-                                _loadProductsForService(selectedServiceId);
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNewDateField({
-    required String label,
-    required String value,
-    required Future<void> Function() onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Focus(
-          onKeyEvent: (_, event) {
-            if (event is KeyDownEvent &&
-                (event.logicalKey == LogicalKeyboardKey.enter ||
-                    event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
-              onTap().then((_) => FocusScope.of(context).nextFocus());
-              return KeyEventResult.handled;
-            }
-            return KeyEventResult.ignored;
-          },
-          child: InkWell(
-            onTap: () =>
-                onTap().then((_) => FocusScope.of(context).nextFocus()),
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              height: 42,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F9FC),
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today_outlined,
-                    size: 16,
-                    color: const Color(0xFF9A76E8),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      value,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 18,
-                    color: Colors.grey.shade500,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNewTimeField({
-    required String label,
-    required String value,
-    required Future<void> Function() onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Focus(
-          onKeyEvent: (_, event) {
-            if (event is KeyDownEvent &&
-                (event.logicalKey == LogicalKeyboardKey.enter ||
-                    event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
-              onTap().then((_) => FocusScope.of(context).nextFocus());
-              return KeyEventResult.handled;
-            }
-            return KeyEventResult.ignored;
-          },
-          child: InkWell(
-            onTap: () =>
-                onTap().then((_) => FocusScope.of(context).nextFocus()),
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              height: 42,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F9FC),
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      value,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 18,
-                    color: Colors.grey.shade500,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildRightSidePanel() {
     // For sales mode, show a single simplified panel
@@ -3398,8 +2754,28 @@ class NewBookingScreenState extends State<NewBookingScreen>
         );
       },
       child: _bookingStep == 0
-          ? _buildClientDetailsPanel()
-          : _buildPaymentSummaryPanel(),
+          ? BookingClientDetailsPanel(
+              form: _form,
+              isSales: selectedBookingType == BookingType.sales,
+              clientNameError: _clientNameError,
+              phoneError: _phoneError,
+              staffNameError: _staffNameError,
+              sendPdfToWhatsApp: sendPdfToWhatsApp,
+              onSendPdfChanged: (v) => setState(() => sendPdfToWhatsApp = v),
+              onContinue: _validateAndContinue,
+              calculateRentalDays: _calculateRentalDays,
+            )
+          : BookingPaymentSummaryPanel(
+              form: _form,
+              selectedPaymentMethod: _selectedPaymentMethod,
+              onPaymentMethodChanged: (method) =>
+                  setState(() => _selectedPaymentMethod = method),
+              onBack: () {
+                _form.removeSearchOverlay();
+                setState(() => _bookingStep = 0);
+              },
+              summarySection: _buildSummarySection(),
+            ),
     );
   }
 
@@ -3618,400 +2994,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
     );
   }
 
-  Widget _buildClientDetailsPanel() {
-    return Container(
-      key: const ValueKey(0),
-      color: Colors.white,
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Client Details Header
-                  const Text(
-                    'Client details',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Name - Only show for bookings
-                  if (selectedBookingType != BookingType.sales) ...[
-                    // ClientName with Search
-                    BlocListener<ClientCubit, ClientState>(
-                      listener: (context, state) {
-                        if (state.selectedClient != null) {
-                          final client = state.selectedClient!;
-                          // Auto-fill fields
-                          _form.clientNameController.text = client.name;
-                          _form.clientPhone1Controller.text = client.phone1
-                              .toString();
-                          if (client.phone2 != null) {
-                            _form.clientPhone2Controller.text = client.phone2
-                                .toString();
-                          }
-                          // Store selected client ID
-                          _form.selectedClientId = client.id;
-                        }
-                      },
-                      child: ClientSearchNameField(
-                        nameController: _form.clientNameController,
-                        focusNode: _form.clientNameFocusNode,
-                        hitText: 'Type or Search name',
-                        onClear: () {
-                          // Clear all client fields when search is cleared
-                          _form.clientNameController.clear();
-                          _form.clientPhone1Controller.clear();
-                          _form.clientPhone2Controller.clear();
-                          _form.clientAddressController.clear();
-                          _form.selectedClientId = null;
-                        },
-                        errorText: _clientNameError,
-                      ),
-                    ),
-                    const SizedBox(height: _fieldSpacing),
-                  ], // End of name section for bookings only
-                  // Phone 1 (WhatsApp) - Always enabled
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.clientPhone1Controller,
-                    hint: 'Whatsapp number',
-                    isNumber: true,
-                    focusNode: _form.clientPhone1FocusNode,
-                    nextFocusNode: _form.clientPhone2FocusNode,
-                    errorText: _phoneError,
-                    prefixSvgAsset: AppAssets.whatsAppSvg,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  // Phone 2 - Optional, only show for bookings, always enabled
-                  if (selectedBookingType != BookingType.sales)
-                    BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: _form.clientPhone2Controller,
-                      hint: 'Phone 2',
-                      isNumber: true,
-                      focusNode: _form.clientPhone2FocusNode,
-                      nextFocusNode: _form.clientAddressFocusNode,
-                      prefixIcon: Icons.phone,
-                    ),
-                  const SizedBox(height: _fieldSpacing),
-                  // Place - Optional
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.clientAddressController,
-                    hint: 'place',
-                    focusNode: _form.clientAddressFocusNode,
-                    nextFocusNode: null, // Last field
-                    prefixIcon: Icons.location_on,
-                  ),
-
-                  const SizedBox(height: _fieldSpacing),
-                  const SizedBox(height: 16),
-                  // WhatsApp Checkbox - Only if feature enabled
-                  if (context.read<UserCubit>().hasFeature(
-                    AppPremiumFeatures.whatsappMessage,
-                  ))
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Checkbox(
-                            value: sendPdfToWhatsApp,
-                            onChanged: (v) =>
-                                setState(() => sendPdfToWhatsApp = v ?? false),
-                            activeColor: Colors.black87,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'Send invoice to whatsapp',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  const SizedBox(height: 7),
-
-                  // Upload documents - Hidden for now
-                  // if (selectedBookingType == BookingType.booking) ...[
-                  //   const SizedBox(height: 8),
-                  //   BookingDocumentUploadSection(
-                  //     _form.documentsNotifier: _form.documentsNotifier,
-                  //   ),
-                  //   const SizedBox(height: 7),
-                  // ],
-
-                  // Staff Details - Required
-                  Row(
-                    children: [
-                      const Text(
-                        'Staff details',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '*',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 7),
-
-                  StaffSearchNameField(
-                    nameController: _form.staffNameController,
-                    errorText: _staffNameError,
-                  ),
-
-                  const SizedBox(height: 7),
-
-                  // Notes - Optional
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: TextField(
-                      controller: _form.descriptionController,
-                      maxLines: null,
-                      expands: true,
-                      textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Notes',
-                        hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                  ),
-
-                  const SizedBox(height: 7),
-
-                  // Running Kilometers - Only for Vehicles
-                  ValueListenableBuilder<List<ProductSelectedEntity>>(
-                    valueListenable: _form.selectedProductsNotifier,
-                    builder: (context, products, _) {
-                      final hasVehicles = products.any(
-                        (p) => p.variant.mainServiceType?.isVehicle ?? false,
-                      );
-                      if (!hasVehicles) return const SizedBox.shrink();
-                      return BookingTextFieldBuilder.buildRightPanelTextField(
-                        controller: _form.runningKilometersController,
-                        hint: 'Running Kilometers',
-                        isNumber: true,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Expandable summary section in step 1
-          ListenableBuilder(
-            listenable: Listenable.merge([
-              _form.selectedProductsNotifier,
-              _form.additionalChargesNotifier,
-              _form.advanceAmountController,
-              _form.discountAmountController,
-            ]),
-            builder: (context, _) {
-              final products = _form.selectedProductsNotifier.value;
-              if (products.isEmpty) return const SizedBox.shrink();
-
-              final additionalCharges = _form.additionalChargesNotifier.value;
-              final isSaleType = selectedBookingType == BookingType.sales;
-              final advanceAmount = isSaleType
-                  ? 0
-                  : (_form.advanceAmountController.text.trim().toIntOrNull() ?? 0);
-              final discountAmount =
-                  _form.discountAmountController.text.trim().toIntOrNull() ?? 0;
-
-              final rentalDays = !isSaleType ? _calculateRentalDays() : 1;
-              final productTotal = products.fold<int>(0, (sum, product) {
-                final daysMultiplier =
-                    (!isSaleType &&
-                        shouldMultiplyByDays(product.variant.mainServiceType))
-                    ? (rentalDays > 0 ? rentalDays : 1)
-                    : 1;
-                return sum +
-                    (product.amount * product.quantity * daysMultiplier);
-              });
-              final additionalTotal = additionalCharges.fold<int>(
-                0,
-                (sum, charge) => sum + (charge.amount ?? 0),
-              );
-              final totalPayable =
-                  productTotal + additionalTotal - discountAmount;
-              final remainingAmount = totalPayable - advanceAmount;
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 6,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 245, 242, 254),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: const Color(0xFF6132E4).withOpacity(0.2),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      // Collapsed view - always visible
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            _isSummaryExpanded = !_isSummaryExpanded;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(10),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.receipt_long_rounded,
-                                    size: 16,
-                                    color: Color(0xFF6132E4),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    !isSaleType && rentalDays > 1
-                                        ? 'Total ($rentalDays days)'
-                                        : 'Total amount',
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF3E3E3E),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    '₹${remainingAmount > 0 ? remainingAmount : 0}',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF6132E4),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Icon(
-                                    _isSummaryExpanded
-                                        ? Icons.keyboard_arrow_up_rounded
-                                        : Icons.keyboard_arrow_down_rounded,
-                                    size: 20,
-                                    color: const Color(0xFF6132E4),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Expanded breakdown
-                      if (_isSummaryExpanded)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-                          child: Column(
-                            children: [
-                              const Divider(height: 8, thickness: 1),
-                              const SizedBox(height: 4),
-                              buildSummaryRow('Product total', productTotal),
-                              if (additionalTotal > 0)
-                                buildSummaryRow(
-                                  'Additional charges',
-                                  additionalTotal,
-                                ),
-                              if (discountAmount > 0)
-                                buildSummaryRow(
-                                  '- Discount',
-                                  discountAmount,
-                                  isNegative: true,
-                                ),
-                              const Divider(height: 12, thickness: 1),
-                              if (!isSaleType && advanceAmount > 0)
-                                buildSummaryRow(
-                                  'Paid',
-                                  advanceAmount,
-                                  valueColor: const Color(0xFF1AB000),
-                                ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-
-          // Bottom Button - Continue
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                onPressed: _validateAndContinue,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6132E4),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _showSuccessDialog(int id, BookingType type) {
     final isSale = type == BookingType.sales;
@@ -4225,285 +3207,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
     );
   }
 
-  Widget _buildPaymentSummaryPanel() {
-    return Container(
-      key: const ValueKey(1),
-      color: Colors.white,
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Back Button
-                  InkWell(
-                    onTap: () {
-                      // Close search overlay before changing steps
-                      _form.removeSearchOverlay();
-                      setState(() => _bookingStep = 0);
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.arrow_back,
-                          size: 20,
-                          color: Colors.grey.shade700,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Back',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade700,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Locations - Only for Vehicles
-                  ValueListenableBuilder<List<ProductSelectedEntity>>(
-                    valueListenable: _form.selectedProductsNotifier,
-                    builder: (context, products, _) {
-                      final hasVehicles = products.any(
-                        (p) => p.variant.mainServiceType?.isVehicle ?? false,
-                      );
-                      if (!hasVehicles) return const SizedBox.shrink();
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BookingTextFieldBuilder.buildSectionHeader(
-                            'Locations',
-                            optional: true,
-                          ),
-                          const SizedBox(height: _fieldSpacing),
-                          BookingTextFieldBuilder.buildRightPanelTextField(
-                            controller: _form.startLocationController,
-                            hint: 'Start location',
-                          ),
-                          const SizedBox(height: _fieldSpacing),
-                          BookingTextFieldBuilder.buildRightPanelTextField(
-                            controller: _form.pickupLocationController,
-                            hint: 'Pickup location',
-                          ),
-                          const SizedBox(height: _fieldSpacing),
-                          BookingTextFieldBuilder.buildRightPanelTextField(
-                            controller: _form.destinationLocationController,
-                            hint: 'Destination',
-                          ),
-                          const SizedBox(height: 14),
-                        ],
-                      );
-                    },
-                  ),
-
-                  // Payment details
-                  BookingTextFieldBuilder.buildSectionHeader(
-                    'Payment details',
-                    optional: true,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.advanceAmountController,
-                    hint: 'Advance amount',
-                    isNumber: true,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.securityAmountController,
-                    hint: 'Security amount',
-                    isNumber: true,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.discountAmountController,
-                    hint: 'Discount amount',
-                    isNumber: true,
-                  ),
-
-                  const SizedBox(height: 14),
-                  // Payment Method Selection - only show if advance amount has value
-                  ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: _form.advanceAmountController,
-                    builder: (context, value, child) {
-                      final hasAdvanceAmount =
-                          value.text.trim().isNotEmpty &&
-                          (int.tryParse(value.text.trim()) ?? 0) > 0;
-                      if (hasAdvanceAmount) {
-                        return Column(
-                          children: [
-                            _buildPaymentMethodSection(),
-                            const SizedBox(height: 14),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-
-                  // Additional Charges
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Additional charges',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: addAdditionalCharge,
-                        borderRadius: BorderRadius.circular(4),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF6132E4).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            size: 16,
-                            color: Color(0xFF6132E4),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  // Additional charges list
-                  ValueListenableBuilder<List<AdditionalChargesEntity>>(
-                    valueListenable: _form.additionalChargesNotifier,
-                    builder: (context, charges, _) {
-                      if (charges.isEmpty) return const SizedBox();
-                      return Column(
-                        children: charges.map((charge) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 6),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF8F9FA),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: const Color(0xFF6132E4).withOpacity(0.2),
-                                width: 1.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.03),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    charge.name ?? 'Charge',
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF2D2D2D),
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(
-                                          0xFF6132E4,
-                                        ).withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(
-                                        '₹${charge.amount ?? 0}',
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xFF6132E4),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    InkWell(
-                                      onTap: () => removeCharge(charge),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          color: Colors.red.shade50,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.close,
-                                          size: 14,
-                                          color: Colors.red.shade600,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-          ),
-
-          // Fixed Bottom Section
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Summary',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _buildSummarySection(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ─── Old Booking ─────────────────────────────────────────────────────────
 
@@ -4517,7 +3220,22 @@ class NewBookingScreenState extends State<NewBookingScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDateSelectionSection(),
+              BookingDateSelectionWidget(
+                isSales: selectedBookingType == BookingType.sales,
+                pickupDate: pickupDate,
+                returnDate: returnDate,
+                pickupTime: pickupTime,
+                returnTime: returnTime,
+                coolingPeriodDays: coolingPeriodDays,
+                onSelectPickupDate: () => _selectDate(isPickup: true),
+                onSelectReturnDate: () => _selectDate(isPickup: false),
+                onSelectPickupTime: () => _selectTime(isPickup: true),
+                onSelectReturnTime: () => _selectTime(isPickup: false),
+                onCoolingPeriodChanged: (val) {
+                  setState(() => coolingPeriodDays = val);
+                  _loadProductsForService(selectedServiceId);
+                },
+              ),
               const SizedBox(height: 16),
               Expanded(child: _buildServiceSelectionSection()),
             ],
@@ -4525,251 +3243,21 @@ class NewBookingScreenState extends State<NewBookingScreen>
         ),
         const SizedBox(width: 16),
         // Right: client details + summary + submit
-        SizedBox(width: 340, child: _buildOldBookingRightPanel()),
+        SizedBox(
+          width: 340,
+          child: OldBookingRightPanel(
+            form: _form,
+            bookedDate: _bookedDate,
+            onBookedDateChanged: (date) => setState(() => _bookedDate = date),
+            clientNameError: _clientNameError,
+            staffNameError: _staffNameError,
+            selectedPaymentMethod: _selectedPaymentMethod,
+            onPaymentMethodChanged: (method) =>
+                setState(() => _selectedPaymentMethod = method),
+            onConfirm: _handleConfirmOldBooking,
+          ),
+        ),
       ],
-    );
-  }
-
-  Widget _buildOldBookingRightPanel() {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Booked Date (optional)
-                  const Text(
-                    'Booked Date (Optional)',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 4),
-                  GestureDetector(
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: _bookedDate ?? DateTime.now(),
-                        firstDate: DateTime(2015),
-                        lastDate: DateTime.now(),
-                      );
-                      if (picked != null) setState(() => _bookedDate = picked);
-                    },
-                    child: Container(
-                      height: 44,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_today,
-                            size: 16,
-                            color: Colors.grey.shade500,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              _bookedDate != null
-                                  ? _bookedDate!.format()
-                                  : 'Select booked date',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: _bookedDate != null
-                                    ? Colors.black87
-                                    : Colors.grey.shade400,
-                              ),
-                            ),
-                          ),
-                          if (_bookedDate != null)
-                            GestureDetector(
-                              onTap: () => setState(() => _bookedDate = null),
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Client Name
-                  const Text(
-                    'Client',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  BlocListener<ClientCubit, ClientState>(
-                    listener: (context, state) {
-                      if (state.selectedClient != null) {
-                        final client = state.selectedClient!;
-                        _form.clientNameController.text = client.name;
-                        _form.clientPhone1Controller.text = client.phone1.toString();
-                        if (client.phone2 != null) {
-                          _form.clientPhone2Controller.text = client.phone2
-                              .toString();
-                        }
-                        _form.selectedClientId = client.id;
-                      }
-                    },
-                    child: ClientSearchNameField(
-                      nameController: _form.clientNameController,
-                      errorText: _clientNameError,
-                      hitText: 'Type or search name',
-                    ),
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Client Phone
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.clientPhone1Controller,
-                    hint: 'Client Phone',
-                    isNumber: true,
-                    prefixIcon: Icons.phone,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Address
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.clientAddressController,
-                    hint: 'Place / Address',
-                    prefixIcon: Icons.location_on,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Staff
-                  const Text(
-                    'Staff',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  StaffSearchNameField(
-                    nameController: _form.staffNameController,
-                    errorText: _staffNameError,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Payment Method
-                  _buildPaymentMethodSection(),
-                  const SizedBox(height: _fieldSpacing),
-
-                  // Notes / Description
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: TextField(
-                      controller: _form.descriptionController,
-                      maxLines: null,
-                      expands: true,
-                      textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Notes / Description',
-                        hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            ),
-          ),
-
-          // Bottom: total + submit button
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Total Amount',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black54,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                ValueListenableBuilder<List<ProductSelectedEntity>>(
-                  valueListenable: _form.selectedProductsNotifier,
-                  builder: (context, products, _) {
-                    final total = products.fold<int>(
-                      0,
-                      (sum, p) => sum + (p.amount * p.quantity),
-                    );
-                    return Text(
-                      '₹ ${total.toCurrency()}',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF6132E4),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _handleConfirmOldBooking,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Save Old Booking',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
