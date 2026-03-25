@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
@@ -67,6 +68,22 @@ class BookingFormControllers {
   final maxPriceNotifier = ValueNotifier<double>(50000);
   final isPriceFilterEnabled = ValueNotifier<bool>(false);
 
+  // ── Booking State ──────────────────────────────────────────────────────────
+  DateTime pickupDate = DateTime.now();
+  DateTime returnDate = DateTime.now().add(const Duration(days: 1));
+  TimeOfDay? pickupTime;
+  TimeOfDay? returnTime;
+  DateTime? coolingPeriodDate;
+  TimeOfDay? coolingPeriodTime;
+
+  int? selectedServiceId = -1;
+  List<String> searchTypes = ['Name', 'Category', 'Model', 'Color'];
+  MainServiceType? currentServiceType;
+  int coolingPeriodDays = 0;
+
+  final quantityControllers = <int, TextEditingController>{};
+  final quantityFocusNodes = <int, FocusNode>{};
+
   // ── Product bloc ──────────────────────────────────────────────────────────────
   late final SelectProductBloc selectProductBloc;
 
@@ -115,6 +132,12 @@ class BookingFormControllers {
     priceRange.dispose();
     maxPriceNotifier.dispose();
     isPriceFilterEnabled.dispose();
+    for (final controller in quantityControllers.values) {
+      controller.dispose();
+    }
+    for (final focusNode in quantityFocusNodes.values) {
+      focusNode.dispose();
+    }
     selectProductBloc.close();
   }
 }
